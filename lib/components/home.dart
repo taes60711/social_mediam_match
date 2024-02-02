@@ -6,7 +6,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    fbService fireBaseService = fbService();
+    FbService fireBaseService = FbService();
 
     return Scaffold(
       body: SafeArea(

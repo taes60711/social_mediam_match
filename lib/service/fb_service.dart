@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-class fbService {
+class FbService {
   FirebaseAuth auth = FirebaseAuth.instance;
 
+
+  
   void signIn(String email, String password) {
     auth
         .signInWithEmailAndPassword(email: email, password: password)
