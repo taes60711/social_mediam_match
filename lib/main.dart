@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/loginpage.dart';
+import 'package:social_mediam_match/components/signuppage.dart';
 import 'package:social_mediam_match/firebase_options.dart';
-import 'package:social_mediam_match/home.dart';
+import 'package:social_mediam_match/components/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +29,9 @@ class MyApp extends StatelessWidget {
             }),
       ),
       routes: <String, WidgetBuilder>{
-        '/': (BuildContext context) => Home(),
+        '/': (BuildContext context) => LoginPage(),
+        '/home': (BuildContext context) => Home(),
+        '/signUp': (BuildContext context) => const SignUpPage(),
       },
     );
   }
