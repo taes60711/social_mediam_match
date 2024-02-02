@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/service/fb_service.dart';
 
@@ -76,6 +75,21 @@ class LoginPage extends StatelessWidget {
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () {
+                    log("忘記帳號?");
+                  },
+                  child: const Text(
+                    "忘記帳號?",
+                    style: TextStyle(color: Colors.blueAccent),
+                  ),
+                ),
+              ),
+            ),
             ElevatedButton(
               onPressed: () {
                 String email = emailController.text;
@@ -88,13 +102,53 @@ class LoginPage extends StatelessWidget {
               },
               child: const Text("登入"),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(
-                  '/signUp',
-                );
-              },
-              child: const Text("註冊"),
+            const Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text("第三方登入(功能暫不處理)"),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    log("Google 登入");
+                  },
+                  child: const Text("Google 登入"),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    log("Twitter 登入");
+                  },
+                  child: const Text("Twitter 登入"),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(right: 6),
+                  child: Text("還沒有帳戶?"),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      '/signUp',
+                    );
+                  },
+                  child: const Text(
+                    "建立帳戶",
+                    style: TextStyle(
+                        color: Colors.blueAccent, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
