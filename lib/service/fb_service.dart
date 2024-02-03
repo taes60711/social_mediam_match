@@ -5,8 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 class FbService {
   FirebaseAuth auth = FirebaseAuth.instance;
 
-
-  
   void signIn(String email, String password) {
     auth
         .signInWithEmailAndPassword(email: email, password: password)
@@ -23,5 +21,12 @@ class FbService {
 
   void signOut() {
     auth.signOut().then((value) => log("signOut Successfull"));
+  }
+
+  void reSetPwd(String email){
+    auth
+        .sendPasswordResetEmail(email: email)
+        .then((value) => log("emailSend Successfull"))
+        .catchError((e) => {log("error: $e")});
   }
 }
