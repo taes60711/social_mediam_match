@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FbService {
@@ -23,7 +22,7 @@ class FbService {
     auth.signOut().then((value) => log("signOut Successfull"));
   }
 
-  void reSetPwd(String email){
+  void reSetPwd(String email) {
     auth
         .sendPasswordResetEmail(email: email)
         .then((value) => log("emailSend Successfull"))

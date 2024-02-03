@@ -14,47 +14,115 @@ class SignUpPage extends StatelessWidget {
     emailController.text = "taes60711@gmail.com";
     pwdController.text = "toto60711";
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Email',
+      appBar: AppBar(
+        title: Text("註冊帳戶"),
+      ),
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.email,
+                  size: 36,
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: pwdController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Password',
+                Expanded(
+                  child: SizedBox(
+                    height: 36,
+                    child: TextField(
+                      controller: emailController,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        border: OutlineInputBorder(),
+                        hintText: 'Email',
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                String email = emailController.text;
-                String pwd = pwdController.text;
-                log("signUp Email:$email Pwd:$pwd");
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.lock,
+                  size: 36,
+                ),
+                Expanded(
+                  child: SizedBox(
+                    height: 36,
+                    child: TextField(
+                      controller: pwdController,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        border: OutlineInputBorder(),
+                        hintText: 'Password',
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              String email = emailController.text;
+              String pwd = pwdController.text;
+              log("signUp Email:$email Pwd:$pwd");
 
-                fireBaseService.signUp(email, pwd);
-              },
-              child: const Text("註冊"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("已經有帳戶"),
-            ),
-          ],
-        ),
+              fireBaseService.signUp(email, pwd);
+            },
+            child: const Text("註冊"),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Container(
+                      width: 20,
+                      height: 1,
+                      color: Colors.black45,
+                    ),
+                  ),
+                  const Text("或"),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Container(
+                      width: 20,
+                      height: 1,
+                      color: Colors.black45,
+                    ),
+                  ),
+                ],
+              )),
+          ElevatedButton(
+            onPressed: () {
+              log("Google 登入");
+            },
+            child: const Text("Google 登入"),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              log("Twitter 登入");
+            },
+            child: const Text("Twitter 登入"),
+          ),
+        ],
       ),
     );
   }

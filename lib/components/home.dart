@@ -10,7 +10,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FbService fireBaseService = FbService();
- FirebaseFirestore firestore = FirebaseFirestore.instance;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     Stream<List<dynamic>> getData() {
       //ReadData Sample
@@ -26,7 +26,8 @@ class Home extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 fireBaseService.signOut();
-                Navigator.of(context).pop();
+                Navigator.of(context)
+                    .popUntil((route) => route.settings.name == "/");
               },
               child: const Text("登出"),
             ),

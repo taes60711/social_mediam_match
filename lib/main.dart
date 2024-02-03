@@ -8,7 +8,7 @@ import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/components/home.dart';
 import 'package:social_mediam_match/service/fb_service.dart';
 
-Future<void> main() async {  
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             }),
       ),
       routes: <String, WidgetBuilder>{
-        '/': (BuildContext context) =>const Initialpage(),
+        '/': (BuildContext context) => const Initialpage(),
         '/home': (BuildContext context) => Home(),
         '/signUp': (BuildContext context) => const SignUpPage(),
       },
@@ -52,30 +52,37 @@ class _InitialpageState extends State<Initialpage> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 5), () {
+    Timer(const Duration(seconds: 1), () {
       setState(() {
         isInitial = false;
       });
-    });   
+    });
   }
 
-  Widget preLoginPage(){
+  Widget preLoginPage() {
     return StreamBuilder(
-      stream: FbService().auth.authStateChanges(),
-      builder: (BuildContext context,AsyncSnapshot<User?> snapshot){
-        if(snapshot.data != null){
-          return Home();
-        } else {
-          return LoginPage();
-        }
-      }
-    );
+        stream: FbService().auth.authStateChanges(),
+        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+          User? userData = snapshot.data;
+
+          if (userData != null) {
+            return Home();
+          } else {
+            return LoginPage();
+          }
+        });
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    return isInitial ? Scaffold(body: Container(width: 200,height: 200,color: Colors.blue,),) :  preLoginPage();
+    return isInitial
+        ? Scaffold(
+            body: Container(
+              width: 200,
+              height: 200,
+              color: Colors.blue,
+            ),
+          )
+        : preLoginPage();
   }
-
-
 }
