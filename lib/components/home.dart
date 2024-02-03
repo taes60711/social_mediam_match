@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:social_mediam_match/service/fb_service.dart';
 
 class Home extends StatelessWidget {
@@ -6,7 +9,15 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    fbService fireBaseService = fbService();
+    FbService fireBaseService = FbService();
+ FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    Stream<List<dynamic>> getData() {
+      //ReadData Sample
+      final stream = firestore.collection("users").snapshots();
+      inspect(stream.map((e) => e.docs.map((e) => e.data()).toList()));
+      return stream.map((e) => e.docs.map((e) => e.data()).toList());
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -18,6 +29,12 @@ class Home extends StatelessWidget {
                 Navigator.of(context).pop();
               },
               child: const Text("登出"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                getData();
+              },
+              child: const Text("取得データ"),
             ),
           ],
         ),

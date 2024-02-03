@@ -8,7 +8,7 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    fbService fireBaseService = fbService();
+    FbService fireBaseService = FbService();
     TextEditingController emailController = TextEditingController();
     TextEditingController pwdController = TextEditingController();
     emailController.text = "taes60711@gmail.com";

@@ -7,7 +7,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    fbService fireBaseService = fbService();
+    FbService fireBaseService = FbService();
     TextEditingController emailController = TextEditingController();
     TextEditingController pwdController = TextEditingController();
     emailController.text = "taes60711@gmail.com";
@@ -81,10 +81,12 @@ class LoginPage extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
                   onTap: () {
-                    log("忘記帳號?");
+                    log("忘記密碼?");
+                    String email = emailController.text;
+                    fireBaseService.reSetPwd(email);
                   },
                   child: const Text(
-                    "忘記帳號?",
+                    "忘記密碼?",
                     style: TextStyle(color: Colors.blueAccent),
                   ),
                 ),
