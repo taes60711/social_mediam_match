@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/loginpage.dart';
 import 'package:social_mediam_match/components/signuppage.dart';
 import 'package:social_mediam_match/firebase_options.dart';
-import 'package:social_mediam_match/components/home.dart';
+import 'package:social_mediam_match/components/home/home.dart';
 import 'package:social_mediam_match/service/fb_service.dart';
 
 Future<void> main() async {
