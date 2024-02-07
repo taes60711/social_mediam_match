@@ -71,12 +71,16 @@ class SignUpPage extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               String email = emailController.text;
               String pwd = pwdController.text;
               log("signUp Email:$email Pwd:$pwd");
-
-              fireBaseService.signUp(email, pwd);
+              await fireBaseService.signUp(email, pwd).then((result) {
+                if (result == true) {
+                  Navigator.of(context)
+                      .popUntil((route) => route.settings.name == "/");
+                }
+              });
             },
             child: const Text("註冊"),
           ),
