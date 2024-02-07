@@ -6,14 +6,12 @@ class DBService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Stream<List<dynamic>> getPostData() {
-    //ReadData Sample
     final stream = firestore.collection("posts").snapshots();
     inspect(stream.map((e) => e.docs.map((e) => e.data()).toList()));
     return stream.map((e) => e.docs.map((e) => e.data()).toList());
   }
 
   Stream<List<dynamic>> getData() {
-    //ReadData Sample
     final stream = firestore.collection("users").snapshots();
     inspect(stream.map((e) => e.docs.map((e) => e.data()).toList()));
     return stream.map((e) => e.docs.map((e) => e.data()).toList());
