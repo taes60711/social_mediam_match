@@ -18,7 +18,7 @@ class DBService {
   }
 
   Future<Map<String, dynamic>> getDataAtOnce(String uid) async {
-    uid = "ug9uHK4DDNze42FFAcuq";
+    uid = "QWXvonFH0UDkrF0kXvIV";
     DocumentSnapshot doc = await firestore.collection('users').doc(uid).get();
     Map<String, dynamic> resultData = doc.data() as Map<String, dynamic>;
     log("${resultData}");
