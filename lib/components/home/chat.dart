@@ -19,13 +19,6 @@ class _ChatState extends State<Chat> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      dbService.getDataAtOnce("").then((value) {
-        value['wantSkill'].forEach((e) {
-          wantSkillFilter.add(e);
-        });
-      });
-    });
   }
 
   @override
