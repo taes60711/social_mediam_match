@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:social_mediam_match/components/home/chat.dart';
+import 'package:social_mediam_match/components/home/course.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends.dart';
 import 'package:social_mediam_match/components/home/user_page.dart';
 import 'package:social_mediam_match/service/db_service.dart';
@@ -21,6 +22,7 @@ class _HomeState extends State<Home> {
   List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     Chat(),
+    Course(),
     Firends(),
     UserPage(),
   ];
@@ -36,18 +38,22 @@ class _HomeState extends State<Home> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: '首頁',
+            label: '留言板',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            label: '主要',
+            label: '告示欄',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            label: '課程',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.mobile_friendly),
             label: '好友',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
+            icon: Icon(Icons.account_box_rounded),
             label: '使用者',
           ),
         ],

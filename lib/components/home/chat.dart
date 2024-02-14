@@ -19,6 +19,13 @@ class _ChatState extends State<Chat> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      dbService.getDataAtOnce("").then((value) {
+        value['wantSkill'].forEach((e) {
+          wantSkillFilter.add(e);
+        });
+      });
+    });
   }
 
   @override
@@ -113,8 +120,10 @@ class _ChatState extends State<Chat> {
                 } else {
                   if (snapshots.hasData) {
                     List<dynamic> filteredData = [];
+
                     snapshots.data!.forEach((e) {
-                      e["wantSkill"].forEach((ele) {
+                      List<dynamic> wantSkillList = e["wantSkill"];
+                      wantSkillList.forEach((ele) {
                         if (wantSkillFilter.contains(ele) &&
                             !filteredData.contains(e)) {
                           filteredData.add(e);
