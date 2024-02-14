@@ -21,42 +21,100 @@ class Firends extends StatelessWidget {
                 List<dynamic> friendList =
                     snapshots.data["chatroom"]["friends"];
                 return Column(
-                  children: friendList.map((e) {
-                    return Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          color: Colors.yellow,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Container(
-                                    width: 40,
-                                    height: 40,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                                Column(
+                  children: [
+                    Column(
+                      children: friendList.map((e) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              log("choiced name: ${e}");
+                            },
+                            child: Container(
+                              color: Colors.yellow,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      color: Color.fromARGB(221, 172, 139, 139),
-                                      child: Text("$e"),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: Container(
+                                        width: 40,
+                                        height: 40,
+                                        color: Colors.blue,
+                                      ),
                                     ),
-                                    Text("dataasdsadasdsadasdsad"),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("名前:$e"),
+                                        Text("dataasdsadasdsadasdsad"),
+                                      ],
+                                    ),
                                   ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
+                        );
+                      }).toList(),
+                    ),
+                    Expanded(
+                      child: StreamBuilder(
+                          stream: dbService.getChatInfo("", ""),
+                          builder: (context, snapshots) {
+                            if (snapshots.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Text("Loading...");
+                            } else {
+                              if (snapshots.hasData) {
+                                List<dynamic> message =
+                                    snapshots.data["message"];
+                                return ListView.builder(
+                                    itemCount: message.length,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: message[index]["poster"] ==
+                                                "QWXvonFH0UDkrF0kXvIV"
+                                            ? Container(
+                                                color: Colors.limeAccent,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(message[index]
+                                                        ["poster"]),
+                                                    Text(message[index]
+                                                        ["content"]),
+                                                  ],
+                                                ),
+                                              )
+                                            : Container(
+                                                color: Colors.limeAccent,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    Text(message[index]
+                                                        ["poster"]),
+                                                    Text(message[index]
+                                                        ["content"]),
+                                                  ],
+                                                ),
+                                              ),
+                                      );
+                                    });
+                              } else {
+                                return Container();
+                              }
+                            }
+                          }),
+                    ),
+                  ],
                 );
               } else {
                 return Container();

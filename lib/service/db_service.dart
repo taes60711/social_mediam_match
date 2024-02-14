@@ -5,6 +5,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class DBService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  Stream<dynamic> getChatInfo(String uid, String otherUid) {
+    uid = "QWXvonFH0UDkrF0kXvIV";
+    otherUid = "Q0PtLSHwhLk2EvZoA2aD";
+    final stream = firestore
+        .collection("friend_chatroom")
+        .doc(otherUid + "_" + uid)
+        .snapshots();
+
+    return stream;
+  }
+
   Stream<dynamic> getChatRoomListData(String uid) {
     uid = "QWXvonFH0UDkrF0kXvIV";
     final streams = firestore.collection("user_chatlist").doc(uid).snapshots();
