@@ -77,10 +77,12 @@ class _InitialpageState extends State<Initialpage> {
   Widget build(BuildContext context) {
     return isInitial
         ? Scaffold(
-            body: Container(
-              width: 200,
-              height: 200,
-              color: Colors.blue,
+            body: Center(
+              child: Container(
+                width: 200,
+                height: 200,
+                color: Colors.blue,
+              ),
             ),
           )
         : preLoginPage();
