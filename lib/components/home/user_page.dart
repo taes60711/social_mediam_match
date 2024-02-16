@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../service/fb_service.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
 
 class UserPage extends StatelessWidget {
   const UserPage({super.key});
@@ -7,6 +9,7 @@ class UserPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FbService fireBaseService = FbService();
+
     return SafeArea(
       child: Column(
         children: [
@@ -30,10 +33,24 @@ class UserPage extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            width: 100,
-            height: 100,
-            color: Colors.black38,
+          GestureDetector(
+            onTap: () async {
+              final wsUrl = Uri.parse('ws://192.168.1.109:8765');
+              final channel = WebSocketChannel.connect(wsUrl);
+
+              await channel.ready;
+
+              channel.sink.add('received!');
+              channel.stream.listen((message) {
+                print(message);
+              });
+              print("test");
+            },
+            child: Container(
+              width: 100,
+              height: 100,
+              color: Colors.black38,
+            ),
           ),
         ],
       ),
