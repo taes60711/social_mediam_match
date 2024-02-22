@@ -1,203 +1,207 @@
-import 'dart:developer';
-
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:web_socket_channel/io.dart';
 
-import '../../../service/db_service.dart';
-
-class Firends extends StatelessWidget {
+class Firends extends StatefulWidget {
   const Firends({super.key});
 
-  Widget friendList() {
-    DBService dbService = DBService();
-    return SafeArea(
-      child: StreamBuilder(
-          stream: dbService.getChatRoomListData(""),
-          builder: (context, snapshots) {
-            log("${snapshots.connectionState}");
-            if (snapshots.connectionState == ConnectionState.waiting) {
-              return const Text("Loading...");
-            } else {
-              if (snapshots.hasData) {
-                List<dynamic> friendList =
-                    snapshots.data["chatroom"]["friends"];
-                return Column(
-                  children: [
-                    Column(
-                      children: friendList.map((e) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              log("choiced name: ${e}");
-                            },
-                            child: Container(
-                              color: Colors.yellow,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 8.0),
-                                      child: Container(
-                                        width: 40,
-                                        height: 40,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text("名前:$e"),
-                                        Text("dataasdsadasdsadasdsad"),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    Expanded(
-                      child: StreamBuilder(
-                          stream: dbService.getChatInfo("", ""),
-                          builder: (context, snapshots) {
-                            if (snapshots.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Text("Loading...");
-                            } else {
-                              if (snapshots.hasData) {
-                                List<dynamic> message =
-                                    snapshots.data["message"];
-                                return ListView.builder(
-                                    itemCount: message.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: message[index]["poster"] ==
-                                                "QWXvonFH0UDkrF0kXvIV"
-                                            ? Container(
-                                                color: Colors.limeAccent,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(message[index]
-                                                        ["poster"]),
-                                                    Text(message[index]
-                                                        ["content"]),
-                                                  ],
-                                                ),
-                                              )
-                                            : Container(
-                                                color: Colors.limeAccent,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
-                                                  children: [
-                                                    Text(message[index]
-                                                        ["poster"]),
-                                                    Text(message[index]
-                                                        ["content"]),
-                                                  ],
-                                                ),
-                                              ),
-                                      );
-                                    });
-                              } else {
-                                return Container();
-                              }
-                            }
-                          }),
-                    ),
-                  ],
-                );
-              } else {
-                return Container();
-              }
-            }
-          }),
-    );
+  @override
+  State<Firends> createState() => _FirendsState();
+}
+
+class _FirendsState extends State<Firends> {
+  IOWebSocketChannel channel = IOWebSocketChannel.connect('ws://61.228.144.13:80/ws');
+  IOWebSocketChannel? channel1;
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
+  bool isSendMessage = false;
+  String JsonData = "";
+  @override
+  void initState() {
+    super.initState();
+    _initializeConnection();
   }
 
-  Widget groupList() {
-    DBService dbService = DBService();
-    return SafeArea(
-      child: StreamBuilder(
-          stream: dbService.getChatRoomListData(""),
-          builder: (context, snapshots) {
-            log("${snapshots.connectionState}");
-            if (snapshots.connectionState == ConnectionState.waiting) {
-              return const Text("Loading...");
-            } else {
-              if (snapshots.hasData) {
-                List<dynamic> friendList = snapshots.data["chatroom"]["groups"];
-                return Column(
-                  children: friendList.map((e) {
-                    return Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          color: Colors.yellow,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Container(
-                                    width: 40,
-                                    height: 40,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      color: Color.fromARGB(221, 172, 139, 139),
-                                      child: Text("$e"),
-                                    ),
-                                    Text("dataasdsadasdsadasdsad"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                );
-              } else {
-                return Container();
-              }
-            }
-          }),
-    );
+  void _initializeConnection() async {
+    await channel.ready;
+    channel.sink.add('{"method" : "connect" , "userid" : 1}');
   }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-          appBar: AppBar(
-            bottom: const TabBar(
-              tabs: [
-                Tab(text: '好友'),
-                Tab(text: '群組'),
+    TextEditingController messageInput = TextEditingController();
+    Widget drawerPage() {
+      return Drawer(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(0),
+          ),
+        ),
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                onPressed: () async {
+                  print("Drawer Close");
+                  await channel1?.sink.close();
+                  _key.currentState!.closeEndDrawer();
+                },
+                icon: const Icon(Icons.arrow_back_ios_sharp),
+              ),
+            ),
+            const Text("聊天室"),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: JsonData != "" ? jsonDecode(JsonData)["Message"].length : 0,
+                  itemBuilder: (context, index) {
+                    List<dynamic> messageData = jsonDecode(JsonData)["Message"];
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        color: Colors.lime,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: 50,
+                                height: 50,
+                                color: Colors.deepPurple,
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("使用者:${messageData[index]["userId"]}"),
+                                Text("${messageData[index]["message"]}"),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Container(
+                      height: 30,
+                      child: TextField(
+                        controller: messageInput,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(top: 5, left: 10),
+                          border: OutlineInputBorder(),
+                          hintText: 'Enter Message',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    channel1?.sink
+                        .add('{"method" : "sendMessage" , "roomid" : 1 , "userid" : 1 , "message" : ${messageInput.text}}');
+                    setState(() {
+                      isSendMessage = true;
+                    });
+                  },
+                  child: Container(
+                    width: 80,
+                    height: 30,
+                    color: Colors.deepOrange,
+                    child: const Center(
+                      child: Text("傳送訊息"),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      );
+    }
+
+    return StreamBuilder(
+      stream: channel.stream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          String data = snapshot.data;
+          List<dynamic> jsonData = jsonDecode(data);
+          return Scaffold(
+            key: _key,
+            endDrawer: drawerPage(),
+            body: Column(
+              children: [
+                const Text("列表"),
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: jsonData.length,
+                      itemBuilder: ((context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () async {
+                              channel1 = IOWebSocketChannel.connect('ws://61.228.144.13:80/ws/chatroom');
+                              await channel1?.ready;
+                              channel1?.sink.add('{"method" : "connect" , "roomid" : ${jsonData[index]["roomId"]}}');
+                              channel1?.stream.listen((event) {
+                                print("channel1 message : " + event);
+                                setState(() {
+                                  JsonData = event;
+                                });
+                                if (isSendMessage) {
+                                  channel.sink.add('{"method" : "sendMessage" , "members" : ${jsonDecode(JsonData)["Members"]}}');
+                                  setState(() {
+                                    isSendMessage = false;
+                                  });
+                                }
+                              });
+                              _key.currentState!.openEndDrawer();
+                            },
+                            child: Container(
+                              color: Colors.indigoAccent,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      width: 50,
+                                      height: 50,
+                                      color: Colors.pinkAccent,
+                                    ),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("${jsonData[index]["roomName"]}"),
+                                      jsonData[index]["lastMessage"] != null
+                                          ? Text(
+                                              "${jsonData[index]["lastMessage"]}",
+                                              style: TextStyle(color: Colors.black54),
+                                            )
+                                          : const Text(""),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      })),
+                ),
               ],
             ),
-          ),
-          body: TabBarView(
-            children: [friendList(), groupList()],
-          )),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }
