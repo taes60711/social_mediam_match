@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
@@ -11,11 +10,12 @@ class Firends extends StatefulWidget {
 }
 
 class _FirendsState extends State<Firends> {
-  IOWebSocketChannel channel = IOWebSocketChannel.connect('ws://61.228.144.13:80/ws');
+  IOWebSocketChannel channel = IOWebSocketChannel.connect('ws://114.37.157.2:80/ws');
   IOWebSocketChannel? channel1;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   bool isSendMessage = false;
   String JsonData = "";
+  int roomIndex = -1;
   @override
   void initState() {
     super.initState();
@@ -44,6 +44,7 @@ class _FirendsState extends State<Firends> {
               child: IconButton(
                 onPressed: () async {
                   print("Drawer Close");
+                  roomIndex = -1;
                   await channel1?.sink.close();
                   _key.currentState!.closeEndDrawer();
                 },
@@ -75,6 +76,7 @@ class _FirendsState extends State<Firends> {
                               children: [
                                 Text("使用者:${messageData[index]["userId"]}"),
                                 Text("${messageData[index]["message"]}"),
+                                Text("${messageData[index]["sentAt"]}"),
                               ],
                             ),
                           ],
@@ -103,8 +105,8 @@ class _FirendsState extends State<Firends> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    channel1?.sink
-                        .add('{"method" : "sendMessage" , "roomid" : 1 , "userid" : 1 , "message" : ${messageInput.text}}');
+                    channel1?.sink.add(
+                        '{"method" : "sendMessage" , "roomid" : ${roomIndex} , "userid" : 1 , "message" : ${messageInput.text}}');
                     setState(() {
                       isSendMessage = true;
                     });
@@ -145,8 +147,9 @@ class _FirendsState extends State<Firends> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () async {
-                              channel1 = IOWebSocketChannel.connect('ws://61.228.144.13:80/ws/chatroom');
+                              channel1 = IOWebSocketChannel.connect('ws://114.37.157.2:80/ws/chatroom');
                               await channel1?.ready;
+                              roomIndex = jsonData[index]["roomId"];
                               channel1?.sink.add('{"method" : "connect" , "roomid" : ${jsonData[index]["roomId"]}}');
                               channel1?.stream.listen((event) {
                                 print("channel1 message : " + event);
