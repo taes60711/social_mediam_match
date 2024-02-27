@@ -2,8 +2,9 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/loginpage.dart';
-import 'package:social_mediam_match/components/signuppage.dart';
+import 'package:social_mediam_match/components/Account/loginpage.dart';
+import 'package:social_mediam_match/components/Account/signuppage.dart';
+import 'package:social_mediam_match/components/Logo.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/components/home/home.dart';
 import 'package:social_mediam_match/service/fb_service.dart';
@@ -74,16 +75,6 @@ class _InitialpageState extends State<Initialpage> {
 
   @override
   Widget build(BuildContext context) {
-    return isInitial
-        ? Scaffold(
-            body: Center(
-              child: Container(
-                width: 200,
-                height: 200,
-                color: Colors.blue,
-              ),
-            ),
-          )
-        : preLoginPage();
+    return isInitial ? Logo() : preLoginPage();
   }
 }
