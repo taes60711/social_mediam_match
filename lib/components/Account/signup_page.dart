@@ -1,14 +1,14 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/service/fb_service.dart';
+import 'package:provider/provider.dart';
+import 'package:social_mediam_match/state/userState.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    FbService fireBaseService = FbService();
+    UserState userFuture = context.read<UserState>();
     TextEditingController emailController = TextEditingController();
     TextEditingController pwdController = TextEditingController();
     emailController.text = "taes60711@gmail.com";
@@ -75,12 +75,7 @@ class SignUpPage extends StatelessWidget {
               String email = emailController.text;
               String pwd = pwdController.text;
               log("signUp Email:$email Pwd:$pwd");
-              await fireBaseService.signUp(email, pwd).then((result) {
-                if (result == true) {
-                  Navigator.of(context)
-                      .popUntil((route) => route.settings.name == "/");
-                }
-              });
+              await userFuture.signUp(email, pwd);
             },
             child: const Text("註冊"),
           ),

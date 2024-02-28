@@ -1,16 +1,18 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/service/fb_service.dart';
-import 'package:social_mediam_match/utilities/IconWithInput.dart';
+import 'package:provider/provider.dart';
+
+import 'package:social_mediam_match/components/IconWithInput.dart';
+import 'package:social_mediam_match/state/userState.dart';
 
 class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    FbService fireBaseService = FbService();
     TextEditingController emailController = TextEditingController();
     TextEditingController pwdController = TextEditingController();
+    UserState userFuture = context.read<UserState>();
 
     return Scaffold(
       body: SafeArea(
@@ -42,7 +44,7 @@ class LoginPage extends StatelessWidget {
                   onTap: () {
                     log("忘記密碼?");
                     String email = emailController.text;
-                    fireBaseService.reSetPwd(email);
+                    userFuture.reSetPwd(email);
                   },
                   child: const Text(
                     "忘記密碼?",
@@ -55,7 +57,7 @@ class LoginPage extends StatelessWidget {
               onPressed: () async {
                 emailController.text = "taes60711@gmail.com";
                 pwdController.text = "toto60711";
-                await fireBaseService.signIn(
+                await userFuture.signIn(
                     emailController.text, pwdController.text);
               },
               child: const Text("登入"),
