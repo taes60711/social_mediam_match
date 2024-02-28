@@ -6,13 +6,27 @@ class FbService {
   FirebaseAuth auth = FirebaseAuth.instance;
   DBService dbService = DBService();
 
-  void signIn(String email, String password) {
+  Stream<User?> isLoginCheck() async* {
+    User? user;
+    await auth.authStateChanges().listen((event) {
+      user = event;
+    });
+    yield user;
+  }
+
+  Future<bool> signIn(String email, String password) async {
+    bool isSuccess = false;
     try {
-      auth
+      await auth
           .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) => log("SignIn Successfull"));
+          .then((value) {
+        log("SignIn isSuccess: ${value}");
+        isSuccess = true;
+      });
+      return isSuccess;
     } catch (e) {
       log("$e");
+      return isSuccess;
     }
   }
 

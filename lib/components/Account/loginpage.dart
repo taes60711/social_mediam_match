@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/service/fb_service.dart';
+import 'package:social_mediam_match/utilities/IconWithInput.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -10,70 +11,28 @@ class LoginPage extends StatelessWidget {
     FbService fireBaseService = FbService();
     TextEditingController emailController = TextEditingController();
     TextEditingController pwdController = TextEditingController();
-    emailController.text = "taes60711@gmail.com";
-    pwdController.text = "toto60711";
+
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(top: 8, bottom: 20),
               child: Container(
                 width: 200,
                 height: 200,
                 color: Colors.blueAccent,
               ),
             ),
-            const SizedBox(
-              height: 20,
+            IconWithInput(
+              icon: Icons.email,
+              inputController: emailController,
+              hintText: 'Email',
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.email,
-                    size: 36,
-                  ),
-                  Expanded(
-                    child: SizedBox(
-                      height: 36,
-                      child: TextField(
-                        controller: emailController,
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(8),
-                          border: OutlineInputBorder(),
-                          hintText: 'Email',
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.lock,
-                    size: 36,
-                  ),
-                  Expanded(
-                    child: SizedBox(
-                      height: 36,
-                      child: TextField(
-                        controller: pwdController,
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(8),
-                          border: OutlineInputBorder(),
-                          hintText: 'Password',
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            IconWithInput(
+              icon: Icons.lock,
+              inputController: pwdController,
+              hintText: 'Password',
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -93,14 +52,11 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                String email = emailController.text;
-                String pwd = pwdController.text;
-                log("signIn $email Pwd:$pwd");
-                fireBaseService.signIn(email, pwd);
-                Navigator.of(context).pushNamed(
-                  '/home',
-                );
+              onPressed: () async {
+                emailController.text = "taes60711@gmail.com";
+                pwdController.text = "toto60711";
+                await fireBaseService.signIn(
+                    emailController.text, pwdController.text);
               },
               child: const Text("登入"),
             ),

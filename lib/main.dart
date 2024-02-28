@@ -2,19 +2,31 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/Account/loginpage.dart';
 import 'package:social_mediam_match/components/Account/signuppage.dart';
-import 'package:social_mediam_match/components/Logo.dart';
+import 'package:social_mediam_match/components/logo.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/components/home/home.dart';
 import 'package:social_mediam_match/service/fb_service.dart';
+
+class LogoStatus extends ChangeNotifier {
+  bool isInitial = true;
+  onchange() {
+    isInitial = false;
+    notifyListeners();
+  }
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (_) => LogoStatus())],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -26,10 +38,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        pageTransitionsTheme: const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
-          TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-          TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
-        }),
+        pageTransitionsTheme: const PageTransitionsTheme(
+            builders: <TargetPlatform, PageTransitionsBuilder>{
+              TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+              TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
+            }),
       ),
       routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => const Initialpage(),
@@ -61,10 +74,9 @@ class _InitialpageState extends State<Initialpage> {
 
   Widget preLoginPage() {
     return StreamBuilder(
-        stream: FbService().auth.authStateChanges(),
+        stream: FbService().isLoginCheck(),
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
           User? userData = snapshot.data;
-
           if (userData != null) {
             return Home();
           } else {
@@ -75,6 +87,6 @@ class _InitialpageState extends State<Initialpage> {
 
   @override
   Widget build(BuildContext context) {
-    return isInitial ? Logo() : preLoginPage();
+    return isInitial ? const Logo() : preLoginPage();
   }
 }
