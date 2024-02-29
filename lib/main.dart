@@ -1,11 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/Account/signup_page.dart';
+import 'package:social_mediam_match/components/account/signup_page.dart';
 import 'package:social_mediam_match/components/Initial/Initial_page.dart';
 import 'package:social_mediam_match/firebase_options.dart';
-import 'package:social_mediam_match/state/initialState.dart';
-import 'package:social_mediam_match/state/userState.dart';
+import 'package:social_mediam_match/states/initial_state.dart';
+import 'package:social_mediam_match/states/user_state.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

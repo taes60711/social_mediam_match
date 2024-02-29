@@ -1,9 +1,11 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/utilities/Icon_with_input.dart';
+import 'package:social_mediam_match/messages/accooint_message.dart';
+import 'package:social_mediam_match/states/user_state.dart';
 
-import 'package:social_mediam_match/components/IconWithInput.dart';
-import 'package:social_mediam_match/state/userState.dart';
+import 'package:social_mediam_match/utilities/screen_size.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -13,6 +15,84 @@ class LoginPage extends StatelessWidget {
     TextEditingController emailController = TextEditingController();
     TextEditingController pwdController = TextEditingController();
     UserState userFuture = context.read<UserState>();
+
+    void closeResetPwdWindow() {
+      userFuture.resetPwdError = ResetPwdStatus.NoIno.value;
+      Navigator.pop(context);
+    }
+
+    _openBottomSheet() {
+      showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.transparent,
+          builder: (context) {
+            String resetPwdError =
+                context.select((UserState value) => value.resetPwdError);
+            return SizedBox(
+              height: ScreenSize().height * .55,
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 30,
+                    bottom: 0,
+                    child: Container(
+                      width: ScreenSize().width,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(20)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("請輸入所登入的郵箱地址:"),
+                            IconWithInput(
+                              icon: Icons.email,
+                              inputController: emailController,
+                              hintText: 'Email',
+                            ),
+                            Text(
+                              resetPwdError,
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: ElevatedButton(
+                                onPressed: () =>
+                                    userFuture.reSetPwd(emailController.text),
+                                child: const Text("發送"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                      right: 25,
+                      child: GestureDetector(
+                        onTap: () => closeResetPwdWindow(),
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: const BoxDecoration(
+                            color: Color.fromARGB(255, 88, 127, 226),
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                          ),
+                          child: const Icon(
+                            Icons.arrow_downward,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ))
+                ],
+              ),
+            );
+          });
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -42,9 +122,7 @@ class LoginPage extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
                   onTap: () {
-                    log("忘記密碼?");
-                    String email = emailController.text;
-                    userFuture.reSetPwd(email);
+                    _openBottomSheet();
                   },
                   child: const Text(
                     "忘記密碼?",

@@ -1,12 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/messages/accooint_message.dart';
 import 'package:social_mediam_match/service/db_service.dart';
 
 class UserState extends ChangeNotifier {
-  String userData = "";
-  bool isLoading = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   DBService dbService = DBService();
+  String userData = "";
+  bool isLoading = false;
+  String resetPwdError = "";
 
   String isLoginCheck() {
     Stream<String> colsure() {
@@ -58,10 +60,16 @@ class UserState extends ChangeNotifier {
     _auth.signOut().then((value) => print("signOut Successfull"));
   }
 
-  void reSetPwd(String email) {
-    _auth
-        .sendPasswordResetEmail(email: email)
-        .then((value) => print("emailSend Successfull"))
-        .catchError((e) => {print("error: $e")});
+  Future<void> reSetPwd(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      print("Email Sended");
+
+      resetPwdError = ResetPwdStatus.Success.value;
+    } catch (e) {
+      resetPwdError = ResetPwdStatus.Error.value;
+      print("Email Error $resetPwdError");
+      notifyListeners();
+    }
   }
 }

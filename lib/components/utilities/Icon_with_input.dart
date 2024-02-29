@@ -16,12 +16,15 @@ class IconWithInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: size ?? 36,
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Icon(
+              icon,
+              size: size ?? 36,
+            ),
           ),
           Expanded(
             child: SizedBox(

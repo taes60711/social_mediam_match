@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/state/userState.dart';
+import 'package:social_mediam_match/states/user_state.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});

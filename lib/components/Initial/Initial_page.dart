@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/home.dart';
 import 'package:social_mediam_match/components/Initial/logo.dart';
-import 'package:social_mediam_match/state/initialState.dart';
-import 'package:social_mediam_match/state/userState.dart';
+import 'package:social_mediam_match/states/initial_state.dart';
+import 'package:social_mediam_match/states/user_state.dart';
 
 class Initialpage extends StatelessWidget {
   const Initialpage({super.key});

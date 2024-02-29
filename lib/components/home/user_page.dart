@@ -188,8 +188,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/Account/login_page.dart';
-import 'package:social_mediam_match/state/userState.dart';
+import 'package:social_mediam_match/components/account/login_page.dart';
+import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:social_mediam_match/states/user_state.dart';
 
 class UserPage extends StatelessWidget {
   const UserPage({super.key});
@@ -199,30 +200,25 @@ class UserPage extends StatelessWidget {
     String userData = context.select((UserState value) => value.userData);
     bool isLoading = context.select((UserState value) => value.isLoading);
     UserState userFuture = context.read<UserState>();
+    Widget userComponent;
 
-    Widget widget() {
-      if (isLoading) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+    if (isLoading) {
+      userComponent = const Loading();
+    } else {
+      if (userData == "") {
+        userComponent = const LoginPage();
       } else {
-        if (userData == "") {
-          return const LoginPage();
-        } else {
-          return Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                userFuture.signOut();
-              },
-              child: const Text("登出"),
-            ),
-          );
-        }
+        userComponent = Center(
+          child: ElevatedButton(
+            onPressed: () async {
+              userFuture.signOut();
+            },
+            child: const Text("登出"),
+          ),
+        );
       }
     }
 
-    return Scaffold(
-      body: widget(),
-    );
+    return Scaffold(body: userComponent);
   }
 }
