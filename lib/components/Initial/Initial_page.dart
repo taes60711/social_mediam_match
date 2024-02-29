@@ -13,10 +13,9 @@ class Initialpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int delayTime = 1;
-    bool isfirstEnterApp =
-        context.select((InitialState value) => value.isfirstEnterApp);
+    bool isfirstEnterApp = context.select((InitialState value) => value.isfirstEnterApp);
 
-    enterApp() {
+    void enterApp() {
       context.read<UserState>().isLoginCheck();
       Timer(Duration(seconds: delayTime), () {
         context.read<InitialState>().onChange();

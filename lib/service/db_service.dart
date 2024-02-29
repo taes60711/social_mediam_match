@@ -8,10 +8,7 @@ class DBService {
   Stream<dynamic> getChatInfo(String uid, String otherUid) {
     uid = "QWXvonFH0UDkrF0kXvIV";
     otherUid = "Q0PtLSHwhLk2EvZoA2aD";
-    final stream = firestore
-        .collection("friend_chatroom")
-        .doc(otherUid + "_" + uid)
-        .snapshots();
+    final stream = firestore.collection("friend_chatroom").doc(otherUid + "_" + uid).snapshots();
 
     return stream;
   }
@@ -46,24 +43,5 @@ class DBService {
     Map<String, dynamic> resultData = doc.data() as Map<String, dynamic>;
     log("${resultData}");
     return resultData;
-  }
-
-  Future<void> addData(String email) async {
-    Map<String, String> data = {"email": email};
-  }
-
-  Future<void> signUp(String email) async {
-    //CreateData Sample
-    Map<String, dynamic> data = {"email": email, 'isEmailVerified': false};
-    await firestore
-        .collection("users")
-        .add(data)
-        .then((result) => firestore
-            .collection("users")
-            .doc(result.id)
-            .update({"docId": result.id}))
-        .then((value) {
-      log('data insert into database');
-    });
   }
 }

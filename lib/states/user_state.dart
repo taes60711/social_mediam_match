@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/config.dart';
+import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/message_strings/account_message.dart';
+import 'package:social_mediam_match/models/userModel.dart';
 
 class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -14,6 +16,8 @@ class UserState extends ChangeNotifier {
   bool isLoading = false;
   //パスワード忘れたページに送信したメッセージ
   String resetPwdError = "";
+  //サーバーアドレス
+  String url = "http://$ip:$port/user";
 
   //メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する
   String isLoginCheck() {
@@ -24,8 +28,10 @@ class UserState extends ChangeNotifier {
     }
 
     if (userData == "") {
-      colsure().listen((event) {
-        userData = event;
+      colsure().listen((String userUID) async {
+        await getUserData(userUID);
+        userData = userUID;
+        print(userData);
         notifyListeners();
       });
     }
@@ -40,14 +46,10 @@ class UserState extends ChangeNotifier {
     try {
       isLoading = true;
       notifyListeners();
-      await _auth.signInWithEmailAndPassword(email: email, password: password).then((value) {
-        print("SignIn Success: ${value}");
-        // var uri = Uri.parse('http://61.228.189.249:80/user/ACqYscxtd2VSdPlkv1G8OgSTKxd2');
-        // var response = await http.get(uri);
-        // print(response.body);
-        isSucess = true;
-      });
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      isSucess = true;
       isLoading = false;
+      notifyListeners();
     } catch (e) {
       print("$e");
     }
@@ -60,19 +62,35 @@ class UserState extends ChangeNotifier {
   Future<dynamic> signUp(String email, String password) async {
     try {
       await _auth.createUserWithEmailAndPassword(email: email, password: password).then((UserCredential value) async {
-        print("SignUp Successfull: ${value.user!.uid}");
-        var uri = Uri.parse('http://$ip:$port/user/signUp');
+        print("Firebase SignUp Success: ${value.user!.uid}");
+        var uri = Uri.parse('$url/signUp');
         Map<String, String> headers = {'content-type': 'application/json'};
-        String body = json.encode({"uid": value.user!.uid, "email": email, "password": password, "isEmailVerified": false});
+        Map<String, dynamic> updateData = {
+          "uid": value.user!.uid,
+          "email": email,
+          "password": password,
+          "isEmailVerified": false
+        };
+        String body = json.encode(updateData);
 
         var resp = await http.put(uri, headers: headers, body: body);
-        print(resp.body);
+        print("MySql SiginUp Sucess:${resp.body}");
       });
-
       return true;
     } catch (e) {
       print("$e");
       return e;
+    }
+  }
+
+  Future<userModel?> getUserData(String uid) async {
+    var uri = Uri.parse('$url/$uid');
+    var response = await http.get(uri);
+
+    if (response.statusCode != 404) {
+      return userModel.fromMap(json.decode(response.body));
+    } else {
+      return null;
     }
   }
 

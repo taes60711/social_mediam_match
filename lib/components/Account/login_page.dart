@@ -1,11 +1,10 @@
 import 'dart:developer';
-import 'package:social_mediam_match/config.dart';
+import 'package:social_mediam_match/global.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Icon_with_input.dart';
 import 'package:social_mediam_match/message_strings/account_message.dart';
 import 'package:social_mediam_match/states/user_state.dart';
-import 'package:social_mediam_match/config.dart';
 import 'package:social_mediam_match/utilities/screen_size.dart';
 
 class LoginPage extends StatelessWidget {
@@ -93,7 +92,7 @@ class LoginPage extends StatelessWidget {
     }
 
     void ReturnHome() {
-      Navigator.of(context).popUntil(ModalRoute.withName(Path.home.value));
+      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
     }
 
     return Scaffold(
@@ -186,7 +185,7 @@ class LoginPage extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).pushNamed(
-                      Path.signUpPage.value,
+                      RoutePath.signUpPage.value,
                     );
                   },
                   child: const Text(
