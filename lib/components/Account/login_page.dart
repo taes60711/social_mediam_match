@@ -1,10 +1,11 @@
 import 'dart:developer';
+import 'package:social_mediam_match/config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Icon_with_input.dart';
 import 'package:social_mediam_match/message_strings/account_message.dart';
 import 'package:social_mediam_match/states/user_state.dart';
-
+import 'package:social_mediam_match/config.dart';
 import 'package:social_mediam_match/utilities/screen_size.dart';
 
 class LoginPage extends StatelessWidget {
@@ -26,8 +27,7 @@ class LoginPage extends StatelessWidget {
           context: context,
           backgroundColor: Colors.transparent,
           builder: (context) {
-            String resetPwdError =
-                context.select((UserState value) => value.resetPwdError);
+            String resetPwdError = context.select((UserState value) => value.resetPwdError);
             return SizedBox(
               height: ScreenSize().height * .55,
               child: Stack(
@@ -39,8 +39,7 @@ class LoginPage extends StatelessWidget {
                       width: ScreenSize().width,
                       decoration: const BoxDecoration(
                         color: Colors.white,
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(20)),
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -61,8 +60,7 @@ class LoginPage extends StatelessWidget {
                             Align(
                               alignment: Alignment.center,
                               child: ElevatedButton(
-                                onPressed: () =>
-                                    userFuture.reSetPwd(emailController.text),
+                                onPressed: () => userFuture.reSetPwd(emailController.text),
                                 child: const Text("發送"),
                               ),
                             ),
@@ -95,7 +93,7 @@ class LoginPage extends StatelessWidget {
     }
 
     void ReturnHome() {
-      Navigator.of(context).popUntil(ModalRoute.withName("/"));
+      Navigator.of(context).popUntil(ModalRoute.withName(Path.home.value));
     }
 
     return Scaffold(
@@ -146,8 +144,7 @@ class LoginPage extends StatelessWidget {
               onPressed: () async {
                 emailController.text = "taes60711@gmail.com";
                 pwdController.text = "toto60711";
-                bool isLoginSucess = await userFuture.signIn(
-                    emailController.text, pwdController.text);
+                bool isLoginSucess = await userFuture.signIn(emailController.text, pwdController.text);
                 isLoginSucess ? ReturnHome() : () {};
               },
               child: const Text("登入"),
@@ -189,13 +186,12 @@ class LoginPage extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).pushNamed(
-                      '/signUp',
+                      Path.signUpPage.value,
                     );
                   },
                   child: const Text(
                     "建立帳戶",
-                    style: TextStyle(
-                        color: Colors.blueAccent, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold),
                   ),
                 ),
               ],

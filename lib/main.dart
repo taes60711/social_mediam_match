@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/Account/login_page.dart';
+import 'package:social_mediam_match/components/account/login_page.dart';
 import 'package:social_mediam_match/components/account/signup_page.dart';
 import 'package:social_mediam_match/components/Initial/Initial_page.dart';
 import 'package:social_mediam_match/firebase_options.dart';
@@ -30,11 +30,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        pageTransitionsTheme: const PageTransitionsTheme(
-            builders: <TargetPlatform, PageTransitionsBuilder>{
-              TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-              TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
-            }),
+        pageTransitionsTheme: const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
+          TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+          TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
+        }),
       ),
       routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => ChangeNotifierProvider(

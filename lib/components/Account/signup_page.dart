@@ -11,8 +11,8 @@ class SignUpPage extends StatelessWidget {
     UserState userFuture = context.read<UserState>();
     TextEditingController emailController = TextEditingController();
     TextEditingController pwdController = TextEditingController();
-    emailController.text = "taes60711@gmail.com";
-    pwdController.text = "toto60711";
+    emailController.text = "taes60811@gmail.com";
+    pwdController.text = "toto60811";
     return Scaffold(
       appBar: AppBar(
         title: Text("註冊帳戶"),
@@ -74,7 +74,7 @@ class SignUpPage extends StatelessWidget {
             onPressed: () async {
               String email = emailController.text;
               String pwd = pwdController.text;
-              log("signUp Email:$email Pwd:$pwd");
+              log("signUpPage Email:$email Pwd:$pwd");
               await userFuture.signUp(email, pwd);
             },
             child: const Text("註冊"),

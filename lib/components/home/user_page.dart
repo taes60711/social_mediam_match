@@ -206,13 +206,20 @@ class UserPage extends StatelessWidget {
     } else {
       userComponent = LoginCheckWidget(
           component: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            userFuture.signOut();
-          },
-          child: const Text("登出"),
-        ),
-      ));
+              child: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () async {},
+            child: const Text("getdata"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              userFuture.signOut();
+            },
+            child: const Text("登出"),
+          ),
+        ],
+      )));
     }
 
     return Scaffold(body: userComponent);

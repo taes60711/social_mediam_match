@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/config.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import 'package:social_mediam_match/utilities/screen_size.dart';
 
@@ -23,7 +24,7 @@ class LoginCheckWidget extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pushNamed(
-                  '/login',
+                  Path.loginPage.value,
                 );
               },
               child: Text("進入登入頁面"),

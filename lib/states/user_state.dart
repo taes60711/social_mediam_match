@@ -1,11 +1,13 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/config.dart';
 import 'package:social_mediam_match/message_strings/account_message.dart';
-import 'package:social_mediam_match/service/db_service.dart';
 
 class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  DBService dbService = DBService();
+
   //ユーザダータ
   String userData = "";
   //ページローディング
@@ -38,10 +40,11 @@ class UserState extends ChangeNotifier {
     try {
       isLoading = true;
       notifyListeners();
-      await _auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) {
+      await _auth.signInWithEmailAndPassword(email: email, password: password).then((value) {
         print("SignIn Success: ${value}");
+        // var uri = Uri.parse('http://61.228.189.249:80/user/ACqYscxtd2VSdPlkv1G8OgSTKxd2');
+        // var response = await http.get(uri);
+        // print(response.body);
         isSucess = true;
       });
       isLoading = false;
@@ -56,12 +59,16 @@ class UserState extends ChangeNotifier {
   //email：メールアドレス，password：パスワード
   Future<dynamic> signUp(String email, String password) async {
     try {
-      await _auth
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((value) async {
-        print("SignUp Successfull: $value");
+      await _auth.createUserWithEmailAndPassword(email: email, password: password).then((UserCredential value) async {
+        print("SignUp Successfull: ${value.user!.uid}");
+        var uri = Uri.parse('http://$ip:$port/user/signUp');
+        Map<String, String> headers = {'content-type': 'application/json'};
+        String body = json.encode({"uid": value.user!.uid, "email": email, "password": password, "isEmailVerified": false});
+
+        var resp = await http.put(uri, headers: headers, body: body);
+        print(resp.body);
       });
-      await dbService.signUp(email);
+
       return true;
     } catch (e) {
       print("$e");
