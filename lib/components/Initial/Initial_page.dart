@@ -13,7 +13,7 @@ class Initialpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int delayTime = 1;
-    bool _isfirstEnterApp =
+    bool isfirstEnterApp =
         context.select((InitialState value) => value.isfirstEnterApp);
 
     enterApp() {
@@ -26,7 +26,7 @@ class Initialpage extends StatelessWidget {
     enterApp();
 
     return Scaffold(
-      body: _isfirstEnterApp ? const Logo() : Home(),
+      body: isfirstEnterApp ? const Logo() : Home(),
     );
   }
 }

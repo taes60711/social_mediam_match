@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/Account/login_page.dart';
 import 'package:social_mediam_match/components/account/signup_page.dart';
 import 'package:social_mediam_match/components/Initial/Initial_page.dart';
 import 'package:social_mediam_match/firebase_options.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
               create: (_) => InitialState(),
               child: const Initialpage(),
             ),
+        '/login': (BuildContext context) => const LoginPage(),
         '/signUp': (BuildContext context) => const SignUpPage(),
       },
     );

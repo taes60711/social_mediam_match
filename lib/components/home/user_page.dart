@@ -188,7 +188,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/account/login_page.dart';
+import 'package:social_mediam_match/components/account/login_check_widget.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 
@@ -197,7 +197,6 @@ class UserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String userData = context.select((UserState value) => value.userData);
     bool isLoading = context.select((UserState value) => value.isLoading);
     UserState userFuture = context.read<UserState>();
     Widget userComponent;
@@ -205,18 +204,15 @@ class UserPage extends StatelessWidget {
     if (isLoading) {
       userComponent = const Loading();
     } else {
-      if (userData == "") {
-        userComponent = const LoginPage();
-      } else {
-        userComponent = Center(
-          child: ElevatedButton(
-            onPressed: () async {
-              userFuture.signOut();
-            },
-            child: const Text("登出"),
-          ),
-        );
-      }
+      userComponent = LoginCheckWidget(
+          component: Center(
+        child: ElevatedButton(
+          onPressed: () async {
+            userFuture.signOut();
+          },
+          child: const Text("登出"),
+        ),
+      ));
     }
 
     return Scaffold(body: userComponent);

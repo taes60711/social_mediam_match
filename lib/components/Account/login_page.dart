@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Icon_with_input.dart';
-import 'package:social_mediam_match/messages/accooint_message.dart';
+import 'package:social_mediam_match/message_strings/account_message.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 
 import 'package:social_mediam_match/utilities/screen_size.dart';
@@ -17,11 +17,11 @@ class LoginPage extends StatelessWidget {
     UserState userFuture = context.read<UserState>();
 
     void closeResetPwdWindow() {
-      userFuture.resetPwdError = ResetPwdStatus.NoIno.value;
+      userFuture.resetPwdError = ResetPwdStatus.NoMessage.value;
       Navigator.pop(context);
     }
 
-    _openBottomSheet() {
+    openBottomSheet() {
       showModalBottomSheet(
           context: context,
           backgroundColor: Colors.transparent,
@@ -48,7 +48,7 @@ class LoginPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("請輸入所登入的郵箱地址:"),
+                            const Text("請輸入註冊時的郵箱地址:"),
                             IconWithInput(
                               icon: Icons.email,
                               inputController: emailController,
@@ -94,10 +94,21 @@ class LoginPage extends StatelessWidget {
           });
     }
 
+    void ReturnHome() {
+      Navigator.of(context).popUntil(ModalRoute.withName("/"));
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: ElevatedButton(
+                onPressed: () => ReturnHome(),
+                child: Text("返回"),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 20),
               child: Container(
@@ -122,7 +133,7 @@ class LoginPage extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
                   onTap: () {
-                    _openBottomSheet();
+                    openBottomSheet();
                   },
                   child: const Text(
                     "忘記密碼?",
@@ -135,8 +146,9 @@ class LoginPage extends StatelessWidget {
               onPressed: () async {
                 emailController.text = "taes60711@gmail.com";
                 pwdController.text = "toto60711";
-                await userFuture.signIn(
+                bool isLoginSucess = await userFuture.signIn(
                     emailController.text, pwdController.text);
+                isLoginSucess ? ReturnHome() : () {};
               },
               child: const Text("登入"),
             ),
