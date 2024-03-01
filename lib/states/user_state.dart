@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/message_strings/account_message.dart';
 import 'package:social_mediam_match/models/user_model.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:crypto/crypto.dart';
 
 class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -80,21 +80,12 @@ class UserState extends ChangeNotifier {
       await _auth.createUserWithEmailAndPassword(email: email, password: password).then(
         (UserCredential value) async {
           print("firebase SiginUp Sucess:${value.user!.uid}");
-          var uri = Uri.parse('$url/signUp');
-          Map<String, String> headers = {'content-type': 'application/json'};
 
-          UserSignUpModel signedUpUserData = UserSignUpModel(
-            uid: value.user!.uid,
-            email: email,
-            password: password,
-            isEmailVerified: false,
-          );
+          bool isMysqlSignUpSucess = await signUpUser(value.user!.uid, email, password);
 
-          String body = jsonEncode(signedUpUserData);
-
-          await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Sucess:${_.body}"));
-          isSucess = true;
-          _isSignUp = false;
+          if (isMysqlSignUpSucess) {
+            isSucess = true;
+          }
         },
       );
     } on FirebaseAuthException catch (e) {
@@ -108,6 +99,33 @@ class UserState extends ChangeNotifier {
           break;
       }
       notifyListeners();
+    }
+    _isSignUp = false;
+    return isSucess;
+  }
+
+  Future<bool> signUpUser(String uid, String email, String password) async {
+    bool isSucess = false;
+    try {
+      var uri = Uri.parse('$url/signUp');
+      Map<String, String> headers = {'content-type': 'application/json'};
+
+      var digest = sha256.convert(utf8.encode(password));
+      print("Digest as hex password: $digest");
+
+      UserSignUpModel signedUpUserData = UserSignUpModel(
+        uid: uid,
+        email: email,
+        password: "$digest",
+        isEmailVerified: false,
+      );
+
+      String body = jsonEncode(signedUpUserData);
+
+      await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Sucess:${_.body}"));
+      isSucess = true;
+    } catch (e) {
+      print(e);
     }
     return isSucess;
   }
@@ -151,20 +169,3 @@ class UserState extends ChangeNotifier {
     }
   }
 }
-
-
-
-
-    // //加密
-    // final key = encrypt.Key.fromUtf8(aesKey);
-    // final iv = encrypt.IV.fromUtf8(aesIV);
-    // final encrypter = encrypt.Encrypter(encrypt.AES(key));
-    // final encrypted = encrypter.encrypt(password, iv: iv);
-    // print(encrypted.base64);
-
-    // // 解密
-    // final encrypters = encrypt.Encrypter(encrypt.AES(key));
-    // String s = "jzXPDhqma8EuBofE3jCTpA==";
-    // final decrypteds = encrypters.decryptBytes(encrypt.Encrypted.fromBase64(s), iv: iv);
-    // final decryptedData = utf8.decode(decrypteds);
-    // print(decryptedData);

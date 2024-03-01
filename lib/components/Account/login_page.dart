@@ -93,10 +93,12 @@ class LoginPage extends StatelessWidget {
     }
 
     void ReturnHome() {
-      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
       resetAllInfo() {
         userFuture.loginError = LoginStatus.NoMessage.value;
       }
+
+      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+      resetAllInfo();
     }
 
     Widget loginErrorMessage;

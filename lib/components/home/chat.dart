@@ -13,7 +13,7 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   DBService dbService = DBService();
-  List<String> Allclass = ["english", "app", "arduino", "japanese"];
+  List<String> allclass = ["english", "app", "arduino", "japanese"];
   List<String> wantSkillFilter = [];
 
   @override
@@ -45,7 +45,7 @@ class _ChatState extends State<Chat> {
                 ),
               ),
               Column(
-                  children: Allclass.map((e) {
+                  children: allclass.map((e) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(

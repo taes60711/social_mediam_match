@@ -15,10 +15,15 @@ class SignUpPage extends StatelessWidget {
     TextEditingController emailController = TextEditingController();
     TextEditingController pwdController = TextEditingController();
     emailController.text = "taes60811@gmail.com";
-    pwdController.text = "toto6811";
+    pwdController.text = "toto60811";
 
     void ReturnLoginPage() {
+      resetAllInfo() {
+        userFuture.signError = SignUpStatus.NoMessage.value;
+      }
+
       Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.loginPage.value));
+      resetAllInfo();
     }
 
     Widget signErrorMessage;
