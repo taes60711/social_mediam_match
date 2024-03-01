@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/strings/login_chek_widget_string.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/user_state.dart';
@@ -14,21 +15,21 @@ class LoginCheckWidget extends StatelessWidget {
     UserLoginModel? userData = context.select((UserState value) => value.userData);
     Widget userComponent;
 
-    Widget RequireLogin() {
+    Widget requireLogin() {
       return SizedBox(
         width: ScreenSize().width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text("目前沒有登入,請登入或註冊帳戶"),
+            Text(noUserData),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pushNamed(
                   RoutePath.loginPage.value,
                 );
               },
-              child: const Text("進入登入頁面"),
+              child: Text(enterLoginButton),
             ),
           ],
         ),
@@ -36,7 +37,7 @@ class LoginCheckWidget extends StatelessWidget {
     }
 
     if (userData == null) {
-      userComponent = RequireLogin();
+      userComponent = requireLogin();
     } else {
       userComponent = component;
     }
