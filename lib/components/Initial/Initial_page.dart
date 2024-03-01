@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/home.dart';

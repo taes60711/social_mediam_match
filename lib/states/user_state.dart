@@ -29,8 +29,11 @@ class UserState extends ChangeNotifier {
     if (userData == null) {
       colsure().listen((String userUID) async {
         if (userUID != "") {
+          isLoading = true;
+          notifyListeners();
           userData = await getUserData(userUID);
           print(userData);
+          isLoading = false;
           notifyListeners();
         }
       });
@@ -43,12 +46,8 @@ class UserState extends ChangeNotifier {
   Future<bool> signIn(String email, String password) async {
     bool isSucess = false;
     try {
-      isLoading = true;
-      notifyListeners();
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       isSucess = true;
-      isLoading = false;
-      notifyListeners();
     } catch (e) {
       print("$e");
     }

@@ -15,7 +15,7 @@ class SignUpPage extends StatelessWidget {
     pwdController.text = "toto60811";
     return Scaffold(
       appBar: AppBar(
-        title: Text("註冊帳戶"),
+        title: const Text("註冊帳戶"),
       ),
       body: Column(
         children: [

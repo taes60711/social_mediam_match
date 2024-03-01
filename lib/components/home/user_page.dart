@@ -197,10 +197,10 @@ class UserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isLoading = context.select((UserState value) => value.isLoading);
     UserState userFuture = context.read<UserState>();
-    Widget userComponent;
+    bool isLoading = context.select((UserState value) => value.isLoading);
 
+    Widget userComponent;
     if (isLoading) {
       userComponent = const Loading();
     } else {
