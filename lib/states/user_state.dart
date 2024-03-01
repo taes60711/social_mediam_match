@@ -1,41 +1,40 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/message_strings/account_message.dart';
-import 'package:social_mediam_match/models/userModel.dart';
+import 'package:social_mediam_match/models/user_model.dart';
 
 class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //ユーザダータ
-  String userData = "";
+  UserLoginModel? userData;
   //ページローディング
   bool isLoading = false;
   //パスワード忘れたページに送信したメッセージ
-  String resetPwdError = "";
+  String resetPwdError = ResetPwdStatus.NoMessage.value;
   //サーバーアドレス
   String url = "http://$ip:$port/user";
 
   //メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する
-  String isLoginCheck() {
+  void isLoginCheck() {
     Stream<String> colsure() {
       return _auth.authStateChanges().map((event) {
         return event != null ? event.uid : "";
       });
     }
 
-    if (userData == "") {
+    if (userData == null) {
       colsure().listen((String userUID) async {
-        await getUserData(userUID);
-        userData = userUID;
-        print(userData);
-        notifyListeners();
+        if (userUID != "") {
+          userData = await getUserData(userUID);
+          print(userData);
+          notifyListeners();
+        }
       });
     }
-    return userData;
   }
 
   //メソッド：ログイン
@@ -65,13 +64,14 @@ class UserState extends ChangeNotifier {
         print("Firebase SignUp Success: ${value.user!.uid}");
         var uri = Uri.parse('$url/signUp');
         Map<String, String> headers = {'content-type': 'application/json'};
-        Map<String, dynamic> updateData = {
-          "uid": value.user!.uid,
-          "email": email,
-          "password": password,
-          "isEmailVerified": false
-        };
-        String body = json.encode(updateData);
+
+        UserSignUpModel signedUpUserData = UserSignUpModel(
+          uid: value.user!.uid,
+          email: email,
+          isEmailVerified: false,
+        );
+
+        String body = json.encode(signedUpUserData);
 
         var resp = await http.put(uri, headers: headers, body: body);
         print("MySql SiginUp Sucess:${resp.body}");
@@ -83,23 +83,30 @@ class UserState extends ChangeNotifier {
     }
   }
 
-  Future<userModel?> getUserData(String uid) async {
+  Future<UserLoginModel?> getUserData(String uid) async {
     var uri = Uri.parse('$url/$uid');
-    var response = await http.get(uri);
+    UserLoginModel? userdata;
+    try {
+      var response = await http.get(uri);
 
-    if (response.statusCode != 404) {
-      return userModel.fromMap(json.decode(response.body));
-    } else {
-      return null;
+      if (response.statusCode != 404) {
+        userdata = UserLoginModel.fromMap(json.decode(response.body));
+      }
+    } catch (e) {
+      print(e);
     }
+    return userdata;
   }
 
   //メソッド：ログアウト
   void signOut() {
-    _auth.signOut().then((value) => print("signOut Successfull"));
+    _auth.signOut().then((value) {
+      userData = null;
+      notifyListeners();
+    });
   }
 
-  //メソッド：パスワード忘れた場合，パスワードがリセット
+  //メソッド：パスワード忘れた場合，パスワードがメール送ってリセット
   //param
   //email：ユーザ登録のメールアドレス
   Future<void> reSetPwd(String email) async {

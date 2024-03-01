@@ -6,7 +6,7 @@ import 'package:social_mediam_match/components/home/chat.dart';
 import 'package:social_mediam_match/components/home/course.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends.dart';
 import 'package:social_mediam_match/components/home/user_page.dart';
-import 'package:social_mediam_match/service/db_service.dart';
+import 'package:social_mediam_match/states/service/db_service.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -118,42 +118,34 @@ class HomePage extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text("文章內容："),
                                       Text("${data["content"]}"),
                                       Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text("留言:"),
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8.0),
+                                            padding: const EdgeInsets.only(left: 8.0),
                                             child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: commentdata.map((r) {
                                                 return Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(
-                                                        "Level : ${commentdata.indexOf(r)}"),
+                                                    Text("Level : ${commentdata.indexOf(r)}"),
                                                     Row(
                                                       children: [
                                                         Container(
                                                           width: 30,
                                                           height: 30,
-                                                          color: Colors
-                                                              .deepPurpleAccent,
+                                                          color: Colors.deepPurpleAccent,
                                                         ),
                                                         const SizedBox(
                                                           width: 10,
                                                         ),
-                                                        Text(
-                                                            "使用者：${r["user"]}"),
+                                                        Text("使用者：${r["user"]}"),
                                                       ],
                                                     ),
                                                     Text("內容：${r["content"]}")

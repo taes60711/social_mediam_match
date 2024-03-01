@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/global.dart';
+import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import 'package:social_mediam_match/utilities/screen_size.dart';
 
@@ -10,7 +11,7 @@ class LoginCheckWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String userData = context.select((UserState value) => value.userData);
+    UserLoginModel? userData = context.select((UserState value) => value.userData);
     Widget userComponent;
 
     Widget RequireLogin() {
@@ -34,7 +35,7 @@ class LoginCheckWidget extends StatelessWidget {
       );
     }
 
-    if (userData == "") {
+    if (userData == null) {
       userComponent = RequireLogin();
     } else {
       userComponent = component;
