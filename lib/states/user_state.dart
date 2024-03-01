@@ -15,8 +15,12 @@ class UserState extends ChangeNotifier {
   bool isLoading = false;
   //パスワード忘れたページに送信したメッセージ
   String resetPwdError = ResetPwdStatus.NoMessage.value;
+  //ログインのエラーメッセージ
+  String loginError = LoginStatus.NoMessage.value;
   //サーバーアドレス
   String url = "http://$ip:$port/user";
+
+  bool _isSignUp = false;
 
   //メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する
   void isLoginCheck() {
@@ -28,11 +32,11 @@ class UserState extends ChangeNotifier {
 
     if (userData == null) {
       colsure().listen((String userUID) async {
-        if (userUID != "") {
+        print(userUID);
+        if (userUID != "" && !_isSignUp) {
+          print("object");
           isLoading = true;
-          notifyListeners();
           userData = await getUserData(userUID);
-          print(userData);
           isLoading = false;
           notifyListeners();
         }
@@ -48,8 +52,17 @@ class UserState extends ChangeNotifier {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       isSucess = true;
-    } catch (e) {
-      print("$e");
+    } on FirebaseAuthException catch (e) {
+      print("signIn error ${e.code}");
+      switch (e.code) {
+        case "invalid-credential":
+          loginError = LoginStatus.EmailorPwdError.value;
+          break;
+        case "invalid-email":
+          loginError = LoginStatus.EmailFormatError.value;
+          break;
+      }
+      notifyListeners();
     }
     return isSucess;
   }
@@ -58,26 +71,35 @@ class UserState extends ChangeNotifier {
   //param
   //email：メールアドレス，password：パスワード
   Future<dynamic> signUp(String email, String password) async {
+    bool isSucess = false;
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password).then((UserCredential value) async {
-        print("Firebase SignUp Success: ${value.user!.uid}");
-        var uri = Uri.parse('$url/signUp');
-        Map<String, String> headers = {'content-type': 'application/json'};
+      _isSignUp = true;
+      await _auth.createUserWithEmailAndPassword(email: email, password: password).then(
+        (UserCredential value) async {
+          print("firebase SiginUp Sucess:${value.user!.uid}");
+          var uri = Uri.parse('$url/signUp');
+          Map<String, String> headers = {'content-type': 'application/json'};
 
-        UserSignUpModel signedUpUserData = UserSignUpModel(
-          uid: value.user!.uid,
-          email: email,
-          isEmailVerified: false,
-        );
+          UserSignUpModel signedUpUserData = UserSignUpModel(
+            uid: value.user!.uid,
+            email: email,
+            password: password,
+            isEmailVerified: false,
+          );
 
-        String body = json.encode(signedUpUserData);
+          String body = jsonEncode(signedUpUserData);
 
-        var resp = await http.put(uri, headers: headers, body: body);
-        print("MySql SiginUp Sucess:${resp.body}");
-      });
-      return true;
-    } catch (e) {
-      print("$e");
+          await http.put(uri, headers: headers, body: body).then((_) {
+            print("MySql SiginUp Sucess:${_.body}");
+            isSucess = true;
+            _isSignUp = false;
+          });
+        },
+      );
+
+      return isSucess;
+    } on FirebaseAuthException catch (e) {
+      print("SignUp error ${e.code}");
       return e;
     }
   }

@@ -1,8 +1,19 @@
 class UserSignUpModel {
   String uid;
   String email;
+  String? password;
   bool isEmailVerified;
-  UserSignUpModel({required this.uid, required this.email, required this.isEmailVerified});
+
+  UserSignUpModel({required this.uid, required this.email, required this.isEmailVerified, this.password});
+
+  Map toJson() {
+    return {
+      'uid': uid,
+      'email': email,
+      'password': password,
+      'isEmailVerified': isEmailVerified,
+    };
+  }
 }
 
 class UserLoginModel extends UserSignUpModel {

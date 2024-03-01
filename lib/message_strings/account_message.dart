@@ -8,8 +8,8 @@ enum ResetPwdStatus {
 }
 
 enum LoginStatus {
-  EmailError("郵箱地址錯誤"),
-  PwdError("密碼錯誤"),
+  EmailFormatError("郵箱格式錯誤"),
+  EmailorPwdError("帳號或密碼錯誤"),
   NoMessage("");
 
   final String value;

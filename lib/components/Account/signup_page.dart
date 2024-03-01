@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -13,6 +14,11 @@ class SignUpPage extends StatelessWidget {
     TextEditingController pwdController = TextEditingController();
     emailController.text = "taes60811@gmail.com";
     pwdController.text = "toto60811";
+
+    void ReturnLoginPage() {
+      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.loginPage.value));
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("註冊帳戶"),
@@ -75,7 +81,8 @@ class SignUpPage extends StatelessWidget {
               String email = emailController.text;
               String pwd = pwdController.text;
               log("signUpPage Email:$email Pwd:$pwd");
-              await userFuture.signUp(email, pwd);
+              bool isSignSucess = await userFuture.signUp(email, pwd);
+              isSignSucess ? ReturnLoginPage() : () {};
             },
             child: const Text("註冊"),
           ),
