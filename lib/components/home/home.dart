@@ -6,7 +6,7 @@ import 'package:social_mediam_match/components/home/chat.dart';
 import 'package:social_mediam_match/components/home/course.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends.dart';
 import 'package:social_mediam_match/components/home/user_page.dart';
-import 'package:social_mediam_match/states/service/db_service.dart';
+import 'package:social_mediam_match/states/services/db_service.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});

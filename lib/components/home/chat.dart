@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/states/service/db_service.dart';
+import 'package:social_mediam_match/states/services/db_service.dart';
 import 'package:social_mediam_match/utilities/screen_size.dart';
 
 class Chat extends StatefulWidget {

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/message_strings/account_message.dart';
 import 'package:social_mediam_match/models/user_model.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 
 class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -17,6 +18,8 @@ class UserState extends ChangeNotifier {
   String resetPwdError = ResetPwdStatus.NoMessage.value;
   //ログインのエラーメッセージ
   String loginError = LoginStatus.NoMessage.value;
+  //ログインのエラーメッセージ
+  String signError = SignUpStatus.NoMessage.value;
   //サーバーアドレス
   String url = "http://$ip:$port/user";
 
@@ -32,11 +35,10 @@ class UserState extends ChangeNotifier {
 
     if (userData == null) {
       colsure().listen((String userUID) async {
-        print(userUID);
         if (userUID != "" && !_isSignUp) {
-          print("object");
           isLoading = true;
           userData = await getUserData(userUID);
+          print(userData);
           isLoading = false;
           notifyListeners();
         }
@@ -49,6 +51,7 @@ class UserState extends ChangeNotifier {
   //email：メールアドレス，password：パスワード
   Future<bool> signIn(String email, String password) async {
     bool isSucess = false;
+
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       isSucess = true;
@@ -89,19 +92,24 @@ class UserState extends ChangeNotifier {
 
           String body = jsonEncode(signedUpUserData);
 
-          await http.put(uri, headers: headers, body: body).then((_) {
-            print("MySql SiginUp Sucess:${_.body}");
-            isSucess = true;
-            _isSignUp = false;
-          });
+          await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Sucess:${_.body}"));
+          isSucess = true;
+          _isSignUp = false;
         },
       );
-
-      return isSucess;
     } on FirebaseAuthException catch (e) {
       print("SignUp error ${e.code}");
-      return e;
+      switch (e.code) {
+        case "invalid-email":
+          signError = SignUpStatus.EmailFormatError.value;
+          break;
+        case "weak-password":
+          signError = SignUpStatus.PwdWeakError.value;
+          break;
+      }
+      notifyListeners();
     }
+    return isSucess;
   }
 
   Future<UserLoginModel?> getUserData(String uid) async {
@@ -143,3 +151,20 @@ class UserState extends ChangeNotifier {
     }
   }
 }
+
+
+
+
+    // //加密
+    // final key = encrypt.Key.fromUtf8(aesKey);
+    // final iv = encrypt.IV.fromUtf8(aesIV);
+    // final encrypter = encrypt.Encrypter(encrypt.AES(key));
+    // final encrypted = encrypter.encrypt(password, iv: iv);
+    // print(encrypted.base64);
+
+    // // 解密
+    // final encrypters = encrypt.Encrypter(encrypt.AES(key));
+    // String s = "jzXPDhqma8EuBofE3jCTpA==";
+    // final decrypteds = encrypters.decryptBytes(encrypt.Encrypted.fromBase64(s), iv: iv);
+    // final decryptedData = utf8.decode(decrypteds);
+    // print(decryptedData);
