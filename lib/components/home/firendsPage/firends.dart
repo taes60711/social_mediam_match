@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/account/login_check_widget.dart';
 import 'package:web_socket_channel/io.dart';
 
 class Firends extends StatefulWidget {
@@ -128,87 +127,84 @@ class _FirendsState extends State<Firends> {
       );
     }
 
-    return LoginCheckWidget(
-      component: StreamBuilder(
-        stream: channel.stream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            String data = snapshot.data;
-            List<dynamic> jsonData = jsonDecode(data);
-            return Scaffold(
-              key: _key,
-              endDrawer: drawerPage(),
-              body: Column(
-                children: [
-                  const Text("列表"),
-                  Expanded(
-                    child: ListView.builder(
-                        itemCount: jsonData.length,
-                        itemBuilder: ((context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () async {
-                                channel1 = IOWebSocketChannel.connect('ws://114.37.157.2:80/ws/chatroom');
-                                await channel1?.ready;
-                                roomIndex = jsonData[index]["roomId"];
-                                channel1?.sink.add('{"method" : "connect" , "roomid" : ${jsonData[index]["roomId"]}}');
-                                channel1?.stream.listen((event) {
-                                  print("channel1 message : " + event);
-                                  setState(() {
-                                    JsonData = event;
-                                  });
-                                  if (isSendMessage) {
-                                    channel.sink
-                                        .add('{"method" : "sendMessage" , "members" : ${jsonDecode(JsonData)["Members"]}}');
-                                    setState(() {
-                                      isSendMessage = false;
-                                    });
-                                  }
+    return StreamBuilder(
+      stream: channel.stream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          String data = snapshot.data;
+          List<dynamic> jsonData = jsonDecode(data);
+          return Scaffold(
+            key: _key,
+            endDrawer: drawerPage(),
+            body: Column(
+              children: [
+                const Text("列表"),
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: jsonData.length,
+                      itemBuilder: ((context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () async {
+                              channel1 = IOWebSocketChannel.connect('ws://114.37.157.2:80/ws/chatroom');
+                              await channel1?.ready;
+                              roomIndex = jsonData[index]["roomId"];
+                              channel1?.sink.add('{"method" : "connect" , "roomid" : ${jsonData[index]["roomId"]}}');
+                              channel1?.stream.listen((event) {
+                                print("channel1 message : " + event);
+                                setState(() {
+                                  JsonData = event;
                                 });
-                                _key.currentState!.openEndDrawer();
-                              },
-                              child: Container(
-                                color: Colors.indigoAccent,
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        width: 50,
-                                        height: 50,
-                                        color: Colors.pinkAccent,
-                                      ),
+                                if (isSendMessage) {
+                                  channel.sink.add('{"method" : "sendMessage" , "members" : ${jsonDecode(JsonData)["Members"]}}');
+                                  setState(() {
+                                    isSendMessage = false;
+                                  });
+                                }
+                              });
+                              _key.currentState!.openEndDrawer();
+                            },
+                            child: Container(
+                              color: Colors.indigoAccent,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      width: 50,
+                                      height: 50,
+                                      color: Colors.pinkAccent,
                                     ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text("${jsonData[index]["roomName"]}"),
-                                        jsonData[index]["lastMessage"] != null
-                                            ? Text(
-                                                "${jsonData[index]["lastMessage"]}",
-                                                style: TextStyle(color: Colors.black54),
-                                              )
-                                            : const Text(""),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("${jsonData[index]["roomName"]}"),
+                                      jsonData[index]["lastMessage"] != null
+                                          ? Text(
+                                              "${jsonData[index]["lastMessage"]}",
+                                              style: TextStyle(color: Colors.black54),
+                                            )
+                                          : const Text(""),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        })),
-                  ),
-                ],
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
+                          ),
+                        );
+                      })),
+                ),
+              ],
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }

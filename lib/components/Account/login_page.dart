@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Icon_with_input.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
 import 'package:social_mediam_match/states/user_state.dart';
-import 'package:social_mediam_match/utilities/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});

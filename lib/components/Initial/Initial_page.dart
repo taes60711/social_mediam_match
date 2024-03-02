@@ -6,6 +6,8 @@ import 'package:social_mediam_match/components/Initial/logo.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 
+import '../../models/user_model.dart';
+
 class Initialpage extends StatelessWidget {
   const Initialpage({super.key});
 
@@ -13,7 +15,7 @@ class Initialpage extends StatelessWidget {
   Widget build(BuildContext context) {
     int delayTime = 1;
     bool isfirstEnterApp = context.select((InitialState value) => value.isfirstEnterApp);
-
+    UserLoginModel? userData = context.select((UserState value) => value.userData);
     void enterApp() {
       context.read<UserState>().isLoginCheck();
       Timer(Duration(seconds: delayTime), () {
@@ -24,7 +26,11 @@ class Initialpage extends StatelessWidget {
     enterApp();
 
     return Scaffold(
-      body: isfirstEnterApp ? const Logo() : Home(),
+      body: isfirstEnterApp
+          ? const Logo()
+          : Home(
+              userData: userData,
+            ),
     );
   }
 }

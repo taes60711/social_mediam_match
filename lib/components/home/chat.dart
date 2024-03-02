@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
-import 'package:social_mediam_match/utilities/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
 class Chat extends StatefulWidget {
   Chat({super.key});

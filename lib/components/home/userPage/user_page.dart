@@ -190,10 +190,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/login_check_widget.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/user_state.dart';
+import '../../../global.dart';
 
 class UserPage extends StatelessWidget {
-  const UserPage({super.key});
+  final UserLoginModel? userData;
+  const UserPage({super.key, this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -204,15 +208,59 @@ class UserPage extends StatelessWidget {
     if (isLoading) {
       userComponent = const Loading();
     } else {
-      userComponent = LoginCheckWidget(
-          component: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            userFuture.signOut();
-          },
-          child: const Text("登出"),
-        ),
-      ));
+      if (userData != null) {
+        UserLoginModel notNullUserData = userData!;
+        userComponent = SizedBox(
+          width: ScreenSize().width,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    userFuture.signOut();
+                  },
+                  child: const Text("登出"),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 120,
+                  height: 120,
+                  color: Colors.green,
+                ),
+              ),
+              Text("Hello, ${notNullUserData.name ?? notNullUserData.email}"),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context).pushNamed(RoutePath.profilePage.value, arguments: notNullUserData);
+                },
+                child: const Text("個人資料"),
+              ),
+              ElevatedButton(
+                onPressed: () async {},
+                child: const Text("我的文章"),
+              ),
+              ElevatedButton(
+                onPressed: () async {},
+                child: const Text("我的課程"),
+              ),
+              ElevatedButton(
+                onPressed: () async {},
+                child: const Text("好友管理"),
+              ),
+              ElevatedButton(
+                onPressed: () async {},
+                child: const Text("設定"),
+              ),
+            ],
+          ),
+        );
+      } else {
+        userComponent = const LoginCheckWidget();
+      }
     }
 
     return Scaffold(body: userComponent);

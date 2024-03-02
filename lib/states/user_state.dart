@@ -80,7 +80,7 @@ class UserState extends ChangeNotifier {
       _isSignUp = true;
       await _auth.createUserWithEmailAndPassword(email: email, password: password).then(
         (UserCredential value) async {
-          print("firebase SiginUp Sucess:${value.user!.uid}");
+          print("firebase SiginUp Success:${value.user!.uid}");
 
           bool isMysqlSignUpSucess = await signUpUser(value.user!.uid, email, password);
 
@@ -109,6 +109,30 @@ class UserState extends ChangeNotifier {
     return isSucess;
   }
 
+  //メソッド：ログアウト
+  void signOut() {
+    _auth.signOut().then((value) {
+      userData = null;
+      notifyListeners();
+    });
+  }
+
+  //メソッド：パスワード忘れた場合，パスワードがメール送ってリセット
+  //param
+  //email：ユーザ登録のメールアドレス
+  Future<void> reSetPwd(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      print("Email Sended");
+
+      resetPwdError = ResetPwdStatus.Success.value;
+    } catch (e) {
+      resetPwdError = ResetPwdStatus.Error.value;
+      print("Email Error $resetPwdError");
+      notifyListeners();
+    }
+  }
+
   //メソッド：MYSQLにユーザーデータを作成する
   //param
   //uid：firebaseからアカウントid,　email：メールアドレス，password：パスワード
@@ -130,7 +154,7 @@ class UserState extends ChangeNotifier {
 
       String body = jsonEncode(signedUpUserData);
 
-      await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Sucess:${_.body}"));
+      await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Success:${_.body}"));
       isSucess = true;
     } catch (e) {
       print(e);
@@ -156,27 +180,26 @@ class UserState extends ChangeNotifier {
     return userdata;
   }
 
-  //メソッド：ログアウト
-  void signOut() {
-    _auth.signOut().then((value) {
-      userData = null;
-      notifyListeners();
-    });
-  }
-
-  //メソッド：パスワード忘れた場合，パスワードがメール送ってリセット
-  //param
-  //email：ユーザ登録のメールアドレス
-  Future<void> reSetPwd(String email) async {
+  Future<bool> updateProfile(String uid, String email, String name) async {
+    bool isSucess = false;
     try {
-      await _auth.sendPasswordResetEmail(email: email);
-      print("Email Sended");
+      var uri = Uri.parse('$url/update/$uid');
+      Map<String, String> headers = {'content-type': 'application/json'};
 
-      resetPwdError = ResetPwdStatus.Success.value;
+      UserLoginModel signedUpUserData = UserLoginModel(
+        uid: uid,
+        email: email,
+        name: name,
+        isEmailVerified: false,
+      );
+
+      String body = jsonEncode(signedUpUserData);
+
+      await http.put(uri, headers: headers, body: body).then((_) => print("MySql Update Success:${_.body}"));
+      isSucess = true;
     } catch (e) {
-      resetPwdError = ResetPwdStatus.Error.value;
-      print("Email Error $resetPwdError");
-      notifyListeners();
+      print(e);
     }
+    return isSucess;
   }
 }
