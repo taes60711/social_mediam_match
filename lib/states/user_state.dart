@@ -22,7 +22,7 @@ class UserState extends ChangeNotifier {
   String signError = SignUpStatus.NoMessage.value;
   //サーバーアドレス
   String url = "http://$ip:$port/user";
-
+  //登録かどうか確認、登録したらログインしなくてために
   bool _isSignUp = false;
 
   //メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する
@@ -38,6 +38,7 @@ class UserState extends ChangeNotifier {
         if (userUID != "" && !_isSignUp) {
           isLoading = true;
           userData = await getUserData(userUID);
+          notifyListeners();
           print(userData);
           isLoading = false;
           notifyListeners();
@@ -87,7 +88,10 @@ class UserState extends ChangeNotifier {
             isSucess = true;
           }
         },
-      );
+      ).then((value) {
+        //firebaseのlistenで自動ログインなのでバッグ発生なくよう、先にログアウト追加する。
+        signOut();
+      });
     } on FirebaseAuthException catch (e) {
       print("SignUp error ${e.code}");
       switch (e.code) {
@@ -101,9 +105,13 @@ class UserState extends ChangeNotifier {
       notifyListeners();
     }
     _isSignUp = false;
+    print("_isSignUp ${_isSignUp}");
     return isSucess;
   }
 
+  //メソッド：MYSQLにユーザーデータを作成する
+  //param
+  //uid：firebaseからアカウントid,　email：メールアドレス，password：パスワード
   Future<bool> signUpUser(String uid, String email, String password) async {
     bool isSucess = false;
     try {
@@ -130,6 +138,9 @@ class UserState extends ChangeNotifier {
     return isSucess;
   }
 
+  //メソッド：MYSQLにユーザーデータを取得する
+  //param
+  //uid：firebaseからアカウントid
   Future<UserLoginModel?> getUserData(String uid) async {
     var uri = Uri.parse('$url/$uid');
     UserLoginModel? userdata;
