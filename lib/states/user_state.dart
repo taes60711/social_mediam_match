@@ -145,7 +145,12 @@ class UserState extends ChangeNotifier {
       var digest = sha256.convert(utf8.encode(password));
       print("Digest as hex password: $digest");
 
-      UpdateUser signedUpUserData = UpdateUser.signUp(uid: uid, email: email, password: "$digest", isEmailVerified: false);
+      UpdateUser signedUpUserData = UpdateUser.signUp(
+        uid: uid,
+        email: email,
+        password: "$digest",
+        isEmailVerified: false,
+      );
 
       String body = jsonEncode(signedUpUserData);
 
@@ -175,22 +180,21 @@ class UserState extends ChangeNotifier {
     return userdata;
   }
 
-  Future<bool> updateProfile(String uid, String email, String name) async {
+  Future<bool> updateProfile(String uid, String name) async {
     bool isSucess = false;
     try {
       var uri = Uri.parse('$url/update/$uid');
       Map<String, String> headers = {'content-type': 'application/json'};
 
-      LoginUser signedUpUserData = LoginUser(
+      UpdateUser signedUpUserData = UpdateUser.update(
         uid: uid,
-        email: email,
         name: name,
-        isEmailVerified: false,
       );
 
       String body = jsonEncode(signedUpUserData);
-
       await http.put(uri, headers: headers, body: body).then((_) => print("MySql Update Success:${_.body}"));
+      userData!.name = name;
+      notifyListeners();
       isSucess = true;
     } catch (e) {
       print(e);

@@ -15,7 +15,18 @@ class Initialpage extends StatelessWidget {
   Widget build(BuildContext context) {
     int delayTime = 1;
     bool isfirstEnterApp = context.select((InitialState value) => value.isfirstEnterApp);
-    LoginUser? userData = context.select((UserState value) => value.userData);
+    LoginUser? userData = context.select((UserState value) {
+      if (value.userData != null) {
+        return LoginUser(
+          uid: value.userData!.uid,
+          email: value.userData!.email,
+          isEmailVerified: value.userData!.isEmailVerified,
+          name: value.userData!.name,
+        );
+      } else {
+        return null;
+      }
+    });
     void enterApp() {
       context.read<UserState>().isLoginCheck();
       Timer(Duration(seconds: delayTime), () {
@@ -26,11 +37,7 @@ class Initialpage extends StatelessWidget {
     enterApp();
 
     return Scaffold(
-      body: isfirstEnterApp
-          ? const Logo()
-          : Home(
-              userData: userData,
-            ),
+      body: isfirstEnterApp ? const Logo() : Home(userData: userData),
     );
   }
 }

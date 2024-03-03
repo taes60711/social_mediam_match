@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/states/user_state.dart';
 
 import '../../../global.dart';
 import '../../../models/user_model.dart';
@@ -9,7 +11,10 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LoginUser userData = ModalRoute.of(context)!.settings.arguments as LoginUser;
+    final Map<String, dynamic> args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    LoginUser userData = args['realUserData'];
+    UserState userFuture = args['userFuture'];
     TextEditingController nameInput = TextEditingController();
     bool _switchSelected = true;
     bool _switchSelected1 = true;
@@ -60,6 +65,7 @@ class Profile extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
+                userFuture.updateProfile(userData.uid, nameInput.text);
                 print(nameInput.text);
               },
               child: const Text("更新"),
