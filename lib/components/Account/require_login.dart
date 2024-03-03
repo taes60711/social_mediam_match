@@ -3,8 +3,8 @@ import 'package:social_mediam_match/components/strings/login_chek_widget_string.
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
-class LoginCheckWidget extends StatelessWidget {
-  const LoginCheckWidget({super.key});
+class requireLogin extends StatelessWidget {
+  const requireLogin({super.key});
 
   @override
   Widget build(BuildContext context) {
