@@ -8,7 +8,7 @@ import 'package:social_mediam_match/components/home/userPage/user_page.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
 class Home extends StatefulWidget {
-  final UserLoginModel? userData;
+  final LoginUser? userData;
   const Home({super.key, this.userData});
 
   @override

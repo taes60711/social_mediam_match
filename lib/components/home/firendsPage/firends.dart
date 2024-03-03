@@ -10,7 +10,7 @@ class Firends extends StatefulWidget {
 }
 
 class _FirendsState extends State<Firends> {
-  IOWebSocketChannel channel = IOWebSocketChannel.connect('ws://114.37.137.216:80/ws');
+  IOWebSocketChannel channel = IOWebSocketChannel.connect('ws://114.37.137.216:123/ws');
   IOWebSocketChannel? channel1;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   bool isSendMessage = false;
@@ -147,7 +147,7 @@ class _FirendsState extends State<Firends> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () async {
-                              channel1 = IOWebSocketChannel.connect('ws://114.37.137.216:80/ws/chatroom');
+                              channel1 = IOWebSocketChannel.connect('ws://114.37.137.216:123/ws/chatroom');
                               await channel1?.ready;
                               roomIndex = jsonData[index]["roomId"];
                               channel1?.sink.add('{"method" : "connect" , "roomid" : ${jsonData[index]["roomId"]}}');

@@ -9,7 +9,7 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserLoginModel userData = ModalRoute.of(context)!.settings.arguments as UserLoginModel;
+    LoginUser userData = ModalRoute.of(context)!.settings.arguments as LoginUser;
     TextEditingController nameInput = TextEditingController();
     bool _switchSelected = true;
     bool _switchSelected1 = true;

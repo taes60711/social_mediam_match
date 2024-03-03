@@ -11,7 +11,7 @@ class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //ユーザダータ
-  UserLoginModel? userData;
+  LoginUser? userData;
   //ページローディング
   bool isLoading = false;
   //パスワード忘れたページに送信したメッセージ
@@ -145,12 +145,7 @@ class UserState extends ChangeNotifier {
       var digest = sha256.convert(utf8.encode(password));
       print("Digest as hex password: $digest");
 
-      UserSignUpModel signedUpUserData = UserSignUpModel(
-        uid: uid,
-        email: email,
-        password: "$digest",
-        isEmailVerified: false,
-      );
+      UpdateUser signedUpUserData = UpdateUser.signUp(uid: uid, email: email, password: "$digest", isEmailVerified: false);
 
       String body = jsonEncode(signedUpUserData);
 
@@ -165,14 +160,14 @@ class UserState extends ChangeNotifier {
   //メソッド：MYSQLにユーザーデータを取得する
   //param
   //uid：firebaseからアカウントid
-  Future<UserLoginModel?> getUserData(String uid) async {
+  Future<LoginUser?> getUserData(String uid) async {
     var uri = Uri.parse('$url/$uid');
-    UserLoginModel? userdata;
+    LoginUser? userdata;
     try {
       var response = await http.get(uri);
 
       if (response.statusCode != 404) {
-        userdata = UserLoginModel.fromMap(json.decode(response.body));
+        userdata = LoginUser.fromMap(json.decode(response.body));
       }
     } catch (e) {
       print(e);
@@ -186,7 +181,7 @@ class UserState extends ChangeNotifier {
       var uri = Uri.parse('$url/update/$uid');
       Map<String, String> headers = {'content-type': 'application/json'};
 
-      UserLoginModel signedUpUserData = UserLoginModel(
+      LoginUser signedUpUserData = LoginUser(
         uid: uid,
         email: email,
         name: name,

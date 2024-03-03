@@ -196,7 +196,7 @@ import 'package:social_mediam_match/states/user_state.dart';
 import '../../../global.dart';
 
 class UserPage extends StatelessWidget {
-  final UserLoginModel? userData;
+  final LoginUser? userData;
   const UserPage({super.key, this.userData});
 
   @override
@@ -209,7 +209,7 @@ class UserPage extends StatelessWidget {
       userComponent = const Loading();
     } else {
       if (userData != null) {
-        UserLoginModel notNullUserData = userData!;
+        LoginUser notNullUserData = userData!;
         userComponent = SizedBox(
           width: ScreenSize().width,
           child: Column(

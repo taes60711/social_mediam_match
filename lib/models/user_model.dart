@@ -1,30 +1,20 @@
-class UserSignUpModel {
+class UserModel {
   String uid;
-  String email;
-  String? password;
-  bool isEmailVerified;
-
-  UserSignUpModel({required this.uid, required this.email, required this.isEmailVerified, this.password});
-
-  Map toJson() {
-    return {
-      'uid': uid,
-      'email': email,
-      'password': password,
-      'isEmailVerified': isEmailVerified,
-    };
-  }
+  UserModel({required this.uid});
 }
 
-class UserLoginModel extends UserSignUpModel {
+class LoginUser extends UserModel {
+  String email;
+  bool isEmailVerified;
   String? name;
   List<dynamic>? mainSkills;
   List<dynamic>? wantSkills;
-  UserLoginModel(
-      {required super.uid, this.name, required super.email, required super.isEmailVerified, this.mainSkills, this.wantSkills});
 
-  factory UserLoginModel.fromMap(Map<String, dynamic> json) {
-    return UserLoginModel(
+  LoginUser(
+      {required super.uid, required this.email, required this.isEmailVerified, this.name, this.mainSkills, this.wantSkills});
+
+  factory LoginUser.fromMap(Map<String, dynamic> json) {
+    return LoginUser(
       uid: json["uid"],
       email: json["email"],
       name: json["name"],
@@ -32,5 +22,30 @@ class UserLoginModel extends UserSignUpModel {
       mainSkills: json["mainSkills"],
       wantSkills: json["wantSkills"],
     );
+  }
+}
+
+class UpdateUser extends UserModel {
+  String? email;
+  String? password;
+  bool? isEmailVerified;
+  String? name;
+  List<dynamic>? mainSkills;
+  List<dynamic>? wantSkills;
+
+  UpdateUser.signUp({required super.uid, required this.isEmailVerified, this.name, required this.email, required this.password});
+
+  UpdateUser.update({required super.uid, this.isEmailVerified, this.name, this.password, this.mainSkills, this.wantSkills});
+
+  Map toJson() {
+    return {
+      'uid': uid,
+      'email': email,
+      'password': password,
+      'isEmailVerified': isEmailVerified,
+      'name': name,
+      'mainSkills': mainSkills,
+      'wantSkills': wantSkills,
+    };
   }
 }
