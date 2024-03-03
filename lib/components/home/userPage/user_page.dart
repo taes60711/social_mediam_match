@@ -188,7 +188,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/account/login_check_widget.dart';
+import 'package:social_mediam_match/components/account/require_login.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/models/user_model.dart';
@@ -259,7 +259,7 @@ class UserPage extends StatelessWidget {
           ),
         );
       } else {
-        userComponent = const LoginCheckWidget();
+        userComponent = const requireLogin();
       }
     }
 
