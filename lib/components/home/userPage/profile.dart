@@ -23,11 +23,9 @@ class Profile extends StatelessWidget {
     List<SkillModel> forntSkillItems = context.watch<UserSettingState>().forntSkillList;
     List<SkillModel> backEndSkillItems = context.watch<UserSettingState>().backEndSkillList;
     List<SkillModel> otherSkillItems = context.watch<UserSettingState>().otherSkillList;
-    TextEditingController nameInput = TextEditingController();
-    TextEditingController introductionInput = TextEditingController();
+    TextEditingController nameInput = TextEditingController()..text = userData.name ?? "";
+    TextEditingController introductionInput = TextEditingController()..text = userData.introduction ?? "";
 
-    nameInput.text = userData.name ?? "";
-    introductionInput.text = userData.introduction ?? "";
     return isFirst
         ? StatefulWrapper(
             onInit: () {
