@@ -94,6 +94,7 @@ class UserSettingState extends ChangeNotifier {
   UpdateUser reformatData(
     String uid,
     String name,
+    String introduction,
     List<SkillModel> webSkillItems,
     List<SkillModel> backEndSkillItems,
     List<SkillModel> otherSkillItems,
@@ -131,6 +132,7 @@ class UserSettingState extends ChangeNotifier {
     return UpdateUser.update(
       uid: uid,
       name: name,
+      introduction: introduction,
       mainSkills: gethaveSkill,
       wantSkills: getWantSkill,
     );

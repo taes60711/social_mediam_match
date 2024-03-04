@@ -24,12 +24,14 @@ class Profile extends StatelessWidget {
     List<SkillModel> backEndSkillItems = context.watch<UserSettingState>().backEndSkillList;
     List<SkillModel> otherSkillItems = context.watch<UserSettingState>().otherSkillList;
     TextEditingController nameInput = TextEditingController();
+    TextEditingController introductionInput = TextEditingController();
 
+    nameInput.text = userData.name ?? "";
+    introductionInput.text = userData.introduction ?? "";
     return isFirst
         ? StatefulWrapper(
             onInit: () {
               userSettingFuture.getPageAllData(userData);
-              nameInput.text = userData.name ?? "";
             },
             child: SizedBox(
               width: ScreenSize().width,
@@ -41,6 +43,7 @@ class Profile extends StatelessWidget {
               width: ScreenSize().width,
               child: Column(
                 children: [
+                  Text("個人資料"),
                   Align(
                     alignment: Alignment.topLeft,
                     child: IconButton(
@@ -50,12 +53,35 @@ class Profile extends StatelessWidget {
                       icon: Icon(Icons.arrow_back_ios),
                     ),
                   ),
-                  TextField(
-                    controller: nameInput,
-                    decoration: const InputDecoration(
-                      labelText: "用户名",
-                      hintText: "用户名",
-                      prefixIcon: Icon(Icons.person),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: nameInput,
+                      decoration: const InputDecoration(
+                        labelText: "用户名",
+                        hintText: "用户名",
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text("自我介紹"),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      minLines: 3,
+                      maxLines: 6,
+                      controller: introductionInput,
+                      decoration: const InputDecoration(
+                        hintText: 'Write a message',
+                        filled: true,
+                      ),
+                      keyboardType: TextInputType.multiline,
                     ),
                   ),
                   Expanded(
@@ -197,8 +223,8 @@ class Profile extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          UpdateUser updateUserData = userSettingFuture.reformatData(
-                              userData.uid, nameInput.text, forntSkillItems, backEndSkillItems, otherSkillItems);
+                          UpdateUser updateUserData = userSettingFuture.reformatData(userData.uid, nameInput.text,
+                              introductionInput.text, forntSkillItems, backEndSkillItems, otherSkillItems);
                           inspect(updateUserData);
                           userFuture.updateProfile(userData.uid, updateUserData);
                         },

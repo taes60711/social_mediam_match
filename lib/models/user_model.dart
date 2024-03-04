@@ -1,11 +1,13 @@
 class UserModel {
   String uid;
   String? name;
+  String? introduction;
   List<dynamic>? mainSkills;
   List<dynamic>? wantSkills;
   UserModel({
     required this.uid,
     this.name,
+    this.introduction,
     this.mainSkills,
     this.wantSkills,
   });
@@ -18,6 +20,7 @@ class LoginUser extends UserModel {
   LoginUser({
     required String uid,
     String? name,
+    String? introduction,
     List<dynamic>? mainSkills,
     List<dynamic>? wantSkills,
     required this.email,
@@ -25,6 +28,7 @@ class LoginUser extends UserModel {
   }) : super(
           uid: uid,
           name: name,
+          introduction: introduction,
           mainSkills: mainSkills,
           wantSkills: wantSkills,
         );
@@ -34,6 +38,7 @@ class LoginUser extends UserModel {
       uid: json["uid"],
       email: json["email"],
       name: json["name"],
+      introduction: json['introduction'],
       isEmailVerified: json["isEmailVerified"],
       mainSkills: json["skills"],
       wantSkills: json["wantSkills"],
@@ -60,6 +65,7 @@ class UpdateUser extends UserModel {
   UpdateUser.update({
     required String uid,
     String? name,
+    String? introduction,
     List<dynamic>? mainSkills,
     List<dynamic>? wantSkills,
     this.isEmailVerified,
@@ -67,6 +73,7 @@ class UpdateUser extends UserModel {
   }) : super(
           uid: uid,
           name: name,
+          introduction: introduction,
           mainSkills: mainSkills,
           wantSkills: wantSkills,
         );
@@ -78,6 +85,7 @@ class UpdateUser extends UserModel {
       'password': password,
       'isEmailVerified': isEmailVerified,
       'name': name,
+      'introduction': introduction,
       'skills': mainSkills,
       'wantSkills': wantSkills,
     };

@@ -22,6 +22,7 @@ class Initialpage extends StatelessWidget {
           email: value.userData!.email,
           isEmailVerified: value.userData!.isEmailVerified,
           name: value.userData!.name,
+          introduction: value.userData!.introduction,
           mainSkills: value.userData!.mainSkills,
           wantSkills: value.userData!.wantSkills,
         );
