@@ -9,7 +9,6 @@ import 'package:crypto/crypto.dart';
 
 class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
   //ユーザダータ
   LoginUser? userData;
   //ページローディング
@@ -172,6 +171,7 @@ class UserState extends ChangeNotifier {
       var response = await http.get(uri);
 
       if (response.statusCode != 404) {
+        print("userData :  ${response.body}");
         userdata = LoginUser.fromMap(json.decode(response.body));
       }
     } catch (e) {
@@ -190,7 +190,10 @@ class UserState extends ChangeNotifier {
       await http.put(uri, headers: headers, body: body).then(
             (_) => print("MySql Update Success:${_.body}"),
           );
+
       userData!.name = updateData.name;
+      userData!.mainSkills = updateData.mainSkills;
+      userData!.wantSkills = updateData.wantSkills;
       notifyListeners();
       isSucess = true;
     } catch (e) {

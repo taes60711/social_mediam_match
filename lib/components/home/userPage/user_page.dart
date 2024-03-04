@@ -211,7 +211,6 @@ class UserPage extends StatelessWidget {
     } else {
       if (userData != null) {
         LoginUser realUserData = userData!;
-
         userComponent = SizedBox(
           width: ScreenSize().width,
           child: Column(

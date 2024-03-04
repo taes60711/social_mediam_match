@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/home.dart';
 import 'package:social_mediam_match/components/Initial/logo.dart';
+import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
-
 import '../../models/user_model.dart';
 
 class Initialpage extends StatelessWidget {
@@ -22,22 +22,28 @@ class Initialpage extends StatelessWidget {
           email: value.userData!.email,
           isEmailVerified: value.userData!.isEmailVerified,
           name: value.userData!.name,
+          mainSkills: value.userData!.mainSkills,
+          wantSkills: value.userData!.wantSkills,
         );
       } else {
         return null;
       }
     });
     void enterApp() {
+      print("first");
       context.read<UserState>().isLoginCheck();
       Timer(Duration(seconds: delayTime), () {
         context.read<InitialState>().onChange();
       });
     }
 
-    enterApp();
-
     return Scaffold(
-      body: isfirstEnterApp ? const Logo() : Home(userData: userData),
+      body: isfirstEnterApp
+          ? StatefulWrapper(
+              onInit: () => enterApp(),
+              child: const Logo(),
+            )
+          : Home(userData: userData),
     );
   }
 }

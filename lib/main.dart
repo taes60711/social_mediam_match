@@ -7,6 +7,7 @@ import 'package:social_mediam_match/components/Initial/Initial_page.dart';
 import 'package:social_mediam_match/components/home/userPage/profile.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
+import 'package:social_mediam_match/states/user_setting_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 
 void main() async {
@@ -43,7 +44,10 @@ class MyApp extends StatelessWidget {
             ),
         '/login': (BuildContext context) => const LoginPage(),
         '/signUp': (BuildContext context) => const SignUpPage(),
-        '/profile': (BuildContext context) => const Profile(),
+        '/profile': (BuildContext context) => ChangeNotifierProvider(
+              create: (_) => UserSettingState(),
+              child: const Profile(),
+            )
       },
     );
   }
