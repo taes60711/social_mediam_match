@@ -43,7 +43,7 @@ class UserSettingState extends ChangeNotifier {
               ...forntSkillList,
               SkillModel(id: e['id'], skillName: e['name'], haveSkill: skillCheckBool, wantSkill: wantSkillCheckBool)
             ];
-          } else if (e['name'] == "java") {
+          } else if (backendType.contains(e['name'])) {
             backEndSkillList = [
               ...backEndSkillList,
               SkillModel(id: e['id'], skillName: e['name'], haveSkill: skillCheckBool, wantSkill: wantSkillCheckBool)
