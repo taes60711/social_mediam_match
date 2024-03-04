@@ -180,20 +180,17 @@ class UserState extends ChangeNotifier {
     return userdata;
   }
 
-  Future<bool> updateProfile(String uid, String name) async {
+  Future<bool> updateProfile(String uid, UpdateUser updateData) async {
     bool isSucess = false;
     try {
       var uri = Uri.parse('$url/update/$uid');
       Map<String, String> headers = {'content-type': 'application/json'};
 
-      UpdateUser signedUpUserData = UpdateUser.update(
-        uid: uid,
-        name: name,
-      );
-
-      String body = jsonEncode(signedUpUserData);
-      await http.put(uri, headers: headers, body: body).then((_) => print("MySql Update Success:${_.body}"));
-      userData!.name = name;
+      String body = jsonEncode(updateData);
+      await http.put(uri, headers: headers, body: body).then(
+            (_) => print("MySql Update Success:${_.body}"),
+          );
+      userData!.name = updateData.name;
       notifyListeners();
       isSucess = true;
     } catch (e) {

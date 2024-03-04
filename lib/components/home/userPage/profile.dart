@@ -11,13 +11,13 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
-    LoginUser userData = args['realUserData'];
-    UserState userFuture = args['userFuture'];
+    UserState userFuture = context.read<UserState>();
+    LoginUser userData = ModalRoute.of(context)!.settings.arguments as LoginUser;
     TextEditingController nameInput = TextEditingController();
+
     bool _switchSelected = true;
     bool _switchSelected1 = true;
+
     return Scaffold(
       body: SafeArea(
           child: SizedBox(
@@ -64,9 +64,16 @@ class Profile extends StatelessWidget {
               ],
             ),
             ElevatedButton(
-              onPressed: () {
-                userFuture.updateProfile(userData.uid, nameInput.text);
-                print(nameInput.text);
+              onPressed: () async {
+                // List<Map<String, String>> dsd = await userFuture.getSkillList();
+                // print(dsd);
+                UpdateUser updateUserData = UpdateUser.update(
+                  uid: userData.uid,
+                  name: nameInput.text,
+                  mainSkills: ["japanese", "java"],
+                  wantSkills: [],
+                );
+                userFuture.updateProfile(userData.uid, updateUserData);
               },
               child: const Text("更新"),
             ),

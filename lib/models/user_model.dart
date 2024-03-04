@@ -35,7 +35,7 @@ class LoginUser extends UserModel {
       email: json["email"],
       name: json["name"],
       isEmailVerified: json["isEmailVerified"],
-      mainSkills: json["mainSkills"],
+      mainSkills: json["skills"],
       wantSkills: json["wantSkills"],
     );
   }
@@ -78,7 +78,7 @@ class UpdateUser extends UserModel {
       'password': password,
       'isEmailVerified': isEmailVerified,
       'name': name,
-      'mainSkills': mainSkills,
+      'skills': mainSkills,
       'wantSkills': wantSkills,
     };
   }

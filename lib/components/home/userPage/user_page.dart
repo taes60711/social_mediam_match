@@ -204,7 +204,6 @@ class UserPage extends StatelessWidget {
     UserState userFuture = context.read<UserState>();
     bool isLoading = context.select((UserState value) => value.isLoading);
 
-    print("object");
     Widget userComponent;
 
     if (isLoading) {
@@ -212,7 +211,7 @@ class UserPage extends StatelessWidget {
     } else {
       if (userData != null) {
         LoginUser realUserData = userData!;
-        print("realUserData : $realUserData");
+
         userComponent = SizedBox(
           width: ScreenSize().width,
           child: Column(
@@ -238,10 +237,7 @@ class UserPage extends StatelessWidget {
               Text("Hello, ${realUserData.name ?? realUserData.email}"),
               ElevatedButton(
                 onPressed: () async {
-                  Navigator.of(context).pushNamed(RoutePath.profilePage.value, arguments: {
-                    'realUserData': realUserData,
-                    'userFuture': userFuture,
-                  });
+                  Navigator.of(context).pushNamed(RoutePath.profilePage.value, arguments: realUserData);
                 },
                 child: const Text("個人資料"),
               ),
