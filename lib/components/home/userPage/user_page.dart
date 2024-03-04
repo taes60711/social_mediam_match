@@ -234,6 +234,34 @@ class UserPage extends StatelessWidget {
                 ),
               ),
               Text("Hello, ${realUserData.name ?? realUserData.email}"),
+              Row(
+                children: [
+                  SizedBox(
+                    width: ScreenSize().width / 2,
+                    child: Column(
+                      children: [
+                        Text("擅長的技能"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: realUserData.mainSkills!.map((e) => Text("$e , ")).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: ScreenSize().width / 2,
+                    child: Column(
+                      children: [
+                        Text("想學的技能"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: realUserData.wantSkills!.map((e) => Text("$e , ")).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               ElevatedButton(
                 onPressed: () async {
                   Navigator.of(context).pushNamed(RoutePath.profilePage.value, arguments: realUserData);
