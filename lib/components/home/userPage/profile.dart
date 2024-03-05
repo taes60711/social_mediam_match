@@ -26,6 +26,15 @@ class Profile extends StatelessWidget {
     TextEditingController nameInput = TextEditingController()..text = userData.name ?? "";
     TextEditingController introductionInput = TextEditingController()..text = userData.introduction ?? "";
 
+    var items = [
+      '0',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+    ];
+
     return isFirst
         ? StatefulWrapper(
             onInit: () {
@@ -90,18 +99,27 @@ class Profile extends StatelessWidget {
                           title: const Text('網頁'),
                           leading: const Icon(Icons.align_horizontal_left),
                           children: forntSkillItems.map((e) {
+                            String? selectedItem = "${e.skillInfo.level}";
                             return Padding(
                               padding: const EdgeInsets.only(left: 10.0),
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: Text(e.skillName),
+                                    child: Text(e.skillInfo.name),
                                   ),
                                   Switch(
                                       value: e.haveSkill,
                                       onChanged: (value) {
-                                        userSettingFuture.checkOnChange(e.skillName, "web_have");
-                                      })
+                                        userSettingFuture.checkOnChange(e.skillInfo.name, "web_have");
+                                      }),
+                                  const Text("程度 :"),
+                                  DropdownButton(
+                                    value: selectedItem,
+                                    items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                                    onChanged: (value) {
+                                      userSettingFuture.skillLevelOnchange(e.skillInfo.name, value ?? "0", "web_have");
+                                    },
+                                  ),
                                 ],
                               ),
                             );
@@ -111,18 +129,27 @@ class Profile extends StatelessWidget {
                           title: const Text('後端'),
                           leading: const Icon(Icons.align_horizontal_left),
                           children: backEndSkillItems.map((e) {
+                            String? selectedItem = "${e.skillInfo.level}";
                             return Padding(
                               padding: const EdgeInsets.only(left: 10.0),
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: Text(e.skillName),
+                                    child: Text(e.skillInfo.name),
                                   ),
                                   Switch(
                                       value: e.haveSkill,
                                       onChanged: (value) {
-                                        userSettingFuture.checkOnChange(e.skillName, "backend_have");
-                                      })
+                                        userSettingFuture.checkOnChange(e.skillInfo.name, "backend_have");
+                                      }),
+                                  const Text("程度 :"),
+                                  DropdownButton(
+                                    value: selectedItem,
+                                    items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                                    onChanged: (value) {
+                                      userSettingFuture.skillLevelOnchange(e.skillInfo.name, value ?? "0", "backend_have");
+                                    },
+                                  ),
                                 ],
                               ),
                             );
@@ -132,18 +159,27 @@ class Profile extends StatelessWidget {
                           title: const Text('其他'),
                           leading: const Icon(Icons.align_horizontal_left),
                           children: otherSkillItems.map((e) {
+                            String? selectedItem = "${e.skillInfo.level}";
                             return Padding(
                               padding: const EdgeInsets.only(left: 10.0),
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: Text(e.skillName),
+                                    child: Text(e.skillInfo.name),
                                   ),
                                   Switch(
                                       value: e.haveSkill,
                                       onChanged: (value) {
-                                        userSettingFuture.checkOnChange(e.skillName, "other_have");
-                                      })
+                                        userSettingFuture.checkOnChange(e.skillInfo.name, "other_have");
+                                      }),
+                                  const Text("程度 :"),
+                                  DropdownButton(
+                                    value: selectedItem,
+                                    items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                                    onChanged: (value) {
+                                      userSettingFuture.skillLevelOnchange(e.skillInfo.name, value ?? "0", "other_have");
+                                    },
+                                  ),
                                 ],
                               ),
                             );
@@ -163,13 +199,13 @@ class Profile extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     Expanded(
-                                      child: Text(e.skillName),
+                                      child: Text(e.skillInfo.name),
                                     ),
                                     Switch(
                                         value: e.wantSkill,
                                         onChanged: (value) {
-                                          userSettingFuture.checkOnChange(e.skillName, "web_want");
-                                        })
+                                          userSettingFuture.checkOnChange(e.skillInfo.name, "web_want");
+                                        }),
                                   ],
                                 ),
                               );
@@ -184,13 +220,13 @@ class Profile extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     Expanded(
-                                      child: Text(e.skillName),
+                                      child: Text(e.skillInfo.name),
                                     ),
                                     Switch(
                                         value: e.wantSkill,
                                         onChanged: (value) {
-                                          userSettingFuture.checkOnChange(e.skillName, "backend_want");
-                                        })
+                                          userSettingFuture.checkOnChange(e.skillInfo.name, "backend_want");
+                                        }),
                                   ],
                                 ),
                               );
@@ -205,13 +241,13 @@ class Profile extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     Expanded(
-                                      child: Text(e.skillName),
+                                      child: Text(e.skillInfo.name),
                                     ),
                                     Switch(
                                         value: e.wantSkill,
                                         onChanged: (value) {
-                                          userSettingFuture.checkOnChange(e.skillName, "other_want");
-                                        })
+                                          userSettingFuture.checkOnChange(e.skillInfo.name, "other_want");
+                                        }),
                                   ],
                                 ),
                               );

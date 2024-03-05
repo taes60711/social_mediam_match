@@ -88,8 +88,9 @@ class DBService {
     try {
       final uri = Uri.parse('$url/$branch/update/$uid');
       Map<String, String> headers = {'content-type': 'application/json'};
-
+      inspect(updateData);
       String body = jsonEncode(updateData);
+      print(body);
       await http.put(uri, headers: headers, body: body).then(
             (_) => print("MySql Update Success:${_.body}"),
           );

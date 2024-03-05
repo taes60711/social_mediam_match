@@ -243,7 +243,7 @@ class UserPage extends StatelessWidget {
                         Text("擅長的技能"),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: realUserData.mainSkills!.map((e) => Text("$e , ")).toList(),
+                          children: realUserData.mainSkills!.map((e) => Text("${e.name} , ")).toList(),
                         ),
                       ],
                     ),
@@ -255,7 +255,7 @@ class UserPage extends StatelessWidget {
                         Text("想學的技能"),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: realUserData.wantSkills!.map((e) => Text("$e , ")).toList(),
+                          children: realUserData.wantSkills!.map((e) => Text("${e.name} , ")).toList(),
                         ),
                       ],
                     ),

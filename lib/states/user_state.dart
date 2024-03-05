@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/global.dart';
@@ -37,7 +39,7 @@ class UserState extends ChangeNotifier {
           isLoading = true;
           userData = await _dbService.getUserData(userUID);
           notifyListeners();
-          print(userData);
+          inspect(userData);
           isLoading = false;
           notifyListeners();
         }

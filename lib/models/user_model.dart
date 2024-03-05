@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 class UserModel {
   String uid;
   String? name;
   String? introduction;
-  List<dynamic>? mainSkills;
-  List<dynamic>? wantSkills;
+  List<SkillInfo>? mainSkills;
+  List<SkillInfo>? wantSkills;
   UserModel({
     required this.uid,
     this.name,
@@ -21,8 +23,8 @@ class LoginUser extends UserModel {
     required String uid,
     String? name,
     String? introduction,
-    List<dynamic>? mainSkills,
-    List<dynamic>? wantSkills,
+    List<SkillInfo>? mainSkills,
+    List<SkillInfo>? wantSkills,
     required this.email,
     required this.isEmailVerified,
   }) : super(
@@ -34,14 +36,20 @@ class LoginUser extends UserModel {
         );
 
   factory LoginUser.fromMap(Map<String, dynamic> json) {
+    print("json[]: ${json["skills"]}");
+    List<SkillInfo> mainSkills =
+        (json["skills"] as List<dynamic>).map((e) => SkillInfo(name: e['name'], level: e['level'], month: e['month'])).toList();
+    List<SkillInfo> wantSkills = (json["wantSkills"] as List<dynamic>)
+        .map((e) => SkillInfo(name: e['name'], level: e['level'], month: e['month']))
+        .toList();
     return LoginUser(
       uid: json["uid"],
       email: json["email"],
       name: json["name"],
       introduction: json['introduction'],
       isEmailVerified: json["isEmailVerified"],
-      mainSkills: json["skills"],
-      wantSkills: json["wantSkills"],
+      mainSkills: mainSkills,
+      wantSkills: wantSkills,
     );
   }
 }
@@ -66,8 +74,8 @@ class UpdateUser extends UserModel {
     required String uid,
     String? name,
     String? introduction,
-    List<dynamic>? mainSkills,
-    List<dynamic>? wantSkills,
+    List<SkillInfo>? mainSkills,
+    List<SkillInfo>? wantSkills,
     this.isEmailVerified,
     this.password,
   }) : super(
@@ -86,8 +94,32 @@ class UpdateUser extends UserModel {
       'isEmailVerified': isEmailVerified,
       'name': name,
       'introduction': introduction,
-      'skills': mainSkills,
-      'wantSkills': wantSkills,
+      'skills': mainSkills!.map((e) => e.toJson()).toList(),
+      'wantSkills': wantSkills!.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class SkillInfo {
+  String name;
+  int level;
+  int month;
+
+  SkillInfo({required this.name, required this.level, required this.month});
+
+  factory SkillInfo.fromMap(Map<String, dynamic> json) {
+    return SkillInfo(
+      name: json["name"],
+      level: json["level"],
+      month: json["month"],
+    );
+  }
+
+  Map toJson() {
+    return {
+      'name': name,
+      'level': level,
+      'month': month,
     };
   }
 }
