@@ -31,7 +31,7 @@ class Initialpage extends StatelessWidget {
       }
     });
     void enterApp() {
-      print("first");
+      print("firstEnterApp");
       context.read<UserState>().isLoginCheck();
       Timer(Duration(seconds: delayTime), () {
         context.read<InitialState>().onChange();

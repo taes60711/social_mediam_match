@@ -223,7 +223,7 @@ class Profile extends StatelessWidget {
                         onPressed: () async {
                           UpdateUser updateUserData = userSettingFuture.reformatData(userData.uid, nameInput.text,
                               introductionInput.text, forntSkillItems, backEndSkillItems, otherSkillItems);
-                          inspect(updateUserData);
+
                           userFuture.updateProfile(userData.uid, updateUserData);
                         },
                         child: const Text("更新"),

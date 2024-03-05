@@ -32,11 +32,12 @@ class UserSettingState extends ChangeNotifier {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        List<dynamic> jsonData = json.decode(response.body) as List<dynamic>;
+        List<dynamic> jsonData = json.decode(response.body);
         for (var e in jsonData) {
           //Switchコンポーネントためにユーザのスキル、勉強したいBool List作成する
           bool skillCheckBool = userData.mainSkills!.contains(e['name']);
           bool wantSkillCheckBool = userData.wantSkills!.contains(e['name']);
+
           //全スキル名前とユーザのスキルリスト組み合わせする
           if (forntType.contains(e['name'])) {
             forntSkillList = [
@@ -90,7 +91,7 @@ class UserSettingState extends ChangeNotifier {
     notifyListeners();
   }
 
-  //SQLにアップデート前にデータ加工する
+  //SQLにアップ前にデータ加工する
   UpdateUser reformatData(
     String uid,
     String name,
@@ -102,30 +103,18 @@ class UserSettingState extends ChangeNotifier {
     List<String> gethaveSkill = [];
     List<String> getWantSkill = [];
 
-    for (var element in backEndSkillItems) {
-      if (element.haveSkill) {
-        gethaveSkill.add(element.skillName);
-      }
-      if (element.wantSkill) {
-        getWantSkill.add(element.skillName);
-      }
-    }
+    //全カテゴリーのスキルリストがリスト化
+    List<List<SkillModel>> allcategoryItems = [backEndSkillItems, webSkillItems, otherSkillItems];
 
-    for (var element in webSkillItems) {
-      if (element.haveSkill) {
-        gethaveSkill.add(element.skillName);
-      }
-      if (element.wantSkill) {
-        getWantSkill.add(element.skillName);
-      }
-    }
-
-    for (var element in otherSkillItems) {
-      if (element.haveSkill) {
-        gethaveSkill.add(element.skillName);
-      }
-      if (element.wantSkill) {
-        getWantSkill.add(element.skillName);
+    for (var categoryItems in allcategoryItems) {
+      for (var items in categoryItems) {
+        //データ加工する
+        if (items.haveSkill) {
+          gethaveSkill.add(items.skillName);
+        }
+        if (items.wantSkill) {
+          getWantSkill.add(items.skillName);
+        }
       }
     }
 

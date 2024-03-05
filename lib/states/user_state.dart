@@ -1,14 +1,13 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
 import 'package:social_mediam_match/models/user_model.dart';
-import 'package:crypto/crypto.dart';
+import 'package:social_mediam_match/states/services/db_service.dart';
 
 class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final DBService _dbService = DBService();
   //ユーザダータ
   LoginUser? userData;
   //ページローディング
@@ -36,7 +35,7 @@ class UserState extends ChangeNotifier {
       colsure().listen((String userUID) async {
         if (userUID != "" && !_isSignUp) {
           isLoading = true;
-          userData = await getUserData(userUID);
+          userData = await _dbService.getUserData(userUID);
           notifyListeners();
           print(userData);
           isLoading = false;
@@ -81,7 +80,7 @@ class UserState extends ChangeNotifier {
         (UserCredential value) async {
           print("firebase SiginUp Success:${value.user!.uid}");
 
-          bool isMysqlSignUpSucess = await signUpUser(value.user!.uid, email, password);
+          bool isMysqlSignUpSucess = await _dbService.signUpUser(value.user!.uid, email, password);
 
           if (isMysqlSignUpSucess) {
             isSucess = true;
@@ -132,73 +131,19 @@ class UserState extends ChangeNotifier {
     }
   }
 
-  //メソッド：MYSQLにユーザーデータを作成する
-  //param
-  //uid：firebaseからアカウントid,　email：メールアドレス，password：パスワード
-  Future<bool> signUpUser(String uid, String email, String password) async {
-    bool isSucess = false;
+  Future<void> updateProfile(String uid, UpdateUser updateData) async {
     try {
-      var uri = Uri.parse('$url/signUp');
-      Map<String, String> headers = {'content-type': 'application/json'};
-
-      var digest = sha256.convert(utf8.encode(password));
-      print("Digest as hex password: $digest");
-
-      UpdateUser signedUpUserData = UpdateUser.signUp(
-        uid: uid,
-        email: email,
-        password: "$digest",
-        isEmailVerified: false,
-      );
-
-      String body = jsonEncode(signedUpUserData);
-
-      await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Success:${_.body}"));
-      isSucess = true;
+      await _dbService.updateUserData(uid, updateData).then((isSucess) {
+        if (isSucess) {
+          userData!.name = updateData.name;
+          userData!.introduction = updateData.introduction;
+          userData!.mainSkills = updateData.mainSkills;
+          userData!.wantSkills = updateData.wantSkills;
+          notifyListeners();
+        }
+      });
     } catch (e) {
       print(e);
     }
-    return isSucess;
-  }
-
-  //メソッド：MYSQLにユーザーデータを取得する
-  //param
-  //uid：firebaseからアカウントid
-  Future<LoginUser?> getUserData(String uid) async {
-    var uri = Uri.parse('$url/$uid');
-    LoginUser? userdata;
-    try {
-      var response = await http.get(uri);
-
-      if (response.statusCode != 404) {
-        print("userData :  ${response.body}");
-        userdata = LoginUser.fromMap(json.decode(response.body));
-      }
-    } catch (e) {
-      print(e);
-    }
-    return userdata;
-  }
-
-  Future<bool> updateProfile(String uid, UpdateUser updateData) async {
-    bool isSucess = false;
-    try {
-      var uri = Uri.parse('$url/update/$uid');
-      Map<String, String> headers = {'content-type': 'application/json'};
-
-      String body = jsonEncode(updateData);
-      await http.put(uri, headers: headers, body: body).then(
-            (_) => print("MySql Update Success:${_.body}"),
-          );
-
-      userData!.name = updateData.name;
-      userData!.mainSkills = updateData.mainSkills;
-      userData!.wantSkills = updateData.wantSkills;
-      notifyListeners();
-      isSucess = true;
-    } catch (e) {
-      print(e);
-    }
-    return isSucess;
   }
 }
