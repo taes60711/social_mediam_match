@@ -18,11 +18,13 @@ class UserModel {
 class LoginUser extends UserModel {
   String email;
   bool isEmailVerified;
+  String lastLogin;
 
   LoginUser({
     required String uid,
     String? name,
     String? introduction,
+    required this.lastLogin,
     List<SkillInfo>? mainSkills,
     List<SkillInfo>? wantSkills,
     required this.email,
@@ -42,10 +44,12 @@ class LoginUser extends UserModel {
     List<SkillInfo> wantSkills = (json["wantSkills"] as List<dynamic>)
         .map((e) => SkillInfo(name: e['name'], level: e['level'], month: e['month']))
         .toList();
+
     return LoginUser(
       uid: json["uid"],
       email: json["email"],
       name: json["name"],
+      lastLogin: json['lastlogin'],
       introduction: json['introduction'],
       isEmailVerified: json["isEmailVerified"],
       mainSkills: mainSkills,
@@ -58,6 +62,7 @@ class UpdateUser extends UserModel {
   String? email;
   String? password;
   bool? isEmailVerified;
+  String? lastLogin;
 
   UpdateUser.signUp({
     required String uid,
@@ -85,6 +90,14 @@ class UpdateUser extends UserModel {
           mainSkills: mainSkills,
           wantSkills: wantSkills,
         );
+  UpdateUser.lastTimupdate({required String uid, this.lastLogin}) : super(uid: uid);
+
+  String updateLastLoginTimeJson() {
+    return jsonEncode({
+      'uid': uid,
+      "lastlogin": lastLogin,
+    });
+  }
 
   Map toJson() {
     return {

@@ -37,12 +37,26 @@ class DBService {
     final uri = Uri.parse('$url/$branch/$uid');
     LoginUser? userdata;
     try {
-      var response = await http.get(uri);
+      Map<String, String> headers = {'content-type': 'application/json'};
+      String body = UpdateUser.lastTimupdate(uid: uid, lastLogin: DateTime.now().toIso8601String()).updateLastLoginTimeJson();
 
-      if (response.statusCode != 404) {
-        print("userData :  ${response.body}");
-        userdata = LoginUser.fromMap(json.decode(response.body));
-      }
+      //ユーザログインのタイム更新する
+      await http
+          .put(
+            Uri.parse('$url/$branch/updateLoginTime/$uid'),
+            headers: headers,
+            body: body,
+          )
+          .then((_) => print("MySql LoginTimeUpdate:${_.body}"))
+          .then((value) async {
+        //ユーザのデータ取得
+        var response = await http.get(uri);
+
+        if (response.statusCode != 404) {
+          print("userData :  ${response.body}");
+          userdata = LoginUser.fromMap(json.decode(response.body));
+        }
+      });
     } catch (e) {
       print(e);
     }
@@ -71,9 +85,7 @@ class DBService {
 
       String body = jsonEncode(signedUpUserData);
 
-      await http
-          .put(uri, headers: headers, body: body)
-          .then((_) => print("MySql SiginUp Success:${_.body}"));
+      await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Success:${_.body}"));
       isSucess = true;
     } catch (e) {
       print(e);
@@ -92,7 +104,6 @@ class DBService {
       Map<String, String> headers = {'content-type': 'application/json'};
       inspect(updateData);
       String body = jsonEncode(updateData);
-      print(body);
       await http.put(uri, headers: headers, body: body).then(
             (_) => print("MySql Update Success:${_.body}"),
           );
