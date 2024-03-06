@@ -71,7 +71,9 @@ class DBService {
 
       String body = jsonEncode(signedUpUserData);
 
-      await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Success:${_.body}"));
+      await http
+          .put(uri, headers: headers, body: body)
+          .then((_) => print("MySql SiginUp Success:${_.body}"));
       isSucess = true;
     } catch (e) {
       print(e);
@@ -100,4 +102,6 @@ class DBService {
     }
     return isSucess;
   }
+
+  void getSkillData() {}
 }
