@@ -6,16 +6,16 @@ import 'package:social_mediam_match/models/user_model.dart';
 
 class SkillModel {
   int id;
-  s skillHave;
-  s skillWant;
+  ProfileSkill skillHave;
+  ProfileSkill skillWant;
 
   SkillModel({required this.id, required this.skillHave, required this.skillWant});
 }
 
-class s {
+class ProfileSkill {
   SkillInfo skillInfo;
   bool ishave;
-  s({required this.skillInfo, required this.ishave});
+  ProfileSkill({required this.skillInfo, required this.ishave});
 }
 
 class UserSettingState extends ChangeNotifier {
@@ -46,11 +46,11 @@ class UserSettingState extends ChangeNotifier {
           int skillLevel = 0;
           bool skillCheckBool = userData.mainSkills!.indexWhere((element) => element.name == e['name']) != -1;
           bool wantSkillCheckBool = userData.wantSkills!.indexWhere((element) => element.name == e['name']) != -1;
-          s have;
-          s want;
+          ProfileSkill have;
+          ProfileSkill want;
 
-          SkillInfo haveSkillInfo = SkillInfo(name: e['name'], level: 0, month: 0);
-          SkillInfo wantSkillInfo = SkillInfo(name: e['name'], level: 0, month: 0);
+          SkillInfo haveSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
+          SkillInfo wantSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
           if (skillCheckBool) {
             skillLevel = userData.mainSkills!.firstWhere((element) => element.name == e['name']).level;
             haveSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
@@ -60,8 +60,8 @@ class UserSettingState extends ChangeNotifier {
             wantSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
           }
 
-          have = s(skillInfo: haveSkillInfo, ishave: skillCheckBool);
-          want = s(skillInfo: wantSkillInfo, ishave: wantSkillCheckBool);
+          have = ProfileSkill(skillInfo: haveSkillInfo, ishave: skillCheckBool);
+          want = ProfileSkill(skillInfo: wantSkillInfo, ishave: wantSkillCheckBool);
 
           //全スキル名前とユーザのスキルリスト組み合わせする
           if (forntType.contains(e['name'])) {
@@ -86,19 +86,15 @@ class UserSettingState extends ChangeNotifier {
   }
 
 //いずれスキルに関するやつ変更する
-  void checkOnChange(String skillName, List<SkillModel> list, String type, {String? choicedLevel}) {
-    int index = list.indexWhere((element) => element.skillHave.skillInfo.name == skillName);
-    if (type == "have") {
+  void checkOnChange(ProfileSkill list, String type, {String? choicedLevel}) {
+    if (type == "level") {
+      //いずれスキルのレベル変更する
+      list.skillInfo.level = int.parse(choicedLevel ?? "0");
+    } else {
       //スキルチェックtrue or false
-      list[index].skillHave.ishave = !list[index].skillHave.ishave;
-    } else if (type == "want") {
-      //スキルチェックtrue or false
-      list[index].skillWant.ishave = !list[index].skillWant.ishave;
+      list.ishave = !list.ishave;
     }
-    // } else if (type == "level") {
-    //   //いずれスキルのレベル変更する
-    //   list[index].skillInfo.level = int.parse(choicedLevel ?? "0");
-    // }
+
     notifyListeners();
   }
 

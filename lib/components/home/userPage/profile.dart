@@ -40,7 +40,7 @@ class Profile extends StatelessWidget {
         title: Text(category),
         leading: const Icon(Icons.align_horizontal_left),
         children: list.map((e) {
-          s skillInfoItem = type == "have" ? e.skillHave : e.skillWant;
+          ProfileSkill skillInfoItem = type == "have" ? e.skillHave : e.skillWant;
           String? selectedItem = "${skillInfoItem.skillInfo.level}";
           return Padding(
             padding: const EdgeInsets.only(left: 10.0),
@@ -52,14 +52,14 @@ class Profile extends StatelessWidget {
                 Switch(
                     value: skillInfoItem.ishave,
                     onChanged: (value) {
-                      userSettingFuture.checkOnChange(skillInfoItem.skillInfo.name, list, type);
+                      userSettingFuture.checkOnChange(skillInfoItem, type);
                     }),
                 Text("$level :"),
                 DropdownButton(
                   value: selectedItem,
                   items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
                   onChanged: (value) {
-                    userSettingFuture.checkOnChange(skillInfoItem.skillInfo.name, list, "level", choicedLevel: value);
+                    userSettingFuture.checkOnChange(skillInfoItem, "level", choicedLevel: value);
                   },
                 ),
               ],
