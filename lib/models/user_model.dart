@@ -90,7 +90,12 @@ class UpdateUser extends UserModel {
           mainSkills: mainSkills,
           wantSkills: wantSkills,
         );
-  UpdateUser.lastTimupdate({required String uid, this.lastLogin}) : super(uid: uid);
+  UpdateUser.lastTimupdate({
+    required String uid,
+    this.lastLogin,
+  }) : super(
+          uid: uid,
+        );
 
   String updateLastLoginTimeJson() {
     return jsonEncode({

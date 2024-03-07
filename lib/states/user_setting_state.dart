@@ -4,16 +4,18 @@ import 'package:social_mediam_match/global.dart';
 import 'package:http/http.dart' as http;
 import 'package:social_mediam_match/models/user_model.dart';
 
-class SkillModel extends ChangeNotifier {
+class SkillModel {
   int id;
+  s skillHave;
+  s skillWant;
+
+  SkillModel({required this.id, required this.skillHave, required this.skillWant});
+}
+
+class s {
   SkillInfo skillInfo;
-  bool haveSkill;
-  bool wantSkill;
-  SkillModel(
-      {required this.id,
-      required this.skillInfo,
-      required this.haveSkill,
-      required this.wantSkill});
+  bool ishave;
+  s({required this.skillInfo, required this.ishave});
 }
 
 class UserSettingState extends ChangeNotifier {
@@ -27,17 +29,7 @@ class UserSettingState extends ChangeNotifier {
   List<SkillModel> backEndSkillList = [];
   List<SkillModel> otherSkillList = [];
 
-  List<String> forntType = [
-    "javascript",
-    "typescript",
-    "css",
-    "html",
-    "vue",
-    "React",
-    "AndroidStudio",
-    "Flutter",
-    "objective-c"
-  ];
+  List<String> forntType = ["javascript", "typescript", "css", "html", "vue", "React", "AndroidStudio", "Flutter", "objective-c"];
   List<String> iotType = ["arduino"];
   List<String> backendType = ["java", "python", "mysql"];
 
@@ -52,57 +44,34 @@ class UserSettingState extends ChangeNotifier {
         for (var e in jsonData) {
           //Switchコンポーネントためにユーザのスキル、勉強したいBool List作成する
           int skillLevel = 0;
-          int skillMonth = 0;
-          bool skillCheckBool =
-              userData.mainSkills!.indexWhere((element) => element.name == e['name']) != -1;
-          bool wantSkillCheckBool =
-              userData.wantSkills!.indexWhere((element) => element.name == e['name']) != -1;
+          bool skillCheckBool = userData.mainSkills!.indexWhere((element) => element.name == e['name']) != -1;
+          bool wantSkillCheckBool = userData.wantSkills!.indexWhere((element) => element.name == e['name']) != -1;
+          s have;
+          s want;
 
+          SkillInfo haveSkillInfo = SkillInfo(name: e['name'], level: 0, month: 0);
+          SkillInfo wantSkillInfo = SkillInfo(name: e['name'], level: 0, month: 0);
           if (skillCheckBool) {
-            skillLevel =
-                userData.mainSkills!.firstWhere((element) => element.name == e['name']).level;
+            skillLevel = userData.mainSkills!.firstWhere((element) => element.name == e['name']).level;
+            haveSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
           }
+          if (wantSkillCheckBool) {
+            skillLevel = userData.wantSkills!.firstWhere((element) => element.name == e['name']).level;
+            wantSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
+          }
+
+          have = s(skillInfo: haveSkillInfo, ishave: skillCheckBool);
+          want = s(skillInfo: wantSkillInfo, ishave: wantSkillCheckBool);
+
           //全スキル名前とユーザのスキルリスト組み合わせする
           if (forntType.contains(e['name'])) {
-            SkillInfo skillInfo = SkillInfo(name: e['name'], level: skillLevel, month: skillMonth);
-            forntSkillList = [
-              ...forntSkillList,
-              SkillModel(
-                  id: e['id'],
-                  skillInfo: skillInfo,
-                  haveSkill: skillCheckBool,
-                  wantSkill: wantSkillCheckBool)
-            ];
+            forntSkillList = [...forntSkillList, SkillModel(id: e['id'], skillHave: have, skillWant: want)];
           } else if (backendType.contains(e['name'])) {
-            SkillInfo skillInfo = SkillInfo(name: e['name'], level: skillLevel, month: skillMonth);
-            backEndSkillList = [
-              ...backEndSkillList,
-              SkillModel(
-                  id: e['id'],
-                  skillInfo: skillInfo,
-                  haveSkill: skillCheckBool,
-                  wantSkill: wantSkillCheckBool)
-            ];
+            backEndSkillList = [...backEndSkillList, SkillModel(id: e['id'], skillHave: have, skillWant: want)];
           } else if (iotType.contains(e['name'])) {
-            SkillInfo skillInfo = SkillInfo(name: e['name'], level: skillLevel, month: skillMonth);
-            iotSkillList = [
-              ...iotSkillList,
-              SkillModel(
-                  id: e['id'],
-                  skillInfo: skillInfo,
-                  haveSkill: skillCheckBool,
-                  wantSkill: wantSkillCheckBool)
-            ];
+            iotSkillList = [...iotSkillList, SkillModel(id: e['id'], skillHave: have, skillWant: want)];
           } else {
-            SkillInfo skillInfo = SkillInfo(name: e['name'], level: skillLevel, month: skillMonth);
-            otherSkillList = [
-              ...otherSkillList,
-              SkillModel(
-                  id: e['id'],
-                  skillInfo: skillInfo,
-                  haveSkill: skillCheckBool,
-                  wantSkill: wantSkillCheckBool)
-            ];
+            otherSkillList = [...otherSkillList, SkillModel(id: e['id'], skillHave: have, skillWant: want)];
           }
         }
 
@@ -118,17 +87,18 @@ class UserSettingState extends ChangeNotifier {
 
 //いずれスキルに関するやつ変更する
   void checkOnChange(String skillName, List<SkillModel> list, String type, {String? choicedLevel}) {
-    int index = list.indexWhere((element) => element.skillInfo.name == skillName);
+    int index = list.indexWhere((element) => element.skillHave.skillInfo.name == skillName);
     if (type == "have") {
       //スキルチェックtrue or false
-      list[index].haveSkill = !list[index].haveSkill;
+      list[index].skillHave.ishave = !list[index].skillHave.ishave;
     } else if (type == "want") {
       //スキルチェックtrue or false
-      list[index].wantSkill = !list[index].wantSkill;
-    } else if (type == "level") {
-      //いずれスキルのレベル変更する
-      list[index].skillInfo.level = int.parse(choicedLevel ?? "0");
+      list[index].skillWant.ishave = !list[index].skillWant.ishave;
     }
+    // } else if (type == "level") {
+    //   //いずれスキルのレベル変更する
+    //   list[index].skillInfo.level = int.parse(choicedLevel ?? "0");
+    // }
     notifyListeners();
   }
 
@@ -146,21 +116,16 @@ class UserSettingState extends ChangeNotifier {
     List<SkillInfo> getWantSkill = [];
 
     //全カテゴリーのスキルリストがリスト化
-    List<List<SkillModel>> allcategoryItems = [
-      backEndSkillItems,
-      webSkillItems,
-      iotSkillItems,
-      otherSkillItems
-    ];
+    List<List<SkillModel>> allcategoryItems = [backEndSkillItems, webSkillItems, iotSkillItems, otherSkillItems];
 
     for (var categoryItems in allcategoryItems) {
       for (var items in categoryItems) {
         //データ加工する
-        if (items.haveSkill) {
-          gethaveSkill.add(items.skillInfo);
+        if (items.skillHave.ishave) {
+          gethaveSkill.add(items.skillHave.skillInfo);
         }
-        if (items.wantSkill) {
-          getWantSkill.add(items.skillInfo);
+        if (items.skillWant.ishave) {
+          getWantSkill.add(items.skillWant.skillInfo);
         }
       }
     }

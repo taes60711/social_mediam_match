@@ -24,8 +24,7 @@ class Profile extends StatelessWidget {
     List<SkillModel> otherSkillItems = context.watch<UserSettingState>().otherSkillList;
 
     TextEditingController nameInput = TextEditingController()..text = userData.name ?? "";
-    TextEditingController introductionInput = TextEditingController()
-      ..text = userData.introduction ?? "";
+    TextEditingController introductionInput = TextEditingController()..text = userData.introduction ?? "";
 
     Widget ExpansionWidget(String category, List<SkillModel> list, String type) {
       var items = [
@@ -41,26 +40,26 @@ class Profile extends StatelessWidget {
         title: Text(category),
         leading: const Icon(Icons.align_horizontal_left),
         children: list.map((e) {
-          String? selectedItem = "${e.skillInfo.level}";
+          s skillInfoItem = type == "have" ? e.skillHave : e.skillWant;
+          String? selectedItem = "${skillInfoItem.skillInfo.level}";
           return Padding(
             padding: const EdgeInsets.only(left: 10.0),
             child: Row(
               children: [
                 Expanded(
-                  child: Text(e.skillInfo.name),
+                  child: Text(skillInfoItem.skillInfo.name),
                 ),
                 Switch(
-                    value: e.haveSkill,
+                    value: skillInfoItem.ishave,
                     onChanged: (value) {
-                      userSettingFuture.checkOnChange(e.skillInfo.name, list, type);
+                      userSettingFuture.checkOnChange(skillInfoItem.skillInfo.name, list, type);
                     }),
                 Text("$level :"),
                 DropdownButton(
                   value: selectedItem,
                   items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
                   onChanged: (value) {
-                    userSettingFuture.checkOnChange(e.skillInfo.name, list, "level",
-                        choicedLevel: value);
+                    userSettingFuture.checkOnChange(skillInfoItem.skillInfo.name, list, "level", choicedLevel: value);
                   },
                 ),
               ],
@@ -131,15 +130,12 @@ class Profile extends StatelessWidget {
                   Expanded(
                       child: ListView(
                     children: [
-                      ExpansionTile(
-                          title: const Text('擅長的技能'),
-                          leading: const Icon(Icons.build_sharp),
-                          children: [
-                            ExpansionWidget("前端", forntSkillItems, "have"),
-                            ExpansionWidget("後端", backEndSkillItems, "have"),
-                            ExpansionWidget("韌體", iotSkillItems, "have"),
-                            ExpansionWidget("其他", otherSkillItems, "have"),
-                          ]),
+                      ExpansionTile(title: const Text('擅長的技能'), leading: const Icon(Icons.build_sharp), children: [
+                        ExpansionWidget("前端", forntSkillItems, "have"),
+                        ExpansionWidget("後端", backEndSkillItems, "have"),
+                        ExpansionWidget("韌體", iotSkillItems, "have"),
+                        ExpansionWidget("其他", otherSkillItems, "have"),
+                      ]),
                       ExpansionTile(
                         title: const Text('想要學的技能'),
                         leading: const Icon(Icons.build_sharp),
@@ -153,14 +149,14 @@ class Profile extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () async {
                           UpdateUser updateUserData = userSettingFuture.reformatData(
-                              userData.uid,
-                              nameInput.text,
-                              introductionInput.text,
-                              forntSkillItems,
-                              iotSkillItems,
-                              backEndSkillItems,
-                              otherSkillItems);
-
+                            userData.uid,
+                            nameInput.text,
+                            introductionInput.text,
+                            forntSkillItems,
+                            iotSkillItems,
+                            backEndSkillItems,
+                            otherSkillItems,
+                          );
                           userFuture.updateProfile(userData.uid, updateUserData);
                         },
                         child: const Text("更新"),
