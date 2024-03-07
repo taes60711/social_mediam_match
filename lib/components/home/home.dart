@@ -16,7 +16,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
   int _selectedIndex = 0;
 
   @override

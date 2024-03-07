@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/home.dart';
 import 'package:social_mediam_match/components/Initial/logo.dart';
-import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import '../../models/user_model.dart';

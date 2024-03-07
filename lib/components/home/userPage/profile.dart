@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/strings/profie_string.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/states/user_setting_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
-import '../../utilities/Stateful_wrapper.dart';
+import '../../utilities/stateful_wrapper.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -24,18 +25,10 @@ class Profile extends StatelessWidget {
     List<SkillModel> otherSkillItems = context.watch<UserSettingState>().otherSkillList;
 
     TextEditingController nameInput = TextEditingController()..text = userData.name ?? "";
-    TextEditingController introductionInput = TextEditingController()..text = userData.introduction ?? "";
+    TextEditingController introductionInput = TextEditingController()
+      ..text = userData.introduction ?? "";
 
     Widget ExpansionWidget(String category, List<SkillModel> list, String type) {
-      var items = [
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-      ];
-      String level = "程度";
       Widget component = ExpansionTile(
         title: Text(category),
         leading: const Icon(Icons.align_horizontal_left),
@@ -54,7 +47,7 @@ class Profile extends StatelessWidget {
                     onChanged: (value) {
                       userSettingFuture.checkOnChange(skillInfoItem, type);
                     }),
-                Text("$level :"),
+                Text(level),
                 DropdownButton(
                   value: selectedItem,
                   items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
@@ -86,7 +79,7 @@ class Profile extends StatelessWidget {
               width: ScreenSize().width,
               child: Column(
                 children: [
-                  Text("個人資料"),
+                  Text(pageTitle),
                   Align(
                     alignment: Alignment.topLeft,
                     child: IconButton(
@@ -130,20 +123,23 @@ class Profile extends StatelessWidget {
                   Expanded(
                       child: ListView(
                     children: [
-                      ExpansionTile(title: const Text('擅長的技能'), leading: const Icon(Icons.build_sharp), children: [
-                        ExpansionWidget("前端", forntSkillItems, "have"),
-                        ExpansionWidget("後端", backEndSkillItems, "have"),
-                        ExpansionWidget("韌體", iotSkillItems, "have"),
-                        ExpansionWidget("其他", otherSkillItems, "have"),
-                      ]),
+                      ExpansionTile(
+                          title: const Text('擅長的技能'),
+                          leading: const Icon(Icons.build_sharp),
+                          children: [
+                            ExpansionWidget(SkillType.forntend.value, forntSkillItems, "have"),
+                            ExpansionWidget(SkillType.backend.value, backEndSkillItems, "have"),
+                            ExpansionWidget(SkillType.iot.value, iotSkillItems, "have"),
+                            ExpansionWidget(SkillType.other.value, otherSkillItems, "have"),
+                          ]),
                       ExpansionTile(
                         title: const Text('想要學的技能'),
                         leading: const Icon(Icons.build_sharp),
                         children: [
-                          ExpansionWidget("前端", forntSkillItems, "want"),
-                          ExpansionWidget("後端", backEndSkillItems, "want"),
-                          ExpansionWidget("韌體", iotSkillItems, "want"),
-                          ExpansionWidget("其他", otherSkillItems, "want"),
+                          ExpansionWidget(SkillType.forntend.value, forntSkillItems, "want"),
+                          ExpansionWidget(SkillType.backend.value, backEndSkillItems, "want"),
+                          ExpansionWidget(SkillType.iot.value, iotSkillItems, "want"),
+                          ExpansionWidget(SkillType.other.value, otherSkillItems, "want"),
                         ],
                       ),
                       ElevatedButton(
@@ -159,7 +155,7 @@ class Profile extends StatelessWidget {
                           );
                           userFuture.updateProfile(userData.uid, updateUserData);
                         },
-                        child: const Text("更新"),
+                        child: Text(updateButtonTitle),
                       ),
                     ],
                   ))
