@@ -23,10 +23,8 @@ class _HomeState extends State<Home> {
       HomePage(),
       Chat(),
       Course(),
-      Firends(),
-      UserPage(
-        userData: widget.userData,
-      ),
+      Firends(userData: widget.userData),
+      UserPage(userData: widget.userData),
     ];
 
     return Scaffold(

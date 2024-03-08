@@ -194,7 +194,6 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import '../../../global.dart';
-import '../../../main.dart';
 import '../../strings/userPage/user_page_string.dart';
 
 class UserPage extends StatelessWidget {
@@ -210,7 +209,7 @@ class UserPage extends StatelessWidget {
     if (isLoading) {
       userComponent = const Loading();
     } else {
-      if (userData != null) {
+      if (!userData!.isEmpty) {
         LoginUser realUserData = userData!;
         userComponent = SizedBox(
           width: ScreenSize().width,

@@ -113,6 +113,4 @@ class DBService {
     }
     return isSucess;
   }
-
-  void getSkillData() {}
 }
