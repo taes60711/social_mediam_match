@@ -194,6 +194,7 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import '../../../global.dart';
+import '../../strings/userPage/user_page_string.dart';
 
 class UserPage extends StatelessWidget {
   final LoginUser? userData;
@@ -203,7 +204,7 @@ class UserPage extends StatelessWidget {
   Widget build(BuildContext context) {
     UserState userFuture = context.read<UserState>();
     bool isLoading = context.select((UserState value) => value.isLoading);
-
+    List<String> ManagerList = [];
     Widget userComponent;
 
     if (isLoading) {
@@ -222,7 +223,7 @@ class UserPage extends StatelessWidget {
                   onPressed: () async {
                     userFuture.signOut();
                   },
-                  child: const Text("登出"),
+                  child: Text(signOutButton),
                 ),
               ),
               Padding(
@@ -240,7 +241,7 @@ class UserPage extends StatelessWidget {
                     width: ScreenSize().width / 2,
                     child: Column(
                       children: [
-                        Text("擅長的技能"),
+                        Text(skillText),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: realUserData.mainSkills!.map((e) => Text("${e.name} , ")).toList(),
@@ -252,7 +253,7 @@ class UserPage extends StatelessWidget {
                     width: ScreenSize().width / 2,
                     child: Column(
                       children: [
-                        Text("想學的技能"),
+                        Text(wantSkillText),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: realUserData.wantSkills!.map((e) => Text("${e.name} , ")).toList(),
@@ -262,27 +263,18 @@ class UserPage extends StatelessWidget {
                   ),
                 ],
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.of(context).pushNamed(RoutePath.profilePage.value, arguments: realUserData);
-                },
-                child: const Text("個人資料"),
-              ),
-              ElevatedButton(
-                onPressed: () async {},
-                child: const Text("我的文章"),
-              ),
-              ElevatedButton(
-                onPressed: () async {},
-                child: const Text("我的課程"),
-              ),
-              ElevatedButton(
-                onPressed: () async {},
-                child: const Text("好友管理"),
-              ),
-              ElevatedButton(
-                onPressed: () async {},
-                child: const Text("設定"),
+              Column(
+                children: ManagerButton.values
+                    .map((e) => ElevatedButton(
+                          onPressed: () async {
+                            Navigator.of(context).pushNamed(
+                              RoutePath.profilePage.value,
+                              arguments: realUserData,
+                            );
+                          },
+                          child: Text(e.value),
+                        ))
+                    .toList(),
               ),
             ],
           ),

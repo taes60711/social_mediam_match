@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:social_mediam_match/components/home/chat.dart';
 import 'package:social_mediam_match/components/home/course.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends.dart';

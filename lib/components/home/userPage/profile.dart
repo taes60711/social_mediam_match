@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/strings/profie_string.dart';
+import 'package:social_mediam_match/components/strings/userPage/profie_string.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/states/user_setting_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import '../../../global.dart';
+import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../utilities/stateful_wrapper.dart';
 
@@ -25,8 +26,7 @@ class Profile extends StatelessWidget {
     List<SkillModel> otherSkillItems = context.watch<UserSettingState>().otherSkillList;
 
     TextEditingController nameInput = TextEditingController()..text = userData.name ?? "";
-    TextEditingController introductionInput = TextEditingController()
-      ..text = userData.introduction ?? "";
+    TextEditingController introductionInput = TextEditingController()..text = userData.introduction ?? "";
 
     Widget ExpansionWidget(String category, List<SkillModel> list, String type) {
       Widget component = ExpansionTile(
@@ -93,18 +93,18 @@ class Profile extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
                       controller: nameInput,
-                      decoration: const InputDecoration(
-                        labelText: "用户名",
-                        hintText: "用户名",
-                        prefixIcon: Icon(Icons.person),
+                      decoration: InputDecoration(
+                        labelText: ItemTitles.username.value,
+                        hintText: ItemTitles.username.hintText,
+                        prefixIcon: const Icon(Icons.person),
                       ),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 8.0),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
                     child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text("自我介紹"),
+                      child: Text(ItemTitles.selfIntroduction.value),
                     ),
                   ),
                   Padding(
@@ -113,8 +113,8 @@ class Profile extends StatelessWidget {
                       minLines: 3,
                       maxLines: 6,
                       controller: introductionInput,
-                      decoration: const InputDecoration(
-                        hintText: 'Write a message',
+                      decoration: InputDecoration(
+                        hintText: ItemTitles.selfIntroduction.hintText,
                         filled: true,
                       ),
                       keyboardType: TextInputType.multiline,
@@ -124,16 +124,17 @@ class Profile extends StatelessWidget {
                       child: ListView(
                     children: [
                       ExpansionTile(
-                          title: const Text('擅長的技能'),
-                          leading: const Icon(Icons.build_sharp),
-                          children: [
-                            ExpansionWidget(SkillType.forntend.value, forntSkillItems, "have"),
-                            ExpansionWidget(SkillType.backend.value, backEndSkillItems, "have"),
-                            ExpansionWidget(SkillType.iot.value, iotSkillItems, "have"),
-                            ExpansionWidget(SkillType.other.value, otherSkillItems, "have"),
-                          ]),
+                        title: Text(ItemTitles.Skill.value),
+                        leading: const Icon(Icons.build_sharp),
+                        children: [
+                          ExpansionWidget(SkillType.forntend.value, forntSkillItems, "have"),
+                          ExpansionWidget(SkillType.backend.value, backEndSkillItems, "have"),
+                          ExpansionWidget(SkillType.iot.value, iotSkillItems, "have"),
+                          ExpansionWidget(SkillType.other.value, otherSkillItems, "have"),
+                        ],
+                      ),
                       ExpansionTile(
-                        title: const Text('想要學的技能'),
+                        title: Text(ItemTitles.wantSkill.value),
                         leading: const Icon(Icons.build_sharp),
                         children: [
                           ExpansionWidget(SkillType.forntend.value, forntSkillItems, "want"),

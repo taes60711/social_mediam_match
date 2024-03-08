@@ -4,19 +4,7 @@ import 'package:social_mediam_match/global.dart';
 import 'package:http/http.dart' as http;
 import 'package:social_mediam_match/models/user_model.dart';
 
-class SkillModel {
-  int id;
-  ProfileSkill skillHave;
-  ProfileSkill skillWant;
-
-  SkillModel({required this.id, required this.skillHave, required this.skillWant});
-}
-
-class ProfileSkill {
-  SkillInfo skillInfo;
-  bool ishave;
-  ProfileSkill({required this.skillInfo, required this.ishave});
-}
+import '../models/skill_model.dart';
 
 class UserSettingState extends ChangeNotifier {
   //ページに遷移すれば（データ一回しか取得ないため），flagを使う
