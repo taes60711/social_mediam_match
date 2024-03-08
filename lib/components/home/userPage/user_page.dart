@@ -209,7 +209,7 @@ class UserPage extends StatelessWidget {
     if (isLoading) {
       userComponent = const Loading();
     } else {
-      if (!userData!.isEmpty) {
+      if (userData != null) {
         LoginUser realUserData = userData!;
         userComponent = SizedBox(
           width: ScreenSize().width,

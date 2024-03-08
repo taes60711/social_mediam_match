@@ -20,8 +20,6 @@ class LoginUser extends UserModel {
   bool isEmailVerified;
   String lastLogin;
 
-  get isEmpty => uid == null ? true : false;
-
   LoginUser({
     required String uid,
     String? name,

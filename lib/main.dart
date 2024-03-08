@@ -6,6 +6,8 @@ import 'package:social_mediam_match/components/account/signup_page.dart';
 import 'package:social_mediam_match/components/Initial/Initial_page.dart';
 import 'package:social_mediam_match/components/home/userPage/profile.dart';
 import 'package:social_mediam_match/firebase_options.dart';
+import 'package:social_mediam_match/global.dart';
+import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/user_setting_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
@@ -18,6 +20,7 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => UserState()),
+      ChangeNotifierProvider(create: (_) => FriendState(channelListUrl: channelListUrl)),
     ],
     child: const MyApp(),
   ));

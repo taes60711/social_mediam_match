@@ -2,6 +2,10 @@
 String ip = "114.37.115.77";
 String port = '80';
 
+String webSocketPort = "123";
+String branch = "ws";
+String channelListUrl = 'ws://$ip:$webSocketPort/$branch';
+
 //Route路徑
 enum RoutePath {
   home("/"),

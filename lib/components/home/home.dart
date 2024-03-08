@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/home/chat.dart';
 import 'package:social_mediam_match/components/home/course.dart';
-import 'package:social_mediam_match/components/home/firendsPage/firends.dart';
+import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
 import 'package:social_mediam_match/components/home/home_page.dart';
 import 'package:social_mediam_match/components/home/userPage/user_page.dart';
 import 'package:social_mediam_match/models/user_model.dart';
@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
       HomePage(),
       Chat(),
       Course(),
-      Firends(userData: widget.userData),
+      FirendsPage(userData: widget.userData),
       UserPage(userData: widget.userData),
     ];
 

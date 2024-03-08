@@ -1,10 +1,10 @@
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
 import 'package:social_mediam_match/models/user_model.dart';
+import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
 
 class UserState extends ChangeNotifier {
@@ -26,7 +26,7 @@ class UserState extends ChangeNotifier {
   bool _isSignUp = false;
 
   //メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する
-  void isLoginCheck() {
+  void isLoginCheck(FriendState chatListChannel) {
     Stream<String> colsure() {
       return _auth.authStateChanges().map((event) {
         return event != null ? event.uid : "";
@@ -38,6 +38,8 @@ class UserState extends ChangeNotifier {
         if (userUID != "" && !_isSignUp) {
           isLoading = true;
           userData = await _dbService.getUserData(userUID);
+
+          chatListChannel.webSocketConnect(userData!.uid);
           notifyListeners();
           inspect(userData);
           isLoading = false;

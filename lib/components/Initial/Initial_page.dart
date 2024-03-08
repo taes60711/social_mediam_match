@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/home.dart';
 import 'package:social_mediam_match/components/Initial/logo.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
+import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import '../../models/user_model.dart';
@@ -14,7 +15,9 @@ class Initialpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int delayTime = 1;
+
     bool isfirstEnterApp = context.select((InitialState value) => value.isfirstEnterApp);
+    FriendState friendState = context.select((FriendState value) => value);
     LoginUser? userData = context.select((UserState value) {
       if (value.userData != null) {
         return LoginUser(
@@ -33,7 +36,7 @@ class Initialpage extends StatelessWidget {
     });
     void enterApp() {
       print("firstEnterApp");
-      context.read<UserState>().isLoginCheck();
+      context.read<UserState>().isLoginCheck(friendState);
       Timer(Duration(seconds: delayTime), () {
         context.read<InitialState>().onChange();
       });

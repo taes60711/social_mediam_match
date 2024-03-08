@@ -210,43 +210,79 @@
 //   }
 // }
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/require_login.dart';
-import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
-import 'package:web_socket_channel/io.dart';
-import '../../../global.dart';
+import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:social_mediam_match/states/friend_state.dart';
 import '../../../models/user_model.dart';
 
-class Firends extends StatelessWidget {
+class FirendsPage extends StatelessWidget {
   final LoginUser? userData;
-  const Firends({super.key, this.userData});
+  const FirendsPage({super.key, this.userData});
 
   @override
   Widget build(BuildContext context) {
-    String webSocketPort = "123";
-    String branch = "ws";
-    String channelListUrl = 'ws://$ip:$webSocketPort/$branch';
-
+    Stream? friendListStream = context.select((FriendState value) => value.chatRoomListStream);
     Widget userComponent;
-    if (!userData!.isEmpty) {
-      LoginUser realUserData = userData!;
-      IOWebSocketChannel channel;
-      userComponent = StatefulWrapper(
-        onInit: () async {
-          channel = IOWebSocketChannel.connect(channelListUrl);
-          try {
-            await channel.ready;
-            channel.sink.add('{"method" : "connect" , "userid" : "${realUserData.uid}"}');
-          } catch (e) {
-            print("webSocket Server Error $e");
-          }
-        },
-        child: Container(
-          width: 100,
-          height: 100,
-          color: Colors.blueGrey,
-        ),
-      );
+    if (userData != null) {
+      userComponent = StreamBuilder(
+          stream: friendListStream!,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              print(snapshot);
+              String data = snapshot.data;
+              List<dynamic> jsonData = jsonDecode(data);
+              return Scaffold(
+                body: Column(
+                  children: [
+                    const Text("列表"),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: jsonData.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              color: const Color.fromARGB(255, 197, 171, 161),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      width: 50,
+                                      height: 50,
+                                      color: Colors.pinkAccent,
+                                    ),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("${jsonData[index]["roomName"]}"),
+                                      jsonData[index]["lastMessage"] != null
+                                          ? Text(
+                                              "${jsonData[index]["lastMessage"]}",
+                                              style: TextStyle(color: Colors.black54),
+                                            )
+                                          : const Text(""),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              );
+            } else {
+              return Loading();
+            }
+          });
     } else {
       userComponent = const requireLogin();
     }
