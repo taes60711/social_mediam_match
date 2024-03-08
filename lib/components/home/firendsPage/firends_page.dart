@@ -245,7 +245,7 @@ class FirendsPage extends StatelessWidget {
             ),
             body: Column(
               children: [
-                Text("好友列表"),
+                const Text("好友列表"),
                 Expanded(
                   child: ListView.builder(
                     itemCount: jsonData.length,
