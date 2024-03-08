@@ -194,6 +194,7 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import '../../../global.dart';
+import '../../../main.dart';
 import '../../strings/userPage/user_page_string.dart';
 
 class UserPage extends StatelessWidget {
@@ -204,7 +205,6 @@ class UserPage extends StatelessWidget {
   Widget build(BuildContext context) {
     UserState userFuture = context.read<UserState>();
     bool isLoading = context.select((UserState value) => value.isLoading);
-    List<String> ManagerList = [];
     Widget userComponent;
 
     if (isLoading) {
