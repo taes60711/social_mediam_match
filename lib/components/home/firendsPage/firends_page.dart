@@ -216,6 +216,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/require_login.dart';
 import 'package:social_mediam_match/components/home/firendsPage/chat_room.dart';
+import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import '../../../models/user_model.dart';
@@ -227,77 +228,74 @@ class FirendsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FriendState friendFuture = context.read<FriendState>();
-    Stream? friendListStream = context.select((FriendState value) => value.friendListStream);
+    String friendListMessage = context.select((FriendState value) => value.friendListMessage);
     final GlobalKey<ScaffoldState> _key = GlobalKey();
 
     Widget userComponent;
 
     if (userData != null) {
-      userComponent = StreamBuilder(
-          stream: friendListStream!,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              String data = snapshot.data;
-              List<dynamic> jsonData = jsonDecode(data);
-              return Scaffold(
-                key: _key,
-                endDrawer: ChatRoom(
-                  globalKey: _key,
-                  userData: userData,
-                ),
-                body: Column(
-                  children: [
-                    const Text("列表"),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: jsonData.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () async {
-                              friendFuture.openRoom(jsonData[index]['roomId']);
-                              _key.currentState!.openEndDrawer();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                color: const Color.fromARGB(255, 197, 171, 161),
-                                child: Row(
+      userComponent = Builder(builder: (context) {
+        if (friendListMessage != "") {
+          List<dynamic> jsonData = jsonDecode(friendListMessage);
+          return Scaffold(
+            key: _key,
+            endDrawer: ChatRoom(
+              globalKey: _key,
+              userData: userData,
+            ),
+            body: Column(
+              children: [
+                Text("好友列表"),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: jsonData.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () async {
+                          friendFuture.openRoom(jsonData[index]['roomId']);
+                          _key.currentState!.openEndDrawer();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            color: const Color.fromARGB(255, 197, 171, 161),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    width: 50,
+                                    height: 50,
+                                    color: Colors.pinkAccent,
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        width: 50,
-                                        height: 50,
-                                        color: Colors.pinkAccent,
-                                      ),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text("${jsonData[index]["roomName"]}"),
-                                        jsonData[index]["lastMessage"] != null
-                                            ? Text(
-                                                "${jsonData[index]["lastMessage"]}",
-                                                style: const TextStyle(color: Colors.black54),
-                                              )
-                                            : const Text(""),
-                                      ],
-                                    ),
+                                    Text("${jsonData[index]["roomName"]}"),
+                                    jsonData[index]["lastMessage"] != null
+                                        ? Text(
+                                            "${jsonData[index]["lastMessage"]}",
+                                            style: const TextStyle(color: Colors.black54),
+                                          )
+                                        : const Text(""),
                                   ],
                                 ),
-                              ),
+                              ],
                             ),
-                          );
-                        },
-                      ),
-                    )
-                  ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              );
-            } else {
-              return Loading();
-            }
-          });
+              ],
+            ),
+          );
+        } else {
+          return const Loading();
+        }
+      });
     } else {
       userComponent = const requireLogin();
     }

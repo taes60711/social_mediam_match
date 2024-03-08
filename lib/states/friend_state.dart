@@ -6,7 +6,7 @@ class FriendState extends ChangeNotifier {
   late IOWebSocketChannel friendListChannel;
 
   Stream? friendListStream;
-  Stream? chatRoomStream;
+  String friendListMessage = "";
   int roomId = -1;
 
   FriendState({required this.channelListUrl});
@@ -19,8 +19,10 @@ class FriendState extends ChangeNotifier {
     await initialConnect();
     await friendListChannel.ready;
     friendListChannel.sink.add('{"method" : "connect" , "userid" : "$uid"}');
-    friendListStream = friendListChannel.stream;
-    notifyListeners();
+    friendListChannel.stream.listen((event) {
+      friendListMessage = event;
+      notifyListeners();
+    });
   }
 
   void openRoom(int roomId) {
