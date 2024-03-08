@@ -4,11 +4,14 @@ import 'package:web_socket_channel/io.dart';
 class FriendState extends ChangeNotifier {
   String channelListUrl;
   late IOWebSocketChannel friendListChannel;
-  Stream? chatRoomListStream;
+
+  Stream? friendListStream;
+  Stream? chatRoomStream;
+  int roomId = -1;
 
   FriendState({required this.channelListUrl});
 
-  void webSocketConnect(String uid) async {
+  void friendListConnect(String uid) async {
     Future<void> initialConnect() async {
       friendListChannel = IOWebSocketChannel.connect(channelListUrl);
     }
@@ -16,7 +19,12 @@ class FriendState extends ChangeNotifier {
     await initialConnect();
     await friendListChannel.ready;
     friendListChannel.sink.add('{"method" : "connect" , "userid" : "$uid"}');
-    chatRoomListStream = friendListChannel.stream;
+    friendListStream = friendListChannel.stream;
+    notifyListeners();
+  }
+
+  void openRoom(int roomId) {
+    this.roomId = roomId;
     notifyListeners();
   }
 }

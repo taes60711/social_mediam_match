@@ -5,6 +5,7 @@ String port = '80';
 String webSocketPort = "123";
 String branch = "ws";
 String channelListUrl = 'ws://$ip:$webSocketPort/$branch';
+String channelRoomUrl = 'ws://$ip:$webSocketPort/$branch/chatroom';
 
 //Route路徑
 enum RoutePath {

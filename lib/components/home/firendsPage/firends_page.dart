@@ -215,6 +215,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/require_login.dart';
+import 'package:social_mediam_match/components/home/firendsPage/chat_room.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import '../../../models/user_model.dart';
@@ -225,17 +226,25 @@ class FirendsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Stream? friendListStream = context.select((FriendState value) => value.chatRoomListStream);
+    FriendState friendFuture = context.read<FriendState>();
+    Stream? friendListStream = context.select((FriendState value) => value.friendListStream);
+    final GlobalKey<ScaffoldState> _key = GlobalKey();
+
     Widget userComponent;
+
     if (userData != null) {
       userComponent = StreamBuilder(
           stream: friendListStream!,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              print(snapshot);
               String data = snapshot.data;
               List<dynamic> jsonData = jsonDecode(data);
               return Scaffold(
+                key: _key,
+                endDrawer: ChatRoom(
+                  globalKey: _key,
+                  userData: userData,
+                ),
                 body: Column(
                   children: [
                     const Text("列表"),
@@ -243,33 +252,39 @@ class FirendsPage extends StatelessWidget {
                       child: ListView.builder(
                         itemCount: jsonData.length,
                         itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              color: const Color.fromARGB(255, 197, 171, 161),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: 50,
-                                      height: 50,
-                                      color: Colors.pinkAccent,
+                          return GestureDetector(
+                            onTap: () async {
+                              friendFuture.openRoom(jsonData[index]['roomId']);
+                              _key.currentState!.openEndDrawer();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                color: const Color.fromARGB(255, 197, 171, 161),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        width: 50,
+                                        height: 50,
+                                        color: Colors.pinkAccent,
+                                      ),
                                     ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("${jsonData[index]["roomName"]}"),
-                                      jsonData[index]["lastMessage"] != null
-                                          ? Text(
-                                              "${jsonData[index]["lastMessage"]}",
-                                              style: TextStyle(color: Colors.black54),
-                                            )
-                                          : const Text(""),
-                                    ],
-                                  ),
-                                ],
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text("${jsonData[index]["roomName"]}"),
+                                        jsonData[index]["lastMessage"] != null
+                                            ? Text(
+                                                "${jsonData[index]["lastMessage"]}",
+                                                style: const TextStyle(color: Colors.black54),
+                                              )
+                                            : const Text(""),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           );

@@ -39,7 +39,7 @@ class UserState extends ChangeNotifier {
           isLoading = true;
           userData = await _dbService.getUserData(userUID);
 
-          chatListChannel.webSocketConnect(userData!.uid);
+          chatListChannel.friendListConnect(userData!.uid);
           notifyListeners();
           inspect(userData);
           isLoading = false;
