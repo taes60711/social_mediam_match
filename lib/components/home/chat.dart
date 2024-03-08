@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/service/db_service.dart';
-import 'package:social_mediam_match/utilities/screen_size.dart';
+import 'package:social_mediam_match/states/services/db_service.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
 class Chat extends StatefulWidget {
   Chat({super.key});
@@ -13,7 +13,7 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   DBService dbService = DBService();
-  List<String> Allclass = ["english", "app", "arduino", "japanese"];
+  List<String> allclass = ["english", "app", "arduino", "japanese"];
   List<String> wantSkillFilter = [];
 
   @override
@@ -45,7 +45,7 @@ class _ChatState extends State<Chat> {
                 ),
               ),
               Column(
-                  children: Allclass.map((e) {
+                  children: allclass.map((e) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
@@ -63,9 +63,7 @@ class _ChatState extends State<Chat> {
                     child: Container(
                       width: 100,
                       height: 50,
-                      color: wantSkillFilter.contains(e)
-                          ? Colors.blue
-                          : Colors.red,
+                      color: wantSkillFilter.contains(e) ? Colors.blue : Colors.red,
                       child: Center(child: Text("$e")),
                     ),
                   ),
@@ -117,8 +115,7 @@ class _ChatState extends State<Chat> {
                     snapshots.data!.forEach((e) {
                       List<dynamic> wantSkillList = e["wantSkill"];
                       wantSkillList.forEach((ele) {
-                        if (wantSkillFilter.contains(ele) &&
-                            !filteredData.contains(e)) {
+                        if (wantSkillFilter.contains(ele) && !filteredData.contains(e)) {
                           filteredData.add(e);
                         }
                       });
@@ -129,10 +126,8 @@ class _ChatState extends State<Chat> {
                           itemCount: filteredData.length,
                           itemBuilder: (context, index) {
                             dynamic data = filteredData[index];
-                            List<dynamic> mainSkill =
-                                data["mainSkill"].toList();
-                            List<dynamic> wantSkill =
-                                data["wantSkill"].toList();
+                            List<dynamic> mainSkill = data["mainSkill"].toList();
+                            List<dynamic> wantSkill = data["wantSkill"].toList();
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
@@ -156,16 +151,14 @@ class _ChatState extends State<Chat> {
                                       child: Container(
                                     color: Colors.black26,
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text("名前 : ${data['email']}"),
                                         Text("Id : ${data['docId']}"),
                                         const Text("持ちスキル: "),
                                         Row(
                                           children: mainSkill.map((e) {
-                                            if (mainSkill.length - 1 !=
-                                                mainSkill.indexOf(e)) {
+                                            if (mainSkill.length - 1 != mainSkill.indexOf(e)) {
                                               return Text("$e、");
                                             } else {
                                               return Text("$e");
@@ -175,8 +168,7 @@ class _ChatState extends State<Chat> {
                                         const Text("勉強したいスキル:"),
                                         Row(
                                           children: wantSkill.map((e) {
-                                            if (wantSkill.length - 1 !=
-                                                wantSkill.indexOf(e)) {
+                                            if (wantSkill.length - 1 != wantSkill.indexOf(e)) {
                                               return Text("$e、");
                                             } else {
                                               return Text("$e");

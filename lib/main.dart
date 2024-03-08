@@ -1,19 +1,29 @@
-import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/loginpage.dart';
-import 'package:social_mediam_match/components/signuppage.dart';
+import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/account/login_page.dart';
+import 'package:social_mediam_match/components/account/signup_page.dart';
+import 'package:social_mediam_match/components/Initial/Initial_page.dart';
+import 'package:social_mediam_match/components/home/userPage/profile.dart';
 import 'package:social_mediam_match/firebase_options.dart';
-import 'package:social_mediam_match/components/home/home.dart';
-import 'package:social_mediam_match/service/fb_service.dart';
+import 'package:social_mediam_match/global.dart';
+import 'package:social_mediam_match/states/friend_state.dart';
+import 'package:social_mediam_match/states/initial_state.dart';
+import 'package:social_mediam_match/states/user_setting_state.dart';
+import 'package:social_mediam_match/states/user_state.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => UserState()),
+      ChangeNotifierProvider(create: (_) => FriendState(channelListUrl: channelListUrl)),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -31,59 +41,17 @@ class MyApp extends StatelessWidget {
         }),
       ),
       routes: <String, WidgetBuilder>{
-        '/': (BuildContext context) => const Initialpage(),
-        '/home': (BuildContext context) => Home(),
+        '/': (BuildContext context) => ChangeNotifierProvider(
+              create: (_) => InitialState(),
+              child: const Initialpage(),
+            ),
+        '/login': (BuildContext context) => const LoginPage(),
         '/signUp': (BuildContext context) => const SignUpPage(),
+        '/profile': (BuildContext context) => ChangeNotifierProvider(
+              create: (_) => UserSettingState(),
+              child: const Profile(),
+            )
       },
     );
-  }
-}
-
-class Initialpage extends StatefulWidget {
-  const Initialpage({super.key});
-
-  @override
-  State<Initialpage> createState() => _InitialpageState();
-}
-
-class _InitialpageState extends State<Initialpage> {
-  bool isInitial = true;
-  @override
-  void initState() {
-    super.initState();
-    Timer(const Duration(seconds: 1), () {
-      setState(() {
-        isInitial = false;
-      });
-    });
-  }
-
-  Widget preLoginPage() {
-    return StreamBuilder(
-        stream: FbService().auth.authStateChanges(),
-        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-          User? userData = snapshot.data;
-
-          if (userData != null) {
-            return Home();
-          } else {
-            return LoginPage();
-          }
-        });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return isInitial
-        ? Scaffold(
-            body: Center(
-              child: Container(
-                width: 200,
-                height: 200,
-                color: Colors.blue,
-              ),
-            ),
-          )
-        : preLoginPage();
   }
 }

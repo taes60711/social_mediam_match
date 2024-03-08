@@ -1,21 +1,50 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/service/fb_service.dart';
+import 'package:provider/provider.dart';
+import 'package:social_mediam_match/global.dart';
+import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
+import 'package:social_mediam_match/states/user_state.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    FbService fireBaseService = FbService();
+    UserState userFuture = context.read<UserState>();
+    String signError = context.select((UserState value) => value.signError);
     TextEditingController emailController = TextEditingController();
     TextEditingController pwdController = TextEditingController();
-    emailController.text = "taes60711@gmail.com";
-    pwdController.text = "toto60711";
+    emailController.text = "taes60811@gmail.com";
+    pwdController.text = "toto60811";
+
+    void ReturnLoginPage() {
+      resetAllInfo() {
+        userFuture.signError = SignUpStatus.NoMessage.value;
+      }
+
+      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.loginPage.value));
+      resetAllInfo();
+    }
+
+    Widget signErrorMessage;
+    if (signError != SignUpStatus.NoMessage.value) {
+      signErrorMessage = Align(
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Text(
+            signError,
+            style: const TextStyle(color: Colors.red),
+          ),
+        ),
+      );
+    } else {
+      signErrorMessage = Container();
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("註冊帳戶"),
+        title: const Text("註冊帳戶"),
       ),
       body: Column(
         children: [
@@ -70,17 +99,14 @@ class SignUpPage extends StatelessWidget {
               ],
             ),
           ),
+          signErrorMessage,
           ElevatedButton(
             onPressed: () async {
               String email = emailController.text;
               String pwd = pwdController.text;
-              log("signUp Email:$email Pwd:$pwd");
-              await fireBaseService.signUp(email, pwd).then((result) {
-                if (result == true) {
-                  Navigator.of(context)
-                      .popUntil((route) => route.settings.name == "/");
-                }
-              });
+              log("signUpPage Email:$email Pwd:$pwd");
+              bool isSignSucess = await userFuture.signUp(email, pwd);
+              isSignSucess ? ReturnLoginPage() : () {};
             },
             child: const Text("註冊"),
           ),
