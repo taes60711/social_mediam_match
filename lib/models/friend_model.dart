@@ -16,10 +16,12 @@ class FriendListModel {
   int roomId;
   String roomName;
   String? lastMessage;
+  int roomType;
   FriendListModel({
     required this.roomId,
     required this.roomName,
     this.lastMessage,
+    required this.roomType,
   });
 
   factory FriendListModel.fromJson(dynamic json) {
@@ -27,6 +29,7 @@ class FriendListModel {
       roomId: json['roomId'],
       roomName: json['roomName'],
       lastMessage: json['lastMessage'],
+      roomType: json['roomType'],
     );
   }
 }

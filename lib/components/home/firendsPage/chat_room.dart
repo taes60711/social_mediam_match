@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -58,18 +59,35 @@ class ChatRoom extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 8),
                           child: Align(
                             alignment: userData!.uid == messageData[index].userId ? Alignment.topRight : Alignment.topLeft,
-                            child: Container(
-                              color: Colors.deepPurple,
-                              child: Column(
-                                crossAxisAlignment: userData!.uid == messageData[index].userId
-                                    ? CrossAxisAlignment.end
-                                    : CrossAxisAlignment.start,
-                                children: [
-                                  Text("使用者:${messageData[index].userId.substring(0, 6)}"),
-                                  Text(messageData[index].message),
-                                  Text(messageData[index].sentAt.substring(0, 10)),
-                                ],
-                              ),
+                            child: Column(
+                              crossAxisAlignment:
+                                  userData!.uid == messageData[index].userId ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                              children: [
+                                Text(messageData[index].userId.substring(0, 6)),
+                                userData!.uid == messageData[index].userId
+                                    ? Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                              "${DateFormat('yyyy/MM/dd hh:mm').format(DateTime.parse(messageData[index].sentAt))}"),
+                                          Container(
+                                            color: Colors.deepPurple,
+                                            child: Text(messageData[index].message),
+                                          ),
+                                        ],
+                                      )
+                                    : Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            color: Colors.deepPurple,
+                                            child: Text(messageData[index].message),
+                                          ),
+                                          Text(
+                                              "${DateFormat('yyyy/MM/dd hh:mm').format(DateTime.parse(messageData[index].sentAt))}"),
+                                        ],
+                                      )
+                              ],
                             ),
                           ),
                         );

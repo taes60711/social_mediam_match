@@ -67,6 +67,7 @@ class FirendsPage extends StatelessWidget {
                                           style: const TextStyle(color: Colors.black54),
                                         )
                                       : const Text(""),
+                                  Text("Room Type : ${data[index].roomType}"),
                                 ],
                               ),
                             ],
