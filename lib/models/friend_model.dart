@@ -1,0 +1,32 @@
+class ChatRoomMessageModel {
+  String userId;
+  String message;
+  String sentAt;
+  ChatRoomMessageModel({required this.userId, required this.message, required this.sentAt});
+  factory ChatRoomMessageModel.fromJson(dynamic json) {
+    return ChatRoomMessageModel(
+      userId: json['userId'],
+      message: json['message'],
+      sentAt: json['sentAt'],
+    );
+  }
+}
+
+class FriendListModel {
+  int roomId;
+  String roomName;
+  String? lastMessage;
+  FriendListModel({
+    required this.roomId,
+    required this.roomName,
+    this.lastMessage,
+  });
+
+  factory FriendListModel.fromJson(dynamic json) {
+    return FriendListModel(
+      roomId: json['roomId'],
+      roomName: json['roomName'],
+      lastMessage: json['lastMessage'],
+    );
+  }
+}

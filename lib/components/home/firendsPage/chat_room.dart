@@ -1,10 +1,10 @@
 import 'dart:convert';
-
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-
+import 'package:social_mediam_match/models/friend_model.dart';
 import '../../../models/user_model.dart';
 import '../../../states/friend_state.dart';
 
@@ -17,8 +17,8 @@ class ChatRoom extends StatelessWidget {
   Widget build(BuildContext context) {
     FriendState friendFuture = context.read<FriendState>();
     String chatRoomMessage = context.select((FriendState value) => value.chatRoomMesaage);
-    TextEditingController messageInput = TextEditingController();
     int roomId = context.select((FriendState value) => value.roomId);
+    TextEditingController messageInput = TextEditingController();
 
     return SizedBox(
       width: ScreenSize().width,
@@ -32,7 +32,11 @@ class ChatRoom extends StatelessWidget {
         child: Builder(
           builder: (context) {
             if (chatRoomMessage != "") {
-              List<dynamic> messageData = jsonDecode(chatRoomMessage)['Message'];
+              List<ChatRoomMessageModel> messageData = (jsonDecode(chatRoomMessage)['Message'] as List<dynamic>).map((e) {
+                return ChatRoomMessageModel.fromJson(e);
+              }).toList();
+
+              inspect(messageData);
               return Column(
                 children: [
                   Align(
@@ -53,17 +57,17 @@ class ChatRoom extends StatelessWidget {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8),
                           child: Align(
-                            alignment: userData!.uid == messageData[index]["userId"] ? Alignment.topRight : Alignment.topLeft,
+                            alignment: userData!.uid == messageData[index].userId ? Alignment.topRight : Alignment.topLeft,
                             child: Container(
                               color: Colors.deepPurple,
                               child: Column(
-                                crossAxisAlignment: userData!.uid == messageData[index]["userId"]
+                                crossAxisAlignment: userData!.uid == messageData[index].userId
                                     ? CrossAxisAlignment.end
                                     : CrossAxisAlignment.start,
                                 children: [
-                                  Text("使用者:${messageData[index]["userId"].toString().substring(0, 6)}"),
-                                  Text("${messageData[index]["message"]}"),
-                                  Text(messageData[index]["sentAt"].toString().substring(0, 10)),
+                                  Text("使用者:${messageData[index].userId.substring(0, 6)}"),
+                                  Text(messageData[index].message),
+                                  Text(messageData[index].sentAt.substring(0, 10)),
                                 ],
                               ),
                             ),

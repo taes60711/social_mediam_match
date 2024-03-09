@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/require_login.dart';
 import 'package:social_mediam_match/components/home/firendsPage/chat_room.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:social_mediam_match/models/friend_model.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import '../../../models/user_model.dart';
 
@@ -15,19 +16,21 @@ class FirendsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     FriendState friendFuture = context.read<FriendState>();
     String friendListMessage = context.select((FriendState value) => value.friendListMessage);
-    GlobalKey<ScaffoldState> _key = context.select((FriendState value) => value.key);
+    GlobalKey<ScaffoldState> key = context.select((FriendState value) => value.key);
 
     Widget userComponent;
 
     if (userData != null) {
       userComponent = Builder(builder: (context) {
-        print("object");
         if (friendListMessage != "") {
-          List<dynamic> jsonData = jsonDecode(friendListMessage);
+          List<FriendListModel> data = (jsonDecode(friendListMessage) as List<dynamic>).map((e) {
+            return FriendListModel.fromJson(e);
+          }).toList();
+
           return Scaffold(
-            key: _key,
+            key: key,
             endDrawer: ChatRoom(
-              globalKey: _key,
+              globalKey: key,
               userData: userData,
             ),
             body: Column(
@@ -35,14 +38,14 @@ class FirendsPage extends StatelessWidget {
                 const Text("好友列表"),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: jsonData.length,
+                    itemCount: data.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                           onPressed: () async {
-                            friendFuture.openRoom(jsonData[index]['roomId']);
-                            _key.currentState!.openEndDrawer();
+                            friendFuture.openRoom(data[index].roomId);
+                            key.currentState!.openEndDrawer();
                           },
                           child: Row(
                             children: [
@@ -57,10 +60,10 @@ class FirendsPage extends StatelessWidget {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("${jsonData[index]["roomName"]}"),
-                                  jsonData[index]["lastMessage"] != null
+                                  Text(data[index].roomName),
+                                  data[index].lastMessage != null
                                       ? Text(
-                                          "${jsonData[index]["lastMessage"]}",
+                                          "${data[index].lastMessage}",
                                           style: const TextStyle(color: Colors.black54),
                                         )
                                       : const Text(""),
