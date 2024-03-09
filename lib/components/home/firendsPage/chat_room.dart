@@ -9,9 +9,9 @@ import '../../../models/user_model.dart';
 import '../../../states/friend_state.dart';
 
 class ChatRoom extends StatelessWidget {
-  GlobalKey<ScaffoldState> globalKey;
+  final GlobalKey<ScaffoldState> globalKey;
   final LoginUser? userData;
-  ChatRoom({super.key, required this.globalKey, this.userData});
+  const ChatRoom({super.key, required this.globalKey, this.userData});
 
   @override
   Widget build(BuildContext context) {

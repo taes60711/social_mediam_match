@@ -3,15 +3,10 @@ import 'package:flutter/material.dart';
 class IconWithInput extends StatelessWidget {
   final IconData icon;
   final TextEditingController inputController;
-  String? hintText;
-  double? size;
+  final String? hintText;
+  final double? size;
 
-  IconWithInput(
-      {super.key,
-      required this.icon,
-      required this.inputController,
-      this.hintText,
-      this.size});
+  const IconWithInput({super.key, required this.icon, required this.inputController, this.hintText, this.size});
 
   @override
   Widget build(BuildContext context) {
