@@ -24,9 +24,18 @@ class DBService {
   }
 
   //メソッド：MYSQLにユーザーデータを取得する
-  Future<List<LoginUser>> getAllUserData() async {
+  Future<List<LoginUser>> getAllUserData({List<String>? filterSkill}) async {
     String branch = "user";
-    final uri = Uri.parse('$url/$branch/getAll');
+    String searchUrl = '$url/$branch/getBySkill';
+    if (filterSkill != null) {
+      String searchkey = "";
+      for (var element in filterSkill) {
+        searchkey += "$element,";
+      }
+      searchUrl += "?skillName=$searchkey";
+    }
+    final uri = Uri.parse(searchUrl);
+    //?skillName=java,japan
     List<LoginUser> allUserData = [];
     try {
       var response = await http.get(uri);
