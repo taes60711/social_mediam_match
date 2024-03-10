@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
 
@@ -51,9 +52,18 @@ class SkillExChangeState extends ChangeNotifier {
 
   Future<void> getAllUserData({List<String>? filterSkill}) async {
     if (filterSkill != null) {
-      allUserData = await _dbService.getAllUserData(filterSkill: filterSkill);
+      List<LoginUser> userData = await _dbService.getAllUserData(filterSkill: filterSkill);
+
+      userData.forEach((element) {
+        allUserData = [...allUserData, element];
+      });
     } else {
-      allUserData = await _dbService.getAllUserData();
+      List<LoginUser> userData = await _dbService.getAllUserData();
+
+      userData.forEach((element) {
+        allUserData.add(element);
+        notifyListeners();
+      });
     }
     inspect(allUserData);
     notifyListeners();
@@ -65,7 +75,7 @@ class SkillExChangeState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void FilterButtonOnClick(
+  void filterButtonOnClick(
     List<Map<String, dynamic>> forntList,
     List<Map<String, dynamic>> backendList,
     List<Map<String, dynamic>> iotList,

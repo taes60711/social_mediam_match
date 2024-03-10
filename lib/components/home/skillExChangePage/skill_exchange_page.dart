@@ -11,13 +11,11 @@ class SkillExChangePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SkillExChangeState skillExChangeFuture = context.read<SkillExChangeState>();
-    List<LoginUser> allUserData = context.select((SkillExChangeState value) => value.allUserData);
-
+    List<LoginUser> allUserData = Provider.of<SkillExChangeState>(context).allUserData;
     final GlobalKey<ScaffoldState> globalKey = GlobalKey();
     return StatefulWrapper(
       onInit: () {
-        skillExChangeFuture.getAllUserData();
+        Provider.of<SkillExChangeState>(context, listen: false).getAllUserData();
       },
       child: Scaffold(
         key: globalKey,
@@ -68,15 +66,20 @@ class SkillExChangePage extends StatelessWidget {
                                 ],
                               ),
                               Text("最後登入時間: ${allUserData[index].lastLogin}"),
-                              Text(skills.isNotEmpty ? "擅長的技能 : ${skills}" : "擅長的技能 : "),
-                              Text(wantSkills.isNotEmpty ? "想學的技能 : ${wantSkills}" : "想學的技能 : "),
+                              Text(skills.isNotEmpty ? "擅長的技能 : $skills" : "擅長的技能 : "),
+                              Text(wantSkills.isNotEmpty ? "想學的技能 : $wantSkills" : "想學的技能 : "),
                             ],
                           ),
                         ),
                       ),
                     );
                   }),
-            )
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Provider.of<SkillExChangeState>(context, listen: false).getAllUserData();
+                },
+                child: Text("加載新資料")),
           ],
         ),
       ),

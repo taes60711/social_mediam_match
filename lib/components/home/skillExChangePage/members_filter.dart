@@ -133,7 +133,7 @@ class MembersFilter extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      skillExChangeFuture.FilterButtonOnClick(
+                      skillExChangeFuture.filterButtonOnClick(
                         forntSkillList,
                         backEndSkillList,
                         iotSkillList,

@@ -23,10 +23,12 @@ class DBService {
     return stream.map((e) => e.docs.map((e) => e.data()).toList());
   }
 
+  int pageNumber = 0;
   //メソッド：MYSQLにユーザーデータを取得する
   Future<List<LoginUser>> getAllUserData({List<String>? filterSkill}) async {
     String branch = "user";
-    String searchUrl = '$url/$branch/getBySkill';
+    int size = 5;
+    String searchUrl = '$url/$branch/getBySkill/test?page=$pageNumber&size=$size';
     if (filterSkill != null) {
       String searchkey = "";
       for (var element in filterSkill) {
@@ -35,15 +37,14 @@ class DBService {
       searchUrl += "?skillName=$searchkey";
     }
     final uri = Uri.parse(searchUrl);
-    //?skillName=java,japan
     List<LoginUser> allUserData = [];
     try {
       var response = await http.get(uri);
-
       if (response.statusCode != 404) {
-        allUserData = (json.decode(response.body) as List<dynamic>).map((element) {
+        allUserData = (json.decode(response.body)['content'] as List<dynamic>).map((element) {
           return LoginUser.jsonToModel(element);
         }).toList();
+        pageNumber++;
       }
     } catch (e) {
       print(e);
