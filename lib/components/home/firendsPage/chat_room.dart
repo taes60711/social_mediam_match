@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -60,14 +59,18 @@ class ChatRoom extends StatelessWidget {
                       itemCount: messageData.length,
                       itemBuilder: (context, index) {
                         return Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.only(
+                              left: 8,
+                              right: 8,
+                              bottom: 8,
+                            ),
                             child: userData!.uid == messageData[index].userId
                                 ? Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
-                                        messageData[index].sentAt.substring(11, messageData[index].sentAt.length),
+                                        messageData[index].sentAt,
                                         style: TextStyle(fontSize: 10),
                                       ),
                                       Padding(
@@ -114,7 +117,7 @@ class ChatRoom extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        messageData[index].sentAt.substring(11, messageData[index].sentAt.length),
+                                        messageData[index].sentAt,
                                         style: TextStyle(fontSize: 10),
                                       ),
                                     ],
