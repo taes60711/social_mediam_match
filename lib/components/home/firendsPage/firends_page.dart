@@ -99,10 +99,10 @@ class FirendsPage extends StatelessWidget {
                           child: ListView.builder(
                             itemCount: data.length,
                             itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: data[index].roomType == 1
-                                    ? ElevatedButton(
+                              return data[index].roomType == 1
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ElevatedButton(
                                         onPressed: () async {
                                           friendFuture.openRoom(data[index].roomId);
                                           key.currentState!.openEndDrawer();
@@ -131,9 +131,9 @@ class FirendsPage extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                      )
-                                    : Container(),
-                              );
+                                      ),
+                                    )
+                                  : Container();
                             },
                           ),
                         ),
@@ -146,10 +146,10 @@ class FirendsPage extends StatelessWidget {
                           child: ListView.builder(
                             itemCount: data.length,
                             itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: data[index].roomType == 2
-                                    ? ElevatedButton(
+                              return data[index].roomType == 2
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ElevatedButton(
                                         onPressed: () async {
                                           friendFuture.openRoom(data[index].roomId);
                                           key.currentState!.openEndDrawer();
@@ -178,9 +178,9 @@ class FirendsPage extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                      )
-                                    : Container(),
-                              );
+                                      ),
+                                    )
+                                  : Container();
                             },
                           ),
                         ),
