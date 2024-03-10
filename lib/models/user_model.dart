@@ -37,7 +37,8 @@ class LoginUser extends UserModel {
           wantSkills: wantSkills,
         );
 
-  factory LoginUser.fromMap(Map<String, dynamic> json) {
+  factory LoginUser.jsonToModel(dynamic json) {
+    //Map<String, dynamic> or dynamic
     print("json: ${json["skills"]}");
     List<SkillInfo> mainSkills =
         (json["skills"] as List<dynamic>).map((e) => SkillInfo(name: e['name'], level: e['level'], month: e['month'])).toList();

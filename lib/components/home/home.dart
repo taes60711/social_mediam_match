@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/home/skill_exchange_page.dart';
+import 'package:social_mediam_match/components/home/skillExChangePage/skill_exchange_page.dart';
 import 'package:social_mediam_match/components/home/course.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
 import 'package:social_mediam_match/components/home/post_page.dart';
@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            label: '告示欄',
+            label: '技能交換',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),

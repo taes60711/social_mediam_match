@@ -23,15 +23,25 @@ class DBService {
     return stream.map((e) => e.docs.map((e) => e.data()).toList());
   }
 
-  Stream<List<dynamic>> getData() {
-    final stream = firestore.collection("users").snapshots();
-    inspect(stream.map((e) => e.docs.map((e) => e.data()).toList()));
-    return stream.map((e) => e.docs.map((e) => e.data()).toList());
+  //メソッド：MYSQLにユーザーデータを取得する
+  Future<List<LoginUser>> getAllUserData() async {
+    String branch = "user";
+    final uri = Uri.parse('$url/$branch/getAll');
+    List<LoginUser> allUserData = [];
+    try {
+      var response = await http.get(uri);
+
+      if (response.statusCode != 404) {
+        allUserData = (json.decode(response.body) as List<dynamic>).map((element) {
+          return LoginUser.jsonToModel(element);
+        }).toList();
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allUserData;
   }
 
-  //メソッド：MYSQLにユーザーデータを取得する
-  //param
-  //uid：firebaseからアカウントid
   Future<LoginUser?> getUserData(String uid) async {
     String branch = "user";
     final uri = Uri.parse('$url/$branch/$uid');
@@ -54,7 +64,7 @@ class DBService {
 
         if (response.statusCode != 404) {
           print("userData :  ${response.body}");
-          userdata = LoginUser.fromMap(json.decode(response.body));
+          userdata = LoginUser.jsonToModel(json.decode(response.body));
         }
       });
     } catch (e) {
