@@ -12,7 +12,7 @@ class SkillExChangePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<LoginUser> allUserData = Provider.of<SkillExChangeState>(context).allUserData;
-    final GlobalKey<ScaffoldState> globalKey = GlobalKey();
+    GlobalKey<ScaffoldState> globalKey = context.select((SkillExChangeState value) => value.globalKey);
     return StatefulWrapper(
       onInit: () {
         Provider.of<SkillExChangeState>(context, listen: false).getAllUserData();

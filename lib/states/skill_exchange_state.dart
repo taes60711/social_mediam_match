@@ -19,6 +19,7 @@ class SkillExChangeState extends ChangeNotifier {
   List<Map<String, dynamic>> backEndSkillList = [];
   List<Map<String, dynamic>> otherSkillList = [];
   bool isFirst = true;
+  final GlobalKey<ScaffoldState> globalKey = GlobalKey();
 
   Future<bool> getSkillList() async {
     bool result = false;
@@ -62,7 +63,6 @@ class SkillExChangeState extends ChangeNotifier {
 
       userData.forEach((element) {
         allUserData.add(element);
-        notifyListeners();
       });
     }
     inspect(allUserData);
