@@ -36,61 +36,89 @@ class ChatRoom extends StatelessWidget {
               List<ChatRoomMessageModel> messageData = (jsonDecode(chatRoomMessage)['Message'] as List<dynamic>).map((e) {
                 return ChatRoomMessageModel.fromJson(e);
               }).toList();
-
               inspect(messageData);
               return Column(
                 children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      onPressed: () async {
-                        print("Drawer Close");
-                        friendFuture.closeRoom();
-                        globalKey.currentState!.closeEndDrawer();
-                      },
-                      icon: const Icon(Icons.arrow_back_ios_sharp),
-                    ),
+                  Row(
+                    children: [
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: IconButton(
+                          onPressed: () async {
+                            print("Drawer Close");
+                            friendFuture.closeRoom();
+                            globalKey.currentState!.closeEndDrawer();
+                          },
+                          icon: const Icon(Icons.arrow_back_ios_sharp),
+                        ),
+                      ),
+                      Text("$roomId"),
+                    ],
                   ),
                   Expanded(
                     child: ListView.builder(
                       itemCount: messageData.length,
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Align(
-                            alignment: userData!.uid == messageData[index].userId ? Alignment.topRight : Alignment.topLeft,
-                            child: Column(
-                              crossAxisAlignment:
-                                  userData!.uid == messageData[index].userId ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                              children: [
-                                Text(messageData[index].userId.substring(0, 6)),
-                                userData!.uid == messageData[index].userId
-                                    ? Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                              "${DateFormat('yyyy/MM/dd hh:mm').format(DateTime.parse(messageData[index].sentAt))}"),
-                                          Container(
-                                            color: Colors.deepPurple,
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: userData!.uid == messageData[index].userId
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        messageData[index].sentAt.substring(11, messageData[index].sentAt.length),
+                                        style: TextStyle(fontSize: 10),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(5),
+                                            color: Color.fromARGB(255, 200, 199, 202),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                             child: Text(messageData[index].message),
                                           ),
-                                        ],
-                                      )
-                                    : Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            color: Colors.deepPurple,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 3),
+                                        child: Container(
+                                          width: 35,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(18),
+                                            color: Color.fromARGB(255, 117, 64, 223),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 8),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(5),
+                                            color: const Color.fromARGB(255, 196, 175, 233),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                             child: Text(messageData[index].message),
                                           ),
-                                          Text(
-                                              "${DateFormat('yyyy/MM/dd hh:mm').format(DateTime.parse(messageData[index].sentAt))}"),
-                                        ],
-                                      )
-                              ],
-                            ),
-                          ),
-                        );
+                                        ),
+                                      ),
+                                      Text(
+                                        messageData[index].sentAt.substring(11, messageData[index].sentAt.length),
+                                        style: TextStyle(fontSize: 10),
+                                      ),
+                                    ],
+                                  ));
                       },
                     ),
                   ),
