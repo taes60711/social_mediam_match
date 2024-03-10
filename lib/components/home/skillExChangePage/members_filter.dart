@@ -18,6 +18,7 @@ class MembersFilter extends StatelessWidget {
     List<Map<String, dynamic>> forntSkillList = context.watch<SkillExChangeState>().forntSkillList;
     List<Map<String, dynamic>> backEndSkillList = context.watch<SkillExChangeState>().backEndSkillList;
     List<Map<String, dynamic>> iotSkillList = context.watch<SkillExChangeState>().iotSkillList;
+    List<Map<String, dynamic>> otherSkillList = context.watch<SkillExChangeState>().otherSkillList;
     bool isFirst = context.select((SkillExChangeState value) => value.isFirst);
 
     return isFirst
@@ -108,6 +109,25 @@ class MembersFilter extends StatelessWidget {
                             );
                           }).toList(),
                         ),
+                        ExpansionTile(
+                          title: Text(SkillType.other.value),
+                          leading: const Icon(Icons.align_horizontal_left),
+                          children: otherSkillList.map((e) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: Row(
+                                children: [
+                                  Expanded(child: Text(e['name'])),
+                                  Switch(
+                                      value: e['bool'],
+                                      onChanged: (value) {
+                                        skillExChangeFuture.filterOnChange(otherSkillList, e['name']);
+                                      }),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
                       ],
                     ),
                   ),
@@ -117,6 +137,7 @@ class MembersFilter extends StatelessWidget {
                         forntSkillList,
                         backEndSkillList,
                         iotSkillList,
+                        otherSkillList,
                       );
                     },
                     child: Text("篩選"),

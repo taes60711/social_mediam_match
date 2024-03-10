@@ -32,7 +32,7 @@ class SkillExChangePage extends StatelessWidget {
                 onPressed: () {
                   globalKey.currentState!.openEndDrawer();
                 },
-                icon: Icon(Icons.arrow_circle_right),
+                icon: Icon(Icons.dehaze_rounded),
               ),
             ),
             Expanded(

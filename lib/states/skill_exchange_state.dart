@@ -16,7 +16,7 @@ class SkillExChangeState extends ChangeNotifier {
   List<Map<String, dynamic>> forntSkillList = [];
   List<Map<String, dynamic>> iotSkillList = [];
   List<Map<String, dynamic>> backEndSkillList = [];
-
+  List<Map<String, dynamic>> otherSkillList = [];
   bool isFirst = true;
 
   Future<bool> getSkillList() async {
@@ -35,6 +35,8 @@ class SkillExChangeState extends ChangeNotifier {
             backEndSkillList = [...backEndSkillList, map];
           } else if (iotType.contains(e['name'])) {
             iotSkillList = [...iotSkillList, map];
+          } else {
+            otherSkillList = [...otherSkillList, map];
           }
         }
         isFirst = false;
@@ -67,6 +69,7 @@ class SkillExChangeState extends ChangeNotifier {
     List<Map<String, dynamic>> forntList,
     List<Map<String, dynamic>> backendList,
     List<Map<String, dynamic>> iotList,
+    List<Map<String, dynamic>> otherList,
   ) {
     List<String>? filterSkill = [];
     forntList.forEach((element) {
@@ -84,7 +87,12 @@ class SkillExChangeState extends ChangeNotifier {
         filterSkill!.add(element['name']);
       }
     });
-    if (filterSkill!.length == 0) {
+    otherList.forEach((element) {
+      if (element['bool']) {
+        filterSkill!.add(element['name']);
+      }
+    });
+    if (filterSkill.isEmpty) {
       filterSkill = null;
     }
     getAllUserData(filterSkill: filterSkill);
