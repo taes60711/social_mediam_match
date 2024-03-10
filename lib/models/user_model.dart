@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 class UserModel {
   String uid;
   String? name;
@@ -39,18 +41,21 @@ class LoginUser extends UserModel {
 
   factory LoginUser.jsonToModel(dynamic json) {
     //Map<String, dynamic> or dynamic
-    print("json: ${json["skills"]}");
     List<SkillInfo> mainSkills =
         (json["skills"] as List<dynamic>).map((e) => SkillInfo(name: e['name'], level: e['level'], month: e['month'])).toList();
     List<SkillInfo> wantSkills = (json["wantSkills"] as List<dynamic>)
         .map((e) => SkillInfo(name: e['name'], level: e['level'], month: e['month']))
         .toList();
 
+    DateTime dateUtc = DateTime.parse(json['lastlogin']).toUtc();
+    DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
+    String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
+
     return LoginUser(
       uid: json["uid"],
       email: json["email"],
       name: json["name"],
-      lastLogin: json['lastlogin'],
+      lastLogin: formattedTime,
       introduction: json['introduction'],
       isEmailVerified: json["isEmailVerified"],
       mainSkills: mainSkills,
