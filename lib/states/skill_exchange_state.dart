@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
 
@@ -13,12 +12,12 @@ class SkillExChangeState extends ChangeNotifier {
   //サーバーアドレス
   String url = "http://$ip:$port";
   List<LoginUser> allUserData = [];
-
+  List<String> filterSkill = [];
   List<Map<String, dynamic>> forntSkillList = [];
   List<Map<String, dynamic>> iotSkillList = [];
   List<Map<String, dynamic>> backEndSkillList = [];
   List<Map<String, dynamic>> otherSkillList = [];
-  bool isFirst = true;
+  bool isFirst = true, isLoading = false;
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
 
   Future<bool> getSkillList() async {
@@ -51,21 +50,21 @@ class SkillExChangeState extends ChangeNotifier {
     return result;
   }
 
-  Future<void> getAllUserData({List<String>? filterSkill}) async {
-    if (filterSkill != null) {
-      List<LoginUser> userData = await _dbService.getAllUserData(filterSkill: filterSkill);
+  Future<void> getAllUserData({required List<String> filterSkill, required bool isFirstSearch}) async {
+    isLoading = true;
 
-      userData.forEach((element) {
-        allUserData = [...allUserData, element];
-      });
+    List<LoginUser> userData = [];
+    userData = await _dbService.getAllUserData(filterSkill: filterSkill, isFirstSearch: isFirstSearch);
+
+    if (isFirstSearch) {
+      allUserData = userData;
     } else {
-      List<LoginUser> userData = await _dbService.getAllUserData();
-
-      userData.forEach((element) {
+      for (var element in userData) {
         allUserData.add(element);
-      });
+      }
     }
     inspect(allUserData);
+    isLoading = false;
     notifyListeners();
   }
 
@@ -81,30 +80,16 @@ class SkillExChangeState extends ChangeNotifier {
     List<Map<String, dynamic>> iotList,
     List<Map<String, dynamic>> otherList,
   ) {
-    List<String>? filterSkill = [];
-    forntList.forEach((element) {
-      if (element['bool']) {
-        filterSkill!.add(element['name']);
+    filterSkill = [];
+    List<List<Map<String, dynamic>>> allList = [forntList, backendList, iotList, otherList];
+    for (var element in allList) {
+      for (var e in element) {
+        if (e['bool']) {
+          filterSkill.add(e['name']);
+        }
       }
-    });
-    backendList.forEach((element) {
-      if (element['bool']) {
-        filterSkill!.add(element['name']);
-      }
-    });
-    iotList.forEach((element) {
-      if (element['bool']) {
-        filterSkill!.add(element['name']);
-      }
-    });
-    otherList.forEach((element) {
-      if (element['bool']) {
-        filterSkill!.add(element['name']);
-      }
-    });
-    if (filterSkill.isEmpty) {
-      filterSkill = null;
     }
-    getAllUserData(filterSkill: filterSkill);
+
+    getAllUserData(filterSkill: filterSkill, isFirstSearch: true);
   }
 }

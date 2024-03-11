@@ -23,19 +23,25 @@ class DBService {
     return stream.map((e) => e.docs.map((e) => e.data()).toList());
   }
 
-  int pageNumber = 0;
   //メソッド：MYSQLにユーザーデータを取得する
-  Future<List<LoginUser>> getAllUserData({List<String>? filterSkill}) async {
+  int pageNumber = 0;
+  Future<List<LoginUser>> getAllUserData({required List<String> filterSkill, required bool isFirstSearch}) async {
     String branch = "user";
     int size = 5;
-    String searchUrl = '$url/$branch/getBySkill/test?page=$pageNumber&size=$size';
-    if (filterSkill != null) {
+
+    if (isFirstSearch) {
+      pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getDataBySkillFilter?page=$pageNumber&size=$size';
+    if (filterSkill.isNotEmpty) {
       String searchkey = "";
       for (var element in filterSkill) {
         searchkey += "$element,";
       }
-      searchUrl += "?skillName=$searchkey";
+      searchUrl += "&skillName=$searchkey";
     }
+
     final uri = Uri.parse(searchUrl);
     List<LoginUser> allUserData = [];
     try {
