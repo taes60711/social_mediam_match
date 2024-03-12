@@ -18,6 +18,7 @@ class SkillExChangeState extends ChangeNotifier {
   List<Map<String, dynamic>> backEndSkillList = [];
   List<Map<String, dynamic>> otherSkillList = [];
   bool isFirst = true, isLoading = false;
+  String endDrawerType = "";
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
 
   Future<bool> getSkillList() async {
@@ -50,11 +51,11 @@ class SkillExChangeState extends ChangeNotifier {
     return result;
   }
 
-  Future<void> getAllUserData({required List<String> filterSkill, required bool isFirstSearch}) async {
+  Future<void> getAllUserData(String userUid, {required List<String> filterSkill, required bool isFirstSearch}) async {
     isLoading = true;
 
     List<LoginUser> userData = [];
-    userData = await _dbService.getAllUserData(filterSkill: filterSkill, isFirstSearch: isFirstSearch);
+    userData = await _dbService.getAllUserData(userUid, filterSkill: filterSkill, isFirstSearch: isFirstSearch);
 
     if (isFirstSearch) {
       allUserData = userData;
@@ -74,12 +75,13 @@ class SkillExChangeState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void filterButtonOnClick(
+  Future<void> filterButtonOnClick(
+    String userUid,
     List<Map<String, dynamic>> forntList,
     List<Map<String, dynamic>> backendList,
     List<Map<String, dynamic>> iotList,
     List<Map<String, dynamic>> otherList,
-  ) {
+  ) async {
     filterSkill = [];
     List<List<Map<String, dynamic>>> allList = [forntList, backendList, iotList, otherList];
     for (var element in allList) {
@@ -90,6 +92,16 @@ class SkillExChangeState extends ChangeNotifier {
       }
     }
 
-    getAllUserData(filterSkill: filterSkill, isFirstSearch: true);
+    await getAllUserData(userUid, filterSkill: filterSkill, isFirstSearch: true);
+  }
+
+  void openDrawer(String endDrawerType) {
+    this.endDrawerType = endDrawerType;
+    notifyListeners();
+    globalKey.currentState!.openEndDrawer();
+  }
+
+  void closeDrawer() {
+    globalKey.currentState!.openEndDrawer();
   }
 }

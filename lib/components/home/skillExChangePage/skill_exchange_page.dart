@@ -1,13 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/members_filter.dart';
+import 'package:social_mediam_match/components/home/skillExChangePage/user_detail.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/models/user_model.dart';
-
 import '../../../states/skill_exchange_state.dart';
 
 class SkillExChangePage extends StatelessWidget {
-  const SkillExChangePage({super.key});
+  final LoginUser? userData;
+  const SkillExChangePage({super.key, this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -15,22 +18,31 @@ class SkillExChangePage extends StatelessWidget {
     GlobalKey<ScaffoldState> globalKey = context.select((SkillExChangeState value) => value.globalKey);
     List<String> filterSkill = context.select((SkillExChangeState value) => value.filterSkill);
     bool isLoading = context.select((SkillExChangeState value) => value.isLoading);
+    SkillExChangeState skillExChangeState = context.read<SkillExChangeState>();
+    String endDrawerType = context.select((SkillExChangeState value) => value.endDrawerType);
+
     return StatefulWrapper(
       onInit: () {
-        Provider.of<SkillExChangeState>(context, listen: false).getAllUserData(filterSkill: filterSkill, isFirstSearch: true);
+        Provider.of<SkillExChangeState>(context, listen: false)
+            .getAllUserData(userData!.uid, filterSkill: filterSkill, isFirstSearch: true);
       },
       child: Scaffold(
         key: globalKey,
-        endDrawer: MembersFilter(
-          globalKey: globalKey,
-        ),
+        endDrawer: endDrawerType == "filter"
+            ? MembersFilter(
+                globalKey: globalKey,
+                userData: userData,
+              )
+            : UserDetail(
+                globalKey: globalKey,
+              ),
         body: Column(
           children: [
             Align(
               alignment: Alignment.topRight,
               child: IconButton(
                 onPressed: () {
-                  globalKey.currentState!.openEndDrawer();
+                  skillExChangeState.openDrawer("filter");
                 },
                 icon: Icon(Icons.dehaze_rounded),
               ),
@@ -43,7 +55,7 @@ class SkillExChangePage extends StatelessWidget {
                     final max = scrollNotification.metrics.maxScrollExtent;
                     if (before == max && !isLoading) {
                       Provider.of<SkillExChangeState>(context, listen: false)
-                          .getAllUserData(filterSkill: filterSkill, isFirstSearch: false);
+                          .getAllUserData(userData!.uid, filterSkill: filterSkill, isFirstSearch: false);
                     }
                   }
                   return false;
@@ -57,7 +69,8 @@ class SkillExChangePage extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
                         child: GestureDetector(
                           onTap: () {
-                            print(index);
+                            inspect(allUserData[index]);
+                            skillExChangeState.openDrawer("userDetail");
                           },
                           child: Container(
                             decoration: BoxDecoration(

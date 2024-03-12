@@ -21,7 +21,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
       PostPage(),
-      SkillExChangePage(),
+      SkillExChangePage(userData: widget.userData),
       Course(),
       FirendsPage(userData: widget.userData),
       UserPage(userData: widget.userData),

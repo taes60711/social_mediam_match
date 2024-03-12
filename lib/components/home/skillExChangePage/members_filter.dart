@@ -6,11 +6,13 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
 import '../../../global.dart';
+import '../../../models/user_model.dart';
 import '../../../states/skill_exchange_state.dart';
 
 class MembersFilter extends StatelessWidget {
   final GlobalKey<ScaffoldState> globalKey;
-  const MembersFilter({super.key, required this.globalKey});
+  final LoginUser? userData;
+  const MembersFilter({super.key, required this.globalKey, this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -132,13 +134,15 @@ class MembersFilter extends StatelessWidget {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      skillExChangeFuture.filterButtonOnClick(
+                    onPressed: () async {
+                      await skillExChangeFuture.filterButtonOnClick(
+                        userData!.uid,
                         forntSkillList,
                         backEndSkillList,
                         iotSkillList,
                         otherSkillList,
                       );
+                      globalKey.currentState!.closeEndDrawer();
                     },
                     child: Text("篩選"),
                   ),
