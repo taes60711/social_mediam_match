@@ -35,6 +35,7 @@ class SkillExChangePage extends StatelessWidget {
               )
             : UserDetail(
                 globalKey: globalKey,
+                userData: userData,
               ),
         body: Column(
           children: [
@@ -70,7 +71,7 @@ class SkillExChangePage extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             inspect(allUserData[index]);
-                            skillExChangeState.openDrawer("userDetail");
+                            skillExChangeState.openDrawer("userDetail", otherUser: allUserData[index]);
                           },
                           child: Container(
                             decoration: BoxDecoration(

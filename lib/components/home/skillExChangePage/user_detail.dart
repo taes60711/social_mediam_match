@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/models/user_model.dart';
 
 import '../../../states/friend_state.dart';
+import '../../../states/skill_exchange_state.dart';
 
 class UserDetail extends StatelessWidget {
+  final LoginUser? userData;
   final GlobalKey<ScaffoldState> globalKey;
-  const UserDetail({
-    super.key,
-    required this.globalKey,
-  });
+  const UserDetail({super.key, required this.globalKey, required this.userData});
 
   @override
   Widget build(BuildContext context) {
     FriendState friendFuture = context.read<FriendState>();
+    LoginUser otherUser = context.select(
+        (SkillExChangeState value) => value.otherUser ?? LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false));
+    String friendListMessage = context.select((FriendState value) => value.friendListMessage);
     return SizedBox(
       width: ScreenSize().width,
       child: Drawer(
@@ -39,7 +42,32 @@ class UserDetail extends StatelessWidget {
               width: 100,
               height: 100,
               color: Colors.deepOrangeAccent,
-            )
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("名前 : ${otherUser.name ?? otherUser.email}"),
+                  Text("自我介紹 : ${otherUser.introduction ?? ""}"),
+                  Text("最後登入時間: ${otherUser.lastLogin}"),
+                  Text("擅長的技能: ${otherUser.mainSkills!.map((e) => e.name).toList()}"),
+                  Text("擅長的技能程度: ${otherUser.mainSkills!.map((e) => e.level).toList()}"),
+                  Text("想學的技能: ${otherUser.wantSkills!.map((e) => e.name).toList()}"),
+                  Text("想學的技能程度: ${otherUser.wantSkills!.map((e) => e.level).toList()}")
+                ],
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                List<String> userList = [userData!.uid, otherUser.uid];
+                friendFuture.addFriend(userList);
+                if (friendListMessage == "is already Friend") {
+                  print("is already Friend");
+                }
+              },
+              child: Text("新增好友"),
+            ),
           ],
         ),
       ),

@@ -17,6 +17,7 @@ class SkillExChangeState extends ChangeNotifier {
   List<Map<String, dynamic>> iotSkillList = [];
   List<Map<String, dynamic>> backEndSkillList = [];
   List<Map<String, dynamic>> otherSkillList = [];
+  LoginUser? otherUser;
   bool isFirst = true, isLoading = false;
   String endDrawerType = "";
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
@@ -95,8 +96,11 @@ class SkillExChangeState extends ChangeNotifier {
     await getAllUserData(userUid, filterSkill: filterSkill, isFirstSearch: true);
   }
 
-  void openDrawer(String endDrawerType) {
+  void openDrawer(String endDrawerType, {LoginUser? otherUser}) {
     this.endDrawerType = endDrawerType;
+    if (this.endDrawerType == "userDetail") {
+      this.otherUser = otherUser;
+    }
     notifyListeners();
     globalKey.currentState!.openEndDrawer();
   }
