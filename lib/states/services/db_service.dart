@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
+import 'package:social_mediam_match/models/post_model.dart';
 import '../../global.dart';
 import '../../models/user_model.dart';
 
@@ -17,10 +18,54 @@ class DBService {
     return stream.map((e) => e.docs.map((e) => e.data()).toList());
   }
 
-  Stream<List<dynamic>> getPostData() {
-    final stream = firestore.collection("posts").snapshots();
-    inspect(stream.map((e) => e.docs.map((e) => e.data()).toList()));
-    return stream.map((e) => e.docs.map((e) => e.data()).toList());
+  //メソッド：MYSQLにユーザーデータを取得する
+  int postCommentPageNumber = 0;
+  Future<List<PostCommentModel>> getPostCommentData(int postId) async {
+    String branch = "posts";
+    int size = 5;
+
+    String searchUrl = '$url/$branch/getPostComment/$postId?page=$postCommentPageNumber&size=$size';
+
+    final uri = Uri.parse(searchUrl);
+    List<PostCommentModel> allpostData = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        allpostData = (json.decode(response.body)['content'] as List<dynamic>).map((e) {
+          return PostCommentModel.toMap(e);
+        }).toList();
+        postCommentPageNumber++;
+        inspect(allpostData);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allpostData;
+  }
+
+  //メソッド：MYSQLにユーザーデータを取得する
+  int postPageNumber = 0;
+  Future<List<PostModel>> getPostData() async {
+    String branch = "posts";
+    int size = 5;
+
+    String searchUrl = '$url/$branch/getAll?page=$postPageNumber&size=$size';
+
+    final uri = Uri.parse(searchUrl);
+    List<PostModel> allpostData = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        allpostData = (json.decode(response.body)['content'] as List<dynamic>).map((e) {
+          return PostModel.toMap(e);
+        }).toList();
+        postPageNumber++;
+        inspect(allpostData);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allpostData;
   }
 
   //メソッド：MYSQLにユーザーデータを取得する
