@@ -1,5 +1,5 @@
 // ip
-String ip = "114.37.102.7";
+String ip = "114.37.135.65";
 String port = '80';
 
 String webSocketPort = "123";
@@ -26,7 +26,8 @@ enum RoutePath {
   home("/"),
   loginPage("/login"),
   signUpPage("/signUp"),
-  profilePage("/profile");
+  profilePage("/profile"),
+  postEditPage("/post_edit");
 
   final String value;
   const RoutePath(this.value);

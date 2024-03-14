@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:intl/intl.dart';
 
 class PostModel {
@@ -16,7 +18,9 @@ class PostModel {
 
   factory PostModel.toMap(dynamic json) {
     DateTime dateUtc = DateTime.parse(json['postTime']).toUtc();
+
     DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
+
     String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
 
     return PostModel(

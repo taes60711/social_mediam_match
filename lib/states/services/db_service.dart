@@ -43,6 +43,20 @@ class DBService {
     return allpostData;
   }
 
+  Future<void> createPost() async {
+    String branch = "posts";
+
+    String searchUrl = '$url/$branch/createPost';
+
+    final uri = Uri.parse(searchUrl);
+
+    Map<String, String> headers = {'content-type': 'application/json'};
+
+    String body = jsonEncode({"created_by": "123", "main_message": "1213"});
+
+    await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Success:${_.body}"));
+  }
+
   //メソッド：MYSQLにユーザーデータを取得する
   int postPageNumber = 0;
   Future<List<PostModel>> getPostData() async {
@@ -59,8 +73,9 @@ class DBService {
         allpostData = (json.decode(response.body)['content'] as List<dynamic>).map((e) {
           return PostModel.toMap(e);
         }).toList();
-        postPageNumber++;
+
         inspect(allpostData);
+        postPageNumber++;
       }
     } catch (e) {
       print(e);

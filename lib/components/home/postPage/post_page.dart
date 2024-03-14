@@ -4,7 +4,8 @@ import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 
-import '../utilities/style/screen_size.dart';
+import '../../../global.dart';
+import '../../utilities/style/screen_size.dart';
 
 class PostPage extends StatelessWidget {
   const PostPage({super.key});
@@ -99,7 +100,11 @@ class PostPage extends StatelessWidget {
       },
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed(
+              RoutePath.postEditPage.value,
+            );
+          },
           child: Icon(Icons.edit),
         ),
         body: SafeArea(
