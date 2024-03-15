@@ -43,7 +43,7 @@ class DBService {
     return allpostData;
   }
 
-  Future<void> createPost() async {
+  Future<void> createPost(String uid, String message) async {
     String branch = "posts";
 
     String searchUrl = '$url/$branch/createPost';
@@ -52,9 +52,9 @@ class DBService {
 
     Map<String, String> headers = {'content-type': 'application/json'};
 
-    String body = jsonEncode({"created_by": "123", "main_message": "1213"});
+    String body = jsonEncode({"created_by": uid, "main_message": message});
 
-    await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Success:${_.body}"));
+    await http.put(uri, headers: headers, body: body).then((_) => print("MySql Post Create Success:${_.body}"));
   }
 
   //メソッド：MYSQLにユーザーデータを取得する

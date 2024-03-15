@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
     List<Widget> _widgetOptions = <Widget>[
       ChangeNotifierProvider(
         create: (_) => PostState(),
-        child: const PostPage(),
+        child: PostPage(userData: widget.userData),
       ),
       SkillExChangePage(userData: widget.userData),
       Course(),

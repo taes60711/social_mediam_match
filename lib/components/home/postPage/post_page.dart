@@ -5,10 +5,12 @@ import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 
 import '../../../global.dart';
+import '../../../models/user_model.dart';
 import '../../utilities/style/screen_size.dart';
 
 class PostPage extends StatelessWidget {
-  const PostPage({super.key});
+  final LoginUser? userData;
+  const PostPage({super.key, this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +105,7 @@ class PostPage extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pushNamed(
               RoutePath.postEditPage.value,
+              arguments: userData,
             );
           },
           child: Icon(Icons.edit),
