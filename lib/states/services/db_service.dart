@@ -18,7 +18,17 @@ class DBService {
     return stream.map((e) => e.docs.map((e) => e.data()).toList());
   }
 
-  //メソッド：MYSQLにユーザーデータを取得する
+  Future<void> createPostComment(int postUId, String uid, String message) async {
+    String branch = "posts";
+    String searchUrl = '$url/$branch/createPostComment';
+
+    final uri = Uri.parse(searchUrl);
+    Map<String, String> headers = {'content-type': 'application/json'};
+    String body = jsonEncode({"postId": postUId, "userUid": uid, "message": message});
+
+    await http.put(uri, headers: headers, body: body).then((_) => print("MySql Post Create Success:${_.body}"));
+  }
+
   int postCommentPageNumber = 0;
   Future<List<PostCommentModel>> getPostCommentData(int postId) async {
     String branch = "posts";
@@ -45,23 +55,25 @@ class DBService {
 
   Future<void> createPost(String uid, String message) async {
     String branch = "posts";
-
     String searchUrl = '$url/$branch/createPost';
 
     final uri = Uri.parse(searchUrl);
 
     Map<String, String> headers = {'content-type': 'application/json'};
-
     String body = jsonEncode({"created_by": uid, "main_message": message});
 
-    await http.put(uri, headers: headers, body: body).then((_) => print("MySql Post Create Success:${_.body}"));
+    await http.put(uri, headers: headers, body: body).then((_) {
+      print("MySql Post Create :${_.body}");
+    });
   }
 
-  //メソッド：MYSQLにユーザーデータを取得する
   int postPageNumber = 0;
-  Future<List<PostModel>> getPostData() async {
+  Future<List<PostModel>> getPostData({bool? isFirst}) async {
     String branch = "posts";
     int size = 5;
+    if (isFirst != null) {
+      postPageNumber = 0;
+    }
 
     String searchUrl = '$url/$branch/getAll?page=$postPageNumber&size=$size';
 

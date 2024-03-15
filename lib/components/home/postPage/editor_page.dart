@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/account/require_login.dart';
-import 'package:social_mediam_match/states/services/db_service.dart';
 
+import 'package:social_mediam_match/components/account/require_login.dart';
+import 'package:social_mediam_match/states/post_state.dart';
 import '../../../models/user_model.dart';
 
 class EditorPage extends StatelessWidget {
@@ -9,7 +9,9 @@ class EditorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LoginUser? userData = ModalRoute.of(context)!.settings.arguments as LoginUser?;
+    PostState postState = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postState'];
+    LoginUser? userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser?;
+
     TextEditingController introductionInput = TextEditingController();
 
     Widget userComponent;
@@ -34,7 +36,7 @@ class EditorPage extends StatelessWidget {
                 minLines: 5,
                 maxLines: 255,
                 controller: introductionInput,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "文章內容",
                   filled: true,
                 ),
@@ -42,8 +44,9 @@ class EditorPage extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                DBService().createPost("", introductionInput.text);
+              onPressed: () async {
+                await postState.createPost(userData.uid, introductionInput.text);
+                Navigator.pop(context);
               },
               child: Text("投稿"),
             ),
