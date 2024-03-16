@@ -7,6 +7,7 @@ class PostState extends ChangeNotifier {
   final DBService _dbService = DBService();
   List<PostModel> postData = [];
   List<PostCommentModel> postCommentData = [];
+  TextEditingController postCommentInput = TextEditingController();
 
   Future<void> getPostData() async {
     List<PostModel> tempPostData = await _dbService.getPostData();

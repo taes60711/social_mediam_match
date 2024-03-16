@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
-import 'package:social_mediam_match/states/services/db_service.dart';
 
 import '../../../global.dart';
 import '../../../models/user_model.dart';
@@ -28,6 +27,7 @@ class PostPage extends StatelessWidget {
             child: Builder(builder: (context) {
               PostState postState = context.read<PostState>();
               List<PostCommentModel> postCommentData = context.watch<PostState>().postCommentData;
+              TextEditingController postCommentInput = context.select((PostState value) => value.postCommentInput);
               return StatefulWrapper(
                 onInit: () async {
                   await postState.getPostCommentData(postId);
@@ -88,38 +88,41 @@ class PostPage extends StatelessWidget {
                                     },
                                   ),
                                 ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                                        child: SizedBox(
-                                          height: 30,
-                                          child: TextField(
-                                            decoration: const InputDecoration(
-                                              contentPadding: EdgeInsets.only(top: 5, left: 10),
-                                              border: OutlineInputBorder(),
-                                              hintText: 'Enter Message',
+                                userData != null
+                                    ? Row(
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                                              child: SizedBox(
+                                                height: 30,
+                                                child: TextField(
+                                                  controller: postCommentInput,
+                                                  decoration: const InputDecoration(
+                                                    contentPadding: EdgeInsets.only(top: 5, left: 10),
+                                                    border: OutlineInputBorder(),
+                                                    hintText: 'Enter Message',
+                                                  ),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        postState.createPostComment(postId, "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2", "asdasdasdqwe");
-                                      },
-                                      child: Container(
-                                        width: 80,
-                                        height: 30,
-                                        color: Colors.deepOrange,
-                                        child: const Center(
-                                          child: Text("傳送訊息"),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
+                                          GestureDetector(
+                                            onTap: () {
+                                              postState.createPostComment(postId, userData!.uid, postCommentInput.text);
+                                            },
+                                            child: Container(
+                                              width: 80,
+                                              height: 30,
+                                              color: Colors.deepOrange,
+                                              child: const Center(
+                                                child: Text("傳送訊息"),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Container(),
                               ],
                             ),
                           ),
