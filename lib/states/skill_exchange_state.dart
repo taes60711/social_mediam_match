@@ -52,11 +52,15 @@ class SkillExChangeState extends ChangeNotifier {
     return result;
   }
 
-  Future<void> getAllUserData(String userUid, {required List<String> filterSkill, required bool isFirstSearch}) async {
+  Future<void> getAllUserData({String? userUid, required List<String> filterSkill, required bool isFirstSearch}) async {
     isLoading = true;
 
     List<LoginUser> userData = [];
-    userData = await _dbService.getAllUserData(userUid, filterSkill: filterSkill, isFirstSearch: isFirstSearch);
+    if (userUid != null) {
+      userData = await _dbService.getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: isFirstSearch);
+    } else {
+      userData = await _dbService.getAllUserData(filterSkill: filterSkill, isFirstSearch: isFirstSearch);
+    }
 
     if (isFirstSearch) {
       allUserData = userData;
@@ -93,7 +97,7 @@ class SkillExChangeState extends ChangeNotifier {
       }
     }
 
-    await getAllUserData(userUid, filterSkill: filterSkill, isFirstSearch: true);
+    await getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: true);
   }
 
   void openDrawer(String endDrawerType, {LoginUser? otherUser}) {

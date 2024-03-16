@@ -23,8 +23,12 @@ class SkillExChangePage extends StatelessWidget {
 
     return StatefulWrapper(
       onInit: () {
-        Provider.of<SkillExChangeState>(context, listen: false)
-            .getAllUserData(userData!.uid, filterSkill: filterSkill, isFirstSearch: true);
+        if (userData != null) {
+          Provider.of<SkillExChangeState>(context, listen: false)
+              .getAllUserData(userUid: userData!.uid, filterSkill: filterSkill, isFirstSearch: true);
+        } else {
+          Provider.of<SkillExChangeState>(context, listen: false).getAllUserData(filterSkill: filterSkill, isFirstSearch: true);
+        }
       },
       child: Scaffold(
         key: globalKey,
@@ -55,8 +59,13 @@ class SkillExChangePage extends StatelessWidget {
                     final before = scrollNotification.metrics.extentBefore;
                     final max = scrollNotification.metrics.maxScrollExtent;
                     if (before == max && !isLoading) {
-                      Provider.of<SkillExChangeState>(context, listen: false)
-                          .getAllUserData(userData!.uid, filterSkill: filterSkill, isFirstSearch: false);
+                      if (userData != null) {
+                        Provider.of<SkillExChangeState>(context, listen: false)
+                            .getAllUserData(userUid: userData!.uid, filterSkill: filterSkill, isFirstSearch: false);
+                      } else {
+                        Provider.of<SkillExChangeState>(context, listen: false)
+                            .getAllUserData(filterSkill: filterSkill, isFirstSearch: false);
+                      }
                     }
                   }
                   return false;

@@ -99,7 +99,8 @@ class DBService {
 
   //メソッド：MYSQLにユーザーデータを取得する
   int pageNumber = 0;
-  Future<List<LoginUser>> getAllUserData(String userUid, {required List<String> filterSkill, required bool isFirstSearch}) async {
+  Future<List<LoginUser>> getAllUserData(
+      {String? userUid, required List<String> filterSkill, required bool isFirstSearch}) async {
     String branch = "user";
     int size = 5;
 
@@ -107,7 +108,10 @@ class DBService {
       pageNumber = 0;
     }
 
-    String searchUrl = '$url/$branch/getDataBySkillFilter?userUid=$userUid&page=$pageNumber&size=$size';
+    String searchUrl = '$url/$branch/getDataBySkillFilter?page=$pageNumber&size=$size';
+    if (userUid != null) {
+      searchUrl += "&userUid=$userUid";
+    }
     if (filterSkill.isNotEmpty) {
       String searchkey = "";
       for (var element in filterSkill) {
