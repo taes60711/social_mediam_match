@@ -41,7 +41,9 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
+        print(response.body);
         allpostData = (json.decode(response.body)['content'] as List<dynamic>).map((e) {
+          inspect(e);
           return PostCommentModel.toMap(e);
         }).toList();
         postCommentPageNumber++;

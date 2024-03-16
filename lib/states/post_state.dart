@@ -40,4 +40,21 @@ class PostState extends ChangeNotifier {
       print(e);
     }
   }
+
+  Future<void> createPostComment(int postId, String userUid, String message) async {
+    try {
+      await _dbService.createPostComment(postId, userUid, message);
+
+      DateTime dateUtc = DateTime.now().toUtc();
+      DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
+      String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
+
+      PostCommentModel tempPostCommentData =
+          PostCommentModel(postId: postId, userUid: userUid, message: message, postTime: formattedTime);
+      postCommentData.insert(0, tempPostCommentData);
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
 }

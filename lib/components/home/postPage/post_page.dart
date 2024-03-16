@@ -27,7 +27,7 @@ class PostPage extends StatelessWidget {
             create: (_) => PostState(),
             child: Builder(builder: (context) {
               PostState postState = context.read<PostState>();
-              List<PostCommentModel> postCommentData = context.select((PostState value) => value.postCommentData);
+              List<PostCommentModel> postCommentData = context.watch<PostState>().postCommentData;
               return StatefulWrapper(
                 onInit: () async {
                   await postState.getPostCommentData(postId);
@@ -107,7 +107,7 @@ class PostPage extends StatelessWidget {
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        DBService().createPostComment(2, "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2", "asdasdasdqwe");
+                                        postState.createPostComment(postId, "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2", "asdasdasdqwe");
                                       },
                                       child: Container(
                                         width: 80,
