@@ -266,10 +266,12 @@ class UserPage extends StatelessWidget {
                 children: ManagerButton.values
                     .map((e) => ElevatedButton(
                           onPressed: () async {
-                            Navigator.of(context).pushNamed(
-                              RoutePath.profilePage.value,
-                              arguments: realUserData,
-                            );
+                            if (e.value == ManagerButton.profile.value) {
+                              Navigator.of(context).pushNamed(
+                                RoutePath.profilePage.value,
+                                arguments: realUserData,
+                              );
+                            }
                           },
                           child: Text(e.value),
                         ))
