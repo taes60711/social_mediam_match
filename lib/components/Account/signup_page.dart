@@ -14,8 +14,8 @@ class SignUpPage extends StatelessWidget {
     String signError = context.select((UserState value) => value.signError);
     TextEditingController emailController = TextEditingController();
     TextEditingController pwdController = TextEditingController();
-    emailController.text = "taes60711@gmail.com";
-    pwdController.text = "toto60711";
+    // emailController.text = "taes60711@gmail.com";
+    // pwdController.text = "toto60711";
 
     void ReturnLoginPage() {
       resetAllInfo() {
