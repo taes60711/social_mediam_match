@@ -29,6 +29,22 @@ class FriendState extends ChangeNotifier {
     });
   }
 
+  void checkIsFriend(List<String> usersList) {
+    List<String> usersListTemp = [];
+    usersList.forEach((element) {
+      usersListTemp = [...usersListTemp, "\"$element\""];
+    });
+    _friendListChannel.sink.add('{"method" : "checkIsFriend","members" : $usersListTemp}');
+  }
+
+  void addFriend(List<String> usersList) {
+    List<String> usersListTemp = [];
+    usersList.forEach((element) {
+      usersListTemp = [...usersListTemp, "\"$element\""];
+    });
+    _friendListChannel.sink.add('{"method" : "addFriend","members" : $usersListTemp}');
+  }
+
   Future<void> openRoom(int roomId) async {
     Future<void> initialConnect() async {
       _chatRoomChannel = IOWebSocketChannel.connect(channelRoomUrl);

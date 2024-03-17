@@ -67,6 +67,8 @@ class UserState extends ChangeNotifier {
         case "invalid-email":
           loginError = LoginStatus.EmailFormatError.value;
           break;
+        case "channel-error":
+          loginError = LoginStatus.EmailFormatError.value;
       }
       notifyListeners();
     }

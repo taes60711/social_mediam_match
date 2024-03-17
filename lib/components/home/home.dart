@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/home/skill_exchange_page.dart';
+import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/home/skillExChangePage/skill_exchange_page.dart';
 import 'package:social_mediam_match/components/home/course.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
-import 'package:social_mediam_match/components/home/post_page.dart';
+import 'package:social_mediam_match/components/home/postPage/post_page.dart';
 import 'package:social_mediam_match/components/home/userPage/user_page.dart';
 import 'package:social_mediam_match/models/user_model.dart';
+import 'package:social_mediam_match/states/post_state.dart';
 
 class Home extends StatefulWidget {
   final LoginUser? userData;
@@ -20,8 +22,11 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
-      PostPage(),
-      SkillExChangePage(),
+      ChangeNotifierProvider(
+        create: (_) => PostState(),
+        child: PostPage(userData: widget.userData),
+      ),
+      SkillExChangePage(userData: widget.userData),
       Course(),
       FirendsPage(userData: widget.userData),
       UserPage(userData: widget.userData),
@@ -40,7 +45,7 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            label: '告示欄',
+            label: '技能交換',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),

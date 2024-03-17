@@ -17,10 +17,6 @@ class UserSettingState extends ChangeNotifier {
   List<SkillModel> backEndSkillList = [];
   List<SkillModel> otherSkillList = [];
 
-  List<String> forntType = ["javascript", "typescript", "css", "html", "vue", "React", "AndroidStudio", "Flutter", "objective-c"];
-  List<String> iotType = ["arduino"];
-  List<String> backendType = ["java", "python", "mysql"];
-
   //ページに遷移する際に、元データ取得する
   Future<bool> getPageAllData(LoginUser userData) async {
     bool result = false;

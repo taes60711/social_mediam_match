@@ -4,11 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/login_page.dart';
 import 'package:social_mediam_match/components/account/signup_page.dart';
 import 'package:social_mediam_match/components/Initial/Initial_page.dart';
+import 'package:social_mediam_match/components/home/postPage/editor_page.dart';
 import 'package:social_mediam_match/components/home/userPage/profile.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
+import 'package:social_mediam_match/states/post_state.dart';
+import 'package:social_mediam_match/states/skill_exchange_state.dart';
 import 'package:social_mediam_match/states/user_setting_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 
@@ -21,6 +24,7 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (_) => UserState()),
       ChangeNotifierProvider(create: (_) => FriendState(channelListUrl: channelListUrl)),
+      ChangeNotifierProvider(create: (_) => SkillExChangeState()),
     ],
     child: const MyApp(),
   ));
@@ -44,6 +48,10 @@ class MyApp extends StatelessWidget {
         '/': (BuildContext context) => ChangeNotifierProvider(
               create: (_) => InitialState(),
               child: const Initialpage(),
+            ),
+        '/post_edit': (BuildContext context) => ChangeNotifierProvider(
+              create: (_) => PostState(),
+              child: const EditorPage(),
             ),
         '/login': (BuildContext context) => const LoginPage(),
         '/signUp': (BuildContext context) => const SignUpPage(),

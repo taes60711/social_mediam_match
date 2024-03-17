@@ -38,21 +38,16 @@ class ChatRoom extends StatelessWidget {
               inspect(messageData);
               return Column(
                 children: [
-                  Row(
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: IconButton(
-                          onPressed: () async {
-                            print("Drawer Close");
-                            friendFuture.closeRoom();
-                            globalKey.currentState!.closeEndDrawer();
-                          },
-                          icon: const Icon(Icons.arrow_back_ios_sharp),
-                        ),
-                      ),
-                      Text("$roomId"),
-                    ],
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      onPressed: () async {
+                        print("Drawer Close");
+                        friendFuture.closeRoom();
+                        globalKey.currentState!.closeEndDrawer();
+                      },
+                      icon: const Icon(Icons.arrow_back_ios_sharp),
+                    ),
                   ),
                   Expanded(
                     child: ListView.builder(

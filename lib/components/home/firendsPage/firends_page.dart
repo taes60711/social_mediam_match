@@ -22,7 +22,7 @@ class FirendsPage extends StatelessWidget {
 
     if (userData != null) {
       userComponent = Builder(builder: (context) {
-        if (friendListMessage != "") {
+        if (friendListMessage != "" && friendListMessage != "is already Friend") {
           List<FriendListModel> data = (jsonDecode(friendListMessage) as List<dynamic>).map((e) {
             return FriendListModel.fromJson(e);
           }).toList();

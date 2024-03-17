@@ -121,45 +121,46 @@ class Profile extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                      child: ListView(
-                    children: [
-                      ExpansionTile(
-                        title: Text(ItemTitles.Skill.value),
-                        leading: const Icon(Icons.build_sharp),
-                        children: [
-                          ExpansionWidget(SkillType.forntend.value, forntSkillItems, "have"),
-                          ExpansionWidget(SkillType.backend.value, backEndSkillItems, "have"),
-                          ExpansionWidget(SkillType.iot.value, iotSkillItems, "have"),
-                          ExpansionWidget(SkillType.other.value, otherSkillItems, "have"),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: Text(ItemTitles.wantSkill.value),
-                        leading: const Icon(Icons.build_sharp),
-                        children: [
-                          ExpansionWidget(SkillType.forntend.value, forntSkillItems, "want"),
-                          ExpansionWidget(SkillType.backend.value, backEndSkillItems, "want"),
-                          ExpansionWidget(SkillType.iot.value, iotSkillItems, "want"),
-                          ExpansionWidget(SkillType.other.value, otherSkillItems, "want"),
-                        ],
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          UpdateUser updateUserData = userSettingFuture.reformatData(
-                            userData.uid,
-                            nameInput.text,
-                            introductionInput.text,
-                            forntSkillItems,
-                            iotSkillItems,
-                            backEndSkillItems,
-                            otherSkillItems,
-                          );
-                          userFuture.updateProfile(userData.uid, updateUserData);
-                        },
-                        child: Text(updateButtonTitle),
-                      ),
-                    ],
-                  ))
+                    child: ListView(
+                      children: [
+                        ExpansionTile(
+                          title: Text(ItemTitles.Skill.value),
+                          leading: const Icon(Icons.build_sharp),
+                          children: [
+                            ExpansionWidget(SkillType.forntend.value, forntSkillItems, "have"),
+                            ExpansionWidget(SkillType.backend.value, backEndSkillItems, "have"),
+                            ExpansionWidget(SkillType.iot.value, iotSkillItems, "have"),
+                            ExpansionWidget(SkillType.other.value, otherSkillItems, "have"),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: Text(ItemTitles.wantSkill.value),
+                          leading: const Icon(Icons.build_sharp),
+                          children: [
+                            ExpansionWidget(SkillType.forntend.value, forntSkillItems, "want"),
+                            ExpansionWidget(SkillType.backend.value, backEndSkillItems, "want"),
+                            ExpansionWidget(SkillType.iot.value, iotSkillItems, "want"),
+                            ExpansionWidget(SkillType.other.value, otherSkillItems, "want"),
+                          ],
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            UpdateUser updateUserData = userSettingFuture.reformatData(
+                              userData.uid,
+                              nameInput.text,
+                              introductionInput.text,
+                              forntSkillItems,
+                              iotSkillItems,
+                              backEndSkillItems,
+                              otherSkillItems,
+                            );
+                            userFuture.updateProfile(userData.uid, updateUserData);
+                          },
+                          child: Text(updateButtonTitle),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             )),

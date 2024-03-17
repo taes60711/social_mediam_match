@@ -16,7 +16,8 @@ class LoginPage extends StatelessWidget {
     TextEditingController pwdController = TextEditingController();
     UserState userFuture = context.read<UserState>();
     String loginError = context.select((UserState value) => value.loginError);
-
+    // emailController.text = "taes60811@gmail.com";
+    // pwdController.text = "toto60811";
     void closeResetPwdWindow() {
       userFuture.resetPwdError = ResetPwdStatus.NoMessage.value;
       Navigator.pop(context);
@@ -164,8 +165,6 @@ class LoginPage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
-                emailController.text = "taes60811@gmail.com";
-                pwdController.text = "toto60811";
                 bool isLoginSucess = await userFuture.signIn(emailController.text, pwdController.text);
                 isLoginSucess ? ReturnHome() : () {};
               },

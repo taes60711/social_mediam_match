@@ -1,5 +1,5 @@
 // ip
-String ip = "114.37.115.77";
+String ip = "114.37.135.65";
 String port = '80';
 
 String webSocketPort = "123";
@@ -7,12 +7,27 @@ String branch = "ws";
 String channelListUrl = 'ws://$ip:$webSocketPort/$branch';
 String channelRoomUrl = 'ws://$ip:$webSocketPort/$branch/chatroom';
 
+List<String> forntType = ["javascript", "typescript", "css", "html", "vue", "React", "AndroidStudio", "Flutter", "objective-c"];
+List<String> iotType = ["arduino"];
+List<String> backendType = ["java", "python", "mysql"];
+
+enum SkillType {
+  forntend("前端"),
+  backend("後端"),
+  iot("韌體"),
+  other("其他");
+
+  final String value;
+  const SkillType(this.value);
+}
+
 //Route路徑
 enum RoutePath {
   home("/"),
   loginPage("/login"),
   signUpPage("/signUp"),
-  profilePage("/profile");
+  profilePage("/profile"),
+  postEditPage("/post_edit");
 
   final String value;
   const RoutePath(this.value);
