@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 class UserModel {
   String uid;
+  String? image;
   String? token;
   String? name;
   String? introduction;
@@ -11,6 +12,7 @@ class UserModel {
   List<SkillInfo>? wantSkills;
   UserModel({
     required this.uid,
+    this.image,
     this.token,
     this.name,
     this.introduction,
@@ -26,6 +28,7 @@ class LoginUser extends UserModel {
 
   LoginUser({
     required String uid,
+    String? image,
     String? token,
     String? name,
     String? introduction,
@@ -36,6 +39,7 @@ class LoginUser extends UserModel {
     required this.isEmailVerified,
   }) : super(
           uid: uid,
+          image: image,
           token: token,
           name: name,
           introduction: introduction,
@@ -57,6 +61,7 @@ class LoginUser extends UserModel {
 
     return LoginUser(
       uid: json["uid"],
+      image: json["image"],
       token: json["token"],
       email: json["email"],
       name: json["name"],

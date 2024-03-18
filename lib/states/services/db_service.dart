@@ -165,19 +165,10 @@ class DBService {
       var response = await http.get(uri);
 
       if (response.statusCode != 404) {
-        print("userData :  ${response.body}");
         userdata = LoginUser.jsonToModel(json.decode(response.body));
+        print("userData :  ");
+        inspect(userdata);
       }
-      // //ユーザログインのタイム更新する
-      // await updateLastTime(uid).then((value) async {
-      //   //ユーザのデータ取得
-      //   var response = await http.get(uri);
-
-      //   if (response.statusCode != 404) {
-      //     print("userData :  ${response.body}");
-      //     userdata = LoginUser.jsonToModel(json.decode(response.body));
-      //   }
-      // });
     } catch (e) {
       print(e);
     }

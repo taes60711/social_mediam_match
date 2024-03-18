@@ -186,6 +186,8 @@
 //   }
 // }
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/require_login.dart';
@@ -211,6 +213,7 @@ class UserPage extends StatelessWidget {
     } else {
       if (userData != null) {
         LoginUser realUserData = userData!;
+
         userComponent = SizedBox(
           width: ScreenSize().width,
           child: Column(
@@ -227,10 +230,10 @@ class UserPage extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
+                child: SizedBox(
                   width: 120,
                   height: 120,
-                  color: Colors.green,
+                  child: Image.memory(const Base64Decoder().convert(realUserData.image ?? "")),
                 ),
               ),
               Text("Hello, ${realUserData.name ?? realUserData.email}"),
