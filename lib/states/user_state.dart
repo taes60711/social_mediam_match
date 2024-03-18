@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
@@ -38,7 +39,7 @@ class UserState extends ChangeNotifier {
         if (userUID != "" && !_isSignUp) {
           isLoading = true;
           userData = await _dbService.getUserData(userUID);
-
+          await _dbService.updateLastTime(userUID);
           chatListChannel.friendListConnect(userData!.uid);
           notifyListeners();
           inspect(userData);
@@ -56,7 +57,10 @@ class UserState extends ChangeNotifier {
     bool isSucess = false;
 
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await _auth.signInWithEmailAndPassword(email: email, password: password).then((value) async {
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        _dbService.updateUserToken(value.user!.uid, fcmToken!);
+      });
       isSucess = true;
     } on FirebaseAuthException catch (e) {
       print("signIn error ${e.code}");

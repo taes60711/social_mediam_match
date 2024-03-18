@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/login_page.dart';
 import 'package:social_mediam_match/components/account/signup_page.dart';
@@ -11,6 +14,7 @@ import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
+import 'package:social_mediam_match/states/services/notification_service.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
 import 'package:social_mediam_match/states/user_setting_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
@@ -20,6 +24,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  NotificationService notificationService = NotificationService()..initNotification();
+  notificationService.notificationListen();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => UserState()),

@@ -4,12 +4,14 @@ import 'package:intl/intl.dart';
 
 class UserModel {
   String uid;
+  String? token;
   String? name;
   String? introduction;
   List<SkillInfo>? mainSkills;
   List<SkillInfo>? wantSkills;
   UserModel({
     required this.uid,
+    this.token,
     this.name,
     this.introduction,
     this.mainSkills,
@@ -24,6 +26,7 @@ class LoginUser extends UserModel {
 
   LoginUser({
     required String uid,
+    String? token,
     String? name,
     String? introduction,
     required this.lastLogin,
@@ -33,6 +36,7 @@ class LoginUser extends UserModel {
     required this.isEmailVerified,
   }) : super(
           uid: uid,
+          token: token,
           name: name,
           introduction: introduction,
           mainSkills: mainSkills,
@@ -53,6 +57,7 @@ class LoginUser extends UserModel {
 
     return LoginUser(
       uid: json["uid"],
+      token: json["token"],
       email: json["email"],
       name: json["name"],
       lastLogin: formattedTime,
@@ -96,6 +101,21 @@ class UpdateUser extends UserModel {
           mainSkills: mainSkills,
           wantSkills: wantSkills,
         );
+
+  UpdateUser.updateToken({
+    required String uid,
+    String? token,
+  }) : super(
+          uid: uid,
+          token: token,
+        );
+
+  String updateupdateTokenJson() {
+    return jsonEncode({
+      'uid': uid,
+      "token": token,
+    });
+  }
 
   UpdateUser.lastTimupdate({
     required String uid,

@@ -136,31 +136,48 @@ class DBService {
     return allUserData;
   }
 
+  //ユーザログインのToken更新する
+  Future<void> updateUserToken(String uid, String token) async {
+    String branch = "user";
+    Map<String, String> headers = {'content-type': 'application/json'};
+    String body = UpdateUser.updateToken(uid: uid, token: token).updateupdateTokenJson();
+    await http
+        .put(Uri.parse('$url/$branch/updateToken/$uid'), headers: headers, body: body)
+        .then((_) => print("MySql Login:${_.body}"));
+  }
+
+  //ユーザログインのタイム更新する
+  Future<void> updateLastTime(String uid) async {
+    String branch = "user";
+    Map<String, String> headers = {'content-type': 'application/json'};
+    String body = UpdateUser.lastTimupdate(uid: uid, lastLogin: DateTime.now().toIso8601String()).updateLastLoginTimeJson();
+    await http
+        .put(Uri.parse('$url/$branch/updateLoginTime/$uid'), headers: headers, body: body)
+        .then((_) => print("MySql LoginTimeUpdate:${_.body}"));
+  }
+
+  //ユーザのデータ取得
   Future<LoginUser?> getUserData(String uid) async {
     String branch = "user";
     final uri = Uri.parse('$url/$branch/$uid');
     LoginUser? userdata;
     try {
-      Map<String, String> headers = {'content-type': 'application/json'};
-      String body = UpdateUser.lastTimupdate(uid: uid, lastLogin: DateTime.now().toIso8601String()).updateLastLoginTimeJson();
+      var response = await http.get(uri);
 
-      //ユーザログインのタイム更新する
-      await http
-          .put(
-            Uri.parse('$url/$branch/updateLoginTime/$uid'),
-            headers: headers,
-            body: body,
-          )
-          .then((_) => print("MySql LoginTimeUpdate:${_.body}"))
-          .then((value) async {
-        //ユーザのデータ取得
-        var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        print("userData :  ${response.body}");
+        userdata = LoginUser.jsonToModel(json.decode(response.body));
+      }
+      // //ユーザログインのタイム更新する
+      // await updateLastTime(uid).then((value) async {
+      //   //ユーザのデータ取得
+      //   var response = await http.get(uri);
 
-        if (response.statusCode != 404) {
-          print("userData :  ${response.body}");
-          userdata = LoginUser.jsonToModel(json.decode(response.body));
-        }
-      });
+      //   if (response.statusCode != 404) {
+      //     print("userData :  ${response.body}");
+      //     userdata = LoginUser.jsonToModel(json.decode(response.body));
+      //   }
+      // });
     } catch (e) {
       print(e);
     }
