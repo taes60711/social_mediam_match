@@ -34,6 +34,7 @@ class Initialpage extends StatelessWidget {
         return null;
       }
     });
+
     void enterApp() {
       print("firstEnterApp");
       context.read<UserState>().isLoginCheck(friendState);
