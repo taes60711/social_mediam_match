@@ -233,37 +233,62 @@ class UserPage extends StatelessWidget {
                 child: SizedBox(
                   width: 120,
                   height: 120,
-                  child: Image.memory(const Base64Decoder().convert(realUserData.image ?? "")),
+                  child: realUserData.image != ""
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(60),
+                          child: Image.memory(
+                            Base64Decoder().convert(realUserData.image ?? ""),
+                          ),
+                        )
+                      : Container(),
                 ),
               ),
               Text("Hello, ${realUserData.name ?? realUserData.email}"),
-              Row(
-                children: [
-                  SizedBox(
-                    width: ScreenSize().width / 2,
-                    child: Column(
-                      children: [
-                        Text(skillText),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: realUserData.mainSkills!.map((e) => Text("${e.name} , ")).toList(),
-                        ),
-                      ],
+              SizedBox(
+                width: ScreenSize().width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(skillText),
+                    Wrap(
+                      runSpacing: 5,
+                      spacing: 5,
+                      children: realUserData.mainSkills!
+                          .map((e) => Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Color.fromARGB(255, 233, 231, 231),
+                                ),
+                                child: Text(e.name),
+                              ))
+                          .toList(),
                     ),
-                  ),
-                  SizedBox(
-                    width: ScreenSize().width / 2,
-                    child: Column(
-                      children: [
-                        Text(wantSkillText),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: realUserData.wantSkills!.map((e) => Text("${e.name} , ")).toList(),
-                        ),
-                      ],
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: ScreenSize().width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(wantSkillText),
+                    Wrap(
+                      runSpacing: 5,
+                      spacing: 5,
+                      children: realUserData.wantSkills!
+                          .map((e) => Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Color.fromARGB(255, 233, 231, 231),
+                                ),
+                                child: Text(e.name),
+                              ))
+                          .toList(),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Column(
                 children: ManagerButton.values

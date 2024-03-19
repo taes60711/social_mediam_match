@@ -21,12 +21,23 @@ class UserSettingState extends ChangeNotifier {
 
   String base64Img = "";
 
+  TextEditingController nameInput = TextEditingController();
+  TextEditingController introductionInput = TextEditingController();
+
+  getuserImg(LoginUser userData) async {
+    Future.delayed(Duration.zero).then((value) {
+      base64Img = userData.image ?? "";
+      nameInput.text = userData.name ?? "";
+      introductionInput.text = userData.introduction ?? "";
+      notifyListeners();
+    });
+  }
+
   //ページに遷移する際に、元データ取得する
   Future<bool> getPageAllData(LoginUser userData) async {
     bool result = false;
     var uri = Uri.parse('$url/skill/getList');
     try {
-      base64Img = userData.image ?? "";
       var response = await http.get(uri);
       if (response.statusCode != 404) {
         List<dynamic> jsonData = json.decode(response.body);
@@ -87,7 +98,7 @@ class UserSettingState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> ImageChange() async {
+  Future<void> imageChange() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
