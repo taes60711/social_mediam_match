@@ -143,12 +143,9 @@ class UserState extends ChangeNotifier {
 
   Future<void> updateProfile(String uid, UpdateUser updateData) async {
     try {
-      await _dbService.updateUserData(uid, updateData).then((isSucess) {
+      await _dbService.updateUserData(uid, updateData).then((isSucess) async {
         if (isSucess) {
-          userData!.name = updateData.name;
-          userData!.introduction = updateData.introduction;
-          userData!.mainSkills = updateData.mainSkills;
-          userData!.wantSkills = updateData.wantSkills;
+          userData = await _dbService.getUserData(uid);
           notifyListeners();
         }
       });

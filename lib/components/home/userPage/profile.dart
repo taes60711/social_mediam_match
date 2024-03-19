@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/strings/userPage/profie_string.dart';
@@ -28,6 +29,7 @@ class Profile extends StatelessWidget {
     TextEditingController nameInput = TextEditingController()..text = userData.name ?? "";
     TextEditingController introductionInput = TextEditingController()..text = userData.introduction ?? "";
 
+    String base64Img = context.select((UserSettingState value) => value.base64Img);
     Widget ExpansionWidget(String category, List<SkillModel> list, String type) {
       Widget component = ExpansionTile(
         title: Text(category),
@@ -91,6 +93,20 @@ class Profile extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: 120,
+                      height: 120,
+                      child: base64Img != "" ? Image.memory(const Base64Decoder().convert(base64Img)) : Container(),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      userSettingFuture.ImageChange();
+                    },
+                    child: Text("image Picker"),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: TextField(
                       controller: nameInput,
                       decoration: InputDecoration(
@@ -147,6 +163,7 @@ class Profile extends StatelessWidget {
                           onPressed: () async {
                             UpdateUser updateUserData = userSettingFuture.reformatData(
                               userData.uid,
+                              base64Img,
                               nameInput.text,
                               introductionInput.text,
                               forntSkillItems,

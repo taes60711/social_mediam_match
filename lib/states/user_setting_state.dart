@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:http/http.dart' as http;
 import 'package:social_mediam_match/models/user_model.dart';
@@ -17,11 +19,14 @@ class UserSettingState extends ChangeNotifier {
   List<SkillModel> backEndSkillList = [];
   List<SkillModel> otherSkillList = [];
 
+  String base64Img = "";
+
   //ページに遷移する際に、元データ取得する
   Future<bool> getPageAllData(LoginUser userData) async {
     bool result = false;
     var uri = Uri.parse('$url/skill/getList');
     try {
+      base64Img = userData.image ?? "";
       var response = await http.get(uri);
       if (response.statusCode != 404) {
         List<dynamic> jsonData = json.decode(response.body);
@@ -82,9 +87,22 @@ class UserSettingState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> ImageChange() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      File _image = File(image.path);
+      String base64String = base64Encode(_image.readAsBytesSync());
+      base64Img = base64String;
+      notifyListeners();
+    }
+  }
+
   //SQLにアップ前にデータ加工する
   UpdateUser reformatData(
     String uid,
+    String image,
     String name,
     String introduction,
     List<SkillModel> webSkillItems,
@@ -112,6 +130,7 @@ class UserSettingState extends ChangeNotifier {
 
     return UpdateUser.update(
       uid: uid,
+      image: image,
       name: name,
       introduction: introduction,
       mainSkills: gethaveSkill,

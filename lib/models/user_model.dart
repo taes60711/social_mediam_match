@@ -93,6 +93,7 @@ class UpdateUser extends UserModel {
 
   UpdateUser.update({
     required String uid,
+    String? image,
     String? name,
     String? introduction,
     List<SkillInfo>? mainSkills,
@@ -101,6 +102,7 @@ class UpdateUser extends UserModel {
     this.password,
   }) : super(
           uid: uid,
+          image: image,
           name: name,
           introduction: introduction,
           mainSkills: mainSkills,
@@ -139,6 +141,7 @@ class UpdateUser extends UserModel {
   Map toJson() {
     return {
       'uid': uid,
+      'image': image,
       'email': email,
       'password': password,
       'isEmailVerified': isEmailVerified,
