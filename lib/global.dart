@@ -27,7 +27,9 @@ enum RoutePath {
   loginPage("/login"),
   signUpPage("/signUp"),
   profilePage("/profile"),
-  postEditPage("/post_edit");
+  postEditPage("/post_edit"),
+
+  setPage("/setting");
 
   final String value;
   const RoutePath(this.value);

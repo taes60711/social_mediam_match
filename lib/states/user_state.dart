@@ -118,8 +118,8 @@ class UserState extends ChangeNotifier {
   }
 
   //メソッド：ログアウト
-  void signOut() {
-    _auth.signOut().then((value) {
+  Future<void> signOut() async {
+    await _auth.signOut().then((value) {
       userData = null;
       notifyListeners();
     });
@@ -141,16 +141,17 @@ class UserState extends ChangeNotifier {
     }
   }
 
-  Future<void> updateProfile(String uid, UpdateUser updateData) async {
+  Future<bool> updateProfile(String uid, UpdateUser updateData) async {
+    bool isSucess = false;
     try {
-      await _dbService.updateUserData(uid, updateData).then((isSucess) async {
-        if (isSucess) {
-          userData = await _dbService.getUserData(uid);
-          notifyListeners();
-        }
-      });
+      isSucess = await _dbService.updateUserData(uid, updateData);
+      if (isSucess) {
+        userData = await _dbService.getUserData(uid);
+        notifyListeners();
+      }
     } catch (e) {
       print(e);
     }
+    return isSucess;
   }
 }

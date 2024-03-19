@@ -6,6 +6,7 @@ import 'package:social_mediam_match/components/account/signup_page.dart';
 import 'package:social_mediam_match/components/Initial/Initial_page.dart';
 import 'package:social_mediam_match/components/home/postPage/editor_page.dart';
 import 'package:social_mediam_match/components/home/userPage/profile.dart';
+import 'package:social_mediam_match/components/home/userPage/setting.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
@@ -63,7 +64,8 @@ class MyApp extends StatelessWidget {
         '/profile': (BuildContext context) => ChangeNotifierProvider(
               create: (_) => UserSettingState(),
               child: const Profile(),
-            )
+            ),
+        '/setting': (BuildContext context) => const Setting(),
       },
     );
   }

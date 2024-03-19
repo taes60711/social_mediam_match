@@ -219,15 +219,6 @@ class UserPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    userFuture.signOut();
-                  },
-                  child: Text(signOutButton),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
@@ -297,6 +288,11 @@ class UserPage extends StatelessWidget {
                             if (e.value == ManagerButton.profile.value) {
                               Navigator.of(context).pushNamed(
                                 RoutePath.profilePage.value,
+                                arguments: realUserData,
+                              );
+                            } else if (e.value == ManagerButton.set.value) {
+                              Navigator.of(context).pushNamed(
+                                RoutePath.setPage.value,
                                 arguments: realUserData,
                               );
                             }

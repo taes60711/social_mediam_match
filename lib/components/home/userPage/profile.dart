@@ -67,31 +67,37 @@ class SkillListWidget extends StatelessWidget {
 
     return StatefulWrapper(
       onInit: () {
-        userSettingFuture.getPageAllData(userData);
+        userSettingFuture.getSkillListData(userData);
       },
       child: isFirst
-          ? Loading()
-          : ListView(
+          ? const Loading()
+          : Column(
               children: [
-                ExpansionTile(
-                  title: Text(ItemTitles.Skill.value),
-                  leading: const Icon(Icons.build_sharp),
-                  children: [
-                    ExpansionWidget(SkillType.forntend.value, forntSkillItems, "have"),
-                    ExpansionWidget(SkillType.backend.value, backEndSkillItems, "have"),
-                    ExpansionWidget(SkillType.iot.value, iotSkillItems, "have"),
-                    ExpansionWidget(SkillType.other.value, otherSkillItems, "have"),
-                  ],
-                ),
-                ExpansionTile(
-                  title: Text(ItemTitles.wantSkill.value),
-                  leading: const Icon(Icons.build_sharp),
-                  children: [
-                    ExpansionWidget(SkillType.forntend.value, forntSkillItems, "want"),
-                    ExpansionWidget(SkillType.backend.value, backEndSkillItems, "want"),
-                    ExpansionWidget(SkillType.iot.value, iotSkillItems, "want"),
-                    ExpansionWidget(SkillType.other.value, otherSkillItems, "want"),
-                  ],
+                Expanded(
+                  child: ListView(
+                    children: [
+                      ExpansionTile(
+                        title: Text(ItemTitles.Skill.value),
+                        leading: const Icon(Icons.build_sharp),
+                        children: [
+                          ExpansionWidget(SkillType.forntend.value, forntSkillItems, "have"),
+                          ExpansionWidget(SkillType.backend.value, backEndSkillItems, "have"),
+                          ExpansionWidget(SkillType.iot.value, iotSkillItems, "have"),
+                          ExpansionWidget(SkillType.other.value, otherSkillItems, "have"),
+                        ],
+                      ),
+                      ExpansionTile(
+                        title: Text(ItemTitles.wantSkill.value),
+                        leading: const Icon(Icons.build_sharp),
+                        children: [
+                          ExpansionWidget(SkillType.forntend.value, forntSkillItems, "want"),
+                          ExpansionWidget(SkillType.backend.value, backEndSkillItems, "want"),
+                          ExpansionWidget(SkillType.iot.value, iotSkillItems, "want"),
+                          ExpansionWidget(SkillType.other.value, otherSkillItems, "want"),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -105,7 +111,11 @@ class SkillListWidget extends StatelessWidget {
                       backEndSkillItems,
                       otherSkillItems,
                     );
-                    userFuture.updateProfile(userData.uid, updateUserData);
+
+                    bool isSucess = await userFuture.updateProfile(userData.uid, updateUserData);
+                    if (isSucess) {
+                      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                    }
                   },
                   child: Text(updateButtonTitle),
                 ),
@@ -128,7 +138,7 @@ class Profile extends StatelessWidget {
 
     return StatefulWrapper(
       onInit: () {
-        context.read<UserSettingState>().getuserImg(userData);
+        context.read<UserSettingState>().userDataInsertToViewValue(userData);
       },
       child: Scaffold(
         body: SafeArea(
@@ -147,8 +157,8 @@ class Profile extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 120,
-                  height: 120,
+                  width: 80,
+                  height: 80,
                   child: base64Img != ""
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(60),
@@ -158,14 +168,18 @@ class Profile extends StatelessWidget {
                         )
                       : Container(),
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    userSettingFuture.imageChange();
+                GestureDetector(
+                  onTap: () async {
+                    await userSettingFuture.imageChange();
                   },
-                  child: const Text("image Picker"),
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    color: const Color.fromARGB(221, 209, 104, 104),
+                    child: const Text("image Picker"),
+                  ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
                   child: TextField(
                     controller: nameInput,
                     decoration: InputDecoration(

@@ -20,11 +20,10 @@ class UserSettingState extends ChangeNotifier {
   List<SkillModel> otherSkillList = [];
 
   String base64Img = "";
-
   TextEditingController nameInput = TextEditingController();
   TextEditingController introductionInput = TextEditingController();
 
-  getuserImg(LoginUser userData) async {
+  userDataInsertToViewValue(LoginUser userData) async {
     Future.delayed(Duration.zero).then((value) {
       base64Img = userData.image ?? "";
       nameInput.text = userData.name ?? "";
@@ -34,7 +33,7 @@ class UserSettingState extends ChangeNotifier {
   }
 
   //ページに遷移する際に、元データ取得する
-  Future<bool> getPageAllData(LoginUser userData) async {
+  Future<bool> getSkillListData(LoginUser userData) async {
     bool result = false;
     var uri = Uri.parse('$url/skill/getList');
     try {
