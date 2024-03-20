@@ -36,12 +36,12 @@ class UserState extends ChangeNotifier {
 
     if (userData == null) {
       colsure().listen((String userUID) async {
-        if (userUID != "" && !_isSignUp) {
+        if (userUID != "" && !_isSignUp && !isLoading) {
           isLoading = true;
+          notifyListeners();
           userData = await _dbService.getUserData(userUID);
           await _dbService.updateLastTime(userUID);
           chatListChannel.friendListConnect(userData!.uid);
-          notifyListeners();
           inspect(userData);
           isLoading = false;
           notifyListeners();
