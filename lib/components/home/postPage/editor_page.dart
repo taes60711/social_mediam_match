@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'package:social_mediam_match/components/account/require_login.dart';
-import 'package:social_mediam_match/states/post_state.dart';
 import '../../../models/user_model.dart';
+import '../../../states/post_state.dart';
 
 class EditorPage extends StatelessWidget {
   const EditorPage({super.key});
@@ -54,7 +52,7 @@ class EditorPage extends StatelessWidget {
         ),
       );
     } else {
-      userComponent = requireLogin();
+      userComponent = Container();
     }
     return Scaffold(body: userComponent);
   }

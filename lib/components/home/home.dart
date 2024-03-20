@@ -9,8 +9,8 @@ import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 
 class Home extends StatefulWidget {
-  final LoginUser? userData;
-  const Home({super.key, this.userData});
+  final LoginUser userData;
+  const Home({super.key, required this.userData});
 
   @override
   State<Home> createState() => _HomeState();

@@ -122,13 +122,6 @@ class LoginPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: ElevatedButton(
-                onPressed: () => ReturnHome(),
-                child: Text("返回"),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 20),
               child: Container(

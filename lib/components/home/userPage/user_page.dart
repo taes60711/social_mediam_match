@@ -187,127 +187,110 @@
 // }
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/account/require_login.dart';
-import 'package:social_mediam_match/components/utilities/loading.dart';
-import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/models/user_model.dart';
-import 'package:social_mediam_match/states/user_state.dart';
 import '../../../global.dart';
+import '../../../models/user_model.dart';
 import '../../strings/userPage/user_page_string.dart';
+import '../../utilities/style/screen_size.dart';
 
 class UserPage extends StatelessWidget {
-  final LoginUser? userData;
-  const UserPage({super.key, this.userData});
+  final LoginUser userData;
+  const UserPage({super.key, required this.userData});
 
   @override
   Widget build(BuildContext context) {
-    UserState userFuture = context.read<UserState>();
-    bool isLoading = context.select((UserState value) => value.isLoading);
     Widget userComponent;
 
-    if (isLoading) {
-      userComponent = const Loading();
-    } else {
-      if (userData != null) {
-        LoginUser realUserData = userData!;
-
-        userComponent = SizedBox(
-          width: ScreenSize().width,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: 120,
-                  height: 120,
-                  child: realUserData.image != ""
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(60),
-                          child: Image.memory(
-                            Base64Decoder().convert(realUserData.image ?? ""),
-                          ),
-                        )
-                      : Container(),
-                ),
-              ),
-              Text("Hello, ${realUserData.name ?? realUserData.email}"),
-              SizedBox(
-                width: ScreenSize().width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(skillText),
-                    Wrap(
-                      runSpacing: 5,
-                      spacing: 5,
-                      children: realUserData.mainSkills!
-                          .map((e) => Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Color.fromARGB(255, 233, 231, 231),
-                                ),
-                                child: Text(e.name),
-                              ))
-                          .toList(),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: ScreenSize().width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(wantSkillText),
-                    Wrap(
-                      runSpacing: 5,
-                      spacing: 5,
-                      children: realUserData.wantSkills!
-                          .map((e) => Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Color.fromARGB(255, 233, 231, 231),
-                                ),
-                                child: Text(e.name),
-                              ))
-                          .toList(),
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                children: ManagerButton.values
-                    .map((e) => ElevatedButton(
-                          onPressed: () async {
-                            if (e.value == ManagerButton.profile.value) {
-                              Navigator.of(context).pushNamed(
-                                RoutePath.profilePage.value,
-                                arguments: realUserData,
-                              );
-                            } else if (e.value == ManagerButton.set.value) {
-                              Navigator.of(context).pushNamed(
-                                RoutePath.setPage.value,
-                                arguments: realUserData,
-                              );
-                            }
-                          },
-                          child: Text(e.value),
-                        ))
-                    .toList(),
-              ),
-            ],
+    userComponent = SizedBox(
+      width: ScreenSize().width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: 120,
+              height: 120,
+              child: userData.image != ""
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(60),
+                      child: Image.memory(
+                        const Base64Decoder().convert(userData.image ?? ""),
+                      ),
+                    )
+                  : Container(),
+            ),
           ),
-        );
-      } else {
-        userComponent = const requireLogin();
-      }
-    }
+          Text("Hello, ${userData.name ?? userData.email}"),
+          SizedBox(
+            width: ScreenSize().width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(skillText),
+                Wrap(
+                  runSpacing: 5,
+                  spacing: 5,
+                  children: userData.mainSkills!
+                      .map((e) => Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: const Color.fromARGB(255, 233, 231, 231),
+                            ),
+                            child: Text(e.name),
+                          ))
+                      .toList(),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: ScreenSize().width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(wantSkillText),
+                Wrap(
+                  runSpacing: 5,
+                  spacing: 5,
+                  children: userData.wantSkills!
+                      .map((e) => Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: const Color.fromARGB(255, 233, 231, 231),
+                            ),
+                            child: Text(e.name),
+                          ))
+                      .toList(),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            children: ManagerButton.values
+                .map((e) => ElevatedButton(
+                      onPressed: () async {
+                        if (e.value == ManagerButton.profile.value) {
+                          Navigator.of(context).pushNamed(
+                            RoutePath.profilePage.value,
+                            arguments: userData,
+                          );
+                        } else if (e.value == ManagerButton.set.value) {
+                          Navigator.of(context).pushNamed(
+                            RoutePath.setPage.value,
+                            arguments: userData,
+                          );
+                        }
+                      },
+                      child: Text(e.value),
+                    ))
+                .toList(),
+          ),
+        ],
+      ),
+    );
 
     return Scaffold(body: userComponent);
   }

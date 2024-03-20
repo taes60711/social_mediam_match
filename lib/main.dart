@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/login_page.dart';
 import 'package:social_mediam_match/components/account/signup_page.dart';
-import 'package:social_mediam_match/components/Initial/Initial_page.dart';
+import 'package:social_mediam_match/components/Initial/initial_page.dart';
 import 'package:social_mediam_match/components/home/postPage/editor_page.dart';
 import 'package:social_mediam_match/components/home/userPage/profile.dart';
 import 'package:social_mediam_match/components/home/userPage/setting.dart';
@@ -59,7 +59,6 @@ class MyApp extends StatelessWidget {
               create: (_) => PostState(),
               child: const EditorPage(),
             ),
-        '/login': (BuildContext context) => const LoginPage(),
         '/signUp': (BuildContext context) => const SignUpPage(),
         '/profile': (BuildContext context) => ChangeNotifierProvider(
               create: (_) => UserSettingState(),

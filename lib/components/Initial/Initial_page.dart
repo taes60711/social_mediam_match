@@ -8,6 +8,7 @@ import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import '../../models/user_model.dart';
+import '../account/login_page.dart';
 
 class Initialpage extends StatelessWidget {
   const Initialpage({super.key});
@@ -45,13 +46,20 @@ class Initialpage extends StatelessWidget {
       });
     }
 
-    return Scaffold(
-      body: isfirstEnterApp
-          ? StatefulWrapper(
-              onInit: () => enterApp(),
-              child: const Logo(),
-            )
-          : Home(userData: userData),
-    );
+    Widget component;
+    if (isfirstEnterApp) {
+      component = StatefulWrapper(
+        onInit: () => enterApp(),
+        child: const Logo(),
+      );
+    } else {
+      if (userData != null) {
+        component = Home(userData: userData);
+      } else {
+        component = const LoginPage();
+      }
+    }
+
+    return component;
   }
 }

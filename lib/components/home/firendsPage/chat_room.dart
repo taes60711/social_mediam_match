@@ -10,8 +10,8 @@ import '../../../states/friend_state.dart';
 
 class ChatRoom extends StatelessWidget {
   final GlobalKey<ScaffoldState> globalKey;
-  final LoginUser? userData;
-  const ChatRoom({super.key, required this.globalKey, this.userData});
+  final LoginUser userData;
+  const ChatRoom({super.key, required this.globalKey, required this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class ChatRoom extends StatelessWidget {
                               right: 8,
                               bottom: 8,
                             ),
-                            child: userData!.uid == messageData[index].userId
+                            child: userData.uid == messageData[index].userId
                                 ? Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -140,7 +140,7 @@ class ChatRoom extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          friendFuture.sendMessage(roomId, userData!.uid, messageInput.text);
+                          friendFuture.sendMessage(roomId, userData.uid, messageInput.text);
                         },
                         child: Container(
                           width: 80,
