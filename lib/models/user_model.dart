@@ -4,12 +4,16 @@ import 'package:intl/intl.dart';
 
 class UserModel {
   String uid;
+  String? image;
+  String? token;
   String? name;
   String? introduction;
   List<SkillInfo>? mainSkills;
   List<SkillInfo>? wantSkills;
   UserModel({
     required this.uid,
+    this.image,
+    this.token,
     this.name,
     this.introduction,
     this.mainSkills,
@@ -24,6 +28,8 @@ class LoginUser extends UserModel {
 
   LoginUser({
     required String uid,
+    String? image,
+    String? token,
     String? name,
     String? introduction,
     required this.lastLogin,
@@ -33,6 +39,8 @@ class LoginUser extends UserModel {
     required this.isEmailVerified,
   }) : super(
           uid: uid,
+          image: image,
+          token: token,
           name: name,
           introduction: introduction,
           mainSkills: mainSkills,
@@ -53,6 +61,8 @@ class LoginUser extends UserModel {
 
     return LoginUser(
       uid: json["uid"],
+      image: json["image"],
+      token: json["token"],
       email: json["email"],
       name: json["name"],
       lastLogin: formattedTime,
@@ -83,6 +93,7 @@ class UpdateUser extends UserModel {
 
   UpdateUser.update({
     required String uid,
+    String? image,
     String? name,
     String? introduction,
     List<SkillInfo>? mainSkills,
@@ -91,11 +102,27 @@ class UpdateUser extends UserModel {
     this.password,
   }) : super(
           uid: uid,
+          image: image,
           name: name,
           introduction: introduction,
           mainSkills: mainSkills,
           wantSkills: wantSkills,
         );
+
+  UpdateUser.updateToken({
+    required String uid,
+    String? token,
+  }) : super(
+          uid: uid,
+          token: token,
+        );
+
+  String updateupdateTokenJson() {
+    return jsonEncode({
+      'uid': uid,
+      "token": token,
+    });
+  }
 
   UpdateUser.lastTimupdate({
     required String uid,
@@ -114,6 +141,7 @@ class UpdateUser extends UserModel {
   Map toJson() {
     return {
       'uid': uid,
+      'image': image,
       'email': email,
       'password': password,
       'isEmailVerified': isEmailVerified,

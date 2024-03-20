@@ -16,8 +16,8 @@ class LoginPage extends StatelessWidget {
     TextEditingController pwdController = TextEditingController();
     UserState userFuture = context.read<UserState>();
     String loginError = context.select((UserState value) => value.loginError);
-    // emailController.text = "taes60811@gmail.com";
-    // pwdController.text = "toto60811";
+    emailController.text = "taes60811@gmail.com";
+    pwdController.text = "toto60811";
     void closeResetPwdWindow() {
       userFuture.resetPwdError = ResetPwdStatus.NoMessage.value;
       Navigator.pop(context);

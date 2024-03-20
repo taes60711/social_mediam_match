@@ -22,6 +22,8 @@ class Initialpage extends StatelessWidget {
       if (value.userData != null) {
         return LoginUser(
           uid: value.userData!.uid,
+          token: value.userData!.token,
+          image: value.userData!.image,
           email: value.userData!.email,
           isEmailVerified: value.userData!.isEmailVerified,
           name: value.userData!.name,
@@ -34,6 +36,7 @@ class Initialpage extends StatelessWidget {
         return null;
       }
     });
+
     void enterApp() {
       print("firstEnterApp");
       context.read<UserState>().isLoginCheck(friendState);

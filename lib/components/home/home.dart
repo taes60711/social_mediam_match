@@ -41,7 +41,7 @@ class _HomeState extends State<Home> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: '留言板',
+            label: '主頁',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
@@ -53,11 +53,11 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.mobile_friendly),
-            label: '好友',
+            label: '聊天室',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_box_rounded),
-            label: '使用者',
+            label: '我的',
           ),
         ],
         currentIndex: _selectedIndex,

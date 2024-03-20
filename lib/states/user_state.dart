@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
@@ -38,7 +39,7 @@ class UserState extends ChangeNotifier {
         if (userUID != "" && !_isSignUp) {
           isLoading = true;
           userData = await _dbService.getUserData(userUID);
-
+          await _dbService.updateLastTime(userUID);
           chatListChannel.friendListConnect(userData!.uid);
           notifyListeners();
           inspect(userData);
@@ -56,7 +57,10 @@ class UserState extends ChangeNotifier {
     bool isSucess = false;
 
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await _auth.signInWithEmailAndPassword(email: email, password: password).then((value) async {
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        _dbService.updateUserToken(value.user!.uid, fcmToken!);
+      });
       isSucess = true;
     } on FirebaseAuthException catch (e) {
       print("signIn error ${e.code}");
@@ -114,8 +118,8 @@ class UserState extends ChangeNotifier {
   }
 
   //メソッド：ログアウト
-  void signOut() {
-    _auth.signOut().then((value) {
+  Future<void> signOut() async {
+    await _auth.signOut().then((value) {
       userData = null;
       notifyListeners();
     });
@@ -137,19 +141,17 @@ class UserState extends ChangeNotifier {
     }
   }
 
-  Future<void> updateProfile(String uid, UpdateUser updateData) async {
+  Future<bool> updateProfile(String uid, UpdateUser updateData) async {
+    bool isSucess = false;
     try {
-      await _dbService.updateUserData(uid, updateData).then((isSucess) {
-        if (isSucess) {
-          userData!.name = updateData.name;
-          userData!.introduction = updateData.introduction;
-          userData!.mainSkills = updateData.mainSkills;
-          userData!.wantSkills = updateData.wantSkills;
-          notifyListeners();
-        }
-      });
+      isSucess = await _dbService.updateUserData(uid, updateData);
+      if (isSucess) {
+        userData = await _dbService.getUserData(uid);
+        notifyListeners();
+      }
     } catch (e) {
       print(e);
     }
+    return isSucess;
   }
 }

@@ -186,6 +186,8 @@
 //   }
 // }
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/require_login.dart';
@@ -211,56 +213,73 @@ class UserPage extends StatelessWidget {
     } else {
       if (userData != null) {
         LoginUser realUserData = userData!;
+
         userComponent = SizedBox(
           width: ScreenSize().width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    userFuture.signOut();
-                  },
-                  child: Text(signOutButton),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
+                child: SizedBox(
                   width: 120,
                   height: 120,
-                  color: Colors.green,
+                  child: realUserData.image != ""
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(60),
+                          child: Image.memory(
+                            Base64Decoder().convert(realUserData.image ?? ""),
+                          ),
+                        )
+                      : Container(),
                 ),
               ),
               Text("Hello, ${realUserData.name ?? realUserData.email}"),
-              Row(
-                children: [
-                  SizedBox(
-                    width: ScreenSize().width / 2,
-                    child: Column(
-                      children: [
-                        Text(skillText),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: realUserData.mainSkills!.map((e) => Text("${e.name} , ")).toList(),
-                        ),
-                      ],
+              SizedBox(
+                width: ScreenSize().width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(skillText),
+                    Wrap(
+                      runSpacing: 5,
+                      spacing: 5,
+                      children: realUserData.mainSkills!
+                          .map((e) => Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Color.fromARGB(255, 233, 231, 231),
+                                ),
+                                child: Text(e.name),
+                              ))
+                          .toList(),
                     ),
-                  ),
-                  SizedBox(
-                    width: ScreenSize().width / 2,
-                    child: Column(
-                      children: [
-                        Text(wantSkillText),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: realUserData.wantSkills!.map((e) => Text("${e.name} , ")).toList(),
-                        ),
-                      ],
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: ScreenSize().width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(wantSkillText),
+                    Wrap(
+                      runSpacing: 5,
+                      spacing: 5,
+                      children: realUserData.wantSkills!
+                          .map((e) => Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Color.fromARGB(255, 233, 231, 231),
+                                ),
+                                child: Text(e.name),
+                              ))
+                          .toList(),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Column(
                 children: ManagerButton.values
@@ -269,6 +288,11 @@ class UserPage extends StatelessWidget {
                             if (e.value == ManagerButton.profile.value) {
                               Navigator.of(context).pushNamed(
                                 RoutePath.profilePage.value,
+                                arguments: realUserData,
+                              );
+                            } else if (e.value == ManagerButton.set.value) {
+                              Navigator.of(context).pushNamed(
+                                RoutePath.setPage.value,
                                 arguments: realUserData,
                               );
                             }
