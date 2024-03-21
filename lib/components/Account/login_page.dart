@@ -96,7 +96,7 @@ class LoginPage extends StatelessWidget {
           });
     }
 
-    void ReturnHome() {
+    void returnHome() {
       resetAllInfo() {
         userFuture.loginError = LoginStatus.NoMessage.value;
       }
@@ -164,7 +164,7 @@ class LoginPage extends StatelessWidget {
           ElevatedButton(
             onPressed: () async {
               bool isLoginSucess = await userFuture.signIn(emailController.text, pwdController.text);
-              isLoginSucess ? ReturnHome() : () {};
+              isLoginSucess ? returnHome() : () {};
             },
             child: const Text("登入"),
           ),

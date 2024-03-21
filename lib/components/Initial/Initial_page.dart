@@ -54,7 +54,10 @@ class Initialpage extends StatelessWidget {
       );
     } else {
       if (userData != null) {
-        component = Home(userData: userData);
+        component = Home(
+          userData: userData,
+          friendState: friendState,
+        );
       } else {
         component = const LoginPage();
       }

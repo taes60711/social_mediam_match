@@ -30,7 +30,7 @@ class Setting extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  await userFuture.signOut();
+                  // await userFuture.signOut();
                   Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
                 },
                 child: Text(signOutButton),

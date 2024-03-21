@@ -8,9 +8,12 @@ import 'package:social_mediam_match/components/home/userPage/user_page.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 
+import '../../states/friend_state.dart';
+
 class Home extends StatefulWidget {
   final LoginUser userData;
-  const Home({super.key, required this.userData});
+  final FriendState friendState;
+  const Home({super.key, required this.userData, required this.friendState});
 
   @override
   State<Home> createState() => _HomeState();
@@ -29,7 +32,10 @@ class _HomeState extends State<Home> {
       SkillExChangePage(userData: widget.userData),
       Course(),
       FirendsPage(userData: widget.userData),
-      UserPage(userData: widget.userData),
+      UserPage(
+        userData: widget.userData,
+        friendState: widget.friendState,
+      ),
     ];
 
     return Scaffold(

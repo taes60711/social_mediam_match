@@ -18,15 +18,21 @@ class FriendState extends ChangeNotifier {
   void friendListConnect(String uid) async {
     Future<void> initialConnect() async {
       _friendListChannel = IOWebSocketChannel.connect(channelListUrl);
+      print("friendList connect");
     }
 
     await initialConnect();
     await _friendListChannel.ready;
     _friendListChannel.sink.add('{"method" : "connect" , "userid" : "$uid"}');
     _friendListChannel.stream.listen((event) {
+      print("friendList Listen");
       friendListMessage = event;
       notifyListeners();
     });
+  }
+
+  void closefriendList() {
+    _friendListChannel.sink.close();
   }
 
   void checkIsFriend(List<String> usersList) {
