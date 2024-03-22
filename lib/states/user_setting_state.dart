@@ -117,7 +117,7 @@ class UserSettingState extends ChangeNotifier {
     String image,
     String name,
     String introduction,
-    List<SkillModel> webSkillItems,
+    List<SkillModel> forntSkillItems,
     List<SkillModel> iotSkillItems,
     List<SkillModel> backEndSkillItems,
     List<SkillModel> otherSkillItems,
@@ -126,7 +126,7 @@ class UserSettingState extends ChangeNotifier {
     List<SkillInfo> getWantSkill = [];
 
     //全カテゴリーのスキルリストがリスト化
-    List<List<SkillModel>> allcategoryItems = [backEndSkillItems, webSkillItems, iotSkillItems, otherSkillItems];
+    List<List<SkillModel>> allcategoryItems = [backEndSkillItems, forntSkillItems, iotSkillItems, otherSkillItems];
 
     for (var categoryItems in allcategoryItems) {
       for (var items in categoryItems) {

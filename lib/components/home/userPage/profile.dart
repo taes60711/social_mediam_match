@@ -19,6 +19,7 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserSettingState userSettingState = context.read<UserSettingState>();
+    UserState userState = context.read<UserState>();
     LoginUser userData = ModalRoute.of(context)!.settings.arguments as LoginUser;
     TextEditingController nameInput = context.select((UserSettingState value) => value.nameInput);
     TextEditingController introductionInput = context.select((UserSettingState value) => value.introductionInput);
@@ -52,13 +53,10 @@ class Profile extends StatelessWidget {
       if (element.skillWant.ishave) allWantSkillItems = [...allWantSkillItems, element];
     });
 
-    allWantSkillItems.forEach((e) {
-      inspect(e);
-    });
     //
     return StatefulWrapper(
       onInit: () {
-        context.read<UserSettingState>().userDataInsertToViewValue(userData);
+        userSettingState.userDataInsertToViewValue(userData);
         userSettingState.getSkillListData(userData);
       },
       child: isFirst
@@ -218,7 +216,8 @@ class Profile extends StatelessWidget {
                             otherSkillItems,
                           );
 
-                          bool isSucess = await UserState().updateProfile(userData.uid, updateUserData);
+                          bool isSucess = await userState.updateProfile(userData.uid, updateUserData);
+
                           if (isSucess) {
                             Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
                           }
