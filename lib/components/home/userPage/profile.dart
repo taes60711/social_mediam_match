@@ -38,20 +38,20 @@ class Profile extends StatelessWidget {
     List<SkillModel> allSkillItems = [];
     List<SkillModel> allWantSkillItems = [];
     forntSkillItems.forEach((element) {
-      if (element.skillHave.ishave) allSkillItems = [...allSkillItems, element];
-      if (element.skillWant.ishave) allWantSkillItems = [...allWantSkillItems, element];
+      if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
+      if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
     });
     backEndSkillItems.forEach((element) {
-      if (element.skillHave.ishave) allSkillItems = [...allSkillItems, element];
-      if (element.skillWant.ishave) allWantSkillItems = [...allWantSkillItems, element];
+      if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
+      if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
     });
     iotSkillItems.forEach((element) {
-      if (element.skillHave.ishave) allSkillItems = [...allSkillItems, element];
-      if (element.skillWant.ishave) allWantSkillItems = [...allWantSkillItems, element];
+      if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
+      if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
     });
     otherSkillItems.forEach((element) {
-      if (element.skillHave.ishave) allSkillItems = [...allSkillItems, element];
-      if (element.skillWant.ishave) allWantSkillItems = [...allWantSkillItems, element];
+      if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
+      if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
     });
 
     //
@@ -147,7 +147,7 @@ class Profile extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(20),
                                       color: const Color.fromARGB(255, 233, 231, 231),
                                     ),
-                                    child: Text(e.skillHave.skillInfo.name),
+                                    child: Text(e.skillHave.name),
                                   ))
                               .toList(),
                         ),
@@ -179,7 +179,7 @@ class Profile extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(20),
                                       color: const Color.fromARGB(255, 233, 231, 231),
                                     ),
-                                    child: Text(e.skillWant.skillInfo.name),
+                                    child: Text(e.skillWant.name),
                                   ))
                               .toList(),
                         ),
