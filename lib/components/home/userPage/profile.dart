@@ -11,6 +11,7 @@ import 'package:social_mediam_match/states/user_state.dart';
 import '../../../global.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
+import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/stateful_wrapper.dart';
 
 class Profile extends StatelessWidget {
@@ -126,10 +127,10 @@ class Profile extends StatelessWidget {
                             userSettingState.openSkillselectPage("have");
                             key.currentState!.openEndDrawer();
                           },
-                          child: const Row(
+                          child: Row(
                             children: [
-                              Text("能教的技能"),
-                              Icon(Icons.arrow_forward_ios),
+                              Text(skillText),
+                              const Icon(Icons.arrow_forward_ios),
                             ],
                           ),
                         ),
@@ -158,10 +159,10 @@ class Profile extends StatelessWidget {
                             userSettingState.openSkillselectPage("want");
                             key.currentState!.openEndDrawer();
                           },
-                          child: const Row(
+                          child: Row(
                             children: [
-                              Text("想學的技能"),
-                              Icon(Icons.arrow_forward_ios),
+                              Text(wantSkillText),
+                              const Icon(Icons.arrow_forward_ios),
                             ],
                           ),
                         ),

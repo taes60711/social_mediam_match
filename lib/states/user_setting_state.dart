@@ -91,6 +91,11 @@ class UserSettingState extends ChangeNotifier {
     if (type == "level") {
       //いずれスキルのレベル変更する
       list.skillInfo.level = int.parse(choicedLevel ?? "0");
+      if (list.skillInfo.level > 0) {
+        list.ishave = true;
+      } else {
+        list.ishave = false;
+      }
     } else {
       //スキルチェックtrue or false
       list.ishave = !list.ishave;
@@ -131,10 +136,10 @@ class UserSettingState extends ChangeNotifier {
     for (var categoryItems in allcategoryItems) {
       for (var items in categoryItems) {
         //データ加工する
-        if (items.skillHave.ishave) {
+        if (items.skillHave.skillInfo.level > 0) {
           gethaveSkill.add(items.skillHave.skillInfo);
         }
-        if (items.skillWant.ishave) {
+        if (items.skillWant.skillInfo.level > 0) {
           getWantSkill.add(items.skillWant.skillInfo);
         }
       }

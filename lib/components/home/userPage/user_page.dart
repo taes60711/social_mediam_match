@@ -187,7 +187,6 @@
 // }
 
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
@@ -276,8 +275,6 @@ class UserPage extends StatelessWidget {
                 .map((e) => ElevatedButton(
                       onPressed: () async {
                         if (e.value == ManagerButton.profile.value) {
-                          print("toSetting");
-                          inspect(userData);
                           Navigator.of(context).pushNamed(
                             RoutePath.profilePage.value,
                             arguments: userData,
