@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/global.dart';
-
+import 'package:social_mediam_match/states/friend_state.dart';
 import '../../../states/user_state.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/style/screen_size.dart';
 
-class Setting extends StatelessWidget {
-  const Setting({super.key});
+class PrivacySetting extends StatelessWidget {
+  const PrivacySetting({super.key});
 
   @override
   Widget build(BuildContext context) {
     UserState userFuture = context.read<UserState>();
-
+    FriendState friendState = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['friendState'];
+    // LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
@@ -30,7 +31,7 @@ class Setting extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  // await userFuture.signOut();
+                  await userFuture.signOut(friendState);
                   Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
                 },
                 child: Text(signOutButton),

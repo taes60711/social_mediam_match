@@ -22,6 +22,8 @@ class UserSettingState extends ChangeNotifier {
   String base64Img = "";
   TextEditingController nameInput = TextEditingController();
   TextEditingController introductionInput = TextEditingController();
+  final GlobalKey<ScaffoldState> key = GlobalKey();
+  String type = "";
 
   userDataInsertToViewValue(LoginUser userData) async {
     Future.delayed(Duration.zero).then((value) {
@@ -146,5 +148,10 @@ class UserSettingState extends ChangeNotifier {
       mainSkills: gethaveSkill,
       wantSkills: getWantSkill,
     );
+  }
+
+  void openSkillselectPage(String type) {
+    this.type = type;
+    notifyListeners();
   }
 }

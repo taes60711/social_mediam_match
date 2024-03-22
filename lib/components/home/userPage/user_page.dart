@@ -188,11 +188,9 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../../../states/friend_state.dart';
-import '../../../states/user_state.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/style/screen_size.dart';
 
@@ -203,7 +201,6 @@ class UserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserState userFuture = context.read<UserState>();
     Widget userComponent;
 
     userComponent = SizedBox(
@@ -211,12 +208,6 @@ class UserPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ElevatedButton(
-            onPressed: () async {
-              await userFuture.signOut(friendState);
-            },
-            child: Text(signOutButton),
-          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
@@ -289,10 +280,10 @@ class UserPage extends StatelessWidget {
                             arguments: userData,
                           );
                         } else if (e.value == ManagerButton.set.value) {
-                          Navigator.of(context).pushNamed(
-                            RoutePath.setPage.value,
-                            arguments: userData,
-                          );
+                          Navigator.of(context).pushNamed(RoutePath.PrivacySettingPage.value, arguments: {
+                            "userData": userData,
+                            "friendState": friendState,
+                          });
                         }
                       },
                       child: Text(e.value),
