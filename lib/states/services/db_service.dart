@@ -7,6 +7,15 @@ import 'package:social_mediam_match/models/post_model.dart';
 import '../../global.dart';
 import '../../models/user_model.dart';
 
+class searchStatus {
+  int pageNumber;
+  int totalPage;
+  searchStatus({
+    this.pageNumber = 0,
+    this.totalPage = 0,
+  });
+}
+
 class DBService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -98,17 +107,18 @@ class DBService {
   }
 
   //メソッド：MYSQLにユーザーデータを取得する
-  int pageNumber = 0;
+
+  searchStatus alluserServerInfo = searchStatus();
   Future<List<LoginUser>> getAllUserData(
       {String? userUid, required List<String> filterSkill, required bool isFirstSearch}) async {
     String branch = "user";
     int size = 5;
 
     if (isFirstSearch) {
-      pageNumber = 0;
+      alluserServerInfo = searchStatus();
     }
 
-    String searchUrl = '$url/$branch/getDataBySkillFilter?page=$pageNumber&size=$size';
+    String searchUrl = '$url/$branch/getDataBySkillFilter?page=${alluserServerInfo.pageNumber}&size=$size';
     if (userUid != null) {
       searchUrl += "&userUid=$userUid";
     }
@@ -122,17 +132,20 @@ class DBService {
 
     final uri = Uri.parse(searchUrl);
     List<LoginUser> allUserData = [];
+
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
+        alluserServerInfo.totalPage = json.decode(response.body)["totalPages"];
         allUserData = (json.decode(response.body)['content'] as List<dynamic>).map((element) {
           return LoginUser.jsonToModel(element);
         }).toList();
-        pageNumber++;
+        alluserServerInfo.pageNumber++;
       }
     } catch (e) {
       print(e);
     }
+
     return allUserData;
   }
 

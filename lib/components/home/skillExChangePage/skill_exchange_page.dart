@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +79,7 @@ class SkillExChangePage extends StatelessWidget {
                       child: ListView.builder(
                           itemCount: allUserData.length,
                           itemBuilder: (context, index) {
-                            return Padding(
+                            Widget listComponent = Padding(
                               padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
                               child: GestureDetector(
                                 onTap: () {
@@ -127,6 +126,8 @@ class SkillExChangePage extends StatelessWidget {
                                 ),
                               ),
                             );
+
+                            return listComponent;
                           }),
                     ),
                   ),
