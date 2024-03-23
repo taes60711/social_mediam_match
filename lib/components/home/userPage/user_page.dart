@@ -220,7 +220,12 @@ class UserPage extends StatelessWidget {
                         const Base64Decoder().convert(userData.image ?? ""),
                       ),
                     )
-                  : Container(),
+                  : Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(60),
+                        color: const Color.fromARGB(255, 224, 224, 224),
+                      ),
+                    ),
             ),
           ),
           Text("Hello, ${userData.name ?? userData.email}"),
