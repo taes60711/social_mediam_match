@@ -52,8 +52,34 @@ class Profile extends StatelessWidget {
       if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
       if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
     });
-
     //
+
+    Future<void> exitCheck() {
+      return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('確認'),
+            content: const Text('有資料正在編輯,確定要離開嗎?'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('確定'),
+                onPressed: () {
+                  Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                },
+              ),
+              ElevatedButton(
+                child: const Text('取消'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return StatefulWrapper(
       onInit: () {
         userSettingState.userDataInsertToViewValue(userData);
@@ -81,7 +107,13 @@ class Profile extends StatelessWidget {
                         alignment: Alignment.topLeft,
                         child: IconButton(
                           onPressed: () {
-                            Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                            bool isChange = userSettingState.isProfileChange(
+                                userData, base64Img, nameInput.text, introductionInput.text, allSkillItems, allWantSkillItems);
+                            if (isChange) {
+                              exitCheck();
+                            } else {
+                              Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                            }
                           },
                           icon: const Icon(Icons.arrow_back_ios),
                         ),

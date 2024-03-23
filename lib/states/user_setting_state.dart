@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -81,7 +82,7 @@ class UserSettingState extends ChangeNotifier {
     return result;
   }
 
-//いずれスキルに関するやつ変更する
+  //いずれスキルに関するやつ変更する
   void checkOnChange(SkillInfo list, {String? choicedLevel}) {
     //いずれスキルのレベル変更する
     list.level = int.parse(choicedLevel ?? "0");
@@ -143,5 +144,44 @@ class UserSettingState extends ChangeNotifier {
   void openSkillselectPage(String type) {
     this.type = type;
     notifyListeners();
+  }
+
+  bool isProfileChange(
+    LoginUser userData,
+    String image,
+    String name,
+    String introduction,
+    List<SkillModel> allSkillItems,
+    List<SkillModel> allWantSkillItems,
+  ) {
+    bool isChange = false;
+
+    if (userData.image != image || userData.name != name || userData.introduction != introduction) {
+      isChange = true;
+    }
+
+    void getSkillListIsChange(List<SkillInfo> userSkillList, List<SkillInfo> skillList) {
+      if (skillList.length != userSkillList.length) {
+        isChange = true;
+      } else {
+        skillList.forEach((element) {
+          userSkillList.forEach((e) {
+            if (element.name == e.name) {
+              if (element.level != e.level) {
+                isChange = true;
+              }
+            }
+          });
+        });
+      }
+    }
+
+    List<SkillInfo> getHaveSkillList = allSkillItems.map((e) => e.skillHave).toList();
+    List<SkillInfo> getWantSkillList = allWantSkillItems.map((e) => e.skillWant).toList();
+    getSkillListIsChange(userData.mainSkills!, getHaveSkillList);
+    getSkillListIsChange(userData.wantSkills!, getWantSkillList);
+
+    print("isProfileChange : $isChange");
+    return isChange;
   }
 }
