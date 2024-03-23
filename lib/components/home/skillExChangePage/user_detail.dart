@@ -20,14 +20,12 @@ class UserDetail extends StatelessWidget {
     FriendState friendFuture = context.read<FriendState>();
     LoginUser otherUser = context.select((SkillExChangeState value) =>
         value.otherUser ?? LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: 0));
-    String friendListMessage = context.select((FriendState value) => value.friendListMessage);
+    bool isFriend = context.select((FriendState value) => value.isFriend);
+
     return StatefulWrapper(
       onInit: () {
         List<String> usersList = [userData!.uid, otherUser.uid];
         friendFuture.checkIsFriend(usersList);
-        if (friendListMessage == "is already Friend") {
-          print("is already Friend");
-        }
       },
       child: SizedBox(
         width: ScreenSize().width,
@@ -46,6 +44,7 @@ class UserDetail extends StatelessWidget {
                   onPressed: () async {
                     print("Drawer Close");
                     globalKey.currentState!.closeEndDrawer();
+                    friendFuture.UserDetailPageClose(userData!.uid);
                   },
                   icon: const Icon(Icons.arrow_back_ios_sharp),
                 ),
@@ -85,7 +84,7 @@ class UserDetail extends StatelessWidget {
                   List<String> usersList = [userData!.uid, otherUser.uid];
                   friendFuture.addFriend(usersList);
                 },
-                child: Text("新增好友"),
+                child: isFriend ? Text("已是好友") : Text("新增好友"),
               ),
             ],
           ),

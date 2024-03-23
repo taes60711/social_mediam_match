@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -164,15 +163,15 @@ class UserSettingState extends ChangeNotifier {
       if (skillList.length != userSkillList.length) {
         isChange = true;
       } else {
-        skillList.forEach((element) {
-          userSkillList.forEach((e) {
+        for (var element in skillList) {
+          for (var e in userSkillList) {
             if (element.name == e.name) {
               if (element.level != e.level) {
                 isChange = true;
               }
             }
-          });
-        });
+          }
+        }
       }
     }
 

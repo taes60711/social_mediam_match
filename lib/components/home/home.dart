@@ -71,6 +71,11 @@ class _HomeState extends State<Home> {
         onTap: (value) {
           setState(() {
             print("Page Index : $value");
+            if (value != 1) {
+              if (widget.friendState.isFriend) {
+                widget.friendState.UserDetailPageClose(widget.userData.uid);
+              }
+            }
             _selectedIndex = value;
           });
         },
