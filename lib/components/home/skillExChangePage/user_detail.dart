@@ -7,6 +7,8 @@ import 'package:social_mediam_match/models/user_model.dart';
 
 import '../../../states/friend_state.dart';
 import '../../../states/skill_exchange_state.dart';
+import '../../strings/userPage/user_page_string.dart';
+import '../../utilities/skill_list_view.dart';
 
 class UserDetail extends StatelessWidget {
   final LoginUser? userData;
@@ -58,13 +60,23 @@ class UserDetail extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("名前 : ${otherUser.name ?? otherUser.email}"),
+                    Text("身分: ${otherUser.status}"),
                     Text("自我介紹 : ${otherUser.introduction ?? ""}"),
                     Text("最後登入時間: ${otherUser.lastLogin}"),
-                    Text("擅長的技能: ${otherUser.mainSkills!.map((e) => e.name).toList()}"),
-                    Text("擅長的技能程度: ${otherUser.mainSkills!.map((e) => e.level).toList()}"),
-                    Text("想學的技能: ${otherUser.wantSkills!.map((e) => e.name).toList()}"),
-                    Text("想學的技能程度: ${otherUser.wantSkills!.map((e) => e.level).toList()}"),
-                    Text("身分: ${otherUser.status}")
+                    SizedBox(
+                      width: ScreenSize().width,
+                      child: SkillListView(
+                        title: skillText,
+                        skillList: userData!.mainSkills ?? [],
+                      ),
+                    ),
+                    SizedBox(
+                      width: ScreenSize().width,
+                      child: SkillListView(
+                        title: wantSkillText,
+                        skillList: userData!.wantSkills ?? [],
+                      ),
+                    ),
                   ],
                 ),
               ),
