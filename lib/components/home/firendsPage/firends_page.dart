@@ -19,6 +19,7 @@ class FirendsPage extends StatelessWidget {
 
     Widget userComponent;
 
+    print("UserPage");
     userComponent = Builder(builder: (context) {
       if (friendListMessage != "" && friendListMessage != "is already Friend") {
         List<FriendListModel> data = (jsonDecode(friendListMessage) as List<dynamic>).map((e) {

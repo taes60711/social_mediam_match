@@ -19,6 +19,7 @@ class UserIcon extends StatelessWidget {
               borderRadius: BorderRadius.circular(60),
               child: Image.memory(
                 const Base64Decoder().convert(userIcon),
+                gaplessPlayback: true,
               ),
             )
           : Container(

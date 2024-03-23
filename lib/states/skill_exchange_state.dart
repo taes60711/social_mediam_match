@@ -18,7 +18,7 @@ class SkillExChangeState extends ChangeNotifier {
   List<Map<String, dynamic>> backEndSkillList = [];
   List<Map<String, dynamic>> otherSkillList = [];
   LoginUser? otherUser;
-  bool isFirst = true, isLoading = false;
+  bool isFirst = true, isLoading = false, isFirstLoading = false;
   String endDrawerType = "";
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
 
@@ -53,8 +53,11 @@ class SkillExChangeState extends ChangeNotifier {
   }
 
   Future<void> getAllUserData({String? userUid, required List<String> filterSkill, required bool isFirstSearch}) async {
-    isLoading = true;
-    Future.delayed(Duration.zero).then((value) => notifyListeners());
+    if (isFirstSearch) {
+      isFirstLoading = true;
+      Future.delayed(Duration.zero).then((value) => notifyListeners());
+    }
+
     List<LoginUser> userData = [];
     if (userUid != null) {
       userData = await _dbService.getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: isFirstSearch);
@@ -64,6 +67,7 @@ class SkillExChangeState extends ChangeNotifier {
 
     if (isFirstSearch) {
       allUserData = userData;
+      isFirstLoading = false;
     } else {
       for (var element in userData) {
         allUserData.add(element);

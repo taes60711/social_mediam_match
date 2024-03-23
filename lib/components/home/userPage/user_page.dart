@@ -204,6 +204,7 @@ class UserPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget userComponent;
 
+    print("UserPage");
     userComponent = SizedBox(
       width: ScreenSize().width,
       child: Column(

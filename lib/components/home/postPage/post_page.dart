@@ -138,6 +138,7 @@ class PostPage extends StatelessWidget {
       );
     }
 
+    print("PostPage");
     return StatefulWrapper(
       onInit: () async {
         await postState.getPostData();
