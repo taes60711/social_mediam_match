@@ -10,6 +10,7 @@ import '../../../global.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../strings/userPage/user_page_string.dart';
+import '../../utilities/skill_list_view.dart';
 import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/user_icon.dart';
 
@@ -160,19 +161,8 @@ class Profile extends StatelessWidget {
                       ),
                       SizedBox(
                         width: ScreenSize().width,
-                        child: Wrap(
-                          runSpacing: 5,
-                          spacing: 5,
-                          children: allSkillItems
-                              .map((e) => Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: const Color.fromARGB(255, 233, 231, 231),
-                                    ),
-                                    child: Text(e.skillHave.name),
-                                  ))
-                              .toList(),
+                        child: SkillListView(
+                          skillList: allSkillItems.map((e) => e.skillHave).toList(),
                         ),
                       ),
                       Padding(
@@ -192,19 +182,8 @@ class Profile extends StatelessWidget {
                       ),
                       SizedBox(
                         width: ScreenSize().width,
-                        child: Wrap(
-                          runSpacing: 5,
-                          spacing: 5,
-                          children: allWantSkillItems
-                              .map((e) => Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: const Color.fromARGB(255, 233, 231, 231),
-                                    ),
-                                    child: Text(e.skillWant.name),
-                                  ))
-                              .toList(),
+                        child: SkillListView(
+                          skillList: allWantSkillItems.map((e) => e.skillWant).toList(),
                         ),
                       ),
                       Padding(

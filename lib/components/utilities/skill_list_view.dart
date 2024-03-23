@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import '../../models/user_model.dart';
 
 class SkillListView extends StatelessWidget {
-  final String title;
+  final String? title;
   final List<SkillInfo> skillList;
-  const SkillListView({super.key, required this.title, required this.skillList});
+  const SkillListView({super.key, this.title, required this.skillList});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class SkillListView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title),
+        title != null ? Text(title ?? "") : Container(),
         skillList.isNotEmpty
             ? Wrap(
                 runSpacing: 5,
