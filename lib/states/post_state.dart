@@ -3,18 +3,26 @@ import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
 
+import '../models/user_model.dart';
+
 class PostState extends ChangeNotifier {
   final DBService _dbService = DBService();
   List<PostModel> postData = [];
   List<PostCommentModel> postCommentData = [];
   TextEditingController postCommentInput = TextEditingController();
+  bool isFirstLoading = false;
+  final GlobalKey<ScaffoldState> globalKey = GlobalKey();
+  LoginUser? otherUser;
 
   Future<void> getPostData() async {
+    isFirstLoading = true;
+    Future.delayed(Duration.zero).then((value) => notifyListeners());
     List<PostModel> tempPostData = await _dbService.getPostData();
 
     tempPostData.forEach((e) {
       postData = [...postData, e];
     });
+    isFirstLoading = false;
     notifyListeners();
   }
 
@@ -57,5 +65,12 @@ class PostState extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
+  }
+
+  void openDrawer(LoginUser otherUser) {
+    this.otherUser = otherUser;
+
+    notifyListeners();
+    globalKey.currentState!.openEndDrawer();
   }
 }

@@ -23,15 +23,20 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
-  void test() {}
+  void gotoFriendPage() {
+    setState(() {
+      _selectedIndex = 3;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
       ChangeNotifierProvider(
         create: (_) => PostState(),
-        child: PostPage(userData: widget.userData),
+        child: PostPage(userData: widget.userData, gotoFriendPage: gotoFriendPage),
       ),
-      SkillExChangePage(userData: widget.userData),
+      SkillExChangePage(userData: widget.userData, gotoFriendPage: gotoFriendPage),
       Course(),
       FirendsPage(userData: widget.userData),
       UserPage(
@@ -79,7 +84,6 @@ class _HomeState extends State<Home> {
               }
               Provider.of<SkillExChangeState>(context, listen: false).skillExchangePageDisPose();
             }
-
             _selectedIndex = value;
           });
         },

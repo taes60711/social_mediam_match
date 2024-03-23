@@ -14,8 +14,8 @@ import '../../utilities/user_icon.dart';
 
 class SkillExChangePage extends StatelessWidget {
   final LoginUser? userData;
-
-  const SkillExChangePage({super.key, this.userData});
+  final VoidCallback gotoFriendPage;
+  const SkillExChangePage({super.key, this.userData, required this.gotoFriendPage});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class SkillExChangePage extends StatelessWidget {
     bool isFirstLoading = context.select((SkillExChangeState value) => value.isFirstLoading);
     SkillExChangeState skillExChangeState = context.read<SkillExChangeState>();
     String endDrawerType = context.select((SkillExChangeState value) => value.endDrawerType);
-
+    LoginUser? otherUser = context.select((SkillExChangeState value) => value.otherUser);
     return StatefulWrapper(
       onInit: () {
         if (userData != null) {
@@ -47,6 +47,8 @@ class SkillExChangePage extends StatelessWidget {
                   : UserDetail(
                       globalKey: globalKey,
                       userData: userData,
+                      otherUser: otherUser,
+                      gotoFriendPage: gotoFriendPage,
                     ),
               body: Column(
                 children: [
