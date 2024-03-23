@@ -8,6 +8,15 @@ class SkillListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var levelIcon = {
+      1: Icons.network_wifi_1_bar,
+      2: Icons.network_wifi_2_bar,
+      3: Icons.network_wifi_3_bar,
+      4: Icons.network_wifi_rounded,
+      5: Icons.network_wifi,
+    };
+    Color textColor = Color.fromARGB(255, 252, 249, 227);
+    Color backGroundColor = Color.fromARGB(255, 236, 121, 44);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -18,13 +27,23 @@ class SkillListView extends StatelessWidget {
                 spacing: 5,
                 children: skillList
                     .map(
-                      (e) => Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: const Color.fromARGB(255, 233, 231, 231),
+                      (e) => Chip(
+                        avatar: Icon(
+                          levelIcon[e.level],
+                          color: textColor,
+                          size: 20,
                         ),
-                        child: Text(e.name),
+                        visualDensity: const VisualDensity(horizontal: 0.0, vertical: -4),
+                        backgroundColor: backGroundColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            side: const BorderSide(
+                              style: BorderStyle.none,
+                            )),
+                        label: Text(
+                          e.name,
+                          style: TextStyle(color: textColor),
+                        ),
                       ),
                     )
                     .toList(),
@@ -33,9 +52,14 @@ class SkillListView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: const Color.fromARGB(255, 233, 231, 231),
+                  color: backGroundColor,
                 ),
-                child: Text("暫無"),
+                child: Text(
+                  "暫無",
+                  style: TextStyle(
+                    color: textColor,
+                  ),
+                ),
               ),
       ],
     );

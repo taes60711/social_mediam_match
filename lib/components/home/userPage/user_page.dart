@@ -210,11 +210,12 @@ class UserPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: UserIcon(
-                iconSize: 120,
-                image: userData.image,
-              )),
+            padding: const EdgeInsets.all(8.0),
+            child: UserIcon(
+              iconSize: 120,
+              image: userData.image,
+            ),
+          ),
           Text("Hello, ${userData.name ?? userData.email}"),
           Text("身分 ${userData.status}"),
           SizedBox(
