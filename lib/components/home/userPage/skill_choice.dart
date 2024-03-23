@@ -7,10 +7,10 @@ import '../../../states/user_setting_state.dart';
 import '../../strings/userPage/profie_string.dart';
 
 class SkillChoice extends StatelessWidget {
-  List<SkillModel> forntSkillItems, backEndSkillItems, iotSkillItems, otherSkillItems;
-  UserSettingState userSettingState;
-  String type;
-  SkillChoice(
+  final List<SkillModel> forntSkillItems, backEndSkillItems, iotSkillItems, otherSkillItems;
+  final UserSettingState userSettingState;
+  final String type;
+  const SkillChoice(
       {super.key,
       required this.userSettingState,
       required this.forntSkillItems,

@@ -186,8 +186,8 @@
 //   }
 // }
 
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../../../states/friend_state.dart';
@@ -209,25 +209,11 @@ class UserPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              width: 120,
-              height: 120,
-              child: userData.image != ""
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(60),
-                      child: Image.memory(
-                        const Base64Decoder().convert(userData.image ?? ""),
-                      ),
-                    )
-                  : Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(60),
-                        color: const Color.fromARGB(255, 224, 224, 224),
-                      ),
-                    ),
-            ),
-          ),
+              padding: const EdgeInsets.all(8.0),
+              child: UserIcon(
+                iconSize: 120,
+                image: userData.image,
+              )),
           Text("Hello, ${userData.name ?? userData.email}"),
           Text("身分 ${userData.status}"),
           SizedBox(

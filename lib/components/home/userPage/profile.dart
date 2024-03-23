@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/userPage/skill_choice.dart';
@@ -12,6 +11,7 @@ import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/stateful_wrapper.dart';
+import '../../utilities/user_icon.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -86,17 +86,9 @@ class Profile extends StatelessWidget {
                           icon: const Icon(Icons.arrow_back_ios),
                         ),
                       ),
-                      SizedBox(
-                        width: 80,
-                        height: 80,
-                        child: base64Img != ""
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(60),
-                                child: Image.memory(
-                                  const Base64Decoder().convert(base64Img),
-                                ),
-                              )
-                            : Container(),
+                      UserIcon(
+                        iconSize: 120,
+                        image: base64Img,
                       ),
                       GestureDetector(
                         onTap: () async {

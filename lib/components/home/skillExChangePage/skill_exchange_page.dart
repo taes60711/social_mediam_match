@@ -1,12 +1,13 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/members_filter.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/user_detail.dart';
+import 'package:social_mediam_match/components/strings/userPage/user_page_string.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import '../../../states/skill_exchange_state.dart';
+import '../../utilities/user_icon.dart';
 
 class SkillExChangePage extends StatelessWidget {
   final LoginUser? userData;
@@ -94,21 +95,16 @@ class SkillExChangePage extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      Container(
-                                        margin: EdgeInsets.only(right: 8),
-                                        width: 50,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(25),
-                                          color: Colors.deepPurple,
-                                        ),
+                                      UserIcon(
+                                        iconSize: 60,
+                                        image: allUserData[index].image,
                                       ),
                                       Text(allUserData[index].email),
                                     ],
                                   ),
                                   Text("最後登入時間: ${allUserData[index].lastLogin}"),
-                                  Text(skills.isNotEmpty ? "擅長的技能 : $skills" : "擅長的技能 : "),
-                                  Text(wantSkills.isNotEmpty ? "想學的技能 : $wantSkills" : "想學的技能 : "),
+                                  Text(skills.isNotEmpty ? "$skillText : $skills" : "$skillText : "),
+                                  Text(wantSkills.isNotEmpty ? "$wantSkillText : $wantSkills" : "$wantSkillText : "),
                                 ],
                               ),
                             ),
