@@ -224,6 +224,7 @@ class UserPage extends StatelessWidget {
             ),
           ),
           Text("Hello, ${userData.name ?? userData.email}"),
+          Text("身分 ${userData.status}"),
           SizedBox(
             width: ScreenSize().width,
             child: Column(

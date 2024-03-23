@@ -15,8 +15,8 @@ class UserDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FriendState friendFuture = context.read<FriendState>();
-    LoginUser otherUser = context.select(
-        (SkillExChangeState value) => value.otherUser ?? LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false));
+    LoginUser otherUser = context.select((SkillExChangeState value) =>
+        value.otherUser ?? LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: 0));
     String friendListMessage = context.select((FriendState value) => value.friendListMessage);
     return StatefulWrapper(
       onInit: () {
@@ -63,7 +63,8 @@ class UserDetail extends StatelessWidget {
                     Text("擅長的技能: ${otherUser.mainSkills!.map((e) => e.name).toList()}"),
                     Text("擅長的技能程度: ${otherUser.mainSkills!.map((e) => e.level).toList()}"),
                     Text("想學的技能: ${otherUser.wantSkills!.map((e) => e.name).toList()}"),
-                    Text("想學的技能程度: ${otherUser.wantSkills!.map((e) => e.level).toList()}")
+                    Text("想學的技能程度: ${otherUser.wantSkills!.map((e) => e.level).toList()}"),
+                    Text("身分: ${otherUser.status}")
                   ],
                 ),
               ),

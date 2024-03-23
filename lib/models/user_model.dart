@@ -25,6 +25,7 @@ class LoginUser extends UserModel {
   String email;
   bool isEmailVerified;
   String lastLogin;
+  int status;
 
   LoginUser({
     required String uid,
@@ -37,6 +38,7 @@ class LoginUser extends UserModel {
     List<SkillInfo>? wantSkills,
     required this.email,
     required this.isEmailVerified,
+    required this.status,
   }) : super(
           uid: uid,
           image: image,
@@ -66,6 +68,7 @@ class LoginUser extends UserModel {
       email: json["email"],
       name: json["name"],
       lastLogin: formattedTime,
+      status: json['status'],
       introduction: json['introduction'],
       isEmailVerified: json["isEmailVerified"],
       mainSkills: mainSkills,
