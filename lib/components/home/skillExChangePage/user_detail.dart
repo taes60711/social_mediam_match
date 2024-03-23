@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
 import '../../../states/friend_state.dart';
@@ -47,10 +48,9 @@ class UserDetail extends StatelessWidget {
                   icon: const Icon(Icons.arrow_back_ios_sharp),
                 ),
               ),
-              Container(
-                width: 100,
-                height: 100,
-                color: Colors.deepOrangeAccent,
+              UserIcon(
+                iconSize: 100,
+                image: otherUser.image,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),

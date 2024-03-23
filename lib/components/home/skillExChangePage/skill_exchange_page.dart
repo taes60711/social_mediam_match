@@ -1,12 +1,14 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/home/skillExChangePage/members_filter.dart';
+import 'package:social_mediam_match/components/home/skillExChangePage/users_filter.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/user_detail.dart';
 import 'package:social_mediam_match/components/strings/userPage/user_page_string.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import '../../../states/skill_exchange_state.dart';
+import '../../utilities/skill_list_view.dart';
+import '../../utilities/style/screen_size.dart';
 import '../../utilities/user_icon.dart';
 
 class SkillExChangePage extends StatelessWidget {
@@ -34,7 +36,7 @@ class SkillExChangePage extends StatelessWidget {
       child: Scaffold(
         key: globalKey,
         endDrawer: endDrawerType == "filter"
-            ? MembersFilter(
+            ? UsersFilter(
                 globalKey: globalKey,
                 userData: userData,
               )
@@ -74,8 +76,6 @@ class SkillExChangePage extends StatelessWidget {
                 child: ListView.builder(
                     itemCount: allUserData.length,
                     itemBuilder: (context, index) {
-                      List<String> skills = allUserData[index].mainSkills!.map((e) => e.name).toList();
-                      List<String> wantSkills = allUserData[index].wantSkills!.map((e) => e.name).toList();
                       return Padding(
                         padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
                         child: GestureDetector(
@@ -86,7 +86,7 @@ class SkillExChangePage extends StatelessWidget {
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Color.fromARGB(255, 218, 219, 219),
+                              color: const Color.fromARGB(255, 218, 219, 219),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -103,8 +103,20 @@ class SkillExChangePage extends StatelessWidget {
                                     ],
                                   ),
                                   Text("最後登入時間: ${allUserData[index].lastLogin}"),
-                                  Text(skills.isNotEmpty ? "$skillText : $skills" : "$skillText : "),
-                                  Text(wantSkills.isNotEmpty ? "$wantSkillText : $wantSkills" : "$wantSkillText : "),
+                                  SizedBox(
+                                    width: ScreenSize().width,
+                                    child: SkillListView(
+                                      title: skillText,
+                                      skillList: allUserData[index].mainSkills ?? [],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: ScreenSize().width,
+                                    child: SkillListView(
+                                      title: wantSkillText,
+                                      skillList: allUserData[index].wantSkills ?? [],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

@@ -192,6 +192,7 @@ import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../../../states/friend_state.dart';
 import '../../strings/userPage/user_page_string.dart';
+import '../../utilities/skill_list_view.dart';
 import '../../utilities/style/screen_size.dart';
 
 class UserPage extends StatelessWidget {
@@ -218,48 +219,16 @@ class UserPage extends StatelessWidget {
           Text("身分 ${userData.status}"),
           SizedBox(
             width: ScreenSize().width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(skillText),
-                Wrap(
-                  runSpacing: 5,
-                  spacing: 5,
-                  children: userData.mainSkills!
-                      .map((e) => Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: const Color.fromARGB(255, 233, 231, 231),
-                            ),
-                            child: Text(e.name),
-                          ))
-                      .toList(),
-                ),
-              ],
+            child: SkillListView(
+              title: skillText,
+              skillList: userData.mainSkills ?? [],
             ),
           ),
           SizedBox(
             width: ScreenSize().width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(wantSkillText),
-                Wrap(
-                  runSpacing: 5,
-                  spacing: 5,
-                  children: userData.wantSkills!
-                      .map((e) => Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: const Color.fromARGB(255, 233, 231, 231),
-                            ),
-                            child: Text(e.name),
-                          ))
-                      .toList(),
-                ),
-              ],
+            child: SkillListView(
+              title: wantSkillText,
+              skillList: userData.wantSkills ?? [],
             ),
           ),
           Column(

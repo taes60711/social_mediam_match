@@ -9,10 +9,10 @@ import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../../../states/skill_exchange_state.dart';
 
-class MembersFilter extends StatelessWidget {
+class UsersFilter extends StatelessWidget {
   final GlobalKey<ScaffoldState> globalKey;
   final LoginUser? userData;
-  const MembersFilter({super.key, required this.globalKey, this.userData});
+  const UsersFilter({super.key, required this.globalKey, this.userData});
 
   @override
   Widget build(BuildContext context) {
