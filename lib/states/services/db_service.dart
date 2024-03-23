@@ -126,6 +126,7 @@ class DBService {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
         allUserData = (json.decode(response.body)['content'] as List<dynamic>).map((element) {
+          print(element);
           return LoginUser.jsonToModel(element);
         }).toList();
         pageNumber++;
@@ -195,7 +196,7 @@ class DBService {
         isEmailVerified: false,
       );
 
-      String body = jsonEncode(signedUpUserData);
+      String body = signedUpUserData.signUpFormJson();
 
       await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Success:${_.body}"));
       isSucess = true;

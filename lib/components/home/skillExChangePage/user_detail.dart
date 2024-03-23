@@ -79,13 +79,18 @@ class UserDetail extends StatelessWidget {
                   ],
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  List<String> usersList = [userData!.uid, otherUser.uid];
-                  friendFuture.addFriend(usersList);
-                },
-                child: isFriend ? Text("已是好友") : Text("新增好友"),
-              ),
+              isFriend
+                  ? ElevatedButton(
+                      onPressed: () {},
+                      child: Text("開啟聊天室"),
+                    )
+                  : ElevatedButton(
+                      onPressed: () {
+                        List<String> usersList = [userData!.uid, otherUser.uid];
+                        friendFuture.addFriend(usersList);
+                      },
+                      child: Text("新增好友"),
+                    ),
             ],
           ),
         ),

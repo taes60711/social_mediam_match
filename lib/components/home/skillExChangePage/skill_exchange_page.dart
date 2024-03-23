@@ -17,20 +17,20 @@ class SkillExChangePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<LoginUser> allUserData = Provider.of<SkillExChangeState>(context).allUserData;
+    List<LoginUser> allUserData = context.watch<SkillExChangeState>().allUserData;
     GlobalKey<ScaffoldState> globalKey = context.select((SkillExChangeState value) => value.globalKey);
     List<String> filterSkill = context.select((SkillExChangeState value) => value.filterSkill);
     bool isLoading = context.select((SkillExChangeState value) => value.isLoading);
+
     SkillExChangeState skillExChangeState = context.read<SkillExChangeState>();
     String endDrawerType = context.select((SkillExChangeState value) => value.endDrawerType);
 
     return StatefulWrapper(
       onInit: () {
         if (userData != null) {
-          Provider.of<SkillExChangeState>(context, listen: false)
-              .getAllUserData(userUid: userData!.uid, filterSkill: filterSkill, isFirstSearch: true);
+          skillExChangeState.getAllUserData(userUid: userData!.uid, filterSkill: filterSkill, isFirstSearch: true);
         } else {
-          Provider.of<SkillExChangeState>(context, listen: false).getAllUserData(filterSkill: filterSkill, isFirstSearch: true);
+          skillExChangeState.getAllUserData(filterSkill: filterSkill, isFirstSearch: true);
         }
       },
       child: Scaffold(

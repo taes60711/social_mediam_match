@@ -54,7 +54,7 @@ class SkillExChangeState extends ChangeNotifier {
 
   Future<void> getAllUserData({String? userUid, required List<String> filterSkill, required bool isFirstSearch}) async {
     isLoading = true;
-
+    Future.delayed(Duration.zero).then((value) => notifyListeners());
     List<LoginUser> userData = [];
     if (userUid != null) {
       userData = await _dbService.getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: isFirstSearch);
