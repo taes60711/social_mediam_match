@@ -18,9 +18,14 @@ class SkillExChangeState extends ChangeNotifier {
   List<Map<String, dynamic>> backEndSkillList = [];
   List<Map<String, dynamic>> otherSkillList = [];
   LoginUser? otherUser;
-  bool isFirst = true, isLoading = false, isFirstLoading = false;
+  bool isFirst = true, isLoading = false, isFirstLoading = true;
   String endDrawerType = "";
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
+
+  void skillExchangePageDisPose() {
+    isFirstLoading = true;
+    notifyListeners();
+  }
 
   Future<bool> getSkillList() async {
     bool result = false;

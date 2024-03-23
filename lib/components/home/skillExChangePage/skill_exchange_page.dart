@@ -15,6 +15,7 @@ import '../../utilities/user_icon.dart';
 
 class SkillExChangePage extends StatelessWidget {
   final LoginUser? userData;
+
   const SkillExChangePage({super.key, this.userData});
 
   @override
@@ -26,6 +27,7 @@ class SkillExChangePage extends StatelessWidget {
     bool isFirstLoading = context.select((SkillExChangeState value) => value.isFirstLoading);
     SkillExChangeState skillExChangeState = context.read<SkillExChangeState>();
     String endDrawerType = context.select((SkillExChangeState value) => value.endDrawerType);
+
     return StatefulWrapper(
       onInit: () {
         if (userData != null) {

@@ -7,6 +7,7 @@ import 'package:social_mediam_match/components/home/postPage/post_page.dart';
 import 'package:social_mediam_match/components/home/userPage/user_page.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
+import 'package:social_mediam_match/states/skill_exchange_state.dart';
 
 import '../../states/friend_state.dart';
 
@@ -22,6 +23,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
+  void test() {}
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
@@ -75,7 +77,9 @@ class _HomeState extends State<Home> {
               if (widget.friendState.isFriend) {
                 widget.friendState.UserDetailPageClose(widget.userData.uid);
               }
+              Provider.of<SkillExChangeState>(context, listen: false).skillExchangePageDisPose();
             }
+
             _selectedIndex = value;
           });
         },
