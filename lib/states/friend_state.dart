@@ -59,6 +59,8 @@ class FriendState extends ChangeNotifier {
       usersListTemp = [...usersListTemp, "\"$element\""];
     });
     _friendListChannel.sink.add('{"method" : "addFriend","members" : $usersListTemp}');
+    isFriend = true;
+    notifyListeners();
   }
 
   Future<void> openRoom(int roomId) async {
