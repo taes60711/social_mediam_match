@@ -58,29 +58,31 @@ class SkillExChangeState extends ChangeNotifier {
   }
 
   Future<void> getAllUserData({String? userUid, required List<String> filterSkill, required bool isFirstSearch}) async {
-    if (isFirstSearch) {
-      isFirstLoading = true;
-      Future.delayed(Duration.zero).then((value) => notifyListeners());
-    }
-
-    List<LoginUser> userData = [];
-    if (userUid != null) {
-      userData = await _dbService.getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: isFirstSearch);
-    } else {
-      userData = await _dbService.getAllUserData(filterSkill: filterSkill, isFirstSearch: isFirstSearch);
-    }
-
-    if (isFirstSearch) {
-      allUserData = userData;
-      isFirstLoading = false;
-    } else {
-      for (var element in userData) {
-        allUserData.add(element);
+    try {
+      if (isFirstSearch) {
+        isFirstLoading = true;
+        Future.delayed(Duration.zero).then((value) => notifyListeners());
       }
-    }
-    inspect(allUserData);
-    isLoading = false;
-    notifyListeners();
+
+      List<LoginUser> userData = [];
+      if (userUid != null) {
+        userData = await _dbService.getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: isFirstSearch);
+      } else {
+        userData = await _dbService.getAllUserData(filterSkill: filterSkill, isFirstSearch: isFirstSearch);
+      }
+
+      if (isFirstSearch) {
+        allUserData = userData;
+        isFirstLoading = false;
+      } else {
+        for (var element in userData) {
+          allUserData.add(element);
+        }
+      }
+      inspect(allUserData);
+      isLoading = false;
+      notifyListeners();
+    } catch (e) {}
   }
 
   void filterOnChange(List<Map<String, dynamic>> list, String skillName) {

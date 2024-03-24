@@ -14,16 +14,25 @@ class PostState extends ChangeNotifier {
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   LoginUser? otherUser;
 
-  Future<void> getPostData() async {
-    isFirstLoading = true;
-    Future.delayed(Duration.zero).then((value) => notifyListeners());
-    List<PostModel> tempPostData = await _dbService.getPostData();
+  Future<void> getPostData({required bool isFirstSearch}) async {
+    try {
+      List<PostModel> tempPostData = [];
+      if (isFirstSearch) {
+        isFirstLoading = true;
+        Future.delayed(Duration.zero).then((value) => notifyListeners());
+        tempPostData = await _dbService.getPostData(isFirst: isFirstSearch);
+      } else {
+        tempPostData = await _dbService.getPostData();
+      }
 
-    tempPostData.forEach((e) {
-      postData = [...postData, e];
-    });
-    isFirstLoading = false;
-    notifyListeners();
+      tempPostData.forEach((e) {
+        postData = [...postData, e];
+      });
+      isFirstLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> getPostCommentData(int postId) async {

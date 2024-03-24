@@ -78,28 +78,27 @@ class DBService {
     });
   }
 
-  int postPageNumber = 0;
+  searchStatus postServerInfo = searchStatus();
   Future<List<PostModel>> getPostData({bool? isFirst}) async {
     String branch = "posts";
     int size = 5;
     if (isFirst != null) {
-      postPageNumber = 0;
+      postServerInfo.pageNumber = 0;
     }
 
-    String searchUrl = '$url/$branch/getAll?page=$postPageNumber&size=$size';
+    String searchUrl = '$url/$branch/getAll?page=${postServerInfo.pageNumber}&size=$size';
 
     final uri = Uri.parse(searchUrl);
     List<PostModel> allpostData = [];
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        print(response.body);
         allpostData = (json.decode(response.body)['content'] as List<dynamic>).map((e) {
           return PostModel.toMap(e);
         }).toList();
 
         inspect(allpostData);
-        postPageNumber++;
+        postServerInfo.pageNumber++;
       }
     } catch (e) {
       print(e);
@@ -137,7 +136,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        alluserServerInfo.totalPage = json.decode(response.body)["totalPages"];
+        // alluserServerInfo.totalPage = json.decode(response.body)["totalPages"];
         allUserData = (json.decode(response.body)['content'] as List<dynamic>).map((element) {
           return LoginUser.jsonToModel(element);
         }).toList();

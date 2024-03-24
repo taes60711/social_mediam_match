@@ -149,7 +149,7 @@ class PostPage extends StatelessWidget {
     print("PostPage");
     return StatefulWrapper(
       onInit: () async {
-        await postState.getPostData();
+        await postState.getPostData(isFirstSearch: true);
       },
       child: isFirstLoading
           ? const Loading()
@@ -173,47 +173,68 @@ class PostPage extends StatelessWidget {
               body: SafeArea(
                 child: Column(
                   children: [
+                    Container(
+                        height: 30,
+                        child: Center(
+                          child: const Text("文章"),
+                        )),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: postData.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-                            child: Container(
-                              color: const Color.fromARGB(255, 179, 175, 174),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      inspect(postData[index].postUserInfo);
-                                      if (userData!.uid != postData[index].postUserInfo.uid) {
-                                        postState.openDrawer(postData[index].postUserInfo);
-                                      }
-                                    },
-                                    child: Row(
-                                      children: [
-                                        UserIcon(
-                                          iconSize: 50,
-                                          image: postData[index].postUserInfo.image,
-                                        ),
-                                        Text(postData[index].postUserInfo.email),
-                                      ],
-                                    ),
-                                  ),
-                                  Text(postData[index].mainMessage),
-                                  Text("發文時間 : ${postData[index].postTime}"),
-                                  GestureDetector(
-                                    onTap: () {
-                                      openBottomSheet(postData[index].id);
-                                    },
-                                    child: Text("コメント${postData[index].commentCount}件すべて見る"),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
+                      child: NotificationListener<ScrollNotification>(
+                        onNotification: (ScrollNotification scrollNotification) {
+                          if (scrollNotification is ScrollEndNotification) {
+                            final before = scrollNotification.metrics.extentBefore;
+                            final max = scrollNotification.metrics.maxScrollExtent;
+                            if (before == max) {
+                              postState.getPostData(isFirstSearch: false);
+                            }
+                          }
+                          return false;
                         },
+                        child: ListView.builder(
+                          itemCount: postData.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+                              child: Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: const Color.fromARGB(255, 218, 219, 219),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        inspect(postData[index].postUserInfo);
+                                        if (userData!.uid != postData[index].postUserInfo.uid) {
+                                          postState.openDrawer(postData[index].postUserInfo);
+                                        }
+                                      },
+                                      child: Row(
+                                        children: [
+                                          UserIcon(
+                                            iconSize: 50,
+                                            image: postData[index].postUserInfo.image,
+                                          ),
+                                          Text(postData[index].postUserInfo.email),
+                                        ],
+                                      ),
+                                    ),
+                                    Text(postData[index].mainMessage),
+                                    Text("發文時間 : ${postData[index].postTime}"),
+                                    GestureDetector(
+                                      onTap: () {
+                                        openBottomSheet(postData[index].id);
+                                      },
+                                      child: Text("コメント${postData[index].commentCount}件すべて見る"),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],
