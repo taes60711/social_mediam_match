@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/signup_page.dart';
 import 'package:social_mediam_match/components/Initial/initial_page.dart';
 import 'package:social_mediam_match/components/home/postPage/editor_page.dart';
+import 'package:social_mediam_match/components/home/userPage/my_posts.dart';
 import 'package:social_mediam_match/components/home/userPage/profile.dart';
 import 'package:social_mediam_match/components/home/userPage/privacy_setting.dart';
 import 'package:social_mediam_match/firebase_options.dart';
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
               create: (_) => UserSettingState(),
               child: const Profile(),
             ),
+        '/myposts': (BuildContext context) => const MyPosts(),
       },
     );
   }

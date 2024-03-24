@@ -9,11 +9,16 @@ class SkillListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var levelIcon = {
-      1: Icons.network_wifi_1_bar,
-      2: Icons.network_wifi_2_bar,
-      3: Icons.network_wifi_3_bar,
-      4: Icons.network_wifi_rounded,
-      5: Icons.network_wifi,
+      // 1: Icons.network_wifi_1_bar,
+      // 2: Icons.network_wifi_2_bar,
+      // 3: Icons.network_wifi_3_bar,
+      // 4: Icons.network_wifi_rounded,
+      // 5: Icons.network_wifi,
+      1: Icons.filter_1,
+      2: Icons.filter_2,
+      3: Icons.filter_3,
+      4: Icons.filter_4,
+      5: Icons.filter_5,
     };
     Color textColor = Color.fromARGB(255, 252, 249, 227);
     Color backGroundColor = Color.fromARGB(255, 236, 121, 44);

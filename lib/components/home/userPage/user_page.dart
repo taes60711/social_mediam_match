@@ -242,8 +242,13 @@ class UserPage extends StatelessWidget {
                             RoutePath.profilePage.value,
                             arguments: userData,
                           );
+                        } else if (e.value == ManagerButton.post.value) {
+                          Navigator.of(context).pushNamed(
+                            RoutePath.myPosts.value,
+                            arguments: userData,
+                          );
                         } else if (e.value == ManagerButton.set.value) {
-                          Navigator.of(context).pushNamed(RoutePath.PrivacySettingPage.value, arguments: {
+                          Navigator.of(context).pushNamed(RoutePath.privacySettingPage.value, arguments: {
                             "userData": userData,
                             "friendState": friendState,
                           });

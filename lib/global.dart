@@ -29,7 +29,8 @@ enum RoutePath {
   profilePage("/profile"),
   postEditPage("/postEdit"),
   skillChoicePage("/skillChoice"),
-  PrivacySettingPage("/privacySetting");
+  myPosts("/myposts"),
+  privacySettingPage("/privacySetting");
 
   final String value;
   const RoutePath(this.value);
