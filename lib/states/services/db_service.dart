@@ -74,7 +74,7 @@ class DBService {
     final uri = Uri.parse(searchUrl);
 
     Map<String, String> headers = {'content-type': 'application/json'};
-    String body = jsonEncode({"created_by": uid, "main_message": message});
+    String body = jsonEncode({"createdBy": uid, "mainMessage": message});
 
     await http.put(uri, headers: headers, body: body).then((_) {
       print("MySql Post Create :${_.body}");

@@ -123,8 +123,8 @@ class PostPage extends StatelessWidget {
                                     ),
                                     Text(postData[index].mainMessage),
                                     Text("發文時間 : ${postData[index].postTime}"),
-                                    GestureDetector(
-                                      onTap: () {
+                                    ElevatedButton(
+                                      onPressed: () {
                                         postState.openDrawer("", choicedPostData: postData[index]);
                                       },
                                       child: Text("コメント${postData[index].commentCount}件すべて見る"),
