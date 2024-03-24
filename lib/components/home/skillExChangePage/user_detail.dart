@@ -68,14 +68,14 @@ class UserDetail extends StatelessWidget {
                       width: ScreenSize().width,
                       child: SkillListView(
                         title: skillText,
-                        skillList: userData!.mainSkills ?? [],
+                        skillList: realOtherUser.mainSkills ?? [],
                       ),
                     ),
                     SizedBox(
                       width: ScreenSize().width,
                       child: SkillListView(
                         title: wantSkillText,
-                        skillList: userData!.wantSkills ?? [],
+                        skillList: realOtherUser.wantSkills ?? [],
                       ),
                     ),
                   ],
