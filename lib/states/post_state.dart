@@ -10,7 +10,7 @@ class PostState extends ChangeNotifier {
   List<PostModel> postData = [];
   List<PostCommentModel> postCommentData = [];
   TextEditingController postCommentInput = TextEditingController();
-  bool isFirstLoading = false;
+  bool isFirstLoading = false, isPostCommentLoading = false;
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   String endDrawerType = "";
   PostModel? choicedPostData;
@@ -38,11 +38,14 @@ class PostState extends ChangeNotifier {
   }
 
   Future<void> getPostCommentData(int postId) async {
+    isPostCommentLoading = true;
+    Future.delayed(Duration.zero).then((value) => notifyListeners());
     List<PostCommentModel> tempPostCommentData = await _dbService.getPostCommentData(postId);
 
     tempPostCommentData.forEach((e) {
       postCommentData = [...postCommentData, e];
     });
+    isPostCommentLoading = false;
     notifyListeners();
   }
 
@@ -61,16 +64,16 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  Future<void> createPostComment(int postId, String userUid, String message) async {
+  Future<void> createPostComment(int postId, String message, LoginUser commentUser) async {
     try {
-      await _dbService.createPostComment(postId, userUid, message);
+      await _dbService.createPostComment(postId, commentUser.uid, message);
 
       DateTime dateUtc = DateTime.now().toUtc();
       DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
       String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
 
-      PostCommentModel tempPostCommentData =
-          PostCommentModel(postId: postId, userUid: userUid, message: message, postTime: formattedTime);
+      PostCommentModel tempPostCommentData = PostCommentModel(
+          postId: postId, userUid: commentUser.uid, message: message, postTime: formattedTime, commentUserInfo: commentUser);
       postCommentData.insert(0, tempPostCommentData);
       notifyListeners();
     } catch (e) {

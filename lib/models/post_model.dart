@@ -38,12 +38,14 @@ class PostCommentModel {
   String userUid;
   String message;
   String postTime;
+  LoginUser commentUserInfo;
 
   PostCommentModel({
     required this.postId,
     required this.userUid,
     required this.message,
     required this.postTime,
+    required this.commentUserInfo,
   });
 
   factory PostCommentModel.toMap(dynamic json) {
@@ -56,6 +58,7 @@ class PostCommentModel {
       userUid: json['userUid'],
       message: json['message'],
       postTime: formattedTime,
+      commentUserInfo: LoginUser.jsonToModel(json['user']),
     );
   }
 }
