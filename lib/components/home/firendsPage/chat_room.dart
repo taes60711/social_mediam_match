@@ -18,7 +18,7 @@ class ChatRoom extends StatelessWidget {
     FriendState friendFuture = context.read<FriendState>();
     String chatRoomMessage = context.select((FriendState value) => value.chatRoomMesaage);
     int roomId = context.select((FriendState value) => value.roomId);
-    TextEditingController messageInput = TextEditingController();
+    TextEditingController messageInput = context.select((FriendState value) => value.messageInput);
 
     return SizedBox(
       width: ScreenSize().width,

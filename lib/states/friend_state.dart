@@ -9,6 +9,7 @@ class FriendState extends ChangeNotifier {
   String friendListMessage = "", chatRoomMesaage = "";
   List<String> members = [];
   final GlobalKey<ScaffoldState> key = GlobalKey();
+  TextEditingController messageInput = TextEditingController();
   int roomId = -1;
 
   String channelListUrl;
