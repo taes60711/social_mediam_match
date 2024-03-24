@@ -2,21 +2,21 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/home/postPage/post_comment.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
-
 import '../../../global.dart';
 import '../../../models/user_model.dart';
-import '../../utilities/style/screen_size.dart';
+
 import '../skillExChangePage/user_detail.dart';
 
 class PostPage extends StatelessWidget {
-  final LoginUser? userData;
+  final LoginUser userData;
   final VoidCallback gotoFriendPage;
-  const PostPage({super.key, this.userData, required this.gotoFriendPage});
+  const PostPage({super.key, required this.userData, required this.gotoFriendPage});
 
   @override
   Widget build(BuildContext context) {
@@ -24,127 +24,20 @@ class PostPage extends StatelessWidget {
     List<PostModel> postData = context.select((PostState value) => value.postData);
     bool isFirstLoading = context.select((PostState value) => value.isFirstLoading);
     GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.globalKey);
+    String endDrawerType = context.select((PostState value) => value.endDrawerType);
     LoginUser? otherUser = context.select((PostState value) => value.otherUser);
-    openBottomSheet(int postId) {
-      showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.transparent,
-        builder: (context) {
-          return ChangeNotifierProvider(
-            create: (_) => PostState(),
-            child: Builder(builder: (context) {
-              PostState postState = context.read<PostState>();
-              List<PostCommentModel> postCommentData = context.watch<PostState>().postCommentData;
-              TextEditingController postCommentInput = context.select((PostState value) => value.postCommentInput);
-              return StatefulWrapper(
-                onInit: () async {
-                  await postState.getPostCommentData(postId);
-                },
-                onDispose: () {
-                  PostState().dispose();
-                },
-                child: SizedBox(
-                  height: ScreenSize().height * .65,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 20,
-                        bottom: 0,
-                        child: Container(
-                          width: ScreenSize().width,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: postCommentData.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  width: 30,
-                                                  height: 30,
-                                                  color: Colors.greenAccent,
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets.only(left: 8.0),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text(postCommentData[index].userUid),
-                                                      Text(postCommentData[index].message),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            Text(postCommentData[index].postTime),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                userData != null
-                                    ? Row(
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 8),
-                                              child: SizedBox(
-                                                height: 30,
-                                                child: TextField(
-                                                  controller: postCommentInput,
-                                                  decoration: const InputDecoration(
-                                                    contentPadding: EdgeInsets.only(top: 5, left: 10),
-                                                    border: OutlineInputBorder(),
-                                                    hintText: 'Enter Message',
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              postState.createPostComment(postId, userData!.uid, postCommentInput.text);
-                                            },
-                                            child: Container(
-                                              width: 80,
-                                              height: 30,
-                                              color: Colors.deepOrange,
-                                              child: const Center(
-                                                child: Text("傳送訊息"),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : Container(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-          );
-        },
-      );
-    }
+    PostModel choicedPostData = context.select(
+      (PostState value) =>
+          value.choicedPostData ??
+          PostModel(
+            id: -1,
+            createdBy: "",
+            mainMessage: "",
+            commentCount: 0,
+            postTime: "",
+            postUserInfo: LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: -1),
+          ),
+    );
 
     print("PostPage");
     return StatefulWrapper(
@@ -155,12 +48,18 @@ class PostPage extends StatelessWidget {
           ? const Loading()
           : Scaffold(
               key: globalKey,
-              endDrawer: UserDetail(
-                globalKey: globalKey,
-                userData: userData,
-                otherUser: otherUser,
-                gotoFriendPage: gotoFriendPage,
-              ),
+              endDrawer: endDrawerType == "userDetail"
+                  ? UserDetail(
+                      globalKey: globalKey,
+                      userData: userData,
+                      otherUser: otherUser,
+                      gotoFriendPage: gotoFriendPage,
+                    )
+                  : PostComment(
+                      choicedPostData: choicedPostData,
+                      userData: userData,
+                      globalKey: globalKey,
+                    ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(RoutePath.postEditPage.value, arguments: {
@@ -174,10 +73,11 @@ class PostPage extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                        height: 30,
-                        child: Center(
-                          child: const Text("文章"),
-                        )),
+                      height: 30,
+                      child: Center(
+                        child: const Text("文章"),
+                      ),
+                    ),
                     Expanded(
                       child: NotificationListener<ScrollNotification>(
                         onNotification: (ScrollNotification scrollNotification) {
@@ -207,8 +107,8 @@ class PostPage extends StatelessWidget {
                                     GestureDetector(
                                       onTap: () {
                                         inspect(postData[index].postUserInfo);
-                                        if (userData!.uid != postData[index].postUserInfo.uid) {
-                                          postState.openDrawer(postData[index].postUserInfo);
+                                        if (userData.uid != postData[index].postUserInfo.uid) {
+                                          postState.openDrawer("userDetail", otherUser: postData[index].postUserInfo);
                                         }
                                       },
                                       child: Row(
@@ -225,7 +125,7 @@ class PostPage extends StatelessWidget {
                                     Text("發文時間 : ${postData[index].postTime}"),
                                     GestureDetector(
                                       onTap: () {
-                                        openBottomSheet(postData[index].id);
+                                        postState.openDrawer("", choicedPostData: postData[index]);
                                       },
                                       child: Text("コメント${postData[index].commentCount}件すべて見る"),
                                     ),

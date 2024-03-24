@@ -12,6 +12,8 @@ class PostState extends ChangeNotifier {
   TextEditingController postCommentInput = TextEditingController();
   bool isFirstLoading = false;
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
+  String endDrawerType = "";
+  PostModel? choicedPostData;
   LoginUser? otherUser;
 
   Future<void> getPostData({required bool isFirstSearch}) async {
@@ -76,9 +78,13 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  void openDrawer(LoginUser otherUser) {
-    this.otherUser = otherUser;
-
+  void openDrawer(String endDrawerType, {LoginUser? otherUser, PostModel? choicedPostData}) {
+    this.endDrawerType = endDrawerType;
+    if (this.endDrawerType == "userDetail") {
+      this.otherUser = otherUser;
+    } else {
+      this.choicedPostData = choicedPostData;
+    }
     notifyListeners();
     globalKey.currentState!.openEndDrawer();
   }
