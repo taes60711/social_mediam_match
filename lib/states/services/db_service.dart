@@ -21,12 +21,6 @@ class DBService {
 
   String url = "http://$ip:$port";
 
-  Stream<List<dynamic>> getCourseData() {
-    final stream = firestore.collection("courses").snapshots();
-    inspect(stream.map((e) => e.docs.map((e) => e.data()).toList()));
-    return stream.map((e) => e.docs.map((e) => e.data()).toList());
-  }
-
   Future<void> createPostComment(int postUId, String uid, String message) async {
     String branch = "posts";
     String searchUrl = '$url/$branch/createPostComment';
@@ -54,7 +48,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allpostData = (json.decode(response.body)['content'] as List<dynamic>).map((e) {
+        allpostData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
           inspect(e);
           return PostCommentModel.toMap(e);
         }).toList();
@@ -96,7 +90,8 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allpostData = (json.decode(response.body)['content'] as List<dynamic>).map((e) {
+        allpostData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+          print(e);
           return PostModel.toMap(e);
         }).toList();
 
@@ -140,7 +135,7 @@ class DBService {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
         // alluserServerInfo.totalPage = json.decode(response.body)["totalPages"];
-        allUserData = (json.decode(response.body)['content'] as List<dynamic>).map((element) {
+        allUserData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((element) {
           return LoginUser.jsonToModel(element);
         }).toList();
         alluserServerInfo.pageNumber++;
@@ -181,7 +176,7 @@ class DBService {
       var response = await http.get(uri);
 
       if (response.statusCode != 404) {
-        userdata = LoginUser.jsonToModel(json.decode(response.body));
+        userdata = LoginUser.jsonToModel(json.decode(utf8.decode(response.bodyBytes)));
         print("userData :  ");
         inspect(userdata);
       }
