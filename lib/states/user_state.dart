@@ -36,12 +36,12 @@ class UserState extends ChangeNotifier {
 
     if (userData == null) {
       colsure().listen((String userUID) async {
-        if (userUID != "" && !_isSignUp) {
+        if (userUID != "" && !_isSignUp && !isLoading) {
           isLoading = true;
+          notifyListeners();
           userData = await _dbService.getUserData(userUID);
           await _dbService.updateLastTime(userUID);
           chatListChannel.friendListConnect(userData!.uid);
-          notifyListeners();
           inspect(userData);
           isLoading = false;
           notifyListeners();
@@ -96,9 +96,9 @@ class UserState extends ChangeNotifier {
             isSucess = true;
           }
         },
-      ).then((value) {
+      ).then((value) async {
         //firebaseのlistenで自動ログインなのでバッグ発生なくよう、先にログアウト追加する。
-        signOut();
+        await _auth.signOut();
       });
     } on FirebaseAuthException catch (e) {
       print("SignUp error ${e.code}");
@@ -118,8 +118,9 @@ class UserState extends ChangeNotifier {
   }
 
   //メソッド：ログアウト
-  Future<void> signOut() async {
+  Future<void> signOut(FriendState chatListChannel) async {
     await _auth.signOut().then((value) {
+      chatListChannel.closefriendList();
       userData = null;
       notifyListeners();
     });

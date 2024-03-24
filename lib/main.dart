@@ -1,12 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/account/login_page.dart';
 import 'package:social_mediam_match/components/account/signup_page.dart';
-import 'package:social_mediam_match/components/Initial/Initial_page.dart';
+import 'package:social_mediam_match/components/Initial/initial_page.dart';
 import 'package:social_mediam_match/components/home/postPage/editor_page.dart';
+import 'package:social_mediam_match/components/home/userPage/my_posts.dart';
 import 'package:social_mediam_match/components/home/userPage/profile.dart';
-import 'package:social_mediam_match/components/home/userPage/setting.dart';
+import 'package:social_mediam_match/components/home/userPage/privacy_setting.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
@@ -55,17 +55,17 @@ class MyApp extends StatelessWidget {
               create: (_) => InitialState(),
               child: const Initialpage(),
             ),
-        '/post_edit': (BuildContext context) => ChangeNotifierProvider(
+        '/signUp': (BuildContext context) => const SignUpPage(),
+        '/postEdit': (BuildContext context) => ChangeNotifierProvider(
               create: (_) => PostState(),
               child: const EditorPage(),
             ),
-        '/login': (BuildContext context) => const LoginPage(),
-        '/signUp': (BuildContext context) => const SignUpPage(),
+        '/privacySetting': (BuildContext context) => const PrivacySetting(),
         '/profile': (BuildContext context) => ChangeNotifierProvider(
               create: (_) => UserSettingState(),
               child: const Profile(),
             ),
-        '/setting': (BuildContext context) => const Setting(),
+        '/myposts': (BuildContext context) => const MyPosts(),
       },
     );
   }

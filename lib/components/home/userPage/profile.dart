@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/home/userPage/skill_choice.dart';
 import 'package:social_mediam_match/components/strings/userPage/profie_string.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -9,222 +9,229 @@ import 'package:social_mediam_match/states/user_state.dart';
 import '../../../global.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
+import '../../strings/userPage/user_page_string.dart';
+import '../../utilities/skill_list_view.dart';
 import '../../utilities/stateful_wrapper.dart';
-
-class SkillListWidget extends StatelessWidget {
-  LoginUser userData;
-  String base64Img;
-  TextEditingController nameInput;
-  TextEditingController introductionInput;
-  SkillListWidget(
-      {required this.userData, required this.base64Img, required this.nameInput, required this.introductionInput, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    UserState userFuture = context.read<UserState>();
-    UserSettingState userSettingFuture = context.read<UserSettingState>();
-    bool isFirst = context.select((UserSettingState value) => value.isFirst);
-    List<SkillModel> forntSkillItems = context.watch<UserSettingState>().forntSkillList;
-    List<SkillModel> iotSkillItems = context.watch<UserSettingState>().iotSkillList;
-    List<SkillModel> backEndSkillItems = context.watch<UserSettingState>().backEndSkillList;
-    List<SkillModel> otherSkillItems = context.watch<UserSettingState>().otherSkillList;
-
-    Widget ExpansionWidget(String category, List<SkillModel> list, String type) {
-      Widget component = ExpansionTile(
-        title: Text(category),
-        leading: const Icon(Icons.align_horizontal_left),
-        children: list.map((e) {
-          ProfileSkill skillInfoItem = type == "have" ? e.skillHave : e.skillWant;
-          String? selectedItem = "${skillInfoItem.skillInfo.level}";
-          return Padding(
-            padding: const EdgeInsets.only(left: 10.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(skillInfoItem.skillInfo.name),
-                ),
-                Switch(
-                    value: skillInfoItem.ishave,
-                    onChanged: (value) {
-                      userSettingFuture.checkOnChange(skillInfoItem, type);
-                    }),
-                Text(level),
-                DropdownButton(
-                  value: selectedItem,
-                  items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                  onChanged: (value) {
-                    userSettingFuture.checkOnChange(skillInfoItem, "level", choicedLevel: value);
-                  },
-                ),
-              ],
-            ),
-          );
-        }).toList(),
-      );
-
-      return component;
-    }
-
-    return StatefulWrapper(
-      onInit: () {
-        userSettingFuture.getSkillListData(userData);
-      },
-      child: isFirst
-          ? const Loading()
-          : Column(
-              children: [
-                Expanded(
-                  child: ListView(
-                    children: [
-                      ExpansionTile(
-                        title: Text(ItemTitles.Skill.value),
-                        leading: const Icon(Icons.build_sharp),
-                        children: [
-                          ExpansionWidget(SkillType.forntend.value, forntSkillItems, "have"),
-                          ExpansionWidget(SkillType.backend.value, backEndSkillItems, "have"),
-                          ExpansionWidget(SkillType.iot.value, iotSkillItems, "have"),
-                          ExpansionWidget(SkillType.other.value, otherSkillItems, "have"),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: Text(ItemTitles.wantSkill.value),
-                        leading: const Icon(Icons.build_sharp),
-                        children: [
-                          ExpansionWidget(SkillType.forntend.value, forntSkillItems, "want"),
-                          ExpansionWidget(SkillType.backend.value, backEndSkillItems, "want"),
-                          ExpansionWidget(SkillType.iot.value, iotSkillItems, "want"),
-                          ExpansionWidget(SkillType.other.value, otherSkillItems, "want"),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    UpdateUser updateUserData = userSettingFuture.reformatData(
-                      userData.uid,
-                      base64Img,
-                      nameInput.text,
-                      introductionInput.text,
-                      forntSkillItems,
-                      iotSkillItems,
-                      backEndSkillItems,
-                      otherSkillItems,
-                    );
-
-                    bool isSucess = await userFuture.updateProfile(userData.uid, updateUserData);
-                    if (isSucess) {
-                      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                    }
-                  },
-                  child: Text(updateButtonTitle),
-                ),
-              ],
-            ),
-    );
-  }
-}
+import '../../utilities/user_icon.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
 
   @override
   Widget build(BuildContext context) {
-    UserSettingState userSettingFuture = context.read<UserSettingState>();
+    UserSettingState userSettingState = context.read<UserSettingState>();
+    UserState userState = context.read<UserState>();
     LoginUser userData = ModalRoute.of(context)!.settings.arguments as LoginUser;
     TextEditingController nameInput = context.select((UserSettingState value) => value.nameInput);
     TextEditingController introductionInput = context.select((UserSettingState value) => value.introductionInput);
     String base64Img = context.select((UserSettingState value) => value.base64Img);
+    bool isFirst = context.select((UserSettingState value) => value.isFirst);
+    GlobalKey<ScaffoldState> key = context.select((UserSettingState value) => value.key);
+    String type = context.select((UserSettingState value) => value.type);
+
+    //先暫時沒整理
+    List<SkillModel> forntSkillItems = context.watch<UserSettingState>().forntSkillList;
+    List<SkillModel> backEndSkillItems = context.watch<UserSettingState>().backEndSkillList;
+    List<SkillModel> iotSkillItems = context.watch<UserSettingState>().iotSkillList;
+    List<SkillModel> otherSkillItems = context.watch<UserSettingState>().otherSkillList;
+
+    List<SkillModel> allSkillItems = [];
+    List<SkillModel> allWantSkillItems = [];
+    forntSkillItems.forEach((element) {
+      if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
+      if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
+    });
+    backEndSkillItems.forEach((element) {
+      if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
+      if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
+    });
+    iotSkillItems.forEach((element) {
+      if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
+      if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
+    });
+    otherSkillItems.forEach((element) {
+      if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
+      if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
+    });
+    //
+
+    Future<void> exitCheck() {
+      return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('確認'),
+            content: const Text('有資料正在編輯,確定要離開嗎?'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('確定'),
+                onPressed: () {
+                  Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                },
+              ),
+              ElevatedButton(
+                child: const Text('取消'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 
     return StatefulWrapper(
       onInit: () {
-        context.read<UserSettingState>().userDataInsertToViewValue(userData);
+        userSettingState.userDataInsertToViewValue(userData);
+        userSettingState.getSkillListData(userData);
       },
-      child: Scaffold(
-        body: SafeArea(
-          child: SizedBox(
-            width: ScreenSize().width,
-            child: Column(
-              children: [
-                Text(pageTitle),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                    },
-                    icon: const Icon(Icons.arrow_back_ios),
-                  ),
-                ),
-                SizedBox(
-                  width: 80,
-                  height: 80,
-                  child: base64Img != ""
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(60),
-                          child: Image.memory(
-                            const Base64Decoder().convert(base64Img),
+      child: isFirst
+          ? const Loading()
+          : Scaffold(
+              key: key,
+              endDrawer: SkillChoice(
+                userSettingState: userSettingState,
+                forntSkillItems: forntSkillItems,
+                backEndSkillItems: backEndSkillItems,
+                iotSkillItems: iotSkillItems,
+                otherSkillItems: otherSkillItems,
+                type: type,
+              ),
+              body: SafeArea(
+                child: SizedBox(
+                  width: ScreenSize().width,
+                  child: Column(
+                    children: [
+                      Text(pageTitle),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: IconButton(
+                          onPressed: () {
+                            bool isChange = userSettingState.isProfileChange(
+                                userData, base64Img, nameInput.text, introductionInput.text, allSkillItems, allWantSkillItems);
+                            if (isChange) {
+                              exitCheck();
+                            } else {
+                              Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                            }
+                          },
+                          icon: const Icon(Icons.arrow_back_ios),
+                        ),
+                      ),
+                      UserIcon(
+                        iconSize: 120,
+                        image: base64Img,
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          await userSettingState.imageChange();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          color: const Color.fromARGB(221, 209, 104, 104),
+                          child: const Text("image Picker"),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+                        child: TextField(
+                          controller: nameInput,
+                          decoration: InputDecoration(
+                            labelText: ItemTitles.username.value,
+                            hintText: ItemTitles.username.hintText,
+                            prefixIcon: const Icon(Icons.person),
                           ),
-                        )
-                      : Container(),
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    await userSettingFuture.imageChange();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    color: const Color.fromARGB(221, 209, 104, 104),
-                    child: const Text("image Picker"),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8, bottom: 8),
+                        child: GestureDetector(
+                          onTap: () {
+                            userSettingState.openSkillselectPage("have");
+                            key.currentState!.openEndDrawer();
+                          },
+                          child: Row(
+                            children: [
+                              Text(skillText),
+                              const Icon(Icons.arrow_forward_ios),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: ScreenSize().width,
+                        child: SkillListView(
+                          skillList: allSkillItems.map((e) => e.skillHave).toList(),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8, bottom: 8),
+                        child: GestureDetector(
+                          onTap: () {
+                            userSettingState.openSkillselectPage("want");
+                            key.currentState!.openEndDrawer();
+                          },
+                          child: Row(
+                            children: [
+                              Text(wantSkillText),
+                              const Icon(Icons.arrow_forward_ios),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: ScreenSize().width,
+                        child: SkillListView(
+                          skillList: allWantSkillItems.map((e) => e.skillWant).toList(),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(ItemTitles.selfIntroduction.value),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          minLines: 3,
+                          maxLines: 6,
+                          controller: introductionInput,
+                          decoration: InputDecoration(
+                            hintText: ItemTitles.selfIntroduction.hintText,
+                            filled: true,
+                          ),
+                          keyboardType: TextInputType.multiline,
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          UpdateUser updateUserData = userSettingState.reformatData(
+                            userData.uid,
+                            base64Img,
+                            nameInput.text,
+                            introductionInput.text,
+                            forntSkillItems,
+                            iotSkillItems,
+                            backEndSkillItems,
+                            otherSkillItems,
+                          );
+
+                          bool isSucess = await userState.updateProfile(userData.uid, updateUserData);
+
+                          if (isSucess) {
+                            Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                          }
+                        },
+                        child: Text(updateButtonTitle),
+                      ),
+                    ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
-                  child: TextField(
-                    controller: nameInput,
-                    decoration: InputDecoration(
-                      labelText: ItemTitles.username.value,
-                      hintText: ItemTitles.username.hintText,
-                      prefixIcon: const Icon(Icons.person),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(ItemTitles.selfIntroduction.value),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    minLines: 3,
-                    maxLines: 6,
-                    controller: introductionInput,
-                    decoration: InputDecoration(
-                      hintText: ItemTitles.selfIntroduction.hintText,
-                      filled: true,
-                    ),
-                    keyboardType: TextInputType.multiline,
-                  ),
-                ),
-                Expanded(
-                  child: ChangeNotifierProvider(
-                    create: (_) => UserSettingState(),
-                    child: SkillListWidget(
-                      userData: userData,
-                      base64Img: base64Img,
-                      nameInput: nameInput,
-                      introductionInput: introductionInput,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

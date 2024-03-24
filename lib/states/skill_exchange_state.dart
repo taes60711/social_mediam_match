@@ -18,9 +18,14 @@ class SkillExChangeState extends ChangeNotifier {
   List<Map<String, dynamic>> backEndSkillList = [];
   List<Map<String, dynamic>> otherSkillList = [];
   LoginUser? otherUser;
-  bool isFirst = true, isLoading = false;
+  bool isFirst = true, isLoading = false, isFirstLoading = true;
   String endDrawerType = "";
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
+
+  void skillExchangePageDisPose() {
+    isFirstLoading = true;
+    notifyListeners();
+  }
 
   Future<bool> getSkillList() async {
     bool result = false;
@@ -53,25 +58,31 @@ class SkillExChangeState extends ChangeNotifier {
   }
 
   Future<void> getAllUserData({String? userUid, required List<String> filterSkill, required bool isFirstSearch}) async {
-    isLoading = true;
-
-    List<LoginUser> userData = [];
-    if (userUid != null) {
-      userData = await _dbService.getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: isFirstSearch);
-    } else {
-      userData = await _dbService.getAllUserData(filterSkill: filterSkill, isFirstSearch: isFirstSearch);
-    }
-
-    if (isFirstSearch) {
-      allUserData = userData;
-    } else {
-      for (var element in userData) {
-        allUserData.add(element);
+    try {
+      if (isFirstSearch) {
+        isFirstLoading = true;
+        Future.delayed(Duration.zero).then((value) => notifyListeners());
       }
-    }
-    inspect(allUserData);
-    isLoading = false;
-    notifyListeners();
+
+      List<LoginUser> userData = [];
+      if (userUid != null) {
+        userData = await _dbService.getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: isFirstSearch);
+      } else {
+        userData = await _dbService.getAllUserData(filterSkill: filterSkill, isFirstSearch: isFirstSearch);
+      }
+
+      if (isFirstSearch) {
+        allUserData = userData;
+        isFirstLoading = false;
+      } else {
+        for (var element in userData) {
+          allUserData.add(element);
+        }
+      }
+      inspect(allUserData);
+      isLoading = false;
+      notifyListeners();
+    } catch (e) {}
   }
 
   void filterOnChange(List<Map<String, dynamic>> list, String skillName) {

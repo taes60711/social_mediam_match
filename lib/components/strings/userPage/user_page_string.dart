@@ -1,5 +1,5 @@
 String signOutButton = "登出";
-String skillText = "擅長的技能";
+String skillText = "能教的技能";
 String wantSkillText = "想學的技能";
 
 enum ManagerButton {

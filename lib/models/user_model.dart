@@ -25,6 +25,7 @@ class LoginUser extends UserModel {
   String email;
   bool isEmailVerified;
   String lastLogin;
+  int status;
 
   LoginUser({
     required String uid,
@@ -37,6 +38,7 @@ class LoginUser extends UserModel {
     List<SkillInfo>? wantSkills,
     required this.email,
     required this.isEmailVerified,
+    required this.status,
   }) : super(
           uid: uid,
           image: image,
@@ -55,9 +57,12 @@ class LoginUser extends UserModel {
         .map((e) => SkillInfo(name: e['name'], level: e['level'], month: e['month']))
         .toList();
 
-    DateTime dateUtc = DateTime.parse(json['lastlogin']).toUtc();
-    DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
-    String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
+    String formattedTime = "";
+    if (json['lastlogin'] != null) {
+      DateTime dateUtc = DateTime.parse(json['lastlogin']).toUtc();
+      DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
+      formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
+    }
 
     return LoginUser(
       uid: json["uid"],
@@ -66,6 +71,7 @@ class LoginUser extends UserModel {
       email: json["email"],
       name: json["name"],
       lastLogin: formattedTime,
+      status: json['status'],
       introduction: json['introduction'],
       isEmailVerified: json["isEmailVerified"],
       mainSkills: mainSkills,
@@ -90,6 +96,15 @@ class UpdateUser extends UserModel {
           uid: uid,
           name: name,
         );
+
+  String signUpFormJson() {
+    return jsonEncode({
+      'uid': uid,
+      "email": email,
+      "password": password,
+      "isEmailVerified": isEmailVerified,
+    });
+  }
 
   UpdateUser.update({
     required String uid,

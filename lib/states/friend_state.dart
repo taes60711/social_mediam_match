@@ -1,15 +1,15 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
 import '../global.dart';
 
 class FriendState extends ChangeNotifier {
   late IOWebSocketChannel _friendListChannel, _chatRoomChannel;
-  bool _isSendMessage = false;
+  bool _isSendMessage = false, isFriend = false;
   String friendListMessage = "", chatRoomMesaage = "";
   List<String> members = [];
   final GlobalKey<ScaffoldState> key = GlobalKey();
+  TextEditingController messageInput = TextEditingController();
   int roomId = -1;
 
   String channelListUrl;
@@ -18,15 +18,32 @@ class FriendState extends ChangeNotifier {
   void friendListConnect(String uid) async {
     Future<void> initialConnect() async {
       _friendListChannel = IOWebSocketChannel.connect(channelListUrl);
+      print("friendList connect");
+      await _friendListChannel.ready;
+      _friendListChannel.sink.add('{"method" : "connect" , "userid" : "$uid"}');
     }
 
     await initialConnect();
-    await _friendListChannel.ready;
-    _friendListChannel.sink.add('{"method" : "connect" , "userid" : "$uid"}');
+
     _friendListChannel.stream.listen((event) {
+      if (event == "is already Friend") {
+        isFriend = true;
+      }
       friendListMessage = event;
       notifyListeners();
     });
+  }
+
+  //ユーザ友達かどうか確認するとfriendListMessageチャットリストじゃなくなるので
+  //、もう一度チャットリストゲットする
+  void UserDetailPageClose(String uid) {
+    _friendListChannel.sink.add('{"method" : "checkEnd" , "userid" : "$uid"}');
+    isFriend = false;
+    notifyListeners();
+  }
+
+  void closefriendList() {
+    _friendListChannel.sink.close();
   }
 
   void checkIsFriend(List<String> usersList) {
@@ -43,6 +60,8 @@ class FriendState extends ChangeNotifier {
       usersListTemp = [...usersListTemp, "\"$element\""];
     });
     _friendListChannel.sink.add('{"method" : "addFriend","members" : $usersListTemp}');
+    isFriend = true;
+    notifyListeners();
   }
 
   Future<void> openRoom(int roomId) async {

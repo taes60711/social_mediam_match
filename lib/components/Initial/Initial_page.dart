@@ -8,6 +8,7 @@ import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import '../../models/user_model.dart';
+import '../account/login_page.dart';
 
 class Initialpage extends StatelessWidget {
   const Initialpage({super.key});
@@ -28,6 +29,7 @@ class Initialpage extends StatelessWidget {
           isEmailVerified: value.userData!.isEmailVerified,
           name: value.userData!.name,
           lastLogin: value.userData!.lastLogin,
+          status: value.userData!.status,
           introduction: value.userData!.introduction,
           mainSkills: value.userData!.mainSkills,
           wantSkills: value.userData!.wantSkills,
@@ -45,13 +47,23 @@ class Initialpage extends StatelessWidget {
       });
     }
 
-    return Scaffold(
-      body: isfirstEnterApp
-          ? StatefulWrapper(
-              onInit: () => enterApp(),
-              child: const Logo(),
-            )
-          : Home(userData: userData),
-    );
+    Widget component;
+    if (isfirstEnterApp) {
+      component = StatefulWrapper(
+        onInit: () => enterApp(),
+        child: const Logo(),
+      );
+    } else {
+      if (userData != null) {
+        component = Home(
+          userData: userData,
+          friendState: friendState,
+        );
+      } else {
+        component = const LoginPage();
+      }
+    }
+
+    return component;
   }
 }

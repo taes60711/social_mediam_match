@@ -7,6 +7,15 @@ import 'package:social_mediam_match/models/post_model.dart';
 import '../../global.dart';
 import '../../models/user_model.dart';
 
+class searchStatus {
+  int pageNumber;
+  int totalPage;
+  searchStatus({
+    this.pageNumber = 0,
+    this.totalPage = 0,
+  });
+}
+
 class DBService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -29,24 +38,27 @@ class DBService {
     await http.put(uri, headers: headers, body: body).then((_) => print("MySql Post Create Success:${_.body}"));
   }
 
-  int postCommentPageNumber = 0;
-  Future<List<PostCommentModel>> getPostCommentData(int postId) async {
+  searchStatus postCommentServerInfo = searchStatus();
+  Future<List<PostCommentModel>> getPostCommentData(int postId, {bool? isFirst}) async {
     String branch = "posts";
     int size = 5;
 
-    String searchUrl = '$url/$branch/getPostComment/$postId?page=$postCommentPageNumber&size=$size';
+    if (isFirst != null) {
+      postCommentServerInfo.pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getPostComment/$postId?page=${postCommentServerInfo.pageNumber}&size=$size';
 
     final uri = Uri.parse(searchUrl);
     List<PostCommentModel> allpostData = [];
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        print(response.body);
         allpostData = (json.decode(response.body)['content'] as List<dynamic>).map((e) {
           inspect(e);
           return PostCommentModel.toMap(e);
         }).toList();
-        postCommentPageNumber++;
+        postCommentServerInfo.pageNumber++;
         inspect(allpostData);
       }
     } catch (e) {
@@ -62,22 +74,22 @@ class DBService {
     final uri = Uri.parse(searchUrl);
 
     Map<String, String> headers = {'content-type': 'application/json'};
-    String body = jsonEncode({"created_by": uid, "main_message": message});
+    String body = jsonEncode({"createdBy": uid, "mainMessage": message});
 
     await http.put(uri, headers: headers, body: body).then((_) {
       print("MySql Post Create :${_.body}");
     });
   }
 
-  int postPageNumber = 0;
+  searchStatus postServerInfo = searchStatus();
   Future<List<PostModel>> getPostData({bool? isFirst}) async {
     String branch = "posts";
     int size = 5;
     if (isFirst != null) {
-      postPageNumber = 0;
+      postServerInfo.pageNumber = 0;
     }
 
-    String searchUrl = '$url/$branch/getAll?page=$postPageNumber&size=$size';
+    String searchUrl = '$url/$branch/getAll?page=${postServerInfo.pageNumber}&size=$size';
 
     final uri = Uri.parse(searchUrl);
     List<PostModel> allpostData = [];
@@ -89,7 +101,7 @@ class DBService {
         }).toList();
 
         inspect(allpostData);
-        postPageNumber++;
+        postServerInfo.pageNumber++;
       }
     } catch (e) {
       print(e);
@@ -98,17 +110,18 @@ class DBService {
   }
 
   //メソッド：MYSQLにユーザーデータを取得する
-  int pageNumber = 0;
+
+  searchStatus alluserServerInfo = searchStatus();
   Future<List<LoginUser>> getAllUserData(
       {String? userUid, required List<String> filterSkill, required bool isFirstSearch}) async {
     String branch = "user";
     int size = 5;
 
     if (isFirstSearch) {
-      pageNumber = 0;
+      alluserServerInfo = searchStatus();
     }
 
-    String searchUrl = '$url/$branch/getDataBySkillFilter?page=$pageNumber&size=$size';
+    String searchUrl = '$url/$branch/getDataBySkillFilter?page=${alluserServerInfo.pageNumber}&size=$size';
     if (userUid != null) {
       searchUrl += "&userUid=$userUid";
     }
@@ -122,17 +135,20 @@ class DBService {
 
     final uri = Uri.parse(searchUrl);
     List<LoginUser> allUserData = [];
+
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
+        // alluserServerInfo.totalPage = json.decode(response.body)["totalPages"];
         allUserData = (json.decode(response.body)['content'] as List<dynamic>).map((element) {
           return LoginUser.jsonToModel(element);
         }).toList();
-        pageNumber++;
+        alluserServerInfo.pageNumber++;
       }
     } catch (e) {
       print(e);
     }
+
     return allUserData;
   }
 
@@ -195,7 +211,7 @@ class DBService {
         isEmailVerified: false,
       );
 
-      String body = jsonEncode(signedUpUserData);
+      String body = signedUpUserData.signUpFormJson();
 
       await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Success:${_.body}"));
       isSucess = true;

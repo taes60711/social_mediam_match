@@ -17,12 +17,12 @@ class SignUpPage extends StatelessWidget {
     // emailController.text = "taes60711@gmail.com";
     // pwdController.text = "toto60711";
 
-    void ReturnLoginPage() {
+    void returnLoginPage() {
       resetAllInfo() {
         userFuture.signError = SignUpStatus.NoMessage.value;
       }
 
-      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.loginPage.value));
+      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
       resetAllInfo();
     }
 
@@ -106,7 +106,7 @@ class SignUpPage extends StatelessWidget {
               String pwd = pwdController.text;
               log("signUpPage Email:$email Pwd:$pwd");
               bool isSignSucess = await userFuture.signUp(email, pwd);
-              isSignSucess ? ReturnLoginPage() : () {};
+              isSignSucess ? returnLoginPage() : () {};
             },
             child: const Text("註冊"),
           ),

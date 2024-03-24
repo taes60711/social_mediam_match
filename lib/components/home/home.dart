@@ -7,10 +7,14 @@ import 'package:social_mediam_match/components/home/postPage/post_page.dart';
 import 'package:social_mediam_match/components/home/userPage/user_page.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
+import 'package:social_mediam_match/states/skill_exchange_state.dart';
+
+import '../../states/friend_state.dart';
 
 class Home extends StatefulWidget {
-  final LoginUser? userData;
-  const Home({super.key, this.userData});
+  final LoginUser userData;
+  final FriendState friendState;
+  const Home({super.key, required this.userData, required this.friendState});
 
   @override
   State<Home> createState() => _HomeState();
@@ -19,17 +23,26 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
+  void gotoFriendPage() {
+    setState(() {
+      _selectedIndex = 3;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
       ChangeNotifierProvider(
         create: (_) => PostState(),
-        child: PostPage(userData: widget.userData),
+        child: PostPage(userData: widget.userData, gotoFriendPage: gotoFriendPage),
       ),
-      SkillExChangePage(userData: widget.userData),
+      SkillExChangePage(userData: widget.userData, gotoFriendPage: gotoFriendPage),
       Course(),
       FirendsPage(userData: widget.userData),
-      UserPage(userData: widget.userData),
+      UserPage(
+        userData: widget.userData,
+        friendState: widget.friendState,
+      ),
     ];
 
     return Scaffold(
@@ -65,6 +78,12 @@ class _HomeState extends State<Home> {
         onTap: (value) {
           setState(() {
             print("Page Index : $value");
+            if (value != 1) {
+              if (widget.friendState.isFriend) {
+                widget.friendState.UserDetailPageClose(widget.userData.uid);
+              }
+              Provider.of<SkillExChangeState>(context, listen: false).skillExchangePageDisPose();
+            }
             _selectedIndex = value;
           });
         },
