@@ -38,24 +38,27 @@ class DBService {
     await http.put(uri, headers: headers, body: body).then((_) => print("MySql Post Create Success:${_.body}"));
   }
 
-  int postCommentPageNumber = 0;
-  Future<List<PostCommentModel>> getPostCommentData(int postId) async {
+  searchStatus postCommentServerInfo = searchStatus();
+  Future<List<PostCommentModel>> getPostCommentData(int postId, {bool? isFirst}) async {
     String branch = "posts";
     int size = 5;
 
-    String searchUrl = '$url/$branch/getPostComment/$postId?page=$postCommentPageNumber&size=$size';
+    if (isFirst != null) {
+      postCommentServerInfo.pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getPostComment/$postId?page=${postCommentServerInfo.pageNumber}&size=$size';
 
     final uri = Uri.parse(searchUrl);
     List<PostCommentModel> allpostData = [];
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        print(response.body);
         allpostData = (json.decode(response.body)['content'] as List<dynamic>).map((e) {
           inspect(e);
           return PostCommentModel.toMap(e);
         }).toList();
-        postCommentPageNumber++;
+        postCommentServerInfo.pageNumber++;
         inspect(allpostData);
       }
     } catch (e) {

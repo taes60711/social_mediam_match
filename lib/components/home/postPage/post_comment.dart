@@ -38,38 +38,54 @@ class PostComment extends StatelessWidget {
             child: Column(
               children: [
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: postCommentData.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification scrollNotification) {
+                      if (scrollNotification is ScrollEndNotification) {
+                        final before = scrollNotification.metrics.extentBefore;
+                        final max = scrollNotification.metrics.maxScrollExtent;
+                        if (before == max) {
+                          postState.getPostCommentData(choicedPostData.id, isFirstSearch: false);
+                        }
+                      }
+                      return false;
+                    },
+                    child: ListView.builder(
+                      itemCount: postCommentData.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8.0),
+                          child: Container(
+                            padding: EdgeInsets.all(20),
+                            color: Colors.grey,
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                UserIcon(
-                                  iconSize: 30,
-                                  image: postCommentData[index].commentUserInfo.image,
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    UserIcon(
+                                      iconSize: 30,
+                                      image: postCommentData[index].commentUserInfo.image,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(postCommentData[index].commentUserInfo.email),
+                                          Text(postCommentData[index].message),
+                                        ],
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(postCommentData[index].commentUserInfo.email),
-                                      Text(postCommentData[index].message),
-                                    ],
-                                  ),
-                                )
+                                Text(postCommentData[index].postTime),
                               ],
                             ),
-                            Text(postCommentData[index].postTime),
-                          ],
-                        ),
-                      );
-                    },
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
                 Row(
@@ -112,7 +128,7 @@ class PostComment extends StatelessWidget {
         return Scaffold(
           body: StatefulWrapper(
             onInit: () async {
-              await postState.getPostCommentData(choicedPostData.id);
+              await postState.getPostCommentData(choicedPostData.id, isFirstSearch: true);
             },
             onDispose: () {
               PostState().dispose();

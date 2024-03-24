@@ -37,10 +37,15 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  Future<void> getPostCommentData(int postId) async {
-    isPostCommentLoading = true;
-    Future.delayed(Duration.zero).then((value) => notifyListeners());
-    List<PostCommentModel> tempPostCommentData = await _dbService.getPostCommentData(postId);
+  Future<void> getPostCommentData(int postId, {required bool isFirstSearch}) async {
+    List<PostCommentModel> tempPostCommentData = [];
+    if (isFirstSearch) {
+      isPostCommentLoading = true;
+      Future.delayed(Duration.zero).then((value) => notifyListeners());
+      tempPostCommentData = await _dbService.getPostCommentData(postId, isFirst: isFirstSearch);
+    } else {
+      tempPostCommentData = await _dbService.getPostCommentData(postId);
+    }
 
     tempPostCommentData.forEach((e) {
       postCommentData = [...postCommentData, e];
