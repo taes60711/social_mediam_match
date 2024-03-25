@@ -6,6 +6,7 @@ import 'package:social_mediam_match/components/home/firendsPage/firends_page.dar
 import 'package:social_mediam_match/components/home/postPage/post_page.dart';
 import 'package:social_mediam_match/components/home/userPage/user_page.dart';
 import 'package:social_mediam_match/models/user_model.dart';
+import 'package:social_mediam_match/states/course_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
 
@@ -37,7 +38,12 @@ class _HomeState extends State<Home> {
         child: PostPage(userData: widget.userData, gotoFriendPage: gotoFriendPage),
       ),
       SkillExChangePage(userData: widget.userData, gotoFriendPage: gotoFriendPage),
-      Course(),
+      ChangeNotifierProvider(
+        create: (_) => CourseState(),
+        child: Course(
+          userData: widget.userData,
+        ),
+      ),
       FirendsPage(userData: widget.userData),
       UserPage(
         userData: widget.userData,

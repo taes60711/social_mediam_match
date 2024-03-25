@@ -13,9 +13,9 @@ import '../../utilities/style/screen_size.dart';
 import '../../utilities/user_icon.dart';
 
 class SkillExChangePage extends StatelessWidget {
-  final LoginUser? userData;
+  final LoginUser userData;
   final VoidCallback gotoFriendPage;
-  const SkillExChangePage({super.key, this.userData, required this.gotoFriendPage});
+  const SkillExChangePage({super.key, required this.userData, required this.gotoFriendPage});
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +29,7 @@ class SkillExChangePage extends StatelessWidget {
     LoginUser? otherUser = context.select((SkillExChangeState value) => value.otherUser);
     return StatefulWrapper(
       onInit: () {
-        if (userData != null) {
-          skillExChangeState.getAllUserData(userUid: userData!.uid, filterSkill: filterSkill, isFirstSearch: true);
-        } else {
-          skillExChangeState.getAllUserData(filterSkill: filterSkill, isFirstSearch: true);
-        }
+        skillExChangeState.getAllUserData(filterSkill: filterSkill, isFirstSearch: true);
       },
       child: isFirstLoading
           ? const Loading()
@@ -68,12 +64,7 @@ class SkillExChangePage extends StatelessWidget {
                           final before = scrollNotification.metrics.extentBefore;
                           final max = scrollNotification.metrics.maxScrollExtent;
                           if (before == max && !isLoading) {
-                            if (userData != null) {
-                              skillExChangeState.getAllUserData(
-                                  userUid: userData!.uid, filterSkill: filterSkill, isFirstSearch: false);
-                            } else {
-                              skillExChangeState.getAllUserData(filterSkill: filterSkill, isFirstSearch: false);
-                            }
+                            skillExChangeState.getAllUserData(filterSkill: filterSkill, isFirstSearch: false);
                           }
                         }
                         return false;

@@ -17,7 +17,7 @@ class PostModel {
     required this.postUserInfo,
   });
 
-  factory PostModel.toMap(dynamic json) {
+  factory PostModel.toMap(dynamic json, {LoginUser? userData}) {
     DateTime dateUtc = DateTime.parse(json['postTime']).toUtc();
     DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
     String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
@@ -28,7 +28,7 @@ class PostModel {
       mainMessage: json['mainMessage'],
       commentCount: json['count'],
       postTime: formattedTime,
-      postUserInfo: LoginUser.jsonToModel(json['user']),
+      postUserInfo: userData ?? LoginUser.jsonToModel(json['user']),
     );
   }
 }

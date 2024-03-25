@@ -8,7 +8,7 @@ class EditorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PostState postState = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postState'];
-    LoginUser? userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser?;
+    LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
 
     TextEditingController introductionInput = TextEditingController();
 

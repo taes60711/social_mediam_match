@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
+import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
@@ -25,6 +26,24 @@ class UserState extends ChangeNotifier {
   String url = "http://$ip:$port/user";
   //登録かどうか確認、登録したらログインしなくてために
   bool _isSignUp = false;
+
+  List<PostModel> myAllPosts = [];
+  bool isFirstLoading = false;
+
+  Future<void> getPostDataByUID(LoginUser userData) async {
+    try {
+      List<PostModel> tempCourseData = [];
+      tempCourseData = await _dbService.getPostDataByUID(userData);
+
+      tempCourseData.forEach((e) {
+        myAllPosts = [...myAllPosts, e];
+      });
+      isFirstLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
 
   //メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する
   void isLoginCheck(FriendState chatListChannel) {
