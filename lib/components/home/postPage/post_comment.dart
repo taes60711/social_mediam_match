@@ -126,56 +126,58 @@ class PostComment extends StatelessWidget {
           );
         }
         return Scaffold(
-          body: StatefulWrapper(
-            onInit: () async {
-              await postState.getPostCommentData(choicedPostData.id, isFirstSearch: true);
-            },
-            onDispose: () {
-              PostState().dispose();
-            },
-            child: SizedBox(
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      onPressed: () async {
-                        print("Drawer Close");
-                        globalKey.currentState!.closeEndDrawer();
-                      },
-                      icon: const Icon(Icons.arrow_back_ios_sharp),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: ScreenSize().width,
-                      color: Colors.indigo,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              inspect(choicedPostData.postUserInfo);
-                            },
-                            child: Row(
-                              children: [
-                                UserIcon(
-                                  iconSize: 50,
-                                  image: choicedPostData.postUserInfo.image,
-                                ),
-                                Text(choicedPostData.postUserInfo.email),
-                              ],
-                            ),
-                          ),
-                          Text(choicedPostData.mainMessage),
-                          Text("發文時間 : ${choicedPostData.postTime}"),
-                        ],
+          body: SafeArea(
+            child: StatefulWrapper(
+              onInit: () async {
+                await postState.getPostCommentData(choicedPostData.id, isFirstSearch: true);
+              },
+              onDispose: () {
+                PostState().dispose();
+              },
+              child: SizedBox(
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        onPressed: () async {
+                          print("Drawer Close");
+                          globalKey.currentState!.closeEndDrawer();
+                        },
+                        icon: const Icon(Icons.arrow_back_ios_sharp),
                       ),
                     ),
-                  ),
-                  commentComponent
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: ScreenSize().width,
+                        color: Colors.indigo,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                inspect(choicedPostData.postUserInfo);
+                              },
+                              child: Row(
+                                children: [
+                                  UserIcon(
+                                    iconSize: 50,
+                                    image: choicedPostData.postUserInfo.image,
+                                  ),
+                                  Text(choicedPostData.postUserInfo.email),
+                                ],
+                              ),
+                            ),
+                            Text(choicedPostData.mainMessage),
+                            Text("發文時間 : ${choicedPostData.postTime}"),
+                          ],
+                        ),
+                      ),
+                    ),
+                    commentComponent
+                  ],
+                ),
               ),
             ),
           ),

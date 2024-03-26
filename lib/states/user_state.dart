@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
-import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
