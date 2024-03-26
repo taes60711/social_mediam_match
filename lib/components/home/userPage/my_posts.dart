@@ -7,6 +7,7 @@ import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
 import '../../utilities/user_icon.dart';
+import '../postPage/post_comment.dart';
 
 class EditPost extends StatelessWidget {
   final PostState postState;
@@ -81,6 +82,7 @@ class MyPosts extends StatelessWidget {
     PostState postState = context.read<PostState>();
     List<PostModel> myAllPosts = context.watch<PostState>().myAllPosts;
     GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.myPostsGlobalKey);
+    String myPostEndDrawerType = context.select((PostState value) => value.myPostEndDrawerType);
 
     Future<void> exitCheck(int postId) {
       return showDialog<void>(
@@ -116,7 +118,23 @@ class MyPosts extends StatelessWidget {
       },
       child: Scaffold(
           key: globalKey,
-          endDrawer: EditPost(postState: postState),
+          endDrawer: myPostEndDrawerType == "edit"
+              ? EditPost(
+                  postState: postState,
+                )
+              : PostComment(
+                  choicedPostData: postState.choicedPost ??
+                      PostModel(
+                        id: -1,
+                        createdBy: "",
+                        mainMessage: "",
+                        commentCount: 0,
+                        postTime: "",
+                        postUserInfo: LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: -1),
+                      ),
+                  userData: userData,
+                  globalKey: globalKey,
+                ),
           body: SafeArea(
             child: Column(
               children: [
@@ -174,12 +192,23 @@ class MyPosts extends StatelessWidget {
                                   ],
                                 ),
                                 Text(myAllPosts[index].mainMessage),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    postState.postOnChange(myAllPosts[index]);
-                                    globalKey.currentState!.openEndDrawer();
-                                  },
-                                  child: Text("編輯"),
+                                Row(
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        postState.postOnChange(myAllPosts[index], "edit");
+                                        globalKey.currentState!.openEndDrawer();
+                                      },
+                                      child: Text("編輯"),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        postState.postOnChange(myAllPosts[index], "comment");
+                                        globalKey.currentState!.openEndDrawer();
+                                      },
+                                      child: Text("觀看留言"),
+                                    ),
+                                  ],
                                 ),
                                 Text("發文時間 : ${myAllPosts[index].postTime}"),
                                 Text("有${myAllPosts[index].commentCount}則留言"),

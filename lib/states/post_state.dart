@@ -21,6 +21,7 @@ class PostState extends ChangeNotifier {
   bool myPostsIsFirstLoading = false;
   GlobalKey<ScaffoldState> myPostsGlobalKey = GlobalKey();
   TextEditingController messageInput = TextEditingController();
+  String myPostEndDrawerType = "";
 
   Future<void> getPostDataByUID(LoginUser userData) async {
     try {
@@ -51,7 +52,8 @@ class PostState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void postOnChange(PostModel choicedPost) {
+  void postOnChange(PostModel choicedPost, String endDrawerType) {
+    myPostEndDrawerType = endDrawerType;
     this.choicedPost = choicedPost;
     Future.delayed(Duration.zero).then((value) => notifyListeners());
   }
