@@ -85,6 +85,40 @@ class DBService {
     return allpostData;
   }
 
+  Future<void> updatePost(int postId, String mainMessage) async {
+    String branch = "posts";
+
+    String searchUrl = '$url/$branch/update/$postId';
+    Map<String, String> headers = {'content-type': 'application/json'};
+
+    String body = UpdatePostModel(id: postId, mainMessage: mainMessage).updatePost();
+    final uri = Uri.parse(searchUrl);
+    try {
+      var response = await http.put(uri, headers: headers, body: body);
+      if (response.statusCode != 404) {
+        print("update sucess");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> deletePost(int postId) async {
+    String branch = "posts";
+
+    String searchUrl = '$url/$branch/delete/$postId';
+
+    final uri = Uri.parse(searchUrl);
+    try {
+      var response = await http.put(uri);
+      if (response.statusCode != 404) {
+        print("delete sucess");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> createPost(String uid, String message) async {
     String branch = "posts";
     String searchUrl = '$url/$branch/createPost';

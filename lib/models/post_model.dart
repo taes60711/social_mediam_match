@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
@@ -30,6 +32,19 @@ class PostModel {
       postTime: formattedTime,
       postUserInfo: userData ?? LoginUser.jsonToModel(json['user']),
     );
+  }
+}
+
+class UpdatePostModel {
+  int id;
+  String mainMessage;
+  UpdatePostModel({required this.id, required this.mainMessage});
+
+  String updatePost() {
+    return jsonEncode({
+      "id": id,
+      "mainMessage": mainMessage,
+    });
   }
 }
 
