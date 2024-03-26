@@ -32,7 +32,6 @@ class PostState extends ChangeNotifier {
       // tempPostsData.forEach((e) {
       //   myAllPosts = [...myAllPosts, e];
       // });
-      isFirstLoading = false;
       notifyListeners();
     } catch (e) {
       print(e);
