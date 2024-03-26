@@ -16,6 +16,46 @@ class PostState extends ChangeNotifier {
   PostModel? choicedPostData;
   LoginUser? otherUser;
 
+  List<PostModel> myAllPosts = [];
+  PostModel? choicedPost;
+  bool myPostsIsFirstLoading = false;
+  GlobalKey<ScaffoldState> myPostsGlobalKey = GlobalKey();
+  TextEditingController messageInput = TextEditingController();
+
+  Future<void> getPostDataByUID(LoginUser userData) async {
+    try {
+      List<PostModel> tempPostsData = [];
+      tempPostsData = await _dbService.getPostDataByUID(userData);
+
+      myAllPosts = tempPostsData;
+      // tempPostsData.forEach((e) {
+      //   myAllPosts = [...myAllPosts, e];
+      // });
+      isFirstLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> deletePostData(int postId) async {
+    await _dbService.deletePost(postId);
+    myAllPosts.remove(myAllPosts.where((element) => element.id == postId).first);
+    notifyListeners();
+  }
+
+  Future<void> updatePostData(int postId, String updateMessage) async {
+    await _dbService.updatePost(postId, updateMessage);
+    int postIndex = myAllPosts.indexWhere((element) => element.id == postId);
+    myAllPosts[postIndex].mainMessage = updateMessage;
+    notifyListeners();
+  }
+
+  void postOnChange(PostModel choicedPost) {
+    this.choicedPost = choicedPost;
+    Future.delayed(Duration.zero).then((value) => notifyListeners());
+  }
+
   Future<void> getPostData({required bool isFirstSearch}) async {
     try {
       List<PostModel> tempPostData = [];

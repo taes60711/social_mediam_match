@@ -1,26 +1,22 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/models/post_model.dart';
-
-import 'package:social_mediam_match/states/user_state.dart';
-
 import '../../../global.dart';
 import '../../../models/user_model.dart';
+import '../../../states/post_state.dart';
 import '../../utilities/user_icon.dart';
 
 class EditPost extends StatelessWidget {
-  final UserState userState;
+  final PostState postState;
 
-  const EditPost({super.key, required this.userState});
+  const EditPost({super.key, required this.postState});
 
   @override
   Widget build(BuildContext context) {
-    PostModel? choicedPost = userState.choicedPost;
-    TextEditingController messageInput = userState.messageInput;
+    PostModel? choicedPost = postState.choicedPost;
+    TextEditingController messageInput = postState.messageInput;
     return StatefulWrapper(
         onInit: () {
           messageInput.text = choicedPost!.mainMessage;
@@ -35,6 +31,17 @@ class EditPost extends StatelessWidget {
                         width: ScreenSize().width,
                         child: Column(
                           children: [
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: IconButton(
+                                onPressed: () async {
+                                  print("Drawer Close");
+
+                                  postState.myPostsGlobalKey.currentState!.closeEndDrawer();
+                                },
+                                icon: const Icon(Icons.arrow_back_ios_sharp),
+                              ),
+                            ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextField(
@@ -54,8 +61,8 @@ class EditPost extends StatelessWidget {
                     : Container(),
                 ElevatedButton(
                     onPressed: () {
-                      userState.updatePostData(choicedPost!.id, messageInput.text);
-                      userState.globalKey.currentState!.closeEndDrawer();
+                      postState.updatePostData(choicedPost!.id, messageInput.text);
+                      postState.myPostsGlobalKey.currentState!.closeEndDrawer();
                     },
                     child: Text("更新"))
               ],
@@ -71,9 +78,9 @@ class MyPosts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LoginUser userData = ModalRoute.of(context)!.settings.arguments as LoginUser;
-    UserState userState = context.read<UserState>();
-    List<PostModel> myAllPosts = context.watch<UserState>().myAllPosts;
-    GlobalKey<ScaffoldState> globalKey = context.select((UserState value) => value.globalKey);
+    PostState postState = context.read<PostState>();
+    List<PostModel> myAllPosts = context.watch<PostState>().myAllPosts;
+    GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.myPostsGlobalKey);
 
     Future<void> exitCheck(int postId) {
       return showDialog<void>(
@@ -86,7 +93,7 @@ class MyPosts extends StatelessWidget {
               ElevatedButton(
                 child: const Text('確定'),
                 onPressed: () {
-                  userState.deletePostData(postId);
+                  postState.deletePostData(postId);
                   Navigator.of(context).pop();
                   print(postId);
                 },
@@ -105,14 +112,15 @@ class MyPosts extends StatelessWidget {
 
     return StatefulWrapper(
       onInit: () {
-        userState.getPostDataByUID(userData);
+        postState.getPostDataByUID(userData);
       },
       child: Scaffold(
           key: globalKey,
-          endDrawer: EditPost(userState: userState),
+          endDrawer: EditPost(postState: postState),
           body: SafeArea(
             child: Column(
               children: [
+                Text("我的文章"),
                 Align(
                   alignment: Alignment.topLeft,
                   child: IconButton(
@@ -168,7 +176,7 @@ class MyPosts extends StatelessWidget {
                                 Text(myAllPosts[index].mainMessage),
                                 ElevatedButton(
                                   onPressed: () {
-                                    userState.postOnChange(myAllPosts[index]);
+                                    postState.postOnChange(myAllPosts[index]);
                                     globalKey.currentState!.openEndDrawer();
                                   },
                                   child: Text("編輯"),

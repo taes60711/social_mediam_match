@@ -65,7 +65,10 @@ class MyApp extends StatelessWidget {
               create: (_) => UserSettingState(),
               child: const Profile(),
             ),
-        '/myposts': (BuildContext context) => const MyPosts(),
+        '/myposts': (BuildContext context) => ChangeNotifierProvider(
+              create: (_) => PostState(),
+              child: const MyPosts(),
+            ),
       },
     );
   }

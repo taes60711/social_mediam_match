@@ -27,46 +27,6 @@ class UserState extends ChangeNotifier {
   //登録かどうか確認、登録したらログインしなくてために
   bool _isSignUp = false;
 
-  List<PostModel> myAllPosts = [];
-  PostModel? choicedPost;
-  bool isFirstLoading = false;
-  GlobalKey<ScaffoldState> globalKey = GlobalKey();
-  TextEditingController messageInput = TextEditingController();
-
-  Future<void> getPostDataByUID(LoginUser userData) async {
-    try {
-      List<PostModel> tempPostsData = [];
-      tempPostsData = await _dbService.getPostDataByUID(userData);
-
-      myAllPosts = tempPostsData;
-      // tempPostsData.forEach((e) {
-      //   myAllPosts = [...myAllPosts, e];
-      // });
-      isFirstLoading = false;
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> deletePostData(int postId) async {
-    await _dbService.deletePost(postId);
-    myAllPosts.remove(myAllPosts.where((element) => element.id == postId).first);
-    notifyListeners();
-  }
-
-  Future<void> updatePostData(int postId, String updateMessage) async {
-    await _dbService.updatePost(postId, updateMessage);
-    int postIndex = myAllPosts.indexWhere((element) => element.id == postId);
-    myAllPosts[postIndex].mainMessage = updateMessage;
-    notifyListeners();
-  }
-
-  void postOnChange(PostModel choicedPost) {
-    this.choicedPost = choicedPost;
-    Future.delayed(Duration.zero).then((value) => notifyListeners());
-  }
-
   //メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する
   void isLoginCheck(FriendState chatListChannel) {
     Stream<String> colsure() {
