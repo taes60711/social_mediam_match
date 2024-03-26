@@ -45,6 +45,22 @@ class DBService {
     return allCouserData;
   }
 
+  Future<void> deletePostComment(int uId) async {
+    String branch = "posts";
+
+    String searchUrl = '$url/$branch/deletePostComment/$uId';
+
+    final uri = Uri.parse(searchUrl);
+    try {
+      var response = await http.put(uri);
+      if (response.statusCode != 404) {
+        print("delete sucess");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> createPostComment(int postUId, String uid, String message) async {
     String branch = "posts";
     String searchUrl = '$url/$branch/createPostComment';

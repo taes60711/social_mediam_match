@@ -22,6 +22,34 @@ class PostComment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> exitCheck(int uId, PostState postState) {
+      return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('確認'),
+            content: const Text('確定要刪除該篇文章嗎?'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('確定'),
+                onPressed: () {
+                  postState.deletePostComment(uId);
+                  Navigator.of(context).pop();
+                  print(uId);
+                },
+              ),
+              ElevatedButton(
+                child: const Text('取消'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return ChangeNotifierProvider(
       create: (_) => PostState(),
       child: Builder(builder: (context) {
@@ -64,7 +92,7 @@ class PostComment extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     UserIcon(
-                                      iconSize: 30,
+                                      iconSize: 40,
                                       image: postCommentData[index].commentUserInfo.image,
                                     ),
                                     Padding(
@@ -76,7 +104,19 @@ class PostComment extends StatelessWidget {
                                           Text(postCommentData[index].message),
                                         ],
                                       ),
-                                    )
+                                    ),
+                                    Expanded(
+                                      child: Align(
+                                        alignment: Alignment.topRight,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            print(postCommentData[index].uid);
+                                            exitCheck(postCommentData[index].uid ?? -1, postState);
+                                          },
+                                          icon: Icon(Icons.close),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 Text(postCommentData[index].postTime),

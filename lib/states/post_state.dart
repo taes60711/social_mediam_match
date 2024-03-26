@@ -79,6 +79,12 @@ class PostState extends ChangeNotifier {
     }
   }
 
+  Future<void> deletePostComment(int uId) async {
+    await _dbService.deletePostComment(uId);
+    postCommentData.remove(postCommentData.where((element) => element.uid == uId).first);
+    notifyListeners();
+  }
+
   Future<void> getPostCommentData(int postId, {required bool isFirstSearch}) async {
     List<PostCommentModel> tempPostCommentData = [];
     if (isFirstSearch) {

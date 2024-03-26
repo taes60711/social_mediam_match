@@ -49,6 +49,7 @@ class UpdatePostModel {
 }
 
 class PostCommentModel {
+  int? uid;
   int postId;
   String userUid;
   String message;
@@ -56,6 +57,7 @@ class PostCommentModel {
   LoginUser commentUserInfo;
 
   PostCommentModel({
+    this.uid,
     required this.postId,
     required this.userUid,
     required this.message,
@@ -69,6 +71,7 @@ class PostCommentModel {
     String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
 
     return PostCommentModel(
+      uid: json['id'],
       postId: json['postId'],
       userUid: json['userUid'],
       message: json['message'],
