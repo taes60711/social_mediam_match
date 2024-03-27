@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
@@ -33,6 +34,29 @@ class Course extends StatelessWidget {
                       onPressed: () {},
                       icon: Icon(Icons.dehaze_rounded),
                     ),
+                  ),
+                  CarouselSlider(
+                    items: courseData
+                        .map((e) => Builder(builder: (BuildContext context) {
+                              return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration: BoxDecoration(color: Colors.amber),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("課程主題 : ${e.title}"),
+                                      Text(
+                                        "課程內容 : ${e.content}",
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text("創建者 : ${e.courseCreateduserInfo.email}")
+                                    ],
+                                  ));
+                            }))
+                        .toList(),
+                    options: CarouselOptions(height: 130.0),
                   ),
                   Expanded(
                     child: ListView.builder(
