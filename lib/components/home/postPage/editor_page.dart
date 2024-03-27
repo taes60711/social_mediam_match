@@ -8,52 +8,46 @@ class EditorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PostState postState = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postState'];
-    LoginUser? userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser?;
+    LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
 
     TextEditingController introductionInput = TextEditingController();
 
-    Widget userComponent;
-
-    if (userData != null) {
-      userComponent = SafeArea(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.arrow_back),
-              ),
-            ),
-            Text("投稿"),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                minLines: 5,
-                maxLines: 255,
-                controller: introductionInput,
-                decoration: const InputDecoration(
-                  hintText: "文章內容",
-                  filled: true,
-                ),
-                keyboardType: TextInputType.multiline,
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                await postState.createPost(userData.uid, introductionInput.text);
+    Widget userComponent = SafeArea(
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: IconButton(
+              onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text("投稿"),
+              icon: Icon(Icons.arrow_back),
             ),
-          ],
-        ),
-      );
-    } else {
-      userComponent = Container();
-    }
+          ),
+          Text("投稿"),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              minLines: 5,
+              maxLines: 255,
+              controller: introductionInput,
+              decoration: const InputDecoration(
+                hintText: "文章內容",
+                filled: true,
+              ),
+              keyboardType: TextInputType.multiline,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await postState.createPost(userData.uid, introductionInput.text);
+              Navigator.pop(context);
+            },
+            child: Text("投稿"),
+          ),
+        ],
+      ),
+    );
     return Scaffold(body: userComponent);
   }
 }

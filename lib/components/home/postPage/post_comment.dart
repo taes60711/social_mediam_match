@@ -22,11 +22,40 @@ class PostComment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> exitCheck(int uId, PostState postState) {
+      return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('確認'),
+            content: const Text('確定要刪除該篇文章嗎?'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('確定'),
+                onPressed: () {
+                  postState.deletePostComment(uId);
+                  Navigator.of(context).pop();
+                  print(uId);
+                },
+              ),
+              ElevatedButton(
+                child: const Text('取消'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return ChangeNotifierProvider(
       create: (_) => PostState(),
       child: Builder(builder: (context) {
         PostState postState = context.read<PostState>();
-        List<PostCommentModel> postCommentData = context.watch<PostState>().postCommentData;
+        List<getPostCommentModel> postCommentData = context.watch<PostState>().postCommentData;
+        List<TextEditingController> postCommentMessageController = context.watch<PostState>().postCommentMessageController;
         TextEditingController postCommentInput = context.select((PostState value) => value.postCommentInput);
         bool isPostCommentLoading = context.select((PostState value) => value.isPostCommentLoading);
 
@@ -52,6 +81,7 @@ class PostComment extends StatelessWidget {
                     child: ListView.builder(
                       itemCount: postCommentData.length,
                       itemBuilder: (context, index) {
+                        postCommentMessageController[index].text = postCommentData[index].message;
                         return Padding(
                           padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8.0),
                           child: Container(
@@ -64,19 +94,52 @@ class PostComment extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     UserIcon(
-                                      iconSize: 30,
+                                      iconSize: 40,
                                       image: postCommentData[index].commentUserInfo.image,
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
+                                    Expanded(
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(postCommentData[index].commentUserInfo.email),
-                                          Text(postCommentData[index].message),
+                                          TextFormField(
+                                            controller: postCommentMessageController[index],
+                                            enabled: postCommentData[index].isEditor,
+                                            style: const TextStyle(color: Colors.black, fontSize: 14),
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              isCollapsed: true,
+                                              contentPadding: EdgeInsets.only(left: 2),
+                                              disabledBorder: InputBorder.none,
+                                            ),
+                                          ),
                                         ],
                                       ),
-                                    )
+                                    ),
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          exitCheck(postCommentData[index].uid ?? -1, postState);
+                                        },
+                                        icon: Icon(Icons.close),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          postState.editPostComment(index);
+                                        },
+                                        child: Text("編輯留言")),
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          postState.changePostComment(
+                                              postCommentData[index].uid ?? -1, index, postCommentMessageController[index].text);
+                                        },
+                                        child: Text("更新留言")),
                                   ],
                                 ),
                                 Text(postCommentData[index].postTime),
@@ -126,56 +189,58 @@ class PostComment extends StatelessWidget {
           );
         }
         return Scaffold(
-          body: StatefulWrapper(
-            onInit: () async {
-              await postState.getPostCommentData(choicedPostData.id, isFirstSearch: true);
-            },
-            onDispose: () {
-              PostState().dispose();
-            },
-            child: SizedBox(
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      onPressed: () async {
-                        print("Drawer Close");
-                        globalKey.currentState!.closeEndDrawer();
-                      },
-                      icon: const Icon(Icons.arrow_back_ios_sharp),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: ScreenSize().width,
-                      color: Colors.indigo,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              inspect(choicedPostData.postUserInfo);
-                            },
-                            child: Row(
-                              children: [
-                                UserIcon(
-                                  iconSize: 50,
-                                  image: choicedPostData.postUserInfo.image,
-                                ),
-                                Text(choicedPostData.postUserInfo.email),
-                              ],
-                            ),
-                          ),
-                          Text(choicedPostData.mainMessage),
-                          Text("發文時間 : ${choicedPostData.postTime}"),
-                        ],
+          body: SafeArea(
+            child: StatefulWrapper(
+              onInit: () async {
+                await postState.getPostCommentData(choicedPostData.id, isFirstSearch: true);
+              },
+              onDispose: () {
+                PostState().dispose();
+              },
+              child: SizedBox(
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        onPressed: () async {
+                          print("Drawer Close");
+                          globalKey.currentState!.closeEndDrawer();
+                        },
+                        icon: const Icon(Icons.arrow_back_ios_sharp),
                       ),
                     ),
-                  ),
-                  commentComponent
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: ScreenSize().width,
+                        color: Colors.indigo,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                inspect(choicedPostData.postUserInfo);
+                              },
+                              child: Row(
+                                children: [
+                                  UserIcon(
+                                    iconSize: 50,
+                                    image: choicedPostData.postUserInfo.image,
+                                  ),
+                                  Text(choicedPostData.postUserInfo.email),
+                                ],
+                              ),
+                            ),
+                            Text(choicedPostData.mainMessage),
+                            Text("發文時間 : ${choicedPostData.postTime}"),
+                          ],
+                        ),
+                      ),
+                    ),
+                    commentComponent
+                  ],
+                ),
               ),
             ),
           ),

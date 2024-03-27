@@ -8,13 +8,57 @@ import '../models/user_model.dart';
 class PostState extends ChangeNotifier {
   final DBService _dbService = DBService();
   List<PostModel> postData = [];
-  List<PostCommentModel> postCommentData = [];
+  List<getPostCommentModel> postCommentData = [];
+  List<TextEditingController> postCommentMessageController = [];
   TextEditingController postCommentInput = TextEditingController();
   bool isFirstLoading = false, isPostCommentLoading = false;
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   String endDrawerType = "";
   PostModel? choicedPostData;
   LoginUser? otherUser;
+
+  List<PostModel> myAllPosts = [];
+  PostModel? choicedPost;
+  bool myPostsIsFirstLoading = false;
+  GlobalKey<ScaffoldState> myPostsGlobalKey = GlobalKey();
+  TextEditingController messageInput = TextEditingController();
+  String myPostEndDrawerType = "";
+
+  Future<void> getPostDataByUID(LoginUser userData, {required bool isFirstSearch}) async {
+    try {
+      List<PostModel> tempPostsData = [];
+      if (isFirstSearch) {
+        tempPostsData = await _dbService.getPostDataByUID(userData, isFirst: isFirstSearch);
+      } else {
+        tempPostsData = await _dbService.getPostDataByUID(userData);
+      }
+      tempPostsData.forEach((e) {
+        myAllPosts = [...myAllPosts, e];
+      });
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> deletePostData(int postId) async {
+    await _dbService.deletePost(postId);
+    myAllPosts.remove(myAllPosts.where((element) => element.id == postId).first);
+    notifyListeners();
+  }
+
+  Future<void> updatePostData(int postId, String updateMessage) async {
+    await _dbService.updatePost(postId, updateMessage);
+    int postIndex = myAllPosts.indexWhere((element) => element.id == postId);
+    myAllPosts[postIndex].mainMessage = updateMessage;
+    notifyListeners();
+  }
+
+  void postOnChange(PostModel choicedPost, String endDrawerType) {
+    myPostEndDrawerType = endDrawerType;
+    this.choicedPost = choicedPost;
+    Future.delayed(Duration.zero).then((value) => notifyListeners());
+  }
 
   Future<void> getPostData({required bool isFirstSearch}) async {
     try {
@@ -37,6 +81,25 @@ class PostState extends ChangeNotifier {
     }
   }
 
+  Future<void> changePostComment(int uid, int index, String updatedMessage) async {
+    await _dbService.updatePostComment(uid, updatedMessage);
+    postCommentData[index].isEditor = false;
+    postCommentData[index].message = updatedMessage;
+    notifyListeners();
+  }
+
+  Future<void> editPostComment(int index) async {
+    postCommentData[index].isEditor = !postCommentData[index].isEditor;
+    notifyListeners();
+  }
+
+  Future<void> deletePostComment(int uId) async {
+    await _dbService.deletePostComment(uId);
+    postCommentData.remove(postCommentData.where((element) => element.uid == uId).first);
+    postCommentMessageController.remove(postCommentData.where((element) => element.uid == uId).first);
+    notifyListeners();
+  }
+
   Future<void> getPostCommentData(int postId, {required bool isFirstSearch}) async {
     List<PostCommentModel> tempPostCommentData = [];
     if (isFirstSearch) {
@@ -48,7 +111,17 @@ class PostState extends ChangeNotifier {
     }
 
     tempPostCommentData.forEach((e) {
-      postCommentData = [...postCommentData, e];
+      postCommentData.add(
+        getPostCommentModel(
+            uid: e.uid,
+            postId: postId,
+            userUid: e.userUid,
+            message: e.message,
+            isEditor: false,
+            postTime: e.postTime,
+            commentUserInfo: e.commentUserInfo),
+      );
+      postCommentMessageController.add(TextEditingController());
     });
     isPostCommentLoading = false;
     notifyListeners();
@@ -77,8 +150,14 @@ class PostState extends ChangeNotifier {
       DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
       String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
 
-      PostCommentModel tempPostCommentData = PostCommentModel(
-          postId: postId, userUid: commentUser.uid, message: message, postTime: formattedTime, commentUserInfo: commentUser);
+      getPostCommentModel tempPostCommentData = getPostCommentModel(
+          postId: postId,
+          userUid: commentUser.uid,
+          message: message,
+          postTime: formattedTime,
+          commentUserInfo: commentUser,
+          isEditor: false);
+      postCommentMessageController.add(TextEditingController());
       postCommentData.insert(0, tempPostCommentData);
       notifyListeners();
     } catch (e) {

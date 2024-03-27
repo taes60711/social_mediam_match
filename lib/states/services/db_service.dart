@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
+import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import '../../global.dart';
 import '../../models/user_model.dart';
@@ -20,6 +21,63 @@ class DBService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   String url = "http://$ip:$port";
+
+  searchStatus coursesServerInfo = searchStatus();
+  Future<List<CourseModel>> getAllCourses({bool? isFirst}) async {
+    String branch = "courses";
+    int size = 5;
+
+    String searchUrl = '$url/$branch/getAll?page=${coursesServerInfo.pageNumber}&size=$size';
+    final uri = Uri.parse(searchUrl);
+    List<CourseModel> allCouserData = [];
+    try {
+      var response = await http.get(uri);
+
+      if (response.statusCode != 404) {
+        allCouserData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+          print(e);
+          return CourseModel.toMap(e);
+        }).toList();
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allCouserData;
+  }
+
+  Future<void> updatePostComment(int postId, String mainMessage) async {
+    String branch = "posts";
+
+    String searchUrl = '$url/$branch/updatePostComment/$postId';
+    Map<String, String> headers = {'content-type': 'application/json'};
+
+    String body = UpdateCommentPostModel(id: postId, message: mainMessage).updatePost();
+    final uri = Uri.parse(searchUrl);
+    try {
+      var response = await http.put(uri, headers: headers, body: body);
+      if (response.statusCode != 404) {
+        print("update sucess");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> deletePostComment(int uId) async {
+    String branch = "posts";
+
+    String searchUrl = '$url/$branch/deletePostComment/$uId';
+
+    final uri = Uri.parse(searchUrl);
+    try {
+      var response = await http.put(uri);
+      if (response.statusCode != 404) {
+        print("delete sucess");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future<void> createPostComment(int postUId, String uid, String message) async {
     String branch = "posts";
@@ -59,6 +117,40 @@ class DBService {
       print(e);
     }
     return allpostData;
+  }
+
+  Future<void> updatePost(int postId, String mainMessage) async {
+    String branch = "posts";
+
+    String searchUrl = '$url/$branch/update/$postId';
+    Map<String, String> headers = {'content-type': 'application/json'};
+
+    String body = UpdatePostModel(id: postId, mainMessage: mainMessage).updatePost();
+    final uri = Uri.parse(searchUrl);
+    try {
+      var response = await http.put(uri, headers: headers, body: body);
+      if (response.statusCode != 404) {
+        print("update sucess");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> deletePost(int postId) async {
+    String branch = "posts";
+
+    String searchUrl = '$url/$branch/delete/$postId';
+
+    final uri = Uri.parse(searchUrl);
+    try {
+      var response = await http.put(uri);
+      if (response.statusCode != 404) {
+        print("delete sucess");
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> createPost(String uid, String message) async {
@@ -104,8 +196,36 @@ class DBService {
     return allpostData;
   }
 
-  //メソッド：MYSQLにユーザーデータを取得する
+  searchStatus postByUserIdServerInfo = searchStatus();
+  Future<List<PostModel>> getPostDataByUID(LoginUser userData, {bool? isFirst}) async {
+    String branch = "posts";
+    int size = 5;
+    if (isFirst != null) {
+      postByUserIdServerInfo.pageNumber = 0;
+    }
 
+    String searchUrl = '$url/$branch/getUserAllPosts/${userData.uid}?page=${postServerInfo.pageNumber}&size=$size';
+
+    final uri = Uri.parse(searchUrl);
+    List<PostModel> allpostDataByUID = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        allpostDataByUID = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+          print(e);
+          return PostModel.toMap(e, userData: userData);
+        }).toList();
+
+        inspect(allpostDataByUID);
+        postByUserIdServerInfo.pageNumber++;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allpostDataByUID;
+  }
+
+  //メソッド：MYSQLにユーザーデータを取得する
   searchStatus alluserServerInfo = searchStatus();
   Future<List<LoginUser>> getAllUserData(
       {String? userUid, required List<String> filterSkill, required bool isFirstSearch}) async {

@@ -9,11 +9,6 @@ class SkillListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var levelIcon = {
-      // 1: Icons.network_wifi_1_bar,
-      // 2: Icons.network_wifi_2_bar,
-      // 3: Icons.network_wifi_3_bar,
-      // 4: Icons.network_wifi_rounded,
-      // 5: Icons.network_wifi,
       1: Icons.filter_1,
       2: Icons.filter_2,
       3: Icons.filter_3,
