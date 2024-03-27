@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
@@ -78,5 +79,39 @@ class PostCommentModel {
       postTime: formattedTime,
       commentUserInfo: LoginUser.jsonToModel(json['user']),
     );
+  }
+}
+
+class getPostCommentModel {
+  int? uid;
+  int postId;
+  String userUid;
+  String message;
+  bool isEditor;
+  String postTime;
+
+  LoginUser commentUserInfo;
+
+  getPostCommentModel({
+    this.uid,
+    required this.postId,
+    required this.userUid,
+    required this.message,
+    required this.isEditor,
+    required this.postTime,
+    required this.commentUserInfo,
+  });
+}
+
+class UpdateCommentPostModel {
+  int id;
+  String message;
+  UpdateCommentPostModel({required this.id, required this.message});
+
+  String updatePost() {
+    return jsonEncode({
+      "id": id,
+      "message": message,
+    });
   }
 }

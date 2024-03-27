@@ -8,7 +8,8 @@ import '../models/user_model.dart';
 class PostState extends ChangeNotifier {
   final DBService _dbService = DBService();
   List<PostModel> postData = [];
-  List<PostCommentModel> postCommentData = [];
+  List<getPostCommentModel> postCommentData = [];
+  List<TextEditingController> postCommentMessageController = [];
   TextEditingController postCommentInput = TextEditingController();
   bool isFirstLoading = false, isPostCommentLoading = false;
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
@@ -78,9 +79,22 @@ class PostState extends ChangeNotifier {
     }
   }
 
+  Future<void> changePostComment(int uid, int index, String updatedMessage) async {
+    await _dbService.updatePostComment(uid, updatedMessage);
+    postCommentData[index].isEditor = false;
+    postCommentData[index].message = updatedMessage;
+    notifyListeners();
+  }
+
+  Future<void> editPostComment(int index) async {
+    postCommentData[index].isEditor = true;
+    notifyListeners();
+  }
+
   Future<void> deletePostComment(int uId) async {
     await _dbService.deletePostComment(uId);
     postCommentData.remove(postCommentData.where((element) => element.uid == uId).first);
+    postCommentMessageController.remove(postCommentData.where((element) => element.uid == uId).first);
     notifyListeners();
   }
 
@@ -95,7 +109,17 @@ class PostState extends ChangeNotifier {
     }
 
     tempPostCommentData.forEach((e) {
-      postCommentData = [...postCommentData, e];
+      postCommentData.add(
+        getPostCommentModel(
+            uid: e.uid,
+            postId: postId,
+            userUid: e.userUid,
+            message: e.message,
+            isEditor: false,
+            postTime: e.postTime,
+            commentUserInfo: e.commentUserInfo),
+      );
+      postCommentMessageController.add(TextEditingController());
     });
     isPostCommentLoading = false;
     notifyListeners();
@@ -124,8 +148,14 @@ class PostState extends ChangeNotifier {
       DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
       String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
 
-      PostCommentModel tempPostCommentData = PostCommentModel(
-          postId: postId, userUid: commentUser.uid, message: message, postTime: formattedTime, commentUserInfo: commentUser);
+      getPostCommentModel tempPostCommentData = getPostCommentModel(
+          postId: postId,
+          userUid: commentUser.uid,
+          message: message,
+          postTime: formattedTime,
+          commentUserInfo: commentUser,
+          isEditor: false);
+      postCommentMessageController.add(TextEditingController());
       postCommentData.insert(0, tempPostCommentData);
       notifyListeners();
     } catch (e) {

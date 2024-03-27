@@ -45,6 +45,24 @@ class DBService {
     return allCouserData;
   }
 
+  Future<void> updatePostComment(int postId, String mainMessage) async {
+    String branch = "posts";
+
+    String searchUrl = '$url/$branch/updatePostComment/$postId';
+    Map<String, String> headers = {'content-type': 'application/json'};
+
+    String body = UpdateCommentPostModel(id: postId, message: mainMessage).updatePost();
+    final uri = Uri.parse(searchUrl);
+    try {
+      var response = await http.put(uri, headers: headers, body: body);
+      if (response.statusCode != 404) {
+        print("update sucess");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> deletePostComment(int uId) async {
     String branch = "posts";
 

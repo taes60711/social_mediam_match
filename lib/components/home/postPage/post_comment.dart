@@ -54,7 +54,8 @@ class PostComment extends StatelessWidget {
       create: (_) => PostState(),
       child: Builder(builder: (context) {
         PostState postState = context.read<PostState>();
-        List<PostCommentModel> postCommentData = context.watch<PostState>().postCommentData;
+        List<getPostCommentModel> postCommentData = context.watch<PostState>().postCommentData;
+        List<TextEditingController> postCommentMessageController = context.watch<PostState>().postCommentMessageController;
         TextEditingController postCommentInput = context.select((PostState value) => value.postCommentInput);
         bool isPostCommentLoading = context.select((PostState value) => value.isPostCommentLoading);
 
@@ -80,6 +81,7 @@ class PostComment extends StatelessWidget {
                     child: ListView.builder(
                       itemCount: postCommentData.length,
                       itemBuilder: (context, index) {
+                        postCommentMessageController[index].text = postCommentData[index].message;
                         return Padding(
                           padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8.0),
                           child: Container(
@@ -95,28 +97,49 @@ class PostComment extends StatelessWidget {
                                       iconSize: 40,
                                       image: postCommentData[index].commentUserInfo.image,
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
+                                    Expanded(
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(postCommentData[index].commentUserInfo.email),
-                                          Text(postCommentData[index].message),
+                                          TextFormField(
+                                            controller: postCommentMessageController[index],
+                                            enabled: postCommentData[index].isEditor,
+                                            style: const TextStyle(color: Colors.black, fontSize: 14),
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              isCollapsed: true,
+                                              contentPadding: EdgeInsets.only(left: 2),
+                                              disabledBorder: InputBorder.none,
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Align(
-                                        alignment: Alignment.topRight,
-                                        child: IconButton(
-                                          onPressed: () {
-                                            print(postCommentData[index].uid);
-                                            exitCheck(postCommentData[index].uid ?? -1, postState);
-                                          },
-                                          icon: Icon(Icons.close),
-                                        ),
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          exitCheck(postCommentData[index].uid ?? -1, postState);
+                                        },
+                                        icon: Icon(Icons.close),
                                       ),
                                     ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          postState.editPostComment(index);
+                                        },
+                                        child: Text("編輯留言")),
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          postState.changePostComment(
+                                              postCommentData[index].uid ?? -1, index, postCommentMessageController[index].text);
+                                        },
+                                        child: Text("更新留言")),
                                   ],
                                 ),
                                 Text(postCommentData[index].postTime),
