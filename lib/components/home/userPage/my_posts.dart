@@ -114,7 +114,7 @@ class MyPosts extends StatelessWidget {
 
     return StatefulWrapper(
       onInit: () {
-        postState.getPostDataByUID(userData);
+        postState.getPostDataByUID(userData, isFirstSearch: true);
       },
       child: Scaffold(
           key: globalKey,

@@ -24,15 +24,17 @@ class PostState extends ChangeNotifier {
   TextEditingController messageInput = TextEditingController();
   String myPostEndDrawerType = "";
 
-  Future<void> getPostDataByUID(LoginUser userData) async {
+  Future<void> getPostDataByUID(LoginUser userData, {required bool isFirstSearch}) async {
     try {
       List<PostModel> tempPostsData = [];
-      tempPostsData = await _dbService.getPostDataByUID(userData);
-
-      myAllPosts = tempPostsData;
-      // tempPostsData.forEach((e) {
-      //   myAllPosts = [...myAllPosts, e];
-      // });
+      if (isFirstSearch) {
+        tempPostsData = await _dbService.getPostDataByUID(userData, isFirst: isFirstSearch);
+      } else {
+        tempPostsData = await _dbService.getPostDataByUID(userData);
+      }
+      tempPostsData.forEach((e) {
+        myAllPosts = [...myAllPosts, e];
+      });
       notifyListeners();
     } catch (e) {
       print(e);
@@ -87,7 +89,7 @@ class PostState extends ChangeNotifier {
   }
 
   Future<void> editPostComment(int index) async {
-    postCommentData[index].isEditor = true;
+    postCommentData[index].isEditor = !postCommentData[index].isEditor;
     notifyListeners();
   }
 
