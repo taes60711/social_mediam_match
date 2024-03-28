@@ -9,7 +9,7 @@ class CourseState extends ChangeNotifier {
   bool isFirstLoading = false;
   int pageIndex = 0;
 
-  void pageOnchange(int index) {
+  void carouselPageOnchange(int index) {
     pageIndex = index;
     notifyListeners();
   }

@@ -68,7 +68,7 @@ class Course extends StatelessWidget {
                             viewportFraction: 1,
                             autoPlay: true,
                             onPageChanged: (index, reason) {
-                              courseState.pageOnchange(index);
+                              courseState.carouselPageOnchange(index);
                             },
                           ),
                         ),

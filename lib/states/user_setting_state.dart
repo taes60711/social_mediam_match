@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -86,7 +85,6 @@ class UserSettingState extends ChangeNotifier {
   void checkOnChange(SkillInfo list, {String? choicedLevel}) {
     //いずれスキルのレベル変更する
     list.level = int.parse(choicedLevel ?? "0");
-
     notifyListeners();
   }
 
