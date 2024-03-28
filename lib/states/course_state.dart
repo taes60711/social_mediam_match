@@ -10,6 +10,13 @@ class CourseState extends ChangeNotifier {
   bool isFirstLoading = false;
   int carouselPageIndex = 0;
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
+  CourseModel? choicedCourse;
+
+  void choicedPage(CourseModel c) {
+    choicedCourse = c;
+    notifyListeners();
+  }
+
   void carouselPageOnchange(int index) {
     carouselPageIndex = index;
     notifyListeners();

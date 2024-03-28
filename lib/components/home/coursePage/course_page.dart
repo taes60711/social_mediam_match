@@ -25,10 +25,13 @@ class CoursePage extends StatelessWidget {
     bool isFirstLoading = context.select((CourseState value) => value.isFirstLoading);
     int carouselPageIndex = context.select((CourseState value) => value.carouselPageIndex);
     GlobalKey<ScaffoldState> globalKey = context.select((CourseState value) => value.globalKey);
+    CourseModel? choicedCourse = context.select((CourseState value) => value.choicedCourse);
 
     return Scaffold(
       key: globalKey,
-      endDrawer: CourseDetail(),
+      endDrawer: CourseDetail(
+        courseData: choicedCourse,
+      ),
       body: SafeArea(
         child: StatefulWrapper(
           onInit: () {
@@ -58,6 +61,7 @@ class CoursePage extends StatelessWidget {
                                       onTap: () {
                                         int index = topCourseData.indexWhere((element) => element == e);
                                         print(index);
+                                        courseState.choicedPage(topCourseData[index]);
                                         globalKey.currentState!.openEndDrawer();
                                       },
                                       child: Container(
@@ -147,6 +151,7 @@ class CoursePage extends StatelessWidget {
                                     ElevatedButton(
                                         onPressed: () {
                                           inspect(courseData[index]);
+                                          courseState.choicedPage(courseData[index]);
                                           globalKey.currentState!.openEndDrawer();
                                         },
                                         child: Text("觀看詳細")),
