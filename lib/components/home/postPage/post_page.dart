@@ -16,7 +16,8 @@ import '../skillExChangePage/user_detail.dart';
 class PostPage extends StatelessWidget {
   final LoginUser userData;
   final VoidCallback gotoFriendPage;
-  const PostPage({super.key, required this.userData, required this.gotoFriendPage});
+  final VoidCallback formPageChange;
+  const PostPage({super.key, required this.userData, required this.gotoFriendPage, required this.formPageChange});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class PostPage extends StatelessWidget {
           ),
     );
 
-    print("PostPage");
+    print("PostPage isFirstLoading: ${isFirstLoading}");
     return StatefulWrapper(
       onInit: () async {
         await postState.getPostData(isFirstSearch: true);
@@ -72,12 +73,15 @@ class PostPage extends StatelessWidget {
               body: SafeArea(
                 child: Column(
                   children: [
-                    Container(
-                      height: 30,
-                      child: Center(
-                        child: const Text("文章"),
-                      ),
-                    ),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                          onPressed: () {
+                            formPageChange();
+                          },
+                          icon: Icon(Icons.arrow_back_ios),
+                        )),
+                    const Text("文章"),
                     Expanded(
                       child: NotificationListener<ScrollNotification>(
                         onNotification: (ScrollNotification scrollNotification) {

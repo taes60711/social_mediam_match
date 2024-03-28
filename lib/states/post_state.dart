@@ -7,11 +7,13 @@ import '../models/user_model.dart';
 
 class PostState extends ChangeNotifier {
   final DBService _dbService = DBService();
+  int formIndex = -1;
+
   List<PostModel> postData = [];
   List<getPostCommentModel> postCommentData = [];
   List<TextEditingController> postCommentMessageController = [];
   TextEditingController postCommentInput = TextEditingController();
-  bool isFirstLoading = false, isPostCommentLoading = false;
+  bool isFirstLoading = true, isPostCommentLoading = false;
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   String endDrawerType = "";
   PostModel? choicedPostData;
@@ -23,6 +25,17 @@ class PostState extends ChangeNotifier {
   GlobalKey<ScaffoldState> myPostsGlobalKey = GlobalKey();
   TextEditingController messageInput = TextEditingController();
   String myPostEndDrawerType = "";
+
+  void forumPageChange(int index) {
+    formIndex = index;
+    notifyListeners();
+  }
+
+  void postOnChange(PostModel choicedPost, String endDrawerType) {
+    myPostEndDrawerType = endDrawerType;
+    this.choicedPost = choicedPost;
+    Future.delayed(Duration.zero).then((value) => notifyListeners());
+  }
 
   Future<void> getPostDataByUID(LoginUser userData, {required bool isFirstSearch}) async {
     try {
@@ -52,12 +65,6 @@ class PostState extends ChangeNotifier {
     int postIndex = myAllPosts.indexWhere((element) => element.id == postId);
     myAllPosts[postIndex].mainMessage = updateMessage;
     notifyListeners();
-  }
-
-  void postOnChange(PostModel choicedPost, String endDrawerType) {
-    myPostEndDrawerType = endDrawerType;
-    this.choicedPost = choicedPost;
-    Future.delayed(Duration.zero).then((value) => notifyListeners());
   }
 
   Future<void> getPostData({required bool isFirstSearch}) async {

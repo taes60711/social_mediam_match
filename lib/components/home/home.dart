@@ -11,6 +11,7 @@ import 'package:social_mediam_match/states/post_state.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
 
 import '../../states/friend_state.dart';
+import 'postPage/forum.dart';
 
 class Home extends StatefulWidget {
   final LoginUser userData;
@@ -35,7 +36,7 @@ class _HomeState extends State<Home> {
     List<Widget> _widgetOptions = <Widget>[
       ChangeNotifierProvider(
         create: (_) => PostState(),
-        child: PostPage(userData: widget.userData, gotoFriendPage: gotoFriendPage),
+        child: Forum(userData: widget.userData, gotoFriendPage: gotoFriendPage),
       ),
       SkillExChangePage(userData: widget.userData, gotoFriendPage: gotoFriendPage),
       ChangeNotifierProvider(
