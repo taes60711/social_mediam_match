@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/skill_exchange_page.dart';
-import 'package:social_mediam_match/components/home/course.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_page.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
 import 'package:social_mediam_match/components/home/postPage/post_page.dart';
 import 'package:social_mediam_match/components/home/userPage/user_page.dart';
@@ -11,6 +11,7 @@ import 'package:social_mediam_match/states/post_state.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
 
 import '../../states/friend_state.dart';
+import 'postPage/forum.dart';
 
 class Home extends StatefulWidget {
   final LoginUser userData;
@@ -35,14 +36,12 @@ class _HomeState extends State<Home> {
     List<Widget> _widgetOptions = <Widget>[
       ChangeNotifierProvider(
         create: (_) => PostState(),
-        child: PostPage(userData: widget.userData, gotoFriendPage: gotoFriendPage),
+        child: Forum(userData: widget.userData, gotoFriendPage: gotoFriendPage),
       ),
       SkillExChangePage(userData: widget.userData, gotoFriendPage: gotoFriendPage),
       ChangeNotifierProvider(
         create: (_) => CourseState(),
-        child: Course(
-          userData: widget.userData,
-        ),
+        child: CoursePage(userData: widget.userData),
       ),
       FirendsPage(userData: widget.userData),
       UserPage(

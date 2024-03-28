@@ -23,11 +23,11 @@ class DBService {
   String url = "http://$ip:$port";
 
   searchStatus coursesServerInfo = searchStatus();
-  Future<List<CourseModel>> getAllCourses({bool? isFirst}) async {
+  Future<List<CourseModel>> getCoursesByType(int type, {bool? isFirst}) async {
     String branch = "courses";
     int size = 5;
 
-    String searchUrl = '$url/$branch/getAll?page=${coursesServerInfo.pageNumber}&size=$size';
+    String searchUrl = '$url/$branch/getCoursesByType/$type?page=${coursesServerInfo.pageNumber}&size=$size';
     final uri = Uri.parse(searchUrl);
     List<CourseModel> allCouserData = [];
     try {
