@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import 'services/db_service.dart';
 
@@ -7,10 +8,10 @@ class CourseState extends ChangeNotifier {
   List<CourseModel> courseData = [];
   List<CourseModel> topCourseData = [];
   bool isFirstLoading = false;
-  int pageIndex = 0;
-
+  int carouselPageIndex = 0;
+  final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   void carouselPageOnchange(int index) {
-    pageIndex = index;
+    carouselPageIndex = index;
     notifyListeners();
   }
 
