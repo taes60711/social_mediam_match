@@ -23,6 +23,7 @@ class CoursePage extends StatelessWidget {
     List<CourseModel> courseData = context.watch<CourseState>().courseData;
     List<CourseModel> topCourseData = context.watch<CourseState>().topCourseData;
     bool isFirstLoading = context.select((CourseState value) => value.isFirstLoading);
+    bool isTopFirstLoading = context.select((CourseState value) => value.isTopFirstLoading);
     int carouselPageIndex = context.select((CourseState value) => value.carouselPageIndex);
     GlobalKey<ScaffoldState> globalKey = context.select((CourseState value) => value.globalKey);
     CourseModel? choicedCourse = context.select((CourseState value) => value.choicedCourse);
@@ -38,7 +39,7 @@ class CoursePage extends StatelessWidget {
             courseState.getCourseData(0, isFirstSearch: true);
             courseState.getCourseData(1, isFirstSearch: true);
           },
-          child: isFirstLoading
+          child: isFirstLoading || isTopFirstLoading
               ? const Loading()
               : Column(
                   children: [
