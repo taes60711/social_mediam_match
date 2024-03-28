@@ -66,6 +66,7 @@ class Course extends StatelessWidget {
                             height: 130,
                             aspectRatio: 16 / 9,
                             viewportFraction: 1,
+                            autoPlay: true,
                             onPageChanged: (index, reason) {
                               courseState.pageOnchange(index);
                             },
@@ -80,10 +81,14 @@ class Course extends StatelessWidget {
                             children: topCourseData.map((e) {
                               int index = topCourseData.indexWhere((element) => element == e);
                               return Container(
-                                margin: EdgeInsets.all(10),
+                                margin: EdgeInsets.only(right: 5, bottom: 5),
                                 width: 10,
                                 height: 10,
-                                color: index == pageIndex ? Colors.blue : Colors.red,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color:
+                                      index == pageIndex ? Color.fromARGB(255, 132, 166, 240) : Color.fromARGB(255, 50, 106, 228),
+                                ),
                               );
                             }).toList(),
                           ),
