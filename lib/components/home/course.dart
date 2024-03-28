@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/states/course_state.dart';
@@ -17,12 +18,14 @@ class Course extends StatelessWidget {
   Widget build(BuildContext context) {
     CourseState courseState = context.read<CourseState>();
     List<CourseModel> courseData = context.watch<CourseState>().courseData;
+    List<CourseModel> topCourseData = context.watch<CourseState>().topCourseData;
     bool isFirstLoading = context.select((CourseState value) => value.isFirstLoading);
-
+    int pageIndex = context.select((CourseState value) => value.pageIndex);
     return SafeArea(
       child: StatefulWrapper(
         onInit: () {
-          courseState.getCourseData(isFirstSearch: true);
+          courseState.getCourseData(0, isFirstSearch: true);
+          courseState.getCourseData(1, isFirstSearch: true);
         },
         child: isFirstLoading
             ? const Loading()
@@ -35,28 +38,58 @@ class Course extends StatelessWidget {
                       icon: Icon(Icons.dehaze_rounded),
                     ),
                   ),
-                  CarouselSlider(
-                    items: courseData
-                        .map((e) => Builder(builder: (BuildContext context) {
+                  Container(
+                    width: ScreenSize().width,
+                    child: Stack(
+                      children: [
+                        CarouselSlider(
+                          items: topCourseData
+                              .map((e) => Builder(builder: (BuildContext context) {
+                                    return Container(
+                                        width: MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(color: Colors.amber),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("課程主題 : ${e.title}"),
+                                            Text(
+                                              "課程內容 : ${e.content}",
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Text("創建者 : ${e.courseCreateduserInfo.email}")
+                                          ],
+                                        ));
+                                  }))
+                              .toList(),
+                          options: CarouselOptions(
+                            height: 130,
+                            aspectRatio: 16 / 9,
+                            viewportFraction: 1,
+                            onPageChanged: (index, reason) {
+                              courseState.pageOnchange(index);
+                            },
+                          ),
+                        ),
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: topCourseData.map((e) {
+                              int index = topCourseData.indexWhere((element) => element == e);
                               return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                  decoration: BoxDecoration(color: Colors.amber),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("課程主題 : ${e.title}"),
-                                      Text(
-                                        "課程內容 : ${e.content}",
-                                        maxLines: 3,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      Text("創建者 : ${e.courseCreateduserInfo.email}")
-                                    ],
-                                  ));
-                            }))
-                        .toList(),
-                    options: CarouselOptions(height: 130.0),
+                                margin: EdgeInsets.all(10),
+                                width: 10,
+                                height: 10,
+                                color: index == pageIndex ? Colors.blue : Colors.red,
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Expanded(
                     child: ListView.builder(
