@@ -40,7 +40,7 @@ class EditorPage extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
-              await postState.createPost(userData.uid, introductionInput.text);
+              await postState.createPost(userData.uid, introductionInput.text, 0);
               Navigator.pop(context);
             },
             child: Text("投稿"),

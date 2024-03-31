@@ -87,7 +87,7 @@ class DBService {
     Map<String, String> headers = {'content-type': 'application/json'};
     String body = jsonEncode({"postId": postUId, "userUid": uid, "message": message});
 
-    await http.put(uri, headers: headers, body: body).then((_) => print("MySql Post Create Success:${_.body}"));
+    await http.put(uri, headers: headers, body: body).then((_) => print("createPostComment Success:${_.body}"));
   }
 
   searchStatus postCommentServerInfo = searchStatus();
@@ -130,7 +130,24 @@ class DBService {
     try {
       var response = await http.put(uri, headers: headers, body: body);
       if (response.statusCode != 404) {
-        print("update sucess");
+        print("updatePost update sucess");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> moveToPost(int postId) async {
+    String branch = "posts";
+
+    String searchUrl = '$url/$branch/moveToPost/$postId';
+    Map<String, String> headers = {'content-type': 'application/json'};
+
+    final uri = Uri.parse(searchUrl);
+    try {
+      var response = await http.put(uri);
+      if (response.statusCode != 404) {
+        print("moveToPost update sucess");
       }
     } catch (e) {
       print(e);
@@ -153,14 +170,14 @@ class DBService {
     }
   }
 
-  Future<void> createPost(String uid, String message) async {
+  Future<void> createPost(String uid, String message, int type) async {
     String branch = "posts";
     String searchUrl = '$url/$branch/createPost';
 
     final uri = Uri.parse(searchUrl);
 
     Map<String, String> headers = {'content-type': 'application/json'};
-    String body = jsonEncode({"createdBy": uid, "mainMessage": message});
+    String body = jsonEncode({"createdBy": uid, "mainMessage": message, "type": type});
 
     await http.put(uri, headers: headers, body: body).then((_) {
       print("MySql Post Create :${_.body}");

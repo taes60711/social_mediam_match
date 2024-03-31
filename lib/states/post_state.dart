@@ -7,7 +7,8 @@ import '../models/user_model.dart';
 
 class PostState extends ChangeNotifier {
   final DBService _dbService = DBService();
-  int formIndex = -1;
+
+  final GlobalKey<ScaffoldState> forumGlobalKey = GlobalKey();
 
   List<PostModel> postData = [];
   List<getPostCommentModel> postCommentData = [];
@@ -25,11 +26,6 @@ class PostState extends ChangeNotifier {
   GlobalKey<ScaffoldState> myPostsGlobalKey = GlobalKey();
   TextEditingController messageInput = TextEditingController();
   String myPostEndDrawerType = "";
-
-  void forumPageChange(int index) {
-    formIndex = index;
-    notifyListeners();
-  }
 
   void postOnChange(PostModel choicedPost, String endDrawerType) {
     myPostEndDrawerType = endDrawerType;
@@ -134,9 +130,9 @@ class PostState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createPost(String userUid, String message) async {
+  Future<void> createPost(String userUid, String message, int type) async {
     try {
-      await _dbService.createPost(userUid, message);
+      await _dbService.createPost(userUid, message, type);
 
       List<PostModel> tempPostData = await _dbService.getPostData(isFirst: true);
       postData = [];
@@ -172,12 +168,17 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  void openDrawer(String endDrawerType, {LoginUser? otherUser, PostModel? choicedPostData}) {
+  Future<void> openDrawer(String endDrawerType,
+      {LoginUser? otherUser, LoginUser? loginUserData, PostModel? choicedPostData}) async {
     this.endDrawerType = endDrawerType;
     if (this.endDrawerType == "userDetail") {
       this.otherUser = otherUser;
     } else {
       this.choicedPostData = choicedPostData;
+      if (loginUserData!.uid != choicedPostData!.createdBy) {
+        print("moveToPost");
+        await _dbService.moveToPost(choicedPostData.id);
+      }
     }
     notifyListeners();
     globalKey.currentState!.openEndDrawer();

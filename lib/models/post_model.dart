@@ -1,20 +1,27 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
+//, e.getViewed(),e.getGood(),e.getBad(),e.getType(),
 class PostModel {
   int id;
   String createdBy;
   String mainMessage;
   String postTime;
+  int viewed;
+  int good;
+  int bad;
+  int type;
   int commentCount;
   LoginUser postUserInfo;
   PostModel({
     required this.id,
     required this.createdBy,
     required this.mainMessage,
+    required this.viewed,
+    required this.good,
+    required this.bad,
+    required this.type,
     required this.commentCount,
     required this.postTime,
     required this.postUserInfo,
@@ -29,6 +36,10 @@ class PostModel {
       id: json['id'],
       createdBy: json['createdBy'],
       mainMessage: json['mainMessage'],
+      viewed: json['viewed'],
+      good: json['good'],
+      bad: json['bad'],
+      type: json['type'],
       commentCount: json['count'],
       postTime: formattedTime,
       postUserInfo: userData ?? LoginUser.jsonToModel(json['user']),
