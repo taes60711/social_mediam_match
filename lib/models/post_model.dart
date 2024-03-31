@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
-//, e.getViewed(),e.getGood(),e.getBad(),e.getType(),
 class PostModel {
   int id;
   String createdBy;
@@ -10,7 +9,6 @@ class PostModel {
   String postTime;
   int viewed;
   int good;
-  int bad;
   int type;
   int commentCount;
   LoginUser postUserInfo;
@@ -20,7 +18,6 @@ class PostModel {
     required this.mainMessage,
     required this.viewed,
     required this.good,
-    required this.bad,
     required this.type,
     required this.commentCount,
     required this.postTime,
@@ -38,7 +35,6 @@ class PostModel {
       mainMessage: json['mainMessage'],
       viewed: json['viewed'],
       good: json['good'],
-      bad: json['bad'],
       type: json['type'],
       commentCount: json['count'],
       postTime: formattedTime,

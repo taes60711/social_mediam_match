@@ -235,8 +235,11 @@ class PostComment extends StatelessWidget {
                             Text(choicedPostData.mainMessage),
                             Row(
                               children: [
+                                ElevatedButton(
+                                  onPressed: () {},
+                                  child: Text("讚"),
+                                ),
                                 Text(" ${choicedPostData.good} 個讚"),
-                                Text(" ${choicedPostData.bad} 個倒讚"),
                               ],
                             ),
                             Text("發文時間 : ${choicedPostData.postTime}"),

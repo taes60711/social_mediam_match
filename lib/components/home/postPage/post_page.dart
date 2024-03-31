@@ -39,7 +39,6 @@ class PostPage extends StatelessWidget {
               postUserInfo: LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: -1),
               viewed: 0,
               good: 0,
-              bad: 0,
               type: 0),
     );
 
@@ -127,7 +126,6 @@ class PostPage extends StatelessWidget {
                                     children: [
                                       Text("已 ${postData[index].viewed} 人瀏覽過"),
                                       Text(" ${postData[index].good} 個讚"),
-                                      Text(" ${postData[index].bad} 個倒讚"),
                                     ],
                                   ),
                                   Text("發文時間 : ${postData[index].postTime}"),

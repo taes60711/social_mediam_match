@@ -133,7 +133,6 @@ class MyPosts extends StatelessWidget {
                           postUserInfo: LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: -1),
                           viewed: 0,
                           good: 0,
-                          bad: 0,
                           type: 0),
                   userData: userData,
                   globalKey: globalKey,
@@ -217,7 +216,6 @@ class MyPosts extends StatelessWidget {
                                   children: [
                                     Text("已 ${myAllPosts[index].viewed} 人瀏覽過"),
                                     Text(" ${myAllPosts[index].good} 個讚"),
-                                    Text(" ${myAllPosts[index].bad} 個倒讚"),
                                   ],
                                 ),
                                 Text("發文時間 : ${myAllPosts[index].postTime}"),
