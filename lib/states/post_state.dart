@@ -11,6 +11,7 @@ class PostState extends ChangeNotifier {
   final GlobalKey<ScaffoldState> forumGlobalKey = GlobalKey();
 
   List<PostModel> postData = [];
+  bool isGood = false;
   List<getPostCommentModel> postCommentData = [];
   List<TextEditingController> postCommentMessageController = [];
   TextEditingController postCommentInput = TextEditingController();
@@ -63,6 +64,12 @@ class PostState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updatePostGood(int postId, {String? userUID}) async {
+    userUID != null ? await _dbService.updatePostGood(postId, userUID: userUID) : await _dbService.updatePostGood(postId);
+    isGood = !isGood;
+    notifyListeners();
+  }
+
   Future<void> getPostData({required bool isFirstSearch}) async {
     try {
       List<PostModel> tempPostData = [];
@@ -103,10 +110,11 @@ class PostState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getPostCommentData(int postId, {required bool isFirstSearch}) async {
+  Future<void> getPostCommentData(int postId, {String? loginUserUID, required bool isFirstSearch}) async {
     List<PostCommentModel> tempPostCommentData = [];
     if (isFirstSearch) {
       isPostCommentLoading = true;
+      isGood = await _dbService.checkIsPostGood(postId, loginUserUID!);
       Future.delayed(Duration.zero).then((value) => notifyListeners());
       tempPostCommentData = await _dbService.getPostCommentData(postId, isFirst: isFirstSearch);
     } else {

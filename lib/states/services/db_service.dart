@@ -137,11 +137,56 @@ class DBService {
     }
   }
 
+  Future<void> updatePostGood(int postId, {String? userUID}) async {
+    String branch = "posts";
+
+    String searchUrl = '$url/$branch/updatePostGood/$postId';
+    Map<String, String> headers = {'content-type': 'application/json'};
+    final uri = Uri.parse(searchUrl);
+    var response;
+    try {
+      if (userUID != null) {
+        String body = jsonEncode({"goodedUserUID": userUID});
+        response = await http.put(uri, headers: headers, body: body);
+        print("Good");
+      } else {
+        String body = jsonEncode({"": ""});
+        response = await http.put(uri, headers: headers, body: body);
+        print("takeBackGood");
+      }
+      inspect(response);
+      if (response.statusCode != 404) {
+        print("updatePostGood sucess");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<bool> checkIsPostGood(int postId, String userUID) async {
+    String branch = "posts";
+    String searchUrl = '$url/$branch/checkIsPostGood/$postId/$userUID';
+    bool ischeck = false;
+    final uri = Uri.parse(searchUrl);
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        print("checkIsPostGood: ${response.body}");
+        if (response.body == "true") {
+          ischeck = true;
+        }
+        print("checkIsPostGood");
+      }
+    } catch (e) {
+      print(e);
+    }
+    return ischeck;
+  }
+
   Future<void> moveToPost(int postId) async {
     String branch = "posts";
 
     String searchUrl = '$url/$branch/moveToPost/$postId';
-    Map<String, String> headers = {'content-type': 'application/json'};
 
     final uri = Uri.parse(searchUrl);
     try {

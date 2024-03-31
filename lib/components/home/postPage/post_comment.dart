@@ -58,7 +58,7 @@ class PostComment extends StatelessWidget {
         List<TextEditingController> postCommentMessageController = context.watch<PostState>().postCommentMessageController;
         TextEditingController postCommentInput = context.select((PostState value) => value.postCommentInput);
         bool isPostCommentLoading = context.select((PostState value) => value.isPostCommentLoading);
-
+        bool isGood = context.select((PostState value) => value.isGood);
         Widget commentComponent;
         if (isPostCommentLoading) {
           commentComponent = const Loading();
@@ -192,7 +192,7 @@ class PostComment extends StatelessWidget {
           body: SafeArea(
             child: StatefulWrapper(
               onInit: () async {
-                await postState.getPostCommentData(choicedPostData.id, isFirstSearch: true);
+                await postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, isFirstSearch: true);
               },
               onDispose: () {
                 PostState().dispose();
@@ -236,8 +236,12 @@ class PostComment extends StatelessWidget {
                             Row(
                               children: [
                                 ElevatedButton(
-                                  onPressed: () {},
-                                  child: Text("讚"),
+                                  onPressed: () {
+                                    isGood
+                                        ? postState.updatePostGood(choicedPostData.id)
+                                        : postState.updatePostGood(choicedPostData.id, userUID: userData.uid);
+                                  },
+                                  child: isGood ? Text("收回讚") : Text("讚"),
                                 ),
                                 Text(" ${choicedPostData.good} 個讚"),
                               ],
