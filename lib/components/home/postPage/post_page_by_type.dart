@@ -69,6 +69,7 @@ class PostPageByType extends StatelessWidget {
                   Navigator.of(context).pushNamed(RoutePath.postEditPage.value, arguments: {
                     "userData": userData,
                     "postState": postState,
+                    "type": type,
                   });
                 },
                 child: Icon(Icons.edit),

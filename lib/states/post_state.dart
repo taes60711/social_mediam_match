@@ -199,7 +199,7 @@ class PostState extends ChangeNotifier {
     try {
       await _dbService.createPost(userUid, message, type);
 
-      List<PostModel> tempPostData = await _dbService.getPostData(isFirst: true);
+      List<PostModel> tempPostData = await _dbService.getPostsByType(type, isFirst: true);
       postData = [];
       tempPostData.forEach((e) {
         postData = [...postData, e];

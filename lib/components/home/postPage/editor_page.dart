@@ -9,7 +9,7 @@ class EditorPage extends StatelessWidget {
   Widget build(BuildContext context) {
     PostState postState = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postState'];
     LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
-
+    int type = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['type'];
     TextEditingController introductionInput = TextEditingController();
 
     Widget userComponent = SafeArea(
@@ -40,7 +40,7 @@ class EditorPage extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
-              await postState.createPost(userData.uid, introductionInput.text, 0);
+              await postState.createPost(userData.uid, introductionInput.text, type);
               Navigator.pop(context);
             },
             child: Text("投稿"),

@@ -63,15 +63,6 @@ class NewsPostPage extends StatelessWidget {
                       userData: userData,
                       globalKey: globalKey,
                     ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(RoutePath.postEditPage.value, arguments: {
-                    "userData": userData,
-                    "postState": postState,
-                  });
-                },
-                child: Icon(Icons.edit),
-              ),
               body: SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
