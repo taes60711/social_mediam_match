@@ -27,6 +27,14 @@ class PostState extends ChangeNotifier {
   TextEditingController messageInput = TextEditingController();
   String myPostEndDrawerType = "";
 
+  int selectedboardIndex = 0;
+
+  void boardOnChange(int type) {
+    selectedboardIndex = type;
+    forumGlobalKey.currentState!.openEndDrawer();
+    notifyListeners();
+  }
+
   void postOnChange(PostModel choicedPost, String endDrawerType) {
     myPostEndDrawerType = endDrawerType;
     this.choicedPost = choicedPost;

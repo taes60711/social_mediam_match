@@ -13,8 +13,10 @@ class Forum extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PostState postState = context.read<PostState>();
     GlobalKey<ScaffoldState> forumGlobalKey = context.select((PostState value) => value.forumGlobalKey);
     List<String> boradList = ["協槓", "技術", "網頁", "韌體", "AI"];
+    int selectedboardIndex = context.select((PostState value) => value.selectedboardIndex);
 
     return Scaffold(
       key: forumGlobalKey,
@@ -23,7 +25,7 @@ class Forum extends StatelessWidget {
         child: PostPageByType(
           userData: userData,
           gotoFriendPage: gotoFriendPage,
-          type: 0,
+          type: selectedboardIndex,
         ),
       ),
       body: DefaultTabController(
@@ -64,7 +66,7 @@ class Forum extends StatelessWidget {
                                 padding: const EdgeInsets.only(top: 8),
                                 child: GestureDetector(
                                   onTap: () {
-                                    forumGlobalKey.currentState!.openEndDrawer();
+                                    postState.boardOnChange(index);
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(8),
