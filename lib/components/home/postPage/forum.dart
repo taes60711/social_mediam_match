@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/home/postPage/news_post_page.dart';
+import 'package:social_mediam_match/components/home/postPage/post_page_by_type.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
 import 'post_page.dart';
@@ -18,9 +20,10 @@ class Forum extends StatelessWidget {
       key: forumGlobalKey,
       endDrawer: ChangeNotifierProvider(
         create: (_) => PostState(),
-        child: PostPage(
+        child: PostPageByType(
           userData: userData,
           gotoFriendPage: gotoFriendPage,
+          type: 0,
         ),
       ),
       body: DefaultTabController(
@@ -44,10 +47,12 @@ class Forum extends StatelessWidget {
                       gotoFriendPage: gotoFriendPage,
                     ),
                   ),
-                  Container(
-                    width: 100,
-                    height: 100,
-                    child: Text("最新文章"),
+                  ChangeNotifierProvider(
+                    create: (_) => PostState(),
+                    child: NewsPostPage(
+                      userData: userData,
+                      gotoFriendPage: gotoFriendPage,
+                    ),
                   ),
                   Column(
                     children: [

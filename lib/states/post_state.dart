@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
-
 import '../models/user_model.dart';
 
 class PostState extends ChangeNotifier {
@@ -65,7 +64,11 @@ class PostState extends ChangeNotifier {
   }
 
   Future<void> updatePostGood(int postId, {String? userUID}) async {
-    userUID != null ? await _dbService.updatePostGood(postId, userUID: userUID) : await _dbService.updatePostGood(postId);
+    if (userUID != null) {
+      await _dbService.updatePostGood(postId, userUID: userUID);
+    } else {
+      await _dbService.updatePostGood(postId);
+    }
     isGood = !isGood;
     notifyListeners();
   }
@@ -79,6 +82,48 @@ class PostState extends ChangeNotifier {
         tempPostData = await _dbService.getPostData(isFirst: isFirstSearch);
       } else {
         tempPostData = await _dbService.getPostData();
+      }
+
+      tempPostData.forEach((e) {
+        postData = [...postData, e];
+      });
+      isFirstLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> getNewsPostData({required bool isFirstSearch}) async {
+    try {
+      List<PostModel> tempPostData = [];
+      if (isFirstSearch) {
+        isFirstLoading = true;
+        Future.delayed(Duration.zero).then((value) => notifyListeners());
+        tempPostData = await _dbService.getNewPosts(isFirst: isFirstSearch);
+      } else {
+        tempPostData = await _dbService.getNewPosts();
+      }
+
+      tempPostData.forEach((e) {
+        postData = [...postData, e];
+      });
+      isFirstLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> getPostDataByType(int type, {required bool isFirstSearch}) async {
+    try {
+      List<PostModel> tempPostData = [];
+      if (isFirstSearch) {
+        isFirstLoading = true;
+        Future.delayed(Duration.zero).then((value) => notifyListeners());
+        tempPostData = await _dbService.getPostsByType(type, isFirst: isFirstSearch);
+      } else {
+        tempPostData = await _dbService.getPostsByType(type);
       }
 
       tempPostData.forEach((e) {
@@ -111,31 +156,35 @@ class PostState extends ChangeNotifier {
   }
 
   Future<void> getPostCommentData(int postId, {String? loginUserUID, required bool isFirstSearch}) async {
-    List<PostCommentModel> tempPostCommentData = [];
-    if (isFirstSearch) {
-      isPostCommentLoading = true;
-      isGood = await _dbService.checkIsPostGood(postId, loginUserUID!);
-      Future.delayed(Duration.zero).then((value) => notifyListeners());
-      tempPostCommentData = await _dbService.getPostCommentData(postId, isFirst: isFirstSearch);
-    } else {
-      tempPostCommentData = await _dbService.getPostCommentData(postId);
-    }
+    try {
+      List<PostCommentModel> tempPostCommentData = [];
+      if (isFirstSearch) {
+        isPostCommentLoading = true;
+        isGood = await _dbService.checkIsPostGood(postId, loginUserUID!);
+        Future.delayed(Duration.zero).then((value) => notifyListeners());
+        tempPostCommentData = await _dbService.getPostCommentData(postId, isFirst: isFirstSearch);
+      } else {
+        tempPostCommentData = await _dbService.getPostCommentData(postId);
+      }
 
-    tempPostCommentData.forEach((e) {
-      postCommentData.add(
-        getPostCommentModel(
-            uid: e.uid,
-            postId: postId,
-            userUid: e.userUid,
-            message: e.message,
-            isEditor: false,
-            postTime: e.postTime,
-            commentUserInfo: e.commentUserInfo),
-      );
-      postCommentMessageController.add(TextEditingController());
-    });
-    isPostCommentLoading = false;
-    notifyListeners();
+      tempPostCommentData.forEach((e) {
+        postCommentData.add(
+          getPostCommentModel(
+              uid: e.uid,
+              postId: postId,
+              userUid: e.userUid,
+              message: e.message,
+              isEditor: false,
+              postTime: e.postTime,
+              commentUserInfo: e.commentUserInfo),
+        );
+        postCommentMessageController.add(TextEditingController());
+      });
+      isPostCommentLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> createPost(String userUid, String message, int type) async {

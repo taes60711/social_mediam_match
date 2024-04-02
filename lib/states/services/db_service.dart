@@ -266,7 +266,7 @@ class DBService {
       postByUserIdServerInfo.pageNumber = 0;
     }
 
-    String searchUrl = '$url/$branch/getUserAllPosts/${userData.uid}?page=${postServerInfo.pageNumber}&size=$size';
+    String searchUrl = '$url/$branch/getPostsByUser/${userData.uid}?page=${postServerInfo.pageNumber}&size=$size';
 
     final uri = Uri.parse(searchUrl);
     List<PostModel> allpostDataByUID = [];
@@ -285,6 +285,64 @@ class DBService {
       print(e);
     }
     return allpostDataByUID;
+  }
+
+  searchStatus newPostServerInfo = searchStatus();
+  Future<List<PostModel>> getNewPosts({bool? isFirst}) async {
+    String branch = "posts";
+    int size = 5;
+    if (isFirst != null) {
+      newPostServerInfo.pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getNewPosts?page=${newPostServerInfo.pageNumber}&size=$size';
+
+    final uri = Uri.parse(searchUrl);
+    List<PostModel> allpostnewPosts = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        allpostnewPosts = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+          print(e);
+          return PostModel.toMap(e);
+        }).toList();
+
+        inspect(allpostnewPosts);
+        newPostServerInfo.pageNumber++;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allpostnewPosts;
+  }
+
+  searchStatus postsByTypeServerInfo = searchStatus();
+  Future<List<PostModel>> getPostsByType(int type, {bool? isFirst}) async {
+    String branch = "posts";
+    int size = 5;
+    if (isFirst != null) {
+      postsByTypeServerInfo.pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getPostsByType/$type?page=${postsByTypeServerInfo.pageNumber}&size=$size';
+
+    final uri = Uri.parse(searchUrl);
+    List<PostModel> allpostsByType = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        allpostsByType = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+          print(e);
+          return PostModel.toMap(e);
+        }).toList();
+
+        inspect(allpostsByType);
+        postsByTypeServerInfo.pageNumber++;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allpostsByType;
   }
 
   //メソッド：MYSQLにユーザーデータを取得する
