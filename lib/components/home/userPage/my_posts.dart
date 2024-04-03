@@ -125,13 +125,15 @@ class MyPosts extends StatelessWidget {
               : PostComment(
                   choicedPostData: postState.choicedPost ??
                       PostModel(
-                        id: -1,
-                        createdBy: "",
-                        mainMessage: "",
-                        commentCount: 0,
-                        postTime: "",
-                        postUserInfo: LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: -1),
-                      ),
+                          id: -1,
+                          createdBy: "",
+                          mainMessage: "",
+                          commentCount: 0,
+                          postTime: "",
+                          postUserInfo: LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: -1),
+                          viewed: 0,
+                          good: 0,
+                          type: 0),
                   userData: userData,
                   globalKey: globalKey,
                 ),
@@ -208,6 +210,12 @@ class MyPosts extends StatelessWidget {
                                       },
                                       child: Text("觀看留言"),
                                     ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("已 ${myAllPosts[index].viewed} 人瀏覽過"),
+                                    Text(" ${myAllPosts[index].good} 個讚"),
                                   ],
                                 ),
                                 Text("發文時間 : ${myAllPosts[index].postTime}"),

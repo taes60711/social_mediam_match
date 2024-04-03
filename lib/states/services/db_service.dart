@@ -87,7 +87,7 @@ class DBService {
     Map<String, String> headers = {'content-type': 'application/json'};
     String body = jsonEncode({"postId": postUId, "userUid": uid, "message": message});
 
-    await http.put(uri, headers: headers, body: body).then((_) => print("MySql Post Create Success:${_.body}"));
+    await http.put(uri, headers: headers, body: body).then((_) => print("createPostComment Success:${_.body}"));
   }
 
   searchStatus postCommentServerInfo = searchStatus();
@@ -130,7 +130,69 @@ class DBService {
     try {
       var response = await http.put(uri, headers: headers, body: body);
       if (response.statusCode != 404) {
-        print("update sucess");
+        print("updatePost update sucess");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> updatePostGood(int postId, {String? userUID}) async {
+    String branch = "posts";
+
+    String searchUrl = '$url/$branch/updatePostGood/$postId';
+    Map<String, String> headers = {'content-type': 'application/json'};
+    final uri = Uri.parse(searchUrl);
+    var response;
+    try {
+      if (userUID != null) {
+        String body = jsonEncode({"goodedUserUID": userUID});
+        response = await http.put(uri, headers: headers, body: body);
+        print("Good");
+      } else {
+        String body = jsonEncode({"": ""});
+        response = await http.put(uri, headers: headers, body: body);
+        print("takeBackGood");
+      }
+      inspect(response);
+      if (response.statusCode != 404) {
+        print("updatePostGood sucess");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<bool> checkIsPostGood(int postId, String userUID) async {
+    String branch = "posts";
+    String searchUrl = '$url/$branch/checkIsPostGood/$postId/$userUID';
+    bool ischeck = false;
+    final uri = Uri.parse(searchUrl);
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        print("checkIsPostGood: ${response.body}");
+        if (response.body == "true") {
+          ischeck = true;
+        }
+        print("checkIsPostGood");
+      }
+    } catch (e) {
+      print(e);
+    }
+    return ischeck;
+  }
+
+  Future<void> moveToPost(int postId) async {
+    String branch = "posts";
+
+    String searchUrl = '$url/$branch/moveToPost/$postId';
+
+    final uri = Uri.parse(searchUrl);
+    try {
+      var response = await http.put(uri);
+      if (response.statusCode != 404) {
+        print("moveToPost update sucess");
       }
     } catch (e) {
       print(e);
@@ -153,14 +215,14 @@ class DBService {
     }
   }
 
-  Future<void> createPost(String uid, String message) async {
+  Future<void> createPost(String uid, String message, int type) async {
     String branch = "posts";
     String searchUrl = '$url/$branch/createPost';
 
     final uri = Uri.parse(searchUrl);
 
     Map<String, String> headers = {'content-type': 'application/json'};
-    String body = jsonEncode({"createdBy": uid, "mainMessage": message});
+    String body = jsonEncode({"createdBy": uid, "mainMessage": message, "type": type});
 
     await http.put(uri, headers: headers, body: body).then((_) {
       print("MySql Post Create :${_.body}");
@@ -204,7 +266,7 @@ class DBService {
       postByUserIdServerInfo.pageNumber = 0;
     }
 
-    String searchUrl = '$url/$branch/getUserAllPosts/${userData.uid}?page=${postServerInfo.pageNumber}&size=$size';
+    String searchUrl = '$url/$branch/getPostsByUser/${userData.uid}?page=${postServerInfo.pageNumber}&size=$size';
 
     final uri = Uri.parse(searchUrl);
     List<PostModel> allpostDataByUID = [];
@@ -223,6 +285,64 @@ class DBService {
       print(e);
     }
     return allpostDataByUID;
+  }
+
+  searchStatus newPostServerInfo = searchStatus();
+  Future<List<PostModel>> getNewPosts({bool? isFirst}) async {
+    String branch = "posts";
+    int size = 5;
+    if (isFirst != null) {
+      newPostServerInfo.pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getNewPosts?page=${newPostServerInfo.pageNumber}&size=$size';
+
+    final uri = Uri.parse(searchUrl);
+    List<PostModel> allpostnewPosts = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        allpostnewPosts = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+          print(e);
+          return PostModel.toMap(e);
+        }).toList();
+
+        inspect(allpostnewPosts);
+        newPostServerInfo.pageNumber++;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allpostnewPosts;
+  }
+
+  searchStatus postsByTypeServerInfo = searchStatus();
+  Future<List<PostModel>> getPostsByType(int type, {bool? isFirst}) async {
+    String branch = "posts";
+    int size = 5;
+    if (isFirst != null) {
+      postsByTypeServerInfo.pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getPostsByType/$type?page=${postsByTypeServerInfo.pageNumber}&size=$size';
+
+    final uri = Uri.parse(searchUrl);
+    List<PostModel> allpostsByType = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        allpostsByType = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+          print(e);
+          return PostModel.toMap(e);
+        }).toList();
+
+        inspect(allpostsByType);
+        postsByTypeServerInfo.pageNumber++;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allpostsByType;
   }
 
   //メソッド：MYSQLにユーザーデータを取得する

@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
-
 import '../models/user_model.dart';
 
 class PostState extends ChangeNotifier {
   final DBService _dbService = DBService();
-  int formIndex = -1;
+
+  final GlobalKey<ScaffoldState> forumGlobalKey = GlobalKey();
 
   List<PostModel> postData = [];
+  bool isGood = false;
   List<getPostCommentModel> postCommentData = [];
   List<TextEditingController> postCommentMessageController = [];
   TextEditingController postCommentInput = TextEditingController();
@@ -26,8 +27,11 @@ class PostState extends ChangeNotifier {
   TextEditingController messageInput = TextEditingController();
   String myPostEndDrawerType = "";
 
-  void forumPageChange(int index) {
-    formIndex = index;
+  int selectedboardIndex = 0;
+
+  void boardOnChange(int type) {
+    selectedboardIndex = type;
+    forumGlobalKey.currentState!.openEndDrawer();
     notifyListeners();
   }
 
@@ -67,6 +71,16 @@ class PostState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updatePostGood(int postId, {String? userUID}) async {
+    if (userUID != null) {
+      await _dbService.updatePostGood(postId, userUID: userUID);
+    } else {
+      await _dbService.updatePostGood(postId);
+    }
+    isGood = !isGood;
+    notifyListeners();
+  }
+
   Future<void> getPostData({required bool isFirstSearch}) async {
     try {
       List<PostModel> tempPostData = [];
@@ -76,6 +90,48 @@ class PostState extends ChangeNotifier {
         tempPostData = await _dbService.getPostData(isFirst: isFirstSearch);
       } else {
         tempPostData = await _dbService.getPostData();
+      }
+
+      tempPostData.forEach((e) {
+        postData = [...postData, e];
+      });
+      isFirstLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> getNewsPostData({required bool isFirstSearch}) async {
+    try {
+      List<PostModel> tempPostData = [];
+      if (isFirstSearch) {
+        isFirstLoading = true;
+        Future.delayed(Duration.zero).then((value) => notifyListeners());
+        tempPostData = await _dbService.getNewPosts(isFirst: isFirstSearch);
+      } else {
+        tempPostData = await _dbService.getNewPosts();
+      }
+
+      tempPostData.forEach((e) {
+        postData = [...postData, e];
+      });
+      isFirstLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> getPostDataByType(int type, {required bool isFirstSearch}) async {
+    try {
+      List<PostModel> tempPostData = [];
+      if (isFirstSearch) {
+        isFirstLoading = true;
+        Future.delayed(Duration.zero).then((value) => notifyListeners());
+        tempPostData = await _dbService.getPostsByType(type, isFirst: isFirstSearch);
+      } else {
+        tempPostData = await _dbService.getPostsByType(type);
       }
 
       tempPostData.forEach((e) {
@@ -107,38 +163,43 @@ class PostState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getPostCommentData(int postId, {required bool isFirstSearch}) async {
-    List<PostCommentModel> tempPostCommentData = [];
-    if (isFirstSearch) {
-      isPostCommentLoading = true;
-      Future.delayed(Duration.zero).then((value) => notifyListeners());
-      tempPostCommentData = await _dbService.getPostCommentData(postId, isFirst: isFirstSearch);
-    } else {
-      tempPostCommentData = await _dbService.getPostCommentData(postId);
-    }
+  Future<void> getPostCommentData(int postId, {String? loginUserUID, required bool isFirstSearch}) async {
+    try {
+      List<PostCommentModel> tempPostCommentData = [];
+      if (isFirstSearch) {
+        isPostCommentLoading = true;
+        isGood = await _dbService.checkIsPostGood(postId, loginUserUID!);
+        Future.delayed(Duration.zero).then((value) => notifyListeners());
+        tempPostCommentData = await _dbService.getPostCommentData(postId, isFirst: isFirstSearch);
+      } else {
+        tempPostCommentData = await _dbService.getPostCommentData(postId);
+      }
 
-    tempPostCommentData.forEach((e) {
-      postCommentData.add(
-        getPostCommentModel(
-            uid: e.uid,
-            postId: postId,
-            userUid: e.userUid,
-            message: e.message,
-            isEditor: false,
-            postTime: e.postTime,
-            commentUserInfo: e.commentUserInfo),
-      );
-      postCommentMessageController.add(TextEditingController());
-    });
-    isPostCommentLoading = false;
-    notifyListeners();
+      tempPostCommentData.forEach((e) {
+        postCommentData.add(
+          getPostCommentModel(
+              uid: e.uid,
+              postId: postId,
+              userUid: e.userUid,
+              message: e.message,
+              isEditor: false,
+              postTime: e.postTime,
+              commentUserInfo: e.commentUserInfo),
+        );
+        postCommentMessageController.add(TextEditingController());
+      });
+      isPostCommentLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
   }
 
-  Future<void> createPost(String userUid, String message) async {
+  Future<void> createPost(String userUid, String message, int type) async {
     try {
-      await _dbService.createPost(userUid, message);
+      await _dbService.createPost(userUid, message, type);
 
-      List<PostModel> tempPostData = await _dbService.getPostData(isFirst: true);
+      List<PostModel> tempPostData = await _dbService.getPostsByType(type, isFirst: true);
       postData = [];
       tempPostData.forEach((e) {
         postData = [...postData, e];
@@ -172,12 +233,17 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  void openDrawer(String endDrawerType, {LoginUser? otherUser, PostModel? choicedPostData}) {
+  Future<void> openDrawer(String endDrawerType,
+      {LoginUser? otherUser, LoginUser? loginUserData, PostModel? choicedPostData}) async {
     this.endDrawerType = endDrawerType;
     if (this.endDrawerType == "userDetail") {
       this.otherUser = otherUser;
     } else {
       this.choicedPostData = choicedPostData;
+      if (loginUserData!.uid != choicedPostData!.createdBy) {
+        print("moveToPost");
+        await _dbService.moveToPost(choicedPostData.id);
+      }
     }
     notifyListeners();
     globalKey.currentState!.openEndDrawer();
