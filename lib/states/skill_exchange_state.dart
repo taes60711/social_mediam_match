@@ -18,7 +18,7 @@ class SkillExChangeState extends ChangeNotifier {
   List<Map<String, dynamic>> backEndSkillList = [];
   List<Map<String, dynamic>> otherSkillList = [];
   LoginUser? otherUser;
-  bool isFirst = true, isLoading = false, isFirstLoading = true;
+  bool isFirst = true, isAddDataLoading = false, isReLoading = false, isFirstLoading = true;
   String endDrawerType = "";
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
 
@@ -57,32 +57,46 @@ class SkillExChangeState extends ChangeNotifier {
     return result;
   }
 
-  Future<void> getAllUserData({String? userUid, required List<String> filterSkill, required bool isFirstSearch}) async {
+  Future<void> getAllUserData({String? userUid, required List<String> filterSkill, required String searchType}) async {
     try {
-      if (isFirstSearch) {
+      if (searchType == "First") {
         isFirstLoading = true;
         Future.delayed(Duration.zero).then((value) => notifyListeners());
       }
 
       List<LoginUser> userData = [];
       if (userUid != null) {
-        userData = await _dbService.getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: isFirstSearch);
+        userData = await _dbService.getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: true);
       } else {
-        userData = await _dbService.getAllUserData(filterSkill: filterSkill, isFirstSearch: isFirstSearch);
+        userData = await _dbService.getAllUserData(filterSkill: filterSkill, isFirstSearch: true);
       }
 
-      if (isFirstSearch) {
-        allUserData = userData;
-        isFirstLoading = false;
-      } else {
+      if (searchType == "AddData") {
         for (var element in userData) {
           allUserData.add(element);
         }
+        isAddDataLoading = false;
+      } else {
+        allUserData = userData;
+        if (searchType == "First") {
+          isFirstLoading = false;
+        } else if (searchType == "Reload") {
+          isReLoading = false;
+        }
       }
       inspect(allUserData);
-      isLoading = false;
       notifyListeners();
     } catch (e) {}
+  }
+
+  void addData() {
+    isAddDataLoading = true;
+    notifyListeners();
+  }
+
+  void reLoadingPage() {
+    isReLoading = true;
+    notifyListeners();
   }
 
   void filterOnChange(List<Map<String, dynamic>> list, String skillName) {
@@ -108,7 +122,7 @@ class SkillExChangeState extends ChangeNotifier {
       }
     }
     inspect(filterSkill);
-    await getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: true);
+    await getAllUserData(userUid: userUid, filterSkill: filterSkill, searchType: "First");
   }
 
   void openDrawer(String endDrawerType, {LoginUser? otherUser}) {

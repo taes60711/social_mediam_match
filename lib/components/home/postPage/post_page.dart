@@ -96,7 +96,6 @@ class PostPage extends StatelessWidget {
                                 postState.getPostData(searchType: "Reload");
                               }
                             }
-
                             return false;
                           },
                           child: ListView.builder(

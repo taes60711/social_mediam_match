@@ -13,7 +13,11 @@ class PostState extends ChangeNotifier {
   List<getPostCommentModel> postCommentData = [];
   List<TextEditingController> postCommentMessageController = [];
   TextEditingController postCommentInput = TextEditingController();
-  bool isFirstLoading = true, isPostCommentLoading = false;
+  bool isFirstLoading = true;
+  bool isDataAddLoding = false;
+  bool isReLoading = false;
+  bool isPostCommentLoading = false;
+
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   final GlobalKey<ScaffoldState> globalCommentKey = GlobalKey();
   String endDrawerType = "";
@@ -81,8 +85,6 @@ class PostState extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isDataAddLoding = false;
-  bool isReLoading = false;
   Future<void> getPostData({required String searchType}) async {
     try {
       List<PostModel> tempPostData = [];
@@ -119,47 +121,77 @@ class PostState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getNewsPostData({required bool isFirstSearch}) async {
+  Future<void> getNewsPostData({required String searchType}) async {
     try {
       List<PostModel> tempPostData = [];
-      if (isFirstSearch) {
-        isFirstLoading = true;
-        Future.delayed(Duration.zero).then((value) => notifyListeners());
-        tempPostData = await _dbService.getNewPosts(isFirst: isFirstSearch);
-      } else {
+      if (searchType == "AddData") {
         tempPostData = await _dbService.getNewPosts();
+        tempPostData.forEach((e) {
+          postData = [...postData, e];
+        });
+        isDataAddLoding = false;
+      } else {
+        if (searchType == "First") {
+          isFirstLoading = true;
+          Future.delayed(Duration.zero).then((value) => notifyListeners());
+        }
+        tempPostData = await _dbService.getNewPosts(isFirst: true);
+        postData = tempPostData;
+        isFirstLoading = false;
+        isReLoading = false;
       }
 
-      tempPostData.forEach((e) {
-        postData = [...postData, e];
-      });
-      isFirstLoading = false;
       notifyListeners();
     } catch (e) {
       print(e);
     }
   }
 
-  Future<void> getPostDataByType(int type, {required bool isFirstSearch}) async {
+  Future<void> getPostDataByType(int type, {required String searchType}) async {
     try {
       List<PostModel> tempPostData = [];
-      if (isFirstSearch) {
-        isFirstLoading = true;
-        Future.delayed(Duration.zero).then((value) => notifyListeners());
-        tempPostData = await _dbService.getPostsByType(type, isFirst: isFirstSearch);
-      } else {
+      if (searchType == "AddData") {
         tempPostData = await _dbService.getPostsByType(type);
+        tempPostData.forEach((e) {
+          postData = [...postData, e];
+        });
+        isDataAddLoding = false;
+      } else {
+        if (searchType == "First") {
+          isFirstLoading = true;
+          Future.delayed(Duration.zero).then((value) => notifyListeners());
+        }
+        tempPostData = await _dbService.getPostsByType(type, isFirst: true);
+        postData = tempPostData;
+        isFirstLoading = false;
+        isReLoading = false;
       }
 
-      tempPostData.forEach((e) {
-        postData = [...postData, e];
-      });
-      isFirstLoading = false;
       notifyListeners();
     } catch (e) {
       print(e);
     }
   }
+  // Future<void> getPostDataByType(int type, {required bool isFirstSearch}) async {
+  //   try {
+  //     List<PostModel> tempPostData = [];
+  //     if (isFirstSearch) {
+  //       isFirstLoading = true;
+  //       Future.delayed(Duration.zero).then((value) => notifyListeners());
+  //       tempPostData = await _dbService.getPostsByType(type, isFirst: isFirstSearch);
+  //     } else {
+  //       tempPostData = await _dbService.getPostsByType(type);
+  //     }
+
+  //     tempPostData.forEach((e) {
+  //       postData = [...postData, e];
+  //     });
+  //     isFirstLoading = false;
+  //     notifyListeners();
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   Future<void> changePostComment(int uid, int index, String updatedMessage) async {
     await _dbService.updatePostComment(uid, updatedMessage);

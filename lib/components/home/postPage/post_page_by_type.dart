@@ -25,6 +25,8 @@ class PostPageByType extends StatelessWidget {
     PostState postState = context.read<PostState>();
     List<PostModel> postData = context.select((PostState value) => value.postData);
     bool isFirstLoading = context.select((PostState value) => value.isFirstLoading);
+    bool isDataAddLoding = context.select((PostState value) => value.isDataAddLoding);
+    bool isReLoading = context.select((PostState value) => value.isReLoading);
     GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.globalKey);
     String endDrawerType = context.select((PostState value) => value.endDrawerType);
     LoginUser? otherUser = context.select((PostState value) => value.otherUser);
@@ -46,7 +48,7 @@ class PostPageByType extends StatelessWidget {
     print("NewsPostPage isFirstLoading: ${isFirstLoading}");
     return StatefulWrapper(
       onInit: () async {
-        await postState.getPostDataByType(type, isFirstSearch: true);
+        await postState.getPostDataByType(type, searchType: "First");
       },
       child: isFirstLoading
           ? const Loading()
@@ -76,72 +78,102 @@ class PostPageByType extends StatelessWidget {
                 child: Icon(Icons.edit),
               ),
               body: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification scrollNotification) {
-                      if (scrollNotification is ScrollEndNotification) {
-                        final before = scrollNotification.metrics.extentBefore;
-                        final max = scrollNotification.metrics.maxScrollExtent;
-                        if (before == max) {
-                          postState.getPostDataByType(type, isFirstSearch: false);
-                        }
-                      }
-                      return false;
-                    },
-                    child: ListView.builder(
-                      itemCount: postData.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
-                          child: GestureDetector(
-                            onTap: () async {
-                              await postState.openDrawer("movetoPost", globalKey,
-                                  loginUserData: userData, choicedPostData: postData[index]);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: const Color.fromARGB(255, 218, 219, 219),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      inspect(postData[index].postUserInfo);
-                                      if (userData.uid != postData[index].postUserInfo.uid) {
-                                        postState.openDrawer("userDetail", globalKey, otherUser: postData[index].postUserInfo);
-                                      }
-                                    },
-                                    child: Row(
+                child: Column(
+                  children: [
+                    isReLoading
+                        ? const Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Loading(),
+                          )
+                        : Container(),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: NotificationListener<ScrollNotification>(
+                          onNotification: (ScrollNotification scrollNotification) {
+                            if (scrollNotification is ScrollUpdateNotification) {
+                              final scrollPosition = scrollNotification.metrics.pixels;
+                              final max = scrollNotification.metrics.maxScrollExtent;
+
+                              if (scrollPosition > max && !isDataAddLoding) {
+                                postState.addData();
+                              } else if (scrollPosition < 0 && !isReLoading) {
+                                postState.reLoadingPage();
+                              }
+                            }
+                            if (scrollNotification is ScrollEndNotification) {
+                              if (isDataAddLoding) {
+                                postState.getPostDataByType(type, searchType: "AddData");
+                              } else if (isReLoading) {
+                                postState.getPostDataByType(type, searchType: "Reload");
+                              }
+                            }
+                            return false;
+                          },
+                          child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            itemCount: postData.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await postState.openDrawer("movetoPost", globalKey,
+                                        loginUserData: userData, choicedPostData: postData[index]);
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: const Color.fromARGB(255, 218, 219, 219),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        UserIcon(
-                                          iconSize: 50,
-                                          image: postData[index].postUserInfo.image,
+                                        GestureDetector(
+                                          onTap: () {
+                                            inspect(postData[index].postUserInfo);
+                                            if (userData.uid != postData[index].postUserInfo.uid) {
+                                              postState.openDrawer("userDetail", globalKey,
+                                                  otherUser: postData[index].postUserInfo);
+                                            }
+                                          },
+                                          child: Row(
+                                            children: [
+                                              UserIcon(
+                                                iconSize: 50,
+                                                image: postData[index].postUserInfo.image,
+                                              ),
+                                              Text(postData[index].postUserInfo.email),
+                                            ],
+                                          ),
                                         ),
-                                        Text(postData[index].postUserInfo.email),
+                                        Text(postData[index].mainMessage),
+                                        Row(
+                                          children: [
+                                            Text("已 ${postData[index].viewed} 人瀏覽過"),
+                                            Text(" ${postData[index].good} 個讚"),
+                                          ],
+                                        ),
+                                        Text("發文時間 : ${postData[index].postTime}"),
+                                        Text("有${postData[index].commentCount}則留言"),
                                       ],
                                     ),
                                   ),
-                                  Text(postData[index].mainMessage),
-                                  Row(
-                                    children: [
-                                      Text("已 ${postData[index].viewed} 人瀏覽過"),
-                                      Text(" ${postData[index].good} 個讚"),
-                                    ],
-                                  ),
-                                  Text("發文時間 : ${postData[index].postTime}"),
-                                  Text("有${postData[index].commentCount}則留言"),
-                                ],
-                              ),
-                            ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
-                  ),
+                    isDataAddLoding
+                        ? const Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Loading(),
+                          )
+                        : Container()
+                  ],
                 ),
               ),
             ),
