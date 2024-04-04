@@ -62,6 +62,8 @@ class PostComment extends StatelessWidget {
         List<TextEditingController> postCommentMessageController = context.watch<PostState>().postCommentMessageController;
         TextEditingController postCommentInput = context.select((PostState value) => value.postCommentInput);
         bool isPostCommentLoading = context.select((PostState value) => value.isPostCommentLoading);
+        bool isPostCommentDataAddLoding = context.select((PostState value) => value.isPostCommentDataAddLoding);
+        bool isPostCommentReLoading = context.select((PostState value) => value.isPostCommentReLoading);
         bool isGood = context.select((PostState value) => value.isGood);
         GlobalKey<ScaffoldState> globalCommentKey = context.select((PostState value) => value.globalCommentKey);
         LoginUser? otherUser = context.select((PostState value) => value.otherUser);
@@ -73,19 +75,30 @@ class PostComment extends StatelessWidget {
           commentComponent = Expanded(
             child: Column(
               children: [
+                isPostCommentReLoading ? Loading() : Container(),
                 Expanded(
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (ScrollNotification scrollNotification) {
-                      if (scrollNotification is ScrollEndNotification) {
-                        final before = scrollNotification.metrics.extentBefore;
+                      if (scrollNotification is ScrollUpdateNotification) {
+                        final scrollPosition = scrollNotification.metrics.pixels;
                         final max = scrollNotification.metrics.maxScrollExtent;
-                        if (before == max) {
-                          postState.getPostCommentData(choicedPostData.id, isFirstSearch: false);
+                        if (scrollPosition > max && !isPostCommentDataAddLoding) {
+                          postState.postAddData();
+                        } else if (scrollPosition < 0 && !isPostCommentReLoading) {
+                          postState.postReLoadingPage();
+                        }
+                      }
+                      if (scrollNotification is ScrollEndNotification) {
+                        if (isPostCommentDataAddLoding) {
+                          postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "AddData");
+                        } else if (isPostCommentReLoading) {
+                          postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "Reload");
                         }
                       }
                       return false;
                     },
                     child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       itemCount: postCommentData.length,
                       itemBuilder: (context, index) {
                         postCommentMessageController[index].text = postCommentData[index].message;
@@ -167,6 +180,7 @@ class PostComment extends StatelessWidget {
                     ),
                   ),
                 ),
+                isPostCommentDataAddLoding ? Loading() : Container(),
                 Row(
                   children: [
                     Expanded(
@@ -210,12 +224,12 @@ class PostComment extends StatelessWidget {
             globalKey: globalCommentKey,
             userData: userData,
             otherUser: otherUser,
-            gotoFriendPage: gotoFriendPage ?? () {},
+            gotoFriendPage: gotoFriendPage,
           ),
           body: SafeArea(
             child: StatefulWrapper(
               onInit: () async {
-                await postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, isFirstSearch: true);
+                await postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "First");
               },
               onDispose: () {
                 PostState().dispose();

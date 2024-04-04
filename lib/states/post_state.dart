@@ -17,6 +17,8 @@ class PostState extends ChangeNotifier {
   bool isDataAddLoding = false;
   bool isReLoading = false;
   bool isPostCommentLoading = false;
+  bool isPostCommentDataAddLoding = false;
+  bool isPostCommentReLoading = false;
 
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   final GlobalKey<ScaffoldState> globalCommentKey = GlobalKey();
@@ -172,26 +174,21 @@ class PostState extends ChangeNotifier {
       print(e);
     }
   }
-  // Future<void> getPostDataByType(int type, {required bool isFirstSearch}) async {
-  //   try {
-  //     List<PostModel> tempPostData = [];
-  //     if (isFirstSearch) {
-  //       isFirstLoading = true;
-  //       Future.delayed(Duration.zero).then((value) => notifyListeners());
-  //       tempPostData = await _dbService.getPostsByType(type, isFirst: isFirstSearch);
-  //     } else {
-  //       tempPostData = await _dbService.getPostsByType(type);
-  //     }
 
-  //     tempPostData.forEach((e) {
-  //       postData = [...postData, e];
-  //     });
-  //     isFirstLoading = false;
-  //     notifyListeners();
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+  Future<void> createPost(String userUid, String message, int type) async {
+    try {
+      await _dbService.createPost(userUid, message, type);
+
+      List<PostModel> tempPostData = await _dbService.getPostsByType(type, isFirst: true);
+      postData = [];
+      tempPostData.forEach((e) {
+        postData = [...postData, e];
+      });
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future<void> changePostComment(int uid, int index, String updatedMessage) async {
     await _dbService.updatePostComment(uid, updatedMessage);
@@ -212,31 +209,56 @@ class PostState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getPostCommentData(int postId, {String? loginUserUID, required bool isFirstSearch}) async {
+  Future<void> getPostCommentData(int postId, {String? loginUserUID, required String searchType}) async {
     try {
       List<PostCommentModel> tempPostCommentData = [];
-      if (isFirstSearch) {
-        isPostCommentLoading = true;
+      if (searchType == "AddData") {
+        isPostCommentDataAddLoding = true;
+        tempPostCommentData = await _dbService.getPostCommentData(postId);
+        notifyListeners();
+
+        tempPostCommentData.forEach((e) {
+          postCommentData.add(
+            getPostCommentModel(
+                uid: e.uid,
+                postId: postId,
+                userUid: e.userUid,
+                message: e.message,
+                isEditor: false,
+                postTime: e.postTime,
+                commentUserInfo: e.commentUserInfo),
+          );
+          postCommentMessageController.add(TextEditingController());
+        });
+      } else {
+        if (searchType == "First") {
+          isPostCommentLoading = true;
+        } else if (searchType == "Reload") {
+          isPostCommentReLoading = true;
+        }
         isGood = await _dbService.checkIsPostGood(postId, loginUserUID!);
         Future.delayed(Duration.zero).then((value) => notifyListeners());
-        tempPostCommentData = await _dbService.getPostCommentData(postId, isFirst: isFirstSearch);
-      } else {
-        tempPostCommentData = await _dbService.getPostCommentData(postId);
+        tempPostCommentData = await _dbService.getPostCommentData(postId, isFirst: true);
+        List<getPostCommentModel> tempGetPostCommentData = [];
+        postCommentMessageController.clear();
+        tempPostCommentData.forEach((e) {
+          tempGetPostCommentData.add(
+            getPostCommentModel(
+                uid: e.uid,
+                postId: postId,
+                userUid: e.userUid,
+                message: e.message,
+                isEditor: false,
+                postTime: e.postTime,
+                commentUserInfo: e.commentUserInfo),
+          );
+          postCommentMessageController.add(TextEditingController());
+        });
+        postCommentData = tempGetPostCommentData;
       }
 
-      tempPostCommentData.forEach((e) {
-        postCommentData.add(
-          getPostCommentModel(
-              uid: e.uid,
-              postId: postId,
-              userUid: e.userUid,
-              message: e.message,
-              isEditor: false,
-              postTime: e.postTime,
-              commentUserInfo: e.commentUserInfo),
-        );
-        postCommentMessageController.add(TextEditingController());
-      });
+      isPostCommentDataAddLoding = false;
+      isPostCommentReLoading = false;
       isPostCommentLoading = false;
       notifyListeners();
     } catch (e) {
@@ -244,19 +266,14 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  Future<void> createPost(String userUid, String message, int type) async {
-    try {
-      await _dbService.createPost(userUid, message, type);
+  void postAddData() {
+    isPostCommentDataAddLoding = true;
+    notifyListeners();
+  }
 
-      List<PostModel> tempPostData = await _dbService.getPostsByType(type, isFirst: true);
-      postData = [];
-      tempPostData.forEach((e) {
-        postData = [...postData, e];
-      });
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
+  void postReLoadingPage() {
+    isPostCommentReLoading = true;
+    notifyListeners();
   }
 
   Future<void> createPostComment(int postId, String message, LoginUser commentUser) async {
