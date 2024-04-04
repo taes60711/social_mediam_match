@@ -107,7 +107,7 @@ class SkillExChangeState extends ChangeNotifier {
         }
       }
     }
-
+    inspect(filterSkill);
     await getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: true);
   }
 

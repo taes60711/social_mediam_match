@@ -8,22 +8,25 @@ import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
 import '../../utilities/Stateful_wrapper.dart';
+import '../skillExChangePage/user_detail.dart';
 
 class PostComment extends StatelessWidget {
   final PostModel choicedPostData;
   final LoginUser userData;
   final GlobalKey<ScaffoldState> globalKey;
+  final VoidCallback gotoFriendPage;
 
   const PostComment({
     super.key,
     required this.choicedPostData,
     required this.userData,
     required this.globalKey,
+    required this.gotoFriendPage,
   });
 
   @override
   Widget build(BuildContext context) {
-    Future<void> exitCheck(int uId, PostState postState) {
+    Future<void> deleteCheck(int uId, PostState postState) {
       return showDialog<void>(
         context: context,
         builder: (BuildContext context) {
@@ -60,6 +63,9 @@ class PostComment extends StatelessWidget {
         TextEditingController postCommentInput = context.select((PostState value) => value.postCommentInput);
         bool isPostCommentLoading = context.select((PostState value) => value.isPostCommentLoading);
         bool isGood = context.select((PostState value) => value.isGood);
+        GlobalKey<ScaffoldState> globalCommentKey = context.select((PostState value) => value.globalCommentKey);
+        LoginUser? otherUser = context.select((PostState value) => value.otherUser);
+
         Widget commentComponent;
         if (isPostCommentLoading) {
           commentComponent = const Loading();
@@ -91,42 +97,51 @@ class PostComment extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    UserIcon(
-                                      iconSize: 40,
-                                      image: postCommentData[index].commentUserInfo.image,
-                                    ),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(postCommentData[index].commentUserInfo.email),
-                                          TextFormField(
-                                            controller: postCommentMessageController[index],
-                                            enabled: postCommentData[index].isEditor,
-                                            style: const TextStyle(color: Colors.black, fontSize: 14),
-                                            decoration: const InputDecoration(
-                                              border: OutlineInputBorder(),
-                                              isCollapsed: true,
-                                              contentPadding: EdgeInsets.only(left: 2),
-                                              disabledBorder: InputBorder.none,
+                                GestureDetector(
+                                  onTap: () {
+                                    inspect(postCommentData[index].commentUserInfo);
+                                    if (userData.uid != postCommentData[index].commentUserInfo.uid) {
+                                      postState.openDrawer("userDetail", globalCommentKey,
+                                          otherUser: postCommentData[index].commentUserInfo);
+                                    }
+                                  },
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      UserIcon(
+                                        iconSize: 40,
+                                        image: postCommentData[index].commentUserInfo.image,
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(postCommentData[index].commentUserInfo.email),
+                                            TextFormField(
+                                              controller: postCommentMessageController[index],
+                                              enabled: postCommentData[index].isEditor,
+                                              style: const TextStyle(color: Colors.black, fontSize: 14),
+                                              decoration: const InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                isCollapsed: true,
+                                                contentPadding: EdgeInsets.only(left: 2),
+                                                disabledBorder: InputBorder.none,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          exitCheck(postCommentData[index].uid ?? -1, postState);
-                                        },
-                                        icon: Icon(Icons.close),
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            deleteCheck(postCommentData[index].uid ?? -1, postState);
+                                          },
+                                          icon: Icon(Icons.close),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                                 Row(
                                   children: [
@@ -190,6 +205,13 @@ class PostComment extends StatelessWidget {
           );
         }
         return Scaffold(
+          key: globalCommentKey,
+          endDrawer: UserDetail(
+            globalKey: globalCommentKey,
+            userData: userData,
+            otherUser: otherUser,
+            gotoFriendPage: gotoFriendPage ?? () {},
+          ),
           body: SafeArea(
             child: StatefulWrapper(
               onInit: () async {
@@ -222,6 +244,9 @@ class PostComment extends StatelessWidget {
                             GestureDetector(
                               onTap: () {
                                 inspect(choicedPostData.postUserInfo);
+                                if (userData.uid != choicedPostData.postUserInfo.uid) {
+                                  postState.openDrawer("userDetail", globalCommentKey, otherUser: choicedPostData.postUserInfo);
+                                }
                               },
                               child: Row(
                                 children: [

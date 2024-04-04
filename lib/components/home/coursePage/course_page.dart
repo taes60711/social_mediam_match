@@ -43,13 +43,6 @@ class CoursePage extends StatelessWidget {
               ? const Loading()
               : Column(
                   children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.dehaze_rounded),
-                      ),
-                    ),
                     Container(
                       width: ScreenSize().width,
                       child: Stack(

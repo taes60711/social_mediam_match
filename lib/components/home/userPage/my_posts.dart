@@ -78,7 +78,9 @@ class MyPosts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LoginUser userData = ModalRoute.of(context)!.settings.arguments as LoginUser;
+    LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
+    VoidCallback gotoFriendPage =
+        (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['gotoFriendPage'] as VoidCallback;
     PostState postState = context.read<PostState>();
     List<PostModel> myAllPosts = context.watch<PostState>().myAllPosts;
     GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.myPostsGlobalKey);
@@ -136,6 +138,7 @@ class MyPosts extends StatelessWidget {
                           type: 0),
                   userData: userData,
                   globalKey: globalKey,
+                  gotoFriendPage: gotoFriendPage,
                 ),
           body: SafeArea(
             child: Column(

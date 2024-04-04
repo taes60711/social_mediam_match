@@ -62,6 +62,7 @@ class NewsPostPage extends StatelessWidget {
                       choicedPostData: choicedPostData,
                       userData: userData,
                       globalKey: globalKey,
+                      gotoFriendPage: gotoFriendPage,
                     ),
               body: SafeArea(
                 child: Padding(
@@ -84,7 +85,8 @@ class NewsPostPage extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
                           child: GestureDetector(
                             onTap: () async {
-                              await postState.openDrawer("movetoPost", loginUserData: userData, choicedPostData: postData[index]);
+                              await postState.openDrawer("movetoPost", globalKey,
+                                  loginUserData: userData, choicedPostData: postData[index]);
                             },
                             child: Container(
                               padding: EdgeInsets.all(8),
@@ -99,7 +101,7 @@ class NewsPostPage extends StatelessWidget {
                                     onTap: () {
                                       inspect(postData[index].postUserInfo);
                                       if (userData.uid != postData[index].postUserInfo.uid) {
-                                        postState.openDrawer("userDetail", otherUser: postData[index].postUserInfo);
+                                        postState.openDrawer("userDetail", globalKey, otherUser: postData[index].postUserInfo);
                                       }
                                     },
                                     child: Row(

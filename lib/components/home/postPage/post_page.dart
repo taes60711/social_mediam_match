@@ -8,7 +8,6 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
-import '../../../global.dart';
 import '../../../models/user_model.dart';
 
 import '../skillExChangePage/user_detail.dart';
@@ -62,6 +61,7 @@ class PostPage extends StatelessWidget {
                       choicedPostData: choicedPostData,
                       userData: userData,
                       globalKey: globalKey,
+                      gotoFriendPage: gotoFriendPage,
                     ),
               body: SafeArea(
                 child: Padding(
@@ -71,20 +71,26 @@ class PostPage extends StatelessWidget {
                       if (scrollNotification is ScrollEndNotification) {
                         final before = scrollNotification.metrics.extentBefore;
                         final max = scrollNotification.metrics.maxScrollExtent;
+                        final scrollPosition = scrollNotification.metrics.pixels;
+                        print("scrollPosition : ${scrollPosition}");
                         if (before == max) {
                           postState.getPostData(isFirstSearch: false);
+                        } else if (scrollPosition == 0) {
+                          postState.getPostData(isFirstSearch: true);
                         }
                       }
                       return false;
                     },
                     child: ListView.builder(
+                      // controller: _scrollController,
                       itemCount: postData.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
                           child: GestureDetector(
                             onTap: () async {
-                              await postState.openDrawer("movetoPost", loginUserData: userData, choicedPostData: postData[index]);
+                              await postState.openDrawer("movetoPost", globalKey,
+                                  loginUserData: userData, choicedPostData: postData[index]);
                             },
                             child: Container(
                               padding: EdgeInsets.all(8),
@@ -99,7 +105,7 @@ class PostPage extends StatelessWidget {
                                     onTap: () {
                                       inspect(postData[index].postUserInfo);
                                       if (userData.uid != postData[index].postUserInfo.uid) {
-                                        postState.openDrawer("userDetail", otherUser: postData[index].postUserInfo);
+                                        postState.openDrawer("userDetail", globalKey, otherUser: postData[index].postUserInfo);
                                       }
                                     },
                                     child: Row(

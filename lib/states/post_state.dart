@@ -16,6 +16,7 @@ class PostState extends ChangeNotifier {
   TextEditingController postCommentInput = TextEditingController();
   bool isFirstLoading = true, isPostCommentLoading = false;
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
+  final GlobalKey<ScaffoldState> globalCommentKey = GlobalKey();
   String endDrawerType = "";
   PostModel? choicedPostData;
   LoginUser? otherUser;
@@ -88,13 +89,14 @@ class PostState extends ChangeNotifier {
         isFirstLoading = true;
         Future.delayed(Duration.zero).then((value) => notifyListeners());
         tempPostData = await _dbService.getPostData(isFirst: isFirstSearch);
+        postData = tempPostData;
       } else {
         tempPostData = await _dbService.getPostData();
+        tempPostData.forEach((e) {
+          postData = [...postData, e];
+        });
       }
 
-      tempPostData.forEach((e) {
-        postData = [...postData, e];
-      });
       isFirstLoading = false;
       notifyListeners();
     } catch (e) {
@@ -233,7 +235,7 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  Future<void> openDrawer(String endDrawerType,
+  Future<void> openDrawer(String endDrawerType, GlobalKey<ScaffoldState> globalKey,
       {LoginUser? otherUser, LoginUser? loginUserData, PostModel? choicedPostData}) async {
     this.endDrawerType = endDrawerType;
     if (this.endDrawerType == "userDetail") {
