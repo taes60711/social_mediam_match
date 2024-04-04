@@ -6,7 +6,6 @@ import '../models/user_model.dart';
 
 class PostState extends ChangeNotifier {
   final DBService _dbService = DBService();
-
   final GlobalKey<ScaffoldState> forumGlobalKey = GlobalKey();
 
   List<PostModel> postData = [];
@@ -82,26 +81,42 @@ class PostState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getPostData({required bool isFirstSearch}) async {
+  bool isDataAddLoding = false;
+  bool isReLoading = false;
+  Future<void> getPostData({required String searchType}) async {
     try {
       List<PostModel> tempPostData = [];
-      if (isFirstSearch) {
-        isFirstLoading = true;
-        Future.delayed(Duration.zero).then((value) => notifyListeners());
-        tempPostData = await _dbService.getPostData(isFirst: isFirstSearch);
-        postData = tempPostData;
-      } else {
+      if (searchType == "AddData") {
         tempPostData = await _dbService.getPostData();
         tempPostData.forEach((e) {
           postData = [...postData, e];
         });
+        isDataAddLoding = false;
+      } else {
+        if (searchType == "First") {
+          isFirstLoading = true;
+          Future.delayed(Duration.zero).then((value) => notifyListeners());
+        }
+        tempPostData = await _dbService.getPostData(isFirst: true);
+        postData = tempPostData;
+        isFirstLoading = false;
+        isReLoading = false;
       }
 
-      isFirstLoading = false;
       notifyListeners();
     } catch (e) {
       print(e);
     }
+  }
+
+  void addData() {
+    isDataAddLoding = true;
+    notifyListeners();
+  }
+
+  void reLoadingPage() {
+    isReLoading = true;
+    notifyListeners();
   }
 
   Future<void> getNewsPostData({required bool isFirstSearch}) async {

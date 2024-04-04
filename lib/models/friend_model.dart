@@ -21,11 +21,13 @@ class ChatRoomMessageModel {
 class FriendListModel {
   int roomId;
   String roomName;
+  String memberId;
   String? lastMessage;
   int roomType;
   FriendListModel({
     required this.roomId,
     required this.roomName,
+    required this.memberId,
     this.lastMessage,
     required this.roomType,
   });
@@ -33,6 +35,7 @@ class FriendListModel {
   factory FriendListModel.fromJson(dynamic json) {
     return FriendListModel(
       roomId: json['roomId'],
+      memberId: json['memberId'],
       roomName: json['roomName'],
       lastMessage: json['lastMessage'],
       roomType: json['roomType'],
