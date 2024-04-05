@@ -86,59 +86,113 @@ class SkillExChangePage extends StatelessWidget {
                           physics: BouncingScrollPhysics(),
                           itemCount: allUserData.length,
                           itemBuilder: (context, index) {
-                            Widget listComponent = Padding(
-                              padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                              child: GestureDetector(
-                                onTap: () {
-                                  inspect(allUserData[index]);
-                                  skillExChangeState.openDrawer("userDetail", otherUser: allUserData[index]);
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: const Color.fromARGB(255, 218, 219, 219),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            UserIcon(
-                                              iconSize: 60,
-                                              image: allUserData[index].image,
+                            Widget listComponent;
+                            if (index != allUserData.length - 1) {
+                              listComponent = Padding(
+                                padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    inspect(allUserData[index]);
+                                    skillExChangeState.openDrawer("userDetail", otherUser: allUserData[index]);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: const Color.fromARGB(255, 218, 219, 219),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              UserIcon(
+                                                iconSize: 60,
+                                                image: allUserData[index].image,
+                                              ),
+                                              Text(allUserData[index].email),
+                                            ],
+                                          ),
+                                          Text("最後登入時間: ${allUserData[index].lastLogin}"),
+                                          SizedBox(
+                                            width: ScreenSize().width,
+                                            child: SkillListView(
+                                              title: skillText,
+                                              skillList: allUserData[index].mainSkills ?? [],
                                             ),
-                                            Text(allUserData[index].email),
-                                          ],
-                                        ),
-                                        Text("最後登入時間: ${allUserData[index].lastLogin}"),
-                                        SizedBox(
-                                          width: ScreenSize().width,
-                                          child: SkillListView(
-                                            title: skillText,
-                                            skillList: allUserData[index].mainSkills ?? [],
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: ScreenSize().width,
-                                          child: SkillListView(
-                                            title: wantSkillText,
-                                            skillList: allUserData[index].wantSkills ?? [],
+                                          SizedBox(
+                                            width: ScreenSize().width,
+                                            child: SkillListView(
+                                              title: wantSkillText,
+                                              skillList: allUserData[index].wantSkills ?? [],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-
+                              );
+                            } else {
+                              listComponent = Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        inspect(allUserData[index]);
+                                        skillExChangeState.openDrawer("userDetail", otherUser: allUserData[index]);
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          color: const Color.fromARGB(255, 218, 219, 219),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  UserIcon(
+                                                    iconSize: 60,
+                                                    image: allUserData[index].image,
+                                                  ),
+                                                  Text(allUserData[index].email),
+                                                ],
+                                              ),
+                                              Text("最後登入時間: ${allUserData[index].lastLogin}"),
+                                              SizedBox(
+                                                width: ScreenSize().width,
+                                                child: SkillListView(
+                                                  title: skillText,
+                                                  skillList: allUserData[index].mainSkills ?? [],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: ScreenSize().width,
+                                                child: SkillListView(
+                                                  title: wantSkillText,
+                                                  skillList: allUserData[index].wantSkills ?? [],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  isAddDataLoading ? Loading() : Container(),
+                                ],
+                              );
+                            }
                             return listComponent;
                           }),
                     ),
                   ),
-                  isAddDataLoading ? Loading() : Container(),
                 ],
               ),
             ),

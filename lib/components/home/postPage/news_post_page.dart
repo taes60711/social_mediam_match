@@ -8,7 +8,6 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
-import '../../../global.dart';
 import '../../../models/user_model.dart';
 
 import '../skillExChangePage/user_detail.dart';
@@ -109,65 +108,118 @@ class NewsPostPage extends StatelessWidget {
                             physics: BouncingScrollPhysics(),
                             itemCount: postData.length,
                             itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    await postState.openDrawer("movetoPost", globalKey,
-                                        loginUserData: userData, choicedPostData: postData[index]);
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: const Color.fromARGB(255, 218, 219, 219),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            inspect(postData[index].postUserInfo);
-                                            if (userData.uid != postData[index].postUserInfo.uid) {
-                                              postState.openDrawer("userDetail", globalKey,
-                                                  otherUser: postData[index].postUserInfo);
-                                            }
-                                          },
-                                          child: Row(
+                              return index != postData.length - 1
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          await postState.openDrawer("movetoPost", globalKey,
+                                              loginUserData: userData, choicedPostData: postData[index]);
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            color: const Color.fromARGB(255, 218, 219, 219),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              UserIcon(
-                                                iconSize: 50,
-                                                image: postData[index].postUserInfo.image,
+                                              GestureDetector(
+                                                onTap: () {
+                                                  inspect(postData[index].postUserInfo);
+                                                  if (userData.uid != postData[index].postUserInfo.uid) {
+                                                    postState.openDrawer("userDetail", globalKey,
+                                                        otherUser: postData[index].postUserInfo);
+                                                  }
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    UserIcon(
+                                                      iconSize: 50,
+                                                      image: postData[index].postUserInfo.image,
+                                                    ),
+                                                    Text(postData[index].postUserInfo.email),
+                                                  ],
+                                                ),
                                               ),
-                                              Text(postData[index].postUserInfo.email),
+                                              Text(postData[index].mainMessage),
+                                              Row(
+                                                children: [
+                                                  Text("已 ${postData[index].viewed} 人瀏覽過"),
+                                                  Text(" ${postData[index].good} 個讚"),
+                                                ],
+                                              ),
+                                              Text("發文時間 : ${postData[index].postTime}"),
+                                              Text("有${postData[index].commentCount}則留言"),
                                             ],
                                           ),
                                         ),
-                                        Text(postData[index].mainMessage),
-                                        Row(
-                                          children: [
-                                            Text("已 ${postData[index].viewed} 人瀏覽過"),
-                                            Text(" ${postData[index].good} 個讚"),
-                                          ],
+                                      ),
+                                    )
+                                  : Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+                                          child: GestureDetector(
+                                            onTap: () async {
+                                              await postState.openDrawer("movetoPost", globalKey,
+                                                  loginUserData: userData, choicedPostData: postData[index]);
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10),
+                                                color: const Color.fromARGB(255, 218, 219, 219),
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      inspect(postData[index].postUserInfo);
+                                                      if (userData.uid != postData[index].postUserInfo.uid) {
+                                                        postState.openDrawer("userDetail", globalKey,
+                                                            otherUser: postData[index].postUserInfo);
+                                                      }
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        UserIcon(
+                                                          iconSize: 50,
+                                                          image: postData[index].postUserInfo.image,
+                                                        ),
+                                                        Text(postData[index].postUserInfo.email),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Text(postData[index].mainMessage),
+                                                  Row(
+                                                    children: [
+                                                      Text("已 ${postData[index].viewed} 人瀏覽過"),
+                                                      Text(" ${postData[index].good} 個讚"),
+                                                    ],
+                                                  ),
+                                                  Text("發文時間 : ${postData[index].postTime}"),
+                                                  Text("有${postData[index].commentCount}則留言"),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                        Text("發文時間 : ${postData[index].postTime}"),
-                                        Text("有${postData[index].commentCount}則留言"),
+                                        isDataAddLoding
+                                            ? const Padding(
+                                                padding: EdgeInsets.all(10),
+                                                child: Loading(),
+                                              )
+                                            : Container()
                                       ],
-                                    ),
-                                  ),
-                                ),
-                              );
+                                    );
                             },
                           ),
                         ),
                       ),
                     ),
-                    isDataAddLoding
-                        ? const Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Loading(),
-                          )
-                        : Container()
                   ],
                 ),
               ),

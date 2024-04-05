@@ -143,47 +143,89 @@ class CoursePage extends StatelessWidget {
                             physics: BouncingScrollPhysics(),
                             itemCount: courseData.length,
                             itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  color: courseData[index].type == 1 ? Colors.indigoAccent : Colors.lime,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(courseData[index].title),
-                                      Row(
-                                        children: [
-                                          UserIcon(
-                                            iconSize: 60,
-                                            image: courseData[index].courseCreateduserInfo.image,
-                                          ),
-                                          Text(courseData[index].courseCreateduserInfo.email)
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          courseData[index].content,
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
+                              return index != courseData.length - 1
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        color: courseData[index].type == 1 ? Colors.indigoAccent : Colors.lime,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(courseData[index].title),
+                                            Row(
+                                              children: [
+                                                UserIcon(
+                                                  iconSize: 60,
+                                                  image: courseData[index].courseCreateduserInfo.image,
+                                                ),
+                                                Text(courseData[index].courseCreateduserInfo.email)
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                courseData[index].content,
+                                                maxLines: 3,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  inspect(courseData[index]);
+                                                  courseState.choicedPage(courseData[index]);
+                                                  globalKey.currentState!.openEndDrawer();
+                                                },
+                                                child: Text("觀看詳細")),
+                                            Text(courseData[index].postTime),
+                                          ],
                                         ),
                                       ),
-                                      ElevatedButton(
-                                          onPressed: () {
-                                            inspect(courseData[index]);
-                                            courseState.choicedPage(courseData[index]);
-                                            globalKey.currentState!.openEndDrawer();
-                                          },
-                                          child: Text("觀看詳細")),
-                                      Text(courseData[index].postTime),
-                                    ],
-                                  ),
-                                ),
-                              );
+                                    )
+                                  : Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            color: courseData[index].type == 1 ? Colors.indigoAccent : Colors.lime,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(courseData[index].title),
+                                                Row(
+                                                  children: [
+                                                    UserIcon(
+                                                      iconSize: 60,
+                                                      image: courseData[index].courseCreateduserInfo.image,
+                                                    ),
+                                                    Text(courseData[index].courseCreateduserInfo.email)
+                                                  ],
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    courseData[index].content,
+                                                    maxLines: 3,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      inspect(courseData[index]);
+                                                      courseState.choicedPage(courseData[index]);
+                                                      globalKey.currentState!.openEndDrawer();
+                                                    },
+                                                    child: Text("觀看詳細")),
+                                                Text(courseData[index].postTime),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        isAddDataLoading ? Loading() : Container(),
+                                      ],
+                                    );
                             }),
                       ),
                     ),
-                    isAddDataLoading ? Loading() : Container(),
                   ],
                 ),
         ),
