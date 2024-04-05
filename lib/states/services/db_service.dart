@@ -26,17 +26,21 @@ class DBService {
   Future<List<CourseModel>> getCoursesByType(int type, {bool? isFirst}) async {
     String branch = "courses";
 
+    if (isFirst != null) {
+      coursesServerInfo.pageNumber = 0;
+    }
+
     String searchUrl = '$url/$branch/getCoursesByType/$type?page=${coursesServerInfo.pageNumber}&size=$size';
     final uri = Uri.parse(searchUrl);
     List<CourseModel> allCouserData = [];
     try {
       var response = await http.get(uri);
-
       if (response.statusCode != 404) {
         allCouserData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
-          print(e);
           return CourseModel.toMap(e);
         }).toList();
+        inspect(allCouserData);
+        coursesServerInfo.pageNumber++;
       }
     } catch (e) {
       print(e);
