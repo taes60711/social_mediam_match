@@ -43,6 +43,10 @@ class PostPage extends StatelessWidget {
               type: 0),
     );
 
+    void changeChoicedPostGoodCount({required PostModel choicedPost, required isGood}) {
+      postState.changeChoicedPostGoodCount(choicedPost: choicedPost, isGood: isGood);
+    }
+
     print("PostPage isFirstLoading: ${isFirstLoading}");
     return StatefulWrapper(
       onInit: () async {
@@ -64,6 +68,7 @@ class PostPage extends StatelessWidget {
                       userData: userData,
                       globalKey: globalKey,
                       gotoFriendPage: gotoFriendPage,
+                      changeChoicedPostGoodCount: changeChoicedPostGoodCount,
                     ),
               body: SafeArea(
                 child: Column(

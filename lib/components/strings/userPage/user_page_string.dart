@@ -7,7 +7,7 @@ enum ManagerButton {
     "個人資料",
   ),
   post("我的文章"),
-  classes("我的課程"),
+  // classes("我的課程"),
   friend("好友管理"),
   set("設定");
 

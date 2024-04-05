@@ -15,6 +15,7 @@ class PostComment extends StatelessWidget {
   final LoginUser userData;
   final GlobalKey<ScaffoldState> globalKey;
   final VoidCallback gotoFriendPage;
+  final Function changeChoicedPostGoodCount;
 
   const PostComment({
     super.key,
@@ -22,6 +23,7 @@ class PostComment extends StatelessWidget {
     required this.userData,
     required this.globalKey,
     required this.gotoFriendPage,
+    required this.changeChoicedPostGoodCount,
   });
 
   @override
@@ -282,6 +284,7 @@ class PostComment extends StatelessWidget {
                                     isGood
                                         ? postState.updatePostGood(choicedPostData.id)
                                         : postState.updatePostGood(choicedPostData.id, userUID: userData.uid);
+                                    changeChoicedPostGoodCount(choicedPost: choicedPostData, isGood: isGood);
                                   },
                                   child: isGood ? Text("收回讚") : Text("讚"),
                                 ),

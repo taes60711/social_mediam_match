@@ -87,6 +87,15 @@ class PostState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void changeChoicedPostGoodCount({required PostModel choicedPost, required isGood}) {
+    if (isGood) {
+      choicedPost.good -= 1;
+    } else {
+      choicedPost.good += 1;
+    }
+    notifyListeners();
+  }
+
   Future<void> getPostData({required String searchType}) async {
     try {
       List<PostModel> tempPostData = [];

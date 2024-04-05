@@ -86,6 +86,10 @@ class MyPosts extends StatelessWidget {
     GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.myPostsGlobalKey);
     String myPostEndDrawerType = context.select((PostState value) => value.myPostEndDrawerType);
 
+    void changeChoicedPostGoodCount({required PostModel choicedPost, required isGood}) {
+      postState.changeChoicedPostGoodCount(choicedPost: choicedPost, isGood: isGood);
+    }
+
     Future<void> exitCheck(int postId) {
       return showDialog<void>(
         context: context,
@@ -139,6 +143,7 @@ class MyPosts extends StatelessWidget {
                   userData: userData,
                   globalKey: globalKey,
                   gotoFriendPage: gotoFriendPage,
+                  changeChoicedPostGoodCount: changeChoicedPostGoodCount,
                 ),
           body: SafeArea(
             child: Column(

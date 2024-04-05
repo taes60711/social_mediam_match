@@ -45,6 +45,10 @@ class PostPageByType extends StatelessWidget {
               type: 0),
     );
 
+    void changeChoicedPostGoodCount({required PostModel choicedPost, required isGood}) {
+      postState.changeChoicedPostGoodCount(choicedPost: choicedPost, isGood: isGood);
+    }
+
     print("NewsPostPage isFirstLoading: ${isFirstLoading}");
     return StatefulWrapper(
       onInit: () async {
@@ -66,6 +70,7 @@ class PostPageByType extends StatelessWidget {
                       userData: userData,
                       globalKey: globalKey,
                       gotoFriendPage: gotoFriendPage,
+                      changeChoicedPostGoodCount: changeChoicedPostGoodCount,
                     ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
