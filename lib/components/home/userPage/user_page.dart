@@ -198,7 +198,8 @@ import '../../utilities/style/screen_size.dart';
 class UserPage extends StatelessWidget {
   final LoginUser userData;
   final FriendState friendState;
-  const UserPage({super.key, required this.userData, required this.friendState});
+  final VoidCallback gotoFriendPage;
+  const UserPage({super.key, required this.userData, required this.friendState, required this.gotoFriendPage});
 
   @override
   Widget build(BuildContext context) {
@@ -245,7 +246,10 @@ class UserPage extends StatelessWidget {
                         } else if (e.value == ManagerButton.post.value) {
                           Navigator.of(context).pushNamed(
                             RoutePath.myPosts.value,
-                            arguments: userData,
+                            arguments: {
+                              "userData": userData,
+                              "gotoFriendPage": gotoFriendPage,
+                            },
                           );
                         } else if (e.value == ManagerButton.set.value) {
                           Navigator.of(context).pushNamed(RoutePath.privacySettingPage.value, arguments: {

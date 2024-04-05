@@ -23,6 +23,8 @@ class CoursePage extends StatelessWidget {
     List<CourseModel> courseData = context.watch<CourseState>().courseData;
     List<CourseModel> topCourseData = context.watch<CourseState>().topCourseData;
     bool isFirstLoading = context.select((CourseState value) => value.isFirstLoading);
+    bool isAddDataLoading = context.select((CourseState value) => value.isAddDataLoading);
+    bool isReLoading = context.select((CourseState value) => value.isReLoading);
     bool isTopFirstLoading = context.select((CourseState value) => value.isTopFirstLoading);
     int carouselPageIndex = context.select((CourseState value) => value.carouselPageIndex);
     GlobalKey<ScaffoldState> globalKey = context.select((CourseState value) => value.globalKey);
@@ -36,20 +38,13 @@ class CoursePage extends StatelessWidget {
       body: SafeArea(
         child: StatefulWrapper(
           onInit: () {
-            courseState.getCourseData(0, isFirstSearch: true);
-            courseState.getCourseData(1, isFirstSearch: true);
+            courseState.getCourseData(0, searchType: "First");
+            courseState.getCourseData(1, searchType: "First");
           },
           child: isFirstLoading || isTopFirstLoading
               ? const Loading()
               : Column(
                   children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.dehaze_rounded),
-                      ),
-                    ),
                     Container(
                       width: ScreenSize().width,
                       child: Stack(
@@ -120,48 +115,116 @@ class CoursePage extends StatelessWidget {
                         ],
                       ),
                     ),
+                    isReLoading ? Loading() : Container(),
                     Expanded(
-                      child: ListView.builder(
-                          itemCount: courseData.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                color: courseData[index].type == 1 ? Colors.indigoAccent : Colors.lime,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(courseData[index].title),
-                                    Row(
-                                      children: [
-                                        UserIcon(
-                                          iconSize: 60,
-                                          image: courseData[index].courseCreateduserInfo.image,
-                                        ),
-                                        Text(courseData[index].courseCreateduserInfo.email)
-                                      ],
-                                    ),
-                                    Padding(
+                      child: NotificationListener<ScrollNotification>(
+                        onNotification: (ScrollNotification scrollNotification) {
+                          if (scrollNotification is ScrollUpdateNotification) {
+                            final scrollPosition = scrollNotification.metrics.pixels;
+                            final max = scrollNotification.metrics.maxScrollExtent;
+                            if (!isAddDataLoading && !isReLoading) {
+                              if (scrollPosition > max && !isAddDataLoading) {
+                                courseState.addData();
+                              } else if (scrollPosition < 0 && !isReLoading) {
+                                courseState.reLoadingPage();
+                              }
+                            }
+                          }
+                          if (scrollNotification is ScrollEndNotification) {
+                            if (isAddDataLoading) {
+                              courseState.getCourseData(0, searchType: "AddData");
+                            } else if (isReLoading) {
+                              courseState.getCourseData(0, searchType: "Reload");
+                            }
+                          }
+                          return false;
+                        },
+                        child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            itemCount: courseData.length,
+                            itemBuilder: (context, index) {
+                              return index != courseData.length - 1
+                                  ? Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        courseData[index].content,
-                                        maxLines: 3,
-                                        overflow: TextOverflow.ellipsis,
+                                      child: Container(
+                                        color: courseData[index].type == 1 ? Colors.indigoAccent : Colors.lime,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(courseData[index].title),
+                                            Row(
+                                              children: [
+                                                UserIcon(
+                                                  iconSize: 60,
+                                                  image: courseData[index].courseCreateduserInfo.image,
+                                                ),
+                                                Text(courseData[index].courseCreateduserInfo.email)
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                courseData[index].content,
+                                                maxLines: 3,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  inspect(courseData[index]);
+                                                  courseState.choicedPage(courseData[index]);
+                                                  globalKey.currentState!.openEndDrawer();
+                                                },
+                                                child: Text("觀看詳細")),
+                                            Text(courseData[index].postTime),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          inspect(courseData[index]);
-                                          courseState.choicedPage(courseData[index]);
-                                          globalKey.currentState!.openEndDrawer();
-                                        },
-                                        child: Text("觀看詳細")),
-                                    Text(courseData[index].postTime),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }),
+                                    )
+                                  : Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            color: courseData[index].type == 1 ? Colors.indigoAccent : Colors.lime,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(courseData[index].title),
+                                                Row(
+                                                  children: [
+                                                    UserIcon(
+                                                      iconSize: 60,
+                                                      image: courseData[index].courseCreateduserInfo.image,
+                                                    ),
+                                                    Text(courseData[index].courseCreateduserInfo.email)
+                                                  ],
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    courseData[index].content,
+                                                    maxLines: 3,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      inspect(courseData[index]);
+                                                      courseState.choicedPage(courseData[index]);
+                                                      globalKey.currentState!.openEndDrawer();
+                                                    },
+                                                    child: Text("觀看詳細")),
+                                                Text(courseData[index].postTime),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        isAddDataLoading ? Loading() : Container(),
+                                      ],
+                                    );
+                            }),
+                      ),
                     ),
                   ],
                 ),

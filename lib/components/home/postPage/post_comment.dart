@@ -8,22 +8,27 @@ import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
 import '../../utilities/Stateful_wrapper.dart';
+import '../skillExChangePage/user_detail.dart';
 
 class PostComment extends StatelessWidget {
   final PostModel choicedPostData;
   final LoginUser userData;
   final GlobalKey<ScaffoldState> globalKey;
+  final VoidCallback gotoFriendPage;
+  final Function changeChoicedPostGoodCount;
 
   const PostComment({
     super.key,
     required this.choicedPostData,
     required this.userData,
     required this.globalKey,
+    required this.gotoFriendPage,
+    required this.changeChoicedPostGoodCount,
   });
 
   @override
   Widget build(BuildContext context) {
-    Future<void> exitCheck(int uId, PostState postState) {
+    Future<void> deleteCheck(int uId, PostState postState) {
       return showDialog<void>(
         context: context,
         builder: (BuildContext context) {
@@ -59,7 +64,12 @@ class PostComment extends StatelessWidget {
         List<TextEditingController> postCommentMessageController = context.watch<PostState>().postCommentMessageController;
         TextEditingController postCommentInput = context.select((PostState value) => value.postCommentInput);
         bool isPostCommentLoading = context.select((PostState value) => value.isPostCommentLoading);
+        bool isPostCommentDataAddLoding = context.select((PostState value) => value.isPostCommentDataAddLoding);
+        bool isPostCommentReLoading = context.select((PostState value) => value.isPostCommentReLoading);
         bool isGood = context.select((PostState value) => value.isGood);
+        GlobalKey<ScaffoldState> globalCommentKey = context.select((PostState value) => value.globalCommentKey);
+        LoginUser? otherUser = context.select((PostState value) => value.otherUser);
+
         Widget commentComponent;
         if (isPostCommentLoading) {
           commentComponent = const Loading();
@@ -67,19 +77,32 @@ class PostComment extends StatelessWidget {
           commentComponent = Expanded(
             child: Column(
               children: [
+                isPostCommentReLoading ? Loading() : Container(),
                 Expanded(
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (ScrollNotification scrollNotification) {
-                      if (scrollNotification is ScrollEndNotification) {
-                        final before = scrollNotification.metrics.extentBefore;
+                      if (scrollNotification is ScrollUpdateNotification) {
+                        final scrollPosition = scrollNotification.metrics.pixels;
                         final max = scrollNotification.metrics.maxScrollExtent;
-                        if (before == max) {
-                          postState.getPostCommentData(choicedPostData.id, isFirstSearch: false);
+                        if (!isPostCommentDataAddLoding && !isPostCommentReLoading) {
+                          if (scrollPosition > max && !isPostCommentDataAddLoding) {
+                            postState.postAddData();
+                          } else if (scrollPosition < 0 && !isPostCommentReLoading) {
+                            postState.postReLoadingPage();
+                          }
+                        }
+                      }
+                      if (scrollNotification is ScrollEndNotification) {
+                        if (isPostCommentDataAddLoding) {
+                          postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "AddData");
+                        } else if (isPostCommentReLoading) {
+                          postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "Reload");
                         }
                       }
                       return false;
                     },
                     child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       itemCount: postCommentData.length,
                       itemBuilder: (context, index) {
                         postCommentMessageController[index].text = postCommentData[index].message;
@@ -91,42 +114,51 @@ class PostComment extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    UserIcon(
-                                      iconSize: 40,
-                                      image: postCommentData[index].commentUserInfo.image,
-                                    ),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(postCommentData[index].commentUserInfo.email),
-                                          TextFormField(
-                                            controller: postCommentMessageController[index],
-                                            enabled: postCommentData[index].isEditor,
-                                            style: const TextStyle(color: Colors.black, fontSize: 14),
-                                            decoration: const InputDecoration(
-                                              border: OutlineInputBorder(),
-                                              isCollapsed: true,
-                                              contentPadding: EdgeInsets.only(left: 2),
-                                              disabledBorder: InputBorder.none,
+                                GestureDetector(
+                                  onTap: () {
+                                    inspect(postCommentData[index].commentUserInfo);
+                                    if (userData.uid != postCommentData[index].commentUserInfo.uid) {
+                                      postState.openDrawer("userDetail", globalCommentKey,
+                                          otherUser: postCommentData[index].commentUserInfo);
+                                    }
+                                  },
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      UserIcon(
+                                        iconSize: 40,
+                                        image: postCommentData[index].commentUserInfo.image,
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(postCommentData[index].commentUserInfo.email),
+                                            TextFormField(
+                                              controller: postCommentMessageController[index],
+                                              enabled: postCommentData[index].isEditor,
+                                              style: const TextStyle(color: Colors.black, fontSize: 14),
+                                              decoration: const InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                isCollapsed: true,
+                                                contentPadding: EdgeInsets.only(left: 2),
+                                                disabledBorder: InputBorder.none,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          exitCheck(postCommentData[index].uid ?? -1, postState);
-                                        },
-                                        icon: Icon(Icons.close),
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            deleteCheck(postCommentData[index].uid ?? -1, postState);
+                                          },
+                                          icon: Icon(Icons.close),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                                 Row(
                                   children: [
@@ -152,6 +184,7 @@ class PostComment extends StatelessWidget {
                     ),
                   ),
                 ),
+                isPostCommentDataAddLoding ? Loading() : Container(),
                 Row(
                   children: [
                     Expanded(
@@ -190,10 +223,17 @@ class PostComment extends StatelessWidget {
           );
         }
         return Scaffold(
+          key: globalCommentKey,
+          endDrawer: UserDetail(
+            globalKey: globalCommentKey,
+            userData: userData,
+            otherUser: otherUser,
+            gotoFriendPage: gotoFriendPage,
+          ),
           body: SafeArea(
             child: StatefulWrapper(
               onInit: () async {
-                await postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, isFirstSearch: true);
+                await postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "First");
               },
               onDispose: () {
                 PostState().dispose();
@@ -222,6 +262,9 @@ class PostComment extends StatelessWidget {
                             GestureDetector(
                               onTap: () {
                                 inspect(choicedPostData.postUserInfo);
+                                if (userData.uid != choicedPostData.postUserInfo.uid) {
+                                  postState.openDrawer("userDetail", globalCommentKey, otherUser: choicedPostData.postUserInfo);
+                                }
                               },
                               child: Row(
                                 children: [
@@ -241,6 +284,7 @@ class PostComment extends StatelessWidget {
                                     isGood
                                         ? postState.updatePostGood(choicedPostData.id)
                                         : postState.updatePostGood(choicedPostData.id, userUID: userData.uid);
+                                    changeChoicedPostGoodCount(choicedPost: choicedPostData, isGood: isGood);
                                   },
                                   child: isGood ? Text("收回讚") : Text("讚"),
                                 ),

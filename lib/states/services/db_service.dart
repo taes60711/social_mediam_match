@@ -19,25 +19,28 @@ class searchStatus {
 
 class DBService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-
+  int size = 8;
   String url = "http://$ip:$port";
 
   searchStatus coursesServerInfo = searchStatus();
   Future<List<CourseModel>> getCoursesByType(int type, {bool? isFirst}) async {
     String branch = "courses";
-    int size = 5;
+
+    if (isFirst != null) {
+      coursesServerInfo.pageNumber = 0;
+    }
 
     String searchUrl = '$url/$branch/getCoursesByType/$type?page=${coursesServerInfo.pageNumber}&size=$size';
     final uri = Uri.parse(searchUrl);
     List<CourseModel> allCouserData = [];
     try {
       var response = await http.get(uri);
-
       if (response.statusCode != 404) {
         allCouserData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
-          print(e);
           return CourseModel.toMap(e);
         }).toList();
+        inspect(allCouserData);
+        coursesServerInfo.pageNumber++;
       }
     } catch (e) {
       print(e);
@@ -47,7 +50,6 @@ class DBService {
 
   Future<void> updatePostComment(int postId, String mainMessage) async {
     String branch = "posts";
-
     String searchUrl = '$url/$branch/updatePostComment/$postId';
     Map<String, String> headers = {'content-type': 'application/json'};
 
@@ -65,7 +67,6 @@ class DBService {
 
   Future<void> deletePostComment(int uId) async {
     String branch = "posts";
-
     String searchUrl = '$url/$branch/deletePostComment/$uId';
 
     final uri = Uri.parse(searchUrl);
@@ -93,7 +94,6 @@ class DBService {
   searchStatus postCommentServerInfo = searchStatus();
   Future<List<PostCommentModel>> getPostCommentData(int postId, {bool? isFirst}) async {
     String branch = "posts";
-    int size = 5;
 
     if (isFirst != null) {
       postCommentServerInfo.pageNumber = 0;
@@ -121,7 +121,6 @@ class DBService {
 
   Future<void> updatePost(int postId, String mainMessage) async {
     String branch = "posts";
-
     String searchUrl = '$url/$branch/update/$postId';
     Map<String, String> headers = {'content-type': 'application/json'};
 
@@ -139,7 +138,6 @@ class DBService {
 
   Future<void> updatePostGood(int postId, {String? userUID}) async {
     String branch = "posts";
-
     String searchUrl = '$url/$branch/updatePostGood/$postId';
     Map<String, String> headers = {'content-type': 'application/json'};
     final uri = Uri.parse(searchUrl);
@@ -185,7 +183,6 @@ class DBService {
 
   Future<void> moveToPost(int postId) async {
     String branch = "posts";
-
     String searchUrl = '$url/$branch/moveToPost/$postId';
 
     final uri = Uri.parse(searchUrl);
@@ -201,7 +198,6 @@ class DBService {
 
   Future<void> deletePost(int postId) async {
     String branch = "posts";
-
     String searchUrl = '$url/$branch/delete/$postId';
 
     final uri = Uri.parse(searchUrl);
@@ -232,7 +228,7 @@ class DBService {
   searchStatus postServerInfo = searchStatus();
   Future<List<PostModel>> getPostData({bool? isFirst}) async {
     String branch = "posts";
-    int size = 5;
+
     if (isFirst != null) {
       postServerInfo.pageNumber = 0;
     }
@@ -261,7 +257,7 @@ class DBService {
   searchStatus postByUserIdServerInfo = searchStatus();
   Future<List<PostModel>> getPostDataByUID(LoginUser userData, {bool? isFirst}) async {
     String branch = "posts";
-    int size = 5;
+
     if (isFirst != null) {
       postByUserIdServerInfo.pageNumber = 0;
     }
@@ -290,7 +286,7 @@ class DBService {
   searchStatus newPostServerInfo = searchStatus();
   Future<List<PostModel>> getNewPosts({bool? isFirst}) async {
     String branch = "posts";
-    int size = 5;
+
     if (isFirst != null) {
       newPostServerInfo.pageNumber = 0;
     }
@@ -319,7 +315,7 @@ class DBService {
   searchStatus postsByTypeServerInfo = searchStatus();
   Future<List<PostModel>> getPostsByType(int type, {bool? isFirst}) async {
     String branch = "posts";
-    int size = 5;
+
     if (isFirst != null) {
       postsByTypeServerInfo.pageNumber = 0;
     }
@@ -350,7 +346,6 @@ class DBService {
   Future<List<LoginUser>> getAllUserData(
       {String? userUid, required List<String> filterSkill, required bool isFirstSearch}) async {
     String branch = "user";
-    int size = 5;
 
     if (isFirstSearch) {
       alluserServerInfo = searchStatus();

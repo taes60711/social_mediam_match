@@ -36,18 +36,21 @@ class _HomeState extends State<Home> {
     List<Widget> _widgetOptions = <Widget>[
       ChangeNotifierProvider(
         create: (_) => PostState(),
-        child: Forum(userData: widget.userData, gotoFriendPage: gotoFriendPage),
+        child: Forum(
+          userData: widget.userData,
+          gotoFriendPage: gotoFriendPage,
+        ),
       ),
-      SkillExChangePage(userData: widget.userData, gotoFriendPage: gotoFriendPage),
+      SkillExChangePage(
+        userData: widget.userData,
+        gotoFriendPage: gotoFriendPage,
+      ),
       ChangeNotifierProvider(
         create: (_) => CourseState(),
         child: CoursePage(userData: widget.userData),
       ),
       FirendsPage(userData: widget.userData),
-      UserPage(
-        userData: widget.userData,
-        friendState: widget.friendState,
-      ),
+      UserPage(userData: widget.userData, friendState: widget.friendState, gotoFriendPage: gotoFriendPage),
     ];
 
     return Scaffold(

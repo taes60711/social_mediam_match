@@ -78,11 +78,17 @@ class MyPosts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LoginUser userData = ModalRoute.of(context)!.settings.arguments as LoginUser;
+    LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
+    VoidCallback gotoFriendPage =
+        (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['gotoFriendPage'] as VoidCallback;
     PostState postState = context.read<PostState>();
     List<PostModel> myAllPosts = context.watch<PostState>().myAllPosts;
     GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.myPostsGlobalKey);
     String myPostEndDrawerType = context.select((PostState value) => value.myPostEndDrawerType);
+
+    void changeChoicedPostGoodCount({required PostModel choicedPost, required isGood}) {
+      postState.changeChoicedPostGoodCount(choicedPost: choicedPost, isGood: isGood);
+    }
 
     Future<void> exitCheck(int postId) {
       return showDialog<void>(
@@ -136,6 +142,8 @@ class MyPosts extends StatelessWidget {
                           type: 0),
                   userData: userData,
                   globalKey: globalKey,
+                  gotoFriendPage: gotoFriendPage,
+                  changeChoicedPostGoodCount: changeChoicedPostGoodCount,
                 ),
           body: SafeArea(
             child: Column(

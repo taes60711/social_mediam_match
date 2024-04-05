@@ -7,7 +7,8 @@ class CourseState extends ChangeNotifier {
   final DBService _dbService = DBService();
   List<CourseModel> courseData = [];
   List<CourseModel> topCourseData = [];
-  bool isFirstLoading = false, isTopFirstLoading = false;
+  bool isFirstLoading = false, isAddDataLoading = false, isReLoading = false, isTopFirstLoading = false;
+
   int carouselPageIndex = 0;
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   CourseModel? choicedCourse;
@@ -22,36 +23,51 @@ class CourseState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getCourseData(int type, {required bool isFirstSearch}) async {
+  Future<void> getCourseData(int type, {required String searchType}) async {
     try {
       List<CourseModel> tempCourseData = [];
-      if (isFirstSearch) {
+      if (searchType == "First") {
         isFirstLoading = true;
         isTopFirstLoading = true;
         Future.delayed(Duration.zero).then((value) => notifyListeners());
-        tempCourseData = await _dbService.getCoursesByType(type, isFirst: isFirstSearch);
+        tempCourseData = await _dbService.getCoursesByType(type, isFirst: true);
       } else {
         tempCourseData = await _dbService.getCoursesByType(type);
       }
+
       if (type == 0) {
-        tempCourseData.forEach((e) {
-          courseData = [...courseData, e];
-        });
-        if (isFirstLoading) {
-          isFirstLoading = false;
+        if (searchType == "AddData") {
+          tempCourseData.forEach((e) {
+            topCourseData = [...topCourseData, e];
+          });
+          isAddDataLoading = false;
+        } else {
+          courseData = tempCourseData;
+          if (searchType == "First") {
+            isFirstLoading = false;
+          } else if (searchType == "Reload") {
+            isReLoading = false;
+          }
         }
       } else {
-        tempCourseData.forEach((e) {
-          topCourseData = [...topCourseData, e];
-        });
-        if (isTopFirstLoading) {
+        topCourseData = tempCourseData;
+        if (searchType == "First") {
           isTopFirstLoading = false;
         }
       }
-
       notifyListeners();
     } catch (e) {
       print(e);
     }
+  }
+
+  void addData() {
+    isAddDataLoading = true;
+    notifyListeners();
+  }
+
+  void reLoadingPage() {
+    isReLoading = true;
+    notifyListeners();
   }
 }

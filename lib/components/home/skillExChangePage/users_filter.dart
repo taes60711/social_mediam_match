@@ -142,7 +142,6 @@ class UsersFilter extends StatelessWidget {
                         iotSkillList,
                         otherSkillList,
                       );
-                      globalKey.currentState!.closeEndDrawer();
                     },
                     child: Text("篩選"),
                   ),
