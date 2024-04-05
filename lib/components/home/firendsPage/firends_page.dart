@@ -1,12 +1,10 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/firendsPage/chat_room.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/models/friend_model.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
-import 'package:social_mediam_match/states/user_state.dart';
 import '../../../models/user_model.dart';
 
 class FirendsPage extends StatelessWidget {
