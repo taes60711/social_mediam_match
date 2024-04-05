@@ -82,10 +82,12 @@ class PostComment extends StatelessWidget {
                       if (scrollNotification is ScrollUpdateNotification) {
                         final scrollPosition = scrollNotification.metrics.pixels;
                         final max = scrollNotification.metrics.maxScrollExtent;
-                        if (scrollPosition > max && !isPostCommentDataAddLoding) {
-                          postState.postAddData();
-                        } else if (scrollPosition < 0 && !isPostCommentReLoading) {
-                          postState.postReLoadingPage();
+                        if (!isPostCommentDataAddLoding && !isPostCommentReLoading) {
+                          if (scrollPosition > max && !isPostCommentDataAddLoding) {
+                            postState.postAddData();
+                          } else if (scrollPosition < 0 && !isPostCommentReLoading) {
+                            postState.postReLoadingPage();
+                          }
                         }
                       }
                       if (scrollNotification is ScrollEndNotification) {

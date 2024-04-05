@@ -122,10 +122,12 @@ class CoursePage extends StatelessWidget {
                           if (scrollNotification is ScrollUpdateNotification) {
                             final scrollPosition = scrollNotification.metrics.pixels;
                             final max = scrollNotification.metrics.maxScrollExtent;
-                            if (scrollPosition > max && !isAddDataLoading) {
-                              courseState.addData();
-                            } else if (scrollPosition < 0 && !isReLoading) {
-                              courseState.reLoadingPage();
+                            if (!isAddDataLoading && !isReLoading) {
+                              if (scrollPosition > max && !isAddDataLoading) {
+                                courseState.addData();
+                              } else if (scrollPosition < 0 && !isReLoading) {
+                                courseState.reLoadingPage();
+                              }
                             }
                           }
                           if (scrollNotification is ScrollEndNotification) {

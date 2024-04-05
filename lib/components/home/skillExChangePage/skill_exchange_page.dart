@@ -65,11 +65,12 @@ class SkillExChangePage extends StatelessWidget {
                         if (scrollNotification is ScrollUpdateNotification) {
                           final scrollPosition = scrollNotification.metrics.pixels;
                           final max = scrollNotification.metrics.maxScrollExtent;
-
-                          if (scrollPosition > max && !isAddDataLoading) {
-                            skillExChangeState.addData();
-                          } else if (scrollPosition < 0 && !isReLoading) {
-                            skillExChangeState.reLoadingPage();
+                          if (!isAddDataLoading && !isReLoading) {
+                            if (scrollPosition > max && !isAddDataLoading) {
+                              skillExChangeState.addData();
+                            } else if (scrollPosition < 0 && !isReLoading) {
+                              skillExChangeState.reLoadingPage();
+                            }
                           }
                         }
                         if (scrollNotification is ScrollEndNotification) {

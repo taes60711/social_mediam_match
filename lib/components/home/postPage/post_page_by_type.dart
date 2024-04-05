@@ -94,11 +94,12 @@ class PostPageByType extends StatelessWidget {
                             if (scrollNotification is ScrollUpdateNotification) {
                               final scrollPosition = scrollNotification.metrics.pixels;
                               final max = scrollNotification.metrics.maxScrollExtent;
-
-                              if (scrollPosition > max && !isDataAddLoding) {
-                                postState.addData();
-                              } else if (scrollPosition < 0 && !isReLoading) {
-                                postState.reLoadingPage();
+                              if (!isDataAddLoding && !isReLoading) {
+                                if (scrollPosition > max && !isDataAddLoding) {
+                                  postState.addData();
+                                } else if (scrollPosition < 0 && !isReLoading) {
+                                  postState.reLoadingPage();
+                                }
                               }
                             }
                             if (scrollNotification is ScrollEndNotification) {
