@@ -281,10 +281,10 @@ class PostComment extends StatelessWidget {
                             Row(
                               children: [
                                 ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     isGood
-                                        ? postState.updatePostGood(choicedPostData.id)
-                                        : postState.updatePostGood(choicedPostData.id, userUID: userData.uid);
+                                        ? await postState.updatePostGood(choicedPostData.id)
+                                        : await postState.updatePostGood(choicedPostData.id, userUID: userData.uid);
                                     changeChoicedPostGoodCount(choicedPost: choicedPostData, isGood: isGood);
                                   },
                                   child: isGood ? Text("收回讚") : Text("讚"),

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/post_model.dart';
@@ -249,6 +247,8 @@ class PostState extends ChangeNotifier {
           isPostCommentReLoading = true;
         }
         isGood = await _dbService.checkIsPostGood(postId, loginUserUID!);
+        print(postId);
+        print(isGood);
         Future.delayed(Duration.zero).then((value) => notifyListeners());
         tempPostCommentData = await _dbService.getPostCommentData(postId, isFirst: true);
         List<getPostCommentModel> tempGetPostCommentData = [];
