@@ -70,6 +70,7 @@ class PostComment extends StatelessWidget {
         GlobalKey<ScaffoldState> globalCommentKey = context.select((PostState value) => value.globalCommentKey);
         LoginUser? otherUser = context.select((PostState value) => value.otherUser);
 
+        print("postCOmment");
         Widget commentComponent;
         if (isPostCommentLoading) {
           commentComponent = const Loading();

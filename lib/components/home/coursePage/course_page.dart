@@ -137,7 +137,7 @@ class CoursePage extends StatelessWidget {
                               courseState.getCourseData(0, searchType: "Reload");
                             }
                           }
-                          return false;
+                          return true;
                         },
                         child: ListView.builder(
                             physics: BouncingScrollPhysics(),

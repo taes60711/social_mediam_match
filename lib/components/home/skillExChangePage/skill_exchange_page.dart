@@ -30,7 +30,7 @@ class SkillExChangePage extends StatelessWidget {
     LoginUser? otherUser = context.select((SkillExChangeState value) => value.otherUser);
     return StatefulWrapper(
       onInit: () {
-        skillExChangeState.getAllUserData(filterSkill: filterSkill, searchType: "First");
+        skillExChangeState.getAllUserData(userUid: userData.uid, filterSkill: filterSkill, searchType: "First");
       },
       child: isFirstLoading
           ? const Loading()
@@ -75,9 +75,11 @@ class SkillExChangePage extends StatelessWidget {
                         }
                         if (scrollNotification is ScrollEndNotification) {
                           if (isAddDataLoading) {
-                            skillExChangeState.getAllUserData(filterSkill: filterSkill, searchType: "AddData");
+                            skillExChangeState.getAllUserData(
+                                userUid: userData.uid, filterSkill: filterSkill, searchType: "AddData");
                           } else if (isReLoading) {
-                            skillExChangeState.getAllUserData(filterSkill: filterSkill, searchType: "Reload");
+                            skillExChangeState.getAllUserData(
+                                userUid: userData.uid, filterSkill: filterSkill, searchType: "Reload");
                           }
                         }
                         return false;

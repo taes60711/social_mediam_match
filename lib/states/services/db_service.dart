@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import '../../global.dart';
@@ -80,7 +81,7 @@ class DBService {
     }
   }
 
-  Future<void> createPostComment(int postUId, String uid, String message) async {
+  Future<int> createPostComment(int postUId, String uid, String message) async {
     String branch = "posts";
     String searchUrl = '$url/$branch/createPostComment';
 
@@ -88,7 +89,9 @@ class DBService {
     Map<String, String> headers = {'content-type': 'application/json'};
     String body = jsonEncode({"postId": postUId, "userUid": uid, "message": message});
 
-    await http.put(uri, headers: headers, body: body).then((_) => print("createPostComment Success:${_.body}"));
+    Response result = await http.put(uri, headers: headers, body: body);
+    int index = int.parse(result.body);
+    return index;
   }
 
   searchStatus postCommentServerInfo = searchStatus();

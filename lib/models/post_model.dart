@@ -57,7 +57,7 @@ class UpdatePostModel {
 }
 
 class PostCommentModel {
-  int? uid;
+  int uid;
   int postId;
   String userUid;
   String message;
@@ -65,7 +65,7 @@ class PostCommentModel {
   LoginUser commentUserInfo;
 
   PostCommentModel({
-    this.uid,
+    required this.uid,
     required this.postId,
     required this.userUid,
     required this.message,
@@ -90,7 +90,7 @@ class PostCommentModel {
 }
 
 class getPostCommentModel {
-  int? uid;
+  int uid;
   int postId;
   String userUid;
   String message;
@@ -100,7 +100,7 @@ class getPostCommentModel {
   LoginUser commentUserInfo;
 
   getPostCommentModel({
-    this.uid,
+    required this.uid,
     required this.postId,
     required this.userUid,
     required this.message,

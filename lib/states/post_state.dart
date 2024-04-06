@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/post_model.dart';
@@ -213,8 +215,9 @@ class PostState extends ChangeNotifier {
 
   Future<void> deletePostComment(int uId) async {
     await _dbService.deletePostComment(uId);
-    postCommentData.remove(postCommentData.where((element) => element.uid == uId).first);
-    postCommentMessageController.remove(postCommentData.where((element) => element.uid == uId).first);
+    int index = postCommentData.indexWhere((element) => element.uid == uId);
+    postCommentData.remove(postCommentData[index]);
+    postCommentMessageController.remove(postCommentMessageController[index]);
     notifyListeners();
   }
 
@@ -287,20 +290,21 @@ class PostState extends ChangeNotifier {
 
   Future<void> createPostComment(int postId, String message, LoginUser commentUser) async {
     try {
-      await _dbService.createPostComment(postId, commentUser.uid, message);
+      int lastIndex = await _dbService.createPostComment(postId, commentUser.uid, message);
 
       DateTime dateUtc = DateTime.now().toUtc();
       DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
       String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
 
       getPostCommentModel tempPostCommentData = getPostCommentModel(
+          uid: lastIndex,
           postId: postId,
           userUid: commentUser.uid,
           message: message,
           postTime: formattedTime,
           commentUserInfo: commentUser,
           isEditor: false);
-      postCommentMessageController.add(TextEditingController());
+      postCommentMessageController.insert(0, TextEditingController());
       postCommentData.insert(0, tempPostCommentData);
       notifyListeners();
     } catch (e) {
