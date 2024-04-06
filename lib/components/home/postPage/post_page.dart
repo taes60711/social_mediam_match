@@ -152,6 +152,7 @@ class PostPage extends StatelessWidget {
                                               ),
                                               Text("發文時間 : ${postData[index].postTime}"),
                                               Text("有${postData[index].commentCount}則留言"),
+                                              Text("看板: ${postData[index].type}")
                                             ],
                                           ),
                                         ),
