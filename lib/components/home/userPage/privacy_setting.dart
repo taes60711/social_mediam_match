@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
@@ -12,72 +15,133 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 String imgUrl = 'https://user-images.githubusercontent.com/122956/72955931-ccc07900-3d52-11ea-89b1-d468a6e2aa2b.png';
 String youtubeUrl = 'https://www.youtube.com/embed/pje9RbHP_sA';
+String url = "http://$ip:$port";
+// class PrivacySetting extends StatelessWidget {
+//   const PrivacySetting({super.key});
 
-class PrivacySetting extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     UserState userFuture = context.read<UserState>();
+//     FriendState friendState = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['friendState'];
+
+//     return Scaffold(
+//       body: SafeArea(
+//         child: SizedBox(
+//           width: ScreenSize().width,
+//           child: Column(
+//             children: [
+//               Align(
+//                 alignment: Alignment.topLeft,
+//                 child: IconButton(
+//                   onPressed: () {
+//                     Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+//                   },
+//                   icon: const Icon(Icons.arrow_back_ios),
+//                 ),
+//               ),
+//               ElevatedButton(
+//                 onPressed: () {
+//                   NotificationService().sendNotification(
+//                       message: "消息",
+//                       sendto:
+//                           "c-K6UQ-LSlS44Ymc6H1cJh:APA91bH1SHXOOWIj3xW1KYWAOB4V5PTu9L0Yd0pqZ1qYtl99EhbmVsdY0ESgco7pwYYS0RLDCCXHHATGqmPXUPAHxAfeJngw7nuQ1ml92rx0ORueiZR8ofS8Yd1xDVmlJ6KGvkVyKfwJ");
+//                 },
+//                 child: Text("送通知(還沒完善)"),
+//               ),
+//               ElevatedButton(
+//                 onPressed: () async {
+//                   await userFuture.signOut(friendState);
+//                   Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+//                 },
+//                 child: Text(signOutButton),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+class PrivacySetting extends StatefulWidget {
   const PrivacySetting({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    UserState userFuture = context.read<UserState>();
-    FriendState friendState = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['friendState'];
+  State<PrivacySetting> createState() => _PrivacySettingState();
+}
 
+class _PrivacySettingState extends State<PrivacySetting> {
+  int index = 0;
+  String choicedImg = "";
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SizedBox(
-          width: ScreenSize().width,
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                  },
-                  icon: const Icon(Icons.arrow_back_ios),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  NotificationService().sendNotification(
-                      message: "消息",
-                      sendto:
-                          "c-K6UQ-LSlS44Ymc6H1cJh:APA91bH1SHXOOWIj3xW1KYWAOB4V5PTu9L0Yd0pqZ1qYtl99EhbmVsdY0ESgco7pwYYS0RLDCCXHHATGqmPXUPAHxAfeJngw7nuQ1ml92rx0ORueiZR8ofS8Yd1xDVmlJ6KGvkVyKfwJ");
-                },
-                child: Text("送通知(還沒完善)"),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  await userFuture.signOut(friendState);
-                  Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                },
-                child: Text(signOutButton),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: HtmlWidget(
-                    '''
+          child: index == 0
+              ? Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                        },
+                        icon: const Icon(Icons.arrow_back_ios),
+                      ),
+                    ),
+                    Expanded(
+                        child: SingleChildScrollView(
+                      child: HtmlWidget(
+                        '''
                       <h3>Heading</h3>
                       <p>
                         A paragraph with <strong>strong</strong>, <em>emphasized</em>
                         and <span style="color: red">colored</span> text.
                       </p>
                       <a href="https://forum.gamer.com.tw">Launch URL</a>
-                      <img src=$imgUrl  height='150'>
+                      <img src=$imgUrl height='150'>
+                      <img src="https://images.chinatimes.com/newsphoto/2024-04-03/1024/20240403005728.jpg" height='150'>
+                      <img src=$url/user/imageTest/1 height='150'>
                       <iframe src=$youtubeUrl></iframe>
                     ''',
-                    onTapUrl: (url) {
-                      print("click: $url");
-                      final Uri _url = Uri.parse(url);
-                      launchUrl(_url);
-                      return false;
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+                        onTapUrl: (url) {
+                          print("click: $url");
+                          final Uri _url = Uri.parse(url);
+                          launchUrl(_url);
+                          return false;
+                        },
+                        onTapImage: (src) {
+                          inspect(src);
+                          print(src.sources.first.url);
+                          setState(() {
+                            index = 1;
+                            choicedImg = src.sources.first.url;
+                          });
+                        },
+                      ),
+                    ))
+                  ],
+                )
+              : Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            index = 0;
+                          });
+                        },
+                        icon: const Icon(Icons.arrow_back_ios),
+                      ),
+                    ),
+                    Expanded(
+                      child: PhotoView(
+                        imageProvider: NetworkImage(choicedImg),
+                      ),
+                    )
+                  ],
+                )),
     );
   }
 }
