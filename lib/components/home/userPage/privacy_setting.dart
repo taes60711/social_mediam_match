@@ -71,28 +71,66 @@ class PrivacySetting extends StatefulWidget {
 }
 
 class _PrivacySettingState extends State<PrivacySetting> {
-  int index = 0;
+  Future<void> imageView(String imgUrl) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dismissible(
+          direction: DismissDirection.vertical,
+          onDismissed: (_) => Navigator.of(context).pop(),
+          key: const Key('key'),
+          child: Scaffold(
+            backgroundColor: Colors.black,
+            body: Column(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: PhotoView(
+                    imageProvider: NetworkImage(imgUrl),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   String choicedImg = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: index == 0
-              ? Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                        },
-                        icon: const Icon(Icons.arrow_back_ios),
-                      ),
-                    ),
-                    Expanded(
-                        child: SingleChildScrollView(
-                      child: HtmlWidget(
-                        '''
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                },
+                icon: const Icon(Icons.arrow_back_ios),
+              ),
+            ),
+            Expanded(
+                child: SingleChildScrollView(
+              child: HtmlWidget(
+                '''
                       <h3>Heading</h3>
                       <p>
                         A paragraph with <strong>strong</strong>, <em>emphasized</em>
@@ -104,44 +142,24 @@ class _PrivacySettingState extends State<PrivacySetting> {
                       <img src=$url/user/imageTest/1 height='150'>
                       <iframe src=$youtubeUrl></iframe>
                     ''',
-                        onTapUrl: (url) {
-                          print("click: $url");
-                          final Uri _url = Uri.parse(url);
-                          launchUrl(_url);
-                          return false;
-                        },
-                        onTapImage: (src) {
-                          inspect(src);
-                          print(src.sources.first.url);
-                          setState(() {
-                            index = 1;
-                            choicedImg = src.sources.first.url;
-                          });
-                        },
-                      ),
-                    ))
-                  ],
-                )
-              : Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            index = 0;
-                          });
-                        },
-                        icon: const Icon(Icons.arrow_back_ios),
-                      ),
-                    ),
-                    Expanded(
-                      child: PhotoView(
-                        imageProvider: NetworkImage(choicedImg),
-                      ),
-                    )
-                  ],
-                )),
+                onTapUrl: (url) {
+                  print("click: $url");
+                  final Uri _url = Uri.parse(url);
+                  launchUrl(_url);
+                  return false;
+                },
+                onTapImage: (src) {
+                  inspect(src);
+                  setState(() {
+                    choicedImg = src.sources.first.url;
+                  });
+                  imageView(choicedImg);
+                },
+              ),
+            ))
+          ],
+        ),
+      ),
     );
   }
 }
