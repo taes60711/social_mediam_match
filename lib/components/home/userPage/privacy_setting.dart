@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../models/rich_text_format.dart';
 import '../../../states/services/notification_service.dart';
 import '../../../states/user_state.dart';
 import '../../strings/userPage/user_page_string.dart';
@@ -114,6 +116,27 @@ class _PrivacySettingState extends State<PrivacySetting> {
   String choicedImg = "";
   @override
   Widget build(BuildContext context) {
+    dynamic jsonList = jsonEncode([
+      {"insert": r'hello\n'},
+      {
+        "insert": {"image": "https://user-images.githubusercontent.com/122956/72955931-ccc07900-3d52-11ea-89b1-d468a6e2aa2b.png"},
+        "attributes": {"style": "height : 150px"}
+      },
+      {
+        "insert": {"image": "https://images.chinatimes.com/newsphoto/2024-04-03/1024/20240403005728.jpg"},
+      },
+      {
+        "insert": {"url": "https://forum.gamer.com.tw"}
+      },
+      {
+        "insert": {"video": "https://www.youtube.com/embed/pje9RbHP_sA"}
+      }
+    ]);
+
+    String jsonString =
+        '[{"insert":"hello\\n"},{"insert":{"image":"https://user-images.githubusercontent.com/122956/72955931-ccc07900-3d52-11ea-89b1-d468a6e2aa2b.png"},"attributes":{"style":"height : 150px"}},{"insert":{"image":"https://images.chinatimes.com/newsphoto/2024-04-03/1024/20240403005728.jpg"}},{"insert":{"url":"https://forum.gamer.com.tw"}},{"insert":{"video":"https://www.youtube.com/embed/pje9RbHP_sA"}}]';
+    dynamic mapJson = jsonDecode(jsonList);
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -130,18 +153,7 @@ class _PrivacySettingState extends State<PrivacySetting> {
             Expanded(
                 child: SingleChildScrollView(
               child: HtmlWidget(
-                '''
-                      <h3>Heading</h3>
-                      <p>
-                        A paragraph with <strong>strong</strong>, <em>emphasized</em>
-                        and <span style="color: red">colored</span> text.
-                      </p>
-                      <a href="https://forum.gamer.com.tw">Launch URL</a>
-                      <img src=$imgUrl height='150'>
-                      <img src="https://images.chinatimes.com/newsphoto/2024-04-03/1024/20240403005728.jpg" height='150'>
-                      <img src=$url/user/imageTest/1 height='150'>
-                      <iframe src=$youtubeUrl></iframe>
-                    ''',
+                RichTextFormat(jsonString: jsonString).toHtmlString(),
                 onTapUrl: (url) {
                   print("click: $url");
                   final Uri _url = Uri.parse(url);
