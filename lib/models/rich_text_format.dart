@@ -34,23 +34,35 @@ class RichTextFormat {
       } else {
         dynamic insertDataAttributes = mapJsonList[i];
         String attributes = "";
+        String space = ' ';
         if (insertDataAttributes.containsKey('attributes')) {
           attributes = insertDataAttributes['attributes']['style'];
         }
         if (insertData.containsKey('image')) {
           String imgUrl = insertData['image'];
-          htmlString += '<img src=$imgUrl style="$attributes"></img>';
+          String insertHtml = 'src=$imgUrl$space';
+          if (attributes != "") {
+            insertHtml += 'style="$attributes"';
+          }
+          htmlString += '<img $insertHtml></img>';
         } else if (insertData.containsKey('url')) {
           String link = insertData['url'];
-          htmlString += '<a href=$link style="$attributes">Launch URL</a>';
+          String insertHtml = 'href=$link$space';
+          if (attributes != "") {
+            insertHtml += 'style="$attributes"';
+          }
+          htmlString += '<a $insertHtml>Launch URL</a>';
         } else if (insertData.containsKey('video')) {
           String videoUrl = insertData['video'];
-          htmlString += ' <iframe src=$videoUrl style="$attributes"></iframe>';
+          String insertHtml = 'src=$videoUrl$space';
+          if (attributes != "") {
+            insertHtml += 'style="$attributes"';
+          }
+          htmlString += '<iframe $insertHtml></iframe>';
         }
       }
     }
 
-    // 转换HTML节点到Quill JSON格式
     parseNodeToJsonList(html.parse(htmlString).body);
 
     print("formatted String : ${htmlString}");
@@ -67,27 +79,40 @@ class RichTextFormat {
         if (element.nodeType == Node.ELEMENT_NODE) {
           inspect(element);
           print('Local name of element: ${element.localName}');
+
           switch (element.localName) {
             case "p":
               jsonMap.add({'"insert"': '"${element.innerHtml}"'});
               break;
             case "img":
-              jsonMap.add({
-                '"insert"': {'"image"': '"${element.attributes['src']}"'},
-                '"attributes"': {'"style"': '"${element.attributes['style']}"'}
-              });
+              element.attributes['style'] == null
+                  ? jsonMap.add({
+                      '"insert"': {'"image"': '"${element.attributes['src']}"'},
+                    })
+                  : jsonMap.add({
+                      '"insert"': {'"image"': '"${element.attributes['src']}"'},
+                      '"attributes"': {'"style"': '"${element.attributes['style']}"'}
+                    });
               break;
             case "a":
-              jsonMap.add({
-                '"insert"': {'"url"': '"${element.attributes['href']}"'},
-                '"attributes"': {'"style"': '"${element.attributes['style']}"'}
-              });
+              element.attributes['style'] == null
+                  ? jsonMap.add({
+                      '"insert"': {'"url"': '"${element.attributes['href']}"'},
+                    })
+                  : jsonMap.add({
+                      '"insert"': {'"url"': '"${element.attributes['href']}"'},
+                      '"attributes"': {'"style"': '"${element.attributes['style']}"'}
+                    });
               break;
             case "iframe":
-              jsonMap.add({
-                '"insert"': {'"video"': '"${element.attributes['src']}"'},
-                '"attributes"': {'"style"': '"${element.attributes['style']}"'}
-              });
+              element.attributes['style'] == null
+                  ? jsonMap.add({
+                      '"insert"': {'"video"': '"${element.attributes['src']}"'},
+                    })
+                  : jsonMap.add({
+                      '"insert"': {'"video"': '"${element.attributes['src']}"'},
+                      '"attributes"': {'"style"': '"${element.attributes['style']}"'}
+                    });
               break;
           }
         }
