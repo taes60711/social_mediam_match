@@ -75,7 +75,7 @@ class RichTextFormat {
 
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var elements = node.querySelectorAll('*');
-      elements.forEach((element) {
+      elements.asMap().forEach((index, element) {
         if (element.nodeType == Node.ELEMENT_NODE) {
           inspect(element);
           print('Local name of element: ${element.localName}');
@@ -85,35 +85,23 @@ class RichTextFormat {
               jsonMap.add({'"insert"': '"${element.innerHtml}"'});
               break;
             case "img":
-              element.attributes['style'] == null
-                  ? jsonMap.add({
-                      '"insert"': {'"image"': '"${element.attributes['src']}"'},
-                    })
-                  : jsonMap.add({
-                      '"insert"': {'"image"': '"${element.attributes['src']}"'},
-                      '"attributes"': {'"style"': '"${element.attributes['style']}"'}
-                    });
+              jsonMap.add({
+                '"insert"': {'"image"': '"${element.attributes['src']}"'},
+              });
               break;
             case "a":
-              element.attributes['style'] == null
-                  ? jsonMap.add({
-                      '"insert"': {'"url"': '"${element.attributes['href']}"'},
-                    })
-                  : jsonMap.add({
-                      '"insert"': {'"url"': '"${element.attributes['href']}"'},
-                      '"attributes"': {'"style"': '"${element.attributes['style']}"'}
-                    });
+              jsonMap.add({
+                '"insert"': {'"url"': '"${element.attributes['href']}"'},
+              });
               break;
             case "iframe":
-              element.attributes['style'] == null
-                  ? jsonMap.add({
-                      '"insert"': {'"video"': '"${element.attributes['src']}"'},
-                    })
-                  : jsonMap.add({
-                      '"insert"': {'"video"': '"${element.attributes['src']}"'},
-                      '"attributes"': {'"style"': '"${element.attributes['style']}"'}
-                    });
+              jsonMap.add({
+                '"insert"': {'"video"': '"${element.attributes['src']}"'},
+              });
               break;
+          }
+          if (element.attributes['style'] != null) {
+            jsonMap[index]["attributes"] = {'"style"': '"${element.attributes['style']}"'};
           }
         }
       });
