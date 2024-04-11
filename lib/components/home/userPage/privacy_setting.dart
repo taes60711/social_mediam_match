@@ -126,16 +126,20 @@ class _PrivacySettingState extends State<PrivacySetting> {
         "insert": {"image": "https://images.chinatimes.com/newsphoto/2024-04-03/1024/20240403005728.jpg"},
       },
       {
-        "insert": {"url": "https://forum.gamer.com.tw"}
+        "insert": {"url": "https://forum.gamer.com.tw"},
+        "attributes": {"link": "https://forum.gamer.com.tw"}
       },
       {
-        "insert": {"video": "https://www.youtube.com/embed/pje9RbHP_sA"}
+        "insert": {"video": "https://www.youtube.com/embed/ceJhXI6LwjE"}
+      },
+      {
+        "insert": {"video": "https://drive.google.com/file/d/1eaCBt5aCl8tsT8BwEuSqfwgMMcybybjX/preview"}
       }
     ]);
 
     String jsonString =
-        '[{"insert":"hello\\n"},{"insert":{"image":"https://user-images.githubusercontent.com/122956/72955931-ccc07900-3d52-11ea-89b1-d468a6e2aa2b.png"},"attributes":{"style":"height : 150px"}},{"insert":{"image":"https://images.chinatimes.com/newsphoto/2024-04-03/1024/20240403005728.jpg"}},{"insert":{"url":"https://forum.gamer.com.tw"}},{"insert":{"video":"https://www.youtube.com/embed/pje9RbHP_sA"}}]';
-    dynamic mapJson = jsonDecode(jsonList);
+        '[{"insert":"hello\\n"},{"insert":{"image":"https://user-images.githubusercontent.com/122956/72955931-ccc07900-3d52-11ea-89b1-d468a6e2aa2b.png"},"attributes":{"style":"height : 150px"}},{"insert":{"image":"https://images.chinatimes.com/newsphoto/2024-04-03/1024/20240403005728.jpg"}},{"insert":{"url":"Launcher"},"attributes": {"link": "https://forum.gamer.com.tw"}},{"insert":{"video":"https://www.youtube.com/embed/pje9RbHP_sA"}},{"insert":{"video":"https://drive.google.com/file/d/1eaCBt5aCl8tsT8BwEuSqfwgMMcybybjX/preview"}}]';
+    List<dynamic> mapJson = jsonDecode(jsonList);
 
     return Scaffold(
       body: SafeArea(
@@ -151,24 +155,33 @@ class _PrivacySettingState extends State<PrivacySetting> {
               ),
             ),
             Expanded(
-                child: SingleChildScrollView(
-              child: HtmlWidget(
-                RichTextFormat(jsonString: jsonString).toHtmlString(),
-                onTapUrl: (url) {
-                  print("click: $url");
-                  final Uri _url = Uri.parse(url);
-                  launchUrl(_url);
-                  return false;
-                },
-                onTapImage: (src) {
-                  inspect(src);
-                  setState(() {
-                    choicedImg = src.sources.first.url;
-                  });
-                  imageView(choicedImg);
-                },
-              ),
-            ))
+              child: SingleChildScrollView(
+                  child: Column(
+                children: [
+                  HtmlWidget(
+                    RichTextFormat(jsonString: jsonString).toHtmlString(),
+                    onTapUrl: (url) {
+                      print("click: $url");
+                      final Uri _url = Uri.parse(url);
+                      launchUrl(_url);
+                      return false;
+                    },
+                    onTapImage: (src) {
+                      inspect(src);
+                      setState(() {
+                        choicedImg = src.sources.first.url;
+                      });
+                      imageView(choicedImg);
+                    },
+                  ),
+                  Container(
+                    width: 100,
+                    height: 100,
+                    color: Colors.blue,
+                  )
+                ],
+              )),
+            )
           ],
         ),
       ),

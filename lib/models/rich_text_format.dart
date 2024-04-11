@@ -33,10 +33,13 @@ class RichTextFormat {
         }
       } else {
         dynamic insertDataAttributes = mapJsonList[i];
-        String attributes = "";
+        dynamic attributes = "";
         String space = ' ';
         if (insertDataAttributes.containsKey('attributes')) {
-          attributes = insertDataAttributes['attributes']['style'];
+          attributes = insertDataAttributes['attributes'];
+          if (attributes.containsKey('style')) {
+            attributes = insertDataAttributes['attributes']['style'];
+          }
         }
         if (insertData.containsKey('image')) {
           String imgUrl = insertData['image'];
@@ -46,12 +49,10 @@ class RichTextFormat {
           }
           htmlString += '<img $insertHtml></img>';
         } else if (insertData.containsKey('url')) {
-          String link = insertData['url'];
+          String link = insertDataAttributes['attributes']['link'];
+          String linkText = insertData['url'];
           String insertHtml = 'href=$link$space';
-          if (attributes != "") {
-            insertHtml += 'style="$attributes"';
-          }
-          htmlString += '<a $insertHtml>Launch URL</a>';
+          htmlString += '<a $insertHtml>$linkText</a>';
         } else if (insertData.containsKey('video')) {
           String videoUrl = insertData['video'];
           String insertHtml = 'src=$videoUrl$space';
@@ -77,7 +78,6 @@ class RichTextFormat {
       var elements = node.querySelectorAll('*');
       elements.asMap().forEach((index, element) {
         if (element.nodeType == Node.ELEMENT_NODE) {
-          inspect(element);
           print('Local name of element: ${element.localName}');
 
           switch (element.localName) {
@@ -90,8 +90,10 @@ class RichTextFormat {
               });
               break;
             case "a":
+              inspect(element);
               jsonMap.add({
-                '"insert"': {'"url"': '"${element.attributes['href']}"'},
+                '"insert"': {'"url"': '"${element.innerHtml}"'},
+                '"attributes"': {'"link"': '"${element.attributes['href']}"'}
               });
               break;
             case "iframe":
