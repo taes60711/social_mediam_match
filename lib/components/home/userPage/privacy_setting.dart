@@ -117,7 +117,12 @@ class _PrivacySettingState extends State<PrivacySetting> {
   @override
   Widget build(BuildContext context) {
     dynamic jsonList = jsonEncode([
-      {"insert": r'hello\n'},
+      {
+        "insert": r'hello\n',
+        "attributes": {
+          "style": "font-size : 20px",
+        }
+      },
       {
         "insert": {"image": "https://user-images.githubusercontent.com/122956/72955931-ccc07900-3d52-11ea-89b1-d468a6e2aa2b.png"},
         "attributes": {"style": "height : 150px"}
@@ -126,8 +131,11 @@ class _PrivacySettingState extends State<PrivacySetting> {
         "insert": {"image": "https://images.chinatimes.com/newsphoto/2024-04-03/1024/20240403005728.jpg"},
       },
       {
-        "insert": {"url": "https://forum.gamer.com.tw"},
-        "attributes": {"link": "https://forum.gamer.com.tw"}
+        "insert": {"linkTitle": "這是網址跟上面的圖片無關"},
+        "attributes": {
+          "link": "https://forum.gamer.com.tw",
+          "style": "font-size : 160%",
+        }
       },
       {
         "insert": {"video": "https://www.youtube.com/embed/ceJhXI6LwjE"}
@@ -138,7 +146,8 @@ class _PrivacySettingState extends State<PrivacySetting> {
     ]);
 
     String jsonString =
-        '[{"insert":"hello\\n"},{"insert":{"image":"https://user-images.githubusercontent.com/122956/72955931-ccc07900-3d52-11ea-89b1-d468a6e2aa2b.png"},"attributes":{"style":"height : 150px"}},{"insert":{"image":"https://images.chinatimes.com/newsphoto/2024-04-03/1024/20240403005728.jpg"}},{"insert":{"url":"Launcher"},"attributes": {"link": "https://forum.gamer.com.tw"}},{"insert":{"video":"https://www.youtube.com/embed/pje9RbHP_sA"}},{"insert":{"video":"https://drive.google.com/file/d/1eaCBt5aCl8tsT8BwEuSqfwgMMcybybjX/preview"}}]';
+        '[{"insert":"hello\\n","attributes":{"style":"font-size : 20px"}},{"insert":{"image":"https://user-images.githubusercontent.com/122956/72955931-ccc07900-3d52-11ea-89b1-d468a6e2aa2b.png"},"attributes":{"style":"height : 150px"}},{"insert":{"image":"https://images.chinatimes.com/newsphoto/2024-04-03/1024/20240403005728.jpg"}},{"insert":{"linkTitle":"這是網址跟上面的圖片無關"},"attributes": {"link": "https://forum.gamer.com.tw","style":"font-size : 20px"}},{"insert":{"video":"https://www.youtube.com/embed/pje9RbHP_sA"}},{"insert":{"video":"https://drive.google.com/file/d/1eaCBt5aCl8tsT8BwEuSqfwgMMcybybjX/preview"}}]';
+
     List<dynamic> mapJson = jsonDecode(jsonList);
 
     return Scaffold(
@@ -159,7 +168,7 @@ class _PrivacySettingState extends State<PrivacySetting> {
                   child: Column(
                 children: [
                   HtmlWidget(
-                    RichTextFormat(jsonString: jsonString).toHtmlString(),
+                    RichTextFormat(jsonList: mapJson).toHtmlString(),
                     onTapUrl: (url) {
                       print("click: $url");
                       final Uri _url = Uri.parse(url);

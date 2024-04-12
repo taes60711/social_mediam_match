@@ -24,23 +24,22 @@ class RichTextFormat {
     String htmlString = "";
     for (int i = 0; i < mapJsonList.length; i++) {
       dynamic insertData = mapJsonList[i]['insert'];
-
+      dynamic insertDataAttributes = mapJsonList[i];
+      String attributes = "";
+      String space = ' ';
+      if (insertDataAttributes.containsKey('attributes')) {
+        dynamic tmpattributes = insertDataAttributes['attributes'];
+        if (tmpattributes.containsKey('style')) {
+          attributes = insertDataAttributes['attributes']['style'];
+        }
+      }
       if (mapJsonList[i]['insert'] is String) {
         if (insertData.substring(insertData.length - 2, insertData.length) == r'\n') {
-          htmlString += "<p>${insertData.substring(0, insertData.length - 2)}</p>";
+          htmlString += "<p style='$attributes'>${insertData.substring(0, insertData.length - 2)}</p>";
         } else {
-          htmlString += "<p>$insertData</p>";
+          htmlString += "<p style='$attributes'>$insertData</p>";
         }
       } else {
-        dynamic insertDataAttributes = mapJsonList[i];
-        dynamic attributes = "";
-        String space = ' ';
-        if (insertDataAttributes.containsKey('attributes')) {
-          attributes = insertDataAttributes['attributes'];
-          if (attributes.containsKey('style')) {
-            attributes = insertDataAttributes['attributes']['style'];
-          }
-        }
         if (insertData.containsKey('image')) {
           String imgUrl = insertData['image'];
           String insertHtml = 'src=$imgUrl$space';
@@ -48,10 +47,13 @@ class RichTextFormat {
             insertHtml += 'style="$attributes"';
           }
           htmlString += '<img $insertHtml></img>';
-        } else if (insertData.containsKey('url')) {
+        } else if (insertData.containsKey('linkTitle')) {
           String link = insertDataAttributes['attributes']['link'];
-          String linkText = insertData['url'];
+          String linkText = insertData['linkTitle'];
           String insertHtml = 'href=$link$space';
+          if (attributes != "") {
+            insertHtml += 'style="$attributes"';
+          }
           htmlString += '<a $insertHtml>$linkText</a>';
         } else if (insertData.containsKey('video')) {
           String videoUrl = insertData['video'];
@@ -82,7 +84,7 @@ class RichTextFormat {
 
           switch (element.localName) {
             case "p":
-              jsonMap.add({'"insert"': '"${element.innerHtml}"'});
+              jsonMap.add({'"insert"': '"${element.innerHtml}\\n"'});
               break;
             case "img":
               jsonMap.add({
@@ -91,10 +93,18 @@ class RichTextFormat {
               break;
             case "a":
               inspect(element);
-              jsonMap.add({
-                '"insert"': {'"url"': '"${element.innerHtml}"'},
-                '"attributes"': {'"link"': '"${element.attributes['href']}"'}
-              });
+              if (element.attributes['style'] != null) {
+                jsonMap.add({
+                  '"insert"': {'"linkTitle"': '"${element.innerHtml}"'},
+                  '"attributes"': {'"link"': '"${element.attributes['href']}"', '"style"': '"${element.attributes['style']}"'}
+                });
+              } else {
+                jsonMap.add({
+                  '"insert"': {'"linkTitle"': '"${element.innerHtml}"'},
+                  '"attributes"': {'"link"': '"${element.attributes['href']}"'}
+                });
+              }
+
               break;
             case "iframe":
               jsonMap.add({
@@ -102,12 +112,12 @@ class RichTextFormat {
               });
               break;
           }
-          if (element.attributes['style'] != null) {
+          if (element.attributes['style'] != null && element.localName != 'a') {
             jsonMap[index]["attributes"] = {'"style"': '"${element.attributes['style']}"'};
           }
         }
       });
-      print(jsonMap);
+      print("jsonMap: $jsonMap");
       return jsonMap;
     }
   }
