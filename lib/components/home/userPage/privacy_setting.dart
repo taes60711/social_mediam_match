@@ -118,9 +118,15 @@ class _PrivacySettingState extends State<PrivacySetting> {
   Widget build(BuildContext context) {
     dynamic jsonList = jsonEncode([
       {
-        "insert": r'hello\n',
+        "insert": 'hello world',
         "attributes": {
           "style": "font-size : 20px",
+        }
+      },
+      {
+        "insert": 'world',
+        "attributes": {
+          "style": "font-size : 15px",
         }
       },
       {
@@ -138,7 +144,8 @@ class _PrivacySettingState extends State<PrivacySetting> {
         }
       },
       {
-        "insert": {"video": "https://www.youtube.com/embed/ceJhXI6LwjE"}
+        "insert": {"video": "https://www.youtube.com/embed/ceJhXI6LwjE"},
+        "attributes": {"style": "height : 150px"}
       },
       {
         "insert": {"video": "https://drive.google.com/file/d/1eaCBt5aCl8tsT8BwEuSqfwgMMcybybjX/preview"}
@@ -146,7 +153,7 @@ class _PrivacySettingState extends State<PrivacySetting> {
     ]);
 
     String jsonString =
-        '[{"insert":"hello\\n","attributes":{"style":"font-size : 20px"}},{"insert":{"image":"https://user-images.githubusercontent.com/122956/72955931-ccc07900-3d52-11ea-89b1-d468a6e2aa2b.png"},"attributes":{"style":"height : 150px"}},{"insert":{"image":"https://images.chinatimes.com/newsphoto/2024-04-03/1024/20240403005728.jpg"}},{"insert":{"linkTitle":"這是網址跟上面的圖片無關"},"attributes": {"link": "https://forum.gamer.com.tw","style":"font-size : 20px"}},{"insert":{"video":"https://www.youtube.com/embed/pje9RbHP_sA"}},{"insert":{"video":"https://drive.google.com/file/d/1eaCBt5aCl8tsT8BwEuSqfwgMMcybybjX/preview"}}]';
+        '[{"insert": "hello", "attributes": {"style": "font-size : 20px"}}, {"insert": {"image": "https://user-images.githubusercontent.com/122956/72955931-ccc07900-3d52-11ea-89b1-d468a6e2aa2b.png"}, "attributes": {"style": "height : 150px"}}, {"insert": {"image": "https://images.chinatimes.com/newsphoto/2024-04-03/1024/20240403005728.jpg"}}, {"insert": {"linkTitle": "這是網址跟上面的圖片無關"}, "attributes": {"link": "https://forum.gamer.com.tw", "style": "font-size : 160%"}}, {"insert": {"video": "https://www.youtube.com/embed/ceJhXI6LwjE"}}, {"insert": {"video": "https://drive.google.com/file/d/1eaCBt5aCl8tsT8BwEuSqfwgMMcybybjX/preview"}}]';
 
     List<dynamic> mapJson = jsonDecode(jsonList);
 

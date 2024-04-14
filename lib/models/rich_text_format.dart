@@ -34,11 +34,12 @@ class RichTextFormat {
         }
       }
       if (mapJsonList[i]['insert'] is String) {
-        if (insertData.substring(insertData.length - 2, insertData.length) == r'\n') {
-          htmlString += "<p style='$attributes'>${insertData.substring(0, insertData.length - 2)}</p>";
-        } else {
-          htmlString += "<p style='$attributes'>$insertData</p>";
-        }
+        htmlString += "<p style='$attributes'>$insertData</p>";
+        // if (insertData.substring(insertData.length - 2, insertData.length) == r'\n') {
+        //   htmlString += "<p style='$attributes'>${insertData.substring(0, insertData.length - 2)}</p>";
+        // } else {
+        //   htmlString += "<p style='$attributes'>$insertData</p>";
+        // }
       } else {
         if (insertData.containsKey('image')) {
           String imgUrl = insertData['image'];
@@ -84,7 +85,7 @@ class RichTextFormat {
 
           switch (element.localName) {
             case "p":
-              jsonMap.add({'"insert"': '"${element.innerHtml}\\n"'});
+              jsonMap.add({'"insert"': '"${element.innerHtml}"'}); //\\n
               break;
             case "img":
               jsonMap.add({
@@ -113,7 +114,7 @@ class RichTextFormat {
               break;
           }
           if (element.attributes['style'] != null && element.localName != 'a') {
-            jsonMap[index]["attributes"] = {'"style"': '"${element.attributes['style']}"'};
+            jsonMap[index]['"attributes"'] = {'"style"': '"${element.attributes['style']}"'};
           }
         }
       });
