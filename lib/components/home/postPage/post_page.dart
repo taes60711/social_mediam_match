@@ -28,6 +28,7 @@ class PostPage extends StatelessWidget {
     GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.globalKey);
     String endDrawerType = context.select((PostState value) => value.endDrawerType);
     LoginUser? otherUser = context.select((PostState value) => value.otherUser);
+
     PostModel choicedPostData = context.select(
       (PostState value) =>
           value.choicedPostData ??
