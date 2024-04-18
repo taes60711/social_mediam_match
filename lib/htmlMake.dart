@@ -26,40 +26,43 @@ class _htmlMakeState extends State<htmlMake> {
               direction: Axis.horizontal,
             ),
             SingleChildScrollView(
-              child: QuillHtmlEditor(
-                text: '',
-                controller: controller,
-                minHeight: 1,
-                textStyle: TextStyle(fontSize: 22),
-                loadingBuilder: (context) {
-                  return const Center(
-                      child: CircularProgressIndicator(
-                    strokeWidth: 0.4,
-                  ));
-                },
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                print(await controller.getText());
-                myController.text = await controller.getText();
-              },
-              child: Text("getText"),
-            ),
-            Container(
-              height: 10,
-            ),
-            const Align(
-              alignment: Alignment.topLeft,
-              child: Text("按下${"getText"}後,複製下面的字串"),
-            ),
-            Container(
-              height: 10,
-            ),
-            TextField(
-              controller: myController,
-              decoration: InputDecoration(hintText: '不要再這邊輸入文字'),
-            ),
+                child: Column(
+              children: [
+                QuillHtmlEditor(
+                  text: '',
+                  controller: controller,
+                  minHeight: 1,
+                  textStyle: TextStyle(fontSize: 22),
+                  loadingBuilder: (context) {
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      strokeWidth: 0.4,
+                    ));
+                  },
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    print(await controller.getText());
+                    myController.text = await controller.getText();
+                  },
+                  child: Text("getText"),
+                ),
+                Container(
+                  height: 10,
+                ),
+                const Align(
+                  alignment: Alignment.topLeft,
+                  child: Text("按下${"getText"}後,複製下面的字串"),
+                ),
+                Container(
+                  height: 10,
+                ),
+                TextField(
+                  controller: myController,
+                  decoration: InputDecoration(hintText: '不要再這邊輸入文字'),
+                ),
+              ],
+            )),
           ],
         ),
       ),

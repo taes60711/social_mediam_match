@@ -167,7 +167,7 @@ class _PrivacySettingState extends State<PrivacySetting> {
                     text: s,
                     controller: controller,
                     minHeight: 1,
-                    textStyle: TextStyle(fontSize: 22),
+                    textStyle: TextStyle(fontSize: 18),
                     loadingBuilder: (context) {
                       return const Center(
                           child: CircularProgressIndicator(
@@ -188,7 +188,7 @@ class _PrivacySettingState extends State<PrivacySetting> {
                       child: Text("set")),
                   HtmlWidget(
                     RichTextFormat(htmlString: s).editedTextToWidgetHtml(),
-                    textStyle: TextStyle(fontSize: 22),
+                    textStyle: TextStyle(fontSize: 18),
                     onTapUrl: (url) {
                       print("click: $url");
                       final Uri _url = Uri.parse(url);
@@ -199,7 +199,7 @@ class _PrivacySettingState extends State<PrivacySetting> {
                       if (element.localName == 'p') {
                         return HtmlWidget(
                           element.innerHtml,
-                          textStyle: TextStyle(fontSize: 22),
+                          textStyle: TextStyle(fontSize: 18),
                           onTapUrl: (url) {
                             print("click: $url");
                             final Uri _url = Uri.parse(url);
