@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' as html;
 
@@ -93,7 +92,6 @@ class RichTextFormat {
           String key = getKeyByValue(fontSizeMap, subedString);
           print("subedString : $subedString : key : $key");
           String editorUseHtml = element.outerHtml.replaceAll("font-size:$subedString", key);
-          print("editorUseHtml : $editorUseHtml");
           htmlString = htmlString.replaceAll(element.outerHtml, editorUseHtml);
         }
       });

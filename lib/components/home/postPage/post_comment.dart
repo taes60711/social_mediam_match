@@ -8,6 +8,7 @@ import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
 import '../../utilities/Stateful_wrapper.dart';
+import '../../utilities/rich_text_view.dart';
 import '../skillExChangePage/user_detail.dart';
 
 class PostComment extends StatelessWidget {
@@ -277,7 +278,9 @@ class PostComment extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Text(choicedPostData.mainMessage),
+                            RichTextView(
+                              content: choicedPostData.mainMessage,
+                            ),
                             Row(
                               children: [
                                 ElevatedButton(
