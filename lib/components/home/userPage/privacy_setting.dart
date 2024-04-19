@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
@@ -18,11 +17,6 @@ import '../../../states/user_state.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/style/screen_size.dart';
 
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-
-String imgUrl = 'https://user-images.githubusercontent.com/122956/72955931-ccc07900-3d52-11ea-89b1-d468a6e2aa2b.png';
-String youtubeUrl = 'https://www.youtube.com/embed/pje9RbHP_sA';
-String url = "http://$ip:$port";
 // class PrivacySetting extends StatelessWidget {
 //   const PrivacySetting({super.key});
 
@@ -82,6 +76,7 @@ class _PrivacySettingState extends State<PrivacySetting> {
   Widget build(BuildContext context) {
     String s =
         '<p><span style="color: rgb(255, 235, 59);">51121</span>   23   13.<span class="ql-size-large" style="background-color: rgb(0, 150, 136);">    Hh</span></p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/uE_T_t6s_Go"></iframe><p><span class="ql-size-large" style="background-color: rgb(0, 150, 136);">ffgh</span></p><p><img src="https://images.chinatimes.com/newsphoto/2024-04-03/1024/20240403005728.jpg"></p><p><a href="https://forum.gamer.com.tw" rel="noopener noreferrer" target="_blank" style="color: rgb(63, 81, 181);">Launcher URL</a></p><iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/ceJhXI6LwjE"></iframe><p><br></p>';
+    final QuillEditorController controller = QuillEditorController();
 
     return Scaffold(
       body: SafeArea(
@@ -100,7 +95,10 @@ class _PrivacySettingState extends State<PrivacySetting> {
               child: SingleChildScrollView(
                   child: Column(
                 children: [
-                  RichTextEditor(content: s),
+                  RichTextEditor(
+                    content: s,
+                    controller: controller,
+                  ),
                   RichTextView(content: s),
                 ],
               )),

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 
 class RichTextEditor extends StatelessWidget {
-  String content;
-  RichTextEditor({required this.content, super.key});
+  final String content;
+  final QuillEditorController controller;
+  const RichTextEditor({required this.controller, required this.content, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final QuillEditorController controller = QuillEditorController();
     final customToolBarList = [ToolBarStyle.color, ToolBarStyle.size, ToolBarStyle.video, ToolBarStyle.link, ToolBarStyle.image];
+    double fontSize = 18;
     return Column(
       children: [
         ToolBar.scroll(
@@ -29,7 +30,7 @@ class RichTextEditor extends StatelessWidget {
           text: content,
           controller: controller,
           minHeight: 1,
-          textStyle: TextStyle(fontSize: 18),
+          textStyle: TextStyle(fontSize: fontSize),
           loadingBuilder: (context) {
             return const Center(
                 child: CircularProgressIndicator(

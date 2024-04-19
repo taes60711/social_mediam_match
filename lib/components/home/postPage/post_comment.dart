@@ -151,6 +151,39 @@ class PostComment extends StatelessWidget {
                                     ],
                                   ),
                                   Text("發文時間 : ${choicedPostData.postTime}"),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(top: 8, right: 8),
+                                          child: SizedBox(
+                                            height: 30,
+                                            child: TextField(
+                                              controller: postCommentInput,
+                                              decoration: const InputDecoration(
+                                                contentPadding: EdgeInsets.only(top: 5, left: 10),
+                                                border: OutlineInputBorder(),
+                                                hintText: 'Enter Message',
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          postState.createPostComment(choicedPostData.id, postCommentInput.text, userData);
+                                        },
+                                        child: Container(
+                                          width: 80,
+                                          height: 30,
+                                          color: Colors.deepOrange,
+                                          child: const Center(
+                                            child: Text("傳送訊息"),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
                                 ],
                               ),
                             ),
@@ -243,39 +276,6 @@ class PostComment extends StatelessWidget {
                   ),
                 ),
                 isPostCommentDataAddLoding ? Loading() : Container(),
-                // Row(
-                //   children: [
-                //     Expanded(
-                //       child: Padding(
-                //         padding: const EdgeInsets.symmetric(horizontal: 8),
-                //         child: SizedBox(
-                //           height: 30,
-                //           child: TextField(
-                //             controller: postCommentInput,
-                //             decoration: const InputDecoration(
-                //               contentPadding: EdgeInsets.only(top: 5, left: 10),
-                //               border: OutlineInputBorder(),
-                //               hintText: 'Enter Message',
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //     ),
-                //     GestureDetector(
-                //       onTap: () {
-                //         postState.createPostComment(choicedPostData.id, postCommentInput.text, userData);
-                //       },
-                //       child: Container(
-                //         width: 80,
-                //         height: 30,
-                //         color: Colors.deepOrange,
-                //         child: const Center(
-                //           child: Text("傳送訊息"),
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // )
               ],
             ),
           );
