@@ -201,7 +201,10 @@ class MyPosts extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                Text(myAllPosts[index].mainMessage),
+                                Text(
+                                  myAllPosts[index].mainMessage,
+                                  maxLines: 2,
+                                ),
                                 Row(
                                   children: [
                                     ElevatedButton(

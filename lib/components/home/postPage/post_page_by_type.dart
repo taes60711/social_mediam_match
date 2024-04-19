@@ -155,7 +155,10 @@ class PostPageByType extends StatelessWidget {
                                                   ],
                                                 ),
                                               ),
-                                              Text(postData[index].mainMessage),
+                                              Text(
+                                                postData[index].mainMessage,
+                                                maxLines: 2,
+                                              ),
                                               Row(
                                                 children: [
                                                   Text("已 ${postData[index].viewed} 人瀏覽過"),
