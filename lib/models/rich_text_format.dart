@@ -64,7 +64,7 @@ class RichTextFormat {
     }
 
     print(htmlString);
-    WidgetToEditorHtml(htmlString);
+    // WidgetToEditorHtml(htmlString);
 
     return htmlString;
   }
