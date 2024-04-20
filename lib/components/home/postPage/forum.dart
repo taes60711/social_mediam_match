@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/home/postPage/news_post_page.dart';
+import 'package:social_mediam_match/components/home/postPage/post_page_by_new.dart';
 import 'package:social_mediam_match/components/home/postPage/post_page_by_type.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
@@ -76,7 +76,7 @@ class Forum extends StatelessWidget {
                         ),
                         ChangeNotifierProvider(
                           create: (_) => PostState(),
-                          child: NewsPostPage(
+                          child: PostPageByNew(
                             userData: userData,
                             gotoFriendPage: gotoFriendPage,
                           ),

@@ -89,123 +89,118 @@ class PostComment extends StatelessWidget {
               onDispose: () {
                 PostState().dispose();
               },
-              child: isPostCommentLoading
-                  ? Loading()
-                  : Column(
-                      children: [
-                        isPostCommentReLoading ? Loading() : Container(),
-                        Expanded(
-                          child: NotificationListener<ScrollNotification>(
-                            onNotification: (ScrollNotification scrollNotification) {
-                              if (scrollNotification is ScrollUpdateNotification) {
-                                final scrollPosition = scrollNotification.metrics.pixels;
-                                final max = scrollNotification.metrics.maxScrollExtent;
-                                if (!isPostCommentDataAddLoding && !isPostCommentReLoading) {
-                                  if (scrollPosition > max && !isPostCommentDataAddLoding) {
-                                    postState.postAddData();
-                                  } else if (scrollPosition < 0 && !isPostCommentReLoading) {
-                                    postState.postReLoadingPage();
-                                  }
-                                }
-                              }
-                              if (scrollNotification is ScrollEndNotification) {
-                                if (isPostCommentDataAddLoding) {
-                                  postState.getPostCommentData(choicedPostData.id,
-                                      loginUserUID: userData.uid, searchType: "AddData");
-                                } else if (isPostCommentReLoading) {
-                                  postState.getPostCommentData(choicedPostData.id,
-                                      loginUserUID: userData.uid, searchType: "Reload");
-                                }
-                              }
-                              return false;
-                            },
-                            child: SingleChildScrollView(
-                              physics: BouncingScrollPhysics(),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: ScreenSize().width,
-                                      color: Color.fromARGB(255, 227, 228, 235),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
+                children: [
+                  isPostCommentReLoading ? Loading() : Container(),
+                  Expanded(
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: (ScrollNotification scrollNotification) {
+                        if (scrollNotification is ScrollUpdateNotification) {
+                          final scrollPosition = scrollNotification.metrics.pixels;
+                          final max = scrollNotification.metrics.maxScrollExtent;
+                          if (!isPostCommentDataAddLoding && !isPostCommentReLoading) {
+                            if (scrollPosition > max && !isPostCommentDataAddLoding) {
+                              postState.postAddData();
+                            } else if (scrollPosition < 0 && !isPostCommentReLoading) {
+                              postState.postReLoadingPage();
+                            }
+                          }
+                        }
+                        if (scrollNotification is ScrollEndNotification) {
+                          if (isPostCommentDataAddLoding) {
+                            postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "AddData");
+                          } else if (isPostCommentReLoading) {
+                            postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "Reload");
+                          }
+                        }
+                        return false;
+                      },
+                      child: SingleChildScrollView(
+                        physics: BouncingScrollPhysics(),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: ScreenSize().width,
+                                color: Color.fromARGB(255, 227, 228, 235),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        inspect(choicedPostData.postUserInfo);
+                                        if (userData.uid != choicedPostData.postUserInfo.uid) {
+                                          postState.openDrawer("userDetail", globalCommentKey,
+                                              otherUser: choicedPostData.postUserInfo);
+                                        }
+                                      },
+                                      child: Row(
                                         children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              inspect(choicedPostData.postUserInfo);
-                                              if (userData.uid != choicedPostData.postUserInfo.uid) {
-                                                postState.openDrawer("userDetail", globalCommentKey,
-                                                    otherUser: choicedPostData.postUserInfo);
-                                              }
-                                            },
-                                            child: Row(
-                                              children: [
-                                                UserIcon(
-                                                  iconSize: 50,
-                                                  image: choicedPostData.postUserInfo.image,
-                                                ),
-                                                Text(choicedPostData.postUserInfo.email),
-                                              ],
-                                            ),
+                                          UserIcon(
+                                            iconSize: 50,
+                                            image: choicedPostData.postUserInfo.image,
                                           ),
-                                          RichTextView(
-                                            content: choicedPostData.mainMessage,
-                                          ),
-                                          Row(
-                                            children: [
-                                              ElevatedButton(
-                                                onPressed: () async {
-                                                  isGood
-                                                      ? await postState.updatePostGood(choicedPostData.id)
-                                                      : await postState.updatePostGood(choicedPostData.id, userUID: userData.uid);
-                                                  changeChoicedPostGoodCount(choicedPost: choicedPostData, isGood: isGood);
-                                                },
-                                                child: isGood ? Text("收回讚") : Text("讚"),
-                                              ),
-                                              Text(" ${choicedPostData.good} 個讚"),
-                                            ],
-                                          ),
-                                          Text("發文時間 : ${choicedPostData.postTime}"),
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(top: 8, right: 8),
-                                                  child: SizedBox(
-                                                    height: 30,
-                                                    child: TextField(
-                                                      controller: postCommentInput,
-                                                      decoration: const InputDecoration(
-                                                        contentPadding: EdgeInsets.only(top: 5, left: 10),
-                                                        border: OutlineInputBorder(),
-                                                        hintText: 'Enter Message',
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  postState.createPostComment(
-                                                      choicedPostData.id, postCommentInput.text, userData);
-                                                },
-                                                child: Container(
-                                                  width: 80,
-                                                  height: 30,
-                                                  color: Colors.deepOrange,
-                                                  child: const Center(
-                                                    child: Text("傳送訊息"),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          )
+                                          Text(choicedPostData.postUserInfo.email),
                                         ],
                                       ),
                                     ),
-                                  ),
-                                  Column(
+                                    RichTextView(content: choicedPostData.mainMessage),
+                                    Row(
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            isGood
+                                                ? await postState.updatePostGood(choicedPostData.id)
+                                                : await postState.updatePostGood(choicedPostData.id, userUID: userData.uid);
+                                            changeChoicedPostGoodCount(choicedPost: choicedPostData, isGood: isGood);
+                                          },
+                                          child: isGood ? Text("收回讚") : Text("讚"),
+                                        ),
+                                        Text(" ${choicedPostData.good} 個讚"),
+                                      ],
+                                    ),
+                                    Text("發文時間 : ${choicedPostData.postTime}"),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 8, right: 8),
+                                            child: SizedBox(
+                                              height: 30,
+                                              child: TextField(
+                                                controller: postCommentInput,
+                                                decoration: const InputDecoration(
+                                                  contentPadding: EdgeInsets.only(top: 5, left: 10),
+                                                  border: OutlineInputBorder(),
+                                                  hintText: 'Enter Message',
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            postState.createPostComment(choicedPostData.id, postCommentInput.text, userData);
+                                          },
+                                          child: Container(
+                                            width: 80,
+                                            height: 30,
+                                            color: Colors.deepOrange,
+                                            child: const Center(
+                                              child: Text("傳送訊息"),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            isPostCommentLoading
+                                ? Loading()
+                                : Column(
                                     children: postCommentData.map((e) {
                                       return Builder(builder: (context) {
                                         int index = postCommentData.indexWhere((element) => element == e);
@@ -287,14 +282,14 @@ class PostComment extends StatelessWidget {
                                       });
                                     }).toList(),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          ],
                         ),
-                        isPostCommentDataAddLoding ? Loading() : Container(),
-                      ],
+                      ),
                     ),
+                  ),
+                  isPostCommentDataAddLoding ? Loading() : Container(),
+                ],
+              ),
             ),
           ),
         );

@@ -10,13 +10,14 @@ import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import '../../../models/user_model.dart';
 
+import '../../utilities/rich_text_view.dart';
 import '../skillExChangePage/user_detail.dart';
 
-class NewsPostPage extends StatelessWidget {
+class PostPageByNew extends StatelessWidget {
   final LoginUser userData;
   final VoidCallback gotoFriendPage;
 
-  const NewsPostPage({super.key, required this.userData, required this.gotoFriendPage});
+  const PostPageByNew({super.key, required this.userData, required this.gotoFriendPage});
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +144,11 @@ class NewsPostPage extends StatelessWidget {
                                                   ],
                                                 ),
                                               ),
-                                              Text(postData[index].mainMessage),
+                                              RichTextView(
+                                                content: postData[index].mainMessage.length >= 100
+                                                    ? postData[index].mainMessage.substring(0, 100)
+                                                    : postData[index].mainMessage,
+                                              ),
                                               Row(
                                                 children: [
                                                   Text("已 ${postData[index].viewed} 人瀏覽過"),
@@ -194,9 +199,10 @@ class NewsPostPage extends StatelessWidget {
                                                       ],
                                                     ),
                                                   ),
-                                                  Text(
-                                                    postData[index].mainMessage,
-                                                    maxLines: 2,
+                                                  RichTextView(
+                                                    content: postData[index].mainMessage.length >= 100
+                                                        ? postData[index].mainMessage.substring(0, 100)
+                                                        : postData[index].mainMessage,
                                                   ),
                                                   Row(
                                                     children: [

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_comment.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
@@ -144,9 +145,10 @@ class PostPage extends StatelessWidget {
                                                   ],
                                                 ),
                                               ),
-                                              Text(
-                                                postData[index].mainMessage,
-                                                maxLines: 2,
+                                              RichTextView(
+                                                content: postData[index].mainMessage.length >= 100
+                                                    ? postData[index].mainMessage.substring(0, 100)
+                                                    : postData[index].mainMessage,
                                               ),
                                               Row(
                                                 children: [
@@ -198,7 +200,11 @@ class PostPage extends StatelessWidget {
                                                       ],
                                                     ),
                                                   ),
-                                                  Text(postData[index].mainMessage),
+                                                  RichTextView(
+                                                    content: postData[index].mainMessage.length >= 100
+                                                        ? postData[index].mainMessage.substring(0, 100)
+                                                        : postData[index].mainMessage,
+                                                  ),
                                                   Row(
                                                     children: [
                                                       Text("已 ${postData[index].viewed} 人瀏覽過"),

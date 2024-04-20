@@ -8,6 +8,7 @@ import 'package:social_mediam_match/models/post_model.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
+import '../../utilities/rich_text_view.dart';
 import '../../utilities/user_icon.dart';
 import '../postPage/post_comment.dart';
 
@@ -188,9 +189,10 @@ class MyPosts extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                Text(
-                                  myAllPosts[index].mainMessage,
-                                  maxLines: 2,
+                                RichTextView(
+                                  content: myAllPosts[index].mainMessage.length >= 100
+                                      ? myAllPosts[index].mainMessage.substring(0, 100)
+                                      : myAllPosts[index].mainMessage,
                                 ),
                                 Row(
                                   children: [

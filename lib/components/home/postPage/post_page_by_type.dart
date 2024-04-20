@@ -11,6 +11,7 @@ import 'package:social_mediam_match/states/post_state.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
 
+import '../../utilities/rich_text_view.dart';
 import '../skillExChangePage/user_detail.dart';
 
 class PostPageByType extends StatelessWidget {
@@ -55,7 +56,9 @@ class PostPageByType extends StatelessWidget {
         await postState.getPostDataByType(type, searchType: "First");
       },
       child: isFirstLoading
-          ? const Loading()
+          ? Scaffold(
+              body: const Loading(),
+            )
           : Scaffold(
               key: globalKey,
               endDrawer: endDrawerType == "userDetail"
@@ -155,9 +158,10 @@ class PostPageByType extends StatelessWidget {
                                                   ],
                                                 ),
                                               ),
-                                              Text(
-                                                postData[index].mainMessage,
-                                                maxLines: 2,
+                                              RichTextView(
+                                                content: postData[index].mainMessage.length >= 100
+                                                    ? postData[index].mainMessage.substring(0, 100)
+                                                    : postData[index].mainMessage,
                                               ),
                                               Row(
                                                 children: [
@@ -208,7 +212,11 @@ class PostPageByType extends StatelessWidget {
                                                       ],
                                                     ),
                                                   ),
-                                                  Text(postData[index].mainMessage),
+                                                  RichTextView(
+                                                    content: postData[index].mainMessage.length >= 100
+                                                        ? postData[index].mainMessage.substring(0, 100)
+                                                        : postData[index].mainMessage,
+                                                  ),
                                                   Row(
                                                     children: [
                                                       Text("已 ${postData[index].viewed} 人瀏覽過"),
