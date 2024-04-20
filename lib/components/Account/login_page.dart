@@ -219,6 +219,7 @@ class LoginPage extends StatelessWidget {
       );
     }
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(child: userComponent),
     );
   }

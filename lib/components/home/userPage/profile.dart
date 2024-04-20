@@ -89,6 +89,7 @@ class Profile extends StatelessWidget {
       child: isFirst
           ? const Loading()
           : Scaffold(
+              resizeToAvoidBottomInset: false,
               key: key,
               endDrawer: SkillChoice(
                 userSettingState: userSettingState,

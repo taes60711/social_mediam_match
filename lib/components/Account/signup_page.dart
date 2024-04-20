@@ -43,6 +43,7 @@ class SignUpPage extends StatelessWidget {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("註冊帳戶"),
       ),
