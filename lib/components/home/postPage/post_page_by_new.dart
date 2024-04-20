@@ -13,6 +13,53 @@ import '../../../models/user_model.dart';
 import '../../utilities/rich_text_view.dart';
 import '../skillExChangePage/user_detail.dart';
 
+class LeftToRightAnimationDialog extends StatefulWidget {
+  final Widget child;
+
+  LeftToRightAnimationDialog({required this.child});
+
+  @override
+  _LeftToRightAnimationDialogState createState() => _LeftToRightAnimationDialogState();
+}
+
+class _LeftToRightAnimationDialogState extends State<LeftToRightAnimationDialog> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    _animation = Tween<double>(begin: 1, end: 0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
+          child: child,
+        );
+      },
+      child: widget.child,
+    );
+  }
+}
+
 class PostPageByNew extends StatelessWidget {
   final LoginUser userData;
   final VoidCallback gotoFriendPage;
@@ -43,6 +90,27 @@ class PostPageByNew extends StatelessWidget {
               good: 0,
               type: 0),
     );
+    Future<void> tts({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return LeftToRightAnimationDialog(
+            child: Dismissible(
+              direction: DismissDirection.startToEnd,
+              onDismissed: (_) => Navigator.of(context).pop(),
+              key: const Key('key'),
+              child: PostComment(
+                choicedPostData: choicedPostData,
+                userData: userData,
+                globalKey: globalKey,
+                gotoFriendPage: gotoFriendPage,
+                changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+              ),
+            ),
+          );
+        },
+      );
+    }
 
     void changeChoicedPostGoodCount({required PostModel choicedPost, required isGood}) {
       postState.changeChoicedPostGoodCount(choicedPost: choicedPost, isGood: isGood);
@@ -114,8 +182,12 @@ class PostPageByNew extends StatelessWidget {
                                       padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
                                       child: GestureDetector(
                                         onTap: () async {
-                                          await postState.openDrawer("movetoPost", globalKey,
-                                              loginUserData: userData, choicedPostData: postData[index]);
+                                          tts(
+                                            choicedPostData: postData[index],
+                                            changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+                                          );
+                                          // await postState.openDrawer("movetoPost", globalKey,
+                                          //     loginUserData: userData, choicedPostData: postData[index]);
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(8),
