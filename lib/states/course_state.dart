@@ -18,12 +18,40 @@ class CourseState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void carouselPageOnchange(int index) {
-    carouselPageIndex = index;
-    notifyListeners();
+  Future<void> getAllCourseData({required String searchType}) async {
+    try {
+      List<CourseModel> tempCourseData = [];
+      if (searchType == "AddData") {
+        tempCourseData = await _dbService.getAllCourses();
+      } else {
+        if (searchType == "First") {
+          isFirstLoading = true;
+          Future.delayed(Duration.zero).then((value) => notifyListeners());
+        }
+        tempCourseData = await _dbService.getAllCourses(isFirst: true);
+      }
+
+      if (searchType == "AddData") {
+        tempCourseData.forEach((e) {
+          topCourseData = [...topCourseData, e];
+        });
+        isAddDataLoading = false;
+      } else {
+        courseData = tempCourseData;
+        if (searchType == "First") {
+          isFirstLoading = false;
+        } else if (searchType == "Reload") {
+          isReLoading = false;
+        }
+      }
+
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
   }
 
-  Future<void> getCourseData(int type, {required String searchType}) async {
+  Future<void> getCourseDatabyType(int type, {required String searchType}) async {
     try {
       List<CourseModel> tempCourseData = [];
       if (searchType == "First") {
