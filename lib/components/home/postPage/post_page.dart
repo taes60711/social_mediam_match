@@ -13,16 +13,16 @@ import '../../../models/user_model.dart';
 
 import '../skillExChangePage/user_detail.dart';
 
-class LeftToRightAnimationDialog extends StatefulWidget {
+class RightToLeftAnimationDialog extends StatefulWidget {
   final Widget child;
 
-  LeftToRightAnimationDialog({required this.child});
+  RightToLeftAnimationDialog({required this.child});
 
   @override
-  _LeftToRightAnimationDialogState createState() => _LeftToRightAnimationDialogState();
+  _RightToLeftAnimationDialogState createState() => _RightToLeftAnimationDialogState();
 }
 
-class _LeftToRightAnimationDialogState extends State<LeftToRightAnimationDialog> with SingleTickerProviderStateMixin {
+class _RightToLeftAnimationDialogState extends State<RightToLeftAnimationDialog> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -93,10 +93,12 @@ class PostPage extends StatelessWidget {
     Future<void> tts({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
       return showDialog(
         context: context,
+        barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
         builder: (BuildContext context) {
-          return LeftToRightAnimationDialog(
+          return RightToLeftAnimationDialog(
             child: Dismissible(
               direction: DismissDirection.startToEnd,
+              resizeDuration: const Duration(milliseconds: 1),
               onDismissed: (_) => Navigator.of(context).pop(),
               key: const Key('key'),
               child: PostComment(

@@ -93,10 +93,12 @@ class PostPageByNew extends StatelessWidget {
     Future<void> tts({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
       return showDialog(
         context: context,
+        barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
         builder: (BuildContext context) {
           return LeftToRightAnimationDialog(
             child: Dismissible(
               direction: DismissDirection.startToEnd,
+              resizeDuration: const Duration(milliseconds: 1),
               onDismissed: (_) => Navigator.of(context).pop(),
               key: const Key('key'),
               child: PostComment(

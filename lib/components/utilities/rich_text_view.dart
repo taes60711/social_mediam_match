@@ -29,6 +29,7 @@ class _RichTextViewState extends State<RichTextView> {
           child: Dismissible(
             direction: DismissDirection.vertical,
             onDismissed: (_) => Navigator.of(context).pop(),
+            resizeDuration: const Duration(milliseconds: 1),
             key: const Key('key'),
             child: Scaffold(
               backgroundColor: Colors.black,

@@ -91,6 +91,15 @@ class PostComment extends StatelessWidget {
               },
               child: Column(
                 children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(Icons.arrow_back_ios_sharp),
+                    ),
+                  ),
                   isPostCommentReLoading ? Loading() : Container(),
                   Expanded(
                     child: NotificationListener<ScrollNotification>(
