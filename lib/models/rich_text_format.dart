@@ -47,7 +47,7 @@ class RichTextFormat {
                       htmlUseouterHtml = "<span $htmlUseStyle>${e.innerHtml.replaceAll(" ", "&nbsp;")}</span>";
                       break;
                     case "a":
-                      String htmlUseHref = "href = ${e.attributes['href']}";
+                      String htmlUseHref = "href=${e.attributes['href']}";
                       htmlUseouterHtml = "<a $htmlUseHref $htmlUseStyle>${e.innerHtml.replaceAll(" ", "&nbsp;")}</a>";
                       break;
                   }
@@ -111,15 +111,20 @@ class RichTextFormat {
               (e) {
                 if (e.localName == "span" || e.localName == "a") {
                   inspect(e);
-                  String htmlUseStyle = 'class="${e.className}" style="${e.attributes['style']}"';
-
+                  String htmlUseStyle = '';
+                  if (e.className != "") {
+                    htmlUseStyle += 'class="${e.className}" ';
+                  }
+                  if (e.attributes['style'] != null) {
+                    htmlUseStyle += 'style="${e.attributes['style']}"';
+                  }
                   String htmlUseouterHtml = "";
                   switch (e.localName) {
                     case "span":
                       htmlUseouterHtml = "<span $htmlUseStyle>${e.innerHtml.replaceAll(" ", "&nbsp;")}</span>";
                       break;
                     case "a":
-                      String htmlUseHref = "href = ${e.attributes['href']}";
+                      String htmlUseHref = "href=${e.attributes['href']}";
                       htmlUseouterHtml = "<a $htmlUseHref $htmlUseStyle>${e.innerHtml.replaceAll(" ", "&nbsp;")}</a>";
                       break;
                   }
