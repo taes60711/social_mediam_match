@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 
+import '../../models/rich_text_format.dart';
+
 class RichTextEditor extends StatelessWidget {
   final String content;
   final QuillEditorController controller;
@@ -27,7 +29,7 @@ class RichTextEditor extends StatelessWidget {
           ],
         ),
         QuillHtmlEditor(
-          text: content,
+          text: RichTextFormat(htmlString: content).WidgetToEditorHtml(content),
           controller: controller,
           minHeight: 1,
           textStyle: TextStyle(fontSize: fontSize),

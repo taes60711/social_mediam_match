@@ -15,7 +15,7 @@ class Initialpage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int delayTime = 1;
+    int delayTime = 3;
 
     bool isfirstEnterApp = context.select((InitialState value) => value.isfirstEnterApp);
     FriendState friendState = context.select((FriendState value) => value);

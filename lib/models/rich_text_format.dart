@@ -63,7 +63,7 @@ class RichTextFormat {
       });
     }
 
-    print(htmlString);
+    // print(htmlString);
     // WidgetToEditorHtml(htmlString);
 
     return htmlString;
@@ -79,23 +79,62 @@ class RichTextFormat {
       return null;
     }
 
+    print(htmlString);
     var node = html.parse(htmlString).body;
     if (node!.nodeType == Node.ELEMENT_NODE) {
-      var elements = node.querySelectorAll('span');
-      elements.forEach((element) {
-        if (element.attributes['style']!.contains("font-size")) {
-          String str = element.attributes['style']!;
-          int fontSizeStartIndex = str.indexOf("font-size") + "font-size:".length;
-          int fontSizeEndIndex = fontSizeStartIndex + 4;
-          String subedString = str.substring(fontSizeStartIndex, fontSizeEndIndex);
+      // var elements = node.querySelectorAll('span');
+      // elements.forEach((element) {
+      //   if (element.attributes['style']!.contains("font-size")) {
+      //     String str = element.attributes['style']!;
+      //     int fontSizeStartIndex = str.indexOf("font-size") + "font-size:".length;
+      //     int fontSizeEndIndex = fontSizeStartIndex + 4;
+      //     String subedString = str.substring(fontSizeStartIndex, fontSizeEndIndex);
 
-          String key = getKeyByValue(fontSizeMap, subedString);
-          print("subedString : $subedString : key : $key");
-          String editorUseHtml = element.outerHtml.replaceAll("font-size:$subedString", key);
-          htmlString = htmlString.replaceAll(element.outerHtml, editorUseHtml);
+      //     String key = getKeyByValue(fontSizeMap, subedString);
+      //     print("subedString : $subedString : key : $key");
+      //     String editorUseHtml = element.outerHtml.replaceAll("font-size:$subedString", key);
+      //     htmlString = htmlString.replaceAll(element.outerHtml, editorUseHtml);
+      //   }
+      // });
+
+      var allElements = node.querySelectorAll('*');
+
+      allElements.forEach((element) {
+        switch (element.localName) {
+          case "p":
+            var document = html.parse(element.innerHtml);
+            if (!element.innerHtml.contains("img") && !element.innerHtml.contains("iframe")) {
+              String pwithSpanString = element.innerHtml.replaceAll(" ", "&nbsp;");
+              htmlString = htmlString.replaceAll(element.innerHtml, pwithSpanString);
+            }
+            document.body?.querySelectorAll('*').forEach(
+              (e) {
+                if (e.localName == "span" || e.localName == "a") {
+                  inspect(e);
+                  String htmlUseStyle = 'class="${e.className}" style="${e.attributes['style']}"';
+
+                  String htmlUseouterHtml = "";
+                  switch (e.localName) {
+                    case "span":
+                      htmlUseouterHtml = "<span $htmlUseStyle>${e.innerHtml.replaceAll(" ", "&nbsp;")}</span>";
+                      break;
+                    case "a":
+                      String htmlUseHref = "href = ${e.attributes['href']}";
+                      htmlUseouterHtml = "<a $htmlUseHref $htmlUseStyle>${e.innerHtml.replaceAll(" ", "&nbsp;")}</a>";
+                      break;
+                  }
+
+                  String nbspedString = e.outerHtml.replaceAll(" ", "&nbsp;");
+                  htmlString = htmlString.replaceAll(nbspedString, htmlUseouterHtml);
+                }
+              },
+            );
+
+            break;
         }
       });
     }
+
     print(htmlString);
     return htmlString;
   }

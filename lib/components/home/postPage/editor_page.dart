@@ -12,7 +12,6 @@ class EditorPage extends StatelessWidget {
     PostState postState = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postState'];
     LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
     int type = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['type'];
-    TextEditingController introductionInput = TextEditingController();
     QuillEditorController controller = QuillEditorController();
     Widget userComponent = SafeArea(
       child: Column(
@@ -31,19 +30,6 @@ class EditorPage extends StatelessWidget {
             content: "",
             controller: controller,
           ),
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: TextField(
-          //     minLines: 5,
-          //     maxLines: 255,
-          //     controller: introductionInput,
-          //     decoration: const InputDecoration(
-          //       hintText: "文章內容",
-          //       filled: true,
-          //     ),
-          //     keyboardType: TextInputType.multiline,
-          //   ),
-          // ),
           ElevatedButton(
             onPressed: () async {
               String content = await controller.getText();
