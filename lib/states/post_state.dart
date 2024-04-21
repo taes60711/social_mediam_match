@@ -317,6 +317,7 @@ class PostState extends ChangeNotifier {
     this.endDrawerType = endDrawerType;
     if (this.endDrawerType == "userDetail") {
       this.otherUser = otherUser;
+      globalKey.currentState!.openEndDrawer();
     } else {
       this.choicedPostData = choicedPostData;
       if (loginUserData!.uid != choicedPostData!.createdBy) {
@@ -325,6 +326,5 @@ class PostState extends ChangeNotifier {
       }
     }
     notifyListeners();
-    globalKey.currentState!.openEndDrawer();
   }
 }

@@ -263,7 +263,6 @@ class DBService {
     }
 
     String searchUrl = '$url/$branch/getAll?page=${postServerInfo.pageNumber}&size=$size';
-
     final uri = Uri.parse(searchUrl);
     List<PostModel> allpostData = [];
     try {

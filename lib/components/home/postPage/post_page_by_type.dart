@@ -14,6 +14,53 @@ import '../../../models/user_model.dart';
 import '../../utilities/rich_text_view.dart';
 import '../skillExChangePage/user_detail.dart';
 
+class RightToLeftAnimationDialog extends StatefulWidget {
+  final Widget child;
+
+  RightToLeftAnimationDialog({required this.child});
+
+  @override
+  _RightToLeftAnimationDialogState createState() => _RightToLeftAnimationDialogState();
+}
+
+class _RightToLeftAnimationDialogState extends State<RightToLeftAnimationDialog> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    _animation = Tween<double>(begin: 1, end: 0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
+          child: child,
+        );
+      },
+      child: widget.child,
+    );
+  }
+}
+
 class PostPageByType extends StatelessWidget {
   final LoginUser userData;
   final VoidCallback gotoFriendPage;
@@ -45,6 +92,30 @@ class PostPageByType extends StatelessWidget {
               good: 0,
               type: 0),
     );
+
+    Future<void> tts({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
+      return showDialog(
+        context: context,
+        barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
+        builder: (BuildContext context) {
+          return RightToLeftAnimationDialog(
+            child: Dismissible(
+              direction: DismissDirection.startToEnd,
+              resizeDuration: const Duration(milliseconds: 1),
+              onDismissed: (_) => Navigator.of(context).pop(),
+              key: const Key('key'),
+              child: PostComment(
+                choicedPostData: choicedPostData,
+                userData: userData,
+                globalKey: globalKey,
+                gotoFriendPage: gotoFriendPage,
+                changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+              ),
+            ),
+          );
+        },
+      );
+    }
 
     void changeChoicedPostGoodCount({required PostModel choicedPost, required isGood}) {
       postState.changeChoicedPostGoodCount(choicedPost: choicedPost, isGood: isGood);
@@ -128,6 +199,10 @@ class PostPageByType extends StatelessWidget {
                                       padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
                                       child: GestureDetector(
                                         onTap: () async {
+                                          tts(
+                                            choicedPostData: postData[index],
+                                            changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+                                          );
                                           await postState.openDrawer("movetoPost", globalKey,
                                               loginUserData: userData, choicedPostData: postData[index]);
                                         },
@@ -182,6 +257,10 @@ class PostPageByType extends StatelessWidget {
                                           padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
                                           child: GestureDetector(
                                             onTap: () async {
+                                              tts(
+                                                choicedPostData: postData[index],
+                                                changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+                                              );
                                               await postState.openDrawer("movetoPost", globalKey,
                                                   loginUserData: userData, choicedPostData: postData[index]);
                                             },

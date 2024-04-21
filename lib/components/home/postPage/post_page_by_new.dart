@@ -127,20 +127,12 @@ class PostPageByNew extends StatelessWidget {
           ? const Loading()
           : Scaffold(
               key: globalKey,
-              endDrawer: endDrawerType == "userDetail"
-                  ? UserDetail(
-                      globalKey: globalKey,
-                      userData: userData,
-                      otherUser: otherUser,
-                      gotoFriendPage: gotoFriendPage,
-                    )
-                  : PostComment(
-                      choicedPostData: choicedPostData,
-                      userData: userData,
-                      globalKey: globalKey,
-                      gotoFriendPage: gotoFriendPage,
-                      changeChoicedPostGoodCount: changeChoicedPostGoodCount,
-                    ),
+              endDrawer: UserDetail(
+                globalKey: globalKey,
+                userData: userData,
+                otherUser: otherUser,
+                gotoFriendPage: gotoFriendPage,
+              ),
               body: SafeArea(
                 child: Column(
                   children: [
@@ -188,8 +180,8 @@ class PostPageByNew extends StatelessWidget {
                                             choicedPostData: postData[index],
                                             changeChoicedPostGoodCount: changeChoicedPostGoodCount,
                                           );
-                                          // await postState.openDrawer("movetoPost", globalKey,
-                                          //     loginUserData: userData, choicedPostData: postData[index]);
+                                          await postState.openDrawer("movetoPost", globalKey,
+                                              loginUserData: userData, choicedPostData: postData[index]);
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(8),
@@ -243,6 +235,10 @@ class PostPageByNew extends StatelessWidget {
                                           padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
                                           child: GestureDetector(
                                             onTap: () async {
+                                              tts(
+                                                choicedPostData: postData[index],
+                                                changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+                                              );
                                               await postState.openDrawer("movetoPost", globalKey,
                                                   loginUserData: userData, choicedPostData: postData[index]);
                                             },

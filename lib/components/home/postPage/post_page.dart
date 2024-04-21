@@ -74,22 +74,8 @@ class PostPage extends StatelessWidget {
     bool isDataAddLoding = context.select((PostState value) => value.isDataAddLoding);
     bool isReLoading = context.select((PostState value) => value.isReLoading);
     GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.globalKey);
-    String endDrawerType = context.select((PostState value) => value.endDrawerType);
     LoginUser? otherUser = context.select((PostState value) => value.otherUser);
-    PostModel choicedPostData = context.select(
-      (PostState value) =>
-          value.choicedPostData ??
-          PostModel(
-              id: -1,
-              createdBy: "",
-              mainMessage: "",
-              commentCount: 0,
-              postTime: "",
-              postUserInfo: LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: -1),
-              viewed: 0,
-              good: 0,
-              type: 0),
-    );
+
     Future<void> tts({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
       return showDialog(
         context: context,
@@ -127,20 +113,12 @@ class PostPage extends StatelessWidget {
           ? const Loading()
           : Scaffold(
               key: globalKey,
-              endDrawer: endDrawerType == "userDetail"
-                  ? UserDetail(
-                      globalKey: globalKey,
-                      userData: userData,
-                      otherUser: otherUser,
-                      gotoFriendPage: gotoFriendPage,
-                    )
-                  : PostComment(
-                      choicedPostData: choicedPostData,
-                      userData: userData,
-                      globalKey: globalKey,
-                      gotoFriendPage: gotoFriendPage,
-                      changeChoicedPostGoodCount: changeChoicedPostGoodCount,
-                    ),
+              endDrawer: UserDetail(
+                globalKey: globalKey,
+                userData: userData,
+                otherUser: otherUser,
+                gotoFriendPage: gotoFriendPage,
+              ),
               body: SafeArea(
                 child: Column(
                   children: [
@@ -158,10 +136,10 @@ class PostPage extends StatelessWidget {
                             if (scrollNotification is ScrollUpdateNotification) {
                               final scrollPosition = scrollNotification.metrics.pixels;
                               final max = scrollNotification.metrics.maxScrollExtent;
-
                               if (!isDataAddLoding && !isReLoading) {
                                 if (scrollPosition > max && !isDataAddLoding) {
                                   postState.addData();
+                                  print("add");
                                 } else if (scrollPosition < 0 && !isReLoading) {
                                   postState.reLoadingPage();
                                 }
@@ -173,6 +151,7 @@ class PostPage extends StatelessWidget {
                                 postState.getPostData(searchType: "Reload");
                               }
                             }
+
                             return false;
                           },
                           child: ListView.builder(
@@ -188,8 +167,8 @@ class PostPage extends StatelessWidget {
                                             choicedPostData: postData[index],
                                             changeChoicedPostGoodCount: changeChoicedPostGoodCount,
                                           );
-                                          // await postState.openDrawer("movetoPost", globalKey,
-                                          //     loginUserData: userData, choicedPostData: postData[index]);
+                                          await postState.openDrawer("movetoPost", globalKey,
+                                              loginUserData: userData, choicedPostData: postData[index]);
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(8),
@@ -243,6 +222,10 @@ class PostPage extends StatelessWidget {
                                           padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
                                           child: GestureDetector(
                                             onTap: () async {
+                                              tts(
+                                                choicedPostData: postData[index],
+                                                changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+                                              );
                                               await postState.openDrawer("movetoPost", globalKey,
                                                   loginUserData: userData, choicedPostData: postData[index]);
                                             },
