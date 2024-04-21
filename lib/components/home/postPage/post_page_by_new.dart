@@ -74,22 +74,9 @@ class PostPageByNew extends StatelessWidget {
     bool isDataAddLoding = context.select((PostState value) => value.isDataAddLoding);
     bool isReLoading = context.select((PostState value) => value.isReLoading);
     GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.globalKey);
-    String endDrawerType = context.select((PostState value) => value.endDrawerType);
     LoginUser? otherUser = context.select((PostState value) => value.otherUser);
-    PostModel choicedPostData = context.select(
-      (PostState value) =>
-          value.choicedPostData ??
-          PostModel(
-              id: -1,
-              createdBy: "",
-              mainMessage: "",
-              commentCount: 0,
-              postTime: "",
-              postUserInfo: LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: -1),
-              viewed: 0,
-              good: 0,
-              type: 0),
-    );
+    bool isCanLoading = context.select((PostState value) => value.isCanLoading);
+
     Future<void> tts({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
       return showDialog(
         context: context,
@@ -151,17 +138,24 @@ class PostPageByNew extends StatelessWidget {
                               final scrollPosition = scrollNotification.metrics.pixels;
                               final max = scrollNotification.metrics.maxScrollExtent;
                               if (!isDataAddLoding && !isReLoading) {
-                                if (scrollPosition > max && !isDataAddLoding) {
+                                if (scrollPosition > max && isCanLoading && !isDataAddLoding) {
+                                  postState.canLoadingChange(false);
                                   postState.addData();
-                                } else if (scrollPosition < 0 && !isReLoading) {
+                                } else if (scrollPosition < 0 && isCanLoading && !isReLoading) {
+                                  postState.canLoadingChange(false);
                                   postState.reLoadingPage();
+                                }
+                              }
+                              if (!isCanLoading) {
+                                if (scrollNotification.dragDetails == null) {
+                                  postState.canLoadingChange(true);
                                 }
                               }
                             }
                             if (scrollNotification is ScrollEndNotification) {
-                              if (isDataAddLoding) {
+                              if (isDataAddLoding && isCanLoading) {
                                 postState.getNewsPostData(searchType: "AddData");
-                              } else if (isReLoading) {
+                              } else if (isReLoading && isCanLoading) {
                                 postState.getNewsPostData(searchType: "Reload");
                               }
                             }

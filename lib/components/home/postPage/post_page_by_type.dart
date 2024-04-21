@@ -76,22 +76,8 @@ class PostPageByType extends StatelessWidget {
     bool isDataAddLoding = context.select((PostState value) => value.isDataAddLoding);
     bool isReLoading = context.select((PostState value) => value.isReLoading);
     GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.globalKey);
-    String endDrawerType = context.select((PostState value) => value.endDrawerType);
     LoginUser? otherUser = context.select((PostState value) => value.otherUser);
-    PostModel choicedPostData = context.select(
-      (PostState value) =>
-          value.choicedPostData ??
-          PostModel(
-              id: -1,
-              createdBy: "",
-              mainMessage: "",
-              commentCount: 0,
-              postTime: "",
-              postUserInfo: LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: -1),
-              viewed: 0,
-              good: 0,
-              type: 0),
-    );
+    bool isCanLoading = context.select((PostState value) => value.isCanLoading);
 
     Future<void> tts({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
       return showDialog(
@@ -132,20 +118,12 @@ class PostPageByType extends StatelessWidget {
             )
           : Scaffold(
               key: globalKey,
-              endDrawer: endDrawerType == "userDetail"
-                  ? UserDetail(
-                      globalKey: globalKey,
-                      userData: userData,
-                      otherUser: otherUser,
-                      gotoFriendPage: gotoFriendPage,
-                    )
-                  : PostComment(
-                      choicedPostData: choicedPostData,
-                      userData: userData,
-                      globalKey: globalKey,
-                      gotoFriendPage: gotoFriendPage,
-                      changeChoicedPostGoodCount: changeChoicedPostGoodCount,
-                    ),
+              endDrawer: UserDetail(
+                globalKey: globalKey,
+                userData: userData,
+                otherUser: otherUser,
+                gotoFriendPage: gotoFriendPage,
+              ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(RoutePath.postEditPage.value, arguments: {
@@ -174,17 +152,24 @@ class PostPageByType extends StatelessWidget {
                               final scrollPosition = scrollNotification.metrics.pixels;
                               final max = scrollNotification.metrics.maxScrollExtent;
                               if (!isDataAddLoding && !isReLoading) {
-                                if (scrollPosition > max && !isDataAddLoding) {
+                                if (scrollPosition > max && isCanLoading && !isDataAddLoding) {
+                                  postState.canLoadingChange(false);
                                   postState.addData();
-                                } else if (scrollPosition < 0 && !isReLoading) {
+                                } else if (scrollPosition < 0 && isCanLoading && !isReLoading) {
+                                  postState.canLoadingChange(false);
                                   postState.reLoadingPage();
+                                }
+                              }
+                              if (!isCanLoading) {
+                                if (scrollNotification.dragDetails == null) {
+                                  postState.canLoadingChange(true);
                                 }
                               }
                             }
                             if (scrollNotification is ScrollEndNotification) {
-                              if (isDataAddLoding) {
+                              if (isDataAddLoding && isCanLoading) {
                                 postState.getPostDataByType(type, searchType: "AddData");
-                              } else if (isReLoading) {
+                              } else if (isReLoading && isCanLoading) {
                                 postState.getPostDataByType(type, searchType: "Reload");
                               }
                             }

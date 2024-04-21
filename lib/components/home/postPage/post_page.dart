@@ -75,6 +75,7 @@ class PostPage extends StatelessWidget {
     bool isReLoading = context.select((PostState value) => value.isReLoading);
     GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.globalKey);
     LoginUser? otherUser = context.select((PostState value) => value.otherUser);
+    bool isCanLoading = context.select((PostState value) => value.isCanLoading);
 
     Future<void> tts({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
       return showDialog(
@@ -136,18 +137,25 @@ class PostPage extends StatelessWidget {
                             if (scrollNotification is ScrollUpdateNotification) {
                               final scrollPosition = scrollNotification.metrics.pixels;
                               final max = scrollNotification.metrics.maxScrollExtent;
+
                               if (!isDataAddLoding && !isReLoading) {
-                                if (scrollPosition > max && !isDataAddLoding) {
+                                if (scrollPosition > max && isCanLoading && !isDataAddLoding) {
+                                  postState.canLoadingChange(false);
                                   postState.addData();
-                                  print("add");
-                                } else if (scrollPosition < 0 && !isReLoading) {
+                                } else if (scrollPosition < 0 && isCanLoading && !isReLoading) {
+                                  postState.canLoadingChange(false);
                                   postState.reLoadingPage();
                                 }
                               }
+                              if (!isCanLoading) {
+                                if (scrollNotification.dragDetails == null) {
+                                  postState.canLoadingChange(true);
+                                }
+                              }
                             } else if (scrollNotification is ScrollEndNotification) {
-                              if (isDataAddLoding) {
+                              if (isDataAddLoding && isCanLoading) {
                                 postState.getPostData(searchType: "AddData");
-                              } else if (isReLoading) {
+                              } else if (isReLoading && isCanLoading) {
                                 postState.getPostData(searchType: "Reload");
                               }
                             }

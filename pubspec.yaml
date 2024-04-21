@@ -71,6 +71,7 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
+    - assets/Logo.png
     - assets/masion.mp3
 
   # The following line ensures that the Material Icons font is
