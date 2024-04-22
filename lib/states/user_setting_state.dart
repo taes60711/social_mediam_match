@@ -21,6 +21,7 @@ class UserSettingState extends ChangeNotifier {
 
   String base64Img = "";
   TextEditingController nameInput = TextEditingController();
+  TextEditingController jobInput = TextEditingController();
   TextEditingController introductionInput = TextEditingController();
   final GlobalKey<ScaffoldState> key = GlobalKey();
   String type = "";
@@ -29,6 +30,7 @@ class UserSettingState extends ChangeNotifier {
     Future.delayed(Duration.zero).then((value) {
       base64Img = userData.image ?? "";
       nameInput.text = userData.name ?? "";
+      jobInput.text = userData.job ?? "";
       introductionInput.text = userData.introduction ?? "";
       notifyListeners();
     });
@@ -105,6 +107,7 @@ class UserSettingState extends ChangeNotifier {
     String uid,
     String image,
     String name,
+    String job,
     String introduction,
     List<SkillModel> forntSkillItems,
     List<SkillModel> iotSkillItems,
@@ -133,6 +136,7 @@ class UserSettingState extends ChangeNotifier {
       uid: uid,
       image: image,
       name: name,
+      job: job,
       introduction: introduction,
       mainSkills: gethaveSkill,
       wantSkills: getWantSkill,
@@ -148,14 +152,28 @@ class UserSettingState extends ChangeNotifier {
     LoginUser userData,
     String image,
     String name,
+    String job,
     String introduction,
     List<SkillModel> allSkillItems,
     List<SkillModel> allWantSkillItems,
   ) {
     bool isChange = false;
 
-    if (userData.image != image || userData.name != name || userData.introduction != introduction) {
+    if (userData.image != image) {
       isChange = true;
+      print("image Change");
+    }
+    if (userData.name != name) {
+      isChange = true;
+      print("name Change");
+    }
+    if (userData.introduction != introduction) {
+      isChange = true;
+      print("introduction Change");
+    }
+    if (userData.job != job) {
+      isChange = true;
+      print("job Change");
     }
 
     void getSkillListIsChange(List<SkillInfo> userSkillList, List<SkillInfo> skillList) {

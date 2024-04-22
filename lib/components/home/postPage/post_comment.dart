@@ -242,17 +242,19 @@ class PostComment extends StatelessWidget {
                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(postCommentData[index].commentUserInfo.email),
-                                                            TextFormField(
-                                                              controller: postCommentMessageController[index],
-                                                              enabled: postCommentData[index].isEditor,
-                                                              style: const TextStyle(color: Colors.black, fontSize: 14),
-                                                              decoration: const InputDecoration(
-                                                                border: OutlineInputBorder(),
-                                                                isCollapsed: true,
-                                                                contentPadding: EdgeInsets.only(left: 2),
-                                                                disabledBorder: InputBorder.none,
-                                                              ),
-                                                            ),
+                                                            postCommentData[index].isEditor
+                                                                ? TextFormField(
+                                                                    controller: postCommentMessageController[index],
+                                                                    enabled: postCommentData[index].isEditor,
+                                                                    style: const TextStyle(color: Colors.black, fontSize: 14),
+                                                                    decoration: const InputDecoration(
+                                                                      border: OutlineInputBorder(),
+                                                                      isCollapsed: true,
+                                                                      contentPadding: EdgeInsets.only(left: 2),
+                                                                      disabledBorder: InputBorder.none,
+                                                                    ),
+                                                                  )
+                                                                : SelectableText(postCommentMessageController[index].text)
                                                           ],
                                                         ),
                                                       ),

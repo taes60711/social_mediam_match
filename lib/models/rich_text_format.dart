@@ -110,7 +110,7 @@ class RichTextFormat {
             document.body?.querySelectorAll('*').forEach(
               (e) {
                 if (e.localName == "span" || e.localName == "a") {
-                  inspect(e);
+                  // inspect(e);
                   String htmlUseStyle = '';
                   if (e.className != "") {
                     htmlUseStyle += 'class="${e.className}" ';

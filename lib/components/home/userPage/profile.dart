@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/userPage/skill_choice.dart';
@@ -23,6 +25,7 @@ class Profile extends StatelessWidget {
     UserState userState = context.read<UserState>();
     LoginUser userData = ModalRoute.of(context)!.settings.arguments as LoginUser;
     TextEditingController nameInput = context.select((UserSettingState value) => value.nameInput);
+    TextEditingController jobInput = context.select((UserSettingState value) => value.jobInput);
     TextEditingController introductionInput = context.select((UserSettingState value) => value.introductionInput);
     String base64Img = context.select((UserSettingState value) => value.base64Img);
     bool isFirst = context.select((UserSettingState value) => value.isFirst);
@@ -109,8 +112,10 @@ class Profile extends StatelessWidget {
                         alignment: Alignment.topLeft,
                         child: IconButton(
                           onPressed: () {
-                            bool isChange = userSettingState.isProfileChange(
-                                userData, base64Img, nameInput.text, introductionInput.text, allSkillItems, allWantSkillItems);
+                            inspect(userData);
+                            print(jobInput.text);
+                            bool isChange = userSettingState.isProfileChange(userData, base64Img, nameInput.text, jobInput.text,
+                                introductionInput.text, allSkillItems, allWantSkillItems);
                             if (isChange) {
                               exitCheck();
                             } else {
@@ -138,6 +143,17 @@ class Profile extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
                         child: TextField(
                           controller: nameInput,
+                          decoration: InputDecoration(
+                            labelText: ItemTitles.username.value,
+                            hintText: ItemTitles.username.hintText,
+                            prefixIcon: const Icon(Icons.person),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+                        child: TextField(
+                          controller: jobInput,
                           decoration: InputDecoration(
                             labelText: ItemTitles.username.value,
                             hintText: ItemTitles.username.hintText,
@@ -213,6 +229,7 @@ class Profile extends StatelessWidget {
                             userData.uid,
                             base64Img,
                             nameInput.text,
+                            jobInput.text,
                             introductionInput.text,
                             forntSkillItems,
                             iotSkillItems,

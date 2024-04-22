@@ -7,6 +7,7 @@ class UserModel {
   String? image;
   String? token;
   String? name;
+  String? job;
   String? introduction;
   List<SkillInfo>? mainSkills;
   List<SkillInfo>? wantSkills;
@@ -15,6 +16,7 @@ class UserModel {
     this.image,
     this.token,
     this.name,
+    this.job,
     this.introduction,
     this.mainSkills,
     this.wantSkills,
@@ -32,6 +34,7 @@ class LoginUser extends UserModel {
     String? image,
     String? token,
     String? name,
+    String? job,
     String? introduction,
     required this.lastLogin,
     List<SkillInfo>? mainSkills,
@@ -44,6 +47,7 @@ class LoginUser extends UserModel {
           image: image,
           token: token,
           name: name,
+          job: job,
           introduction: introduction,
           mainSkills: mainSkills,
           wantSkills: wantSkills,
@@ -70,6 +74,7 @@ class LoginUser extends UserModel {
       token: json["token"],
       email: json["email"],
       name: json["name"],
+      job: json["job"],
       lastLogin: formattedTime,
       status: json['status'],
       introduction: json['introduction'],
@@ -110,6 +115,7 @@ class UpdateUser extends UserModel {
     required String uid,
     String? image,
     String? name,
+    String? job,
     String? introduction,
     List<SkillInfo>? mainSkills,
     List<SkillInfo>? wantSkills,
@@ -119,6 +125,7 @@ class UpdateUser extends UserModel {
           uid: uid,
           image: image,
           name: name,
+          job: job,
           introduction: introduction,
           mainSkills: mainSkills,
           wantSkills: wantSkills,
@@ -161,6 +168,7 @@ class UpdateUser extends UserModel {
       'password': password,
       'isEmailVerified': isEmailVerified,
       'name': name,
+      'job': job,
       'introduction': introduction,
       'skills': mainSkills!.map((e) => e.toJson()).toList(),
       'wantSkills': wantSkills!.map((e) => e.toJson()).toList(),
