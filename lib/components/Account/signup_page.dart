@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
 import 'package:social_mediam_match/states/user_state.dart';
@@ -14,8 +15,6 @@ class SignUpPage extends StatelessWidget {
     String signError = context.select((UserState value) => value.signError);
     TextEditingController emailController = TextEditingController();
     TextEditingController pwdController = TextEditingController();
-    // emailController.text = "taes60711@gmail.com";
-    // pwdController.text = "toto60711";
 
     void returnLoginPage() {
       resetAllInfo() {
@@ -44,116 +43,172 @@ class SignUpPage extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text("註冊帳戶"),
-      ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.email,
-                  size: 36,
-                ),
-                Expanded(
-                  child: SizedBox(
-                    height: 36,
-                    child: TextField(
-                      controller: emailController,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.all(8),
-                        border: OutlineInputBorder(),
-                        hintText: 'Email',
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                onPressed: () {
+                  returnLoginPage();
+                },
+                icon: Icon(Icons.arrow_back_ios),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.lock,
-                  size: 36,
-                ),
-                Expanded(
-                  child: SizedBox(
-                    height: 36,
-                    child: TextField(
-                      controller: pwdController,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.all(8),
-                        border: OutlineInputBorder(),
-                        hintText: 'Password',
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            const SizedBox(
+              height: 20,
             ),
-          ),
-          signErrorMessage,
-          ElevatedButton(
-            onPressed: () async {
-              String email = emailController.text;
-              String pwd = pwdController.text;
-              log("signUpPage Email:$email Pwd:$pwd");
-              bool isSignSucess = await userFuture.signUp(email, pwd);
-              isSignSucess ? returnLoginPage() : () {};
-            },
-            child: const Text("註冊"),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-              padding: const EdgeInsets.all(10.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Container(
-                      width: 20,
-                      height: 1,
-                      color: Colors.black45,
-                    ),
+                  const Icon(
+                    Icons.email,
+                    size: 36,
                   ),
-                  const Text("或"),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Container(
-                      width: 20,
-                      height: 1,
-                      color: Colors.black45,
+                  Expanded(
+                    child: SizedBox(
+                      height: 36,
+                      child: TextField(
+                        controller: emailController,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(8),
+                          border: OutlineInputBorder(),
+                          hintText: 'Email',
+                        ),
+                      ),
                     ),
                   ),
                 ],
-              )),
-          ElevatedButton(
-            onPressed: () {
-              log("Google 登入");
-            },
-            child: const Text("Google 登入"),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              log("Twitter 登入");
-            },
-            child: const Text("Twitter 登入"),
-          ),
-        ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.lock,
+                    size: 36,
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      height: 36,
+                      child: TextField(
+                        controller: pwdController,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(8),
+                          border: OutlineInputBorder(),
+                          hintText: 'Password',
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            signErrorMessage,
+            GestureDetector(
+                onTap: () async {
+                  String email = emailController.text;
+                  String pwd = pwdController.text;
+                  log("signUpPage Email:$email Pwd:$pwd");
+                  bool isSignSucess = await userFuture.signUp(email, pwd);
+                  isSignSucess ? returnLoginPage() : () {};
+                },
+                child: Container(
+                  width: ScreenSize().width,
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(246, 138, 89, 1),
+                    borderRadius: BorderRadius.all(Radius.circular(13)),
+                  ),
+                  child: Center(child: Text("註冊")),
+                )),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Container(
+                        width: 20,
+                        height: 1,
+                        color: Colors.black45,
+                      ),
+                    ),
+                    const Text("或"),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Container(
+                        width: 20,
+                        height: 1,
+                        color: Colors.black45,
+                      ),
+                    ),
+                  ],
+                )),
+            GestureDetector(
+              onTap: () {
+                log("Google 登入");
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.5, color: Color.fromRGBO(66, 82, 95, 1)),
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  borderRadius: BorderRadius.all(Radius.circular(13)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 25,
+                      height: 25,
+                      child: Image.asset('assets/google_Logo.png', fit: BoxFit.cover),
+                    ),
+                    SizedBox(width: 10),
+                    const Text("Google 登入"),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            GestureDetector(
+              onTap: () {
+                log("X (Twitter) 登入");
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.5, color: Color.fromRGBO(66, 82, 95, 1)),
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  borderRadius: BorderRadius.all(Radius.circular(13)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 25,
+                      height: 25,
+                      child: Image.asset('assets/twitter_Logo.png', fit: BoxFit.cover),
+                    ),
+                    SizedBox(width: 10),
+                    const Text("X (Twitter) 登入"),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -129,10 +129,10 @@ class LoginPage extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 8, bottom: 20),
-            child: Container(
+            child: SizedBox(
               width: 200,
               height: 200,
-              color: Colors.blueAccent,
+              child: Image.asset('assets/Logo.png'),
             ),
           ),
           IconWithInput(

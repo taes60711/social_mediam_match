@@ -72,8 +72,13 @@ dev_dependencies:
 flutter:
   assets:
     - assets/Logo.png
+    - assets/google_Logo.png
+    - assets/twitter_Logo.png
     - assets/masion.mp3
-
+  fonts:
+    - family: GenJyu
+      fonts:
+        - asset: assets/fonts/GenJyuuGothic-Medium.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
