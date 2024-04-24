@@ -72,8 +72,8 @@ dev_dependencies:
 flutter:
   assets:
     - assets/Logo.png
-    - assets/google_Logo.png
-    - assets/twitter_Logo.png
+    - assets/google_w_Logo.png
+    - assets/twitter_w_Logo.png
     - assets/masion.mp3
   fonts:
     - family: GenJyu

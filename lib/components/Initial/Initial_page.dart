@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/account/welcome_page.dart';
 import 'package:social_mediam_match/components/home/home.dart';
 import 'package:social_mediam_match/components/Initial/logo.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
@@ -61,7 +62,7 @@ class Initialpage extends StatelessWidget {
           friendState: friendState,
         );
       } else {
-        component = const LoginPage();
+        component = WelcomePage(); //const LoginPage();
       }
     }
 

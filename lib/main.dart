@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/account/login_page.dart';
 import 'package:social_mediam_match/components/account/signup_page.dart';
 import 'package:social_mediam_match/components/Initial/initial_page.dart';
 import 'package:social_mediam_match/components/home/postPage/editor_page.dart';
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
               child: const Initialpage(),
             ),
         '/signUp': (BuildContext context) => const SignUpPage(),
+        '/login': (BuildContext context) => const LoginPage(),
         '/postEdit': (BuildContext context) => ChangeNotifierProvider(
               create: (_) => PostState(),
               child: const EditorPage(),

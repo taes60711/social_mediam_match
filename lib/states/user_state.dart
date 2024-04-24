@@ -25,6 +25,17 @@ class UserState extends ChangeNotifier {
   String url = "http://$ip:$port/user";
   //登録かどうか確認、登録したらログインしなくてために
   bool _isSignUp = false;
+  //サインアップステップインデックス
+  int signUpIndex = 0;
+
+  //メソッド：サインアップページチェンジ
+  //param
+  //toSignUpIndex : サインアップのページインデックス
+  int onChangePage(int toSignUpIndex) {
+    signUpIndex = toSignUpIndex;
+    notifyListeners();
+    return signUpIndex;
+  }
 
   //メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する
   void isLoginCheck(FriendState chatListChannel) {
@@ -109,12 +120,33 @@ class UserState extends ChangeNotifier {
         case "weak-password":
           signError = SignUpStatus.PwdWeakError.value;
           break;
+        case "channel-error":
+          signError = "channel-error";
+          break;
       }
       notifyListeners();
     }
     _isSignUp = false;
     print("_isSignUp ${_isSignUp}");
     return isSucess;
+  }
+
+  //メソッド：メールアドレスかどうか確認
+  //param
+  //email：メールアドレス
+  bool signUpEmailCheck(String email) {
+    bool isEmail = true;
+    if (!email.contains("@")) {
+      signError = SignUpStatus.EmailFormatError.value;
+      notifyListeners();
+      isEmail = false;
+    }
+    return isEmail;
+  }
+
+  void signUpErrorReset() {
+    signError = SignUpStatus.NoMessage.value;
+    notifyListeners();
   }
 
   //メソッド：ログアウト
