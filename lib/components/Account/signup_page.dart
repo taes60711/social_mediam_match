@@ -400,47 +400,50 @@ class SignUpPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(
-                onPressed: () {
-                  if (signUpIndex == 0) {
-                    returnHomePage();
-                  } else {
-                    userFuture.onChangePage(signUpIndex - 1);
-                  }
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: normalBgColor2,
+        child: Container(
+          decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/bg.png'), fit: BoxFit.cover)),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  onPressed: () {
+                    if (signUpIndex == 0) {
+                      returnHomePage();
+                    } else {
+                      userFuture.onChangePage(signUpIndex - 1);
+                    }
+                  },
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: normalBgColor2,
+                  ),
                 ),
               ),
-            ),
-            signUpPageList[signUpIndex],
-            signUpIndex != 0
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: signStepList.map((e) {
-                      bool inPage = signStepList.indexOf(e) == signUpIndex - 1;
-                      return inPage
-                          ? Container(
-                              margin: EdgeInsets.all(5),
-                              width: 10,
-                              height: 10,
-                              color: normalBgColor,
-                            )
-                          : Container(
-                              margin: EdgeInsets.all(5),
-                              width: 10,
-                              height: 10,
-                              color: Color.fromARGB(255, 192, 191, 191),
-                            );
-                    }).toList(),
-                  )
-                : Container(),
-          ],
+              signUpPageList[signUpIndex],
+              signUpIndex != 0
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: signStepList.map((e) {
+                        bool inPage = signStepList.indexOf(e) == signUpIndex - 1;
+                        return inPage
+                            ? Container(
+                                margin: EdgeInsets.all(5),
+                                width: 10,
+                                height: 10,
+                                color: normalBgColor,
+                              )
+                            : Container(
+                                margin: EdgeInsets.all(5),
+                                width: 10,
+                                height: 10,
+                                color: Color.fromARGB(255, 192, 191, 191),
+                              );
+                      }).toList(),
+                    )
+                  : Container(),
+            ],
+          ),
         ),
       ),
     );
