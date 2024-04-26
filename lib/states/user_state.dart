@@ -11,6 +11,8 @@ import 'package:social_mediam_match/states/services/db_service.dart';
 class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DBService _dbService = DBService();
+  //サーバーアドレス
+  String url = "http://$ip:$port/user";
   //ユーザダータ
   LoginUser? userData;
   //ページローディング
@@ -21,13 +23,13 @@ class UserState extends ChangeNotifier {
   String loginError = LoginStatus.NoMessage.value;
   //ログインのエラーメッセージ
   String signError = SignUpStatus.NoMessage.value;
-  //サーバーアドレス
-  String url = "http://$ip:$port/user";
   //登録かどうか確認、登録したらログインしなくてために
   bool _isSignUp = false;
   //サインアップステップインデックス
   int signUpIndex = 0;
-
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController pwdController = TextEditingController();
   //メソッド：サインアップページチェンジ
   //param
   //toSignUpIndex : サインアップのページインデックス

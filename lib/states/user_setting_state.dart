@@ -145,6 +145,7 @@ class UserSettingState extends ChangeNotifier {
 
   void openSkillselectPage(String type) {
     this.type = type;
+    key.currentState!.openEndDrawer();
     notifyListeners();
   }
 
