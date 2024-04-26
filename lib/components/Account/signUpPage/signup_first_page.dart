@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -14,6 +16,23 @@ class SignUpFirstPage extends StatelessWidget {
   final Widget signErrorMessage;
   final UserState userFuture;
   const SignUpFirstPage({super.key, required this.emailController, required this.signErrorMessage, required this.userFuture});
+
+  //ホームのボタン
+  //param:
+  //title: ボタン内の文字、　titleColor:　ボタン内の文字の色
+  //backgroundColor: ボタンの色、　onPressed: ボタンの機能関数
+  _button({required title, required titleColor, required backgroundColor, required onPressed, String? iconImg}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: CustomButton(
+        title: title,
+        titleColor: titleColor,
+        iconImg: iconImg,
+        backgroundColor: backgroundColor,
+        onPress: onPressed,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +57,7 @@ class SignUpFirstPage extends StatelessWidget {
         ),
         signErrorMessage,
         Padding(
-          padding: const EdgeInsets.only(left: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Row(
@@ -70,21 +89,17 @@ class SignUpFirstPage extends StatelessWidget {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: CustomButton(
+        _button(
             title: "信箱登入",
-            titleColor: Colors.white,
+            titleColor: normalTextColor,
             backgroundColor: normalBgColor,
-            onPress: () {
+            onPressed: () {
               bool isEmail = userFuture.signUpEmailCheck(emailController.text);
               if (isEmail) {
                 userFuture.onChangePage(1);
                 userFuture.signUpErrorReset();
               }
-            },
-          ),
-        ),
+            }),
         Container(
           padding: EdgeInsets.symmetric(vertical: 10),
           width: ScreenSize().width,
@@ -115,29 +130,23 @@ class SignUpFirstPage extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: CustomButton(
-              title: "Google 登入",
-              titleColor: Colors.white,
-              iconImg: 'assets/google_w_Logo.png',
-              backgroundColor: Color.fromARGB(255, 93, 161, 238),
-              onPress: () {
-                log("Google 登入");
-              }),
-        ),
-        SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: CustomButton(
-              title: "Twitter 登入",
-              titleColor: Colors.white,
-              iconImg: 'assets/twitter_w_Logo.png',
-              backgroundColor: Color.fromARGB(255, 41, 41, 41),
-              onPress: () {
-                log("Twitter 登入");
-              }),
-        ),
+        _button(
+            title: "Google 登入",
+            titleColor: normalTextColor,
+            backgroundColor: Color.fromARGB(255, 93, 161, 238),
+            iconImg: 'assets/google_w_Logo.png',
+            onPressed: () {
+              log("Google 登入");
+            }),
+        const SizedBox(height: 10),
+        _button(
+            title: "Twitter 登入",
+            titleColor: normalTextColor,
+            backgroundColor: Color.fromARGB(255, 41, 41, 41),
+            iconImg: 'assets/twitter_w_Logo.png',
+            onPressed: () {
+              log("Twitter 登入");
+            }),
       ],
     );
   }

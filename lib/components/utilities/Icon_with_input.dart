@@ -51,11 +51,14 @@ class TitleInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title),
+          Padding(
+            padding: const EdgeInsets.only(left: 5, bottom: 5),
+            child: Text(title),
+          ),
           SizedBox(
             height: inputHeight,
             child: TextField(

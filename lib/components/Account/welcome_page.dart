@@ -13,7 +13,6 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //バージョンテキスト
-
     Widget _versionText = const Text(
       "ver 1.0.0",
       style: TextStyle(
@@ -25,7 +24,7 @@ class WelcomePage extends StatelessWidget {
     //ホームのボタン
     //param:
     //title: ボタン内の文字、　titleColor:　ボタン内の文字の色
-    //backgroundColor: ボタンの色、　onPressed: ボタン機能の関数
+    //backgroundColor: ボタンの色、　onPressed: ボタンの機能関数
     _button({required title, required titleColor, required backgroundColor, required onPressed}) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
