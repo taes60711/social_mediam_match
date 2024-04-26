@@ -46,19 +46,35 @@ class TitleInput extends StatelessWidget {
   final String title;
   final double inputHeight;
   final TextEditingController textController;
-  const TitleInput({super.key, required this.title, required this.inputHeight, required this.textController});
+  final bool? isrequired;
+  const TitleInput({super.key, required this.title, required this.inputHeight, this.isrequired, required this.textController});
 
   @override
   Widget build(BuildContext context) {
+    bool isInputRequired = isrequired ?? false;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 5, bottom: 5),
-            child: Text(title),
-          ),
+          isInputRequired
+              ? Text.rich(
+                  TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: '*',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      TextSpan(
+                        text: title,
+                      ),
+                    ],
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(left: 5, bottom: 5),
+                  child: Text(title),
+                ),
           SizedBox(
             height: inputHeight,
             child: TextField(

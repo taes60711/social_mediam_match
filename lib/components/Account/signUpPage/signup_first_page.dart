@@ -1,4 +1,4 @@
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, avoid_print
 
 import 'dart:developer';
 
@@ -44,7 +44,7 @@ class SignUpFirstPage extends StatelessWidget {
     child: Align(
       alignment: Alignment.centerLeft,
       child: Text(
-        introduction,
+        FirstPage().introduction,
         style: TextStyle(color: hintTextColor, fontSize: 14),
       ),
     ),
@@ -58,7 +58,7 @@ class SignUpFirstPage extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            hintText,
+            FirstPage().hintText,
             style: TextStyle(color: hintTextColor, fontSize: 14),
           ),
           GestureDetector(
@@ -66,12 +66,12 @@ class SignUpFirstPage extends StatelessWidget {
               print("使用者條款");
             },
             child: Text(
-              termText,
+              FirstPage().termText,
               style: TextStyle(color: normalBgColor, fontSize: 14),
             ),
           ),
           Text(
-            andText,
+            FirstPage().andText,
             style: TextStyle(color: hintTextColor, fontSize: 14),
           ),
           GestureDetector(
@@ -79,7 +79,7 @@ class SignUpFirstPage extends StatelessWidget {
               print("隱私權政策");
             },
             child: Text(
-              privacyText,
+              FirstPage().privacyText,
               style: TextStyle(color: normalBgColor, fontSize: 14),
             ),
           ),
@@ -109,7 +109,7 @@ class SignUpFirstPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           line(padding: const EdgeInsets.only(left: 20, right: 10)),
-          const Text("或"),
+          Text(FirstPage().orText),
           line(padding: const EdgeInsets.only(left: 10, right: 20)),
         ],
       ),
@@ -118,16 +118,22 @@ class SignUpFirstPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String googleIconPath = 'assets/google_w_Logo.png';
+    Color googleButtonColor = const Color.fromARGB(255, 93, 161, 238);
+
+    String twitterIconPath = 'assets/twitter_w_Logo.png';
+    Color twitterButtonColor = const Color.fromARGB(255, 41, 41, 41);
+
     return Column(
       children: [
         //タイトル
-        Text(title),
+        Text(FirstPage().title),
         const SizedBox(height: 10),
         //紹介文章
         introductionWidget,
         //メールアドレスインプット
         TitleInput(
-          title: emailInputTitle,
+          title: FirstPage().emailInputTitle,
           inputHeight: 36,
           textController: emailController,
         ),
@@ -137,7 +143,7 @@ class SignUpFirstPage extends StatelessWidget {
         privacy,
         //メールアドレス登録ボタン
         _button(
-            title: emailButtonText,
+            title: FirstPage().emailButtonText,
             titleColor: normalTextColor,
             backgroundColor: normalBgColor,
             onPressed: () {
@@ -151,20 +157,20 @@ class SignUpFirstPage extends StatelessWidget {
         orText(),
         //グーグル登録ボタン
         _button(
-            title: googleButtonText,
+            title: FirstPage().googleButtonText,
             titleColor: normalTextColor,
-            backgroundColor: Color.fromARGB(255, 93, 161, 238),
-            iconImg: 'assets/google_w_Logo.png',
+            backgroundColor: googleButtonColor,
+            iconImg: googleIconPath,
             onPressed: () {
               log("Google 登入");
             }),
         const SizedBox(height: 10),
         //ツイッター登録ボタン
         _button(
-            title: twitterButtonText,
+            title: FirstPage().twitterButtonText,
             titleColor: normalTextColor,
-            backgroundColor: Color.fromARGB(255, 41, 41, 41),
-            iconImg: 'assets/twitter_w_Logo.png',
+            backgroundColor: twitterButtonColor,
+            iconImg: twitterIconPath,
             onPressed: () {
               log("Twitter 登入");
             }),

@@ -1,7 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/account/signUpPage/signUP_step_one.dart';
 import 'package:social_mediam_match/components/account/signUpPage/signup_first_page.dart';
+import 'package:social_mediam_match/components/account/signUpPage/signup_guide.dart';
+import 'package:social_mediam_match/components/account/signUpPage/signup_step_two.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
@@ -53,173 +56,16 @@ class SignUpPage extends StatelessWidget {
       userFuture: userFuture,
     );
 
-    Widget signUpTwicePage = Column(
-      children: [
-        Text("SMM用戶註冊"),
-        SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("用戶名"),
-              SizedBox(
-                height: 36,
-                child: TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-                    ),
-                    contentPadding: EdgeInsets.all(8),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '*',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    TextSpan(
-                      text: "密碼",
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 36,
-                child: TextField(
-                  controller: pwdController,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-                    ),
-                    contentPadding: EdgeInsets.all(8),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              signErrorMessage,
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Material(
-                  color: Color.fromRGBO(246, 138, 89, 1),
-                  borderRadius: BorderRadius.circular(15.0),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(15.0),
-                    onTap: () async {
-                      userFuture.onChangePage(2);
-                      String email = emailController.text;
-                      String pwd = pwdController.text;
-                      log("signUpPage Email:$email Pwd:$pwd");
-                      // bool isSignSucess = await userFuture.signUp(email, pwd);
-                      // isSignSucess ? userFuture.onChangePage(2) : () {print("sign Failed")};
-                    },
-                    child: Container(
-                      width: ScreenSize().width,
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      child: Center(
-                        child: Text(
-                          "註冊",
-                          style: TextStyle(color: Color.fromARGB(255, 243, 239, 231)),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+    Widget signUpTwicePage = SignUpStepOne(
+        emailController: emailController,
+        nameController: nameController,
+        pwdController: pwdController,
+        signErrorMessage: signErrorMessage,
+        userFuture: userFuture);
 
-    Widget signUpThirdPage = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(child: Text("個人資料設定")),
-        SizedBox(height: 10),
-        Text("職業"),
-        SizedBox(
-          height: 36,
-          child: TextField(
-            controller: emailController,
-            decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-              ),
-              contentPadding: EdgeInsets.all(8),
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Material(
-            color: Color.fromRGBO(246, 138, 89, 1),
-            borderRadius: BorderRadius.circular(15.0),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(15.0),
-              onTap: () async {
-                userFuture.onChangePage(3);
-              },
-              child: Container(
-                width: ScreenSize().width,
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: Center(
-                  child: Text(
-                    "送出",
-                    style: TextStyle(color: Color.fromARGB(255, 243, 239, 231)),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+    Widget signUpThirdPage = SignUpStepTwo(userFuture: userFuture);
 
-    Widget guidePage = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-            child: Text(
-          "導覽",
-        )),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Material(
-            color: Color.fromRGBO(246, 138, 89, 1),
-            borderRadius: BorderRadius.circular(15.0),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(15.0),
-              onTap: () async {
-                returnHomePage();
-              },
-              child: Container(
-                width: ScreenSize().width,
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: Center(
-                  child: Text(
-                    "跳過",
-                    style: TextStyle(color: Color.fromARGB(255, 243, 239, 231)),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+    Widget guidePage = SignUpGuide(returnHomePage: returnHomePage);
 
     List<Widget> signUpPageList = [signUpFirstPage, signUpTwicePage, signUpThirdPage, guidePage];
     List<String> signStepList = ["step1", "step2", "step3"];
