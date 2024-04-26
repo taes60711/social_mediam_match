@@ -38,6 +38,7 @@ class WelcomePage extends StatelessWidget {
     }
 
     return BackgroundWidget(
+      isSafeArea: false,
       child: FittedBox(
         child: Column(
           children: [

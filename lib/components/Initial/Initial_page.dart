@@ -62,7 +62,7 @@ class Initialpage extends StatelessWidget {
           friendState: friendState,
         );
       } else {
-        component = WelcomePage(); //const LoginPage();
+        component = const WelcomePage(); //const LoginPage();
       }
     }
 
