@@ -23,6 +23,32 @@ class DBService {
   int size = 8;
   String url = "http://$ip:$port";
 
+  searchStatus allCoursesServerInfo = searchStatus();
+  Future<List<CourseModel>> getAllCourses({bool? isFirst}) async {
+    String branch = "courses";
+
+    if (isFirst != null) {
+      allCoursesServerInfo.pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getAllCourses?page=${allCoursesServerInfo.pageNumber}&size=$size';
+    final uri = Uri.parse(searchUrl);
+    List<CourseModel> allCouserData = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        allCouserData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+          return CourseModel.toMap(e);
+        }).toList();
+        inspect(allCouserData);
+        allCoursesServerInfo.pageNumber++;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allCouserData;
+  }
+
   searchStatus coursesServerInfo = searchStatus();
   Future<List<CourseModel>> getCoursesByType(int type, {bool? isFirst}) async {
     String branch = "courses";
@@ -237,7 +263,6 @@ class DBService {
     }
 
     String searchUrl = '$url/$branch/getAll?page=${postServerInfo.pageNumber}&size=$size';
-
     final uri = Uri.parse(searchUrl);
     List<PostModel> allpostData = [];
     try {

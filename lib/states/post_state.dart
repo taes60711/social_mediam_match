@@ -8,6 +8,7 @@ class PostState extends ChangeNotifier {
   final DBService _dbService = DBService();
   final GlobalKey<ScaffoldState> forumGlobalKey = GlobalKey();
 
+  bool isCanLoading = true;
   List<PostModel> postData = [];
   bool isGood = false;
   List<getPostCommentModel> postCommentData = [];
@@ -120,6 +121,11 @@ class PostState extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
+  }
+
+  void canLoadingChange(bool loading) {
+    isCanLoading = loading;
+    notifyListeners();
   }
 
   void addData() {
@@ -317,6 +323,7 @@ class PostState extends ChangeNotifier {
     this.endDrawerType = endDrawerType;
     if (this.endDrawerType == "userDetail") {
       this.otherUser = otherUser;
+      globalKey.currentState!.openEndDrawer();
     } else {
       this.choicedPostData = choicedPostData;
       if (loginUserData!.uid != choicedPostData!.createdBy) {
@@ -325,6 +332,5 @@ class PostState extends ChangeNotifier {
       }
     }
     notifyListeners();
-    globalKey.currentState!.openEndDrawer();
   }
 }

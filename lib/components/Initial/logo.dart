@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
 class Logo extends StatelessWidget {
   const Logo({super.key});
@@ -8,9 +9,11 @@ class Logo extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Container(
-          width: 200,
-          height: 200,
-          color: Colors.cyan,
+          width: ScreenSize().width,
+          child: AspectRatio(
+            aspectRatio: 16.0 / 9.0,
+            child: Image.asset('assets/Logo.png'),
+          ),
         ),
       ),
     );

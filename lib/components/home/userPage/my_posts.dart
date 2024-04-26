@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
+import '../../utilities/rich_text_view.dart';
 import '../../utilities/user_icon.dart';
 import '../postPage/post_comment.dart';
 
@@ -17,59 +20,44 @@ class EditPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PostModel? choicedPost = postState.choicedPost;
-    TextEditingController messageInput = postState.messageInput;
-    return StatefulWrapper(
-        onInit: () {
-          messageInput.text = choicedPost!.mainMessage;
-        },
-        child: Scaffold(
-          body: SafeArea(
-            child: Column(
-              children: [
-                Text("編輯"),
-                choicedPost != null
-                    ? Container(
-                        width: ScreenSize().width,
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: IconButton(
-                                onPressed: () async {
-                                  print("Drawer Close");
+    QuillEditorController controller = QuillEditorController();
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Text("編輯"),
+            choicedPost != null
+                ? Container(
+                    width: ScreenSize().width,
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: IconButton(
+                            onPressed: () async {
+                              print("Drawer Close");
 
-                                  postState.myPostsGlobalKey.currentState!.closeEndDrawer();
-                                },
-                                icon: const Icon(Icons.arrow_back_ios_sharp),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                minLines: 5,
-                                maxLines: 255,
-                                controller: messageInput,
-                                decoration: const InputDecoration(
-                                  hintText: "文章內容",
-                                  filled: true,
-                                ),
-                                keyboardType: TextInputType.multiline,
-                              ),
-                            ),
-                          ],
+                              postState.myPostsGlobalKey.currentState!.closeEndDrawer();
+                            },
+                            icon: const Icon(Icons.arrow_back_ios_sharp),
+                          ),
                         ),
-                      )
-                    : Container(),
-                ElevatedButton(
-                    onPressed: () {
-                      postState.updatePostData(choicedPost!.id, messageInput.text);
-                      postState.myPostsGlobalKey.currentState!.closeEndDrawer();
-                    },
-                    child: Text("更新"))
-              ],
-            ),
-          ),
-        ));
+                        RichTextEditor(controller: controller, content: choicedPost!.mainMessage)
+                      ],
+                    ),
+                  )
+                : Container(),
+            ElevatedButton(
+                onPressed: () async {
+                  String content = await controller.getText();
+                  postState.updatePostData(choicedPost!.id, content);
+                  postState.myPostsGlobalKey.currentState!.closeEndDrawer();
+                },
+                child: Text("更新"))
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -201,7 +189,11 @@ class MyPosts extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                Text(myAllPosts[index].mainMessage),
+                                RichTextView(
+                                  content: myAllPosts[index].mainMessage.length >= 100
+                                      ? myAllPosts[index].mainMessage.substring(0, 100)
+                                      : myAllPosts[index].mainMessage,
+                                ),
                                 Row(
                                   children: [
                                     ElevatedButton(

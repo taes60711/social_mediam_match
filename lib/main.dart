@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/account/signup_page.dart';
+import 'package:social_mediam_match/components/account/login_page.dart';
+import 'package:social_mediam_match/components/account/signUpPage/signup_page.dart';
 import 'package:social_mediam_match/components/Initial/initial_page.dart';
 import 'package:social_mediam_match/components/home/postPage/editor_page.dart';
 import 'package:social_mediam_match/components/home/userPage/my_posts.dart';
@@ -9,6 +11,7 @@ import 'package:social_mediam_match/components/home/userPage/profile.dart';
 import 'package:social_mediam_match/components/home/userPage/privacy_setting.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
+import 'package:social_mediam_match/htmlMake.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
@@ -25,6 +28,12 @@ void main() async {
 
   NotificationService notificationService = NotificationService()..initNotification();
   notificationService.notificationListen();
+  await SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ],
+  );
 
   runApp(MultiProvider(
     providers: [
@@ -44,6 +53,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        fontFamily: 'GenJyu',
         useMaterial3: false,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         pageTransitionsTheme: const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
@@ -57,6 +67,7 @@ class MyApp extends StatelessWidget {
               child: const Initialpage(),
             ),
         '/signUp': (BuildContext context) => const SignUpPage(),
+        '/login': (BuildContext context) => const LoginPage(),
         '/postEdit': (BuildContext context) => ChangeNotifierProvider(
               create: (_) => PostState(),
               child: const EditorPage(),
@@ -72,5 +83,8 @@ class MyApp extends StatelessWidget {
             ),
       },
     );
+    // return MaterialApp(
+    //   home: htmlMake(),
+    // );
   }
 }

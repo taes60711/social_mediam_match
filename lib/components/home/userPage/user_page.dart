@@ -220,6 +220,7 @@ class UserPage extends StatelessWidget {
           ),
           Text("Hello, ${userData.name ?? userData.email}"),
           Text("身分 ${userData.status}"),
+          Text("職業 ${userData.job}"),
           SizedBox(
             width: ScreenSize().width,
             child: SkillListView(

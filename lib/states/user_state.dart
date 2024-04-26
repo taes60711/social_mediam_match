@@ -11,6 +11,8 @@ import 'package:social_mediam_match/states/services/db_service.dart';
 class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DBService _dbService = DBService();
+  //サーバーアドレス
+  String url = "http://$ip:$port/user";
   //ユーザダータ
   LoginUser? userData;
   //ページローディング
@@ -21,10 +23,21 @@ class UserState extends ChangeNotifier {
   String loginError = LoginStatus.NoMessage.value;
   //ログインのエラーメッセージ
   String signError = SignUpStatus.NoMessage.value;
-  //サーバーアドレス
-  String url = "http://$ip:$port/user";
   //登録かどうか確認、登録したらログインしなくてために
   bool _isSignUp = false;
+  //サインアップステップインデックス
+  int signUpIndex = 0;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController pwdController = TextEditingController();
+  //メソッド：サインアップページチェンジ
+  //param
+  //toSignUpIndex : サインアップのページインデックス
+  int onChangePage(int toSignUpIndex) {
+    signUpIndex = toSignUpIndex;
+    notifyListeners();
+    return signUpIndex;
+  }
 
   //メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する
   void isLoginCheck(FriendState chatListChannel) {
@@ -109,12 +122,33 @@ class UserState extends ChangeNotifier {
         case "weak-password":
           signError = SignUpStatus.PwdWeakError.value;
           break;
+        case "channel-error":
+          signError = "channel-error";
+          break;
       }
       notifyListeners();
     }
     _isSignUp = false;
     print("_isSignUp ${_isSignUp}");
     return isSucess;
+  }
+
+  //メソッド：メールアドレスかどうか確認
+  //param
+  //email：メールアドレス
+  bool signUpEmailCheck(String email) {
+    bool isEmail = true;
+    if (!email.contains("@")) {
+      signError = SignUpStatus.EmailFormatError.value;
+      notifyListeners();
+      isEmail = false;
+    }
+    return isEmail;
+  }
+
+  void signUpErrorReset() {
+    signError = SignUpStatus.NoMessage.value;
+    notifyListeners();
   }
 
   //メソッド：ログアウト

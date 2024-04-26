@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/account/welcome_page.dart';
 import 'package:social_mediam_match/components/home/home.dart';
 import 'package:social_mediam_match/components/Initial/logo.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
@@ -15,7 +16,7 @@ class Initialpage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int delayTime = 1;
+    int delayTime = 3;
 
     bool isfirstEnterApp = context.select((InitialState value) => value.isfirstEnterApp);
     FriendState friendState = context.select((FriendState value) => value);
@@ -28,6 +29,7 @@ class Initialpage extends StatelessWidget {
           email: value.userData!.email,
           isEmailVerified: value.userData!.isEmailVerified,
           name: value.userData!.name,
+          job: value.userData!.job,
           lastLogin: value.userData!.lastLogin,
           status: value.userData!.status,
           introduction: value.userData!.introduction,
@@ -60,7 +62,7 @@ class Initialpage extends StatelessWidget {
           friendState: friendState,
         );
       } else {
-        component = const LoginPage();
+        component = const WelcomePage(); //const LoginPage();
       }
     }
 

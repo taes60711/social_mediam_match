@@ -20,6 +20,7 @@ class UserIcon extends StatelessWidget {
               child: Image.memory(
                 const Base64Decoder().convert(userIcon),
                 gaplessPlayback: true,
+                fit: BoxFit.cover,
               ),
             )
           : Container(

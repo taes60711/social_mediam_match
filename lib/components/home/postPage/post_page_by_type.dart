@@ -11,7 +11,55 @@ import 'package:social_mediam_match/states/post_state.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
 
+import '../../utilities/rich_text_view.dart';
 import '../skillExChangePage/user_detail.dart';
+
+class RightToLeftAnimationDialog extends StatefulWidget {
+  final Widget child;
+
+  RightToLeftAnimationDialog({required this.child});
+
+  @override
+  _RightToLeftAnimationDialogState createState() => _RightToLeftAnimationDialogState();
+}
+
+class _RightToLeftAnimationDialogState extends State<RightToLeftAnimationDialog> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    _animation = Tween<double>(begin: 1, end: 0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
+          child: child,
+        );
+      },
+      child: widget.child,
+    );
+  }
+}
 
 class PostPageByType extends StatelessWidget {
   final LoginUser userData;
@@ -28,22 +76,32 @@ class PostPageByType extends StatelessWidget {
     bool isDataAddLoding = context.select((PostState value) => value.isDataAddLoding);
     bool isReLoading = context.select((PostState value) => value.isReLoading);
     GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.globalKey);
-    String endDrawerType = context.select((PostState value) => value.endDrawerType);
     LoginUser? otherUser = context.select((PostState value) => value.otherUser);
-    PostModel choicedPostData = context.select(
-      (PostState value) =>
-          value.choicedPostData ??
-          PostModel(
-              id: -1,
-              createdBy: "",
-              mainMessage: "",
-              commentCount: 0,
-              postTime: "",
-              postUserInfo: LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: -1),
-              viewed: 0,
-              good: 0,
-              type: 0),
-    );
+    bool isCanLoading = context.select((PostState value) => value.isCanLoading);
+
+    Future<void> tts({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
+      return showDialog(
+        context: context,
+        barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
+        builder: (BuildContext context) {
+          return RightToLeftAnimationDialog(
+            child: Dismissible(
+              direction: DismissDirection.startToEnd,
+              resizeDuration: const Duration(milliseconds: 1),
+              onDismissed: (_) => Navigator.of(context).pop(),
+              key: const Key('key'),
+              child: PostComment(
+                choicedPostData: choicedPostData,
+                userData: userData,
+                globalKey: globalKey,
+                gotoFriendPage: gotoFriendPage,
+                changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+              ),
+            ),
+          );
+        },
+      );
+    }
 
     void changeChoicedPostGoodCount({required PostModel choicedPost, required isGood}) {
       postState.changeChoicedPostGoodCount(choicedPost: choicedPost, isGood: isGood);
@@ -55,23 +113,17 @@ class PostPageByType extends StatelessWidget {
         await postState.getPostDataByType(type, searchType: "First");
       },
       child: isFirstLoading
-          ? const Loading()
+          ? Scaffold(
+              body: const Loading(),
+            )
           : Scaffold(
               key: globalKey,
-              endDrawer: endDrawerType == "userDetail"
-                  ? UserDetail(
-                      globalKey: globalKey,
-                      userData: userData,
-                      otherUser: otherUser,
-                      gotoFriendPage: gotoFriendPage,
-                    )
-                  : PostComment(
-                      choicedPostData: choicedPostData,
-                      userData: userData,
-                      globalKey: globalKey,
-                      gotoFriendPage: gotoFriendPage,
-                      changeChoicedPostGoodCount: changeChoicedPostGoodCount,
-                    ),
+              endDrawer: UserDetail(
+                globalKey: globalKey,
+                userData: userData,
+                otherUser: otherUser,
+                gotoFriendPage: gotoFriendPage,
+              ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(RoutePath.postEditPage.value, arguments: {
@@ -100,17 +152,24 @@ class PostPageByType extends StatelessWidget {
                               final scrollPosition = scrollNotification.metrics.pixels;
                               final max = scrollNotification.metrics.maxScrollExtent;
                               if (!isDataAddLoding && !isReLoading) {
-                                if (scrollPosition > max && !isDataAddLoding) {
+                                if (scrollPosition > max && isCanLoading && !isDataAddLoding) {
+                                  postState.canLoadingChange(false);
                                   postState.addData();
-                                } else if (scrollPosition < 0 && !isReLoading) {
+                                } else if (scrollPosition < 0 && isCanLoading && !isReLoading) {
+                                  postState.canLoadingChange(false);
                                   postState.reLoadingPage();
+                                }
+                              }
+                              if (!isCanLoading) {
+                                if (scrollNotification.dragDetails == null) {
+                                  postState.canLoadingChange(true);
                                 }
                               }
                             }
                             if (scrollNotification is ScrollEndNotification) {
-                              if (isDataAddLoding) {
+                              if (isDataAddLoding && isCanLoading) {
                                 postState.getPostDataByType(type, searchType: "AddData");
-                              } else if (isReLoading) {
+                              } else if (isReLoading && isCanLoading) {
                                 postState.getPostDataByType(type, searchType: "Reload");
                               }
                             }
@@ -125,6 +184,10 @@ class PostPageByType extends StatelessWidget {
                                       padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
                                       child: GestureDetector(
                                         onTap: () async {
+                                          tts(
+                                            choicedPostData: postData[index],
+                                            changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+                                          );
                                           await postState.openDrawer("movetoPost", globalKey,
                                               loginUserData: userData, choicedPostData: postData[index]);
                                         },
@@ -155,7 +218,11 @@ class PostPageByType extends StatelessWidget {
                                                   ],
                                                 ),
                                               ),
-                                              Text(postData[index].mainMessage),
+                                              RichTextView(
+                                                content: postData[index].mainMessage.length >= 100
+                                                    ? postData[index].mainMessage.substring(0, 100)
+                                                    : postData[index].mainMessage,
+                                              ),
                                               Row(
                                                 children: [
                                                   Text("已 ${postData[index].viewed} 人瀏覽過"),
@@ -175,6 +242,10 @@ class PostPageByType extends StatelessWidget {
                                           padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
                                           child: GestureDetector(
                                             onTap: () async {
+                                              tts(
+                                                choicedPostData: postData[index],
+                                                changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+                                              );
                                               await postState.openDrawer("movetoPost", globalKey,
                                                   loginUserData: userData, choicedPostData: postData[index]);
                                             },
@@ -205,7 +276,11 @@ class PostPageByType extends StatelessWidget {
                                                       ],
                                                     ),
                                                   ),
-                                                  Text(postData[index].mainMessage),
+                                                  RichTextView(
+                                                    content: postData[index].mainMessage.length >= 100
+                                                        ? postData[index].mainMessage.substring(0, 100)
+                                                        : postData[index].mainMessage,
+                                                  ),
                                                   Row(
                                                     children: [
                                                       Text("已 ${postData[index].viewed} 人瀏覽過"),
