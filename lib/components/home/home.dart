@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/skill_exchange_page.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_page.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
-import 'package:social_mediam_match/components/home/postPage/post_page.dart';
 import 'package:social_mediam_match/components/home/userPage/user_page.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/course_state.dart';

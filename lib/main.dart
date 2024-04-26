@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/login_page.dart';
-import 'package:social_mediam_match/components/account/signup_page.dart';
+import 'package:social_mediam_match/components/account/signUpPage/signup_page.dart';
 import 'package:social_mediam_match/components/Initial/initial_page.dart';
 import 'package:social_mediam_match/components/home/postPage/editor_page.dart';
 import 'package:social_mediam_match/components/home/userPage/my_posts.dart';

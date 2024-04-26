@@ -41,3 +41,37 @@ class IconWithInput extends StatelessWidget {
     );
   }
 }
+
+class TitleInput extends StatelessWidget {
+  final String title;
+  final double inputHeight;
+  final TextEditingController textController;
+  const TitleInput({super.key, required this.title, required this.inputHeight, required this.textController});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title),
+          SizedBox(
+            height: inputHeight,
+            child: TextField(
+              controller: textController,
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                ),
+                contentPadding: const EdgeInsets.all(8),
+                border: const OutlineInputBorder(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

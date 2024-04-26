@@ -166,7 +166,6 @@ class Profile extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             userSettingState.openSkillselectPage("have");
-                            key.currentState!.openEndDrawer();
                           },
                           child: Row(
                             children: [
@@ -187,7 +186,6 @@ class Profile extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             userSettingState.openSkillselectPage("want");
-                            key.currentState!.openEndDrawer();
                           },
                           child: Row(
                             children: [
