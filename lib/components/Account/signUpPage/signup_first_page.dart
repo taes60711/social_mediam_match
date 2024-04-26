@@ -5,7 +5,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/Icon_with_input.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
-
 import '../../../states/user_state.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/style/screen_size.dart';
@@ -15,9 +14,14 @@ class SignUpFirstPage extends StatelessWidget {
   final TextEditingController emailController;
   final Widget signErrorMessage;
   final UserState userFuture;
-  const SignUpFirstPage({super.key, required this.emailController, required this.signErrorMessage, required this.userFuture});
+  SignUpFirstPage({
+    super.key,
+    required this.emailController,
+    required this.signErrorMessage,
+    required this.userFuture,
+  });
 
-  //ホームのボタン
+  //ボタン
   //param:
   //title: ボタン内の文字、　titleColor:　ボタン内の文字の色
   //backgroundColor: ボタンの色、　onPressed: ボタンの機能関数
@@ -34,63 +38,106 @@ class SignUpFirstPage extends StatelessWidget {
     );
   }
 
+  //紹介文章
+  final Widget introductionWidget = Padding(
+    padding: const EdgeInsets.only(left: 8.0),
+    child: Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        introduction,
+        style: TextStyle(color: hintTextColor, fontSize: 14),
+      ),
+    ),
+  );
+
+  //プライバシー
+  final Widget privacy = Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+    child: Align(
+      alignment: Alignment.centerLeft,
+      child: Row(
+        children: [
+          Text(
+            hintText,
+            style: TextStyle(color: hintTextColor, fontSize: 14),
+          ),
+          GestureDetector(
+            onTap: () {
+              print("使用者條款");
+            },
+            child: Text(
+              termText,
+              style: TextStyle(color: normalBgColor, fontSize: 14),
+            ),
+          ),
+          Text(
+            andText,
+            style: TextStyle(color: hintTextColor, fontSize: 14),
+          ),
+          GestureDetector(
+            onTap: () {
+              print("隱私權政策");
+            },
+            child: Text(
+              privacyText,
+              style: TextStyle(color: normalBgColor, fontSize: 14),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  //or テキスト
+  orText() {
+    line({required EdgeInsetsGeometry padding}) {
+      return Expanded(
+        child: Padding(
+          padding: padding,
+          child: Container(
+            height: 1,
+            color: Colors.black45,
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      width: ScreenSize().width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          line(padding: const EdgeInsets.only(left: 20, right: 10)),
+          const Text("或"),
+          line(padding: const EdgeInsets.only(left: 10, right: 20)),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        //タイトル
         Text(title),
         const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              introduction,
-              style: TextStyle(color: hintTextColor, fontSize: 14),
-            ),
-          ),
-        ),
+        //紹介文章
+        introductionWidget,
+        //メールアドレスインプット
         TitleInput(
           title: emailInputTitle,
           inputHeight: 36,
           textController: emailController,
         ),
+        //エラーメッセージ
         signErrorMessage,
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Row(
-              children: [
-                Text(
-                  '註冊即代表同意 ',
-                  style: TextStyle(color: hintTextColor, fontSize: 14),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    print("使用者條款");
-                  },
-                  child: Text(
-                    '使用者條款',
-                    style: TextStyle(color: normalBgColor, fontSize: 14),
-                  ),
-                ),
-                Text(' 與 ', style: TextStyle(color: hintTextColor, fontSize: 14)),
-                GestureDetector(
-                  onTap: () {
-                    print("使用者條款");
-                  },
-                  child: Text(
-                    '隱私權政策',
-                    style: TextStyle(color: normalBgColor, fontSize: 14),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        //プライバシー
+        privacy,
+        //メールアドレス登録ボタン
         _button(
-            title: "信箱登入",
+            title: emailButtonText,
             titleColor: normalTextColor,
             backgroundColor: normalBgColor,
             onPressed: () {
@@ -100,38 +147,11 @@ class SignUpFirstPage extends StatelessWidget {
                 userFuture.signUpErrorReset();
               }
             }),
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          width: ScreenSize().width,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 10),
-                  child: Container(
-                    width: 20,
-                    height: 1,
-                    color: Colors.black45,
-                  ),
-                ),
-              ),
-              const Text("或"),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 20),
-                  child: Container(
-                    width: 20,
-                    height: 1,
-                    color: Colors.black45,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        //or テキスト
+        orText(),
+        //グーグル登録ボタン
         _button(
-            title: "Google 登入",
+            title: googleButtonText,
             titleColor: normalTextColor,
             backgroundColor: Color.fromARGB(255, 93, 161, 238),
             iconImg: 'assets/google_w_Logo.png',
@@ -139,8 +159,9 @@ class SignUpFirstPage extends StatelessWidget {
               log("Google 登入");
             }),
         const SizedBox(height: 10),
+        //ツイッター登録ボタン
         _button(
-            title: "Twitter 登入",
+            title: twitterButtonText,
             titleColor: normalTextColor,
             backgroundColor: Color.fromARGB(255, 41, 41, 41),
             iconImg: 'assets/twitter_w_Logo.png',

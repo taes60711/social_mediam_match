@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -84,6 +86,7 @@ class _RichTextViewState extends State<RichTextView> {
             textStyle: TextStyle(fontSize: fontSize),
           );
         }
+        return null;
       },
       onTapImage: (src) {
         inspect(src);

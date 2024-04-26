@@ -21,7 +21,7 @@ class WelcomePage extends StatelessWidget {
       ),
     );
 
-    //ホームのボタン
+    //ボタン
     //param:
     //title: ボタン内の文字、　titleColor:　ボタン内の文字の色
     //backgroundColor: ボタンの色、　onPressed: ボタンの機能関数
@@ -38,15 +38,18 @@ class WelcomePage extends StatelessWidget {
     }
 
     return BackgroundWidget(
+      isSafeArea: false,
       child: FittedBox(
         child: Column(
           children: [
+            //ロゴ
             Container(
               margin: EdgeInsets.only(top: ScreenSize().height / 8, bottom: ScreenSize().height / 3.5),
               width: 180,
               height: 180,
               child: Image.asset(logoImg),
             ),
+            //登録ボタン
             _button(
                 title: "第一次使用",
                 titleColor: normalTextColor,
@@ -55,6 +58,7 @@ class WelcomePage extends StatelessWidget {
                   Navigator.of(context).pushNamed(RoutePath.signUpPage.value);
                 }),
             const SizedBox(height: 10),
+            //”ログインページ遷移”ボタン
             _button(
                 title: "登入",
                 titleColor: normalBgColor2,
@@ -63,6 +67,7 @@ class WelcomePage extends StatelessWidget {
                   Navigator.of(context).pushNamed(RoutePath.loginPage.value);
                 }),
             const SizedBox(height: 30),
+            //バージョンテキスト
             _versionText,
           ],
         ),
