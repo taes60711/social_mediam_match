@@ -84,9 +84,21 @@ class _RichTextViewState extends State<RichTextView> {
           return HtmlWidget(
             element.innerHtml,
             textStyle: TextStyle(fontSize: fontSize),
+            onTapUrl: (url) {
+              print("click: $url");
+              final Uri _url = Uri.parse(url);
+              launchUrl(_url);
+              return false;
+            },
+            onTapImage: (src) {
+              inspect(src);
+              setState(() {
+                choicedImg = src.sources.first.url;
+              });
+              imageView(choicedImg);
+            },
           );
         }
-        return null;
       },
       onTapImage: (src) {
         inspect(src);
