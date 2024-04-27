@@ -26,9 +26,12 @@ class SignUpPage extends StatelessWidget {
     UserState userFuture = context.read<UserState>();
     String signError = context.select((UserState value) => value.signError);
     int signUpIndex = context.select((UserState value) => value.signUpIndex);
-    TextEditingController nameController = context.select((UserState value) => value.nameController);
     TextEditingController emailController = context.select((UserState value) => value.emailController);
     TextEditingController pwdController = context.select((UserState value) => value.pwdController);
+
+    TextEditingController nameController = context.select((UserSettingState value) => value.nameInput);
+    TextEditingController jobController = context.select((UserSettingState value) => value.jobInput);
+    TextEditingController introductionController = context.select((UserSettingState value) => value.introductionInput);
 
     UserSettingState userSettingState = context.read<UserSettingState>();
     GlobalKey<ScaffoldState> key = context.select((UserSettingState value) => value.key);
@@ -107,6 +110,9 @@ class SignUpPage extends StatelessWidget {
       allSkillItems: allSkillItems,
       allWantSkillItems: allWantSkillItems,
       userSettingState: userSettingState,
+      nameController: nameController,
+      jobController: jobController,
+      introductionController: introductionController,
     );
 
     Widget guidePage = SignUpGuide(returnHomePage: returnHomePage);

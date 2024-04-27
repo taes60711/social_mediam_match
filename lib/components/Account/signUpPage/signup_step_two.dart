@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/states/user_setting_state.dart';
 import '../../../models/skill_model.dart';
@@ -13,13 +15,20 @@ class SignUpStepTwo extends StatelessWidget {
   final UserSettingState userSettingState;
   final List<SkillModel> allSkillItems;
   final List<SkillModel> allWantSkillItems;
+  final TextEditingController nameController;
+  final TextEditingController jobController;
+  final TextEditingController introductionController;
 
-  const SignUpStepTwo(
-      {super.key,
-      required this.userFuture,
-      required this.userSettingState,
-      required this.allSkillItems,
-      required this.allWantSkillItems});
+  const SignUpStepTwo({
+    super.key,
+    required this.userFuture,
+    required this.userSettingState,
+    required this.allSkillItems,
+    required this.allWantSkillItems,
+    required this.nameController,
+    required this.jobController,
+    required this.introductionController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +39,11 @@ class SignUpStepTwo extends StatelessWidget {
         TitleInput(
           title: "職業",
           inputHeight: 36,
-          textController: TextEditingController(),
+          textController: jobController,
         ),
         TitleInput(
           title: "自我介紹",
-          textController: TextEditingController(),
+          textController: introductionController,
           isMulti: true,
         ),
         const SizedBox(height: 15),
@@ -126,6 +135,10 @@ class SignUpStepTwo extends StatelessWidget {
             titleColor: normalTextColor,
             backgroundColor: normalBgColor,
             onPress: () async {
+              print(
+                  "nameController : ${nameController.text} jobController : ${jobController.text} introductionController : ${introductionController.text}");
+              inspect(allSkillItems);
+              inspect(allWantSkillItems);
               userFuture.onChangePage(3);
             },
           ),

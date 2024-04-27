@@ -27,7 +27,6 @@ class UserState extends ChangeNotifier {
   bool _isSignUp = false;
   //サインアップステップインデックス
   int signUpIndex = 0;
-  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController pwdController = TextEditingController();
   //メソッド：サインアップページチェンジ
