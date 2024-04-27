@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print, avoid_function_literals_in_foreach_calls
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/signUpPage/signUP_step_one.dart';
@@ -111,6 +113,56 @@ class SignUpPage extends StatelessWidget {
 
     List<Widget> signUpPageList = [signUpFirstPage, signUpTwicePage, signUpThirdPage, guidePage];
     List<String> signStepList = ["step1", "step2", "step3"];
+
+    _stepView(List<String> signStepList) {
+      circle(Color bgColor) {
+        return Container(
+          margin: EdgeInsets.all(5),
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+        );
+      }
+
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: signStepList.map((e) {
+          bool inPage = signStepList.indexOf(e) == signUpIndex - 1;
+          return inPage ? circle(normalBgColor) : circle(const Color.fromARGB(255, 192, 191, 191));
+        }).toList(),
+      );
+    }
+
+    Widget stepView;
+    if (signUpIndex != 0) {
+      stepView = _stepView(signStepList);
+    } else {
+      stepView = Container();
+    }
+
+    Widget backButton = SizedBox(
+      width: ScreenSize().width,
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: IconButton(
+          onPressed: () {
+            if (signUpIndex == 0) {
+              returnHomePage();
+            } else {
+              userFuture.onChangePage(signUpIndex - 1);
+            }
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: normalBgColor2,
+          ),
+        ),
+      ),
+    );
+
     return StatefulWrapper(
       onInit: () {
         userSettingState.getSkillListData();
@@ -138,24 +190,7 @@ class SignUpPage extends StatelessWidget {
                   alignment: Alignment.topLeft,
                   child: Column(
                     children: [
-                      SizedBox(
-                          width: ScreenSize().width,
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: IconButton(
-                              onPressed: () {
-                                if (signUpIndex == 0) {
-                                  returnHomePage();
-                                } else {
-                                  userFuture.onChangePage(signUpIndex - 1);
-                                }
-                              },
-                              icon: Icon(
-                                Icons.arrow_back_ios,
-                                color: normalBgColor2,
-                              ),
-                            ),
-                          )),
+                      backButton,
                       signUpPageList[signUpIndex],
                     ],
                   ),
@@ -163,33 +198,7 @@ class SignUpPage extends StatelessWidget {
               ),
               SizedBox(
                 height: ScreenSize().safeheight * 0.05,
-                child: signUpIndex != 0
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: signStepList.map((e) {
-                          bool inPage = signStepList.indexOf(e) == signUpIndex - 1;
-                          return inPage
-                              ? Container(
-                                  margin: EdgeInsets.all(5),
-                                  width: 10,
-                                  height: 10,
-                                  decoration: BoxDecoration(
-                                    color: normalBgColor,
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                )
-                              : Container(
-                                  margin: EdgeInsets.all(5),
-                                  width: 10,
-                                  height: 10,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 192, 191, 191),
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                );
-                        }).toList(),
-                      )
-                    : Container(),
+                child: stepView,
               ),
             ],
           ),

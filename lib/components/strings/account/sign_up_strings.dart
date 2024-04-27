@@ -21,3 +21,8 @@ class StepOnePage {
   String pwdInputTitle = "密碼";
   String signUpButtonText = "註冊";
 }
+
+//signup_guide
+class StepGuide {
+  String title = "導覽";
+}

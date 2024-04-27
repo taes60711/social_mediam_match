@@ -42,7 +42,7 @@ class WelcomePage extends StatelessWidget {
       child: Column(
         children: [
           //ロゴ
-          Container(
+          SizedBox(
             height: ScreenSize().height * 0.8,
             child: Center(
               child: SizedBox(

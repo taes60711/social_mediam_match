@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 class IconWithInput extends StatelessWidget {
   final IconData icon;
@@ -57,6 +58,11 @@ class TitleInput extends StatelessWidget {
     bool isInputRequired = isRequired ?? false;
     bool isInputMulti = isMulti ?? false;
     double viewInputHeight = inputHeight ?? 36;
+
+    OutlineInputBorder outlineInputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
       child: Column(
@@ -86,14 +92,13 @@ class TitleInput extends StatelessWidget {
                   child: TextField(
                     minLines: 3,
                     maxLines: 6,
+                    cursorColor: normalBgColor2,
                     controller: textController,
                     decoration: InputDecoration(
                       hintText: "",
                       filled: true,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-                      ),
+                      enabledBorder: outlineInputBorder,
+                      focusedBorder: outlineInputBorder,
                       contentPadding: const EdgeInsets.all(8),
                       border: const OutlineInputBorder(),
                     ),
@@ -104,12 +109,11 @@ class TitleInput extends StatelessWidget {
                   width: ScreenSize().width,
                   height: viewInputHeight,
                   child: TextField(
+                    cursorColor: normalBgColor2,
                     controller: textController,
                     decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-                      ),
+                      enabledBorder: outlineInputBorder,
+                      focusedBorder: outlineInputBorder,
                       contentPadding: const EdgeInsets.all(8),
                       border: const OutlineInputBorder(),
                     ),

@@ -1,12 +1,10 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
 
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../models/rich_text_format.dart';
 
 class RichTextView extends StatefulWidget {

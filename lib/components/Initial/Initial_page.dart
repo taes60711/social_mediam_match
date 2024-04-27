@@ -9,7 +9,6 @@ import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import '../../models/user_model.dart';
-import '../account/login_page.dart';
 
 class Initialpage extends StatelessWidget {
   const Initialpage({super.key});
