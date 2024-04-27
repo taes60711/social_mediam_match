@@ -51,7 +51,6 @@ class SkillChoice extends StatelessWidget {
         children: list.map((e) {
           SkillInfo skillInfoItem = type == "have" ? e.skillHave : e.skillWant;
           String? selectedItem = "${skillInfoItem.level}";
-
           return PopupMenuButton(
             offset: const Offset(0.0, 22),
             itemBuilder: (context) {
@@ -75,7 +74,21 @@ class SkillChoice extends StatelessWidget {
                   .toList();
             },
             onSelected: (value) {
-              if (choicedCount < 7) {
+              bool changeChoicedSkillLevel = false;
+
+              type == "have"
+                  ? allSkillItems.map((e) => e.skillHave.name == skillInfoItem.name).toList().forEach((element) {
+                      if (element) {
+                        changeChoicedSkillLevel = true;
+                      }
+                    })
+                  : allWantSkillItems.map((e) => e.skillWant.name == skillInfoItem.name).toList().forEach((element) {
+                      if (element) {
+                        changeChoicedSkillLevel = true;
+                      }
+                    });
+
+              if (choicedCount < 7 || changeChoicedSkillLevel) {
                 userSettingState.checkOnChange(skillInfoItem, choicedLevel: value);
               } else {
                 print("不能在選擇了");
