@@ -24,7 +24,6 @@ class SignUpStepTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Center(child: Text("個人資料設定")),
         const SizedBox(height: 10),
@@ -45,30 +44,35 @@ class SignUpStepTwo extends StatelessWidget {
               print("能教的技能");
               userSettingState.openSkillselectPage("have");
             },
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "能教的技能",
-                  style: TextStyle(fontSize: 14),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "能教的技能",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    SizedBox(width: 5),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 12,
+                    ),
+                    Text(
+                      "(${allSkillItems.length}/7)",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 5),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 12,
-                ),
-                Text(
-                  "(${allSkillItems.length}/7)",
-                  style: TextStyle(fontSize: 14),
+                SizedBox(
+                  width: ScreenSize().width,
+                  child: SkillListView(
+                    skillList: allSkillItems.map((e) => e.skillHave).toList(),
+                  ),
                 ),
               ],
             ),
-          ),
-        ),
-        SizedBox(
-          width: ScreenSize().width,
-          child: SkillListView(
-            skillList: allSkillItems.map((e) => e.skillHave).toList(),
           ),
         ),
         const SizedBox(height: 10),
@@ -79,30 +83,35 @@ class SignUpStepTwo extends StatelessWidget {
               print("想學的技能");
               userSettingState.openSkillselectPage("want");
             },
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "想學的技能",
-                  style: TextStyle(fontSize: 14),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "想學的技能",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    SizedBox(width: 5),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 12,
+                    ),
+                    Text(
+                      "(${allWantSkillItems.length}/7)",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 5),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 12,
-                ),
-                Text(
-                  "(${allWantSkillItems.length}/7)",
-                  style: TextStyle(fontSize: 14),
+                SizedBox(
+                  width: ScreenSize().width,
+                  child: SkillListView(
+                    skillList: allWantSkillItems.map((e) => e.skillWant).toList(),
+                  ),
                 ),
               ],
             ),
-          ),
-        ),
-        SizedBox(
-          width: ScreenSize().width,
-          child: SkillListView(
-            skillList: allWantSkillItems.map((e) => e.skillWant).toList(),
           ),
         ),
         Padding(

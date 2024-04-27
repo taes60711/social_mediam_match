@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../models/user_model.dart';
 
 class SkillListView extends StatelessWidget {
@@ -15,8 +16,8 @@ class SkillListView extends StatelessWidget {
       4: Icons.filter_4,
       5: Icons.filter_5,
     };
-    Color textColor = Color.fromARGB(255, 252, 249, 227);
-    Color backGroundColor = Color.fromARGB(255, 236, 121, 44);
+    Color textColor = normalTextColor;
+    Color backGroundColor = normalBgColor;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

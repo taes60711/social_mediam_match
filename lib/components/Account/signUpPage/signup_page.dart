@@ -6,6 +6,7 @@ import 'package:social_mediam_match/components/account/signUpPage/signup_guide.d
 import 'package:social_mediam_match/components/account/signUpPage/signup_step_two.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
@@ -14,6 +15,8 @@ import 'package:social_mediam_match/states/user_state.dart';
 import '../../../models/skill_model.dart';
 import '../../../states/user_setting_state.dart';
 import '../../home/userPage/skill_choice.dart';
+import '../../strings/account/sign_up_strings.dart';
+import '../../utilities/Icon_with_input.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -126,64 +129,102 @@ class SignUpPage extends StatelessWidget {
           type: type,
         ),
         body: BackgroundWidget(
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      onPressed: () {
-                        if (signUpIndex == 0) {
-                          returnHomePage();
-                        } else {
-                          userFuture.onChangePage(signUpIndex - 1);
-                        }
-                      },
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        color: normalBgColor2,
-                      ),
+          child: FittedBox(
+            alignment: Alignment.topLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    onPressed: () {
+                      if (signUpIndex == 0) {
+                        returnHomePage();
+                      } else {
+                        userFuture.onChangePage(signUpIndex - 1);
+                      }
+                    },
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color: normalBgColor2,
                     ),
                   ),
-                  signUpPageList[signUpIndex],
-                ],
-              ),
-              Positioned(
-                bottom: 50,
-                left: 0,
-                right: 0,
-                child: signUpIndex != 0
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: signStepList.map((e) {
-                          bool inPage = signStepList.indexOf(e) == signUpIndex - 1;
-                          return inPage
-                              ? Container(
-                                  margin: EdgeInsets.all(5),
-                                  width: 10,
-                                  height: 10,
-                                  decoration: BoxDecoration(
-                                    color: normalBgColor,
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                )
-                              : Container(
-                                  margin: EdgeInsets.all(5),
-                                  width: 10,
-                                  height: 10,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 192, 191, 191),
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                );
-                        }).toList(),
-                      )
-                    : Container(),
-              ),
-            ],
+                ),
+                signUpPageList[signUpIndex],
+                Padding(
+                  padding: EdgeInsets.only(top: 100),
+                  child: Container(
+                    height: 30,
+                    width: 30,
+                    color: Colors.blue,
+                  ),
+                )
+              ],
+            ),
           ),
+          // child: Stack(
+          //   fit: StackFit.expand,
+          //   children: [
+          //     Column(
+          //       children: [
+          //         Align(
+          //           alignment: Alignment.topLeft,
+          //           child: IconButton(
+          //             onPressed: () {
+          //               if (signUpIndex == 0) {
+          //                 returnHomePage();
+          //               } else {
+          //                 userFuture.onChangePage(signUpIndex - 1);
+          //               }
+          //             },
+          //             icon: Icon(
+          //               Icons.arrow_back_ios,
+          //               color: normalBgColor2,
+          //             ),
+          //           ),
+          //         ),
+          //         signUpPageList[signUpIndex],
+          //         Container(
+          //           width: 100,
+          //           height: 300,
+          //           color: Colors.red,
+          //         )
+          //       ],
+          //     ),
+          //     Positioned(
+          //       bottom: 50,
+          //       left: 0,
+          //       right: 0,
+          //       child: signUpIndex != 0
+          //           ? Row(
+          //               mainAxisAlignment: MainAxisAlignment.center,
+          //               children: signStepList.map((e) {
+          //                 bool inPage = signStepList.indexOf(e) == signUpIndex - 1;
+          //                 return inPage
+          //                     ? Container(
+          //                         margin: EdgeInsets.all(5),
+          //                         width: 10,
+          //                         height: 10,
+          //                         decoration: BoxDecoration(
+          //                           color: normalBgColor,
+          //                           borderRadius: BorderRadius.circular(15.0),
+          //                         ),
+          //                       )
+          //                     : Container(
+          //                         margin: EdgeInsets.all(5),
+          //                         width: 10,
+          //                         height: 10,
+          //                         decoration: BoxDecoration(
+          //                           color: Color.fromARGB(255, 192, 191, 191),
+          //                           borderRadius: BorderRadius.circular(15.0),
+          //                         ),
+          //                       );
+          //               }).toList(),
+          //             )
+          //           : Container(),
+          //     ),
+          //   ],
+          // ),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
 class IconWithInput extends StatelessWidget {
   final IconData icon;
@@ -80,23 +81,27 @@ class TitleInput extends StatelessWidget {
                   child: Text(title),
                 ),
           isInputMulti
-              ? TextField(
-                  minLines: 3,
-                  maxLines: 6,
-                  controller: textController,
-                  decoration: InputDecoration(
-                    hintText: "",
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+              ? SizedBox(
+                  width: ScreenSize().width,
+                  child: TextField(
+                    minLines: 3,
+                    maxLines: 6,
+                    controller: textController,
+                    decoration: InputDecoration(
+                      hintText: "",
+                      filled: true,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                      ),
+                      contentPadding: const EdgeInsets.all(8),
+                      border: const OutlineInputBorder(),
                     ),
-                    contentPadding: const EdgeInsets.all(8),
-                    border: const OutlineInputBorder(),
+                    keyboardType: TextInputType.multiline,
                   ),
-                  keyboardType: TextInputType.multiline,
                 )
               : SizedBox(
+                  width: ScreenSize().width,
                   height: viewInputHeight,
                   child: TextField(
                     controller: textController,

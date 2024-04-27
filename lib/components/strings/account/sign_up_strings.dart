@@ -14,7 +14,7 @@ class FirstPage {
   String orText = "或";
 }
 
-//
+//signup_step_one
 class StepOnePage {
   String title = "SMM用戶註冊";
   String nameInputTitle = "用戶名";

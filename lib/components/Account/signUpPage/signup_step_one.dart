@@ -31,7 +31,6 @@ class SignUpStepOne extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TitleInput(
                 title: StepOnePage().nameInputTitle,

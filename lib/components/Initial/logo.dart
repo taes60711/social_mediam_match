@@ -8,7 +8,7 @@ class Logo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Container(
+        child: SizedBox(
           width: ScreenSize().width,
           child: AspectRatio(
             aspectRatio: 16.0 / 9.0,

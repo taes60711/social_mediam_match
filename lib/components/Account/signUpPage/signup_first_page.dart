@@ -53,9 +53,10 @@ class SignUpFirstPage extends StatelessWidget {
   //プライバシー
   final Widget privacy = Padding(
     padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
-    child: Align(
-      alignment: Alignment.centerLeft,
+    child: SizedBox(
+      width: ScreenSize().width,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             FirstPage().hintText,
