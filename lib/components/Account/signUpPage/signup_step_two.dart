@@ -139,7 +139,12 @@ class SignUpStepTwo extends StatelessWidget {
                   "nameController : ${nameController.text} jobController : ${jobController.text} introductionController : ${introductionController.text}");
               inspect(allSkillItems);
               inspect(allWantSkillItems);
-              userFuture.onChangePage(3);
+
+              // bool isSucess = await userFuture.updateProfile(userData.uid, updateUserData);
+              bool isSucess = true;
+              if (isSucess) {
+                userFuture.onChangePage(3);
+              }
             },
           ),
         ),

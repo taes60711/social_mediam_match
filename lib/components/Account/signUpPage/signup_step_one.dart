@@ -47,10 +47,8 @@ class SignUpStepOne extends StatelessWidget {
             backgroundColor: normalBgColor,
             onPress: () async {
               userFuture.onChangePage(2);
-              String email = emailController.text;
-              String pwd = pwdController.text;
-              log("signUpPage Email:$email Pwd:$pwd");
-              // bool isSignSucess = await userFuture.signUp(email, pwd);
+              log("signUpPage Email:${emailController.text} Pwd:${pwdController.text}");
+              // bool isSignSucess = await userFuture.signUp(emailController.text, pwdController.text);
               // isSignSucess ? userFuture.onChangePage(2) : () {print("sign Failed")};
             },
           ),

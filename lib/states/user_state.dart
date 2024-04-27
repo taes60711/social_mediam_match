@@ -33,6 +33,11 @@ class UserState extends ChangeNotifier {
   //param
   //toSignUpIndex : サインアップのページインデックス
   int onChangePage(int toSignUpIndex) {
+    if (toSignUpIndex == 0) {
+      signUpErrorReset();
+      emailController = TextEditingController();
+      pwdController = TextEditingController();
+    }
     signUpIndex = toSignUpIndex;
     notifyListeners();
     return signUpIndex;

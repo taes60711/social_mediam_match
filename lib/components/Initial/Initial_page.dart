@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/welcome_page.dart';
 import 'package:social_mediam_match/components/home/home.dart';
 import 'package:social_mediam_match/components/Initial/logo.dart';
+import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
@@ -40,6 +41,7 @@ class Initialpage extends StatelessWidget {
       }
     });
 
+    bool isLoading = context.select((UserState value) => value.isLoading);
     void enterApp() {
       print("firstEnterApp");
       context.read<UserState>().isLoginCheck(friendState);
@@ -55,13 +57,19 @@ class Initialpage extends StatelessWidget {
         child: const Logo(),
       );
     } else {
-      if (userData != null) {
-        component = Home(
-          userData: userData,
-          friendState: friendState,
+      if (isLoading) {
+        component = const Scaffold(
+          body: Loading(),
         );
       } else {
-        component = const WelcomePage();
+        if (userData != null) {
+          component = Home(
+            userData: userData,
+            friendState: friendState,
+          );
+        } else {
+          component = const WelcomePage();
+        }
       }
     }
 

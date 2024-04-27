@@ -63,10 +63,7 @@ class SignUpPage extends StatelessWidget {
     //
 
     void returnHomePage() {
-      resetAllInfo() {
-        userFuture.signUpErrorReset();
-        userFuture.onChangePage(0);
-      }
+      resetAllInfo() => userFuture.onChangePage(0);
 
       Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
       resetAllInfo();

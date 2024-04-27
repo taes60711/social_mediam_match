@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import '../../../global.dart';
 import '../../../models/skill_model.dart';
@@ -45,73 +46,92 @@ class SkillChoice extends StatelessWidget {
 
     int choicedCount = type == "have" ? allSkillItems.length : allWantSkillItems.length;
     Widget expansionWidget(String category, List<SkillModel> list, String type) {
-      Widget component = ExpansionTile(
-        title: Text(category),
-        leading: const Icon(Icons.align_horizontal_left),
-        children: list.map((e) {
-          SkillInfo skillInfoItem = type == "have" ? e.skillHave : e.skillWant;
-          String? selectedItem = "${skillInfoItem.level}";
-          return PopupMenuButton(
-            offset: const Offset(0.0, 22),
-            itemBuilder: (context) {
-              return items
-                  .map(
-                    (e) => PopupMenuItem(
-                      value: e,
-                      child: SizedBox(
-                        width: ScreenSize().width,
-                        child: skillInfoItem.level.toString() == e
-                            ? Row(
-                                children: [
-                                  Text(e),
-                                  const Icon(Icons.check),
-                                ],
-                              )
-                            : Text(e),
+      Widget component = Container(
+        margin: EdgeInsets.only(bottom: 8),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(96, 214, 214, 214),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: ExpansionTile(
+          title: Text(category),
+          shape: Border.all(color: Colors.transparent),
+          children: list.map((e) {
+            SkillInfo skillInfoItem = type == "have" ? e.skillHave : e.skillWant;
+            String? selectedItem = "${skillInfoItem.level}";
+            return PopupMenuButton(
+              offset: const Offset(0.0, 22),
+              itemBuilder: (context) {
+                return items
+                    .map(
+                      (e) => PopupMenuItem(
+                        value: e,
+                        child: SizedBox(
+                          width: ScreenSize().width,
+                          child: skillInfoItem.level.toString() == e
+                              ? Row(
+                                  children: [
+                                    Text(e),
+                                    const Icon(Icons.check),
+                                  ],
+                                )
+                              : Text(e),
+                        ),
+                      ),
+                    )
+                    .toList();
+              },
+              onSelected: (value) {
+                bool changeChoicedSkillLevel = false;
+
+                type == "have"
+                    ? allSkillItems.map((e) => e.skillHave.name == skillInfoItem.name).toList().forEach((element) {
+                        if (element) {
+                          changeChoicedSkillLevel = true;
+                        }
+                      })
+                    : allWantSkillItems.map((e) => e.skillWant.name == skillInfoItem.name).toList().forEach((element) {
+                        if (element) {
+                          changeChoicedSkillLevel = true;
+                        }
+                      });
+
+                if (choicedCount < 7 || changeChoicedSkillLevel) {
+                  userSettingState.checkOnChange(skillInfoItem, choicedLevel: value);
+                } else {
+                  print("不能在選擇了");
+                  warningPopView();
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                width: ScreenSize().width,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: skillInfoItem.level > 0 ? normalBgColor : Color.fromARGB(104, 177, 176, 176),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        skillInfoItem.name,
+                        style: TextStyle(color: skillInfoItem.level > 0 ? normalTextColor : normalBgColor2),
                       ),
                     ),
-                  )
-                  .toList();
-            },
-            onSelected: (value) {
-              bool changeChoicedSkillLevel = false;
-
-              type == "have"
-                  ? allSkillItems.map((e) => e.skillHave.name == skillInfoItem.name).toList().forEach((element) {
-                      if (element) {
-                        changeChoicedSkillLevel = true;
-                      }
-                    })
-                  : allWantSkillItems.map((e) => e.skillWant.name == skillInfoItem.name).toList().forEach((element) {
-                      if (element) {
-                        changeChoicedSkillLevel = true;
-                      }
-                    });
-
-              if (choicedCount < 7 || changeChoicedSkillLevel) {
-                userSettingState.checkOnChange(skillInfoItem, choicedLevel: value);
-              } else {
-                print("不能在選擇了");
-                warningPopView();
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8),
-              child: Container(
-                  width: ScreenSize().width,
-                  color: skillInfoItem.level > 0 ? const Color.fromARGB(255, 155, 211, 236) : Colors.transparent,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(skillInfoItem.name),
-                      ),
-                      Text(level),
-                      Text(selectedItem)
-                    ],
-                  )),
-            ),
-          );
-        }).toList(),
+                    Text(
+                      level,
+                      style: TextStyle(color: skillInfoItem.level > 0 ? normalTextColor : normalBgColor2),
+                    ),
+                    Text(
+                      selectedItem,
+                      style: TextStyle(color: skillInfoItem.level > 0 ? normalTextColor : normalBgColor2),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+        ),
       );
 
       return component;
