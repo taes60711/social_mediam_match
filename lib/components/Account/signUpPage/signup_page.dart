@@ -69,13 +69,16 @@ class SignUpPage extends StatelessWidget {
 
     Widget signErrorMessage;
     if (signError != SignUpStatus.NoMessage.value) {
-      signErrorMessage = Align(
-        alignment: Alignment.topLeft,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Text(
-            signError,
-            style: const TextStyle(color: Colors.red),
+      signErrorMessage = SizedBox(
+        width: ScreenSize().width,
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(
+              signError,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ),
       );
@@ -127,30 +130,40 @@ class SignUpPage extends StatelessWidget {
           type: type,
         ),
         body: BackgroundWidget(
-          child: FittedBox(
-            alignment: Alignment.topLeft,
-            child: Column(
-              children: [
-                SizedBox(
-                    width: ScreenSize().width,
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        onPressed: () {
-                          if (signUpIndex == 0) {
-                            returnHomePage();
-                          } else {
-                            userFuture.onChangePage(signUpIndex - 1);
-                          }
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          color: normalBgColor2,
-                        ),
-                      ),
-                    )),
-                signUpPageList[signUpIndex],
-                signUpIndex != 0
+          child: Column(
+            children: [
+              SizedBox(
+                height: ScreenSize().safeheight * 0.95,
+                child: FittedBox(
+                  alignment: Alignment.topLeft,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                          width: ScreenSize().width,
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: IconButton(
+                              onPressed: () {
+                                if (signUpIndex == 0) {
+                                  returnHomePage();
+                                } else {
+                                  userFuture.onChangePage(signUpIndex - 1);
+                                }
+                              },
+                              icon: Icon(
+                                Icons.arrow_back_ios,
+                                color: normalBgColor2,
+                              ),
+                            ),
+                          )),
+                      signUpPageList[signUpIndex],
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: ScreenSize().safeheight * 0.05,
+                child: signUpIndex != 0
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: signStepList.map((e) {
@@ -177,8 +190,8 @@ class SignUpPage extends StatelessWidget {
                         }).toList(),
                       )
                     : Container(),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

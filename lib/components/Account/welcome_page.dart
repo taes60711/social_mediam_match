@@ -39,38 +39,49 @@ class WelcomePage extends StatelessWidget {
 
     return BackgroundWidget(
       isSafeArea: false,
-      child: FittedBox(
-        child: Column(
-          children: [
-            //ロゴ
-            Container(
-              margin: EdgeInsets.only(top: ScreenSize().height / 8, bottom: ScreenSize().height / 3.5),
-              width: 180,
-              height: 180,
-              child: Image.asset(logoImg),
+      child: Column(
+        children: [
+          //ロゴ
+          Container(
+            height: ScreenSize().height * 0.83,
+            child: Center(
+              child: SizedBox(
+                width: 180,
+                height: 180,
+                child: Image.asset(logoImg),
+              ),
             ),
-            //登録ボタン
-            _button(
-                title: "第一次使用",
-                titleColor: normalTextColor,
-                backgroundColor: normalBgColor,
-                onPressed: () {
-                  Navigator.of(context).pushNamed(RoutePath.signUpPage.value);
-                }),
-            const SizedBox(height: 10),
-            //”ログインページ遷移”ボタン
-            _button(
-                title: "登入",
-                titleColor: normalBgColor2,
-                backgroundColor: disAbleColor,
-                onPressed: () {
-                  Navigator.of(context).pushNamed(RoutePath.loginPage.value);
-                }),
-            const SizedBox(height: 30),
-            //バージョンテキスト
-            _versionText,
-          ],
-        ),
+          ),
+          Container(
+            height: ScreenSize().height * 0.17,
+            child: FittedBox(
+              child: Column(
+                children: [
+                  //登録ボタン
+                  _button(
+                      title: "第一次使用",
+                      titleColor: normalTextColor,
+                      backgroundColor: normalBgColor,
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(RoutePath.signUpPage.value);
+                      }),
+                  const SizedBox(height: 10),
+                  //”ログインページ遷移”ボタン
+                  _button(
+                      title: "登入",
+                      titleColor: normalBgColor2,
+                      backgroundColor: disAbleColor,
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(RoutePath.loginPage.value);
+                      }),
+                  const SizedBox(height: 30),
+                  //バージョンテキスト
+                  _versionText,
+                ],
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

@@ -39,8 +39,8 @@ class SignUpFirstPage extends StatelessWidget {
   }
 
   //紹介文章
-  final Widget introductionWidget = Padding(
-    padding: const EdgeInsets.only(left: 8.0),
+  final Widget introductionWidget = SizedBox(
+    width: ScreenSize().width,
     child: Align(
       alignment: Alignment.centerLeft,
       child: Text(
@@ -135,7 +135,6 @@ class SignUpFirstPage extends StatelessWidget {
         //メールアドレスインプット
         TitleInput(
           title: FirstPage().emailInputTitle,
-          inputHeight: 36,
           textController: emailController,
         ),
         //エラーメッセージ

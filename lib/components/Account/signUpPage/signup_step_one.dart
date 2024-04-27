@@ -30,13 +30,11 @@ class SignUpStepOne extends StatelessWidget {
         const SizedBox(height: 10),
         TitleInput(
           title: StepOnePage().nameInputTitle,
-          inputHeight: 36,
           textController: nameController,
         ),
         const SizedBox(height: 10),
         TitleInput(
           title: StepOnePage().pwdInputTitle,
-          inputHeight: 36,
           textController: pwdController,
           isRequired: true,
         ),
