@@ -23,6 +23,26 @@ class SkillChoice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> warningPopView() {
+      return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('確認'),
+            content: const Text('最多只能選擇七個技能'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('確認'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     int choicedCount = type == "have" ? allSkillItems.length : allWantSkillItems.length;
     Widget expansionWidget(String category, List<SkillModel> list, String type) {
       Widget component = ExpansionTile(
@@ -59,6 +79,7 @@ class SkillChoice extends StatelessWidget {
                 userSettingState.checkOnChange(skillInfoItem, choicedLevel: value);
               } else {
                 print("不能在選擇了");
+                warningPopView();
               }
             },
             child: Padding(

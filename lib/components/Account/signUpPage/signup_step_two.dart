@@ -37,6 +37,7 @@ class SignUpStepTwo extends StatelessWidget {
           textController: TextEditingController(),
           isMulti: true,
         ),
+        const SizedBox(height: 15),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
           child: GestureDetector(
@@ -54,10 +55,12 @@ class SignUpStepTwo extends StatelessWidget {
                       "能教的技能",
                       style: TextStyle(fontSize: 14),
                     ),
-                    SizedBox(width: 5),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 12,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 12,
+                      ),
                     ),
                     Text(
                       "(${allSkillItems.length}/7)",
@@ -93,10 +96,12 @@ class SignUpStepTwo extends StatelessWidget {
                       "想學的技能",
                       style: TextStyle(fontSize: 14),
                     ),
-                    SizedBox(width: 5),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 12,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 12,
+                      ),
                     ),
                     Text(
                       "(${allWantSkillItems.length}/7)",
@@ -115,7 +120,7 @@ class SignUpStepTwo extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: CustomButton(
             title: "送出",
             titleColor: normalTextColor,

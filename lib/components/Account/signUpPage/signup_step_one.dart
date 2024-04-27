@@ -28,40 +28,33 @@ class SignUpStepOne extends StatelessWidget {
       children: [
         Text(StepOnePage().title),
         const SizedBox(height: 10),
+        TitleInput(
+          title: StepOnePage().nameInputTitle,
+          inputHeight: 36,
+          textController: nameController,
+        ),
+        const SizedBox(height: 10),
+        TitleInput(
+          title: StepOnePage().pwdInputTitle,
+          inputHeight: 36,
+          textController: pwdController,
+          isRequired: true,
+        ),
+        signErrorMessage,
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              TitleInput(
-                title: StepOnePage().nameInputTitle,
-                inputHeight: 36,
-                textController: nameController,
-              ),
-              const SizedBox(height: 10),
-              TitleInput(
-                title: StepOnePage().pwdInputTitle,
-                inputHeight: 36,
-                textController: pwdController,
-                isRequired: true,
-              ),
-              signErrorMessage,
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: CustomButton(
-                  title: StepOnePage().signUpButtonText,
-                  titleColor: normalTextColor,
-                  backgroundColor: normalBgColor,
-                  onPress: () async {
-                    userFuture.onChangePage(2);
-                    String email = emailController.text;
-                    String pwd = pwdController.text;
-                    log("signUpPage Email:$email Pwd:$pwd");
-                    // bool isSignSucess = await userFuture.signUp(email, pwd);
-                    // isSignSucess ? userFuture.onChangePage(2) : () {print("sign Failed")};
-                  },
-                ),
-              ),
-            ],
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: CustomButton(
+            title: StepOnePage().signUpButtonText,
+            titleColor: normalTextColor,
+            backgroundColor: normalBgColor,
+            onPress: () async {
+              userFuture.onChangePage(2);
+              String email = emailController.text;
+              String pwd = pwdController.text;
+              log("signUpPage Email:$email Pwd:$pwd");
+              // bool isSignSucess = await userFuture.signUp(email, pwd);
+              // isSignSucess ? userFuture.onChangePage(2) : () {print("sign Failed")};
+            },
           ),
         ),
       ],
