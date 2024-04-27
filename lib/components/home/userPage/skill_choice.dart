@@ -7,7 +7,7 @@ import '../../../states/user_setting_state.dart';
 import '../../strings/userPage/profie_string.dart';
 
 class SkillChoice extends StatelessWidget {
-  final List<SkillModel> forntSkillItems, backEndSkillItems, iotSkillItems, otherSkillItems;
+  final List<SkillModel> forntSkillItems, backEndSkillItems, iotSkillItems, otherSkillItems, allSkillItems, allWantSkillItems;
   final UserSettingState userSettingState;
   final String type;
   const SkillChoice(
@@ -17,11 +17,14 @@ class SkillChoice extends StatelessWidget {
       required this.backEndSkillItems,
       required this.iotSkillItems,
       required this.otherSkillItems,
+      required this.allSkillItems,
+      required this.allWantSkillItems,
       required this.type});
 
   @override
   Widget build(BuildContext context) {
-    Widget ExpansionWidget(String category, List<SkillModel> list, String type) {
+    int choicedCount = type == "have" ? allSkillItems.length : allWantSkillItems.length;
+    Widget expansionWidget(String category, List<SkillModel> list, String type) {
       Widget component = ExpansionTile(
         title: Text(category),
         leading: const Icon(Icons.align_horizontal_left),
@@ -42,7 +45,7 @@ class SkillChoice extends StatelessWidget {
                             ? Row(
                                 children: [
                                   Text(e),
-                                  Icon(Icons.check),
+                                  const Icon(Icons.check),
                                 ],
                               )
                             : Text(e),
@@ -52,7 +55,11 @@ class SkillChoice extends StatelessWidget {
                   .toList();
             },
             onSelected: (value) {
-              userSettingState.checkOnChange(skillInfoItem, choicedLevel: value);
+              if (choicedCount < 7) {
+                userSettingState.checkOnChange(skillInfoItem, choicedLevel: value);
+              } else {
+                print("不能在選擇了");
+              }
             },
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8),
@@ -89,13 +96,14 @@ class SkillChoice extends StatelessWidget {
               icon: const Icon(Icons.arrow_back_ios),
             ),
           ),
+          Text("($choicedCount / 7)"),
           Expanded(
             child: ListView(
               children: [
-                ExpansionWidget(SkillType.forntend.value, forntSkillItems, type),
-                ExpansionWidget(SkillType.backend.value, backEndSkillItems, type),
-                ExpansionWidget(SkillType.iot.value, iotSkillItems, type),
-                ExpansionWidget(SkillType.other.value, otherSkillItems, type),
+                expansionWidget(SkillType.forntend.value, forntSkillItems, type),
+                expansionWidget(SkillType.backend.value, backEndSkillItems, type),
+                expansionWidget(SkillType.iot.value, iotSkillItems, type),
+                expansionWidget(SkillType.other.value, otherSkillItems, type),
               ],
             ),
           ),

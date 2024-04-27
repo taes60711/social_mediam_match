@@ -87,7 +87,7 @@ class Profile extends StatelessWidget {
     return StatefulWrapper(
       onInit: () {
         userSettingState.userDataInsertToViewValue(userData);
-        userSettingState.getSkillListData(userData);
+        userSettingState.getSkillListData(userData: userData);
       },
       child: isFirst
           ? const Loading()
@@ -100,6 +100,8 @@ class Profile extends StatelessWidget {
                 backEndSkillItems: backEndSkillItems,
                 iotSkillItems: iotSkillItems,
                 otherSkillItems: otherSkillItems,
+                allSkillItems: allSkillItems,
+                allWantSkillItems: allWantSkillItems,
                 type: type,
               ),
               body: SafeArea(

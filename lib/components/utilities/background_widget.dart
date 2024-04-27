@@ -11,6 +11,7 @@ class BackgroundWidget extends StatelessWidget {
     print("background render");
     bool isSafeArea = this.isSafeArea ?? true;
     return Scaffold(
+      backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
       body: isSafeArea
           ? SafeArea(

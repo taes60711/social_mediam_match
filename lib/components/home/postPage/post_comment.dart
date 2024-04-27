@@ -262,7 +262,7 @@ class PostComment extends StatelessWidget {
                                                         alignment: Alignment.topRight,
                                                         child: IconButton(
                                                           onPressed: () {
-                                                            deleteCheck(postCommentData[index].uid ?? -1, postState);
+                                                            deleteCheck(postCommentData[index].uid, postState);
                                                           },
                                                           icon: Icon(Icons.close),
                                                         ),
@@ -279,7 +279,7 @@ class PostComment extends StatelessWidget {
                                                         child: Text("編輯留言")),
                                                     ElevatedButton(
                                                         onPressed: () {
-                                                          postState.changePostComment(postCommentData[index].uid ?? -1, index,
+                                                          postState.changePostComment(postCommentData[index].uid, index,
                                                               postCommentMessageController[index].text);
                                                         },
                                                         child: Text("更新留言")),

@@ -37,7 +37,7 @@ class UserSettingState extends ChangeNotifier {
   }
 
   //ページに遷移する際に、元データ取得する
-  Future<bool> getSkillListData(LoginUser userData) async {
+  Future<bool> getSkillListData({LoginUser? userData}) async {
     bool result = false;
     var uri = Uri.parse('$url/skill/getList');
     try {
@@ -47,18 +47,21 @@ class UserSettingState extends ChangeNotifier {
         for (var e in jsonData) {
           //Switchコンポーネントためにユーザのスキル、勉強したいBool List作成する
           int skillLevel = 0;
-          bool skillCheckBool = userData.mainSkills!.indexWhere((element) => element.name == e['name']) != -1;
-          bool wantSkillCheckBool = userData.wantSkills!.indexWhere((element) => element.name == e['name']) != -1;
 
           SkillInfo haveSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
           SkillInfo wantSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
-          if (skillCheckBool) {
-            skillLevel = userData.mainSkills!.firstWhere((element) => element.name == e['name']).level;
-            haveSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
-          }
-          if (wantSkillCheckBool) {
-            skillLevel = userData.wantSkills!.firstWhere((element) => element.name == e['name']).level;
-            wantSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
+
+          if (userData != null) {
+            bool skillCheckBool = userData.mainSkills!.indexWhere((element) => element.name == e['name']) != -1;
+            bool wantSkillCheckBool = userData.wantSkills!.indexWhere((element) => element.name == e['name']) != -1;
+            if (skillCheckBool) {
+              skillLevel = userData.mainSkills!.firstWhere((element) => element.name == e['name']).level;
+              haveSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
+            }
+            if (wantSkillCheckBool) {
+              skillLevel = userData.wantSkills!.firstWhere((element) => element.name == e['name']).level;
+              wantSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
+            }
           }
 
           //全スキル名前とユーザのスキルリスト組み合わせする

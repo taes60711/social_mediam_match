@@ -43,7 +43,7 @@ class SignUpStepOne extends StatelessWidget {
                 title: StepOnePage().pwdInputTitle,
                 inputHeight: 36,
                 textController: pwdController,
-                isrequired: true,
+                isRequired: true,
               ),
               signErrorMessage,
               Padding(

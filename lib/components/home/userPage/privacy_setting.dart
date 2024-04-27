@@ -1,17 +1,7 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quill_html_editor/quill_html_editor.dart';
-import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
-import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../../../models/rich_text_format.dart';
 import '../../../states/services/notification_service.dart';
 import '../../../states/user_state.dart';
 import '../../strings/userPage/user_page_string.dart';

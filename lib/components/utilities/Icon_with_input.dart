@@ -44,14 +44,18 @@ class IconWithInput extends StatelessWidget {
 
 class TitleInput extends StatelessWidget {
   final String title;
-  final double inputHeight;
+  final double? inputHeight;
   final TextEditingController textController;
-  final bool? isrequired;
-  const TitleInput({super.key, required this.title, required this.inputHeight, this.isrequired, required this.textController});
+  final bool? isRequired;
+  final bool? isMulti;
+  const TitleInput(
+      {super.key, required this.title, this.inputHeight, this.isRequired, this.isMulti, required this.textController});
 
   @override
   Widget build(BuildContext context) {
-    bool isInputRequired = isrequired ?? false;
+    bool isInputRequired = isRequired ?? false;
+    bool isInputMulti = isMulti ?? false;
+    double viewInputHeight = inputHeight ?? 36;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
       child: Column(
@@ -75,20 +79,37 @@ class TitleInput extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 5, bottom: 5),
                   child: Text(title),
                 ),
-          SizedBox(
-            height: inputHeight,
-            child: TextField(
-              controller: textController,
-              decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+          isInputMulti
+              ? TextField(
+                  minLines: 3,
+                  maxLines: 6,
+                  controller: textController,
+                  decoration: InputDecoration(
+                    hintText: "",
+                    filled: true,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                    ),
+                    contentPadding: const EdgeInsets.all(8),
+                    border: const OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.multiline,
+                )
+              : SizedBox(
+                  height: viewInputHeight,
+                  child: TextField(
+                    controller: textController,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                      ),
+                      contentPadding: const EdgeInsets.all(8),
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
                 ),
-                contentPadding: const EdgeInsets.all(8),
-                border: const OutlineInputBorder(),
-              ),
-            ),
-          ),
         ],
       ),
     );
