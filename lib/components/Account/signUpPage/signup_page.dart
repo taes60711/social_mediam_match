@@ -26,6 +26,7 @@ class SignUpPage extends StatelessWidget {
     UserState userFuture = context.read<UserState>();
     String signError = context.select((UserState value) => value.signError);
     int signUpIndex = context.select((UserState value) => value.signUpIndex);
+    String signUpedUserUID = context.select((UserState value) => value.signUpedUserUID);
     TextEditingController emailController = context.select((UserState value) => value.emailController);
     TextEditingController pwdController = context.select((UserState value) => value.pwdController);
 
@@ -63,7 +64,7 @@ class SignUpPage extends StatelessWidget {
     //
 
     void returnHomePage() {
-      resetAllInfo() => userFuture.onChangePage(0);
+      resetAllInfo() => userFuture.onChangeSignUpPage(0);
 
       Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
       resetAllInfo();
@@ -104,6 +105,7 @@ class SignUpPage extends StatelessWidget {
 
     Widget signUpThirdPage = SignUpStepTwo(
       userFuture: userFuture,
+      signUpedUserUID: signUpedUserUID,
       allSkillItems: allSkillItems,
       allWantSkillItems: allWantSkillItems,
       userSettingState: userSettingState,
@@ -155,7 +157,7 @@ class SignUpPage extends StatelessWidget {
             if (signUpIndex == 0) {
               returnHomePage();
             } else {
-              userFuture.onChangePage(signUpIndex - 1);
+              userFuture.onChangeSignUpPage(signUpIndex - 1);
             }
           },
           icon: Icon(
