@@ -11,7 +11,7 @@ import 'package:social_mediam_match/components/home/userPage/profile.dart';
 import 'package:social_mediam_match/components/home/userPage/privacy_setting.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
-import 'package:social_mediam_match/htmlMake.dart';
+
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
@@ -88,8 +88,5 @@ class MyApp extends StatelessWidget {
             ),
       },
     );
-    // return MaterialApp(
-    //   home: htmlMake(),
-    // );
   }
 }
