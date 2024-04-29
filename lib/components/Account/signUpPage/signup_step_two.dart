@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/states/user_setting_state.dart';
 import '../../../models/skill_model.dart';
+import '../../../models/user_model.dart';
 import '../../../states/user_state.dart';
 import '../../utilities/Icon_with_input.dart';
 import '../../utilities/custom_button.dart';
@@ -12,6 +13,7 @@ import '../../utilities/style/style_config.dart';
 
 class SignUpStepTwo extends StatelessWidget {
   final UserState userFuture;
+  final String signUpedUserUID;
   final UserSettingState userSettingState;
   final List<SkillModel> allSkillItems;
   final List<SkillModel> allWantSkillItems;
@@ -22,6 +24,7 @@ class SignUpStepTwo extends StatelessWidget {
   const SignUpStepTwo({
     super.key,
     required this.userFuture,
+    required this.signUpedUserUID,
     required this.userSettingState,
     required this.allSkillItems,
     required this.allWantSkillItems,
@@ -140,10 +143,30 @@ class SignUpStepTwo extends StatelessWidget {
               inspect(allSkillItems);
               inspect(allWantSkillItems);
 
-              // bool isSucess = await userFuture.updateProfile(userData.uid, updateUserData);
-              bool isSucess = true;
+              List<SkillInfo> gethaveSkill = [];
+              List<SkillInfo> getWantSkill = [];
+              for (var element in allSkillItems) {
+                gethaveSkill.add(element.skillHave);
+              }
+              for (var element in allWantSkillItems) {
+                getWantSkill.add(element.skillWant);
+              }
+              inspect(gethaveSkill);
+              inspect(getWantSkill);
+
+              UpdateUser updateUserData = UpdateUser.update(
+                uid: signUpedUserUID,
+                image: "",
+                name: nameController.text,
+                job: jobController.text,
+                introduction: introductionController.text,
+                mainSkills: gethaveSkill,
+                wantSkills: getWantSkill,
+              );
+              bool isSucess = await userFuture.updateProfile(signUpedUserUID, updateUserData);
+
               if (isSucess) {
-                userFuture.onChangePage(3);
+                userFuture.onChangeSignUpPage(3);
               }
             },
           ),

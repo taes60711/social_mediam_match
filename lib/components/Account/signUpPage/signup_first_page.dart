@@ -149,7 +149,7 @@ class SignUpFirstPage extends StatelessWidget {
             onPressed: () {
               bool isEmail = userFuture.signUpEmailCheck(emailController.text);
               if (isEmail) {
-                userFuture.onChangePage(1);
+                userFuture.onChangeSignUpPage(1);
                 userFuture.signUpErrorReset();
               }
             }),

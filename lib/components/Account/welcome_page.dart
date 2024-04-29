@@ -1,6 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/strings/welcome_strings.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
@@ -12,10 +13,11 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String verNumber = "1.0.0";
     //バージョンテキスト
-    Widget _versionText = const Text(
-      "ver 1.0.0",
-      style: TextStyle(
+    Widget _versionText = Text(
+      "${WelcomeStrings().version} $verNumber",
+      style: const TextStyle(
         fontSize: 12,
         color: Color.fromARGB(255, 177, 176, 176),
       ),
@@ -59,7 +61,7 @@ class WelcomePage extends StatelessWidget {
                 children: [
                   //登録ボタン
                   _button(
-                      title: "第一次使用",
+                      title: WelcomeStrings().firstButtonText,
                       titleColor: normalTextColor,
                       backgroundColor: normalBgColor,
                       onPressed: () {
@@ -68,7 +70,7 @@ class WelcomePage extends StatelessWidget {
                   const SizedBox(height: 10),
                   //”ログインページ遷移”ボタン
                   _button(
-                      title: "登入",
+                      title: WelcomeStrings().loginButtonText,
                       titleColor: normalBgColor2,
                       backgroundColor: disAbleColor,
                       onPressed: () {

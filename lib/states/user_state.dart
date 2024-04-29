@@ -19,20 +19,18 @@ class UserState extends ChangeNotifier {
   bool isLoading = false;
   //パスワード忘れたページに送信したメッセージ
   String resetPwdError = ResetPwdStatus.NoMessage.value;
-  //ログインのエラーメッセージ
-  String loginError = LoginStatus.NoMessage.value;
-  //ログインのエラーメッセージ
-  String signError = SignUpStatus.NoMessage.value;
   //登録かどうか確認、登録したらログインしなくてために
-  bool _isSignUp = false;
+  // bool _isSignUp = false;
   //サインアップステップインデックス
   int signUpIndex = 0;
+
+  //サインアップのインプット
   TextEditingController emailController = TextEditingController();
   TextEditingController pwdController = TextEditingController();
   //メソッド：サインアップページチェンジ
   //param
   //toSignUpIndex : サインアップのページインデックス
-  int onChangePage(int toSignUpIndex) {
+  int onChangeSignUpPage(int toSignUpIndex) {
     if (toSignUpIndex == 0) {
       signUpErrorReset();
       emailController = TextEditingController();
@@ -53,13 +51,18 @@ class UserState extends ChangeNotifier {
 
     if (userData == null) {
       colsure().listen((String userUID) async {
-        if (userUID != "" && !_isSignUp && !isLoading) {
+        if (userUID != "" && !isLoading) {
           isLoading = true;
           notifyListeners();
+
           userData = await _dbService.getUserData(userUID);
           await _dbService.updateLastTime(userUID);
-          chatListChannel.friendListConnect(userData!.uid);
+          chatListChannel.friendListConnect(userUID);
           inspect(userData);
+
+          final fcmToken = await FirebaseMessaging.instance.getToken();
+          _dbService.updateUserToken(userUID, fcmToken!);
+
           isLoading = false;
           notifyListeners();
         }
@@ -67,6 +70,8 @@ class UserState extends ChangeNotifier {
     }
   }
 
+  //ログインのエラーメッセージ
+  String loginError = LoginStatus.NoMessage.value;
   //メソッド：ログイン
   //param
   //email：メールアドレス，password：パスワード
@@ -74,10 +79,7 @@ class UserState extends ChangeNotifier {
     bool isSucess = false;
 
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password).then((value) async {
-        final fcmToken = await FirebaseMessaging.instance.getToken();
-        _dbService.updateUserToken(value.user!.uid, fcmToken!);
-      });
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
       isSucess = true;
     } on FirebaseAuthException catch (e) {
       print("signIn error ${e.code}");
@@ -96,13 +98,17 @@ class UserState extends ChangeNotifier {
     return isSucess;
   }
 
+  //Firebaseで登録したユーザUID
+  String signUpedUserUID = "";
+  //サインアップのエラーメッセージ
+  String signError = SignUpStatus.NoMessage.value;
   //メソッド：登録
   //param
   //email：メールアドレス，password：パスワード
   Future<dynamic> signUp(String email, String password) async {
     bool isSucess = false;
     try {
-      _isSignUp = true;
+      // _isSignUp = true;
       await _auth.createUserWithEmailAndPassword(email: email, password: password).then(
         (UserCredential value) async {
           print("firebase SiginUp Success:${value.user!.uid}");
@@ -111,12 +117,11 @@ class UserState extends ChangeNotifier {
 
           if (isMysqlSignUpSucess) {
             isSucess = true;
+            print("Mysql SignUp Sucess");
+            signUpedUserUID = value.user!.uid;
           }
         },
-      ).then((value) async {
-        //firebaseのlistenで自動ログインなのでバッグ発生なくよう、先にログアウト追加する。
-        await _auth.signOut();
-      });
+      );
     } on FirebaseAuthException catch (e) {
       print("SignUp error ${e.code}");
       switch (e.code) {
@@ -132,8 +137,6 @@ class UserState extends ChangeNotifier {
       }
       notifyListeners();
     }
-    _isSignUp = false;
-    print("_isSignUp ${_isSignUp}");
     return isSucess;
   }
 

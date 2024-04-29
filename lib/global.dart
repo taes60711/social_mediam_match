@@ -1,5 +1,5 @@
 // ip
-String ip = "118.167.75.87";
+String ip = "36.226.131.215";
 String port = '80';
 
 String webSocketPort = "123";
@@ -7,17 +7,7 @@ String branch = "ws";
 String channelListUrl = 'ws://$ip:$webSocketPort/$branch';
 String channelRoomUrl = 'ws://$ip:$webSocketPort/$branch/chatroom';
 
-List<String> forntType = [
-  "javascript",
-  "typescript",
-  "css",
-  "html",
-  "vue",
-  "React",
-  "AndroidStudio",
-  "Flutter",
-  "objective-c"
-];
+List<String> forntType = ["javascript", "typescript", "css", "html", "vue", "React", "AndroidStudio", "Flutter", "objective-c"];
 List<String> iotType = ["arduino"];
 List<String> backendType = ["java", "python", "mysql"];
 
