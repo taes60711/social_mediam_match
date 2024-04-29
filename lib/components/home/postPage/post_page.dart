@@ -163,7 +163,6 @@ class PostPage extends StatelessWidget {
                             return false;
                           },
                           child: ListView.builder(
-                            physics: BouncingScrollPhysics(),
                             itemCount: postData.length,
                             itemBuilder: (context, index) {
                               return index != postData.length - 1

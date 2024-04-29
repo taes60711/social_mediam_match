@@ -125,7 +125,6 @@ class PostComment extends StatelessWidget {
                         return false;
                       },
                       child: SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
                         child: Column(
                           children: [
                             Padding(

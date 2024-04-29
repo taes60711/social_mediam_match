@@ -85,7 +85,6 @@ class SkillExChangePage extends StatelessWidget {
                         return false;
                       },
                       child: ListView.builder(
-                          physics: BouncingScrollPhysics(),
                           itemCount: allUserData.length,
                           itemBuilder: (context, index) {
                             Widget listComponent;

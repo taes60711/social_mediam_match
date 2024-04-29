@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/user_model.dart';
@@ -28,17 +29,27 @@ class SkillChoice extends StatelessWidget {
       return showDialog<void>(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('確認'),
-            content: const Text('最多只能選擇七個技能'),
-            actions: <Widget>[
-              ElevatedButton(
-                child: const Text('確認'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+          return Center(
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.all(15),
+              width: 180,
+              height: 150,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
+              child: Column(
+                children: [
+                  const Text('最多只能選擇七個技能'),
+                  Expanded(child: Container()),
+                  CustomButton(
+                      title: '確認',
+                      titleColor: normalTextColor,
+                      backgroundColor: normalBgColor,
+                      onPress: () {
+                        Navigator.of(context).pop();
+                      })
+                ],
               ),
-            ],
+            ),
           );
         },
       );
@@ -47,13 +58,17 @@ class SkillChoice extends StatelessWidget {
     int choicedCount = type == "have" ? allSkillItems.length : allWantSkillItems.length;
     Widget expansionWidget(String category, List<SkillModel> list, String type) {
       Widget component = Container(
-        margin: EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
-          color: Color.fromARGB(96, 214, 214, 214),
+          color: const Color.fromARGB(96, 214, 214, 214),
           borderRadius: BorderRadius.circular(4),
         ),
         child: ExpansionTile(
           title: Text(category),
+          collapsedTextColor: Colors.black45,
+          textColor: Colors.black45,
+          collapsedIconColor: Colors.black45,
+          iconColor: Colors.black45,
+          initiallyExpanded: true,
           shape: Border.all(color: Colors.transparent),
           children: list.map((e) {
             SkillInfo skillInfoItem = type == "have" ? e.skillHave : e.skillWant;
@@ -150,7 +165,8 @@ class SkillChoice extends StatelessWidget {
               icon: const Icon(Icons.arrow_back_ios),
             ),
           ),
-          Text("($choicedCount / 7)"),
+          Text(type == "have" ? "能教的技能" : "想學的技能"),
+          Text("($choicedCount / 7)", style: TextStyle(fontSize: 12)),
           Expanded(
             child: ListView(
               children: [

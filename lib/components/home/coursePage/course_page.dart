@@ -67,7 +67,6 @@ class CoursePage extends StatelessWidget {
                           return true;
                         },
                         child: ListView.builder(
-                            physics: BouncingScrollPhysics(),
                             itemCount: courseData.length,
                             itemBuilder: (context, index) {
                               return index != courseData.length - 1
