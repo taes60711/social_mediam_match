@@ -1,4 +1,5 @@
 {
-    "lang_name": "English",
-    "title": "Change Lang App"
-  }
+  "version":"ver",
+  "first_use_button":"Start",
+  "login_button":"Login"
+}
