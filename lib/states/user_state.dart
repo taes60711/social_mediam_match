@@ -8,6 +8,8 @@ import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
 
+import '../components/strings/account/sign_up_strings.dart';
+
 class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DBService _dbService = DBService();
@@ -19,14 +21,13 @@ class UserState extends ChangeNotifier {
   bool isLoading = false;
   //パスワード忘れたページに送信したメッセージ
   String resetPwdError = ResetPwdStatus.NoMessage.value;
-  //登録かどうか確認、登録したらログインしなくてために
-  // bool _isSignUp = false;
   //サインアップステップインデックス
   int signUpIndex = 0;
 
   //サインアップのインプット
   TextEditingController emailController = TextEditingController();
   TextEditingController pwdController = TextEditingController();
+
   //メソッド：サインアップページチェンジ
   //param
   //toSignUpIndex : サインアップのページインデックス
@@ -101,7 +102,7 @@ class UserState extends ChangeNotifier {
   //Firebaseで登録したユーザUID
   String signUpedUserUID = "";
   //サインアップのエラーメッセージ
-  String signError = SignUpStatus.NoMessage.value;
+  String signError = SignUpError().noError;
   //メソッド：登録
   //param
   //email：メールアドレス，password：パスワード
@@ -126,10 +127,10 @@ class UserState extends ChangeNotifier {
       print("SignUp error ${e.code}");
       switch (e.code) {
         case "invalid-email":
-          signError = SignUpStatus.EmailFormatError.value;
+          signError = SignUpError().emailFormatError;
           break;
         case "weak-password":
-          signError = SignUpStatus.PwdWeakError.value;
+          signError = SignUpError().pwdWeakError;
           break;
         case "channel-error":
           signError = "channel-error";
@@ -146,7 +147,7 @@ class UserState extends ChangeNotifier {
   bool signUpEmailCheck(String email) {
     bool isEmail = true;
     if (!email.contains("@")) {
-      signError = SignUpStatus.EmailFormatError.value;
+      signError = SignUpError().emailFormatError;
       notifyListeners();
       isEmail = false;
     }
@@ -154,7 +155,7 @@ class UserState extends ChangeNotifier {
   }
 
   void signUpErrorReset() {
-    signError = SignUpStatus.NoMessage.value;
+    signError = SignUpError().noError;
     notifyListeners();
   }
 

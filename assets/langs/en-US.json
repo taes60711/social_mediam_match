@@ -1,5 +1,38 @@
 {
+  "//": "welcomePage",
   "version":"ver",
   "first_use_button":"Start",
-  "login_button":"Login"
+  "login_button":"Login",
+
+  "//": "signUp_Error",
+  "su_error_invalid-email":"Invalid Email",
+  "su_error_weak-pwd":"password must be at least 6 characters long",
+
+  "//": "signUp_FirstPage",
+  "su_fp_title":"SMM",
+  "su_fp_introduction":"Welcome to SMM, Start to Sign Up and Update Profile",
+  "su_fp_emailInputTitle":"Email",
+  "su_fp_emailButtonText":"Next",
+  "su_fp_googleButtonText":" Login with Google",
+  "su_fp_twitterButtonText":"Login with Twitter",
+  "su_fp_hintText":"Note : ",
+  "su_fp_termText":"Terms",
+  "su_fp_privacyText":"Privacy Policy",
+  "su_fp_andText":" and ",
+  "su_fp_orText":"or",
+
+  "//": "signUp_StepOne",
+  "su_st_one_p_title":"SMM",
+  "su_st_one_p_nameInputTitle":"Name",
+  "su_st_one_p_pwdInputTitle":"Password",
+  "su_st_one_p_signUpButtonText":"Sign Up",
+
+  "//": "signUp_StepTwo",
+  "su_st_two_p_title":"Profile",
+  "su_st_two_p_jobInputTitle":"Job",
+  "su_st_two_p_introInputTitle":"Introduction",
+  "su_st_two_p_haveSkill":"Skill",
+  "su_st_two_p_wantSkill":"Learning SKill",
+  "su_st_two_p_sentButtonText":"Send"
+
 }

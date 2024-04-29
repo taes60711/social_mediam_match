@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/welcome_page.dart';
 import 'package:social_mediam_match/components/home/home.dart';
 import 'package:social_mediam_match/components/Initial/logo.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
@@ -54,11 +55,12 @@ class Initialpage extends StatelessWidget {
     if (isfirstEnterApp) {
       component = StatefulWrapper(
         onInit: () => enterApp(),
-        child: const Logo(),
+        child: const BackgroundWidget(isSafeArea: false, child: Logo()),
       );
     } else {
       if (isLoading) {
         component = const Scaffold(
+          backgroundColor: Colors.white,
           body: Loading(),
         );
       } else {

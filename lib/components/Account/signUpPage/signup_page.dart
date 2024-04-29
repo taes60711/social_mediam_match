@@ -11,12 +11,12 @@ import 'package:social_mediam_match/components/utilities/background_widget.dart'
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/global.dart';
-import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 
 import '../../../models/skill_model.dart';
 import '../../../states/user_setting_state.dart';
 import '../../home/userPage/skill_choice.dart';
+import '../../strings/account/sign_up_strings.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -71,7 +71,7 @@ class SignUpPage extends StatelessWidget {
     }
 
     Widget signErrorMessage;
-    if (signError != SignUpStatus.NoMessage.value) {
+    if (signError != SignUpError().noError) {
       signErrorMessage = SizedBox(
         width: ScreenSize().width,
         child: Align(

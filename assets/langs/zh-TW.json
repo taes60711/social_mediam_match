@@ -1,5 +1,37 @@
 {
+  "//": "welcomePage",
   "version":"版本",
   "first_use_button":"第一次使用",
-  "login_button":"登入"
+  "login_button":"登入",
+
+  "//": "signUp_Error",
+  "su_error_invalid-email":"郵箱格式錯誤",
+  "su_error_weak-pwd":"密碼須至少6位數以上",
+
+  "//": "signUp_FirstPage",
+  "su_fp_title":"SMM用戶註冊",
+  "su_fp_introduction":"歡迎使用SMM, 請利用一段時間註冊帳號並設定個人資料",
+  "su_fp_emailInputTitle":"常用信箱",
+  "su_fp_emailButtonText":"信箱登入",
+  "su_fp_googleButtonText":"Google登入",
+  "su_fp_twitterButtonText":"Twitter登入",
+  "su_fp_hintText":"註冊即代表同意 ",
+  "su_fp_termText":"使用者條款",
+  "su_fp_privacyText":"隱私權政策",
+  "su_fp_andText":" 與 ",
+  "su_fp_orText":"或",
+
+  "//": "signUp_StepOne",
+  "su_st_one_p_title":"SMM用戶註冊",
+  "su_st_one_p_nameInputTitle":"用戶名",
+  "su_st_one_p_pwdInputTitle":"密碼",
+  "su_st_one_p_signUpButtonText":"註冊",
+
+  "//": "signUp_StepTwo",
+  "su_st_two_p_title":"個人資料設定",
+  "su_st_two_p_jobInputTitle":"職業",
+  "su_st_two_p_introInputTitle":"自我介紹",
+  "su_st_two_p_haveSkill":"能教的技能",
+  "su_st_two_p_wantSkill":"想學的技能",
+  "su_st_two_p_sentButtonText":"送出"
 }

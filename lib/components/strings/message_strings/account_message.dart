@@ -16,13 +16,3 @@ enum LoginStatus {
   final String value;
   const LoginStatus(this.key, this.value);
 }
-
-enum SignUpStatus {
-  EmailFormatError("invalid-email", "郵箱格式錯誤"),
-  PwdWeakError("weak-password", "密碼須至少6位數以上"),
-  NoMessage("no-err", "");
-
-  final String fbKey;
-  final String value;
-  const SignUpStatus(this.fbKey, this.value);
-}

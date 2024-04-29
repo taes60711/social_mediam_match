@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/strings/account/sign_up_strings.dart';
 import 'package:social_mediam_match/states/user_setting_state.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
@@ -37,15 +38,15 @@ class SignUpStepTwo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Center(child: Text("個人資料設定")),
+        Text(StepTwoPage().title),
         const SizedBox(height: 10),
         TitleInput(
-          title: "職業",
+          title: StepTwoPage().jobInputTitle,
           inputHeight: 36,
           textController: jobController,
         ),
         TitleInput(
-          title: "自我介紹",
+          title: StepTwoPage().introInputTitle,
           textController: introductionController,
           isMulti: true,
         ),
@@ -64,7 +65,7 @@ class SignUpStepTwo extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "能教的技能",
+                      StepTwoPage().haveSkillText,
                       style: TextStyle(fontSize: 14),
                     ),
                     Padding(
@@ -105,7 +106,7 @@ class SignUpStepTwo extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "想學的技能",
+                      StepTwoPage().wantSkillText,
                       style: TextStyle(fontSize: 14),
                     ),
                     Padding(
@@ -134,7 +135,7 @@ class SignUpStepTwo extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: CustomButton(
-            title: "送出",
+            title: StepTwoPage().sendButtonText,
             titleColor: normalTextColor,
             backgroundColor: normalBgColor,
             onPress: () async {
@@ -154,20 +155,21 @@ class SignUpStepTwo extends StatelessWidget {
               inspect(gethaveSkill);
               inspect(getWantSkill);
 
-              UpdateUser updateUserData = UpdateUser.update(
-                uid: signUpedUserUID,
-                image: "",
-                name: nameController.text,
-                job: jobController.text,
-                introduction: introductionController.text,
-                mainSkills: gethaveSkill,
-                wantSkills: getWantSkill,
-              );
-              bool isSucess = await userFuture.updateProfile(signUpedUserUID, updateUserData);
+              // UpdateUser updateUserData = UpdateUser.update(
+              //   uid: signUpedUserUID,
+              //   image: "",
+              //   name: nameController.text,
+              //   job: jobController.text,
+              //   introduction: introductionController.text,
+              //   mainSkills: gethaveSkill,
+              //   wantSkills: getWantSkill,
+              // );
+              // bool isSucess = await userFuture.updateProfile(signUpedUserUID, updateUserData);
 
-              if (isSucess) {
-                userFuture.onChangeSignUpPage(3);
-              }
+              // if (isSucess) {
+              //   userFuture.onChangeSignUpPage(3);
+              // }
+              userFuture.onChangeSignUpPage(3);
             },
           ),
         ),
