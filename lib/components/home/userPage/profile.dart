@@ -16,7 +16,6 @@ import '../../../global.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../strings/account/sign_up_strings.dart';
-import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/skill_list_view.dart';
 import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/user_icon.dart';

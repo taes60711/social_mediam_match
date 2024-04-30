@@ -241,7 +241,7 @@ class UserPage extends StatelessWidget {
             children: ManagerButton.values
                 .map((e) => Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Container(
+                      child: SizedBox(
                         width: 80,
                         height: 80,
                         child: CustomButton(
