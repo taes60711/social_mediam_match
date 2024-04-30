@@ -33,5 +33,18 @@
   "su_st_two_p_introInputTitle":"自我介紹",
   "su_st_two_p_haveSkill":"能教的技能",
   "su_st_two_p_wantSkill":"想學的技能",
-  "su_st_two_p_sentButtonText":"送出"
+  "su_st_two_p_sentButtonText":"送出",
+
+  "//": "Login",
+  "login_emailInputTitle":"信箱",
+  "login_pwdInputTitle":"密碼",
+  "login_pwdForgot":"忘記密碼?",
+  "login_emailButtonText":"登入",
+  "login_singUpButtonText":"註冊帳號",
+  "login_googleButtonText":"Google登入",
+  "login_twitterButtonText":"Twitter登入",
+
+  "//": "PasswordForgot",
+  "pwdForgot_emailInputTitle":"請輸入註冊時的郵箱地址",
+  "pwdForgot_sendButtonText":"發送"
 }

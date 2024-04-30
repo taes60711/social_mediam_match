@@ -46,6 +46,7 @@ void main() async {
       ],
       child: EasyLocalization(
         supportedLocales: [Locale('zh', 'TW'), Locale('en', 'US')],
+        fallbackLocale: Locale('en', 'US'),
         path: 'assets/langs',
         child: const MyApp(),
       ),

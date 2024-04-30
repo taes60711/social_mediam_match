@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:social_mediam_match/components/strings/account/login_strings.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
-import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,6 @@ class LoginPage extends StatelessWidget {
     emailController.text = "taes60811@gmail.com";
     pwdController.text = "toto60811";
 
-    bool isLoading = context.select((UserState value) => value.isLoading);
     void closeResetPwdWindow() {
       userFuture.resetPwdError = ResetPwdStatus.NoMessage.value;
       Navigator.pop(context);
@@ -55,23 +54,17 @@ class LoginPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("請輸入註冊時的郵箱地址:"),
-                            IconWithInput(
-                              icon: Icons.email,
-                              inputController: emailController,
-                              hintText: 'Email',
-                            ),
+                            TitleInput(title: PasswordForgot().emailInputTitle, textController: emailController),
                             Text(
                               resetPwdError,
                               style: const TextStyle(color: Colors.red),
                             ),
-                            Align(
-                              alignment: Alignment.center,
-                              child: ElevatedButton(
-                                onPressed: () => userFuture.reSetPwd(emailController.text),
-                                child: const Text("發送"),
-                              ),
-                            ),
+                            CustomButton(
+                              title: PasswordForgot().sendButtonText,
+                              titleColor: normalTextColor,
+                              backgroundColor: normalBgColor,
+                              onPress: () => userFuture.reSetPwd(emailController.text),
+                            )
                           ],
                         ),
                       ),
@@ -84,9 +77,9 @@ class LoginPage extends StatelessWidget {
                         child: Container(
                           width: 60,
                           height: 60,
-                          decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 88, 127, 226),
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                          decoration: BoxDecoration(
+                            color: normalBgColor,
+                            borderRadius: const BorderRadius.all(Radius.circular(15)),
                           ),
                           child: const Icon(
                             Icons.arrow_downward,
@@ -128,7 +121,7 @@ class LoginPage extends StatelessWidget {
     Future<void> loadingPopView() {
       return showDialog<void>(
         barrierDismissible: false,
-        barrierColor: Color.fromARGB(28, 0, 0, 0),
+        barrierColor: Color.fromARGB(50, 0, 0, 0),
         context: context,
         builder: (BuildContext context) {
           return LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35);
@@ -165,11 +158,10 @@ class LoginPage extends StatelessWidget {
     String twitterIconPath = 'assets/twitter_w_Logo.png';
     Color twitterButtonColor = const Color.fromARGB(255, 41, 41, 41);
 
-    Widget userComponent;
-    if (isLoading) {
-      userComponent = const Loading();
-    } else {
-      userComponent = BackgroundWidget(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+          child: BackgroundWidget(
         child: Column(
           children: [
             SizedBox(
@@ -185,8 +177,8 @@ class LoginPage extends StatelessWidget {
               child: FittedBox(
                 child: Column(
                   children: [
-                    TitleInput(title: "信箱", textController: emailController),
-                    TitleInput(title: "密碼", textController: pwdController),
+                    TitleInput(title: Login().emailInputTitle, textController: emailController),
+                    TitleInput(title: Login().pwdInputTitle, textController: pwdController),
                     loginErrorMessage,
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -198,9 +190,9 @@ class LoginPage extends StatelessWidget {
                             onTap: () {
                               openBottomSheet();
                             },
-                            child: const Text(
-                              "忘記密碼?",
-                              style: TextStyle(color: Colors.blueAccent),
+                            child: Text(
+                              Login().forgotPassword,
+                              style: const TextStyle(color: Colors.blueAccent),
                             ),
                           ),
                         ),
@@ -209,7 +201,7 @@ class LoginPage extends StatelessWidget {
 
                     //ログインボタン
                     _button(
-                        title: "登入",
+                        title: Login().emailLoginButtonText,
                         titleColor: normalTextColor,
                         backgroundColor: normalBgColor,
                         onPressed: () async {
@@ -221,7 +213,7 @@ class LoginPage extends StatelessWidget {
                     const SizedBox(height: 10),
                     //登録ボタン
                     _button(
-                        title: "註冊帳號",
+                        title: Login().signUpButtonText,
                         titleColor: normalTextColor,
                         backgroundColor: Color.fromARGB(255, 177, 179, 177),
                         onPressed: () async {
@@ -230,7 +222,7 @@ class LoginPage extends StatelessWidget {
                     const SizedBox(height: 10),
                     //グーグル登録ボタン
                     _button(
-                        title: "Google登入",
+                        title: Login().googleButtonText,
                         titleColor: normalTextColor,
                         backgroundColor: googleButtonColor,
                         iconImg: googleIconPath,
@@ -240,7 +232,7 @@ class LoginPage extends StatelessWidget {
                     const SizedBox(height: 10),
                     //ツイッター登録ボタン
                     _button(
-                        title: "Twitter 登入",
+                        title: Login().twitterButtonText,
                         titleColor: normalTextColor,
                         backgroundColor: twitterButtonColor,
                         iconImg: twitterIconPath,
@@ -253,11 +245,7 @@ class LoginPage extends StatelessWidget {
             )
           ],
         ),
-      );
-    }
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(child: userComponent),
+      )),
     );
   }
 }

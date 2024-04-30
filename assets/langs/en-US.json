@@ -33,6 +33,18 @@
   "su_st_two_p_introInputTitle":"Introduction",
   "su_st_two_p_haveSkill":"Skill",
   "su_st_two_p_wantSkill":"Learning SKill",
-  "su_st_two_p_sentButtonText":"Send"
+  "su_st_two_p_sentButtonText":"Send",
 
+  "//": "Login",
+  "login_emailInputTitle":"Email",
+  "login_pwdInputTitle":"Password",
+  "login_pwdForgot":"Forgot Password?",
+  "login_emailButtonText":"Login",
+  "login_singUpButtonText":"Sign Up",
+  "login_googleButtonText":" Login with Google",
+  "login_twitterButtonText":"Login with Twitter",
+
+  "//": "PasswordForgot",
+  "pwdForgot_emailInputTitle":"Email Address",
+  "pwdForgot_sendButtonText":"Send"
 }
