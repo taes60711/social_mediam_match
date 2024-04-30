@@ -1,5 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 
+class LoginError {
+  String emailFormatError = tr("login_error_invalid-email");
+  String emailorPwdError = tr("login_invalid-credential");
+  String noError = "";
+}
+
 class Login {
   String emailInputTitle = tr("login_emailInputTitle");
   String pwdInputTitle = tr("login_pwdInputTitle");

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/strings/account/login_strings.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
 import 'package:social_mediam_match/models/user_model.dart';
@@ -73,7 +74,7 @@ class UserState extends ChangeNotifier {
   }
 
   //ログインのエラーメッセージ
-  String loginError = LoginStatus.NoMessage.value;
+  String loginError = LoginError().noError;
   //メソッド：ログイン
   //param
   //email：メールアドレス，password：パスワード
@@ -88,13 +89,13 @@ class UserState extends ChangeNotifier {
       print("signIn error ${e.code}");
       switch (e.code) {
         case "invalid-credential":
-          loginError = LoginStatus.EmailorPwdError.value;
+          loginError = LoginError().emailorPwdError;
           break;
         case "invalid-email":
-          loginError = LoginStatus.EmailFormatError.value;
+          loginError = LoginError().emailFormatError;
           break;
         case "channel-error":
-          loginError = LoginStatus.EmailFormatError.value;
+          loginError = "channel-error";
       }
       notifyListeners();
     }

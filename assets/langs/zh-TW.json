@@ -8,6 +8,10 @@
   "su_error_invalid-email":"郵箱格式錯誤",
   "su_error_weak-pwd":"密碼須至少6位數以上",
 
+  "//": "login_Error",
+  "login_error_invalid-email":"郵箱格式錯誤",
+  "login_invalid-credential":"帳號或密碼錯誤",
+
   "//": "signUp_FirstPage",
   "su_fp_title":"SMM用戶註冊",
   "su_fp_introduction":"歡迎使用SMM, 請利用一段時間註冊帳號並設定個人資料",

@@ -8,6 +8,10 @@
   "su_error_invalid-email":"Invalid Email",
   "su_error_weak-pwd":"password must be at least 6 characters long",
 
+  "//": "login_Error",
+  "login_error_invalid-email":"Invalid Email",
+  "login_invalid-credential":"email or passwrod incorrect",
+
   "//": "signUp_FirstPage",
   "su_fp_title":"SMM",
   "su_fp_introduction":"Welcome to SMM, Start to Sign Up and Update Profile",

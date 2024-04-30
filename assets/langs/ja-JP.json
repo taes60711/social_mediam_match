@@ -8,6 +8,10 @@
   "su_error_invalid-email":"入力されたメールアドレスの形式正しくではありません",
   "su_error_weak-pwd":"6文字以上入力してください",
 
+  "//": "login_Error",
+  "login_error_invalid-email":"入力されたメールアドレスの形式正しくではありません",
+  "login_invalid-credential":"ユーザが存在しないか、パスワードが不正です",
+
   "//": "signUp_FirstPage",
   "su_fp_title":"SMM登録",
   "su_fp_introduction":"SMMへようこそ",

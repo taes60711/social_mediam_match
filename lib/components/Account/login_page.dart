@@ -95,7 +95,7 @@ class LoginPage extends StatelessWidget {
 
     void returnHome() {
       resetAllInfo() {
-        userFuture.loginError = LoginStatus.NoMessage.value;
+        userFuture.loginError = LoginError().noError;
       }
 
       Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
@@ -103,11 +103,11 @@ class LoginPage extends StatelessWidget {
     }
 
     Widget loginErrorMessage;
-    if (loginError != LoginStatus.NoMessage.value) {
-      loginErrorMessage = Align(
-        alignment: Alignment.topLeft,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
+    if (loginError != LoginError().noError) {
+      loginErrorMessage = SizedBox(
+        width: ScreenSize().width,
+        child: Align(
+          alignment: Alignment.topLeft,
           child: Text(
             loginError,
             style: const TextStyle(color: Colors.red),
@@ -158,47 +158,56 @@ class LoginPage extends StatelessWidget {
     String twitterIconPath = 'assets/twitter_w_Logo.png';
     Color twitterButtonColor = const Color.fromARGB(255, 41, 41, 41);
 
+    //ロゴ
+    Widget logo = SizedBox(
+      height: ScreenSize().safeheight * 0.4,
+      child: SizedBox(
+        width: 150,
+        height: 150,
+        child: Image.asset('assets/Logo.png'),
+      ),
+    );
+
+    //パスワード忘れるテキスト
+    Widget forgotPwdText = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: SizedBox(
+        width: ScreenSize().width,
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: GestureDetector(
+            onTap: () {
+              openBottomSheet();
+            },
+            child: Text(
+              Login().forgotPassword,
+              style: TextStyle(color: googleButtonColor),
+            ),
+          ),
+        ),
+      ),
+    );
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: BackgroundWidget(
         child: Column(
           children: [
-            SizedBox(
-              height: ScreenSize().safeheight * 0.4,
-              child: SizedBox(
-                width: 150,
-                height: 150,
-                child: Image.asset('assets/Logo.png'),
-              ),
-            ),
+            //ロゴ
+            logo,
             SizedBox(
               height: ScreenSize().safeheight * 0.6,
               child: FittedBox(
                 child: Column(
                   children: [
+                    //メールアドレスInput
                     TitleInput(title: Login().emailInputTitle, textController: emailController),
+                    //パスワードInput
                     TitleInput(title: Login().pwdInputTitle, textController: pwdController),
+                    //エラーメッセージ
                     loginErrorMessage,
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: SizedBox(
-                        width: ScreenSize().width,
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: GestureDetector(
-                            onTap: () {
-                              openBottomSheet();
-                            },
-                            child: Text(
-                              Login().forgotPassword,
-                              style: const TextStyle(color: Colors.blueAccent),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-
+                    //パスワード忘れるテキスト
+                    forgotPwdText,
                     //ログインボタン
                     _button(
                         title: Login().emailLoginButtonText,
@@ -215,7 +224,7 @@ class LoginPage extends StatelessWidget {
                     _button(
                         title: Login().signUpButtonText,
                         titleColor: normalTextColor,
-                        backgroundColor: Color.fromARGB(255, 177, 179, 177),
+                        backgroundColor: greyColor,
                         onPressed: () async {
                           Navigator.of(context).pushNamed(RoutePath.signUpPage.value);
                         }),
