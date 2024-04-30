@@ -31,7 +31,8 @@ class UserState extends ChangeNotifier {
   //メソッド：サインアップページチェンジ
   //param
   //toSignUpIndex : サインアップのページインデックス
-  int onChangeSignUpPage(int toSignUpIndex) {
+  Future<int> onChangeSignUpPage(int toSignUpIndex) async {
+    await Future.delayed(Duration.zero);
     if (toSignUpIndex == 0) {
       signUpErrorReset();
       emailController = TextEditingController();
@@ -81,6 +82,7 @@ class UserState extends ChangeNotifier {
 
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+
       isSucess = true;
     } on FirebaseAuthException catch (e) {
       print("signIn error ${e.code}");
@@ -109,7 +111,7 @@ class UserState extends ChangeNotifier {
   Future<dynamic> signUp(String email, String password) async {
     bool isSucess = false;
     try {
-      // _isSignUp = true;
+      notifyListeners();
       await _auth.createUserWithEmailAndPassword(email: email, password: password).then(
         (UserCredential value) async {
           print("firebase SiginUp Success:${value.user!.uid}");
@@ -136,6 +138,7 @@ class UserState extends ChangeNotifier {
           signError = "channel-error";
           break;
       }
+
       notifyListeners();
     }
     return isSucess;

@@ -64,10 +64,7 @@ class SignUpPage extends StatelessWidget {
     //
 
     void returnHomePage() {
-      resetAllInfo() => userFuture.onChangeSignUpPage(0);
-
       Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-      resetAllInfo();
     }
 
     Widget signErrorMessage;
@@ -122,7 +119,7 @@ class SignUpPage extends StatelessWidget {
     _stepView(List<String> signStepList) {
       circle(Color bgColor) {
         return Container(
-          margin: EdgeInsets.all(5),
+          margin: const EdgeInsets.all(5),
           width: 10,
           height: 10,
           decoration: BoxDecoration(
@@ -170,8 +167,14 @@ class SignUpPage extends StatelessWidget {
 
     return StatefulWrapper(
       onInit: () {
-        userSettingState.getSkillListData();
         print("getSkillListData");
+
+        resetAllInfo() {
+          userFuture.onChangeSignUpPage(0);
+          userSettingState.getSkillListData();
+        }
+
+        resetAllInfo();
       },
       child: Scaffold(
         key: key,

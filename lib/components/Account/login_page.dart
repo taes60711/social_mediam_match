@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
@@ -124,6 +125,23 @@ class LoginPage extends StatelessWidget {
       loginErrorMessage = Container();
     }
 
+    Future<void> loadingPopView() {
+      return showDialog<void>(
+        barrierDismissible: false,
+        barrierColor: Color.fromARGB(28, 0, 0, 0),
+        context: context,
+        builder: (BuildContext context) {
+          return LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35);
+        },
+      );
+    }
+
+    void closePop() {
+      if (!ModalRoute.of(context)!.isCurrent) {
+        Navigator.of(context).pop();
+      }
+    }
+
     //ボタン
     //param:
     //title: ボタン内の文字、　titleColor:　ボタン内の文字の色
@@ -195,7 +213,9 @@ class LoginPage extends StatelessWidget {
                         titleColor: normalTextColor,
                         backgroundColor: normalBgColor,
                         onPressed: () async {
+                          loadingPopView();
                           bool isLoginSucess = await userFuture.signIn(emailController.text, pwdController.text);
+                          closePop();
                           isLoginSucess ? returnHome() : () {};
                         }),
                     const SizedBox(height: 10),
