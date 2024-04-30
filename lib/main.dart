@@ -45,7 +45,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => SkillExChangeState()),
       ],
       child: EasyLocalization(
-        supportedLocales: [Locale('zh', 'TW'), Locale('en', 'US')],
+        supportedLocales: [Locale('zh', 'TW'), Locale('en', 'US'), Locale('ja', 'JP')],
         fallbackLocale: Locale('en', 'US'),
         path: 'assets/langs',
         child: const MyApp(),

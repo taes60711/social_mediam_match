@@ -1,0 +1,50 @@
+{
+  "//": "welcomePage",
+  "version":"Ver",
+  "first_use_button":"始める",
+  "login_button":"ログイン",
+
+  "//": "signUp_Error",
+  "su_error_invalid-email":"入力されたメールアドレスの形式正しくではありません",
+  "su_error_weak-pwd":"6文字以上入力してください",
+
+  "//": "signUp_FirstPage",
+  "su_fp_title":"SMM登録",
+  "su_fp_introduction":"SMMへようこそ",
+  "su_fp_emailInputTitle":"メール",
+  "su_fp_emailButtonText":"進む",
+  "su_fp_googleButtonText":"Googleでログイン",
+  "su_fp_twitterButtonText":"Twitterでログイン",
+  "su_fp_hintText":"Note: ",
+  "su_fp_termText":"利用規約",
+  "su_fp_privacyText":"プライバシーポリシー",
+  "su_fp_andText":" と ",
+  "su_fp_orText":"または",
+
+  "//": "signUp_StepOne",
+  "su_st_one_p_title":"SMM登録",
+  "su_st_one_p_nameInputTitle":"名前",
+  "su_st_one_p_pwdInputTitle":"パスワード",
+  "su_st_one_p_signUpButtonText":"登録する",
+
+  "//": "signUp_StepTwo",
+  "su_st_two_p_title":"個人情報設定",
+  "su_st_two_p_jobInputTitle":"職業",
+  "su_st_two_p_introInputTitle":"自己紹介",
+  "su_st_two_p_haveSkill":"持っているスキル",
+  "su_st_two_p_wantSkill":"勉強したいスキル",
+  "su_st_two_p_sentButtonText":"送信する",
+
+  "//": "Login",
+  "login_emailInputTitle":"メールアドレス",
+  "login_pwdInputTitle":"パスワード",
+  "login_pwdForgot":"パスワード忘れています?",
+  "login_emailButtonText":"ログインする",
+  "login_singUpButtonText":"新規会員登録",
+  "login_googleButtonText":"Googleでログインする",
+  "login_twitterButtonText":"Twitterでログインする",
+
+  "//": "PasswordForgot",
+  "pwdForgot_emailInputTitle":"登録したメールアドレス入力してください",
+  "pwdForgot_sendButtonText":"送信する"
+}
