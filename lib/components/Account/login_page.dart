@@ -7,7 +7,7 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import 'package:social_mediam_match/global.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/utilities/Icon_with_input.dart';
+import 'package:social_mediam_match/components/utilities/title_input.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -224,7 +224,7 @@ class LoginPage extends StatelessWidget {
                     _button(
                         title: Login().signUpButtonText,
                         titleColor: normalTextColor,
-                        backgroundColor: greyColor,
+                        backgroundColor: hintTextColor,
                         onPressed: () async {
                           Navigator.of(context).pushNamed(RoutePath.signUpPage.value);
                         }),

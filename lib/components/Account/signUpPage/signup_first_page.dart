@@ -3,7 +3,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/utilities/Icon_with_input.dart';
+import 'package:social_mediam_match/components/utilities/title_input.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import '../../../states/user_state.dart';
 import '../../strings/account/sign_up_strings.dart';

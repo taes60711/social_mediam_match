@@ -17,7 +17,7 @@ class SkillListView extends StatelessWidget {
       5: Icons.filter_5,
     };
     Color textColor = normalTextColor;
-    Color backGroundColor = normalBgColor;
+    Color backGroundColor = Color.fromARGB(255, 238, 115, 110);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -56,7 +56,7 @@ class SkillListView extends StatelessWidget {
                   color: backGroundColor,
                 ),
                 child: Text(
-                  "暫無",
+                  "none",
                   style: TextStyle(
                     color: textColor,
                   ),

@@ -7,7 +7,7 @@ import 'package:social_mediam_match/states/user_setting_state.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../../states/user_state.dart';
-import '../../utilities/Icon_with_input.dart';
+import '../../utilities/title_input.dart';
 import '../../utilities/custom_button.dart';
 import '../../utilities/skill_list_view.dart';
 import '../../utilities/style/screen_size.dart';

@@ -167,6 +167,9 @@ class SkillChoice extends StatelessWidget {
           ),
           Text(type == "have" ? "能教的技能" : "想學的技能"),
           Text("($choicedCount / 7)", style: TextStyle(fontSize: 12)),
+          SizedBox(
+            height: 20,
+          ),
           Expanded(
             child: ListView(
               children: [

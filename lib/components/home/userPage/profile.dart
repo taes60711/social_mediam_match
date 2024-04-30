@@ -4,13 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/userPage/skill_choice.dart';
 import 'package:social_mediam_match/components/strings/userPage/profie_string.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/title_input.dart';
 import 'package:social_mediam_match/states/user_setting_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import '../../../global.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
+import '../../strings/account/sign_up_strings.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/skill_list_view.dart';
 import '../../utilities/stateful_wrapper.dart';
@@ -84,6 +89,50 @@ class Profile extends StatelessWidget {
       );
     }
 
+    //スキルタイトルボタン、押したらスキル選択ページに遷移する
+    skillTitle({required String type}) {
+      List<SkillModel> skillItems = type == "have" ? allSkillItems : allWantSkillItems;
+      String title = type == "have" ? StepTwoPage().haveSkillText : StepTwoPage().wantSkillText;
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+        child: GestureDetector(
+          onTap: () {
+            print(type);
+            userSettingState.openSkillselectPage(type);
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(title),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 12,
+                    ),
+                  ),
+                  Text(
+                    "(${skillItems.length} / 7)",
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: ScreenSize().width,
+                child: SkillListView(
+                  skillList: skillItems.map((e) => type == "have" ? e.skillHave : e.skillWant).toList(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return StatefulWrapper(
       onInit: () {
         userSettingState.userDataInsertToViewValue(userData);
@@ -104,146 +153,80 @@ class Profile extends StatelessWidget {
                 allWantSkillItems: allWantSkillItems,
                 type: type,
               ),
-              body: SafeArea(
-                child: SizedBox(
-                  width: ScreenSize().width,
+              body: BackgroundWidget(
+                isSafeArea: true,
+                child: FittedBox(
                   child: Column(
                     children: [
                       Text(pageTitle),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: IconButton(
-                          onPressed: () {
-                            inspect(userData);
-                            print(jobInput.text);
-                            bool isChange = userSettingState.isProfileChange(userData, base64Img, nameInput.text, jobInput.text,
-                                introductionInput.text, allSkillItems, allWantSkillItems);
-                            if (isChange) {
-                              exitCheck();
-                            } else {
-                              Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                            }
-                          },
-                          icon: const Icon(Icons.arrow_back_ios),
+                      SizedBox(
+                        width: ScreenSize().width,
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: IconButton(
+                            onPressed: () {
+                              inspect(userData);
+                              bool isChange = userSettingState.isProfileChange(userData, base64Img, nameInput.text, jobInput.text,
+                                  introductionInput.text, allSkillItems, allWantSkillItems);
+                              if (isChange) {
+                                exitCheck();
+                              } else {
+                                Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                              }
+                            },
+                            icon: const Icon(Icons.arrow_back_ios),
+                          ),
                         ),
                       ),
                       UserIcon(
                         iconSize: 120,
                         image: base64Img,
                       ),
-                      GestureDetector(
-                        onTap: () async {
-                          await userSettingState.imageChange();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          color: const Color.fromARGB(221, 209, 104, 104),
-                          child: const Text("image Picker"),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
-                        child: TextField(
-                          controller: nameInput,
-                          decoration: InputDecoration(
-                            labelText: ItemTitles.username.value,
-                            hintText: ItemTitles.username.hintText,
-                            prefixIcon: const Icon(Icons.person),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
-                        child: TextField(
-                          controller: jobInput,
-                          decoration: InputDecoration(
-                            labelText: ItemTitles.username.value,
-                            hintText: ItemTitles.username.hintText,
-                            prefixIcon: const Icon(Icons.person),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, bottom: 8),
-                        child: GestureDetector(
-                          onTap: () {
-                            userSettingState.openSkillselectPage("have");
-                          },
-                          child: Row(
-                            children: [
-                              Text(skillText),
-                              const Icon(Icons.arrow_forward_ios),
-                            ],
-                          ),
-                        ),
-                      ),
+                      const SizedBox(height: 10),
                       SizedBox(
-                        width: ScreenSize().width,
-                        child: SkillListView(
-                          skillList: allSkillItems.map((e) => e.skillHave).toList(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, bottom: 8),
-                        child: GestureDetector(
-                          onTap: () {
-                            userSettingState.openSkillselectPage("want");
+                        width: 150,
+                        child: CustomButton(
+                          title: "image Picker",
+                          titleColor: normalTextColor,
+                          backgroundColor: normalBgColor,
+                          onPress: () async {
+                            await userSettingState.imageChange();
                           },
-                          child: Row(
-                            children: [
-                              Text(wantSkillText),
-                              const Icon(Icons.arrow_forward_ios),
-                            ],
-                          ),
                         ),
                       ),
-                      SizedBox(
-                        width: ScreenSize().width,
-                        child: SkillListView(
-                          skillList: allWantSkillItems.map((e) => e.skillWant).toList(),
-                        ),
-                      ),
+                      TitleInput(title: "用戶名", textController: nameInput),
+                      TitleInput(title: "職業", textController: jobInput),
+                      const SizedBox(height: 15),
+                      skillTitle(type: "have"),
+                      skillTitle(type: "want"),
+                      TitleInput(isMulti: true, title: "自我介紹", textController: introductionInput),
+                      const SizedBox(height: 15),
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(ItemTitles.selfIntroduction.value),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextField(
-                          minLines: 3,
-                          maxLines: 6,
-                          controller: introductionInput,
-                          decoration: InputDecoration(
-                            hintText: ItemTitles.selfIntroduction.hintText,
-                            filled: true,
-                          ),
-                          keyboardType: TextInputType.multiline,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          UpdateUser updateUserData = userSettingState.reformatData(
-                            userData.uid,
-                            base64Img,
-                            nameInput.text,
-                            jobInput.text,
-                            introductionInput.text,
-                            forntSkillItems,
-                            iotSkillItems,
-                            backEndSkillItems,
-                            otherSkillItems,
-                          );
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: CustomButton(
+                          title: "更新",
+                          titleColor: normalTextColor,
+                          backgroundColor: normalBgColor,
+                          onPress: () async {
+                            UpdateUser updateUserData = userSettingState.reformatData(
+                              userData.uid,
+                              base64Img,
+                              nameInput.text,
+                              jobInput.text,
+                              introductionInput.text,
+                              forntSkillItems,
+                              iotSkillItems,
+                              backEndSkillItems,
+                              otherSkillItems,
+                            );
 
-                          bool isSucess = await userState.updateProfile(userData.uid, updateUserData);
+                            bool isSucess = await userState.updateProfile(userData.uid, updateUserData);
 
-                          if (isSucess) {
-                            Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                          }
-                        },
-                        child: Text(updateButtonTitle),
+                            if (isSucess) {
+                              Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                            }
+                          },
+                        ),
                       ),
                     ],
                   ),

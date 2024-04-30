@@ -187,6 +187,8 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
@@ -235,31 +237,40 @@ class UserPage extends StatelessWidget {
               skillList: userData.wantSkills ?? [],
             ),
           ),
-          Column(
+          Wrap(
             children: ManagerButton.values
-                .map((e) => ElevatedButton(
-                      onPressed: () async {
-                        if (e.value == ManagerButton.profile.value) {
-                          Navigator.of(context).pushNamed(
-                            RoutePath.profilePage.value,
-                            arguments: userData,
-                          );
-                        } else if (e.value == ManagerButton.post.value) {
-                          Navigator.of(context).pushNamed(
-                            RoutePath.myPosts.value,
-                            arguments: {
-                              "userData": userData,
-                              "gotoFriendPage": gotoFriendPage,
-                            },
-                          );
-                        } else if (e.value == ManagerButton.set.value) {
-                          Navigator.of(context).pushNamed(RoutePath.privacySettingPage.value, arguments: {
-                            "userData": userData,
-                            "friendState": friendState,
-                          });
-                        }
-                      },
-                      child: Text(e.value),
+                .map((e) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        child: CustomButton(
+                          onPress: () async {
+                            if (e.value == ManagerButton.profile.value) {
+                              Navigator.of(context).pushNamed(
+                                RoutePath.profilePage.value,
+                                arguments: userData,
+                              );
+                            } else if (e.value == ManagerButton.post.value) {
+                              Navigator.of(context).pushNamed(
+                                RoutePath.myPosts.value,
+                                arguments: {
+                                  "userData": userData,
+                                  "gotoFriendPage": gotoFriendPage,
+                                },
+                              );
+                            } else if (e.value == ManagerButton.set.value) {
+                              Navigator.of(context).pushNamed(RoutePath.privacySettingPage.value, arguments: {
+                                "userData": userData,
+                                "friendState": friendState,
+                              });
+                            }
+                          },
+                          title: e.value,
+                          titleColor: normalTextColor,
+                          backgroundColor: normalBgColor,
+                        ),
+                      ),
                     ))
                 .toList(),
           ),
