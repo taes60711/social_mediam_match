@@ -6,7 +6,6 @@ import 'package:social_mediam_match/models/user_model.dart';
 import '../../../global.dart';
 import '../../../models/skill_model.dart';
 import '../../../states/user_setting_state.dart';
-import '../../strings/userPage/profie_string.dart';
 
 class SkillChoice extends StatelessWidget {
   final List<SkillModel> forntSkillItems, backEndSkillItems, iotSkillItems, otherSkillItems, allSkillItems, allWantSkillItems;
@@ -25,6 +24,16 @@ class SkillChoice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String level = "程度 : ";
+    var items = [
+      '0',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+    ];
+
     Future<void> warningPopView() {
       return showDialog<void>(
         context: context,

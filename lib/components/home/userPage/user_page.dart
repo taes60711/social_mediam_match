@@ -73,24 +73,7 @@
 //     return SafeArea(
 //       child: Column(
 //         children: [
-//           Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: GestureDetector(
-//               onTap: () {
-//                 fireBaseService.signOut();
-//               },
-//               child: const Row(
-//                 mainAxisAlignment: MainAxisAlignment.end,
-//                 children: [
-//                   Text("登出"),
-//                   SizedBox(
-//                     width: 10,
-//                   ),
-//                   Icon(Icons.exit_to_app),
-//                 ],
-//               ),
-//             ),
-//           ),
+
 //           GestureDetector(
 //             onTap: () async {
 //               print("audio player");
@@ -187,12 +170,14 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../../../states/friend_state.dart';
+import '../../strings/account/sign_up_strings.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/skill_list_view.dart';
 import '../../utilities/style/screen_size.dart';
@@ -205,79 +190,157 @@ class UserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget userComponent;
-
-    print("UserPage");
-    userComponent = SizedBox(
-      width: ScreenSize().width,
+    return BackgroundWidget(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: UserIcon(
-              iconSize: 120,
-              image: userData.image,
-            ),
-          ),
-          Text("Hello, ${userData.name ?? userData.email}"),
-          Text("身分 ${userData.status}"),
-          Text("職業 ${userData.job}"),
           SizedBox(
-            width: ScreenSize().width,
-            child: SkillListView(
-              title: skillText,
-              skillList: userData.mainSkills ?? [],
-            ),
+            height: ScreenSize().safeheight * 0.05,
           ),
           SizedBox(
             width: ScreenSize().width,
-            child: SkillListView(
-              title: wantSkillText,
-              skillList: userData.wantSkills ?? [],
+            height: ScreenSize().safeheight * 0.3,
+            child: FittedBox(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: UserIcon(
+                      iconSize: 120,
+                      image: userData.image,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text("Hello, ${userData.name ?? userData.email}"),
+                  Text("${UserPageString().infoStatus} ${userData.status}"),
+                  Text("${UserPageString().infoJob} ${userData.job}"),
+                ],
+              ),
             ),
           ),
-          Wrap(
-            children: ManagerButton.values
-                .map((e) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 80,
-                        height: 80,
-                        child: CustomButton(
-                          onPress: () async {
-                            if (e.value == ManagerButton.profile.value) {
-                              Navigator.of(context).pushNamed(
-                                RoutePath.profilePage.value,
-                                arguments: userData,
-                              );
-                            } else if (e.value == ManagerButton.post.value) {
-                              Navigator.of(context).pushNamed(
-                                RoutePath.myPosts.value,
-                                arguments: {
-                                  "userData": userData,
-                                  "gotoFriendPage": gotoFriendPage,
-                                },
-                              );
-                            } else if (e.value == ManagerButton.set.value) {
-                              Navigator.of(context).pushNamed(RoutePath.privacySettingPage.value, arguments: {
-                                "userData": userData,
-                                "friendState": friendState,
-                              });
-                            }
-                          },
-                          title: e.value,
-                          titleColor: normalTextColor,
-                          backgroundColor: normalBgColor,
-                        ),
+          SizedBox(
+            width: ScreenSize().width,
+            height: ScreenSize().safeheight * 0.65,
+            child: FittedBox(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(StepTwoPage().haveSkillText),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: ScreenSize().width,
+                      child: SkillListView(
+                        skillList: userData.mainSkills ?? [],
                       ),
-                    ))
-                .toList(),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(StepTwoPage().wantSkillText),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: ScreenSize().width,
+                      child: SkillListView(
+                        skillList: userData.wantSkills ?? [],
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: ScreenSize().width / 4,
+                          child: CustomButton(
+                              title: UserPageString().profileBtn,
+                              icon: Icons.verified_user_rounded,
+                              titleColor: normalBgColor2,
+                              backgroundColor: normalBgColor,
+                              onPress: () {
+                                print("${UserPageString().profileBtn}");
+                                Navigator.of(context).pushNamed(
+                                  RoutePath.profilePage.value,
+                                  arguments: userData,
+                                );
+                              }),
+                        ),
+                        SizedBox(
+                          width: ScreenSize().width / 4,
+                          child: CustomButton(
+                              title: UserPageString().postBtn,
+                              icon: Icons.wordpress,
+                              titleColor: normalBgColor2,
+                              backgroundColor: normalBgColor,
+                              onPress: () {
+                                print("${UserPageString().postBtn}");
+                                Navigator.of(context).pushNamed(
+                                  RoutePath.myPosts.value,
+                                  arguments: {
+                                    "userData": userData,
+                                    "gotoFriendPage": gotoFriendPage,
+                                  },
+                                );
+                              }),
+                        ),
+                        SizedBox(
+                          width: ScreenSize().width / 4,
+                          child: CustomButton(
+                              title: UserPageString().notificationBtn,
+                              icon: Icons.notifications,
+                              titleColor: normalBgColor2,
+                              backgroundColor: normalBgColor,
+                              onPress: () {
+                                print("${UserPageString().notificationBtn}");
+                              }),
+                        ),
+                        SizedBox(
+                          width: ScreenSize().width / 4,
+                          child: CustomButton(
+                              title: UserPageString().settingBtn,
+                              icon: Icons.settings,
+                              titleColor: normalBgColor2,
+                              backgroundColor: normalBgColor,
+                              onPress: () {
+                                print("${UserPageString().settingBtn}");
+                                Navigator.of(context).pushNamed(RoutePath.privacySettingPage.value, arguments: {
+                                  "userData": userData,
+                                  "friendState": friendState,
+                                });
+                              }),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: ScreenSize().width / 4,
+                          child: CustomButton(
+                              title: UserPageString().friendManagernBtn,
+                              icon: Icons.outdoor_grill,
+                              titleColor: normalBgColor2,
+                              backgroundColor: normalBgColor,
+                              onPress: () {
+                                print("${UserPageString().friendManagernBtn}");
+                              }),
+                        ),
+                        SizedBox(
+                          width: ScreenSize().width / 4,
+                          child: CustomButton(
+                              title: UserPageString().guideBtn,
+                              icon: Icons.wallpaper,
+                              titleColor: normalBgColor2,
+                              backgroundColor: normalBgColor,
+                              onPress: () {
+                                print("${UserPageString().guideBtn}");
+                              }),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),
     );
-
-    return Scaffold(body: userComponent);
   }
 }

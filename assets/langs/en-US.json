@@ -35,11 +35,13 @@
   "su_st_two_p_title":"Profile",
   "su_st_two_p_jobInputTitle":"Job",
   "su_st_two_p_introInputTitle":"Introduction",
-  "su_st_two_p_haveSkill":"Skill",
-  "su_st_two_p_wantSkill":"Learning SKill",
   "su_st_two_p_sentButtonText":"Send",
 
-  "//": "Login",
+  "//": "skill",
+  "su_st_two_p_haveSkill":"Skill",
+  "su_st_two_p_wantSkill":"Learning SKill",
+
+  "//": "login",
   "login_emailInputTitle":"Email",
   "login_pwdInputTitle":"Password",
   "login_pwdForgot":"Forgot Password?",
@@ -48,7 +50,25 @@
   "login_googleButtonText":" Login with Google",
   "login_twitterButtonText":"Login with Twitter",
 
-  "//": "PasswordForgot",
+  "//": "passwordForgot",
   "pwdForgot_emailInputTitle":"Email Address",
-  "pwdForgot_sendButtonText":"Send"
+  "pwdForgot_sendButtonText":"Send",
+
+  "//": "profile",
+  "profile_title":"Profile",
+  "profile_nameInputTitle":"Name",
+  "profile_jobInputTitle":"Job",
+  "profile_introductionInputTitle":"Introduction",
+  "profile_imgPickerButtonText":"Image picker",
+  "profile_updateButtonText":"update",
+
+  "//": "userPage",
+  "userpage_info_status":"Status",
+  "userpage_info_job":"Job",
+  "userpage_profile_btn":"Profile",
+  "userpage_post_btn":"My Post",
+  "userpage_notification_btn":"Notification",
+  "userpage_setting_btn":"Setting",
+  "userpage_friendmanger_btn":"Friends",
+  "userpage_guide_btn":"Guide"
 }
