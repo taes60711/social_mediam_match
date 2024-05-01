@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 String signOutButton = "登出";
 String skillText = "能教的技能";
 String wantSkillText = "想學的技能";
@@ -12,4 +14,13 @@ enum ManagerButton {
 
   final String value;
   const ManagerButton(this.value);
+}
+
+class ProfileString {
+  String title = tr("profile_title");
+  String nameInputTitle = tr("profile_nameInputTitle");
+  String jobInputTitle = tr("profile_jobInputTitle");
+  String introductionInputTitle = tr("profile_introductionInputTitle");
+  String imgPickerButtonText = tr("profile_imgPickerButtonText");
+  String updateButtonText = tr("profile_updateButtonText");
 }

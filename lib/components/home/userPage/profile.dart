@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/userPage/skill_choice.dart';
-import 'package:social_mediam_match/components/strings/userPage/profie_string.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
@@ -16,6 +15,7 @@ import '../../../global.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../strings/account/sign_up_strings.dart';
+import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/skill_list_view.dart';
 import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/user_icon.dart';
@@ -62,6 +62,7 @@ class Profile extends StatelessWidget {
     });
     //
 
+    //編集したらポップ（編集したら画面を離れる前に確認）
     Future<void> exitCheck() {
       return showDialog<void>(
         context: context,
@@ -87,6 +88,27 @@ class Profile extends StatelessWidget {
         },
       );
     }
+
+    //パックボタン（画面を離れるよう）
+    Widget backButton = SizedBox(
+      width: ScreenSize().width,
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: IconButton(
+          onPressed: () {
+            inspect(userData);
+            bool isChange = userSettingState.isProfileChange(
+                userData, base64Img, nameInput.text, jobInput.text, introductionInput.text, allSkillItems, allWantSkillItems);
+            if (isChange) {
+              exitCheck();
+            } else {
+              Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+            }
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
+      ),
+    );
 
     //スキルタイトルボタン、押したらスキル選択ページに遷移する
     skillTitle({required String type}) {
@@ -157,35 +179,14 @@ class Profile extends StatelessWidget {
                 child: FittedBox(
                   child: Column(
                     children: [
-                      Text(pageTitle),
-                      SizedBox(
-                        width: ScreenSize().width,
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: IconButton(
-                            onPressed: () {
-                              inspect(userData);
-                              bool isChange = userSettingState.isProfileChange(userData, base64Img, nameInput.text, jobInput.text,
-                                  introductionInput.text, allSkillItems, allWantSkillItems);
-                              if (isChange) {
-                                exitCheck();
-                              } else {
-                                Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                              }
-                            },
-                            icon: const Icon(Icons.arrow_back_ios),
-                          ),
-                        ),
-                      ),
-                      UserIcon(
-                        iconSize: 120,
-                        image: base64Img,
-                      ),
+                      Text(ProfileString().title),
+                      backButton,
+                      UserIcon(iconSize: 120, image: base64Img),
                       const SizedBox(height: 10),
                       SizedBox(
                         width: 150,
                         child: CustomButton(
-                          title: "image Picker",
+                          title: ProfileString().imgPickerButtonText,
                           titleColor: normalTextColor,
                           backgroundColor: normalBgColor,
                           onPress: () async {
@@ -193,17 +194,17 @@ class Profile extends StatelessWidget {
                           },
                         ),
                       ),
-                      TitleInput(title: "用戶名", textController: nameInput),
-                      TitleInput(title: "職業", textController: jobInput),
+                      TitleInput(title: ProfileString().nameInputTitle, textController: nameInput),
+                      TitleInput(title: ProfileString().jobInputTitle, textController: jobInput),
                       const SizedBox(height: 15),
                       skillTitle(type: "have"),
                       skillTitle(type: "want"),
-                      TitleInput(isMulti: true, title: "自我介紹", textController: introductionInput),
+                      TitleInput(isMulti: true, title: ProfileString().introductionInputTitle, textController: introductionInput),
                       const SizedBox(height: 15),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: CustomButton(
-                          title: "更新",
+                          title: ProfileString().updateButtonText,
                           titleColor: normalTextColor,
                           backgroundColor: normalBgColor,
                           onPress: () async {

@@ -35,11 +35,14 @@
   "su_st_two_p_title":"個人情報設定",
   "su_st_two_p_jobInputTitle":"職業",
   "su_st_two_p_introInputTitle":"自己紹介",
-  "su_st_two_p_haveSkill":"持っているスキル",
-  "su_st_two_p_wantSkill":"勉強したいスキル",
+
   "su_st_two_p_sentButtonText":"送信する",
 
-  "//": "Login",
+  "//": "skill",
+  "su_st_two_p_haveSkill":"持っているスキル",
+  "su_st_two_p_wantSkill":"勉強したいスキル",
+
+  "//": "login",
   "login_emailInputTitle":"メールアドレス",
   "login_pwdInputTitle":"パスワード",
   "login_pwdForgot":"パスワード忘れています?",
@@ -48,7 +51,15 @@
   "login_googleButtonText":"Googleでログインする",
   "login_twitterButtonText":"Twitterでログインする",
 
-  "//": "PasswordForgot",
+  "//": "passwordForgot",
   "pwdForgot_emailInputTitle":"登録したメールアドレス入力してください",
-  "pwdForgot_sendButtonText":"送信する"
+  "pwdForgot_sendButtonText":"送信する",
+
+  "//": "profile",
+  "profile_title":"個人情報",
+  "profile_nameInputTitle":"名前",
+  "profile_jobInputTitle":"職業",
+  "profile_introductionInputTitle":"自己紹介",
+  "profile_imgPickerButtonText":"画像アップ",
+  "profile_updateButtonText":"更新する"
 }

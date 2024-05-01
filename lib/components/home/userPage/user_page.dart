@@ -73,24 +73,7 @@
 //     return SafeArea(
 //       child: Column(
 //         children: [
-//           Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: GestureDetector(
-//               onTap: () {
-//                 fireBaseService.signOut();
-//               },
-//               child: const Row(
-//                 mainAxisAlignment: MainAxisAlignment.end,
-//                 children: [
-//                   Text("登出"),
-//                   SizedBox(
-//                     width: 10,
-//                   ),
-//                   Icon(Icons.exit_to_app),
-//                 ],
-//               ),
-//             ),
-//           ),
+
 //           GestureDetector(
 //             onTap: () async {
 //               print("audio player");
@@ -205,79 +188,136 @@ class UserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget userComponent;
-
-    print("UserPage");
-    userComponent = SizedBox(
-      width: ScreenSize().width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: UserIcon(
-              iconSize: 120,
-              image: userData.image,
+    return FittedBox(
+      child: SizedBox(
+        width: ScreenSize().width,
+        height: ScreenSize().safeheight,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: UserIcon(
+                iconSize: 120,
+                image: userData.image,
+              ),
             ),
-          ),
-          Text("Hello, ${userData.name ?? userData.email}"),
-          Text("身分 ${userData.status}"),
-          Text("職業 ${userData.job}"),
-          SizedBox(
-            width: ScreenSize().width,
-            child: SkillListView(
-              title: skillText,
-              skillList: userData.mainSkills ?? [],
-            ),
-          ),
-          SizedBox(
-            width: ScreenSize().width,
-            child: SkillListView(
-              title: wantSkillText,
-              skillList: userData.wantSkills ?? [],
-            ),
-          ),
-          Wrap(
-            children: ManagerButton.values
-                .map((e) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: 80,
-                        height: 80,
-                        child: CustomButton(
-                          onPress: () async {
-                            if (e.value == ManagerButton.profile.value) {
-                              Navigator.of(context).pushNamed(
-                                RoutePath.profilePage.value,
-                                arguments: userData,
-                              );
-                            } else if (e.value == ManagerButton.post.value) {
-                              Navigator.of(context).pushNamed(
-                                RoutePath.myPosts.value,
-                                arguments: {
-                                  "userData": userData,
-                                  "gotoFriendPage": gotoFriendPage,
-                                },
-                              );
-                            } else if (e.value == ManagerButton.set.value) {
-                              Navigator.of(context).pushNamed(RoutePath.privacySettingPage.value, arguments: {
-                                "userData": userData,
-                                "friendState": friendState,
-                              });
-                            }
-                          },
-                          title: e.value,
-                          titleColor: normalTextColor,
-                          backgroundColor: normalBgColor,
+            SizedBox(height: 20),
+            Text("Hello, ${userData.name ?? userData.email}"),
+            Text("身分 ${userData.status}"),
+            Text("職業 ${userData.job}"),
+            SizedBox(height: 20),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SkillListView(
+                  title: skillText,
+                  skillList: userData.mainSkills ?? [],
+                ),
+                SkillListView(
+                  title: wantSkillText,
+                  skillList: userData.wantSkills ?? [],
+                ),
+                Container(
+                  width: ScreenSize().width,
+                  height: 180,
+                  child: GridView(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: ScreenSize().width / 4, childAspectRatio: 1.0),
+                    children: [
+                      FittedBox(
+                        child: SizedBox(
+                          width: ScreenSize().width / 4,
+                          child: CustomButton(
+                              title: "個人資料",
+                              icon: Icons.verified_user_rounded,
+                              titleColor: normalBgColor2,
+                              backgroundColor: normalBgColor,
+                              onPress: () {
+                                Navigator.of(context).pushNamed(
+                                  RoutePath.profilePage.value,
+                                  arguments: userData,
+                                );
+                              }),
                         ),
                       ),
-                    ))
-                .toList(),
-          ),
-        ],
+                      FittedBox(
+                        child: SizedBox(
+                          width: ScreenSize().width / 4,
+                          child: CustomButton(
+                              title: "我的文章",
+                              icon: Icons.wordpress,
+                              titleColor: normalBgColor2,
+                              backgroundColor: normalBgColor,
+                              onPress: () {
+                                Navigator.of(context).pushNamed(
+                                  RoutePath.myPosts.value,
+                                  arguments: {
+                                    "userData": userData,
+                                    "gotoFriendPage": gotoFriendPage,
+                                  },
+                                );
+                              }),
+                        ),
+                      ),
+                      FittedBox(
+                        child: SizedBox(
+                          width: ScreenSize().width / 4,
+                          child: CustomButton(
+                              title: "通知",
+                              icon: Icons.notifications,
+                              titleColor: normalBgColor2,
+                              backgroundColor: normalBgColor,
+                              onPress: () {}),
+                        ),
+                      ),
+                      FittedBox(
+                        child: SizedBox(
+                          width: ScreenSize().width / 4,
+                          child: CustomButton(
+                              title: "設定",
+                              icon: Icons.settings,
+                              titleColor: normalBgColor2,
+                              backgroundColor: normalBgColor,
+                              onPress: () {
+                                Navigator.of(context).pushNamed(RoutePath.privacySettingPage.value, arguments: {
+                                  "userData": userData,
+                                  "friendState": friendState,
+                                });
+                              }),
+                        ),
+                      ),
+                      FittedBox(
+                        child: SizedBox(
+                          width: ScreenSize().width / 4,
+                          child: CustomButton(
+                              title: "好友管理",
+                              icon: Icons.outdoor_grill,
+                              titleColor: normalBgColor2,
+                              backgroundColor: normalBgColor,
+                              onPress: () {}),
+                        ),
+                      ),
+                      FittedBox(
+                        child: SizedBox(
+                          width: ScreenSize().width / 4,
+                          child: CustomButton(
+                              title: "導覽",
+                              icon: Icons.wallpaper,
+                              titleColor: normalBgColor2,
+                              backgroundColor: normalBgColor,
+                              onPress: () {}),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
-
-    return Scaffold(body: userComponent);
   }
 }
