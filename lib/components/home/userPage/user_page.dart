@@ -170,6 +170,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
@@ -188,43 +189,56 @@ class UserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FittedBox(
-      child: SizedBox(
-        width: ScreenSize().width,
-        height: ScreenSize().safeheight,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: UserIcon(
-                iconSize: 120,
-                image: userData.image,
+    return BackgroundWidget(
+      child: Column(
+        children: [
+          SizedBox(
+            height: ScreenSize().safeheight * 0.05,
+          ),
+          SizedBox(
+            width: ScreenSize().width,
+            height: ScreenSize().safeheight * 0.3,
+            child: FittedBox(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: UserIcon(
+                      iconSize: 120,
+                      image: userData.image,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text("Hello, ${userData.name ?? userData.email}"),
+                  Text("身分 ${userData.status}"),
+                  Text("職業 ${userData.job}"),
+                ],
               ),
             ),
-            SizedBox(height: 20),
-            Text("Hello, ${userData.name ?? userData.email}"),
-            Text("身分 ${userData.status}"),
-            Text("職業 ${userData.job}"),
-            SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SkillListView(
-                  title: skillText,
-                  skillList: userData.mainSkills ?? [],
-                ),
-                SkillListView(
-                  title: wantSkillText,
-                  skillList: userData.wantSkills ?? [],
-                ),
-                Container(
-                  width: ScreenSize().width,
-                  height: 180,
-                  child: GridView(
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: ScreenSize().width / 4, childAspectRatio: 1.0),
+          ),
+          SizedBox(
+            width: ScreenSize().width,
+            height: ScreenSize().safeheight * 0.65,
+            child: FittedBox(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("能教的技能"),
+                  SizedBox(
+                    width: ScreenSize().width,
+                    child: SkillListView(
+                      skillList: userData.mainSkills ?? [],
+                    ),
+                  ),
+                  Text("想學的技能"),
+                  SizedBox(
+                    width: ScreenSize().width,
+                    child: SkillListView(
+                      skillList: userData.wantSkills ?? [],
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Row(
                     children: [
                       FittedBox(
                         child: SizedBox(
@@ -288,6 +302,11 @@ class UserPage extends StatelessWidget {
                               }),
                         ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+                  Row(
+                    children: [
                       FittedBox(
                         child: SizedBox(
                           width: ScreenSize().width / 4,
@@ -311,12 +330,12 @@ class UserPage extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
-                ),
-              ],
+                  )
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

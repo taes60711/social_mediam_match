@@ -176,60 +176,68 @@ class Profile extends StatelessWidget {
               ),
               body: BackgroundWidget(
                 isSafeArea: true,
-                child: FittedBox(
-                  child: Column(
-                    children: [
-                      Text(ProfileString().title),
-                      backButton,
-                      UserIcon(iconSize: 120, image: base64Img),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: 150,
-                        child: CustomButton(
-                          title: ProfileString().imgPickerButtonText,
-                          titleColor: normalTextColor,
-                          backgroundColor: normalBgColor,
-                          onPress: () async {
-                            await userSettingState.imageChange();
-                          },
+                child: Column(
+                  children: [
+                    backButton,
+                    Text(ProfileString().title),
+                    SizedBox(
+                      height: ScreenSize().safeheight * 0.95,
+                      child: FittedBox(
+                        child: Column(
+                          children: [
+                            UserIcon(iconSize: 120, image: base64Img),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              width: 150,
+                              child: CustomButton(
+                                title: ProfileString().imgPickerButtonText,
+                                titleColor: normalTextColor,
+                                backgroundColor: normalBgColor,
+                                onPress: () async {
+                                  await userSettingState.imageChange();
+                                },
+                              ),
+                            ),
+                            TitleInput(title: ProfileString().nameInputTitle, textController: nameInput),
+                            TitleInput(title: ProfileString().jobInputTitle, textController: jobInput),
+                            const SizedBox(height: 15),
+                            skillTitle(type: "have"),
+                            skillTitle(type: "want"),
+                            TitleInput(
+                                isMulti: true, title: ProfileString().introductionInputTitle, textController: introductionInput),
+                            const SizedBox(height: 15),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: CustomButton(
+                                title: ProfileString().updateButtonText,
+                                titleColor: normalTextColor,
+                                backgroundColor: normalBgColor,
+                                onPress: () async {
+                                  UpdateUser updateUserData = userSettingState.reformatData(
+                                    userData.uid,
+                                    base64Img,
+                                    nameInput.text,
+                                    jobInput.text,
+                                    introductionInput.text,
+                                    forntSkillItems,
+                                    iotSkillItems,
+                                    backEndSkillItems,
+                                    otherSkillItems,
+                                  );
+
+                                  bool isSucess = await userState.updateProfile(userData.uid, updateUserData);
+
+                                  if (isSucess) {
+                                    Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      TitleInput(title: ProfileString().nameInputTitle, textController: nameInput),
-                      TitleInput(title: ProfileString().jobInputTitle, textController: jobInput),
-                      const SizedBox(height: 15),
-                      skillTitle(type: "have"),
-                      skillTitle(type: "want"),
-                      TitleInput(isMulti: true, title: ProfileString().introductionInputTitle, textController: introductionInput),
-                      const SizedBox(height: 15),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: CustomButton(
-                          title: ProfileString().updateButtonText,
-                          titleColor: normalTextColor,
-                          backgroundColor: normalBgColor,
-                          onPress: () async {
-                            UpdateUser updateUserData = userSettingState.reformatData(
-                              userData.uid,
-                              base64Img,
-                              nameInput.text,
-                              jobInput.text,
-                              introductionInput.text,
-                              forntSkillItems,
-                              iotSkillItems,
-                              backEndSkillItems,
-                              otherSkillItems,
-                            );
-
-                            bool isSucess = await userState.updateProfile(userData.uid, updateUserData);
-
-                            if (isSucess) {
-                              Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

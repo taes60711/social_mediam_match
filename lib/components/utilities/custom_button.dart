@@ -29,15 +29,22 @@ class CustomButton extends StatelessWidget {
     return icon != null
         ? GestureDetector(
             onTap: onPress,
-            child: Column(
-              children: [
-                Icon(icon, color: backgroundColor),
-                const SizedBox(height: 10),
-                Text(
-                  title,
-                  style: TextStyle(color: titleColor),
-                )
-              ],
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                children: [
+                  Icon(
+                    icon,
+                    color: backgroundColor,
+                    size: iconSize,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    title,
+                    style: TextStyle(color: titleColor),
+                  )
+                ],
+              ),
             ),
           )
         : Material(
