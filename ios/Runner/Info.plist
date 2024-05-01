@@ -52,6 +52,7 @@
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>en</string>
+		<string>ja</string>
 		<string>zh_TW</string>
 	</array>
 
