@@ -42,4 +42,5 @@ class StepTwoPage {
 //signup_guide
 class StepGuide {
   String title = "導覽";
+  String skipButtonText = "跳過";
 }

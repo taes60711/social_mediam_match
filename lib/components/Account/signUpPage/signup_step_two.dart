@@ -84,7 +84,7 @@ class SignUpStepTwo extends StatelessWidget {
     Future<void> loadingPopView() {
       return showDialog<void>(
         barrierDismissible: false,
-        barrierColor: Color.fromARGB(50, 0, 0, 0),
+        barrierColor: barrierColor,
         context: context,
         builder: (BuildContext context) {
           return LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35);

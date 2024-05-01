@@ -16,7 +16,7 @@ class SignUpGuide extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: CustomButton(
-              title: "跳過",
+              title: StepGuide().skipButtonText,
               titleColor: normalTextColor,
               backgroundColor: normalBgColor,
               onPress: () {
