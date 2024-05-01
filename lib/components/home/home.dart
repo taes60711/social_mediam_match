@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/skill_exchange_page.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_page.dart';
@@ -60,23 +61,23 @@ class _HomeState extends State<Home> {
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(FontAwesomeIcons.home),
             label: '主頁',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
+            icon: Icon(FontAwesomeIcons.solidFaceLaugh),
             label: '技能交換',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
+            icon: Icon(FontAwesomeIcons.bookOpenReader),
             label: '課程',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.mobile_friendly),
+            icon: Icon(FontAwesomeIcons.solidComments),
             label: '聊天室',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_box_rounded),
+            icon: Icon(FontAwesomeIcons.solidUser),
             label: '我的',
           ),
         ],

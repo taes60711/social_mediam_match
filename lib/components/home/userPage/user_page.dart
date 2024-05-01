@@ -170,6 +170,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
@@ -205,11 +206,11 @@ class UserPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: UserIcon(
-                      iconSize: 120,
+                      iconSize: 100,
                       image: userData.image,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Text("Hello, ${userData.name ?? userData.email}"),
                   Text("${UserPageString().infoStatus} ${userData.status}"),
                   Text("${UserPageString().infoJob} ${userData.job}"),
@@ -250,7 +251,7 @@ class UserPage extends StatelessWidget {
                           width: ScreenSize().width / 4,
                           child: CustomButton(
                               title: UserPageString().profileBtn,
-                              icon: Icons.verified_user_rounded,
+                              icon: FontAwesomeIcons.solidAddressCard,
                               titleColor: normalBgColor2,
                               backgroundColor: normalBgColor,
                               onPress: () {
@@ -265,7 +266,7 @@ class UserPage extends StatelessWidget {
                           width: ScreenSize().width / 4,
                           child: CustomButton(
                               title: UserPageString().postBtn,
-                              icon: Icons.wordpress,
+                              icon: FontAwesomeIcons.solidNewspaper,
                               titleColor: normalBgColor2,
                               backgroundColor: normalBgColor,
                               onPress: () {
@@ -283,7 +284,7 @@ class UserPage extends StatelessWidget {
                           width: ScreenSize().width / 4,
                           child: CustomButton(
                               title: UserPageString().notificationBtn,
-                              icon: Icons.notifications,
+                              icon: FontAwesomeIcons.solidBell,
                               titleColor: normalBgColor2,
                               backgroundColor: normalBgColor,
                               onPress: () {
@@ -294,7 +295,7 @@ class UserPage extends StatelessWidget {
                           width: ScreenSize().width / 4,
                           child: CustomButton(
                               title: UserPageString().settingBtn,
-                              icon: Icons.settings,
+                              icon: FontAwesomeIcons.gear,
                               titleColor: normalBgColor2,
                               backgroundColor: normalBgColor,
                               onPress: () {
@@ -314,7 +315,7 @@ class UserPage extends StatelessWidget {
                           width: ScreenSize().width / 4,
                           child: CustomButton(
                               title: UserPageString().friendManagernBtn,
-                              icon: Icons.outdoor_grill,
+                              icon: FontAwesomeIcons.userLarge,
                               titleColor: normalBgColor2,
                               backgroundColor: normalBgColor,
                               onPress: () {
@@ -325,7 +326,7 @@ class UserPage extends StatelessWidget {
                           width: ScreenSize().width / 4,
                           child: CustomButton(
                               title: UserPageString().guideBtn,
-                              icon: Icons.wallpaper,
+                              icon: Icons.question_answer,
                               titleColor: normalBgColor2,
                               backgroundColor: normalBgColor,
                               onPress: () {
