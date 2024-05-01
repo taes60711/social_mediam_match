@@ -27,7 +27,7 @@ class CustomButton extends StatelessWidget {
     double iconSize = 25;
 
     return icon != null
-        ? GestureDetector(
+        ? InkWell(
             onTap: onPress,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 10),
