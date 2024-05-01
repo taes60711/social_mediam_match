@@ -4,18 +4,6 @@ String signOutButton = "登出";
 String skillText = "能教的技能";
 String wantSkillText = "想學的技能";
 
-enum ManagerButton {
-  profile("個人資料"),
-  post("我的文章"),
-  friend("好友管理"),
-  notification("通知"),
-  guide("導覽"),
-  set("設定");
-
-  final String value;
-  const ManagerButton(this.value);
-}
-
 class ProfileString {
   String title = tr("profile_title");
   String nameInputTitle = tr("profile_nameInputTitle");
@@ -23,4 +11,15 @@ class ProfileString {
   String introductionInputTitle = tr("profile_introductionInputTitle");
   String imgPickerButtonText = tr("profile_imgPickerButtonText");
   String updateButtonText = tr("profile_updateButtonText");
+}
+
+class UserPageString {
+  String infoStatus = tr("userpage_info_status");
+  String infoJob = tr("userpage_info_job");
+  String profileBtn = tr("userpage_profile_btn");
+  String postBtn = tr("userpage_post_btn");
+  String notificationBtn = tr("userpage_notification_btn");
+  String settingBtn = tr("userpage_setting_btn");
+  String friendManagernBtn = tr("userpage_friendmanger_btn");
+  String guideBtn = tr("userpage_guide_btn");
 }

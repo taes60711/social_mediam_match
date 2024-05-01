@@ -61,5 +61,15 @@
   "profile_jobInputTitle":"職業",
   "profile_introductionInputTitle":"自己紹介",
   "profile_imgPickerButtonText":"画像アップ",
-  "profile_updateButtonText":"更新する"
+  "profile_updateButtonText":"更新する",
+
+  "//": "userPage",
+  "userpage_info_status":"身分",
+  "userpage_info_job":"職業",
+  "userpage_profile_btn":"個人情報",
+  "userpage_post_btn":"My投稿",
+  "userpage_notification_btn":"通知",
+  "userpage_setting_btn":"設定",
+  "userpage_friendmanger_btn":"友だち管理",
+  "userpage_guide_btn":"ガイド"
 }

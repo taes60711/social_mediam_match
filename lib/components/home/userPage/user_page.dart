@@ -177,6 +177,7 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../../../states/friend_state.dart';
+import '../../strings/account/sign_up_strings.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/skill_list_view.dart';
 import '../../utilities/style/screen_size.dart';
@@ -210,8 +211,8 @@ class UserPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Text("Hello, ${userData.name ?? userData.email}"),
-                  Text("身分 ${userData.status}"),
-                  Text("職業 ${userData.job}"),
+                  Text("${UserPageString().infoStatus} ${userData.status}"),
+                  Text("${UserPageString().infoJob} ${userData.job}"),
                 ],
               ),
             ),
@@ -220,51 +221,55 @@ class UserPage extends StatelessWidget {
             width: ScreenSize().width,
             height: ScreenSize().safeheight * 0.65,
             child: FittedBox(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("能教的技能"),
-                  SizedBox(
-                    width: ScreenSize().width,
-                    child: SkillListView(
-                      skillList: userData.mainSkills ?? [],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(StepTwoPage().haveSkillText),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: ScreenSize().width,
+                      child: SkillListView(
+                        skillList: userData.mainSkills ?? [],
+                      ),
                     ),
-                  ),
-                  Text("想學的技能"),
-                  SizedBox(
-                    width: ScreenSize().width,
-                    child: SkillListView(
-                      skillList: userData.wantSkills ?? [],
+                    const SizedBox(height: 10),
+                    Text(StepTwoPage().wantSkillText),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: ScreenSize().width,
+                      child: SkillListView(
+                        skillList: userData.wantSkills ?? [],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    children: [
-                      FittedBox(
-                        child: SizedBox(
+                    const SizedBox(height: 30),
+                    Row(
+                      children: [
+                        SizedBox(
                           width: ScreenSize().width / 4,
                           child: CustomButton(
-                              title: "個人資料",
+                              title: UserPageString().profileBtn,
                               icon: Icons.verified_user_rounded,
                               titleColor: normalBgColor2,
                               backgroundColor: normalBgColor,
                               onPress: () {
+                                print("${UserPageString().profileBtn}");
                                 Navigator.of(context).pushNamed(
                                   RoutePath.profilePage.value,
                                   arguments: userData,
                                 );
                               }),
                         ),
-                      ),
-                      FittedBox(
-                        child: SizedBox(
+                        SizedBox(
                           width: ScreenSize().width / 4,
                           child: CustomButton(
-                              title: "我的文章",
+                              title: UserPageString().postBtn,
                               icon: Icons.wordpress,
                               titleColor: normalBgColor2,
                               backgroundColor: normalBgColor,
                               onPress: () {
+                                print("${UserPageString().postBtn}");
                                 Navigator.of(context).pushNamed(
                                   RoutePath.myPosts.value,
                                   arguments: {
@@ -274,64 +279,63 @@ class UserPage extends StatelessWidget {
                                 );
                               }),
                         ),
-                      ),
-                      FittedBox(
-                        child: SizedBox(
+                        SizedBox(
                           width: ScreenSize().width / 4,
                           child: CustomButton(
-                              title: "通知",
+                              title: UserPageString().notificationBtn,
                               icon: Icons.notifications,
                               titleColor: normalBgColor2,
                               backgroundColor: normalBgColor,
-                              onPress: () {}),
+                              onPress: () {
+                                print("${UserPageString().notificationBtn}");
+                              }),
                         ),
-                      ),
-                      FittedBox(
-                        child: SizedBox(
+                        SizedBox(
                           width: ScreenSize().width / 4,
                           child: CustomButton(
-                              title: "設定",
+                              title: UserPageString().settingBtn,
                               icon: Icons.settings,
                               titleColor: normalBgColor2,
                               backgroundColor: normalBgColor,
                               onPress: () {
+                                print("${UserPageString().settingBtn}");
                                 Navigator.of(context).pushNamed(RoutePath.privacySettingPage.value, arguments: {
                                   "userData": userData,
                                   "friendState": friendState,
                                 });
                               }),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    children: [
-                      FittedBox(
-                        child: SizedBox(
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    Row(
+                      children: [
+                        SizedBox(
                           width: ScreenSize().width / 4,
                           child: CustomButton(
-                              title: "好友管理",
+                              title: UserPageString().friendManagernBtn,
                               icon: Icons.outdoor_grill,
                               titleColor: normalBgColor2,
                               backgroundColor: normalBgColor,
-                              onPress: () {}),
+                              onPress: () {
+                                print("${UserPageString().friendManagernBtn}");
+                              }),
                         ),
-                      ),
-                      FittedBox(
-                        child: SizedBox(
+                        SizedBox(
                           width: ScreenSize().width / 4,
                           child: CustomButton(
-                              title: "導覽",
+                              title: UserPageString().guideBtn,
                               icon: Icons.wallpaper,
                               titleColor: normalBgColor2,
                               backgroundColor: normalBgColor,
-                              onPress: () {}),
+                              onPress: () {
+                                print("${UserPageString().guideBtn}");
+                              }),
                         ),
-                      ),
-                    ],
-                  )
-                ],
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),

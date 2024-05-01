@@ -60,5 +60,15 @@
   "profile_jobInputTitle":"職業",
   "profile_introductionInputTitle":"自我介紹",
   "profile_imgPickerButtonText":"圖片選擇",
-  "profile_updateButtonText":"更新"
+  "profile_updateButtonText":"更新",
+
+  "//": "userPage",
+  "userpage_info_status":"身分",
+  "userpage_info_job":"職業",
+  "userpage_profile_btn":"個人資料",
+  "userpage_post_btn":"我的文章",
+  "userpage_notification_btn":"通知",
+  "userpage_setting_btn":"設定",
+  "userpage_friendmanger_btn":"好友管理",
+  "userpage_guide_btn":"導覽"
 }

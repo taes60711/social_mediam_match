@@ -60,5 +60,15 @@
   "profile_jobInputTitle":"Job",
   "profile_introductionInputTitle":"Introduction",
   "profile_imgPickerButtonText":"Image picker",
-  "profile_updateButtonText":"update"
+  "profile_updateButtonText":"update",
+
+  "//": "userPage",
+  "userpage_info_status":"Status",
+  "userpage_info_job":"Job",
+  "userpage_profile_btn":"Profile",
+  "userpage_post_btn":"My Post",
+  "userpage_notification_btn":"Notification",
+  "userpage_setting_btn":"Setting",
+  "userpage_friendmanger_btn":"Friends",
+  "userpage_guide_btn":"Guide"
 }
