@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:social_mediam_match/components/home/postPage/post_comment.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
@@ -60,6 +61,31 @@ class _RightToLeftAnimationDialogState extends State<RightToLeftAnimationDialog>
   }
 }
 
+class ShimmerList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: ListView.builder(
+        itemCount: 5, // Adjust the count based on your needs
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Container(
+              height: 200,
+              width: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: const Color.fromARGB(255, 218, 219, 219),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
 class PostPage extends StatelessWidget {
   final LoginUser userData;
   final VoidCallback gotoFriendPage;
@@ -106,12 +132,13 @@ class PostPage extends StatelessWidget {
     }
 
     print("PostPage isFirstLoading: ${isFirstLoading}");
+
     return StatefulWrapper(
       onInit: () async {
         await postState.getPostData(searchType: "First");
       },
       child: isFirstLoading
-          ? const Loading()
+          ? ShimmerList()
           : Scaffold(
               key: globalKey,
               endDrawer: UserDetail(

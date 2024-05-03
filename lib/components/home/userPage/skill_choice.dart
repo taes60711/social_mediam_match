@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
@@ -26,7 +27,6 @@ class SkillChoice extends StatelessWidget {
   Widget build(BuildContext context) {
     String level = "程度 : ";
     var items = [
-      '0',
       '1',
       '2',
       '3',
@@ -150,6 +150,15 @@ class SkillChoice extends StatelessWidget {
                       selectedItem,
                       style: TextStyle(color: skillInfoItem.level > 0 ? normalTextColor : normalBgColor2),
                     ),
+                    skillInfoItem.level > 0
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 5, top: 2.0),
+                            child: GestureDetector(
+                              onTap: () => userSettingState.checkOnChange(skillInfoItem, choicedLevel: "0"),
+                              child: Icon(FontAwesomeIcons.close, size: 15, color: normalTextColor),
+                            ),
+                          )
+                        : SizedBox(),
                   ],
                 ),
               ),

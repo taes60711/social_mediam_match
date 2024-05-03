@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +21,44 @@ import '../../utilities/skill_list_view.dart';
 import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/user_icon.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> with WidgetsBindingObserver {
+  final _scrollController = ScrollController();
+  double keboardHeight = 0;
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (MediaQuery.of(context).viewInsets.bottom == 0) {
+        _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+        print("關閉鍵盤");
+      } else {
+        double bottom = MediaQuery.of(context).viewInsets.bottom;
+        keboardHeight = max(keboardHeight, bottom);
+        _scrollController.animateTo(200, duration: Duration(milliseconds: 500), curve: Curves.ease);
+
+        print("顯示鍵盤 ${keboardHeight}");
+      }
+    });
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +197,12 @@ class Profile extends StatelessWidget {
         userSettingState.getSkillListData(userData: userData);
       },
       child: isFirst
-          ? const Loading()
+          ? ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _scrollController,
+              children: [const Loading()],
+            )
           : Scaffold(
               resizeToAvoidBottomInset: false,
               key: key,
@@ -176,12 +218,18 @@ class Profile extends StatelessWidget {
               ),
               body: BackgroundWidget(
                 isSafeArea: true,
-                child: Column(
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: _scrollController,
                   children: [
                     backButton,
-                    Text(ProfileString().title),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(ProfileString().title),
+                    ),
                     SizedBox(
-                      height: ScreenSize().safeheight * 0.95,
+                      height: ScreenSize().safeheight,
                       child: FittedBox(
                         child: Column(
                           children: [
@@ -237,6 +285,7 @@ class Profile extends StatelessWidget {
                         ),
                       ),
                     ),
+                    Container(height: keboardHeight)
                   ],
                 ),
               ),

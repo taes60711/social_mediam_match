@@ -108,20 +108,45 @@ class SkillExChangePage extends StatelessWidget {
                                         children: [
                                           Row(
                                             children: [
-                                              UserIcon(
-                                                iconSize: 60,
-                                                image: allUserData[index].image,
+                                              Expanded(
+                                                child: Row(
+                                                  children: [
+                                                    UserIcon(
+                                                      iconSize: 60,
+                                                      image: allUserData[index].image,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(allUserData[index].email),
+                                                        Text(
+                                                          allUserData[index].job ?? "無",
+                                                          style: TextStyle(color: Colors.grey),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                              Text(allUserData[index].email),
+                                              Text(
+                                                "${allUserData[index].lastLogin}天",
+                                                style: TextStyle(color: Colors.grey),
+                                              ),
                                             ],
                                           ),
-                                          Text("最後登入時間: ${allUserData[index].lastLogin}"),
-                                          SizedBox(
-                                            width: ScreenSize().width,
-                                            child: SkillListView(
-                                              title: skillText,
-                                              skillList: allUserData[index].mainSkills ?? [],
-                                            ),
+                                          allUserData[index].introduction != ""
+                                              ? Padding(
+                                                  padding: EdgeInsets.only(left: 60),
+                                                  child: Text(
+                                                    "${allUserData[index].introduction}",
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                )
+                                              : Container(),
+                                          SkillListView(
+                                            title: skillText,
+                                            skillList: allUserData[index].mainSkills ?? [],
                                           ),
                                           SizedBox(
                                             width: ScreenSize().width,
@@ -158,16 +183,35 @@ class SkillExChangePage extends StatelessWidget {
                                             children: [
                                               Row(
                                                 children: [
-                                                  UserIcon(
-                                                    iconSize: 60,
-                                                    image: allUserData[index].image,
+                                                  Expanded(
+                                                    child: Row(
+                                                      children: [
+                                                        UserIcon(
+                                                          iconSize: 60,
+                                                          image: allUserData[index].image,
+                                                        ),
+                                                        Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(allUserData[index].email),
+                                                            Text(
+                                                              allUserData[index].job ?? "無",
+                                                              style: TextStyle(color: Colors.grey),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                  Text(allUserData[index].email),
+                                                  Text(
+                                                    "${allUserData[index].lastLogin}天",
+                                                    style: TextStyle(color: Colors.grey),
+                                                  ),
                                                 ],
                                               ),
-                                              Text("最後登入時間: ${allUserData[index].lastLogin}"),
                                               SizedBox(
                                                 width: ScreenSize().width,
+                                                height: 50,
                                                 child: SkillListView(
                                                   title: skillText,
                                                   skillList: allUserData[index].mainSkills ?? [],

@@ -64,8 +64,10 @@ class LoginUser extends UserModel {
     String formattedTime = "";
     if (json['lastlogin'] != null) {
       DateTime dateUtc = DateTime.parse(json['lastlogin']).toUtc();
-      DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
-      formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
+      Duration duration = DateTime.now().toUtc().difference(dateUtc);
+      formattedTime = "${duration.inDays}";
+      // DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
+      // formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
     }
 
     return LoginUser(

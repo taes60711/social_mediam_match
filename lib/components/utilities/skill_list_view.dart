@@ -32,15 +32,17 @@ class SkillListView extends StatelessWidget {
                         avatar: Icon(
                           levelIcon[e.level],
                           color: textColor,
-                          size: 20,
+                          size: 18,
                         ),
                         visualDensity: const VisualDensity(horizontal: 0.0, vertical: -4),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         backgroundColor: backGroundColor,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            side: const BorderSide(
-                              style: BorderStyle.none,
-                            )),
+                          borderRadius: BorderRadius.circular(20),
+                          side: const BorderSide(
+                            style: BorderStyle.none,
+                          ),
+                        ),
                         label: Text(
                           e.name,
                           style: TextStyle(color: textColor),
