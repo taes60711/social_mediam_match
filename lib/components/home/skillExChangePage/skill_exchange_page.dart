@@ -99,7 +99,7 @@ class SkillExChangePage extends StatelessWidget {
                                   child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      color: const Color.fromARGB(255, 218, 219, 219),
+                                      color: Color.fromARGB(255, 228, 228, 228),
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -136,7 +136,7 @@ class SkillExChangePage extends StatelessWidget {
                                           ),
                                           allUserData[index].introduction != ""
                                               ? Padding(
-                                                  padding: EdgeInsets.only(left: 60),
+                                                  padding: const EdgeInsets.only(left: 60),
                                                   child: Text(
                                                     "${allUserData[index].introduction}",
                                                     maxLines: 2,
@@ -146,12 +146,13 @@ class SkillExChangePage extends StatelessWidget {
                                               : Container(),
                                           SkillListView(
                                             title: skillText,
+                                            fontSize: 13,
                                             skillList: allUserData[index].mainSkills ?? [],
                                           ),
                                           SizedBox(
-                                            width: ScreenSize().width,
                                             child: SkillListView(
                                               title: wantSkillText,
+                                              fontSize: 13,
                                               skillList: allUserData[index].wantSkills ?? [],
                                             ),
                                           ),
@@ -174,7 +175,7 @@ class SkillExChangePage extends StatelessWidget {
                                       child: Container(
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10),
-                                          color: const Color.fromARGB(255, 218, 219, 219),
+                                          color: Color.fromARGB(255, 228, 228, 228),
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -209,20 +210,15 @@ class SkillExChangePage extends StatelessWidget {
                                                   ),
                                                 ],
                                               ),
-                                              SizedBox(
-                                                width: ScreenSize().width,
-                                                height: 50,
-                                                child: SkillListView(
-                                                  title: skillText,
-                                                  skillList: allUserData[index].mainSkills ?? [],
-                                                ),
+                                              SkillListView(
+                                                title: skillText,
+                                                fontSize: 13,
+                                                skillList: allUserData[index].mainSkills ?? [],
                                               ),
-                                              SizedBox(
-                                                width: ScreenSize().width,
-                                                child: SkillListView(
-                                                  title: wantSkillText,
-                                                  skillList: allUserData[index].wantSkills ?? [],
-                                                ),
+                                              SkillListView(
+                                                title: wantSkillText,
+                                                fontSize: 13,
+                                                skillList: allUserData[index].wantSkills ?? [],
                                               ),
                                             ],
                                           ),
