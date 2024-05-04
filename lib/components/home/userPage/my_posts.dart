@@ -53,7 +53,7 @@ class EditPost extends StatelessWidget {
                   postState.updatePostData(choicedPost!.id, content);
                   postState.myPostsGlobalKey.currentState!.closeEndDrawer();
                 },
-                child: Text("更新"))
+                child: const Text("更新"))
           ],
         ),
       ),

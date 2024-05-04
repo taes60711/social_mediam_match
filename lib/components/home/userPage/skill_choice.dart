@@ -47,7 +47,7 @@ class SkillChoice extends StatelessWidget {
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
               child: Column(
                 children: [
-                  const Text('最多只能選擇七個技能'),
+                  const Text('最多只能選擇五個技能'),
                   Expanded(child: Container()),
                   CustomButton(
                       title: '確認',
@@ -119,7 +119,7 @@ class SkillChoice extends StatelessWidget {
                         }
                       });
 
-                if (choicedCount < 7 || changeChoicedSkillLevel) {
+                if (choicedCount < 5 || changeChoicedSkillLevel) {
                   userSettingState.checkOnChange(skillInfoItem, choicedLevel: value);
                 } else {
                   print("不能在選擇了");
@@ -158,7 +158,7 @@ class SkillChoice extends StatelessWidget {
                               child: Icon(FontAwesomeIcons.close, size: 15, color: normalTextColor),
                             ),
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                   ],
                 ),
               ),
@@ -184,10 +184,8 @@ class SkillChoice extends StatelessWidget {
             ),
           ),
           Text(type == "have" ? "能教的技能" : "想學的技能"),
-          Text("($choicedCount / 7)", style: TextStyle(fontSize: 12)),
-          SizedBox(
-            height: 20,
-          ),
+          Text("($choicedCount / 5)", style: const TextStyle(fontSize: 12)),
+          const SizedBox(height: 20),
           Expanded(
             child: ListView(
               children: [

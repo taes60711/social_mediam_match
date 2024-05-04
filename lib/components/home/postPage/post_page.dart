@@ -68,7 +68,7 @@ class ShimmerList extends StatelessWidget {
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.grey[100]!,
       child: ListView.builder(
-        itemCount: 5, // Adjust the count based on your needs
+        itemCount: 5,
         itemBuilder: (context, index) {
           return ListTile(
             title: Container(
@@ -205,7 +205,7 @@ class PostPage extends StatelessWidget {
                                               loginUserData: userData, choicedPostData: postData[index]);
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.all(8),
+                                          padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(10),
                                             color: const Color.fromARGB(255, 218, 219, 219),
@@ -264,7 +264,7 @@ class PostPage extends StatelessWidget {
                                                   loginUserData: userData, choicedPostData: postData[index]);
                                             },
                                             child: Container(
-                                              padding: EdgeInsets.all(8),
+                                              padding: const EdgeInsets.all(8),
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.circular(10),
                                                 color: const Color.fromARGB(255, 218, 219, 219),

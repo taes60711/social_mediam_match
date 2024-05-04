@@ -32,7 +32,7 @@ class SkillListView extends StatelessWidget {
                       (e) => Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(8),
                           color: backGroundColor,
                         ),
                         child: Row(

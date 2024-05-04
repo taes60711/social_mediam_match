@@ -244,7 +244,7 @@ class UserPage extends StatelessWidget {
                         skillList: userData.wantSkills ?? [],
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 20),
                     Row(
                       children: [
                         SizedBox(

@@ -9,7 +9,6 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import '../../../states/skill_exchange_state.dart';
 import '../../utilities/skill_list_view.dart';
-import '../../utilities/style/screen_size.dart';
 import '../../utilities/user_icon.dart';
 
 class SkillExChangePage extends StatelessWidget {
@@ -185,23 +184,25 @@ class SkillExChangePage extends StatelessWidget {
                                               Row(
                                                 children: [
                                                   Expanded(
-                                                    child: Row(
-                                                      children: [
-                                                        UserIcon(
-                                                          iconSize: 60,
-                                                          image: allUserData[index].image,
-                                                        ),
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(allUserData[index].email),
-                                                            Text(
-                                                              allUserData[index].job ?? "無",
-                                                              style: TextStyle(color: Colors.grey),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
+                                                    child: Container(
+                                                      child: Row(
+                                                        children: [
+                                                          UserIcon(
+                                                            iconSize: 60,
+                                                            image: allUserData[index].image,
+                                                          ),
+                                                          Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              Text(allUserData[index].email),
+                                                              Text(
+                                                                allUserData[index].job ?? "無",
+                                                                style: TextStyle(color: Colors.grey),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
                                                   Text(

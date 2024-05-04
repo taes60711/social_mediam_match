@@ -127,23 +127,80 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
     }
 
     //パックボタン（画面を離れるよう）
-    Widget backButton = SizedBox(
+    Widget backButton = Container(
+      margin: EdgeInsets.only(left: ScreenSize().width * 0.03),
       width: ScreenSize().width,
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: IconButton(
-          onPressed: () {
-            inspect(userData);
-            bool isChange = userSettingState.isProfileChange(
-                userData, base64Img, nameInput.text, jobInput.text, introductionInput.text, allSkillItems, allWantSkillItems);
-            if (isChange) {
-              exitCheck();
-            } else {
-              Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-            }
-          },
-          icon: const Icon(Icons.arrow_back_ios),
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: ScreenSize().width * 0.3,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: GestureDetector(
+                onTap: () {
+                  inspect(userData);
+                  bool isChange = userSettingState.isProfileChange(userData, base64Img, nameInput.text, jobInput.text,
+                      introductionInput.text, allSkillItems, allWantSkillItems);
+                  if (isChange) {
+                    exitCheck();
+                  } else {
+                    Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                  }
+                },
+                child: const Icon(Icons.arrow_back_ios),
+              ),
+            ),
+          ),
+          //タイトル
+          SizedBox(
+            width: ScreenSize().width * 0.34,
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(ProfileString().title),
+            ),
+          ),
+          //更新ボタン
+          SizedBox(
+            width: ScreenSize().width * 0.3,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Material(
+                color: normalBgColor,
+                borderRadius: BorderRadius.circular(8),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () async {
+                    UpdateUser updateUserData = userSettingState.reformatData(
+                      userData.uid,
+                      base64Img,
+                      nameInput.text,
+                      jobInput.text,
+                      introductionInput.text,
+                      forntSkillItems,
+                      iotSkillItems,
+                      backEndSkillItems,
+                      otherSkillItems,
+                    );
+
+                    bool isSucess = await userState.updateProfile(userData.uid, updateUserData);
+
+                    if (isSucess) {
+                      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    child: Text(
+                      ProfileString().updateButtonText,
+                      style: TextStyle(color: normalTextColor),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
       ),
     );
 
@@ -173,7 +230,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                     ),
                   ),
                   Text(
-                    "(${skillItems.length} / 7)",
+                    "(${skillItems.length} / 5)",
                     style: const TextStyle(fontSize: 14),
                   ),
                 ],
@@ -201,7 +258,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               controller: _scrollController,
-              children: [const Loading()],
+              children: const [Loading()],
             )
           : Scaffold(
               resizeToAvoidBottomInset: false,
@@ -224,10 +281,6 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                   controller: _scrollController,
                   children: [
                     backButton,
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(ProfileString().title),
-                    ),
                     SizedBox(
                       height: ScreenSize().safeheight,
                       child: FittedBox(
@@ -253,34 +306,6 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                             skillTitle(type: "want"),
                             TitleInput(
                                 isMulti: true, title: ProfileString().introductionInputTitle, textController: introductionInput),
-                            const SizedBox(height: 15),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: CustomButton(
-                                title: ProfileString().updateButtonText,
-                                titleColor: normalTextColor,
-                                backgroundColor: normalBgColor,
-                                onPress: () async {
-                                  UpdateUser updateUserData = userSettingState.reformatData(
-                                    userData.uid,
-                                    base64Img,
-                                    nameInput.text,
-                                    jobInput.text,
-                                    introductionInput.text,
-                                    forntSkillItems,
-                                    iotSkillItems,
-                                    backEndSkillItems,
-                                    otherSkillItems,
-                                  );
-
-                                  bool isSucess = await userState.updateProfile(userData.uid, updateUserData);
-
-                                  if (isSucess) {
-                                    Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                                  }
-                                },
-                              ),
-                            ),
                           ],
                         ),
                       ),

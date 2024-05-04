@@ -82,21 +82,6 @@ class RichTextFormat {
     print(htmlString);
     var node = html.parse(htmlString).body;
     if (node!.nodeType == Node.ELEMENT_NODE) {
-      // var elements = node.querySelectorAll('span');
-      // elements.forEach((element) {
-      //   if (element.attributes['style']!.contains("font-size")) {
-      //     String str = element.attributes['style']!;
-      //     int fontSizeStartIndex = str.indexOf("font-size") + "font-size:".length;
-      //     int fontSizeEndIndex = fontSizeStartIndex + 4;
-      //     String subedString = str.substring(fontSizeStartIndex, fontSizeEndIndex);
-
-      //     String key = getKeyByValue(fontSizeMap, subedString);
-      //     print("subedString : $subedString : key : $key");
-      //     String editorUseHtml = element.outerHtml.replaceAll("font-size:$subedString", key);
-      //     htmlString = htmlString.replaceAll(element.outerHtml, editorUseHtml);
-      //   }
-      // });
-
       var allElements = node.querySelectorAll('*');
 
       allElements.forEach((element) {
