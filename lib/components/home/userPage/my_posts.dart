@@ -121,6 +121,7 @@ class MyPosts extends StatelessWidget {
                       PostModel(
                           id: -1,
                           createdBy: "",
+                          title: "",
                           mainMessage: "",
                           commentCount: 0,
                           postTime: "",

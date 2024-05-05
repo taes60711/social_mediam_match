@@ -166,7 +166,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
             child: Align(
               alignment: Alignment.centerRight,
               child: Material(
-                color: normalBgColor,
+                // color: normalBgColor,
                 borderRadius: BorderRadius.circular(8),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(8),
@@ -193,7 +193,6 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     child: Text(
                       ProfileString().updateButtonText,
-                      style: TextStyle(color: normalTextColor),
                     ),
                   ),
                 ),

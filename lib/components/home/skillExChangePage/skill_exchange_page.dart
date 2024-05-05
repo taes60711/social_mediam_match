@@ -6,6 +6,7 @@ import 'package:social_mediam_match/components/home/skillExChangePage/user_detai
 import 'package:social_mediam_match/components/strings/userPage/user_page_string.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import '../../../states/skill_exchange_state.dart';
 import '../../utilities/skill_list_view.dart';
@@ -96,7 +97,10 @@ class SkillExChangePage extends StatelessWidget {
                                     skillExChangeState.openDrawer("userDetail", otherUser: allUserData[index]);
                                   },
                                   child: Container(
-                                    color: const Color.fromARGB(255, 228, 228, 228),
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(255, 231, 231, 231),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
@@ -125,7 +129,7 @@ class SkillExChangePage extends StatelessWidget {
                                                 ),
                                               ),
                                               Text(
-                                                "${allUserData[index].lastLogin}天",
+                                                "${allUserData[index].lastLogin}天前",
                                                 style: TextStyle(color: Colors.grey),
                                               ),
                                             ],

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_comment.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
@@ -12,6 +13,7 @@ import '../../../global.dart';
 import '../../../models/user_model.dart';
 
 import '../../utilities/rich_text_view.dart';
+import '../../utilities/style/style_config.dart';
 import '../skillExChangePage/user_detail.dart';
 
 class RightToLeftAnimationDialog extends StatefulWidget {
@@ -191,10 +193,11 @@ class PostPageByType extends StatelessWidget {
                                               loginUserData: userData, choicedPostData: postData[index]);
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.all(8),
+                                          padding: EdgeInsets.only(bottom: 5),
                                           decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            color: const Color.fromARGB(255, 218, 219, 219),
+                                            border: Border(
+                                              bottom: BorderSide(width: 0.2, color: normalBgColor2),
+                                            ),
                                           ),
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,28 +210,135 @@ class PostPageByType extends StatelessWidget {
                                                         otherUser: postData[index].postUserInfo);
                                                   }
                                                 },
-                                                child: Row(
+                                                child: Container(
+                                                  padding: EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
+                                                  decoration: BoxDecoration(
+                                                      border: Border(bottom: BorderSide(width: 0.2, color: normalBgColor2)),
+                                                      color: Color.fromARGB(255, 236, 157, 120)),
+                                                  child: Row(
+                                                    children: [
+                                                      UserIcon(
+                                                        iconSize: 35,
+                                                        image: postData[index].postUserInfo.image,
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(
+                                                              postData[index].postUserInfo.email,
+                                                              style: TextStyle(fontSize: 12, color: normalTextColor),
+                                                            ),
+                                                            Text(
+                                                              "看板: ${postData[index].type}",
+                                                              style: TextStyle(fontSize: 12, color: normalTextColor),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        " ${postData[index].postTime}天前",
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: normalTextColor,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                margin: EdgeInsets.symmetric(horizontal: 8),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    UserIcon(
-                                                      iconSize: 50,
-                                                      image: postData[index].postUserInfo.image,
+                                                    Text(
+                                                      postData[index].title,
+                                                      style: TextStyle(fontWeight: FontWeight.bold),
                                                     ),
-                                                    Text(postData[index].postUserInfo.email),
+                                                    Container(
+                                                        margin: EdgeInsets.symmetric(vertical: 5),
+                                                        height: 0.2,
+                                                        color: normalBgColor2),
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                                      child: RichTextView(
+                                                        content: postData[index].mainMessage,
+                                                        isPreView: true,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                        margin: EdgeInsets.symmetric(vertical: 5),
+                                                        height: 0.2,
+                                                        color: normalBgColor2),
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                FontAwesomeIcons.eye,
+                                                                size: 14,
+                                                                color: Color.fromARGB(255, 63, 63, 63),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                                child: Text(
+                                                                  "${postData[index].viewed}",
+                                                                  style: TextStyle(
+                                                                    fontSize: 13,
+                                                                    color: hintTextColor,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Icon(
+                                                                FontAwesomeIcons.heart,
+                                                                size: 14,
+                                                                color: Color.fromARGB(255, 248, 110, 110),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                                child: Text(
+                                                                  "${postData[index].good}",
+                                                                  style: TextStyle(
+                                                                    fontSize: 13,
+                                                                    color: hintTextColor,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Icon(FontAwesomeIcons.comment, size: 14, color: Colors.blueAccent),
+                                                              Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                                child: Text(
+                                                                  "${postData[index].commentCount}",
+                                                                  style: TextStyle(
+                                                                    fontSize: 13,
+                                                                    color: hintTextColor,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(right: 5),
+                                                          child: GestureDetector(
+                                                            child: Icon(
+                                                              FontAwesomeIcons.ellipsis,
+                                                              color: hintTextColor,
+                                                              size: 14,
+                                                            ),
+                                                            onTap: () {
+                                                              print("Icon");
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ],
                                                 ),
                                               ),
-                                              RichTextView(
-                                                content: postData[index].mainMessage,
-                                                isPreView: true,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text("已 ${postData[index].viewed} 人瀏覽過"),
-                                                  Text(" ${postData[index].good} 個讚"),
-                                                ],
-                                              ),
-                                              Text("發文時間 : ${postData[index].postTime}"),
-                                              Text("有${postData[index].commentCount}則留言"),
                                             ],
                                           ),
                                         ),
@@ -248,10 +358,11 @@ class PostPageByType extends StatelessWidget {
                                                   loginUserData: userData, choicedPostData: postData[index]);
                                             },
                                             child: Container(
-                                              padding: EdgeInsets.all(8),
+                                              padding: EdgeInsets.only(bottom: 5),
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(10),
-                                                color: const Color.fromARGB(255, 218, 219, 219),
+                                                border: Border(
+                                                  bottom: BorderSide(width: 0.2, color: normalBgColor2),
+                                                ),
                                               ),
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,28 +375,136 @@ class PostPageByType extends StatelessWidget {
                                                             otherUser: postData[index].postUserInfo);
                                                       }
                                                     },
-                                                    child: Row(
+                                                    child: Container(
+                                                      padding: EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
+                                                      decoration: BoxDecoration(
+                                                          border: Border(bottom: BorderSide(width: 0.2, color: normalBgColor2)),
+                                                          color: Color.fromARGB(255, 236, 157, 120)),
+                                                      child: Row(
+                                                        children: [
+                                                          UserIcon(
+                                                            iconSize: 35,
+                                                            image: postData[index].postUserInfo.image,
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          Expanded(
+                                                            child: Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                Text(
+                                                                  postData[index].postUserInfo.email,
+                                                                  style: TextStyle(fontSize: 12, color: normalTextColor),
+                                                                ),
+                                                                Text(
+                                                                  "看板: ${postData[index].type}",
+                                                                  style: TextStyle(fontSize: 12, color: normalTextColor),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            " ${postData[index].postTime}天前",
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: normalTextColor,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    margin: EdgeInsets.symmetric(horizontal: 8),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        UserIcon(
-                                                          iconSize: 50,
-                                                          image: postData[index].postUserInfo.image,
+                                                        Text(
+                                                          postData[index].title,
+                                                          style: TextStyle(fontWeight: FontWeight.bold),
                                                         ),
-                                                        Text(postData[index].postUserInfo.email),
+                                                        Container(
+                                                            margin: EdgeInsets.symmetric(vertical: 5),
+                                                            height: 0.2,
+                                                            color: normalBgColor2),
+                                                        Padding(
+                                                          padding: const EdgeInsets.symmetric(vertical: 8),
+                                                          child: RichTextView(
+                                                            content: postData[index].mainMessage,
+                                                            isPreView: true,
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                            margin: EdgeInsets.symmetric(vertical: 5),
+                                                            height: 0.2,
+                                                            color: normalBgColor2),
+                                                        Row(
+                                                          children: [
+                                                            Expanded(
+                                                              child: Row(
+                                                                children: [
+                                                                  Icon(
+                                                                    FontAwesomeIcons.eye,
+                                                                    size: 14,
+                                                                    color: Color.fromARGB(255, 63, 63, 63),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                                    child: Text(
+                                                                      "${postData[index].viewed}",
+                                                                      style: TextStyle(
+                                                                        fontSize: 13,
+                                                                        color: hintTextColor,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Icon(
+                                                                    FontAwesomeIcons.heart,
+                                                                    size: 14,
+                                                                    color: Color.fromARGB(255, 248, 110, 110),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                                    child: Text(
+                                                                      "${postData[index].good}",
+                                                                      style: TextStyle(
+                                                                        fontSize: 13,
+                                                                        color: hintTextColor,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Icon(FontAwesomeIcons.comment,
+                                                                      size: 14, color: Colors.blueAccent),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                                    child: Text(
+                                                                      "${postData[index].commentCount}",
+                                                                      style: TextStyle(
+                                                                        fontSize: 13,
+                                                                        color: hintTextColor,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.only(right: 5),
+                                                              child: GestureDetector(
+                                                                child: Icon(
+                                                                  FontAwesomeIcons.ellipsis,
+                                                                  color: hintTextColor,
+                                                                  size: 14,
+                                                                ),
+                                                                onTap: () {
+                                                                  print("Icon");
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ],
                                                     ),
                                                   ),
-                                                  RichTextView(
-                                                    content: postData[index].mainMessage,
-                                                    isPreView: true,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Text("已 ${postData[index].viewed} 人瀏覽過"),
-                                                      Text(" ${postData[index].good} 個讚"),
-                                                    ],
-                                                  ),
-                                                  Text("發文時間 : ${postData[index].postTime}"),
-                                                  Text("有${postData[index].commentCount}則留言"),
                                                 ],
                                               ),
                                             ),
