@@ -11,13 +11,10 @@ import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/post_model.dart';
-import 'package:social_mediam_match/models/rich_text_format.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import '../../../models/user_model.dart';
 
 import '../skillExChangePage/user_detail.dart';
-
-import 'package:html/parser.dart' as html;
 
 class RightToLeftAnimationDialog extends StatefulWidget {
   final Widget child;
@@ -227,9 +224,7 @@ class PostPage extends StatelessWidget {
                                                 },
                                                 child: Container(
                                                   padding: EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
-                                                  decoration: BoxDecoration(
-                                                      border: Border(bottom: BorderSide(width: 0.2, color: normalBgColor2)),
-                                                      color: Color.fromARGB(255, 236, 157, 120)),
+                                                  color: Color.fromARGB(255, 236, 157, 120),
                                                   child: Row(
                                                     children: [
                                                       UserIcon(
@@ -390,9 +385,7 @@ class PostPage extends StatelessWidget {
                                                     },
                                                     child: Container(
                                                       padding: EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
-                                                      decoration: BoxDecoration(
-                                                          border: Border(bottom: BorderSide(width: 0.2, color: normalBgColor2)),
-                                                          color: Color.fromARGB(255, 236, 157, 120)),
+                                                      color: Color.fromARGB(255, 236, 157, 120),
                                                       child: Row(
                                                         children: [
                                                           UserIcon(
