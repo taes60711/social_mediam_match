@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' as html;
 
@@ -33,7 +32,7 @@ class RichTextFormat {
             document.body?.querySelectorAll('*').forEach(
               (e) {
                 if (e.localName == "span" || e.localName == "a") {
-                  inspect(e);
+                  // inspect(e);
                   String htmlUseStyle = 'style="${e.attributes['style']} "';
                   String fontSize = fontSizeMap[e.className] ?? "";
 
@@ -69,7 +68,7 @@ class RichTextFormat {
     return htmlString;
   }
 
-  String WidgetToEditorHtml(String htmlString) {
+  String widgetToEditorHtml(String htmlString) {
     dynamic getKeyByValue(Map<dynamic, dynamic> map, dynamic value) {
       for (var entry in map.entries) {
         if (entry.value == value) {
@@ -79,7 +78,7 @@ class RichTextFormat {
       return null;
     }
 
-    print(htmlString);
+    // print(htmlString);
     var node = html.parse(htmlString).body;
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var allElements = node.querySelectorAll('*');
@@ -125,7 +124,46 @@ class RichTextFormat {
       });
     }
 
-    print(htmlString);
+    // print(htmlString);
     return htmlString;
+  }
+
+  Map<String, dynamic> getPostPreView() {
+    var node = html.parse(htmlString).body;
+    String resultString = "";
+    bool isImage = false;
+
+    if (htmlString.length >= 100) {
+      resultString = htmlString.substring(0, 100);
+    } else {
+      resultString = htmlString;
+    }
+
+    if (node!.nodeType == Node.ELEMENT_NODE) {
+      var allElements = node.querySelectorAll('*');
+
+      String getImageUrl(String htmlString) {
+        int startIndex = htmlString.indexOf('src="');
+        if (startIndex != -1) {
+          int endIndex = htmlString.indexOf('"', startIndex + 5);
+          if (endIndex != -1) {
+            return htmlString.substring(startIndex + 5, endIndex);
+          }
+        }
+        return '';
+      }
+
+      allElements.forEach((element) {
+        if (element.innerHtml.contains("img")) {
+          isImage = true;
+          resultString = getImageUrl(element.innerHtml);
+        }
+      });
+    }
+
+    return {
+      "IsImage": isImage,
+      "resultString": resultString,
+    };
   }
 }

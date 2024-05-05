@@ -9,10 +9,13 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/post_model.dart';
+import 'package:social_mediam_match/models/rich_text_format.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import '../../../models/user_model.dart';
 
 import '../skillExChangePage/user_detail.dart';
+
+import 'package:html/parser.dart' as html;
 
 class RightToLeftAnimationDialog extends StatefulWidget {
   final Widget child;
@@ -201,8 +204,8 @@ class PostPage extends StatelessWidget {
                                             choicedPostData: postData[index],
                                             changeChoicedPostGoodCount: changeChoicedPostGoodCount,
                                           );
-                                          await postState.openDrawer("movetoPost", globalKey,
-                                              loginUserData: userData, choicedPostData: postData[index]);
+                                          // await postState.openDrawer("movetoPost", globalKey,
+                                          //     loginUserData: userData, choicedPostData: postData[index]);
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.all(8),
@@ -232,9 +235,8 @@ class PostPage extends StatelessWidget {
                                                 ),
                                               ),
                                               RichTextView(
-                                                content: postData[index].mainMessage.length >= 100
-                                                    ? postData[index].mainMessage.substring(0, 100)
-                                                    : postData[index].mainMessage,
+                                                content: postData[index].mainMessage,
+                                                isPreView: true,
                                               ),
                                               Row(
                                                 children: [
@@ -260,8 +262,8 @@ class PostPage extends StatelessWidget {
                                                 choicedPostData: postData[index],
                                                 changeChoicedPostGoodCount: changeChoicedPostGoodCount,
                                               );
-                                              await postState.openDrawer("movetoPost", globalKey,
-                                                  loginUserData: userData, choicedPostData: postData[index]);
+                                              // await postState.openDrawer("movetoPost", globalKey,
+                                              //     loginUserData: userData, choicedPostData: postData[index]);
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.all(8),
@@ -291,9 +293,8 @@ class PostPage extends StatelessWidget {
                                                     ),
                                                   ),
                                                   RichTextView(
-                                                    content: postData[index].mainMessage.length >= 100
-                                                        ? postData[index].mainMessage.substring(0, 100)
-                                                        : postData[index].mainMessage,
+                                                    content: postData[index].mainMessage,
+                                                    isPreView: true,
                                                   ),
                                                   Row(
                                                     children: [

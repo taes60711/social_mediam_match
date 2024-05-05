@@ -89,17 +89,14 @@ class SkillExChangePage extends StatelessWidget {
                             Widget listComponent;
                             if (index != allUserData.length - 1) {
                               listComponent = Padding(
-                                padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                                padding: const EdgeInsets.only(bottom: 8),
                                 child: GestureDetector(
                                   onTap: () {
                                     inspect(allUserData[index]);
                                     skillExChangeState.openDrawer("userDetail", otherUser: allUserData[index]);
                                   },
                                   child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Color.fromARGB(255, 228, 228, 228),
-                                    ),
+                                    color: const Color.fromARGB(255, 228, 228, 228),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
@@ -148,12 +145,10 @@ class SkillExChangePage extends StatelessWidget {
                                             fontSize: 13,
                                             skillList: allUserData[index].mainSkills ?? [],
                                           ),
-                                          SizedBox(
-                                            child: SkillListView(
-                                              title: wantSkillText,
-                                              fontSize: 13,
-                                              skillList: allUserData[index].wantSkills ?? [],
-                                            ),
+                                          SkillListView(
+                                            title: wantSkillText,
+                                            fontSize: 13,
+                                            skillList: allUserData[index].wantSkills ?? [],
                                           ),
                                         ],
                                       ),
