@@ -190,9 +190,8 @@ class MyPosts extends StatelessWidget {
                                   ],
                                 ),
                                 RichTextView(
-                                  content: myAllPosts[index].mainMessage.length >= 100
-                                      ? myAllPosts[index].mainMessage.substring(0, 100)
-                                      : myAllPosts[index].mainMessage,
+                                  content: myAllPosts[index].mainMessage,
+                                  isPreView: true,
                                 ),
                                 Row(
                                   children: [

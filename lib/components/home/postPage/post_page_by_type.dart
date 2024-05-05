@@ -218,9 +218,8 @@ class PostPageByType extends StatelessWidget {
                                                 ),
                                               ),
                                               RichTextView(
-                                                content: postData[index].mainMessage.length >= 100
-                                                    ? postData[index].mainMessage.substring(0, 100)
-                                                    : postData[index].mainMessage,
+                                                content: postData[index].mainMessage,
+                                                isPreView: true,
                                               ),
                                               Row(
                                                 children: [
@@ -276,9 +275,8 @@ class PostPageByType extends StatelessWidget {
                                                     ),
                                                   ),
                                                   RichTextView(
-                                                    content: postData[index].mainMessage.length >= 100
-                                                        ? postData[index].mainMessage.substring(0, 100)
-                                                        : postData[index].mainMessage,
+                                                    content: postData[index].mainMessage,
+                                                    isPreView: true,
                                                   ),
                                                   Row(
                                                     children: [
