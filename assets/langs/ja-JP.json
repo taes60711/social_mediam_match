@@ -71,5 +71,9 @@
   "userpage_notification_btn":"ニュース",
   "userpage_setting_btn":"設定",
   "userpage_friendmanger_btn":"友だち管理",
-  "userpage_guide_btn":"ガイド"
+  "userpage_guide_btn":"ガイド",
+
+  "//": "skillExchangePage",
+  "skExChpage_beforDays":"日前",
+  "skExChpage_nojobData":"未輸入"
 }

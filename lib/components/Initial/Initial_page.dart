@@ -41,8 +41,8 @@ class Initialpage extends StatelessWidget {
         return null;
       }
     });
-
     bool isLoading = context.select((UserState value) => value.isLoading);
+
     void enterApp() {
       print("firstEnterApp");
       context.read<UserState>().isLoginCheck(friendState);

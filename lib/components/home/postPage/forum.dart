@@ -58,7 +58,7 @@ class Forum extends StatelessWidget {
                 length: 3,
                 child: Scaffold(
                     appBar: TabBar(
-                      tabs: [
+                      tabs: const [
                         SizedBox(
                           height: 25,
                           child: Tab(text: '人氣'),
@@ -75,9 +75,9 @@ class Forum extends StatelessWidget {
                       isScrollable: true,
                       indicator: UnderlineTabIndicator(
                         borderSide: BorderSide(width: 1.0, color: normalBgColor),
-                        insets: EdgeInsets.symmetric(horizontal: 10),
+                        insets: const EdgeInsets.symmetric(horizontal: 10),
                       ),
-                      labelPadding: EdgeInsets.only(top: 5, left: 10, right: 10),
+                      labelPadding: const EdgeInsets.only(top: 5, left: 10, right: 10),
                       labelColor: normalBgColor2,
                     ),
                     body: TabBarView(

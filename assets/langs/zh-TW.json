@@ -70,5 +70,9 @@
   "userpage_notification_btn":"通知",
   "userpage_setting_btn":"設定",
   "userpage_friendmanger_btn":"好友管理",
-  "userpage_guide_btn":"導覽"
+  "userpage_guide_btn":"導覽",
+
+  "//": "skillExchangePage",
+  "skExChpage_beforDays":"天前",
+  "skExChpage_nojobData":"未輸入"
 }

@@ -18,7 +18,7 @@ class SkillListView extends StatelessWidget {
       5: Icons.filter_5,
     };
     Color textColor = normalTextColor;
-    Color backGroundColor = Color.fromARGB(255, 236, 157, 120); // Color.fromARGB(255, 238, 115, 110);
+    Color backGroundColor = Color.fromARGB(255, 236, 157, 120);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -33,7 +33,6 @@ class SkillListView extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          // border: Border.all(width: 0.5, color: normalBgColor2),
                           color: backGroundColor,
                         ),
                         child: Row(

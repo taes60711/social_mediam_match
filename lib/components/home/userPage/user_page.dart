@@ -183,6 +183,13 @@ import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/skill_list_view.dart';
 import '../../utilities/style/screen_size.dart';
 
+class SettingButtonInfo {
+  String title;
+  IconData icon;
+  VoidCallback onPress;
+  SettingButtonInfo({required this.title, required this.icon, required this.onPress});
+}
+
 class UserPage extends StatelessWidget {
   final LoginUser userData;
   final FriendState friendState;
@@ -191,6 +198,61 @@ class UserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<SettingButtonInfo> settingButtonInfoList = [
+      SettingButtonInfo(
+          title: UserPageString().profileBtn,
+          icon: FontAwesomeIcons.solidAddressCard,
+          onPress: () {
+            Navigator.of(context).pushNamed(
+              RoutePath.profilePage.value,
+              arguments: userData,
+            );
+          }),
+      SettingButtonInfo(
+          title: UserPageString().postBtn,
+          icon: FontAwesomeIcons.solidNewspaper,
+          onPress: () {
+            Navigator.of(context).pushNamed(
+              RoutePath.myPosts.value,
+              arguments: {
+                "userData": userData,
+                "gotoFriendPage": gotoFriendPage,
+              },
+            );
+          }),
+      SettingButtonInfo(
+          title: UserPageString().notificationBtn,
+          icon: FontAwesomeIcons.solidBell,
+          onPress: () {
+            print("${UserPageString().notificationBtn}");
+          }),
+      SettingButtonInfo(
+          title: UserPageString().settingBtn,
+          icon: FontAwesomeIcons.gear,
+          onPress: () {
+            print("${UserPageString().settingBtn}");
+            Navigator.of(context).pushNamed(RoutePath.privacySettingPage.value, arguments: {
+              "userData": userData,
+              "friendState": friendState,
+            });
+          }),
+    ];
+
+    List<SettingButtonInfo> settingButtonInfoList2 = [
+      SettingButtonInfo(
+          title: UserPageString().friendManagernBtn,
+          icon: FontAwesomeIcons.userLarge,
+          onPress: () {
+            print("${UserPageString().friendManagernBtn}");
+          }),
+      SettingButtonInfo(
+          title: UserPageString().guideBtn,
+          icon: Icons.question_answer,
+          onPress: () {
+            print("${UserPageString().guideBtn}");
+          }),
+    ];
+
     return BackgroundWidget(
       child: Column(
         children: [
@@ -203,13 +265,7 @@ class UserPage extends StatelessWidget {
             child: FittedBox(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: UserIcon(
-                      iconSize: 100,
-                      image: userData.image,
-                    ),
-                  ),
+                  UserIcon(iconSize: 100, image: userData.image),
                   const SizedBox(height: 10),
                   Text("Hello, ${userData.name ?? userData.email}"),
                   Text("${UserPageString().infoStatus} ${userData.status}"),
@@ -227,114 +283,53 @@ class UserPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    //持っているスキル
                     Text(StepTwoPage().haveSkillText),
-                    const SizedBox(height: 10),
-                    SizedBox(
+                    Container(
+                      margin: const EdgeInsets.only(top: 10, bottom: 10),
                       width: ScreenSize().width,
-                      child: SkillListView(
-                        skillList: userData.mainSkills ?? [],
-                      ),
+                      child: SkillListView(skillList: userData.mainSkills ?? []),
                     ),
-                    const SizedBox(height: 10),
+                    //勉強したいスキル
                     Text(StepTwoPage().wantSkillText),
-                    const SizedBox(height: 10),
-                    SizedBox(
+                    Container(
+                      margin: const EdgeInsets.only(top: 10, bottom: 20),
                       width: ScreenSize().width,
-                      child: SkillListView(
-                        skillList: userData.wantSkills ?? [],
-                      ),
+                      child: SkillListView(skillList: userData.wantSkills ?? []),
                     ),
-                    const SizedBox(height: 20),
+                    //設定ボタン　例：プロフィール、設定、ニュース...
                     Row(
-                      children: [
-                        SizedBox(
-                          width: ScreenSize().width / 4,
-                          child: CustomButton(
-                              title: UserPageString().profileBtn,
-                              icon: FontAwesomeIcons.solidAddressCard,
-                              titleColor: normalBgColor2,
-                              backgroundColor: normalBgColor,
-                              onPress: () {
-                                print("${UserPageString().profileBtn}");
-                                Navigator.of(context).pushNamed(
-                                  RoutePath.profilePage.value,
-                                  arguments: userData,
-                                );
-                              }),
-                        ),
-                        SizedBox(
-                          width: ScreenSize().width / 4,
-                          child: CustomButton(
-                              title: UserPageString().postBtn,
-                              icon: FontAwesomeIcons.solidNewspaper,
-                              titleColor: normalBgColor2,
-                              backgroundColor: normalBgColor,
-                              onPress: () {
-                                print("${UserPageString().postBtn}");
-                                Navigator.of(context).pushNamed(
-                                  RoutePath.myPosts.value,
-                                  arguments: {
-                                    "userData": userData,
-                                    "gotoFriendPage": gotoFriendPage,
-                                  },
-                                );
-                              }),
-                        ),
-                        SizedBox(
-                          width: ScreenSize().width / 4,
-                          child: CustomButton(
-                              title: UserPageString().notificationBtn,
-                              icon: FontAwesomeIcons.solidBell,
-                              titleColor: normalBgColor2,
-                              backgroundColor: normalBgColor,
-                              onPress: () {
-                                print("${UserPageString().notificationBtn}");
-                              }),
-                        ),
-                        SizedBox(
-                          width: ScreenSize().width / 4,
-                          child: CustomButton(
-                              title: UserPageString().settingBtn,
-                              icon: FontAwesomeIcons.gear,
-                              titleColor: normalBgColor2,
-                              backgroundColor: normalBgColor,
-                              onPress: () {
-                                print("${UserPageString().settingBtn}");
-                                Navigator.of(context).pushNamed(RoutePath.privacySettingPage.value, arguments: {
-                                  "userData": userData,
-                                  "friendState": friendState,
-                                });
-                              }),
-                        ),
-                      ],
+                      children: settingButtonInfoList
+                          .map(
+                            (e) => SizedBox(
+                              width: ScreenSize().width / 4,
+                              child: CustomButton(
+                                  title: e.title,
+                                  icon: e.icon,
+                                  titleColor: normalBgColor2,
+                                  backgroundColor: normalBgColor,
+                                  onPress: e.onPress),
+                            ),
+                          )
+                          .toList(),
                     ),
                     const SizedBox(height: 30),
+                    //設定ボタン　例：プロフィール、設定、ニュース...
                     Row(
-                      children: [
-                        SizedBox(
-                          width: ScreenSize().width / 4,
-                          child: CustomButton(
-                              title: UserPageString().friendManagernBtn,
-                              icon: FontAwesomeIcons.userLarge,
-                              titleColor: normalBgColor2,
-                              backgroundColor: normalBgColor,
-                              onPress: () {
-                                print("${UserPageString().friendManagernBtn}");
-                              }),
-                        ),
-                        SizedBox(
-                          width: ScreenSize().width / 4,
-                          child: CustomButton(
-                              title: UserPageString().guideBtn,
-                              icon: Icons.question_answer,
-                              titleColor: normalBgColor2,
-                              backgroundColor: normalBgColor,
-                              onPress: () {
-                                print("${UserPageString().guideBtn}");
-                              }),
-                        ),
-                      ],
-                    )
+                      children: settingButtonInfoList2
+                          .map(
+                            (e) => SizedBox(
+                              width: ScreenSize().width / 4,
+                              child: CustomButton(
+                                  title: e.title,
+                                  icon: e.icon,
+                                  titleColor: normalBgColor2,
+                                  backgroundColor: normalBgColor,
+                                  onPress: e.onPress),
+                            ),
+                          )
+                          .toList(),
+                    ),
                   ],
                 ),
               ),

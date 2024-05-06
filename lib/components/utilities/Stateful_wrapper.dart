@@ -20,23 +20,6 @@ class _StatefulWrapperState extends State<StatefulWrapper> {
   }
 
   @override
-  void didChangeDependencies() {
-    if (widget.onDidChange != null) {
-      widget.onDidChange!();
-    }
-
-    super.didChangeDependencies();
-  }
-
-  void onDispose() {
-    if (widget.onDispose != null) {
-      widget.onDispose!();
-    }
-
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return widget.child;
   }

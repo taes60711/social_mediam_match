@@ -213,8 +213,9 @@ class PostPageByType extends StatelessWidget {
                                                 child: Container(
                                                   padding: EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
                                                   decoration: BoxDecoration(
-                                                      border: Border(bottom: BorderSide(width: 0.2, color: normalBgColor2)),
-                                                      color: Color.fromARGB(255, 236, 157, 120)),
+                                                    borderRadius: BorderRadius.circular(3),
+                                                    color: Color.fromARGB(255, 236, 157, 120),
+                                                  ),
                                                   child: Row(
                                                     children: [
                                                       UserIcon(
@@ -378,8 +379,9 @@ class PostPageByType extends StatelessWidget {
                                                     child: Container(
                                                       padding: EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
                                                       decoration: BoxDecoration(
-                                                          border: Border(bottom: BorderSide(width: 0.2, color: normalBgColor2)),
-                                                          color: Color.fromARGB(255, 236, 157, 120)),
+                                                        borderRadius: BorderRadius.circular(3),
+                                                        color: Color.fromARGB(255, 236, 157, 120),
+                                                      ),
                                                       child: Row(
                                                         children: [
                                                           UserIcon(

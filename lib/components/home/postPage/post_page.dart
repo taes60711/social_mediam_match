@@ -1,11 +1,11 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:social_mediam_match/components/home/postPage/post_comment.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/custom_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
@@ -13,55 +13,7 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import '../../../models/user_model.dart';
-
 import '../skillExChangePage/user_detail.dart';
-
-class RightToLeftAnimationDialog extends StatefulWidget {
-  final Widget child;
-
-  RightToLeftAnimationDialog({required this.child});
-
-  @override
-  _RightToLeftAnimationDialogState createState() => _RightToLeftAnimationDialogState();
-}
-
-class _RightToLeftAnimationDialogState extends State<RightToLeftAnimationDialog> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 300),
-    );
-    _animation = Tween<double>(begin: 1, end: 0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
-          child: child,
-        );
-      },
-      child: widget.child,
-    );
-  }
-}
 
 class ShimmerList extends StatelessWidget {
   @override
@@ -105,12 +57,12 @@ class PostPage extends StatelessWidget {
     LoginUser? otherUser = context.select((PostState value) => value.otherUser);
     bool isCanLoading = context.select((PostState value) => value.isCanLoading);
 
-    Future<void> tts({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
+    Future<void> opneCommentPage({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
       return showDialog(
         context: context,
         barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
         builder: (BuildContext context) {
-          return RightToLeftAnimationDialog(
+          return CustomEndDrawer(
             child: Dismissible(
               direction: DismissDirection.startToEnd,
               resizeDuration: const Duration(milliseconds: 1),
@@ -134,6 +86,23 @@ class PostPage extends StatelessWidget {
     }
 
     print("PostPage isFirstLoading: ${isFirstLoading}");
+
+    iconWithText(IconData icon, Color iconColor, String text) {
+      return Row(
+        children: [
+          Icon(icon, size: 14, color: iconColor),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              text,
+              style: TextStyle(fontSize: 13, color: hintTextColor),
+            ),
+          ),
+        ],
+      );
+    }
+
+    Widget breakLine = Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2);
 
     return StatefulWrapper(
       onInit: () async {
@@ -194,328 +163,131 @@ class PostPage extends StatelessWidget {
                           child: ListView.builder(
                             itemCount: postData.length,
                             itemBuilder: (context, index) {
-                              return index != postData.length - 1
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(bottom: 5, left: 8, right: 8),
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          tts(
-                                            choicedPostData: postData[index],
-                                            changeChoicedPostGoodCount: changeChoicedPostGoodCount,
-                                          );
+                              Color titleBackGroundColor = const Color.fromARGB(255, 236, 157, 120);
+
+                              Widget postedUserInfo = Container(
+                                padding: const EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(3),
+                                  color: titleBackGroundColor,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: UserIcon(iconSize: 35, image: postData[index].postUserInfo.image),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            postData[index].postUserInfo.name != ""
+                                                ? postData[index].postUserInfo.name ?? ""
+                                                : postData[index].postUserInfo.email,
+                                            style: TextStyle(fontSize: 12, color: normalTextColor),
+                                          ),
+                                          Text(
+                                            "看板: ${postData[index].type}",
+                                            style: TextStyle(fontSize: 12, color: normalTextColor),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Text(
+                                      " ${postData[index].postTime}天前",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: normalTextColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              Widget postTitle = Text(
+                                postData[index].title,
+                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              );
+
+                              Widget postEvaluate = Row(
+                                children: [
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        iconWithText(FontAwesomeIcons.eye, const Color.fromARGB(255, 63, 63, 63),
+                                            "${postData[index].viewed}"),
+                                        iconWithText(FontAwesomeIcons.heart, const Color.fromARGB(255, 248, 110, 110),
+                                            "${postData[index].good}"),
+                                        iconWithText(
+                                            FontAwesomeIcons.comment, Colors.blueAccent, "${postData[index].commentCount}"),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 5),
+                                    child: GestureDetector(
+                                      child: Icon(
+                                        FontAwesomeIcons.ellipsis,
+                                        color: hintTextColor,
+                                        size: 14,
+                                      ),
+                                      onTap: () {
+                                        print("Icon");
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              );
+
+                              Widget mainBody = Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    GestureDetector(
+                                        onTap: () {
+                                          inspect(postData[index].postUserInfo);
+                                          if (userData.uid != postData[index].postUserInfo.uid) {
+                                            postState.openDrawer("userDetail", globalKey,
+                                                otherUser: postData[index].postUserInfo);
+                                          }
                                         },
-                                        child: Container(
-                                          padding: EdgeInsets.only(bottom: 5),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(width: 0.2, color: normalBgColor2),
+                                        child: postedUserInfo),
+                                    GestureDetector(
+                                      onTap: () {
+                                        opneCommentPage(
+                                          choicedPostData: postData[index],
+                                          changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+                                        );
+                                      },
+                                      child: Container(
+                                        color: Colors.transparent,
+                                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            postTitle,
+                                            breakLine,
+                                            RichTextView(
+                                              content: postData[index].mainMessage,
+                                              isPreView: true,
                                             ),
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  inspect(postData[index].postUserInfo);
-                                                  if (userData.uid != postData[index].postUserInfo.uid) {
-                                                    postState.openDrawer("userDetail", globalKey,
-                                                        otherUser: postData[index].postUserInfo);
-                                                  }
-                                                },
-                                                child: Container(
-                                                  padding: EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
-                                                  color: Color.fromARGB(255, 236, 157, 120),
-                                                  child: Row(
-                                                    children: [
-                                                      UserIcon(
-                                                        iconSize: 35,
-                                                        image: postData[index].postUserInfo.image,
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      Expanded(
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              postData[index].postUserInfo.email,
-                                                              style: TextStyle(fontSize: 12, color: normalTextColor),
-                                                            ),
-                                                            Text(
-                                                              "看板: ${postData[index].type}",
-                                                              style: TextStyle(fontSize: 12, color: normalTextColor),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        " ${postData[index].postTime}天前",
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: normalTextColor,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.symmetric(horizontal: 8),
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      postData[index].title,
-                                                      style: TextStyle(fontWeight: FontWeight.bold),
-                                                    ),
-                                                    Container(
-                                                        margin: EdgeInsets.symmetric(vertical: 5),
-                                                        height: 0.2,
-                                                        color: normalBgColor2),
-                                                    Padding(
-                                                      padding: const EdgeInsets.symmetric(vertical: 8),
-                                                      child: RichTextView(
-                                                        content: postData[index].mainMessage,
-                                                        isPreView: true,
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                        margin: EdgeInsets.symmetric(vertical: 5),
-                                                        height: 0.2,
-                                                        color: normalBgColor2),
-                                                    Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child: Row(
-                                                            children: [
-                                                              Icon(
-                                                                FontAwesomeIcons.eye,
-                                                                size: 14,
-                                                                color: Color.fromARGB(255, 63, 63, 63),
-                                                              ),
-                                                              Padding(
-                                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                                                child: Text(
-                                                                  "${postData[index].viewed}",
-                                                                  style: TextStyle(
-                                                                    fontSize: 13,
-                                                                    color: hintTextColor,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Icon(
-                                                                FontAwesomeIcons.heart,
-                                                                size: 14,
-                                                                color: Color.fromARGB(255, 248, 110, 110),
-                                                              ),
-                                                              Padding(
-                                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                                                child: Text(
-                                                                  "${postData[index].good}",
-                                                                  style: TextStyle(
-                                                                    fontSize: 13,
-                                                                    color: hintTextColor,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Icon(FontAwesomeIcons.comment, size: 14, color: Colors.blueAccent),
-                                                              Padding(
-                                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                                                child: Text(
-                                                                  "${postData[index].commentCount}",
-                                                                  style: TextStyle(
-                                                                    fontSize: 13,
-                                                                    color: hintTextColor,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(right: 5),
-                                                          child: GestureDetector(
-                                                            child: Icon(
-                                                              FontAwesomeIcons.ellipsis,
-                                                              color: hintTextColor,
-                                                              size: 14,
-                                                            ),
-                                                            onTap: () {
-                                                              print("Icon");
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            breakLine,
+                                            postEvaluate,
+                                            breakLine,
+                                          ],
                                         ),
                                       ),
-                                    )
+                                    ),
+                                  ],
+                                ),
+                              );
+                              return index != postData.length - 1
+                                  ? mainBody
                                   : Column(
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(bottom: 5, left: 8, right: 8),
-                                          child: GestureDetector(
-                                            onTap: () async {
-                                              tts(
-                                                choicedPostData: postData[index],
-                                                changeChoicedPostGoodCount: changeChoicedPostGoodCount,
-                                              );
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.only(bottom: 5),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-                                                  bottom: BorderSide(width: 0.2, color: normalBgColor2),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      inspect(postData[index].postUserInfo);
-                                                      if (userData.uid != postData[index].postUserInfo.uid) {
-                                                        postState.openDrawer("userDetail", globalKey,
-                                                            otherUser: postData[index].postUserInfo);
-                                                      }
-                                                    },
-                                                    child: Container(
-                                                      padding: EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
-                                                      color: Color.fromARGB(255, 236, 157, 120),
-                                                      child: Row(
-                                                        children: [
-                                                          UserIcon(
-                                                            iconSize: 35,
-                                                            image: postData[index].postUserInfo.image,
-                                                          ),
-                                                          SizedBox(width: 10),
-                                                          Expanded(
-                                                            child: Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                Text(
-                                                                  postData[index].postUserInfo.email,
-                                                                  style: TextStyle(fontSize: 12, color: normalTextColor),
-                                                                ),
-                                                                Text(
-                                                                  "看板: ${postData[index].type}",
-                                                                  style: TextStyle(fontSize: 12, color: normalTextColor),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            " ${postData[index].postTime}天前",
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                              color: normalTextColor,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    margin: EdgeInsets.symmetric(horizontal: 8),
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(
-                                                          postData[index].title,
-                                                          style: TextStyle(fontWeight: FontWeight.bold),
-                                                        ),
-                                                        Container(
-                                                            margin: EdgeInsets.symmetric(vertical: 5),
-                                                            height: 0.2,
-                                                            color: normalBgColor2),
-                                                        Padding(
-                                                          padding: const EdgeInsets.symmetric(vertical: 8),
-                                                          child: RichTextView(
-                                                            content: postData[index].mainMessage,
-                                                            isPreView: true,
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                            margin: EdgeInsets.symmetric(vertical: 5),
-                                                            height: 0.2,
-                                                            color: normalBgColor2),
-                                                        Row(
-                                                          children: [
-                                                            Expanded(
-                                                              child: Row(
-                                                                children: [
-                                                                  Icon(
-                                                                    FontAwesomeIcons.eye,
-                                                                    size: 14,
-                                                                    color: Color.fromARGB(255, 63, 63, 63),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                                                    child: Text(
-                                                                      "${postData[index].viewed}",
-                                                                      style: TextStyle(
-                                                                        fontSize: 13,
-                                                                        color: hintTextColor,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Icon(
-                                                                    FontAwesomeIcons.heart,
-                                                                    size: 14,
-                                                                    color: Color.fromARGB(255, 248, 110, 110),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                                                    child: Text(
-                                                                      "${postData[index].good}",
-                                                                      style: TextStyle(
-                                                                        fontSize: 13,
-                                                                        color: hintTextColor,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Icon(FontAwesomeIcons.comment,
-                                                                      size: 14, color: Colors.blueAccent),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                                                    child: Text(
-                                                                      "${postData[index].commentCount}",
-                                                                      style: TextStyle(
-                                                                        fontSize: 13,
-                                                                        color: hintTextColor,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.only(right: 5),
-                                                              child: GestureDetector(
-                                                                child: Icon(
-                                                                  FontAwesomeIcons.ellipsis,
-                                                                  color: hintTextColor,
-                                                                  size: 14,
-                                                                ),
-                                                                onTap: () {
-                                                                  print("Icon");
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
+                                        mainBody,
                                         isDataAddLoding
                                             ? const Padding(
                                                 padding: EdgeInsets.all(10),
