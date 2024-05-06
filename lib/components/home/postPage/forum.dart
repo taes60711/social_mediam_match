@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_page_by_new.dart';
 import 'package:social_mediam_match/components/home/postPage/post_page_by_type.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
 import 'post_page.dart';
@@ -43,7 +44,7 @@ class Forum extends StatelessWidget {
                   ),
                 ],
                 options: CarouselOptions(
-                  height: 100,
+                  height: 70,
                   aspectRatio: 16 / 9,
                   viewportFraction: 1,
                   autoPlay: true,
@@ -56,14 +57,28 @@ class Forum extends StatelessWidget {
             child: DefaultTabController(
                 length: 3,
                 child: Scaffold(
-                    appBar: const TabBar(
+                    appBar: TabBar(
                       tabs: [
-                        Tab(text: '人氣'),
-                        Tab(text: '最新'),
-                        Tab(text: '看板'),
+                        SizedBox(
+                          height: 25,
+                          child: Tab(text: '人氣'),
+                        ),
+                        SizedBox(
+                          height: 25,
+                          child: Tab(text: '最新'),
+                        ),
+                        SizedBox(
+                          height: 25,
+                          child: Tab(text: '看板'),
+                        ),
                       ],
                       isScrollable: true,
-                      labelColor: Colors.black,
+                      indicator: UnderlineTabIndicator(
+                        borderSide: BorderSide(width: 1.0, color: normalBgColor),
+                        insets: EdgeInsets.symmetric(horizontal: 10),
+                      ),
+                      labelPadding: EdgeInsets.only(top: 5, left: 10, right: 10),
+                      labelColor: normalBgColor2,
                     ),
                     body: TabBarView(
                       children: [

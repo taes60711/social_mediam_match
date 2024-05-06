@@ -63,7 +63,7 @@ class SignUpStepTwo extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "(${skillItems.length} / 7)",
+                    "(${skillItems.length} / 5)",
                     style: const TextStyle(fontSize: 14),
                   ),
                 ],

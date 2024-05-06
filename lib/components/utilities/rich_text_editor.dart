@@ -29,15 +29,16 @@ class RichTextEditor extends StatelessWidget {
           ],
         ),
         QuillHtmlEditor(
-          text: RichTextFormat(htmlString: content).WidgetToEditorHtml(content),
+          text: RichTextFormat(htmlString: content).widgetToEditorHtml(content),
           controller: controller,
           minHeight: 1,
           textStyle: TextStyle(fontSize: fontSize),
           loadingBuilder: (context) {
             return const Center(
-                child: CircularProgressIndicator(
-              strokeWidth: 0.4,
-            ));
+              child: CircularProgressIndicator(
+                strokeWidth: 0.4,
+              ),
+            );
           },
         ),
       ],

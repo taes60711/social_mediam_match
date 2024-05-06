@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +28,12 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  NotificationService notificationService = NotificationService()..initNotification();
-  notificationService.notificationListen();
+  if (Platform.isAndroid) {
+    //初始化 > 通知系統在上架前,先暫時只給安卓使用
+    NotificationService notificationService = NotificationService()..initNotification();
+    notificationService.notificationListen();
+  }
+
   await SystemChrome.setPreferredOrientations(
     [
       DeviceOrientation.landscapeLeft,

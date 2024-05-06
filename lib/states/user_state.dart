@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -63,8 +64,11 @@ class UserState extends ChangeNotifier {
           chatListChannel.friendListConnect(userUID);
           inspect(userData);
 
-          final fcmToken = await FirebaseMessaging.instance.getToken();
-          _dbService.updateUserToken(userUID, fcmToken!);
+          if (Platform.isAndroid) {
+            //取得使用者TOKEN > 通知系統在上架前,先暫時只給安卓使用
+            final fcmToken = await FirebaseMessaging.instance.getToken();
+            _dbService.updateUserToken(userUID, fcmToken!);
+          }
 
           isLoading = false;
           notifyListeners();

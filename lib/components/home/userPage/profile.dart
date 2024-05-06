@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +21,44 @@ import '../../utilities/skill_list_view.dart';
 import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/user_icon.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> with WidgetsBindingObserver {
+  final _scrollController = ScrollController();
+  double keboardHeight = 0;
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (MediaQuery.of(context).viewInsets.bottom == 0) {
+        _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+        print("關閉鍵盤");
+      } else {
+        double bottom = MediaQuery.of(context).viewInsets.bottom;
+        keboardHeight = max(keboardHeight, bottom);
+        _scrollController.animateTo(200, duration: Duration(milliseconds: 500), curve: Curves.ease);
+
+        print("顯示鍵盤 ${keboardHeight}");
+      }
+    });
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,23 +127,79 @@ class Profile extends StatelessWidget {
     }
 
     //パックボタン（画面を離れるよう）
-    Widget backButton = SizedBox(
+    Widget backButton = Container(
+      margin: EdgeInsets.only(left: ScreenSize().width * 0.03),
       width: ScreenSize().width,
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: IconButton(
-          onPressed: () {
-            inspect(userData);
-            bool isChange = userSettingState.isProfileChange(
-                userData, base64Img, nameInput.text, jobInput.text, introductionInput.text, allSkillItems, allWantSkillItems);
-            if (isChange) {
-              exitCheck();
-            } else {
-              Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-            }
-          },
-          icon: const Icon(Icons.arrow_back_ios),
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: ScreenSize().width * 0.3,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: GestureDetector(
+                onTap: () {
+                  inspect(userData);
+                  bool isChange = userSettingState.isProfileChange(userData, base64Img, nameInput.text, jobInput.text,
+                      introductionInput.text, allSkillItems, allWantSkillItems);
+                  if (isChange) {
+                    exitCheck();
+                  } else {
+                    Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                  }
+                },
+                child: const Icon(Icons.arrow_back_ios),
+              ),
+            ),
+          ),
+          //タイトル
+          SizedBox(
+            width: ScreenSize().width * 0.34,
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(ProfileString().title),
+            ),
+          ),
+          //更新ボタン
+          SizedBox(
+            width: ScreenSize().width * 0.3,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Material(
+                // color: normalBgColor,
+                borderRadius: BorderRadius.circular(8),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () async {
+                    UpdateUser updateUserData = userSettingState.reformatData(
+                      userData.uid,
+                      base64Img,
+                      nameInput.text,
+                      jobInput.text,
+                      introductionInput.text,
+                      forntSkillItems,
+                      iotSkillItems,
+                      backEndSkillItems,
+                      otherSkillItems,
+                    );
+
+                    bool isSucess = await userState.updateProfile(userData.uid, updateUserData);
+
+                    if (isSucess) {
+                      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    child: Text(
+                      ProfileString().updateButtonText,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
       ),
     );
 
@@ -136,7 +229,7 @@ class Profile extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "(${skillItems.length} / 7)",
+                    "(${skillItems.length} / 5)",
                     style: const TextStyle(fontSize: 14),
                   ),
                 ],
@@ -160,7 +253,12 @@ class Profile extends StatelessWidget {
         userSettingState.getSkillListData(userData: userData);
       },
       child: isFirst
-          ? const Loading()
+          ? ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _scrollController,
+              children: const [Loading()],
+            )
           : Scaffold(
               resizeToAvoidBottomInset: false,
               key: key,
@@ -176,12 +274,14 @@ class Profile extends StatelessWidget {
               ),
               body: BackgroundWidget(
                 isSafeArea: true,
-                child: Column(
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: _scrollController,
                   children: [
                     backButton,
-                    Text(ProfileString().title),
                     SizedBox(
-                      height: ScreenSize().safeheight * 0.95,
+                      height: ScreenSize().safeheight,
                       child: FittedBox(
                         child: Column(
                           children: [
@@ -205,38 +305,11 @@ class Profile extends StatelessWidget {
                             skillTitle(type: "want"),
                             TitleInput(
                                 isMulti: true, title: ProfileString().introductionInputTitle, textController: introductionInput),
-                            const SizedBox(height: 15),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: CustomButton(
-                                title: ProfileString().updateButtonText,
-                                titleColor: normalTextColor,
-                                backgroundColor: normalBgColor,
-                                onPress: () async {
-                                  UpdateUser updateUserData = userSettingState.reformatData(
-                                    userData.uid,
-                                    base64Img,
-                                    nameInput.text,
-                                    jobInput.text,
-                                    introductionInput.text,
-                                    forntSkillItems,
-                                    iotSkillItems,
-                                    backEndSkillItems,
-                                    otherSkillItems,
-                                  );
-
-                                  bool isSucess = await userState.updateProfile(userData.uid, updateUserData);
-
-                                  if (isSucess) {
-                                    Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                                  }
-                                },
-                              ),
-                            ),
                           ],
                         ),
                       ),
                     ),
+                    Container(height: keboardHeight)
                   ],
                 ),
               ),

@@ -53,7 +53,7 @@ class EditPost extends StatelessWidget {
                   postState.updatePostData(choicedPost!.id, content);
                   postState.myPostsGlobalKey.currentState!.closeEndDrawer();
                 },
-                child: Text("更新"))
+                child: const Text("更新"))
           ],
         ),
       ),
@@ -121,6 +121,7 @@ class MyPosts extends StatelessWidget {
                       PostModel(
                           id: -1,
                           createdBy: "",
+                          title: "",
                           mainMessage: "",
                           commentCount: 0,
                           postTime: "",
@@ -190,9 +191,8 @@ class MyPosts extends StatelessWidget {
                                   ],
                                 ),
                                 RichTextView(
-                                  content: myAllPosts[index].mainMessage.length >= 100
-                                      ? myAllPosts[index].mainMessage.substring(0, 100)
-                                      : myAllPosts[index].mainMessage,
+                                  content: myAllPosts[index].mainMessage,
+                                  isPreView: true,
                                 ),
                                 Row(
                                   children: [

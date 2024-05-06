@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:math';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:social_mediam_match/components/strings/account/login_strings.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
@@ -12,8 +12,45 @@ import 'package:social_mediam_match/components/strings/message_strings/account_m
 import 'package:social_mediam_match/states/user_state.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
+  final _scrollController = ScrollController();
+  double keboardHeight = 0;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (MediaQuery.of(context).viewInsets.bottom == 0) {
+        _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+        print("關閉鍵盤");
+      } else {
+        double bottom = MediaQuery.of(context).viewInsets.bottom;
+        keboardHeight = max(keboardHeight, bottom);
+        _scrollController.animateTo(200, duration: Duration(milliseconds: 500), curve: Curves.ease);
+
+        print("顯示鍵盤 ${keboardHeight}");
+      }
+    });
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +197,7 @@ class LoginPage extends StatelessWidget {
 
     //ロゴ
     Widget logo = SizedBox(
-      height: ScreenSize().safeheight * 0.4,
+      height: ScreenSize().safeheight * 0.3,
       child: SizedBox(
         width: 150,
         height: 150,
@@ -187,74 +224,92 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+
+    Widget backButton = SizedBox(
+      width: ScreenSize().width,
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: IconButton(
+          onPressed: () {
+            returnHome();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: normalBgColor2,
+          ),
+        ),
+      ),
+    );
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-          child: BackgroundWidget(
-        child: Column(
+      body: BackgroundWidget(
+        child: ListView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          controller: _scrollController,
           children: [
+            backButton,
             //ロゴ
             logo,
-            SizedBox(
-              height: ScreenSize().safeheight * 0.6,
-              child: FittedBox(
-                child: Column(
-                  children: [
-                    //メールアドレスInput
-                    TitleInput(title: Login().emailInputTitle, textController: emailController),
-                    //パスワードInput
-                    TitleInput(title: Login().pwdInputTitle, textController: pwdController),
-                    //エラーメッセージ
-                    loginErrorMessage,
-                    //パスワード忘れるテキスト
-                    forgotPwdText,
-                    //ログインボタン
-                    _button(
-                        title: Login().emailLoginButtonText,
-                        titleColor: normalTextColor,
-                        backgroundColor: normalBgColor,
-                        onPressed: () async {
-                          loadingPopView();
-                          bool isLoginSucess = await userFuture.signIn(emailController.text, pwdController.text);
-                          closePop();
-                          isLoginSucess ? returnHome() : () {};
-                        }),
-                    const SizedBox(height: 10),
-                    //登録ボタン
-                    _button(
-                        title: Login().signUpButtonText,
-                        titleColor: normalTextColor,
-                        backgroundColor: hintTextColor,
-                        onPressed: () async {
-                          Navigator.of(context).pushNamed(RoutePath.signUpPage.value);
-                        }),
-                    const SizedBox(height: 10),
-                    //グーグル登録ボタン
-                    _button(
-                        title: Login().googleButtonText,
-                        titleColor: normalTextColor,
-                        backgroundColor: googleButtonColor,
-                        iconImg: googleIconPath,
-                        onPressed: () {
-                          log("Google 登入");
-                        }),
-                    const SizedBox(height: 10),
-                    //ツイッター登録ボタン
-                    _button(
-                        title: Login().twitterButtonText,
-                        titleColor: normalTextColor,
-                        backgroundColor: twitterButtonColor,
-                        iconImg: twitterIconPath,
-                        onPressed: () {
-                          log("Twitter 登入");
-                        }),
-                  ],
+            Column(
+              children: [
+                SizedBox(
+                  height: ScreenSize().height * 0.6,
+                  child: FittedBox(
+                    child: Column(
+                      children: [
+                        //メールアドレスInput
+                        TitleInput(title: Login().emailInputTitle, textController: emailController),
+                        //パスワードInput
+                        TitleInput(title: Login().pwdInputTitle, textController: pwdController),
+                        //エラーメッセージ
+                        loginErrorMessage,
+                        //パスワード忘れるテキスト
+                        forgotPwdText,
+                        //ログインボタン
+                        _button(
+                            title: Login().emailLoginButtonText,
+                            titleColor: normalTextColor,
+                            backgroundColor: normalBgColor,
+                            onPressed: () async {
+                              loadingPopView();
+                              bool isLoginSucess = await userFuture.signIn(emailController.text, pwdController.text);
+                              closePop();
+                              isLoginSucess ? returnHome() : () {};
+                            }),
+                        const SizedBox(height: 10),
+
+                        //グーグル登録ボタン
+                        _button(
+                            title: Login().googleButtonText,
+                            titleColor: normalTextColor,
+                            backgroundColor: googleButtonColor,
+                            iconImg: googleIconPath,
+                            onPressed: () {
+                              print("Google 登入");
+                            }),
+                        const SizedBox(height: 10),
+                        //ツイッター登録ボタン
+                        _button(
+                            title: Login().twitterButtonText,
+                            titleColor: normalTextColor,
+                            backgroundColor: twitterButtonColor,
+                            iconImg: twitterIconPath,
+                            onPressed: () {
+                              print("Twitter 登入");
+                            }),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            )
+                Container(
+                  height: keboardHeight,
+                ),
+              ],
+            ),
           ],
         ),
-      )),
+      ),
     );
   }
 }

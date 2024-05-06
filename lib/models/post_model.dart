@@ -5,6 +5,7 @@ import 'package:social_mediam_match/models/user_model.dart';
 class PostModel {
   int id;
   String createdBy;
+  String title;
   String mainMessage;
   String postTime;
   int viewed;
@@ -15,6 +16,7 @@ class PostModel {
   PostModel({
     required this.id,
     required this.createdBy,
+    required this.title,
     required this.mainMessage,
     required this.viewed,
     required this.good,
@@ -25,13 +27,17 @@ class PostModel {
   });
 
   factory PostModel.toMap(dynamic json, {LoginUser? userData}) {
+    // DateTime dateUtc = DateTime.parse(json['postTime']).toUtc();
+    // DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
+    // String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
     DateTime dateUtc = DateTime.parse(json['postTime']).toUtc();
-    DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
-    String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
+    Duration duration = DateTime.now().toUtc().difference(dateUtc);
+    String formattedTime = "${duration.inDays}";
 
     return PostModel(
       id: json['id'],
       createdBy: json['createdBy'],
+      title: json['title'],
       mainMessage: json['mainMessage'],
       viewed: json['viewed'],
       good: json['good'],
