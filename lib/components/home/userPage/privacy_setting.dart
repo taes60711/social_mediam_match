@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/states/friend_state.dart';

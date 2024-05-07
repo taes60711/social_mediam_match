@@ -24,41 +24,35 @@ class _RichTextViewState extends State<RichTextView> {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return GestureDetector(
-          onPanDown: (_) {},
-          child: Dismissible(
-            direction: DismissDirection.vertical,
-            onDismissed: (_) => Navigator.of(context).pop(),
-            resizeDuration: const Duration(milliseconds: 1),
-            key: const Key('key'),
-            child: Scaffold(
-              backgroundColor: Colors.black,
-              body: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                        ),
-                      ),
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: Column(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
                     ),
                   ),
-                  Expanded(
-                    child: PhotoView(
-                      imageProvider: NetworkImage(imgUrl),
-                      backgroundDecoration: const BoxDecoration(color: Colors.transparent),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+              Expanded(
+                child: PhotoView.customChild(
+                  backgroundDecoration: const BoxDecoration(color: Colors.transparent),
+                  child: GestureDetector(
+                    onDoubleTap: () => Navigator.of(context).pop(),
+                    child: Image.network(imgUrl),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
