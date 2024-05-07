@@ -84,7 +84,8 @@ class PostComment extends StatelessWidget {
           body: SafeArea(
             child: StatefulWrapper(
               onInit: () async {
-                await postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "First");
+                Future.delayed(Duration(milliseconds: 300)).then((value) async =>
+                    await postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "First"));
               },
               onDispose: () {
                 PostState().dispose();
