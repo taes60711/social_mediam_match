@@ -22,9 +22,11 @@ class RichTextView extends StatefulWidget {
 PhotoViewController photoViewController = PhotoViewController();
 
 class _RichTextViewState extends State<RichTextView> with SingleTickerProviderStateMixin {
-  Future<void> imageView(String imgUrl, String imgType) {
+  Future<void> imageView(String imgUrl) {
     double value = 1;
+    double zoomSpeed = 0.05 * ScreenSize().height / ScreenSize().width;
     Timer timer = Timer(Duration.zero, () {});
+
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -64,64 +66,55 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   controller: photoViewController,
                   backgroundDecoration: const BoxDecoration(color: Colors.transparent),
                   child: GestureDetector(
-                    onTapDown: (details) {
-                      print("onTapDown");
+                      onTapDown: (details) {
+                        print("onTapDown");
+                        void zoomFunc({required double zoomChangeValue, required double resizeValue, required String type}) {
+                          timer = Timer.periodic(const Duration(microseconds: 5), (timer) {
+                            setState(() {
+                              bool isEnd = false;
+                              switch (type) {
+                                case "less":
+                                  if (zoomChangeValue < resizeValue) {
+                                    zoomChangeValue += zoomSpeed;
+                                  } else {
+                                    isEnd = true;
+                                  }
+                                  break;
+                                case "greater":
+                                  if (zoomChangeValue >= resizeValue) {
+                                    zoomChangeValue -= zoomSpeed;
+                                  } else {
+                                    isEnd = true;
+                                  }
+                                  break;
+                              }
 
-                      value = photoViewController.scale ?? 1;
-                      if (value < 1) {
-                        double t = photoViewController.scale ?? 1;
-                        timer = Timer.periodic(const Duration(microseconds: 5), (timer) {
-                          setState(() {
-                            if (t < 1) {
-                              t += 0.005;
-                              photoViewController.scale = t;
-                              print(t);
-                            } else {
-                              photoViewController.scale = 1;
-                              timer.cancel();
-                            }
+                              if (isEnd) {
+                                photoViewController.scale = resizeValue;
+                                timer.cancel();
+                              } else {
+                                photoViewController.scale = zoomChangeValue;
+                                print(zoomChangeValue);
+                              }
+                            });
                           });
-                        });
-                      } else if (value < 2.5) {
-                        double t = photoViewController.scale ?? 1;
-                        timer = Timer.periodic(const Duration(microseconds: 5), (timer) {
-                          setState(() {
-                            if (t < 2.5) {
-                              t += 0.005;
-                              photoViewController.scale = t;
-                              print(t);
-                            } else {
-                              photoViewController.scale = 3;
-                              timer.cancel();
-                            }
-                          });
-                        });
-                      } else {
-                        double t = photoViewController.scale ?? 1;
-                        timer = Timer.periodic(const Duration(microseconds: 5), (timer) {
-                          setState(() {
-                            if (t >= 1) {
-                              t -= 0.005;
-                              photoViewController.scale = t;
-                              print(t);
-                            } else {
-                              photoViewController.scale = 1;
-                              timer.cancel();
-                            }
-                          });
-                        });
-                      }
-                    },
-                    onDoubleTap: () {
-                      print("onDoubleTap");
-                      imageViewExit();
-                    },
-                    child: imgType == "base64"
-                        ? Image.memory(
-                            const Base64Decoder().convert(imgUrl),
-                          )
-                        : Image.network(imgUrl),
-                  ),
+                        }
+
+                        value = photoViewController.scale ?? 1;
+                        double zoomChangeValue = photoViewController.scale ?? 1;
+                        if (value < 1) {
+                          zoomFunc(zoomChangeValue: zoomChangeValue, resizeValue: 1, type: "less");
+                        } else if (value < 2.5) {
+                          zoomFunc(zoomChangeValue: zoomChangeValue, resizeValue: 2.5, type: "less");
+                        } else {
+                          zoomFunc(zoomChangeValue: zoomChangeValue, resizeValue: 1, type: "greater");
+                        }
+                      },
+                      onDoubleTap: () {
+                        print("onDoubleTap");
+                        imageViewExit();
+                      },
+                      child: Image.network(imgUrl)),
                 ),
               ),
             ],
@@ -165,23 +158,11 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   onTapImage: (src) {
                     print("onTapImage: ${src.sources.first.url}");
 
-                    String imgType = "network";
-                    choicedImg = src.sources.first.url;
-                    if (src.sources.first.url.contains('data:image/')) {
-                      int startIndex = src.sources.first.url.indexOf('data:image/') + 22;
-                      if (src.sources.first.url.contains('data:image/jpeg')) {
-                        startIndex = src.sources.first.url.indexOf('data:image/') + 23;
-                      }
-                      int endIndex = src.sources.first.url.length;
-
-                      choicedImg = src.sources.first.url.substring(startIndex, endIndex);
-                      imgType = "base64";
-                    }
-                    print(choicedImg);
                     setState(() {
-                      choicedImg = choicedImg;
+                      choicedImg = src.sources.first.url;
                     });
-                    imageView(choicedImg, imgType);
+
+                    imageView(choicedImg);
                   },
                 );
               }
@@ -189,53 +170,25 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
             onTapImage: (src) {
               print("onTapImage: ${src.sources.first.url}");
 
-              String imgType = "network";
-              choicedImg = src.sources.first.url;
-              if (src.sources.first.url.contains('data:image/')) {
-                int startIndex = src.sources.first.url.indexOf('data:image/') + 22;
-                if (src.sources.first.url.contains('data:image/jpeg')) {
-                  startIndex = src.sources.first.url.indexOf('data:image/') + 23;
-                }
-                int endIndex = src.sources.first.url.length;
-
-                choicedImg = src.sources.first.url.substring(startIndex, endIndex);
-                imgType = "base64";
-              }
-              print(choicedImg);
               setState(() {
-                choicedImg = choicedImg;
+                choicedImg = src.sources.first.url;
               });
-              imageView(choicedImg, imgType);
+              imageView(choicedImg);
             },
           )
         : Builder(builder: (context) {
             //プレビュー文章の画面
             bool haveImage = RichTextFormat(htmlString: widget.content).getPostPreView()["IsImage"];
             String resultString = RichTextFormat(htmlString: widget.content).getPostPreView()["resultString"];
-            String imageType = "";
-            if (haveImage) {
-              if (resultString.contains('http')) {
-                imageType = "network";
-              } else {
-                imageType = "base64";
-              }
-            }
+
             return haveImage
-                ? imageType == "base64"
-                    ? Image.memory(
-                        const Base64Decoder().convert(resultString),
-                        width: ScreenSize().width,
-                        height: 150,
-                        fit: BoxFit.cover,
-                        gaplessPlayback: true,
-                      )
-                    : Image.network(
-                        resultString,
-                        width: ScreenSize().width,
-                        height: 150,
-                        fit: BoxFit.cover,
-                        gaplessPlayback: true,
-                      )
+                ? Image.network(
+                    resultString,
+                    width: ScreenSize().width,
+                    height: 150,
+                    fit: BoxFit.cover,
+                    gaplessPlayback: true,
+                  )
                 : HtmlWidget(
                     resultString,
                     textStyle: TextStyle(fontSize: fontSize),
