@@ -1,9 +1,12 @@
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' as html;
+import 'package:uuid/uuid.dart';
+
+import '../global.dart';
+import '../states/services/image_service.dart';
 
 class RichTextFormat {
   String htmlString;
-
   RichTextFormat({
     required this.htmlString,
   });
@@ -15,8 +18,42 @@ class RichTextFormat {
     "ql-size-small": "15px",
   };
 
-  String editedTextToWidgetHtml() {
+  Future<String> sendPostImgFormat() async {
+    String _htmlString = htmlString;
     var node = html.parse(htmlString).body;
+
+    if (node!.nodeType == Node.ELEMENT_NODE) {
+      var elements = node.querySelectorAll('*');
+      for (var element in elements) {
+        switch (element.localName) {
+          case "p":
+            var document = html.parse(element.innerHtml);
+
+            await Future.forEach(document.body?.querySelectorAll('*') ?? [], (e) async {
+              if (e.localName == 'img') {
+                String uid = const Uuid().v1();
+                String resultString = getImage(e.outerHtml);
+
+                if (await ImageService().imageIsExist(resultString) != "-1") {
+                  uid = await ImageService().imageIsExist(resultString);
+                } else {
+                  await ImageService().saveImage(uid, resultString);
+                }
+
+                String imgStringToHttp = '<img src="http://\$ip:\$port/images/$uid">';
+                _htmlString = _htmlString.replaceAll(e.outerHtml, imgStringToHttp);
+              }
+            });
+            break;
+        }
+      }
+    }
+    return _htmlString;
+  }
+
+  String editedTextToWidgetHtml() {
+    String _htmlString = mappingIPAndPort(htmlString);
+    var node = html.parse(_htmlString).body;
 
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var elements = node.querySelectorAll('*');
@@ -27,7 +64,7 @@ class RichTextFormat {
             if (!element.innerHtml.contains("img") && !element.innerHtml.contains("iframe")) {
               // inspect(element);
               String pwithSpanString = element.innerHtml.replaceAll(" ", "&nbsp;");
-              htmlString = htmlString.replaceAll(element.innerHtml, pwithSpanString);
+              _htmlString = _htmlString.replaceAll(element.innerHtml, pwithSpanString);
             }
             document.body?.querySelectorAll('*').forEach(
               (e) {
@@ -52,7 +89,7 @@ class RichTextFormat {
                   }
 
                   String nbspedString = e.outerHtml.replaceAll(" ", "&nbsp;");
-                  htmlString = htmlString.replaceAll(nbspedString, htmlUseouterHtml);
+                  _htmlString = _htmlString.replaceAll(nbspedString, htmlUseouterHtml);
                 }
               },
             );
@@ -62,13 +99,11 @@ class RichTextFormat {
       });
     }
 
-    // print(htmlString);
-    // WidgetToEditorHtml(htmlString);
-
-    return htmlString;
+    return _htmlString;
   }
 
   String widgetToEditorHtml(String htmlString) {
+    String _htmlString = mappingIPAndPort(htmlString);
     dynamic getKeyByValue(Map<dynamic, dynamic> map, dynamic value) {
       for (var entry in map.entries) {
         if (entry.value == value) {
@@ -78,7 +113,6 @@ class RichTextFormat {
       return null;
     }
 
-    // print(htmlString);
     var node = html.parse(htmlString).body;
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var allElements = node.querySelectorAll('*');
@@ -89,7 +123,7 @@ class RichTextFormat {
             var document = html.parse(element.innerHtml);
             if (!element.innerHtml.contains("img") && !element.innerHtml.contains("iframe")) {
               String pwithSpanString = element.innerHtml.replaceAll(" ", "&nbsp;");
-              htmlString = htmlString.replaceAll(element.innerHtml, pwithSpanString);
+              _htmlString = _htmlString.replaceAll(element.innerHtml, pwithSpanString);
             }
             document.body?.querySelectorAll('*').forEach(
               (e) {
@@ -114,7 +148,7 @@ class RichTextFormat {
                   }
 
                   String nbspedString = e.outerHtml.replaceAll(" ", "&nbsp;");
-                  htmlString = htmlString.replaceAll(nbspedString, htmlUseouterHtml);
+                  _htmlString = _htmlString.replaceAll(nbspedString, htmlUseouterHtml);
                 }
               },
             );
@@ -125,42 +159,23 @@ class RichTextFormat {
     }
 
     // print(htmlString);
-    return htmlString;
+    return _htmlString;
   }
 
   Map<String, dynamic> getPostPreView() {
-    var node = html.parse(htmlString).body;
+    String _htmlString = mappingIPAndPort(htmlString);
+    var node = html.parse(_htmlString).body;
     String resultString = "";
     bool isImage = false;
 
-    if (htmlString.length >= 100) {
-      resultString = htmlString.substring(0, 100);
+    if (_htmlString.length >= 100) {
+      resultString = _htmlString.substring(0, 100);
     } else {
-      resultString = htmlString;
+      resultString = _htmlString;
     }
 
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var allElements = node.querySelectorAll('*');
-
-      String getImage(String htmlString) {
-        int startIndex = -1;
-        if (htmlString.contains('src="data:image/')) {
-          startIndex = htmlString.indexOf('src="data:image/') + 27;
-          if (htmlString.contains('src="data:image/jpeg')) {
-            startIndex = htmlString.indexOf('src="data:image/') + 28;
-          }
-        } else if (htmlString.contains('src="')) {
-          startIndex = htmlString.indexOf('src="') + 5;
-        }
-
-        if (startIndex != -1) {
-          int endIndex = htmlString.indexOf('"', startIndex);
-          if (endIndex != -1) {
-            return htmlString.substring(startIndex, endIndex);
-          }
-        }
-        return '';
-      }
 
       allElements.forEach((element) {
         if (element.innerHtml.contains("img")) {
@@ -174,5 +189,31 @@ class RichTextFormat {
       "IsImage": isImage,
       "resultString": resultString,
     };
+  }
+
+  String getImage(String htmlString) {
+    int startIndex = -1;
+    if (htmlString.contains('src="data:image/')) {
+      startIndex = htmlString.indexOf('src="data:image/') + 27;
+      if (htmlString.contains('src="data:image/jpeg')) {
+        startIndex = htmlString.indexOf('src="data:image/') + 28;
+      }
+    } else if (htmlString.contains('src="')) {
+      startIndex = htmlString.indexOf('src="') + 5;
+    }
+
+    if (startIndex != -1) {
+      int endIndex = htmlString.indexOf('"', startIndex);
+      if (endIndex != -1) {
+        return htmlString.substring(startIndex, endIndex);
+      }
+    }
+    return '';
+  }
+
+  String mappingIPAndPort(String htmlString) {
+    String changedHtmlString = htmlString.replaceAll('\$ip', ip);
+    changedHtmlString = changedHtmlString.replaceAll('\$port', port);
+    return changedHtmlString;
   }
 }
