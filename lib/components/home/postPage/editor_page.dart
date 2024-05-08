@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
+import 'package:social_mediam_match/components/utilities/title_input.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
 
@@ -13,6 +14,7 @@ class EditorPage extends StatelessWidget {
     LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
     int type = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['type'];
     QuillEditorController controller = QuillEditorController();
+    TextEditingController titleController = TextEditingController();
     Widget userComponent = SafeArea(
       child: Column(
         children: [
@@ -26,6 +28,8 @@ class EditorPage extends StatelessWidget {
             ),
           ),
           Text("投稿"),
+          SizedBox(height: 10),
+          TitleInput(title: '標題', textController: titleController),
           RichTextEditor(
             content: "",
             controller: controller,
@@ -33,7 +37,7 @@ class EditorPage extends StatelessWidget {
           ElevatedButton(
             onPressed: () async {
               String content = await controller.getText();
-              await postState.createPost(userData.uid, content, type);
+              await postState.createPost(userData.uid, titleController.text, content, type);
               Navigator.pop(context);
             },
             child: Text("投稿"),

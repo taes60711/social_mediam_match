@@ -1,5 +1,5 @@
 // ip
-String ip = "36.226.131.116";
+String ip = "114.37.111.177";
 String port = '80';
 
 String webSocketPort = "123";

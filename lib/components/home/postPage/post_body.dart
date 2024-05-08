@@ -183,27 +183,26 @@ class NoPostData extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: ScreenSize().width,
+      height: ScreenSize().safeheight,
       child: AspectRatio(
         aspectRatio: 16.0 / 9.0,
-        child: BackgroundWidget(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                FontAwesomeIcons.commentSlash,
-                size: 50,
-                color: hintTextColor,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              FontAwesomeIcons.commentSlash,
+              size: 50,
+              color: hintTextColor,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              "沒有文章",
+              style: TextStyle(
+                fontSize: 20,
+                color: normalBgColor2,
               ),
-              const SizedBox(height: 10),
-              Text(
-                "沒有文章",
-                style: TextStyle(
-                  fontSize: 20,
-                  color: normalBgColor2,
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );

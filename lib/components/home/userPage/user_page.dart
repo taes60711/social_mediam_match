@@ -266,20 +266,36 @@ class UserPage extends StatelessWidget {
               child: Column(
                 children: [
                   UserIcon(iconSize: 100, image: userData.image),
-                  const SizedBox(height: 10),
-                  Text("Hello, ${userData.name ?? userData.email}"),
-                  Text("${UserPageString().infoStatus} ${userData.status}"),
-                  Text("${UserPageString().infoJob} ${userData.job}"),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text("Hello, ${userData.name ?? userData.email}"),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 200,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: hintTextColor.withAlpha(25),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("${UserPageString().infoStatus} : ${userData.status}"),
+                        Text("${UserPageString().infoJob} : ${userData.job}"),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
           SizedBox(
             width: ScreenSize().width,
-            height: ScreenSize().safeheight * 0.65,
+            height: ScreenSize().safeheight * 0.6,
             child: FittedBox(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -288,47 +304,65 @@ class UserPage extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.only(top: 10, bottom: 10),
                       width: ScreenSize().width,
-                      child: SkillListView(skillList: userData.mainSkills ?? []),
+                      child: SkillListView(
+                        skillList: userData.mainSkills ?? [],
+                        backgroundColor: googleColor,
+                      ),
                     ),
                     //勉強したいスキル
                     Text(StepTwoPage().wantSkillText),
                     Container(
-                      margin: const EdgeInsets.only(top: 10, bottom: 20),
+                      margin: const EdgeInsets.only(top: 10, bottom: 30),
                       width: ScreenSize().width,
-                      child: SkillListView(skillList: userData.wantSkills ?? []),
+                      child: SkillListView(
+                        skillList: userData.wantSkills ?? [],
+                        backgroundColor: googleColor,
+                      ),
                     ),
                     //設定ボタン　例：プロフィール、設定、ニュース...
-                    Row(
-                      children: settingButtonInfoList
-                          .map(
-                            (e) => SizedBox(
-                              width: ScreenSize().width / 4,
-                              child: CustomButton(
-                                  title: e.title,
-                                  icon: e.icon,
-                                  titleColor: normalBgColor2,
-                                  backgroundColor: normalBgColor,
-                                  onPress: e.onPress),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                    const SizedBox(height: 30),
-                    //設定ボタン　例：プロフィール、設定、ニュース...
-                    Row(
-                      children: settingButtonInfoList2
-                          .map(
-                            (e) => SizedBox(
-                              width: ScreenSize().width / 4,
-                              child: CustomButton(
-                                  title: e.title,
-                                  icon: e.icon,
-                                  titleColor: normalBgColor2,
-                                  backgroundColor: normalBgColor,
-                                  onPress: e.onPress),
-                            ),
-                          )
-                          .toList(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 0.1, color: normalBgColor2),
+                        borderRadius: BorderRadius.circular(10),
+                        color: hintTextColor.withAlpha(25),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: settingButtonInfoList
+                                .map(
+                                  (e) => SizedBox(
+                                    width: ScreenSize().width / 4,
+                                    child: CustomButton(
+                                        title: e.title,
+                                        icon: e.icon,
+                                        titleColor: normalBgColor2,
+                                        backgroundColor: normalBgColor,
+                                        onPress: e.onPress),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                          const SizedBox(height: 30),
+                          Row(
+                            children: settingButtonInfoList2
+                                .map(
+                                  (e) => SizedBox(
+                                    width: ScreenSize().width / 4,
+                                    child: CustomButton(
+                                        title: e.title,
+                                        icon: e.icon,
+                                        titleColor: normalBgColor2,
+                                        backgroundColor: normalBgColor,
+                                        onPress: e.onPress),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

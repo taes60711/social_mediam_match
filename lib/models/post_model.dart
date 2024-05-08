@@ -49,6 +49,23 @@ class PostModel {
   }
 }
 
+class CreatePostModel {
+  String createdByUId;
+  String title;
+  String mainMessage;
+  int type;
+  CreatePostModel({required this.createdByUId, required this.title, required this.mainMessage, required this.type});
+
+  String createPost() {
+    return jsonEncode({
+      "createdBy": createdByUId,
+      "title": title,
+      "mainMessage": mainMessage,
+      "type": type,
+    });
+  }
+}
+
 class UpdatePostModel {
   int id;
   String mainMessage;

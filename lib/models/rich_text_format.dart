@@ -142,12 +142,21 @@ class RichTextFormat {
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var allElements = node.querySelectorAll('*');
 
-      String getImageUrl(String htmlString) {
-        int startIndex = htmlString.indexOf('src="');
+      String getImage(String htmlString) {
+        int startIndex = -1;
+        if (htmlString.contains('src="data:image/')) {
+          startIndex = htmlString.indexOf('src="data:image/') + 27;
+          if (htmlString.contains('src="data:image/jpeg')) {
+            startIndex = htmlString.indexOf('src="data:image/') + 28;
+          }
+        } else if (htmlString.contains('src="')) {
+          startIndex = htmlString.indexOf('src="') + 5;
+        }
+
         if (startIndex != -1) {
-          int endIndex = htmlString.indexOf('"', startIndex + 5);
+          int endIndex = htmlString.indexOf('"', startIndex);
           if (endIndex != -1) {
-            return htmlString.substring(startIndex + 5, endIndex);
+            return htmlString.substring(startIndex, endIndex);
           }
         }
         return '';
@@ -156,7 +165,7 @@ class RichTextFormat {
       allElements.forEach((element) {
         if (element.innerHtml.contains("img")) {
           isImage = true;
-          resultString = getImageUrl(element.innerHtml);
+          resultString = getImage(element.innerHtml);
         }
       });
     }

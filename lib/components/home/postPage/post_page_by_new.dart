@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
@@ -83,7 +84,11 @@ class PostPageByNew extends StatelessWidget {
                             return false;
                           },
                           child: postData.isEmpty
-                              ? const NoPostData()
+                              ? BackgroundWidget(
+                                  child: ListView(
+                                    children: const [NoPostData()],
+                                  ),
+                                )
                               : ListView.builder(
                                   itemCount: postData.length,
                                   itemBuilder: (context, index) {

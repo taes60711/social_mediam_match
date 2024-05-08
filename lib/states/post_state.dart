@@ -190,9 +190,9 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  Future<void> createPost(String userUid, String message, int type) async {
+  Future<void> createPost(String userUid, String title, String message, int type) async {
     try {
-      await _dbService.createPost(userUid, message, type);
+      await _dbService.createPost(userUid, title, message, type);
 
       List<PostModel> tempPostData = await _dbService.getPostsByType(type, isFirst: true);
       postData = [];
