@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/welcome_page.dart';
@@ -11,6 +12,8 @@ import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import '../../models/user_model.dart';
+import '../../states/services/dynamic_links.dart';
+import '../../states/services/notification_service.dart';
 
 class Initialpage extends StatelessWidget {
   const Initialpage({super.key});
@@ -45,9 +48,18 @@ class Initialpage extends StatelessWidget {
 
     void enterApp() {
       print("firstEnterApp");
+
       context.read<UserState>().isLoginCheck(friendState);
       Timer(Duration(seconds: delayTime), () {
         context.read<InitialState>().onChange();
+
+        if (Platform.isAndroid) {
+          //初始化 > dynamicLink 在上架前,先暫時只有安卓使用
+          DynamicLinks().initDynamicLink(context);
+          //初始化 > 通知系統 在上架前,先暫時只有安卓使用
+          NotificationService notificationService = NotificationService()..initNotification();
+          notificationService.notificationListen();
+        }
       });
     }
 

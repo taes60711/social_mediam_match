@@ -109,16 +109,17 @@ class Forum extends StatelessWidget {
                                           postState.boardOnChange(index);
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.all(8),
-                                          color: Colors.cyan,
+                                          padding: const EdgeInsets.all(8),
+                                          color: const Color.fromARGB(255, 236, 157, 120),
                                           child: Row(
                                             children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(right: 8.0),
-                                                child: Container(
-                                                  width: 30,
-                                                  height: 30,
-                                                  color: const Color.fromARGB(255, 116, 136, 153),
+                                              Container(
+                                                margin: const EdgeInsets.only(right: 8.0),
+                                                width: 35,
+                                                height: 35,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(3),
+                                                  color: Color.fromARGB(255, 213, 226, 236),
                                                 ),
                                               ),
                                               Text("${boradList[index]}"),

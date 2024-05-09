@@ -280,24 +280,44 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                   controller: _scrollController,
                   children: [
                     backButton,
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: ScreenSize().safeheight * 0.025),
+                      child: SizedBox(
+                        height: ScreenSize().safeheight * 0.15,
+                        child: FittedBox(
+                          child: Column(
+                            children: [
+                              UserIcon(iconSize: 120, image: base64Img),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     SizedBox(
-                      height: ScreenSize().safeheight,
+                      height: ScreenSize().safeheight * 0.05,
                       child: FittedBox(
                         child: Column(
                           children: [
-                            UserIcon(iconSize: 120, image: base64Img),
-                            const SizedBox(height: 10),
                             SizedBox(
                               width: 150,
                               child: CustomButton(
                                 title: ProfileString().imgPickerButtonText,
                                 titleColor: normalTextColor,
-                                backgroundColor: normalBgColor,
+                                backgroundColor: googleColor,
                                 onPress: () async {
                                   await userSettingState.imageChange();
                                 },
                               ),
                             ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: ScreenSize().safeheight * 0.65,
+                      child: FittedBox(
+                        child: Column(
+                          children: [
                             TitleInput(title: ProfileString().nameInputTitle, textController: nameInput),
                             TitleInput(title: ProfileString().jobInputTitle, textController: jobInput),
                             const SizedBox(height: 15),

@@ -137,15 +137,20 @@ class MyPosts extends StatelessWidget {
           body: SafeArea(
             child: Column(
               children: [
-                Text("我的文章"),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                    },
-                    icon: const Icon(Icons.arrow_back_ios),
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      width: ScreenSize().width * 0.31,
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                        },
+                        icon: const Icon(Icons.arrow_back_ios),
+                      ),
+                    ),
+                    SizedBox(width: ScreenSize().width * 0.31, child: const Center(child: Text("我的文章"))),
+                  ],
                 ),
                 Expanded(
                   child: NotificationListener<ScrollNotification>(

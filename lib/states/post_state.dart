@@ -190,9 +190,9 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  Future<void> createPost(String userUid, String message, int type) async {
+  Future<void> createPost(String userUid, String title, String message, int type) async {
     try {
-      await _dbService.createPost(userUid, message, type);
+      await _dbService.createPost(userUid, title, message, type);
 
       List<PostModel> tempPostData = await _dbService.getPostsByType(type, isFirst: true);
       postData = [];
@@ -318,12 +318,12 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  Future<void> openDrawer(String endDrawerType, GlobalKey<ScaffoldState> globalKey,
-      {LoginUser? otherUser, LoginUser? loginUserData, PostModel? choicedPostData}) async {
+  Future<void> openDrawer(String endDrawerType,
+      {GlobalKey<ScaffoldState>? globalKey, LoginUser? otherUser, LoginUser? loginUserData, PostModel? choicedPostData}) async {
     this.endDrawerType = endDrawerType;
     if (this.endDrawerType == "userDetail") {
       this.otherUser = otherUser;
-      globalKey.currentState!.openEndDrawer();
+      globalKey?.currentState!.openEndDrawer();
     } else {
       this.choicedPostData = choicedPostData;
       if (loginUserData!.uid != choicedPostData!.createdBy) {

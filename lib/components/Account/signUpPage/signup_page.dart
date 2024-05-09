@@ -193,7 +193,7 @@ class SignUpPage extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
-                height: ScreenSize().safeheight * 0.95,
+                height: ScreenSize().safeheight,
                 child: FittedBox(
                   alignment: Alignment.topLeft,
                   child: Column(

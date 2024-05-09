@@ -6,7 +6,8 @@ class SkillListView extends StatelessWidget {
   final String? title;
   final double? fontSize;
   final List<SkillInfo> skillList;
-  const SkillListView({super.key, this.title, this.fontSize, required this.skillList});
+  final Color? backgroundColor;
+  const SkillListView({super.key, this.title, this.fontSize, this.backgroundColor, required this.skillList});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class SkillListView extends StatelessWidget {
       5: Icons.filter_5,
     };
     Color textColor = normalTextColor;
-    Color backGroundColor = Color.fromARGB(255, 236, 157, 120);
+    Color backGroundColor = backgroundColor ?? Color.fromARGB(255, 236, 157, 120);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

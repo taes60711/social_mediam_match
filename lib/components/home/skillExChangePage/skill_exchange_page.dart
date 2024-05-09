@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/users_filter.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/user_detail.dart';
 import 'package:social_mediam_match/components/strings/skillExChangePage/skill_change_page_string.dart';
@@ -14,6 +15,134 @@ import '../../../states/skill_exchange_state.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/skill_list_view.dart';
 import '../../utilities/user_icon.dart';
+
+class SkillExchangeLoading extends StatelessWidget {
+  const SkillExchangeLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.topRight,
+          child: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.dehaze_rounded),
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Container(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Container(
+                            width: 65,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 60,
+                                height: 13,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Container(
+                                width: 30,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Container(
+                                width: ScreenSize().width,
+                                height: 26,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Container(
+                                width: 70,
+                                height: 12,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Container(
+                                width: 150,
+                                height: 13,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Container(
+                                width: 70,
+                                height: 12,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Container(
+                                width: 150,
+                                height: 12,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: 40,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 class SkillExChangePage extends StatelessWidget {
   final LoginUser userData;
@@ -34,26 +163,27 @@ class SkillExChangePage extends StatelessWidget {
 
     return StatefulWrapper(
       onInit: () {
-        skillExChangeState.getAllUserData(userUid: userData.uid, filterSkill: filterSkill, searchType: "First");
+        Future.delayed(Duration(milliseconds: 200)).then((value) async =>
+            skillExChangeState.getAllUserData(userUid: userData.uid, filterSkill: filterSkill, searchType: "First"));
       },
-      child: isFirstLoading
-          ? const Loading()
-          : Scaffold(
-              key: globalKey,
-              endDrawer: endDrawerType == "filter"
-                  ? UsersFilter(
-                      globalKey: globalKey,
-                      userData: userData,
-                    )
-                  : UserDetail(
-                      globalKey: globalKey,
-                      userData: userData,
-                      otherUser: otherUser,
-                      gotoFriendPage: gotoFriendPage,
-                    ),
-              body: BackgroundWidget(
-                isSafeArea: true,
-                child: Column(
+      child: Scaffold(
+        key: globalKey,
+        endDrawer: endDrawerType == "filter"
+            ? UsersFilter(
+                globalKey: globalKey,
+                userData: userData,
+              )
+            : UserDetail(
+                globalKey: globalKey,
+                userData: userData,
+                otherUser: otherUser,
+                gotoFriendPage: gotoFriendPage,
+              ),
+        body: BackgroundWidget(
+          isSafeArea: true,
+          child: isFirstLoading
+              ? const SkillExchangeLoading()
+              : Column(
                   children: [
                     Align(
                       alignment: Alignment.topRight,
@@ -193,8 +323,8 @@ class SkillExChangePage extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-            ),
+        ),
+      ),
     );
   }
 }

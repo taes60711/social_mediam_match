@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
+import 'package:social_mediam_match/components/utilities/title_input.dart';
+import '../../../models/rich_text_format.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
 
@@ -13,31 +15,44 @@ class EditorPage extends StatelessWidget {
     LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
     int type = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['type'];
     QuillEditorController controller = QuillEditorController();
+    TextEditingController titleController = TextEditingController();
     Widget userComponent = SafeArea(
       child: Column(
         children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back_ios),
+                ),
+                const Text("投稿"),
+                GestureDetector(
+                  onTap: () async {
+                    String content = await controller.getText();
+                    String fomattedContent = await RichTextFormat(htmlString: content).sendPostImgFormat();
+                    await postState.createPost(userData.uid, titleController.text, fomattedContent, type);
+                    Navigator.pop(context);
+                  },
+                  child: const Text("送出"),
+                ),
+              ],
             ),
           ),
-          Text("投稿"),
-          RichTextEditor(
-            content: "",
-            controller: controller,
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              String content = await controller.getText();
-              await postState.createPost(userData.uid, content, type);
-              Navigator.pop(context);
-            },
-            child: Text("投稿"),
-          ),
+          const SizedBox(height: 10),
+          TitleInput(title: '標題', textController: titleController),
+          Expanded(
+            child: SingleChildScrollView(
+              child: RichTextEditor(
+                content: "",
+                controller: controller,
+              ),
+            ),
+          )
         ],
       ),
     );
