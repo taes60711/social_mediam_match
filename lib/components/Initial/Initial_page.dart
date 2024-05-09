@@ -11,6 +11,7 @@ import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 import '../../models/user_model.dart';
+import '../../states/services/dynamic_links.dart';
 
 class Initialpage extends StatelessWidget {
   const Initialpage({super.key});
@@ -45,6 +46,7 @@ class Initialpage extends StatelessWidget {
 
     void enterApp() {
       print("firstEnterApp");
+      DynamicLinks().initDynamicLink(context);
       context.read<UserState>().isLoginCheck(friendState);
       Timer(Duration(seconds: delayTime), () {
         context.read<InitialState>().onChange();

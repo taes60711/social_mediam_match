@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
+import 'package:social_mediam_match/states/services/dynamic_links.dart';
 import 'package:social_mediam_match/states/services/notification_service.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
 import 'package:social_mediam_match/states/user_setting_state.dart';
@@ -52,8 +54,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => SkillExChangeState()),
       ],
       child: EasyLocalization(
-        supportedLocales: [Locale('zh', 'TW'), Locale('en', 'US'), Locale('ja', 'JP')],
-        fallbackLocale: Locale('en', 'US'),
+        supportedLocales: const [Locale('zh', 'TW'), Locale('en', 'US'), Locale('ja', 'JP')],
+        fallbackLocale: const Locale('en', 'US'),
         path: 'assets/langs',
         child: const MyApp(),
       ),
@@ -73,7 +75,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       scrollBehavior: ScrollConfiguration.of(context).copyWith(
         physics: CustomBouncingScrollPhysics(),
-        // physics: BouncingScrollPhysics()
       ),
       theme: ThemeData(
         fontFamily: 'GenJyu',

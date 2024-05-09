@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
+import 'package:social_mediam_match/states/services/dynamic_links.dart';
 import '../../../states/services/notification_service.dart';
 import '../../../states/user_state.dart';
 import '../../strings/userPage/user_page_string.dart';
@@ -38,6 +39,13 @@ class PrivacySetting extends StatelessWidget {
                           "c-K6UQ-LSlS44Ymc6H1cJh:APA91bH1SHXOOWIj3xW1KYWAOB4V5PTu9L0Yd0pqZ1qYtl99EhbmVsdY0ESgco7pwYYS0RLDCCXHHATGqmPXUPAHxAfeJngw7nuQ1ml92rx0ORueiZR8ofS8Yd1xDVmlJ6KGvkVyKfwJ");
                 },
                 child: Text("送通知(還沒完善)"),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  String createdLink = await DynamicLinks().createLink("refCode");
+                  print(createdLink);
+                },
+                child: Text("DynamicLink(Test)"),
               ),
               ElevatedButton(
                 onPressed: () async {
