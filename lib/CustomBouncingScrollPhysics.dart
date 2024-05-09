@@ -71,25 +71,14 @@ class CustomBouncingScrollPhysics extends ScrollPhysics {
   Simulation? createBallisticSimulation(ScrollMetrics position, double velocity) {
     final Tolerance tolerance = toleranceFor(position);
     if (velocity.abs() >= tolerance.velocity) {
-      if (position.pixels > position.maxScrollExtent) {
-        return BouncingScrollSimulation(
-          spring: spring,
-          position: position.pixels,
-          velocity: velocity,
-          leadingExtent: position.maxScrollExtent - 36,
-          trailingExtent: position.maxScrollExtent - 36,
-          tolerance: tolerance,
-        );
-      } else {
-        return BouncingScrollSimulation(
-          spring: spring,
-          position: position.pixels,
-          velocity: velocity,
-          leadingExtent: position.minScrollExtent,
-          trailingExtent: position.maxScrollExtent,
-          tolerance: tolerance,
-        );
-      }
+      return BouncingScrollSimulation(
+        spring: spring,
+        position: position.pixels,
+        velocity: velocity,
+        leadingExtent: position.minScrollExtent,
+        trailingExtent: position.maxScrollExtent - 36,
+        tolerance: tolerance,
+      );
     }
 
     return null;
