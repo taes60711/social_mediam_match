@@ -75,7 +75,6 @@ class CoursePage extends StatelessWidget {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text(courseData[index].title),
                                             Row(
                                               children: [
                                                 UserIcon(
@@ -85,10 +84,17 @@ class CoursePage extends StatelessWidget {
                                                 Text(courseData[index].courseCreateduserInfo.email)
                                               ],
                                             ),
+                                            Text(courseData[index].title),
+                                            Text("最後更新日期(Time): ${courseData[index].postTime}"),
+                                            Text("課程難度(int): ${courseData[index].needLevel}"),
+                                            Text("學習的技能(List): ${courseData[index].courseLearningSkills}"),
+                                            Text("Tag技能(List): ${courseData[index].courseTagsSkillList}"),
+                                            Text("學習前需要(String): ${courseData[index].beforeNeed}"),
+                                            Text("公開有否(Bool): ${courseData[index].isPublic}"),
                                             Padding(
                                               padding: const EdgeInsets.all(8.0),
                                               child: Text(
-                                                courseData[index].content,
+                                                "課程大綱(String): ${courseData[index].content}",
                                                 maxLines: 3,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
@@ -114,7 +120,6 @@ class CoursePage extends StatelessWidget {
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text(courseData[index].title),
                                                 Row(
                                                   children: [
                                                     UserIcon(
@@ -124,10 +129,17 @@ class CoursePage extends StatelessWidget {
                                                     Text(courseData[index].courseCreateduserInfo.email)
                                                   ],
                                                 ),
+                                                Text(courseData[index].title),
+                                                Text("最後更新日期(Time): ${courseData[index].postTime}"),
+                                                Text("課程難度(int): ${courseData[index].needLevel}"),
+                                                Text("學習的技能(List): ${courseData[index].courseLearningSkills}"),
+                                                Text("Tag技能(List): ${courseData[index].courseTagsSkillList}"),
+                                                Text("學習前需要(String): ${courseData[index].beforeNeed}"),
+                                                Text("公開有否(Bool): ${courseData[index].isPublic}"),
                                                 Padding(
                                                   padding: const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                    courseData[index].content,
+                                                    "課程大綱(String): ${courseData[index].content}",
                                                     maxLines: 3,
                                                     overflow: TextOverflow.ellipsis,
                                                   ),
