@@ -351,16 +351,18 @@ class PostBody extends StatelessWidget {
               onTap: () {
                 inspect(postData.postUserInfo);
                 if (userData.uid != postData.postUserInfo.uid) {
-                  postState.openDrawer("userDetail", globalKey, otherUser: postData.postUserInfo);
+                  postState.openDrawer("userDetail", globalKey: globalKey, otherUser: postData.postUserInfo);
                 }
               },
               child: postedUserInfo),
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               opneCommentPage(
                 choicedPostData: postData,
                 changeChoicedPostGoodCount: changeChoicedPostGoodCount,
               );
+
+              await postState.openDrawer("movetoPost", loginUserData: userData, choicedPostData: postData);
             },
             child: Container(
               color: Colors.transparent,

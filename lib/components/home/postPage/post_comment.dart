@@ -140,8 +140,8 @@ class PostComment extends StatelessWidget {
                                       onTap: () {
                                         inspect(choicedPostData.postUserInfo);
                                         if (userData.uid != choicedPostData.postUserInfo.uid) {
-                                          postState.openDrawer("userDetail", globalCommentKey,
-                                              otherUser: choicedPostData.postUserInfo);
+                                          postState.openDrawer("userDetail",
+                                              globalKey: globalCommentKey, otherUser: choicedPostData.postUserInfo);
                                         }
                                       },
                                       child: Row(
@@ -226,7 +226,8 @@ class PostComment extends StatelessWidget {
                                                   onTap: () {
                                                     inspect(postCommentData[index].commentUserInfo);
                                                     if (userData.uid != postCommentData[index].commentUserInfo.uid) {
-                                                      postState.openDrawer("userDetail", globalCommentKey,
+                                                      postState.openDrawer("userDetail",
+                                                          globalKey: globalCommentKey,
                                                           otherUser: postCommentData[index].commentUserInfo);
                                                     }
                                                   },

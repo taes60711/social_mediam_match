@@ -318,12 +318,12 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  Future<void> openDrawer(String endDrawerType, GlobalKey<ScaffoldState> globalKey,
-      {LoginUser? otherUser, LoginUser? loginUserData, PostModel? choicedPostData}) async {
+  Future<void> openDrawer(String endDrawerType,
+      {GlobalKey<ScaffoldState>? globalKey, LoginUser? otherUser, LoginUser? loginUserData, PostModel? choicedPostData}) async {
     this.endDrawerType = endDrawerType;
     if (this.endDrawerType == "userDetail") {
       this.otherUser = otherUser;
-      globalKey.currentState!.openEndDrawer();
+      globalKey?.currentState!.openEndDrawer();
     } else {
       this.choicedPostData = choicedPostData;
       if (loginUserData!.uid != choicedPostData!.createdBy) {
