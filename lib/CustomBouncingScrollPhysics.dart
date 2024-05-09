@@ -73,7 +73,7 @@ class CustomBouncingScrollPhysics extends ScrollPhysics {
     if (velocity.abs() >= tolerance.velocity) {
       if (position.pixels > position.maxScrollExtent) {
         return BouncingScrollSimulation(
-          spring: spring, // 可调整弹性的力度
+          spring: spring,
           position: position.pixels,
           velocity: velocity,
           leadingExtent: position.maxScrollExtent - 36,
