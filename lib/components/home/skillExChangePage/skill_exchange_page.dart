@@ -199,6 +199,7 @@ class SkillExChangePage extends StatelessWidget {
                       child: NotificationListener<ScrollNotification>(
                         onNotification: (ScrollNotification scrollNotification) {
                           if (scrollNotification is ScrollUpdateNotification) {
+                            print(scrollNotification.depth);
                             final scrollPosition = scrollNotification.metrics.pixels;
                             final max = scrollNotification.metrics.maxScrollExtent;
                             if (!isAddDataLoading && !isReLoading) {

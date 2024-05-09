@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 import 'package:social_mediam_match/components/account/login_page.dart';
 import 'package:social_mediam_match/components/account/signUpPage/signup_page.dart';
 import 'package:social_mediam_match/components/Initial/initial_page.dart';
@@ -71,7 +72,8 @@ class MyApp extends StatelessWidget {
       locale: context.locale,
       debugShowCheckedModeBanner: false,
       scrollBehavior: ScrollConfiguration.of(context).copyWith(
-        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        physics: CustomBouncingScrollPhysics(),
+        // physics: BouncingScrollPhysics()
       ),
       theme: ThemeData(
         fontFamily: 'GenJyu',

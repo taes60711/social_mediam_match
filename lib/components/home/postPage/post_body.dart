@@ -7,7 +7,6 @@ import 'package:shimmer/shimmer.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
-import '../../utilities/background_widget.dart';
 import '../../utilities/custom_end_drawer.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
