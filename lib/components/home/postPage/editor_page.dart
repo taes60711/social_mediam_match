@@ -19,31 +19,40 @@ class EditorPage extends StatelessWidget {
     Widget userComponent = SafeArea(
       child: Column(
         children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back_ios),
+                ),
+                const Text("投稿"),
+                GestureDetector(
+                  onTap: () async {
+                    String content = await controller.getText();
+                    String fomattedContent = await RichTextFormat(htmlString: content).sendPostImgFormat();
+                    await postState.createPost(userData.uid, titleController.text, fomattedContent, type);
+                    Navigator.pop(context);
+                  },
+                  child: const Text("送出"),
+                ),
+              ],
             ),
           ),
-          const Text("投稿"),
           const SizedBox(height: 10),
           TitleInput(title: '標題', textController: titleController),
-          RichTextEditor(
-            content: "",
-            controller: controller,
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              String content = await controller.getText();
-              String fomattedContent = await RichTextFormat(htmlString: content).sendPostImgFormat();
-              await postState.createPost(userData.uid, titleController.text, fomattedContent, type);
-              Navigator.pop(context);
-            },
-            child: const Text("投稿"),
-          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: RichTextEditor(
+                content: "",
+                controller: controller,
+              ),
+            ),
+          )
         ],
       ),
     );

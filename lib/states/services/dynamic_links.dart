@@ -18,11 +18,24 @@ class DynamicLinks {
   }
 
   void initDynamicLink(BuildContext context) async {
+    print("initDynamicLink 初始化");
     final instanceLink = await FirebaseDynamicLinks.instance.getInitialLink();
+    print("Initial DynamicLinks");
+    FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
+
+    dynamicLinks.onLink.listen((dynamicLinkData) {
+      final Uri uri = dynamicLinkData.link;
+      final queryParams = uri.queryParameters;
+      if (queryParams.isNotEmpty) {
+        print("Incoming Link :" + uri.toString());
+      } else {
+        print("No Current Links");
+      }
+    });
 
     if (instanceLink != null) {
       final Uri refLink = instanceLink.link;
-      void t() {
+      void LinkView() {
         showDialog<void>(
           context: context,
           builder: (BuildContext context) {
@@ -39,9 +52,7 @@ class DynamicLinks {
         );
       }
 
-      t();
-
-      print("${refLink.queryParameters['ref']}");
+      LinkView();
     }
   }
 }

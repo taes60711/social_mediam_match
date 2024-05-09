@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -16,12 +13,9 @@ import 'package:social_mediam_match/components/home/userPage/profile.dart';
 import 'package:social_mediam_match/components/home/userPage/privacy_setting.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
-
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
-import 'package:social_mediam_match/states/services/dynamic_links.dart';
-import 'package:social_mediam_match/states/services/notification_service.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
 import 'package:social_mediam_match/states/user_setting_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
@@ -30,12 +24,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  if (Platform.isAndroid) {
-    //初始化 > 通知系統在上架前,先暫時只給安卓使用
-    NotificationService notificationService = NotificationService()..initNotification();
-    notificationService.notificationListen();
-  }
 
   await SystemChrome.setPreferredOrientations(
     [
@@ -74,7 +62,7 @@ class MyApp extends StatelessWidget {
       locale: context.locale,
       debugShowCheckedModeBanner: false,
       scrollBehavior: ScrollConfiguration.of(context).copyWith(
-        physics: CustomBouncingScrollPhysics(),
+        physics: const CustomBouncingScrollPhysics(),
       ),
       theme: ThemeData(
         fontFamily: 'GenJyu',
