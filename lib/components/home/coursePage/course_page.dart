@@ -1,10 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_detail.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:social_mediam_match/components/utilities/skill_list_view.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/states/course_state.dart';
@@ -40,6 +44,13 @@ class CoursePage extends StatelessWidget {
               ? const Loading()
               : Column(
                   children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.dehaze_rounded),
+                      ),
+                    ),
                     isReLoading ? const Loading() : Container(),
                     Expanded(
                       child: NotificationListener<ScrollNotification>(
@@ -67,95 +78,165 @@ class CoursePage extends StatelessWidget {
                         child: ListView.builder(
                             itemCount: courseData.length,
                             itemBuilder: (context, index) {
-                              return index != courseData.length - 1
-                                  ? Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        color: courseData[index].type == 1 ? Colors.indigoAccent : Colors.lime,
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                UserIcon(
-                                                  iconSize: 60,
-                                                  image: courseData[index].courseCreateduserInfo.image,
-                                                ),
-                                                Text(courseData[index].courseCreateduserInfo.email)
-                                              ],
-                                            ),
-                                            Text(courseData[index].title),
-                                            Text("最後更新日期(Time): ${courseData[index].postTime}"),
-                                            Text("課程難度(int): ${courseData[index].needLevel}"),
-                                            Text("學習的技能(List): ${courseData[index].courseLearningSkills}"),
-                                            Text("Tag技能(List): ${courseData[index].courseTagsSkillList}"),
-                                            Text("學習前需要(String): ${courseData[index].beforeNeed}"),
-                                            Text("公開有否(Bool): ${courseData[index].isPublic}"),
-                                            Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                "課程大綱(String): ${courseData[index].content}",
-                                                maxLines: 3,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            ElevatedButton(
-                                                onPressed: () {
-                                                  inspect(courseData[index]);
-                                                  courseState.choicedPage(courseData[index]);
-                                                  globalKey.currentState!.openEndDrawer();
-                                                },
-                                                child: Text("觀看詳細")),
-                                            Text(courseData[index].postTime),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  : Column(
+                              Widget mainBody = Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    inspect(courseData[index]);
+                                    courseState.choicedPage(courseData[index]);
+                                    globalKey.currentState!.openEndDrawer();
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(0),
+                                    color: Colors.transparent,
+                                    width: ScreenSize().width,
+                                    height: 265,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                            color: courseData[index].type == 1 ? Colors.indigoAccent : Colors.lime,
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(5),
+                                                decoration:
+                                                    BoxDecoration(color: googleColor, borderRadius: BorderRadius.circular(3)),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    UserIcon(
-                                                      iconSize: 60,
-                                                      image: courseData[index].courseCreateduserInfo.image,
+                                                    Text(
+                                                      courseData[index].title,
+                                                      style: const TextStyle(fontSize: 16),
+                                                      maxLines: 2,
+                                                      overflow: TextOverflow.ellipsis,
                                                     ),
-                                                    Text(courseData[index].courseCreateduserInfo.email)
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: SkillListView(
+                                                            skillList: courseData[index].courseLearningSkills,
+                                                            fontSize: 10,
+                                                            backgroundColor: normalBgColor2.withAlpha(150),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "難度: ${courseData[index].needLevel}",
+                                                          style: TextStyle(fontSize: 12, color: normalTextColor),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ],
                                                 ),
-                                                Text(courseData[index].title),
-                                                Text("最後更新日期(Time): ${courseData[index].postTime}"),
-                                                Text("課程難度(int): ${courseData[index].needLevel}"),
-                                                Text("學習的技能(List): ${courseData[index].courseLearningSkills}"),
-                                                Text("Tag技能(List): ${courseData[index].courseTagsSkillList}"),
-                                                Text("學習前需要(String): ${courseData[index].beforeNeed}"),
-                                                Text("公開有否(Bool): ${courseData[index].isPublic}"),
-                                                Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    "課程大綱(String): ${courseData[index].content}",
-                                                    maxLines: 3,
-                                                    overflow: TextOverflow.ellipsis,
-                                                  ),
+                                              ),
+                                              Container(
+                                                margin: EdgeInsets.symmetric(vertical: 5),
+                                                height: 0.3,
+                                                width: ScreenSize().width,
+                                                color: hintTextColor,
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "課程大綱: ",
+                                                      style: TextStyle(fontSize: 14),
+                                                    ),
+                                                    Text(
+                                                      "${courseData[index].content}",
+                                                      style: TextStyle(fontSize: 13),
+                                                      maxLines: 3,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                    Text(
+                                                      "學習前需要: ",
+                                                      style: TextStyle(fontSize: 14),
+                                                    ),
+                                                    Text(
+                                                      "${courseData[index].beforeNeed}",
+                                                      style: TextStyle(color: hintTextColor, fontSize: 12),
+                                                      maxLines: 2,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                  ],
                                                 ),
-                                                ElevatedButton(
-                                                    onPressed: () {
-                                                      inspect(courseData[index]);
-                                                      courseState.choicedPage(courseData[index]);
-                                                      globalKey.currentState!.openEndDrawer();
-                                                    },
-                                                    child: Text("觀看詳細")),
-                                                Text(courseData[index].postTime),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ),
+                                        Container(
+                                          margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                                          height: 0.3,
+                                          width: ScreenSize().width,
+                                          color: hintTextColor,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                    children: [
+                                                      Text(
+                                                        "作成者:",
+                                                        style: TextStyle(fontSize: 12),
+                                                      ),
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                        child: UserIcon(
+                                                          iconSize: 25,
+                                                          image: courseData[index].courseCreateduserInfo.image,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "${courseData[index].courseCreateduserInfo.name != "" ? courseData[index].courseCreateduserInfo.name ?? "" : courseData[index].courseCreateduserInfo.email}",
+                                                        style: TextStyle(fontSize: 12),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Text(
+                                                    "最終更新日:${courseData[index].postTime}",
+                                                    style: TextStyle(fontSize: 11, color: hintTextColor),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(right: 5),
+                                              child: GestureDetector(
+                                                child: Icon(
+                                                  FontAwesomeIcons.ellipsis,
+                                                  color: hintTextColor,
+                                                  size: 14,
+                                                ),
+                                                onTap: () {
+                                                  print("Icon");
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.symmetric(vertical: 5),
+                                          height: 0.3,
+                                          width: ScreenSize().width,
+                                          color: hintTextColor,
+                                        ),
+                                        // Text("公開有否: ${courseData[index].isPublic}"),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                              return index != courseData.length - 1
+                                  ? mainBody
+                                  : Column(
+                                      children: [
+                                        mainBody,
                                         isAddDataLoading ? Loading() : Container(),
                                       ],
                                     );
