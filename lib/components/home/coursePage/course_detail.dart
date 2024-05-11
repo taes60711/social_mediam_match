@@ -129,7 +129,7 @@ class CourseDetail extends StatelessWidget {
                 return ExpansionTile(
                   title: Text("章節 ${e.chapter}"),
                   children: [
-                    Container(
+                    SizedBox(
                       width: ScreenSize().width,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,70 +137,73 @@ class CourseDetail extends StatelessWidget {
                           Map<String, dynamic> resultData = jsonDecode(e);
                           String chapterText = "${resultData['text']}";
                           String chapterUrl = "${resultData['url']}";
-                          return Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 5),
-                                child: Icon(
-                                  Icons.ondemand_video,
-                                  color: normalBgColor2,
-                                ),
-                              ),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    String vidoeHtml = "<iframe src='${chapterUrl}'></iframe>";
-
-                                    showGeneralDialog(
-                                        barrierColor: Colors.black.withOpacity(0.7),
-                                        transitionBuilder: (context, a1, a2, widget) {
-                                          return Transform.scale(
-                                            scale: a1.value,
-                                            child: Opacity(
-                                              opacity: a1.value,
-                                              child: SizedBox(
-                                                height: ScreenSize().height,
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                      child: Container(
-                                                        margin: const EdgeInsets.only(right: 20, bottom: 20),
-                                                        height: 30,
-                                                        width: 30,
-                                                        child: Icon(
-                                                          Icons.close,
-                                                          color: normalTextColor,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    RichTextView(content: vidoeHtml)
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        transitionDuration: Duration(milliseconds: 200),
-                                        barrierDismissible: true,
-                                        barrierLabel: '',
-                                        context: context,
-                                        pageBuilder: (context, animation1, animation2) {
-                                          return Container();
-                                        });
-                                  },
-                                  child: Text(
-                                    chapterText,
-                                    style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
-                                    overflow: TextOverflow.ellipsis,
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: Icon(
+                                    Icons.ondemand_video,
+                                    color: normalBgColor2,
                                   ),
                                 ),
-                              ),
-                            ],
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      String vidoeHtml = "<iframe src='${chapterUrl}'></iframe>";
+
+                                      showGeneralDialog(
+                                          barrierColor: Colors.black.withOpacity(0.7),
+                                          transitionBuilder: (context, a1, a2, widget) {
+                                            return Transform.scale(
+                                              scale: a1.value,
+                                              child: Opacity(
+                                                opacity: a1.value,
+                                                child: SizedBox(
+                                                  height: ScreenSize().height,
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                        child: Container(
+                                                          margin: const EdgeInsets.only(right: 20, bottom: 20),
+                                                          height: 30,
+                                                          width: 30,
+                                                          child: Icon(
+                                                            Icons.close,
+                                                            color: normalTextColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      RichTextView(content: vidoeHtml)
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          transitionDuration: Duration(milliseconds: 200),
+                                          barrierDismissible: true,
+                                          barrierLabel: '',
+                                          context: context,
+                                          pageBuilder: (context, animation1, animation2) {
+                                            return Container();
+                                          });
+                                    },
+                                    child: Text(
+                                      chapterText,
+                                      style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
                         }).toList(),
                       ),

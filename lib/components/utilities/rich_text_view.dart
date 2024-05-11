@@ -23,7 +23,7 @@ PhotoViewController photoViewController = PhotoViewController();
 class _RichTextViewState extends State<RichTextView> with SingleTickerProviderStateMixin {
   Future<void> imageView(String imgUrl) {
     double value = 1;
-    double zoomSpeed = 0.05 * ScreenSize().height / ScreenSize().width;
+    double zoomSpeed = 0.01 * ScreenSize().height / ScreenSize().width;
     Timer timer = Timer(Duration.zero, () {});
 
     return showDialog<void>(
