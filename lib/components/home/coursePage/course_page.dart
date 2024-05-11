@@ -112,6 +112,7 @@ class CoursePage extends StatelessWidget {
                                                       overflow: TextOverflow.ellipsis,
                                                     ),
                                                     Row(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Expanded(
                                                           child: SkillListView(
@@ -151,7 +152,7 @@ class CoursePage extends StatelessWidget {
                                                       overflow: TextOverflow.ellipsis,
                                                     ),
                                                     Text(
-                                                      "學習前需要: ",
+                                                      "課程前需要: ",
                                                       style: TextStyle(fontSize: 14),
                                                     ),
                                                     Text(

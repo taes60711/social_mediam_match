@@ -76,7 +76,7 @@ class CustomBouncingScrollPhysics extends ScrollPhysics {
         position: position.pixels,
         velocity: velocity,
         leadingExtent: position.minScrollExtent,
-        trailingExtent: position.maxScrollExtent - 36,
+        trailingExtent: position.maxScrollExtent - 36, //36為Loading的size
         tolerance: tolerance,
       );
     }

@@ -2,11 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 import '../../../models/course_model.dart';
+import '../../utilities/skill_list_view.dart';
+import '../../utilities/user_icon.dart';
 
 class CourseDetail extends StatelessWidget {
   final CourseModel? courseData;
@@ -19,19 +22,108 @@ class CourseDetail extends StatelessWidget {
     if (courseData != null) {
       CourseModel realCourseData = courseData!;
 
-      component = Container(
+      Widget breakLine = Container(
+        margin: EdgeInsets.all(5),
         width: ScreenSize().width,
-        color: Colors.white,
+        height: 0.3,
+        color: hintTextColor,
+      );
+
+      component = Padding(
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("課程標題:${realCourseData.title}"),
-            Text("課程創建者${realCourseData.courseCreateduserInfo.email}"),
-            Text("課程內容:${realCourseData.content}"),
-            Text("課程難度:${realCourseData.needLevel}"),
-            Text("課程類別:${realCourseData.type}"),
-            Text("課程前需求:${realCourseData.beforeNeed}"),
-            Text("最後更新日: ${realCourseData.postTime}"),
+            Text(
+              realCourseData.title,
+              style: TextStyle(fontSize: 19),
+            ),
+            Text(
+              "課程類別: ${realCourseData.type}",
+              style: TextStyle(fontSize: 12, color: hintTextColor),
+            ),
+            breakLine,
+            Text(
+              "課程前需求:",
+              style: TextStyle(fontSize: 14),
+            ),
+            Container(
+              width: ScreenSize().width,
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+              decoration: BoxDecoration(
+                color: hintTextColor.withAlpha(50),
+                borderRadius: BorderRadius.circular(3),
+              ),
+              child: Text(realCourseData.beforeNeed),
+            ),
+            breakLine,
+            Text(
+              "課程內容:",
+              style: TextStyle(fontSize: 14),
+            ),
+            Container(
+              width: ScreenSize().width,
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+              decoration: BoxDecoration(
+                color: hintTextColor.withAlpha(50),
+                borderRadius: BorderRadius.circular(3),
+              ),
+              child: Text(realCourseData.content),
+            ),
+            SizedBox(height: 5),
+            Text(
+              "學習技能:",
+              style: TextStyle(fontSize: 14),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: SkillListView(
+                    skillList: realCourseData.courseLearningSkills,
+                    fontSize: 12,
+                  ),
+                ),
+                Text(
+                  "難度: ${realCourseData.needLevel}",
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+            breakLine,
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+              decoration: BoxDecoration(color: googleColor.withAlpha(150), borderRadius: BorderRadius.circular(3)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        "作成者 : ",
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: UserIcon(
+                          iconSize: 35,
+                          image: realCourseData.courseCreateduserInfo.image,
+                        ),
+                      ),
+                      Text(
+                        "${realCourseData.courseCreateduserInfo.name != "" ? realCourseData.courseCreateduserInfo.name ?? "" : realCourseData.courseCreateduserInfo.email}",
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "最終更新日 : ${realCourseData.postTime}",
+                    style: TextStyle(color: normalBgColor2, fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
             Column(
               children: realCourseData.chapterList.map((e) {
                 return ExpansionTile(
@@ -116,11 +208,16 @@ class CourseDetail extends StatelessWidget {
                   ],
                 );
               }).toList(),
-            )
+            ),
           ],
         ),
       );
     }
-    return component;
+    return BackgroundWidget(
+      child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
+        child: component,
+      ),
+    );
   }
 }
