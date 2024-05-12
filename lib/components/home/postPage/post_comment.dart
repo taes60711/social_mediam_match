@@ -69,15 +69,11 @@ class PostComment extends StatelessWidget {
         List<TextEditingController> postCommentMessageController = context.watch<PostState>().postCommentMessageController;
         TextEditingController postCommentInput = context.select((PostState value) => value.postCommentInput);
         bool isPostCommentLoading = context.select((PostState value) => value.isPostCommentLoading);
-        bool isPostCommentDataAddLoding = context.select((PostState value) => value.isPostCommentDataAddLoding);
-        bool isPostCommentReLoading = context.select((PostState value) => value.isPostCommentReLoading);
+
         bool isGood = context.select((PostState value) => value.isGood);
         GlobalKey<ScaffoldState> globalCommentKey = context.select((PostState value) => value.globalCommentKey);
         LoginUser? otherUser = context.select((PostState value) => value.otherUser);
 
-        double startScrollPosition = context.select((PostState value) => value.startScrollPosition);
-        ScrollController scrollController = ScrollController();
-        bool floatButtonIsVisiable = context.select((PostState value) => value.floatButtonIsVisiable);
         print("postCOmment");
 
         return Scaffold(
@@ -88,28 +84,11 @@ class PostComment extends StatelessWidget {
             otherUser: otherUser,
             gotoFriendPage: gotoFriendPage,
           ),
-          floatingActionButton: Visibility(
-            visible: floatButtonIsVisiable,
-            child: FloatingActionButton(
-              mini: true,
-              backgroundColor: normalBgColor2,
-              onPressed: () {
-                scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
-              },
-              child: const Icon(
-                FontAwesomeIcons.angleUp,
-                size: 16,
-              ),
-            ),
-          ),
           body: SafeArea(
             child: StatefulWrapper(
               onInit: () async {
                 Future.delayed(Duration(milliseconds: 300)).then((value) async =>
                     await postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "First"));
-              },
-              onDispose: () {
-                PostState().dispose();
               },
               child: Column(
                 children: [
@@ -122,10 +101,10 @@ class PostComment extends StatelessWidget {
                       icon: const Icon(Icons.arrow_back_ios_sharp),
                     ),
                   ),
-                  SizedBox(
-                    height: ScreenSize().height * 0.8,
+                  Expanded(
+                    // height: ScreenSize().height * 0.76,
                     child: SingleChildScrollView(
-                      physics: ClampingScrollPhysics(),
+                      physics: const ClampingScrollPhysics(),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
@@ -207,7 +186,12 @@ class PostComment extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(
+                  Container(
+                    height: 50,
+                    width: ScreenSize().width,
+                    decoration: BoxDecoration(color: normalBgColor, borderRadius: BorderRadius.circular(5)),
+                    padding: EdgeInsets.only(left: 10),
+                    margin: EdgeInsets.symmetric(horizontal: 10),
                     child: GestureDetector(
                       onTap: () {
                         showModalBottomSheet(
@@ -215,316 +199,192 @@ class PostComment extends StatelessWidget {
                             isScrollControlled: true,
                             backgroundColor: Colors.transparent,
                             builder: (builder) {
-                              return Container(
-                                height: ScreenSize().height * 0.7,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                  color: Colors.white,
-                                ),
-                                child: Column(
-                                  children: [
-                                    isPostCommentReLoading ? Loading() : Container(),
-                                    Container(
-                                      height: 50,
+                              return ChangeNotifierProvider(
+                                create: (_) => PostState(),
+                                child: Builder(builder: (context) {
+                                  bool isPostCommentReLoading = context.select((PostState value) => value.isPostCommentReLoading);
+                                  bool isPostCommentDataAddLoding =
+                                      context.select((PostState value) => value.isPostCommentDataAddLoding);
+                                  double startScrollPosition = context.select((PostState value) => value.startScrollPosition);
+                                  ScrollController scrollController = ScrollController();
+                                  PostState postState = context.read<PostState>();
+                                  return Container(
+                                    height: ScreenSize().height * 0.75,
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      color: Colors.white,
                                     ),
-                                    Expanded(
-                                      child: NotificationListener<ScrollNotification>(
-                                        onNotification: (ScrollNotification scrollNotification) {
-                                          if (scrollNotification is ScrollStartNotification) {
-                                            postState.getStartScrollPos(scrollNotification.metrics.pixels);
-                                          } else if (scrollNotification is ScrollUpdateNotification) {
-                                            final scrollPosition = scrollNotification.metrics.pixels;
-                                            final max = scrollNotification.metrics.maxScrollExtent;
-                                            if (!isPostCommentDataAddLoding && !isPostCommentReLoading) {
-                                              if (scrollPosition > max && !isPostCommentDataAddLoding) {
-                                                postState.postAddData();
-                                              } else if (startScrollPosition <= 0) {
-                                                if (scrollPosition < 0 && !isPostCommentReLoading) {
-                                                  postState.postReLoadingPage();
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.topRight,
+                                          margin: const EdgeInsets.only(right: 20, bottom: 5, top: 5),
+                                          width: ScreenSize().width,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Icon(
+                                              Icons.close,
+                                              size: 35,
+                                            ),
+                                          ),
+                                        ),
+                                        isPostCommentReLoading ? Loading() : Container(),
+                                        Expanded(
+                                          child: NotificationListener<ScrollNotification>(
+                                            onNotification: (ScrollNotification scrollNotification) {
+                                              if (scrollNotification is ScrollUpdateNotification) {
+                                                final scrollPosition = scrollNotification.metrics.pixels;
+
+                                                final max = scrollNotification.metrics.maxScrollExtent;
+                                                if (!isPostCommentDataAddLoding && !isPostCommentReLoading) {
+                                                  if (scrollPosition > max && !isPostCommentDataAddLoding) {
+                                                    postState.postAddData();
+                                                  } else if (startScrollPosition <= 0) {
+                                                    if (scrollPosition < 0 && !isPostCommentReLoading) {
+                                                      postState.postReLoadingPage();
+                                                    }
+                                                  }
+                                                  postState.floatButtonVisiableChange(scrollPosition);
                                                 }
                                               }
-                                              postState.floatButtonVisiableChange(scrollPosition);
-                                            }
-                                          }
-                                          if (scrollNotification is ScrollEndNotification) {
-                                            if (isPostCommentDataAddLoding) {
-                                              postState.getPostCommentData(choicedPostData.id,
-                                                  loginUserUID: userData.uid, searchType: "AddData");
-                                            } else if (isPostCommentReLoading) {
-                                              postState.getPostCommentData(choicedPostData.id,
-                                                  loginUserUID: userData.uid, searchType: "Reload");
-                                            }
-                                          }
-                                          return false;
-                                        },
-                                        child: Column(
-                                          children: [
-                                            Expanded(
-                                              child: SingleChildScrollView(
-                                                controller: scrollController,
-                                                child: Column(
-                                                  children: [
-                                                    isPostCommentLoading
-                                                        ? Loading()
-                                                        : Column(
-                                                            children: postCommentData.map((e) {
-                                                              return Builder(builder: (context) {
-                                                                int index = postCommentData.indexWhere((element) => element == e);
-                                                                postCommentMessageController[index].text =
-                                                                    postCommentData[index].message;
-                                                                return Padding(
-                                                                  padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8.0),
-                                                                  child: Container(
-                                                                    padding: EdgeInsets.all(20),
-                                                                    color: Colors.grey,
-                                                                    child: Column(
-                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                      children: [
-                                                                        GestureDetector(
-                                                                          onTap: () {
-                                                                            inspect(postCommentData[index].commentUserInfo);
-                                                                            if (userData.uid !=
-                                                                                postCommentData[index].commentUserInfo.uid) {
-                                                                              postState.openDrawer("userDetail",
-                                                                                  globalKey: globalCommentKey,
-                                                                                  otherUser:
-                                                                                      postCommentData[index].commentUserInfo);
-                                                                            }
-                                                                          },
-                                                                          child: Row(
-                                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                                            children: [
-                                                                              UserIcon(
-                                                                                iconSize: 40,
-                                                                                image:
-                                                                                    postCommentData[index].commentUserInfo.image,
-                                                                              ),
-                                                                              Expanded(
-                                                                                child: Column(
-                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                  children: [
-                                                                                    Text(postCommentData[index]
-                                                                                        .commentUserInfo
-                                                                                        .email),
-                                                                                    postCommentData[index].isEditor
-                                                                                        ? TextFormField(
-                                                                                            controller:
-                                                                                                postCommentMessageController[
-                                                                                                    index],
-                                                                                            enabled:
-                                                                                                postCommentData[index].isEditor,
-                                                                                            style: const TextStyle(
-                                                                                                color: Colors.black,
-                                                                                                fontSize: 14),
-                                                                                            decoration: const InputDecoration(
-                                                                                              border: OutlineInputBorder(),
-                                                                                              isCollapsed: true,
-                                                                                              contentPadding:
-                                                                                                  EdgeInsets.only(left: 2),
-                                                                                              disabledBorder: InputBorder.none,
-                                                                                            ),
-                                                                                          )
-                                                                                        : SelectableText(
-                                                                                            postCommentMessageController[index]
-                                                                                                .text)
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              Align(
-                                                                                alignment: Alignment.topRight,
-                                                                                child: IconButton(
-                                                                                  onPressed: () {
-                                                                                    deleteCheck(
-                                                                                        postCommentData[index].uid, postState);
-                                                                                  },
-                                                                                  icon: Icon(Icons.close),
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                        Row(
+                                              if (scrollNotification is ScrollEndNotification) {
+                                                if (isPostCommentDataAddLoding) {
+                                                  postState.getPostCommentData(choicedPostData.id,
+                                                      loginUserUID: userData.uid, searchType: "AddData");
+                                                } else if (isPostCommentReLoading) {
+                                                  postState.getPostCommentData(choicedPostData.id,
+                                                      loginUserUID: userData.uid, searchType: "Reload");
+                                                }
+                                              }
+                                              return false;
+                                            },
+                                            child: Column(
+                                              children: [
+                                                Expanded(
+                                                  child: SingleChildScrollView(
+                                                    controller: scrollController,
+                                                    child: Column(
+                                                      children: [
+                                                        isPostCommentLoading
+                                                            ? Loading()
+                                                            : Column(
+                                                                children: postCommentData.map((e) {
+                                                                  return Builder(builder: (context) {
+                                                                    int index =
+                                                                        postCommentData.indexWhere((element) => element == e);
+                                                                    postCommentMessageController[index].text =
+                                                                        postCommentData[index].message;
+                                                                    return Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.only(left: 8, right: 8, bottom: 8.0),
+                                                                      child: Container(
+                                                                        padding: EdgeInsets.all(20),
+                                                                        color: Colors.grey,
+                                                                        child: Column(
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                                           children: [
-                                                                            ElevatedButton(
-                                                                                onPressed: () {
-                                                                                  postState.editPostComment(index);
-                                                                                },
-                                                                                child: Text("編輯留言")),
-                                                                            ElevatedButton(
-                                                                                onPressed: () {
-                                                                                  postState.changePostComment(
-                                                                                      postCommentData[index].uid,
-                                                                                      index,
-                                                                                      postCommentMessageController[index].text);
-                                                                                },
-                                                                                child: Text("更新留言")),
+                                                                            Row(
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                UserIcon(
+                                                                                  iconSize: 40,
+                                                                                  image: postCommentData[index]
+                                                                                      .commentUserInfo
+                                                                                      .image,
+                                                                                ),
+                                                                                Expanded(
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text(postCommentData[index]
+                                                                                          .commentUserInfo
+                                                                                          .email),
+                                                                                      postCommentData[index].isEditor
+                                                                                          ? TextFormField(
+                                                                                              controller:
+                                                                                                  postCommentMessageController[
+                                                                                                      index],
+                                                                                              enabled:
+                                                                                                  postCommentData[index].isEditor,
+                                                                                              style: const TextStyle(
+                                                                                                  color: Colors.black,
+                                                                                                  fontSize: 14),
+                                                                                              decoration: const InputDecoration(
+                                                                                                border: OutlineInputBorder(),
+                                                                                                isCollapsed: true,
+                                                                                                contentPadding:
+                                                                                                    EdgeInsets.only(left: 2),
+                                                                                                disabledBorder: InputBorder.none,
+                                                                                              ),
+                                                                                            )
+                                                                                          : SelectableText(
+                                                                                              postCommentMessageController[index]
+                                                                                                  .text)
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                                Align(
+                                                                                  alignment: Alignment.topRight,
+                                                                                  child: IconButton(
+                                                                                    onPressed: () {
+                                                                                      deleteCheck(
+                                                                                          postCommentData[index].uid, postState);
+                                                                                    },
+                                                                                    icon: Icon(Icons.close),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                            Row(
+                                                                              children: [
+                                                                                ElevatedButton(
+                                                                                    onPressed: () {
+                                                                                      postState.editPostComment(index);
+                                                                                    },
+                                                                                    child: Text("編輯留言")),
+                                                                                ElevatedButton(
+                                                                                    onPressed: () {
+                                                                                      postState.changePostComment(
+                                                                                          postCommentData[index].uid,
+                                                                                          index,
+                                                                                          postCommentMessageController[index]
+                                                                                              .text);
+                                                                                    },
+                                                                                    child: Text("更新留言")),
+                                                                              ],
+                                                                            ),
+                                                                            Text(postCommentData[index].postTime),
                                                                           ],
                                                                         ),
-                                                                        Text(postCommentData[index].postTime),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              });
-                                                            }).toList(),
-                                                          ),
-                                                    isPostCommentDataAddLoding ? Loading() : Container(),
-                                                  ],
+                                                                      ),
+                                                                    );
+                                                                  });
+                                                                }).toList(),
+                                                              ),
+                                                        isPostCommentDataAddLoding ? Loading() : Container(),
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
+                                              ],
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  );
+                                }),
                               );
                             });
                       },
-                      child: Container(
-                        width: ScreenSize().width,
-                        color: Colors.black87,
-                        child: Text(
-                          "comment",
-                          style: TextStyle(color: hintTextColor),
-                        ),
+                      child: Text(
+                        "有${choicedPostData.commentCount}則回復",
+                        style: TextStyle(color: normalTextColor),
                       ),
                     ),
                   ),
-                  // isPostCommentReLoading ? Loading() : Container(),
-                  // Expanded(
-                  //   child: NotificationListener<ScrollNotification>(
-                  //     onNotification: (ScrollNotification scrollNotification) {
-                  //       if (scrollNotification is ScrollStartNotification) {
-                  //         postState.getStartScrollPos(scrollNotification.metrics.pixels);
-                  //       } else if (scrollNotification is ScrollUpdateNotification) {
-                  //         final scrollPosition = scrollNotification.metrics.pixels;
-                  //         final max = scrollNotification.metrics.maxScrollExtent;
-                  //         if (!isPostCommentDataAddLoding && !isPostCommentReLoading) {
-                  //           if (scrollPosition > max && !isPostCommentDataAddLoding) {
-                  //             postState.postAddData();
-                  //           } else if (startScrollPosition <= 0) {
-                  //             if (scrollPosition < 0 && !isPostCommentReLoading) {
-                  //               postState.postReLoadingPage();
-                  //             }
-                  //           }
-                  //           postState.floatButtonVisiableChange(scrollPosition);
-                  //         }
-                  //       }
-                  //       if (scrollNotification is ScrollEndNotification) {
-                  //         if (isPostCommentDataAddLoding) {
-                  //           postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "AddData");
-                  //         } else if (isPostCommentReLoading) {
-                  //           postState.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "Reload");
-                  //         }
-                  //       }
-                  //       return false;
-                  //     },
-                  //     child: Column(
-                  //       children: [
-                  //         Expanded(
-                  //           child: SingleChildScrollView(
-                  //             controller: scrollController,
-                  //             child: Column(
-                  //               children: [
-                  //                 isPostCommentLoading
-                  //                     ? Loading()
-                  //                     : Column(
-                  //                         children: postCommentData.map((e) {
-                  //                           return Builder(builder: (context) {
-                  //                             int index = postCommentData.indexWhere((element) => element == e);
-                  //                             postCommentMessageController[index].text = postCommentData[index].message;
-                  //                             return Padding(
-                  //                               padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8.0),
-                  //                               child: Container(
-                  //                                 padding: EdgeInsets.all(20),
-                  //                                 color: Colors.grey,
-                  //                                 child: Column(
-                  //                                   crossAxisAlignment: CrossAxisAlignment.start,
-                  //                                   children: [
-                  //                                     GestureDetector(
-                  //                                       onTap: () {
-                  //                                         inspect(postCommentData[index].commentUserInfo);
-                  //                                         if (userData.uid != postCommentData[index].commentUserInfo.uid) {
-                  //                                           postState.openDrawer("userDetail",
-                  //                                               globalKey: globalCommentKey,
-                  //                                               otherUser: postCommentData[index].commentUserInfo);
-                  //                                         }
-                  //                                       },
-                  //                                       child: Row(
-                  //                                         crossAxisAlignment: CrossAxisAlignment.start,
-                  //                                         children: [
-                  //                                           UserIcon(
-                  //                                             iconSize: 40,
-                  //                                             image: postCommentData[index].commentUserInfo.image,
-                  //                                           ),
-                  //                                           Expanded(
-                  //                                             child: Column(
-                  //                                               crossAxisAlignment: CrossAxisAlignment.start,
-                  //                                               children: [
-                  //                                                 Text(postCommentData[index].commentUserInfo.email),
-                  //                                                 postCommentData[index].isEditor
-                  //                                                     ? TextFormField(
-                  //                                                         controller: postCommentMessageController[index],
-                  //                                                         enabled: postCommentData[index].isEditor,
-                  //                                                         style:
-                  //                                                             const TextStyle(color: Colors.black, fontSize: 14),
-                  //                                                         decoration: const InputDecoration(
-                  //                                                           border: OutlineInputBorder(),
-                  //                                                           isCollapsed: true,
-                  //                                                           contentPadding: EdgeInsets.only(left: 2),
-                  //                                                           disabledBorder: InputBorder.none,
-                  //                                                         ),
-                  //                                                       )
-                  //                                                     : SelectableText(postCommentMessageController[index].text)
-                  //                                               ],
-                  //                                             ),
-                  //                                           ),
-                  //                                           Align(
-                  //                                             alignment: Alignment.topRight,
-                  //                                             child: IconButton(
-                  //                                               onPressed: () {
-                  //                                                 deleteCheck(postCommentData[index].uid, postState);
-                  //                                               },
-                  //                                               icon: Icon(Icons.close),
-                  //                                             ),
-                  //                                           ),
-                  //                                         ],
-                  //                                       ),
-                  //                                     ),
-                  //                                     Row(
-                  //                                       children: [
-                  //                                         ElevatedButton(
-                  //                                             onPressed: () {
-                  //                                               postState.editPostComment(index);
-                  //                                             },
-                  //                                             child: Text("編輯留言")),
-                  //                                         ElevatedButton(
-                  //                                             onPressed: () {
-                  //                                               postState.changePostComment(postCommentData[index].uid, index,
-                  //                                                   postCommentMessageController[index].text);
-                  //                                             },
-                  //                                             child: Text("更新留言")),
-                  //                                       ],
-                  //                                     ),
-                  //                                     Text(postCommentData[index].postTime),
-                  //                                   ],
-                  //                                 ),
-                  //                               ),
-                  //                             );
-                  //                           });
-                  //                         }).toList(),
-                  //                       ),
-                  //               ],
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // isPostCommentDataAddLoding ? Loading() : Container(),
                 ],
               ),
             ),
