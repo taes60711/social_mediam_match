@@ -1,6 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
 
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -138,7 +139,6 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                 final Uri _url = Uri.parse(url);
                 launchUrl(_url);
               }
-
               return false;
             },
             customWidgetBuilder: (element) {
@@ -163,6 +163,12 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
 
                     imageView(choicedImg);
                   },
+                );
+              } else if (element.localName == "iframe") {
+                print(element.outerHtml);
+                return HtmlWidget(
+                  element.outerHtml,
+                  buildAsync: true,
                 );
               }
             },
