@@ -127,9 +127,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
   double fontSize = 18;
   @override
   Widget build(BuildContext context) {
-    List<String> videoId = ["RPfdLbTWr0g", "tl7t2vQ_l84"];
     late List<YoutubePlayerController> controller = [];
-    List<String> tmpvideoId = [];
     int index = 0;
 
     String choicedImg = "";
@@ -172,11 +170,15 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
               } else if (element.localName == "iframe") {
                 print(element.outerHtml);
 
+                int startIndex = element.outerHtml.indexOf('src=');
+                int endIndex = element.outerHtml.indexOf('">');
+                String videoId = element.outerHtml.substring(startIndex + 'src="https://www.youtube.com/embed/'.length, endIndex);
+
                 index = controller.length;
-                tmpvideoId.add(videoId[index]);
+
                 controller.add(
                   YoutubePlayerController(
-                    initialVideoId: tmpvideoId[index],
+                    initialVideoId: videoId,
                     flags: const YoutubePlayerFlags(
                       autoPlay: false,
                       mute: false,
@@ -184,7 +186,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   ),
                 );
 
-                return Container(
+                return SizedBox(
                   width: ScreenSize().width,
                   child: YoutubePlayer(
                     controller: controller[index],
