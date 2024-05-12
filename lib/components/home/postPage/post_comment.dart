@@ -66,7 +66,7 @@ class PostComment extends StatelessWidget {
       child: Builder(builder: (context) {
         PostState postState = context.read<PostState>();
         List<getPostCommentModel> postCommentData = context.watch<PostState>().postCommentData;
-        List<TextEditingController> postCommentMessageController = context.watch<PostState>().postCommentMessageController;
+
         TextEditingController postCommentInput = context.select((PostState value) => value.postCommentInput);
         bool isPostCommentLoading = context.select((PostState value) => value.isPostCommentLoading);
 
@@ -204,7 +204,9 @@ class PostComment extends StatelessWidget {
                                   bool isPostCommentDataAddLoding =
                                       context.select((PostState value) => value.isPostCommentDataAddLoding);
                                   double startScrollPosition = context.select((PostState value) => value.startScrollPosition);
-                                  ScrollController scrollController = ScrollController();
+                                  List<TextEditingController> postCommentMessageController =
+                                      context.watch<PostState>().postCommentMessageController;
+
                                   PostState postState = context.read<PostState>();
                                   return Container(
                                     height: ScreenSize().height * 0.75,
@@ -262,7 +264,7 @@ class PostComment extends StatelessWidget {
                                               children: [
                                                 Expanded(
                                                   child: SingleChildScrollView(
-                                                    controller: scrollController,
+                                                    physics: BouncingScrollPhysics(),
                                                     child: Column(
                                                       children: [
                                                         isPostCommentLoading
