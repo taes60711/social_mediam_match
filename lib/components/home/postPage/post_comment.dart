@@ -64,25 +64,77 @@ class PostComment extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => PostState(),
       child: Builder(builder: (context) {
+        PostState postState = context.read<PostState>();
+        bool isPostCommentReLoading =
+            context.select((PostState value) => value.isPostCommentReLoading);
+        bool isPostCommentDataAddLoding =
+            context.select((PostState value) => value.isPostCommentDataAddLoding);
+        double startScrollPosition = context.select((PostState value) => value.startScrollPosition);
         print("postCOmment");
         return Scaffold(
           body: StatefulWrapper(
             onInit: () async {
-              Future.delayed(Duration(milliseconds: 300)).then((value) async =>
-                  await postState!.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "First"));
+              Future.delayed(Duration(milliseconds: 300)).then((value) async => await postState!
+                  .getPostCommentData(choicedPostData.id,
+                      loginUserUID: userData.uid, searchType: "First"));
             },
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  RichTextView(content: choicedPostData.mainMessage),
-                  Container(
-                    width: 100,
-                    height: 100,
-                    color: const Color.fromARGB(115, 165, 62, 62),
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(Icons.arrow_back_ios_sharp),
                   ),
-                ],
-              ),
+                ),
+                isPostCommentReLoading ? Loading() : Container(),
+                Expanded(
+                    child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollNotification) {
+                    if (scrollNotification is ScrollStartNotification) {
+                      postState.getStartScrollPos(scrollNotification.metrics.pixels);
+                    } else if (scrollNotification is ScrollUpdateNotification) {
+                      final scrollPosition = scrollNotification.metrics.pixels;
+                      final max = scrollNotification.metrics.maxScrollExtent;
+                      if (!isPostCommentDataAddLoding && !isPostCommentReLoading) {
+                        if (scrollPosition > max && !isPostCommentDataAddLoding) {
+                          postState.postAddData();
+                        } else if (startScrollPosition <= 0) {
+                          if (scrollPosition < 0 && !isPostCommentReLoading) {
+                            postState.postReLoadingPage();
+                          }
+                        }
+                        postState.floatButtonVisiableChange(scrollPosition);
+                      }
+                    }
+                    if (scrollNotification is ScrollEndNotification) {
+                      if (isPostCommentDataAddLoding) {
+                        postState.getPostCommentData(choicedPostData.id,
+                            loginUserUID: userData.uid, searchType: "AddData");
+                      } else if (isPostCommentReLoading) {
+                        postState.getPostCommentData(choicedPostData.id,
+                            loginUserUID: userData.uid, searchType: "Reload");
+                      }
+                    }
+                    return false;
+                  },
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        RichTextView(content: choicedPostData.mainMessage),
+                        Container(
+                          width: 100,
+                          height: 500,
+                          color: const Color.fromARGB(115, 165, 62, 62),
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+                isPostCommentDataAddLoding ? Loading() : Container(),
+              ],
             ),
           ),
         );
