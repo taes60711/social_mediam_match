@@ -61,27 +61,32 @@ class PostComment extends StatelessWidget {
       );
     }
 
-    print("postCOmment");
-    return Scaffold(
-      body: StatefulWrapper(
-        onInit: () async {
-          Future.delayed(Duration(milliseconds: 300)).then((value) async =>
-              await postState!.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "First"));
-        },
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              RichTextView(content: choicedPostData.mainMessage),
-              Container(
-                width: 100,
-                height: 100,
-                color: const Color.fromARGB(115, 165, 62, 62),
+    return ChangeNotifierProvider(
+      create: (_) => PostState(),
+      child: Builder(builder: (context) {
+        print("postCOmment");
+        return Scaffold(
+          body: StatefulWrapper(
+            onInit: () async {
+              Future.delayed(Duration(milliseconds: 300)).then((value) async =>
+                  await postState!.getPostCommentData(choicedPostData.id, loginUserUID: userData.uid, searchType: "First"));
+            },
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  RichTextView(content: choicedPostData.mainMessage),
+                  Container(
+                    width: 100,
+                    height: 100,
+                    color: const Color.fromARGB(115, 165, 62, 62),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
     // return ChangeNotifierProvider(
     //   create: (_) => PostState(),
