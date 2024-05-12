@@ -127,13 +127,10 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
   double fontSize = 18;
   @override
   Widget build(BuildContext context) {
-    late YoutubePlayerController controller = YoutubePlayerController(
-      initialVideoId: "rEQ5D1coelM",
-      flags: const YoutubePlayerFlags(
-        autoPlay: false,
-        mute: false,
-      ),
-    );
+    List<String> videoId = ["RPfdLbTWr0g", "tl7t2vQ_l84"];
+    late List<YoutubePlayerController> controller = [];
+    List<String> tmpvideoId = [];
+    int index = 0;
 
     String choicedImg = "";
     return (widget.isPreView != true)
@@ -174,11 +171,23 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                 );
               } else if (element.localName == "iframe") {
                 print(element.outerHtml);
+
+                index = controller.length;
+                tmpvideoId.add(videoId[index]);
+                controller.add(
+                  YoutubePlayerController(
+                    initialVideoId: tmpvideoId[index],
+                    flags: const YoutubePlayerFlags(
+                      autoPlay: false,
+                      mute: false,
+                    ),
+                  ),
+                );
+
                 return Container(
                   width: ScreenSize().width,
-                  height: 300,
                   child: YoutubePlayer(
-                    controller: controller,
+                    controller: controller[index],
                     onReady: () => {},
                     onEnded: (metaData) {},
                   ),
