@@ -242,6 +242,7 @@ class PostBody extends StatelessWidget {
                 globalKey: globalKey,
                 gotoFriendPage: gotoFriendPage,
                 changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+                postState: postState,
               ),
             ),
           );

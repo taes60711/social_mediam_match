@@ -168,11 +168,9 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   },
                 );
               } else if (element.localName == "iframe") {
-                print(element.outerHtml);
-
-                int startIndex = element.outerHtml.indexOf('src=');
+                int startIndex = element.outerHtml.indexOf('src=') + 'src="https://www.youtube.com/embed/'.length;
                 int endIndex = element.outerHtml.indexOf('">');
-                String videoId = element.outerHtml.substring(startIndex + 'src="https://www.youtube.com/embed/'.length, endIndex);
+                String videoId = element.outerHtml.substring(startIndex, endIndex);
 
                 index = controller.length;
 
@@ -191,14 +189,12 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   child: YoutubePlayer(
                     controller: controller[index],
                     onReady: () => {},
-                    onEnded: (metaData) {},
                   ),
                 );
               }
             },
             onTapImage: (src) {
               print("onTapImage: ${src.sources.first.url}");
-
               setState(() {
                 choicedImg = src.sources.first.url;
               });
