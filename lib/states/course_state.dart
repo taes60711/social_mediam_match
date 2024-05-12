@@ -14,6 +14,12 @@ class CourseState extends ChangeNotifier {
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   CourseModel? choicedCourse;
 
+  double startScrollPosition = -1;
+  void getStartScrollPos(double pos) {
+    startScrollPosition = pos;
+    notifyListeners();
+  }
+
   bool floatButtonIsVisiable = false;
   void floatButtonVisiableChange(double posheight) {
     if (posheight < 40) {

@@ -39,6 +39,7 @@ class CoursePage extends StatelessWidget {
     String endDrawerType = context.select((CourseState value) => value.endDrawerType);
     LoginUser? otherUser = context.select((CourseState value) => value.otherUser);
 
+    double startScrollPosition = context.select((CourseState value) => value.startScrollPosition);
     ScrollController scrollController = ScrollController();
     bool floatButtonIsVisiable = context.select((CourseState value) => value.floatButtonIsVisiable);
     return Scaffold(
@@ -90,14 +91,18 @@ class CoursePage extends StatelessWidget {
                     Expanded(
                       child: NotificationListener<ScrollNotification>(
                         onNotification: (ScrollNotification scrollNotification) {
-                          if (scrollNotification is ScrollUpdateNotification) {
+                          if (scrollNotification is ScrollStartNotification) {
+                            courseState.getStartScrollPos(scrollNotification.metrics.pixels);
+                          } else if (scrollNotification is ScrollUpdateNotification) {
                             final scrollPosition = scrollNotification.metrics.pixels;
                             final max = scrollNotification.metrics.maxScrollExtent;
                             if (!isAddDataLoading && !isReLoading) {
                               if (scrollPosition > max && !isAddDataLoading) {
                                 courseState.addData();
-                              } else if (scrollPosition < 0 && !isReLoading) {
-                                courseState.reLoadingPage();
+                              } else if (startScrollPosition <= 0) {
+                                if (scrollPosition < 0 && !isReLoading) {
+                                  courseState.reLoadingPage();
+                                }
                               }
                               courseState.floatButtonVisiableChange(scrollPosition);
                             }

@@ -23,6 +23,12 @@ class SkillExChangeState extends ChangeNotifier {
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   bool floatButtonIsVisiable = false;
 
+  double startScrollPosition = -1;
+  void getStartScrollPos(double pos) {
+    startScrollPosition = pos;
+    notifyListeners();
+  }
+
   void floatButtonVisiableChange(double posheight) {
     if (posheight < 40) {
       if (floatButtonIsVisiable) {

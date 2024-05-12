@@ -162,6 +162,7 @@ class SkillExChangePage extends StatelessWidget {
     String endDrawerType = context.select((SkillExChangeState value) => value.endDrawerType);
     LoginUser? otherUser = context.select((SkillExChangeState value) => value.otherUser);
 
+    double startScrollPosition = context.select((SkillExChangeState value) => value.startScrollPosition);
     ScrollController scrollController = ScrollController();
     bool floatButtonIsVisiable = context.select((SkillExChangeState value) => value.floatButtonIsVisiable);
     return StatefulWrapper(
@@ -215,14 +216,18 @@ class SkillExChangePage extends StatelessWidget {
                     Expanded(
                       child: NotificationListener<ScrollNotification>(
                         onNotification: (ScrollNotification scrollNotification) {
-                          if (scrollNotification is ScrollUpdateNotification) {
+                          if (scrollNotification is ScrollStartNotification) {
+                            skillExChangeState.getStartScrollPos(scrollNotification.metrics.pixels);
+                          } else if (scrollNotification is ScrollUpdateNotification) {
                             final scrollPosition = scrollNotification.metrics.pixels;
                             final max = scrollNotification.metrics.maxScrollExtent;
                             if (!isAddDataLoading && !isReLoading) {
                               if (scrollPosition > max && !isAddDataLoading) {
                                 skillExChangeState.addData();
-                              } else if (scrollPosition < 0 && !isReLoading) {
-                                skillExChangeState.reLoadingPage();
+                              } else if (startScrollPosition <= 0) {
+                                if (scrollPosition < 0 && !isReLoading) {
+                                  skillExChangeState.reLoadingPage();
+                                }
                               }
                             }
                             skillExChangeState.floatButtonVisiableChange(scrollPosition);
