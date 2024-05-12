@@ -21,6 +21,21 @@ class SkillExChangeState extends ChangeNotifier {
   bool isFirst = true, isAddDataLoading = false, isReLoading = false, isFirstLoading = true;
   String endDrawerType = "";
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
+  bool floatButtonIsVisiable = false;
+
+  void floatButtonVisiableChange(double posheight) {
+    if (posheight < 40) {
+      if (floatButtonIsVisiable) {
+        floatButtonIsVisiable = false;
+        notifyListeners();
+      }
+    } else {
+      if (!floatButtonIsVisiable) {
+        floatButtonIsVisiable = true;
+        notifyListeners();
+      }
+    }
+  }
 
   void skillExchangePageDisPose() {
     isFirstLoading = true;

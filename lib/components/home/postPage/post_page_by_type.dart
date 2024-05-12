@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
@@ -6,6 +7,7 @@ import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
+import '../../utilities/style/style_config.dart';
 import '../skillExChangePage/user_detail.dart';
 import 'post_body.dart';
 
@@ -27,6 +29,9 @@ class PostPageByType extends StatelessWidget {
     LoginUser? otherUser = context.select((PostState value) => value.otherUser);
     bool isCanLoading = context.select((PostState value) => value.isCanLoading);
 
+    double startScrollPosition = context.select((PostState value) => value.startScrollPosition);
+    ScrollController scrollController = ScrollController();
+    bool floatButtonIsVisiable = context.select((PostState value) => value.floatButtonIsVisiable);
     print("NewsPostPage isFirstLoading: ${isFirstLoading}");
     return StatefulWrapper(
       onInit: () async {
@@ -43,15 +48,40 @@ class PostPageByType extends StatelessWidget {
                 otherUser: otherUser,
                 gotoFriendPage: gotoFriendPage,
               ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(RoutePath.postEditPage.value, arguments: {
-                    "userData": userData,
-                    "postState": postState,
-                    "type": type,
-                  });
-                },
-                child: Icon(Icons.edit),
+              floatingActionButton: Visibility(
+                visible: floatButtonIsVisiable,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FloatingActionButton(
+                      mini: true,
+                      backgroundColor: normalTextColor,
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(RoutePath.postEditPage.value, arguments: {
+                          "userData": userData,
+                          "postState": postState,
+                          "type": type,
+                        });
+                      },
+                      child: Icon(
+                        FontAwesomeIcons.penToSquare,
+                        size: 16,
+                        color: normalBgColor,
+                      ),
+                    ),
+                    FloatingActionButton(
+                      mini: true,
+                      backgroundColor: normalBgColor2,
+                      onPressed: () {
+                        scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+                      },
+                      child: const Icon(
+                        FontAwesomeIcons.angleUp,
+                        size: 16,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               body: SafeArea(
                 child: Column(
@@ -67,17 +97,22 @@ class PostPageByType extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: NotificationListener<ScrollNotification>(
                           onNotification: (ScrollNotification scrollNotification) {
-                            if (scrollNotification is ScrollUpdateNotification) {
+                            if (scrollNotification is ScrollStartNotification) {
+                              postState.getStartScrollPos(scrollNotification.metrics.pixels);
+                            } else if (scrollNotification is ScrollUpdateNotification) {
                               final scrollPosition = scrollNotification.metrics.pixels;
                               final max = scrollNotification.metrics.maxScrollExtent;
                               if (!isDataAddLoding && !isReLoading) {
                                 if (scrollPosition > max && isCanLoading && !isDataAddLoding) {
                                   postState.canLoadingChange(false);
                                   postState.addData();
-                                } else if (scrollPosition < 0 && isCanLoading && !isReLoading) {
-                                  postState.canLoadingChange(false);
-                                  postState.reLoadingPage();
+                                } else if (startScrollPosition <= 0.0) {
+                                  if (scrollPosition < 0 && isCanLoading && !isReLoading) {
+                                    postState.canLoadingChange(false);
+                                    postState.reLoadingPage();
+                                  }
                                 }
+                                postState.floatButtonVisiableChange(scrollPosition);
                               }
                               if (!isCanLoading) {
                                 if (scrollNotification.dragDetails == null) {
@@ -98,6 +133,7 @@ class PostPageByType extends StatelessWidget {
                               ? const NoPostData()
                               : ListView.builder(
                                   itemCount: postData.length,
+                                  controller: scrollController,
                                   itemBuilder: (context, index) {
                                     Widget mainBody = PostBody(
                                       postData: postData[index],

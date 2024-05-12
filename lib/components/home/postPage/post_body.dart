@@ -328,15 +328,19 @@ class PostBody extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(right: 5),
-          child: GestureDetector(
-            child: Icon(
-              FontAwesomeIcons.ellipsis,
-              color: hintTextColor,
-              size: 14,
+          child: Container(
+            padding: EdgeInsets.all(10),
+            color: Colors.transparent,
+            child: GestureDetector(
+              child: Icon(
+                FontAwesomeIcons.ellipsis,
+                color: hintTextColor,
+                size: 14,
+              ),
+              onTap: () {
+                print("Icon");
+              },
             ),
-            onTap: () {
-              print("Icon");
-            },
           ),
         ),
       ],

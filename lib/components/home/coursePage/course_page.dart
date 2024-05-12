@@ -14,10 +14,17 @@ import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
 import '../../../models/user_model.dart';
+import '../skillExChangePage/user_detail.dart';
 
 class CoursePage extends StatelessWidget {
   final LoginUser userData;
-  const CoursePage({super.key, required this.userData});
+  final VoidCallback gotoFriendPage;
+
+  const CoursePage({
+    super.key,
+    required this.userData,
+    required this.gotoFriendPage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +36,40 @@ class CoursePage extends StatelessWidget {
     bool isReLoading = context.select((CourseState value) => value.isReLoading);
     GlobalKey<ScaffoldState> globalKey = context.select((CourseState value) => value.globalKey);
     CourseModel? choicedCourse = context.select((CourseState value) => value.choicedCourse);
+    String endDrawerType = context.select((CourseState value) => value.endDrawerType);
+    LoginUser? otherUser = context.select((CourseState value) => value.otherUser);
 
+    ScrollController scrollController = ScrollController();
+    bool floatButtonIsVisiable = context.select((CourseState value) => value.floatButtonIsVisiable);
     return Scaffold(
       key: globalKey,
-      endDrawer: CourseDetail(
-        courseData: choicedCourse,
+      floatingActionButton: Visibility(
+        visible: floatButtonIsVisiable,
+        child: FloatingActionButton(
+          mini: true,
+          backgroundColor: normalBgColor2,
+          onPressed: () {
+            scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+          },
+          child: const Icon(
+            FontAwesomeIcons.angleUp,
+            size: 16,
+          ),
+        ),
       ),
+      endDrawer: endDrawerType == "userDetail"
+          ? UserDetail(
+              globalKey: globalKey,
+              userData: userData,
+              otherUser: otherUser,
+              gotoFriendPage: gotoFriendPage,
+            )
+          : CourseDetail(
+              courseData: choicedCourse,
+              globalKey: globalKey,
+              userData: userData,
+              gotoFriendPage: gotoFriendPage,
+            ),
       body: SafeArea(
         child: StatefulWrapper(
           onInit: () {
@@ -64,6 +99,7 @@ class CoursePage extends StatelessWidget {
                               } else if (scrollPosition < 0 && !isReLoading) {
                                 courseState.reLoadingPage();
                               }
+                              courseState.floatButtonVisiableChange(scrollPosition);
                             }
                           }
                           if (scrollNotification is ScrollEndNotification) {
@@ -76,6 +112,7 @@ class CoursePage extends StatelessWidget {
                           return true;
                         },
                         child: ListView.builder(
+                            controller: scrollController,
                             itemCount: courseData.length,
                             itemBuilder: (context, index) {
                               Widget mainBody = Padding(
@@ -83,7 +120,7 @@ class CoursePage extends StatelessWidget {
                                 child: GestureDetector(
                                   onTap: () {
                                     inspect(courseData[index]);
-                                    courseState.choicedPage(courseData[index]);
+                                    courseState.openEndDrawer("course", course: courseData[index]);
                                     globalKey.currentState!.openEndDrawer();
                                   },
                                   child: Container(
@@ -176,47 +213,61 @@ class CoursePage extends StatelessWidget {
                                         Row(
                                           children: [
                                             Expanded(
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  courseState.openEndDrawer("userDetail",
+                                                      user: courseData[index].courseCreateduserInfo);
+                                                  globalKey.currentState!.openEndDrawer();
+                                                },
+                                                child: Container(
+                                                  color: Colors.transparent,
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Text(
-                                                        "作成者:",
-                                                        style: TextStyle(fontSize: 12),
+                                                      Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                        children: [
+                                                          Text(
+                                                            "作成者:",
+                                                            style: TextStyle(fontSize: 12),
+                                                          ),
+                                                          Padding(
+                                                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                            child: UserIcon(
+                                                              iconSize: 25,
+                                                              image: courseData[index].courseCreateduserInfo.image,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            "${courseData[index].courseCreateduserInfo.name != "" ? courseData[index].courseCreateduserInfo.name ?? "" : courseData[index].courseCreateduserInfo.email}",
+                                                            style: TextStyle(fontSize: 12),
+                                                          ),
+                                                        ],
                                                       ),
-                                                      Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                                                        child: UserIcon(
-                                                          iconSize: 25,
-                                                          image: courseData[index].courseCreateduserInfo.image,
-                                                        ),
-                                                      ),
                                                       Text(
-                                                        "${courseData[index].courseCreateduserInfo.name != "" ? courseData[index].courseCreateduserInfo.name ?? "" : courseData[index].courseCreateduserInfo.email}",
-                                                        style: TextStyle(fontSize: 12),
+                                                        "最終更新日:${courseData[index].postTime}",
+                                                        style: TextStyle(fontSize: 11, color: hintTextColor),
                                                       ),
                                                     ],
                                                   ),
-                                                  Text(
-                                                    "最終更新日:${courseData[index].postTime}",
-                                                    style: TextStyle(fontSize: 11, color: hintTextColor),
-                                                  ),
-                                                ],
+                                                ),
                                               ),
                                             ),
                                             Padding(
-                                              padding: const EdgeInsets.only(right: 5),
-                                              child: GestureDetector(
-                                                child: Icon(
-                                                  FontAwesomeIcons.ellipsis,
-                                                  color: hintTextColor,
-                                                  size: 14,
+                                              padding: const EdgeInsets.only(right: 10),
+                                              child: Container(
+                                                padding: EdgeInsets.all(10),
+                                                color: Colors.transparent,
+                                                child: GestureDetector(
+                                                  child: Icon(
+                                                    FontAwesomeIcons.ellipsis,
+                                                    color: hintTextColor,
+                                                    size: 14,
+                                                  ),
+                                                  onTap: () {
+                                                    print("Icon");
+                                                  },
                                                 ),
-                                                onTap: () {
-                                                  print("Icon");
-                                                },
                                               ),
                                             ),
                                           ],

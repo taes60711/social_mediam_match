@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -9,6 +10,7 @@ import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
 import '../../utilities/Stateful_wrapper.dart';
 import '../../utilities/rich_text_view.dart';
+import '../../utilities/style/style_config.dart';
 import '../skillExChangePage/user_detail.dart';
 
 class PostComment extends StatelessWidget {
@@ -71,6 +73,9 @@ class PostComment extends StatelessWidget {
         GlobalKey<ScaffoldState> globalCommentKey = context.select((PostState value) => value.globalCommentKey);
         LoginUser? otherUser = context.select((PostState value) => value.otherUser);
 
+        double startScrollPosition = context.select((PostState value) => value.startScrollPosition);
+        ScrollController scrollController = ScrollController();
+        bool floatButtonIsVisiable = context.select((PostState value) => value.floatButtonIsVisiable);
         print("postCOmment");
 
         return Scaffold(
@@ -80,6 +85,20 @@ class PostComment extends StatelessWidget {
             userData: userData,
             otherUser: otherUser,
             gotoFriendPage: gotoFriendPage,
+          ),
+          floatingActionButton: Visibility(
+            visible: floatButtonIsVisiable,
+            child: FloatingActionButton(
+              mini: true,
+              backgroundColor: normalBgColor2,
+              onPressed: () {
+                scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+              },
+              child: const Icon(
+                FontAwesomeIcons.angleUp,
+                size: 16,
+              ),
+            ),
           ),
           body: SafeArea(
             child: StatefulWrapper(
@@ -105,15 +124,20 @@ class PostComment extends StatelessWidget {
                   Expanded(
                     child: NotificationListener<ScrollNotification>(
                       onNotification: (ScrollNotification scrollNotification) {
-                        if (scrollNotification is ScrollUpdateNotification) {
+                        if (scrollNotification is ScrollStartNotification) {
+                          postState.getStartScrollPos(scrollNotification.metrics.pixels);
+                        } else if (scrollNotification is ScrollUpdateNotification) {
                           final scrollPosition = scrollNotification.metrics.pixels;
                           final max = scrollNotification.metrics.maxScrollExtent;
                           if (!isPostCommentDataAddLoding && !isPostCommentReLoading) {
                             if (scrollPosition > max && !isPostCommentDataAddLoding) {
                               postState.postAddData();
-                            } else if (scrollPosition < 0 && !isPostCommentReLoading) {
-                              postState.postReLoadingPage();
+                            } else if (startScrollPosition <= 0) {
+                              if (scrollPosition < 0 && !isPostCommentReLoading) {
+                                postState.postReLoadingPage();
+                              }
                             }
+                            postState.floatButtonVisiableChange(scrollPosition);
                           }
                         }
                         if (scrollNotification is ScrollEndNotification) {
@@ -126,6 +150,7 @@ class PostComment extends StatelessWidget {
                         return false;
                       },
                       child: SingleChildScrollView(
+                        controller: scrollController,
                         child: Column(
                           children: [
                             Padding(

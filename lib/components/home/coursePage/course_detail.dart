@@ -1,19 +1,26 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/states/course_state.dart';
 
 import '../../../models/course_model.dart';
+import '../../../models/user_model.dart';
+import '../../utilities/custom_end_drawer.dart';
 import '../../utilities/skill_list_view.dart';
 import '../../utilities/user_icon.dart';
+import '../skillExChangePage/user_detail.dart';
 
 class CourseDetail extends StatelessWidget {
   final CourseModel? courseData;
-  const CourseDetail({super.key, this.courseData});
+  final LoginUser? userData;
+  final GlobalKey<ScaffoldState> globalKey;
+  final VoidCallback gotoFriendPage;
+  const CourseDetail({super.key, this.courseData, required this.globalKey, required this.userData, required this.gotoFriendPage});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +30,7 @@ class CourseDetail extends StatelessWidget {
       CourseModel realCourseData = courseData!;
 
       Widget breakLine = Container(
-        margin: EdgeInsets.all(5),
+        margin: const EdgeInsets.all(5),
         width: ScreenSize().width,
         height: 0.3,
         color: hintTextColor,
@@ -34,6 +41,13 @@ class CourseDetail extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.arrow_back_ios),
+            ),
+            SizedBox(height: 5),
             Text(
               realCourseData.title,
               style: TextStyle(fontSize: 19),
@@ -91,37 +105,61 @@ class CourseDetail extends StatelessWidget {
               ],
             ),
             breakLine,
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-              decoration: BoxDecoration(color: googleColor.withAlpha(150), borderRadius: BorderRadius.circular(3)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        "作成者 : ",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: UserIcon(
-                          iconSize: 35,
-                          image: realCourseData.courseCreateduserInfo.image,
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
+                  builder: (BuildContext context) {
+                    return CustomEndDrawer(
+                      child: Dismissible(
+                        direction: DismissDirection.startToEnd,
+                        resizeDuration: const Duration(milliseconds: 1),
+                        onDismissed: (_) => Navigator.of(context).pop(),
+                        key: const Key('key'),
+                        child: UserDetail(
+                          globalKey: globalKey,
+                          userData: userData,
+                          otherUser: realCourseData.courseCreateduserInfo,
+                          gotoFriendPage: gotoFriendPage,
                         ),
                       ),
-                      Text(
-                        "${realCourseData.courseCreateduserInfo.name != "" ? realCourseData.courseCreateduserInfo.name ?? "" : realCourseData.courseCreateduserInfo.email}",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    "最終更新日 : ${realCourseData.postTime}",
-                    style: TextStyle(color: normalBgColor2, fontSize: 13),
-                  ),
-                ],
+                    );
+                  },
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                decoration: BoxDecoration(color: googleColor.withAlpha(150), borderRadius: BorderRadius.circular(3)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "作成者 : ",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: UserIcon(
+                            iconSize: 35,
+                            image: realCourseData.courseCreateduserInfo.image,
+                          ),
+                        ),
+                        Text(
+                          "${realCourseData.courseCreateduserInfo.name != "" ? realCourseData.courseCreateduserInfo.name ?? "" : realCourseData.courseCreateduserInfo.email}",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      "最終更新日 : ${realCourseData.postTime}",
+                      style: TextStyle(color: normalBgColor2, fontSize: 13),
+                    ),
+                  ],
+                ),
               ),
             ),
             Column(
@@ -218,7 +256,7 @@ class CourseDetail extends StatelessWidget {
     }
     return BackgroundWidget(
       child: SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         child: component,
       ),
     );
