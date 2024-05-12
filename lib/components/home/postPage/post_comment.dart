@@ -102,7 +102,6 @@ class PostComment extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    // height: ScreenSize().height * 0.76,
                     child: SingleChildScrollView(
                       physics: const ClampingScrollPhysics(),
                       child: Padding(
@@ -124,7 +123,7 @@ class PostComment extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     UserIcon(
-                                      iconSize: 50,
+                                      iconSize: 35,
                                       image: choicedPostData.postUserInfo.image,
                                     ),
                                     Text(choicedPostData.postUserInfo.email),
@@ -189,9 +188,8 @@ class PostComment extends StatelessWidget {
                   Container(
                     height: 50,
                     width: ScreenSize().width,
-                    decoration: BoxDecoration(color: normalBgColor, borderRadius: BorderRadius.circular(5)),
+                    decoration: BoxDecoration(color: normalBgColor2),
                     padding: EdgeInsets.only(left: 10),
-                    margin: EdgeInsets.symmetric(horizontal: 10),
                     child: GestureDetector(
                       onTap: () {
                         showModalBottomSheet(
