@@ -1,13 +1,13 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
 
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../models/rich_text_format.dart';
 
 class RichTextView extends StatefulWidget {
@@ -127,6 +127,14 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
   double fontSize = 18;
   @override
   Widget build(BuildContext context) {
+    late YoutubePlayerController controller = YoutubePlayerController(
+      initialVideoId: "rEQ5D1coelM",
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
+
     String choicedImg = "";
     return (widget.isPreView != true)
         //全文章
@@ -166,9 +174,14 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                 );
               } else if (element.localName == "iframe") {
                 print(element.outerHtml);
-                return HtmlWidget(
-                  element.outerHtml,
-                  buildAsync: true,
+                return Container(
+                  width: ScreenSize().width,
+                  height: 300,
+                  child: YoutubePlayer(
+                    controller: controller,
+                    onReady: () => {},
+                    onEnded: (metaData) {},
+                  ),
                 );
               }
             },
