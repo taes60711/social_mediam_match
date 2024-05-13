@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
@@ -214,6 +215,7 @@ class PostBody extends StatelessWidget {
   final GlobalKey<ScaffoldState> globalKey;
   final LoginUser userData;
   final VoidCallback gotoFriendPage;
+
   const PostBody({
     super.key,
     required this.postData,

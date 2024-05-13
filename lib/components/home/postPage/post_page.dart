@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -77,7 +75,8 @@ class PostPage extends StatelessWidget {
                         child: NotificationListener<ScrollNotification>(
                           onNotification: (ScrollNotification scrollNotification) {
                             if (scrollNotification is ScrollStartNotification) {
-                              postState.getStartScrollPos(scrollNotification.metrics.pixels);
+                              final scrollPosition = scrollNotification.metrics.pixels;
+                              postState.getStartScrollPos(scrollPosition);
                             } else if (scrollNotification is ScrollUpdateNotification) {
                               final scrollPosition = scrollNotification.metrics.pixels;
                               final max = scrollNotification.metrics.maxScrollExtent;

@@ -177,7 +177,12 @@ class PostComment extends StatelessWidget {
                                           context.select((PostState value) => value.postCommentInput);
 
                                       return Container(
-                                        color: Colors.white,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(10),
+                                          ),
+                                        ),
                                         child: StatefulWrapper(
                                           onInit: () async {
                                             Future.delayed(Duration(milliseconds: 200)).then((value) async =>
@@ -186,19 +191,39 @@ class PostComment extends StatelessWidget {
                                           },
                                           child: Column(
                                             children: [
-                                              Container(
-                                                alignment: Alignment.topRight,
-                                                margin: const EdgeInsets.only(right: 20, bottom: 5, top: 5),
-                                                width: ScreenSize().width,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Icon(
-                                                    Icons.close,
-                                                    size: 35,
+                                              Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: ScreenSize().width * 0.33,
                                                   ),
-                                                ),
+                                                  Container(
+                                                    alignment: Alignment.topCenter,
+                                                    width: ScreenSize().width * 0.33,
+                                                    child: Icon(
+                                                      Icons.remove,
+                                                      size: 35,
+                                                      color: normalBgColor2,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    alignment: Alignment.topRight,
+                                                    padding: const EdgeInsets.only(right: 10),
+                                                    width: ScreenSize().width * 0.33,
+                                                    child: Container(
+                                                      color: Colors.transparent,
+                                                      padding: const EdgeInsets.all(5),
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.pop(context);
+                                                        },
+                                                        child: const Icon(
+                                                          Icons.close,
+                                                          size: 25,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                               Row(
                                                 children: [
