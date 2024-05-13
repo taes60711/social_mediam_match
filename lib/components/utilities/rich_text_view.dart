@@ -127,7 +127,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
   double fontSize = 18;
   @override
   Widget build(BuildContext context) {
-    late List<YoutubePlayerController> controller = [];
+    late List<YoutubePlayerController> ytController = [];
     int index = 0;
 
     String choicedImg = "";
@@ -159,11 +159,9 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   },
                   onTapImage: (src) {
                     print("onTapImage: ${src.sources.first.url}");
-
                     setState(() {
                       choicedImg = src.sources.first.url;
                     });
-
                     imageView(choicedImg);
                   },
                 );
@@ -172,9 +170,9 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                 int endIndex = element.outerHtml.indexOf('">');
                 String videoId = element.outerHtml.substring(startIndex, endIndex);
 
-                index = controller.length;
+                index = ytController.length;
 
-                controller.add(
+                ytController.add(
                   YoutubePlayerController(
                     initialVideoId: videoId,
                     flags: const YoutubePlayerFlags(
@@ -187,7 +185,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                 return SizedBox(
                   width: ScreenSize().width,
                   child: YoutubePlayer(
-                    controller: controller[index],
+                    controller: ytController[index],
                     onReady: () => {},
                   ),
                 );
