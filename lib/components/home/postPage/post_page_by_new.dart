@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
@@ -6,6 +7,7 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import '../../../models/user_model.dart';
+import '../../utilities/style/style_config.dart';
 import '../skillExChangePage/user_detail.dart';
 import 'post_body.dart';
 
@@ -26,6 +28,10 @@ class PostPageByNew extends StatelessWidget {
     LoginUser? otherUser = context.select((PostState value) => value.otherUser);
     bool isCanLoading = context.select((PostState value) => value.isCanLoading);
 
+    double startScrollPosition = context.select((PostState value) => value.startScrollPosition);
+    ScrollController scrollController = ScrollController();
+    bool floatButtonIsVisiable = context.select((PostState value) => value.floatButtonIsVisiable);
+
     print("NewsPostPage isFirstLoading: ${isFirstLoading}");
     return StatefulWrapper(
       onInit: () async {
@@ -41,6 +47,20 @@ class PostPageByNew extends StatelessWidget {
                 otherUser: otherUser,
                 gotoFriendPage: gotoFriendPage,
               ),
+              floatingActionButton: Visibility(
+                visible: floatButtonIsVisiable,
+                child: FloatingActionButton(
+                  mini: true,
+                  backgroundColor: normalBgColor2,
+                  onPressed: () {
+                    scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+                  },
+                  child: const Icon(
+                    FontAwesomeIcons.angleUp,
+                    size: 16,
+                  ),
+                ),
+              ),
               body: SafeArea(
                 child: Column(
                   children: [
@@ -55,7 +75,9 @@ class PostPageByNew extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: NotificationListener<ScrollNotification>(
                           onNotification: (ScrollNotification scrollNotification) {
-                            if (scrollNotification is ScrollUpdateNotification) {
+                            if (scrollNotification is ScrollStartNotification) {
+                              postState.getStartScrollPos(scrollNotification.metrics.pixels);
+                            } else if (scrollNotification is ScrollUpdateNotification) {
                               final scrollPosition = scrollNotification.metrics.pixels;
                               final max = scrollNotification.metrics.maxScrollExtent;
 
@@ -63,10 +85,13 @@ class PostPageByNew extends StatelessWidget {
                                 if (scrollPosition > max && isCanLoading && !isDataAddLoding) {
                                   postState.canLoadingChange(false);
                                   postState.addData();
-                                } else if (scrollPosition < 0 && isCanLoading && !isReLoading) {
-                                  postState.canLoadingChange(false);
-                                  postState.reLoadingPage();
+                                } else if (startScrollPosition <= 0.0) {
+                                  if (scrollPosition < 0 && isCanLoading && !isReLoading) {
+                                    postState.canLoadingChange(false);
+                                    postState.reLoadingPage();
+                                  }
                                 }
+                                postState.floatButtonVisiableChange(scrollPosition);
                               }
                               if (!isCanLoading) {
                                 if (scrollNotification.dragDetails == null) {
@@ -91,6 +116,7 @@ class PostPageByNew extends StatelessWidget {
                                 )
                               : ListView.builder(
                                   itemCount: postData.length,
+                                  controller: scrollController,
                                   itemBuilder: (context, index) {
                                     Widget mainBody = PostBody(
                                       postData: postData[index],
@@ -98,6 +124,14 @@ class PostPageByNew extends StatelessWidget {
                                       globalKey: globalKey,
                                       userData: userData,
                                       gotoFriendPage: gotoFriendPage,
+                                      bottomSheetFuncs: [
+                                        PostOption(
+                                            icon: Icons.link,
+                                            buttonFunc: () async {
+                                              print("分享");
+                                            },
+                                            funcText: '分享'),
+                                      ],
                                     );
                                     return index != postData.length - 1
                                         ? mainBody

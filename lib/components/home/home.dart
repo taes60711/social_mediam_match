@@ -47,7 +47,10 @@ class _HomeState extends State<Home> {
       ),
       ChangeNotifierProvider(
         create: (_) => CourseState(),
-        child: CoursePage(userData: widget.userData),
+        child: CoursePage(
+          userData: widget.userData,
+          gotoFriendPage: gotoFriendPage,
+        ),
       ),
       FirendsPage(userData: widget.userData),
       UserPage(userData: widget.userData, friendState: widget.friendState, gotoFriendPage: gotoFriendPage),

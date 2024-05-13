@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
       locale: context.locale,
       debugShowCheckedModeBanner: false,
       scrollBehavior: ScrollConfiguration.of(context).copyWith(
-        physics: const CustomBouncingScrollPhysics(),
+        physics: const CustomBouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       ),
       theme: ThemeData(
         fontFamily: 'GenJyu',

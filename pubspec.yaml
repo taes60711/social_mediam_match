@@ -59,6 +59,7 @@ dependencies:
   shimmer: ^3.0.0
   uuid: ^3.0.1
   firebase_dynamic_links: ^5.4.17
+  youtube_player_flutter: ^9.0.1
 
 dev_dependencies:
   flutter_test:

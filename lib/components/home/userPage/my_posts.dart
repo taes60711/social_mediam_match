@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:social_mediam_match/components/home/postPage/post_body.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -111,131 +113,84 @@ class MyPosts extends StatelessWidget {
         postState.getPostDataByUID(userData, isFirstSearch: true);
       },
       child: Scaffold(
-          key: globalKey,
-          endDrawer: myPostEndDrawerType == "edit"
-              ? EditPost(
-                  postState: postState,
-                )
-              : PostComment(
-                  choicedPostData: postState.choicedPost ??
-                      PostModel(
-                          id: -1,
-                          createdBy: "",
-                          title: "",
-                          mainMessage: "",
-                          commentCount: 0,
-                          postTime: "",
-                          postUserInfo: LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: -1),
-                          viewed: 0,
-                          good: 0,
-                          type: 0),
-                  userData: userData,
-                  globalKey: globalKey,
-                  gotoFriendPage: gotoFriendPage,
-                  changeChoicedPostGoodCount: changeChoicedPostGoodCount,
-                ),
-          body: SafeArea(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: ScreenSize().width * 0.31,
-                      alignment: Alignment.centerLeft,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                        },
-                        icon: const Icon(Icons.arrow_back_ios),
-                      ),
-                    ),
-                    SizedBox(width: ScreenSize().width * 0.31, child: const Center(child: Text("我的文章"))),
-                  ],
-                ),
-                Expanded(
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification scrollNotification) {
-                      if (scrollNotification is ScrollEndNotification) {
-                        final before = scrollNotification.metrics.extentBefore;
-                        final max = scrollNotification.metrics.maxScrollExtent;
-                        if (before == max) {}
-                      }
-                      return false;
-                    },
-                    child: ListView.builder(
-                      itemCount: myAllPosts.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: const Color.fromARGB(255, 218, 219, 219),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    UserIcon(
-                                      iconSize: 50,
-                                      image: myAllPosts[index].postUserInfo.image,
-                                    ),
-                                    Text(myAllPosts[index].postUserInfo.email),
-                                    Expanded(
-                                      child: Align(
-                                        alignment: Alignment.topRight,
-                                        child: IconButton(
-                                            onPressed: () {
-                                              exitCheck(myAllPosts[index].id);
-                                            },
-                                            icon: Icon(Icons.close)),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                RichTextView(
-                                  content: myAllPosts[index].mainMessage,
-                                  isPreView: true,
-                                ),
-                                Row(
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        postState.postOnChange(myAllPosts[index], "edit");
-                                        globalKey.currentState!.openEndDrawer();
-                                      },
-                                      child: Text("編輯"),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        postState.postOnChange(myAllPosts[index], "comment");
-                                        globalKey.currentState!.openEndDrawer();
-                                      },
-                                      child: Text("觀看留言"),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text("已 ${myAllPosts[index].viewed} 人瀏覽過"),
-                                    Text(" ${myAllPosts[index].good} 個讚"),
-                                  ],
-                                ),
-                                Text("發文時間 : ${myAllPosts[index].postTime}"),
-                                Text("有${myAllPosts[index].commentCount}則留言"),
-                              ],
-                            ),
-                          ),
-                        );
+        key: globalKey,
+        endDrawer: myPostEndDrawerType == "edit"
+            ? EditPost(postState: postState)
+            : PostComment(
+                choicedPostData: postState.choicedPost ??
+                    PostModel(
+                        id: -1,
+                        createdBy: "",
+                        title: "",
+                        mainMessage: "",
+                        commentCount: 0,
+                        postTime: "",
+                        postUserInfo: LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: -1),
+                        viewed: 0,
+                        good: 0,
+                        type: 0),
+                userData: userData,
+                globalKey: globalKey,
+                gotoFriendPage: gotoFriendPage,
+                changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+              ),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: ScreenSize().width * 0.33,
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
                       },
+                      icon: const Icon(Icons.arrow_back_ios),
                     ),
                   ),
+                  SizedBox(width: ScreenSize().width * 0.33, child: const Center(child: Text("我的文章"))),
+                ],
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: myAllPosts.length,
+                  itemBuilder: ((context, index) {
+                    return Column(
+                      children: [
+                        PostBody(
+                          postData: myAllPosts[index],
+                          postState: postState,
+                          globalKey: globalKey,
+                          userData: userData,
+                          gotoFriendPage: gotoFriendPage,
+                          bottomSheetFuncs: [
+                            PostOption(
+                                icon: Icons.edit,
+                                buttonFunc: () async {
+                                  Navigator.pop(context);
+                                  await postState.postOnChange(myAllPosts[index], "edit");
+                                  globalKey.currentState!.openEndDrawer();
+                                },
+                                funcText: '編輯文章'),
+                            PostOption(
+                                icon: FontAwesomeIcons.commentSlash,
+                                buttonFunc: () {
+                                  Navigator.pop(context);
+                                  exitCheck(myAllPosts[index].id);
+                                },
+                                funcText: '刪除'),
+                          ],
+                        ),
+                      ],
+                    );
+                  }),
                 ),
-              ],
-            ),
-          )),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

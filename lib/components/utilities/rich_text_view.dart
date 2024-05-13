@@ -7,6 +7,7 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../models/rich_text_format.dart';
 
 class RichTextView extends StatefulWidget {
@@ -23,7 +24,7 @@ PhotoViewController photoViewController = PhotoViewController();
 class _RichTextViewState extends State<RichTextView> with SingleTickerProviderStateMixin {
   Future<void> imageView(String imgUrl) {
     double value = 1;
-    double zoomSpeed = 0.05 * ScreenSize().height / ScreenSize().width;
+    double zoomSpeed = 0.01 * ScreenSize().height / ScreenSize().width;
     Timer timer = Timer(Duration.zero, () {});
 
     return showDialog<void>(
@@ -126,6 +127,9 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
   double fontSize = 18;
   @override
   Widget build(BuildContext context) {
+    late List<YoutubePlayerController> ytController = [];
+    int index = 0;
+
     String choicedImg = "";
     return (widget.isPreView != true)
         //全文章
@@ -138,7 +142,6 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                 final Uri _url = Uri.parse(url);
                 launchUrl(_url);
               }
-
               return false;
             },
             customWidgetBuilder: (element) {
@@ -156,19 +159,40 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   },
                   onTapImage: (src) {
                     print("onTapImage: ${src.sources.first.url}");
-
                     setState(() {
                       choicedImg = src.sources.first.url;
                     });
-
                     imageView(choicedImg);
                   },
+                );
+              } else if (element.localName == "iframe") {
+                int startIndex = element.outerHtml.indexOf('src=') + 'src="https://www.youtube.com/embed/'.length;
+                int endIndex = element.outerHtml.indexOf('">');
+                String videoId = element.outerHtml.substring(startIndex, endIndex);
+
+                index = ytController.length;
+
+                ytController.add(
+                  YoutubePlayerController(
+                    initialVideoId: videoId,
+                    flags: const YoutubePlayerFlags(
+                      autoPlay: false,
+                      mute: false,
+                    ),
+                  ),
+                );
+
+                return SizedBox(
+                  width: ScreenSize().width,
+                  child: YoutubePlayer(
+                    controller: ytController[index],
+                    onReady: () => {},
+                  ),
                 );
               }
             },
             onTapImage: (src) {
               print("onTapImage: ${src.sources.first.url}");
-
               setState(() {
                 choicedImg = src.sources.first.url;
               });

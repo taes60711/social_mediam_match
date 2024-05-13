@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/course_model.dart';
+import '../models/user_model.dart';
 import 'services/db_service.dart';
 
 class CourseState extends ChangeNotifier {
@@ -13,8 +14,36 @@ class CourseState extends ChangeNotifier {
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   CourseModel? choicedCourse;
 
-  void choicedPage(CourseModel c) {
-    choicedCourse = c;
+  double startScrollPosition = -1;
+  void getStartScrollPos(double pos) {
+    startScrollPosition = pos;
+    notifyListeners();
+  }
+
+  bool floatButtonIsVisiable = false;
+  void floatButtonVisiableChange(double posheight) {
+    if (posheight < 40) {
+      if (floatButtonIsVisiable) {
+        floatButtonIsVisiable = false;
+        notifyListeners();
+      }
+    } else {
+      if (!floatButtonIsVisiable) {
+        floatButtonIsVisiable = true;
+        notifyListeners();
+      }
+    }
+  }
+
+  String endDrawerType = "";
+  LoginUser? otherUser;
+  void openEndDrawer(String type, {LoginUser? user, CourseModel? course}) {
+    endDrawerType = type;
+    if (type == "userDetail") {
+      otherUser = user;
+    } else {
+      choicedCourse = course;
+    }
     notifyListeners();
   }
 

@@ -7,6 +7,7 @@ import '../models/user_model.dart';
 class PostState extends ChangeNotifier {
   final DBService _dbService = DBService();
   final GlobalKey<ScaffoldState> forumGlobalKey = GlobalKey();
+  bool floatButtonIsVisiable = false;
 
   bool isCanLoading = true;
   List<PostModel> postData = [];
@@ -34,18 +35,37 @@ class PostState extends ChangeNotifier {
   TextEditingController messageInput = TextEditingController();
   String myPostEndDrawerType = "";
 
-  int selectedboardIndex = 0;
+  double startScrollPosition = -1;
+  void getStartScrollPos(double pos) {
+    startScrollPosition = pos;
+    notifyListeners();
+  }
 
+  void floatButtonVisiableChange(double posheight) {
+    if (posheight < 40) {
+      if (floatButtonIsVisiable) {
+        floatButtonIsVisiable = false;
+        notifyListeners();
+      }
+    } else {
+      if (!floatButtonIsVisiable) {
+        floatButtonIsVisiable = true;
+        notifyListeners();
+      }
+    }
+  }
+
+  int selectedboardIndex = 0;
   void boardOnChange(int type) {
     selectedboardIndex = type;
     forumGlobalKey.currentState!.openEndDrawer();
     notifyListeners();
   }
 
-  void postOnChange(PostModel choicedPost, String endDrawerType) {
+  Future<void> postOnChange(PostModel choicedPost, String endDrawerType) async {
     myPostEndDrawerType = endDrawerType;
     this.choicedPost = choicedPost;
-    Future.delayed(Duration.zero).then((value) => notifyListeners());
+    await Future.delayed(Duration.zero).then((value) => notifyListeners());
   }
 
   Future<void> getPostDataByUID(LoginUser userData, {required bool isFirstSearch}) async {

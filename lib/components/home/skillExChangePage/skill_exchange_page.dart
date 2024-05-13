@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/users_filter.dart';
@@ -161,6 +162,9 @@ class SkillExChangePage extends StatelessWidget {
     String endDrawerType = context.select((SkillExChangeState value) => value.endDrawerType);
     LoginUser? otherUser = context.select((SkillExChangeState value) => value.otherUser);
 
+    double startScrollPosition = context.select((SkillExChangeState value) => value.startScrollPosition);
+    ScrollController scrollController = ScrollController();
+    bool floatButtonIsVisiable = context.select((SkillExChangeState value) => value.floatButtonIsVisiable);
     return StatefulWrapper(
       onInit: () {
         Future.delayed(Duration(milliseconds: 200)).then((value) async =>
@@ -179,6 +183,20 @@ class SkillExChangePage extends StatelessWidget {
                 otherUser: otherUser,
                 gotoFriendPage: gotoFriendPage,
               ),
+        floatingActionButton: Visibility(
+          visible: floatButtonIsVisiable,
+          child: FloatingActionButton(
+            mini: true,
+            backgroundColor: normalBgColor2,
+            onPressed: () {
+              scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+            },
+            child: const Icon(
+              FontAwesomeIcons.angleUp,
+              size: 16,
+            ),
+          ),
+        ),
         body: BackgroundWidget(
           isSafeArea: true,
           child: isFirstLoading
@@ -198,16 +216,21 @@ class SkillExChangePage extends StatelessWidget {
                     Expanded(
                       child: NotificationListener<ScrollNotification>(
                         onNotification: (ScrollNotification scrollNotification) {
-                          if (scrollNotification is ScrollUpdateNotification) {
+                          if (scrollNotification is ScrollStartNotification) {
+                            skillExChangeState.getStartScrollPos(scrollNotification.metrics.pixels);
+                          } else if (scrollNotification is ScrollUpdateNotification) {
                             final scrollPosition = scrollNotification.metrics.pixels;
                             final max = scrollNotification.metrics.maxScrollExtent;
                             if (!isAddDataLoading && !isReLoading) {
                               if (scrollPosition > max && !isAddDataLoading) {
                                 skillExChangeState.addData();
-                              } else if (scrollPosition < 0 && !isReLoading) {
-                                skillExChangeState.reLoadingPage();
+                              } else if (startScrollPosition <= 0) {
+                                if (scrollPosition < 0 && !isReLoading) {
+                                  skillExChangeState.reLoadingPage();
+                                }
                               }
                             }
+                            skillExChangeState.floatButtonVisiableChange(scrollPosition);
                           }
                           if (scrollNotification is ScrollEndNotification) {
                             if (isAddDataLoading) {
@@ -221,6 +244,7 @@ class SkillExChangePage extends StatelessWidget {
                           return false;
                         },
                         child: ListView.builder(
+                            controller: scrollController,
                             itemCount: allUserData.length,
                             itemBuilder: (context, index) {
                               double titleTextSize = 14;
