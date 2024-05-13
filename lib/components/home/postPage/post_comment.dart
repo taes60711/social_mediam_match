@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
@@ -256,7 +257,7 @@ class PostComment extends StatelessWidget {
                                                     children: [
                                                       Expanded(
                                                         child: SingleChildScrollView(
-                                                          physics: BouncingScrollPhysics(),
+                                                          physics: const CustomBouncingScrollPhysics(haveReloading: false),
                                                           controller: scrollController,
                                                           child: Column(
                                                             children: [

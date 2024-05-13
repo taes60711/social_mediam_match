@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 export 'package:flutter/physics.dart' show ScrollSpringSimulation, Simulation, Tolerance;
 
 class CustomBouncingScrollPhysics extends ScrollPhysics {
+  final bool? haveReloading;
   const CustomBouncingScrollPhysics({
     this.decelerationRate = ScrollDecelerationRate.normal,
+    this.haveReloading,
     super.parent,
   });
 
@@ -70,13 +72,14 @@ class CustomBouncingScrollPhysics extends ScrollPhysics {
   @override
   Simulation? createBallisticSimulation(ScrollMetrics position, double velocity) {
     final Tolerance tolerance = toleranceFor(position);
+    final bool hReloading = haveReloading ?? true;
     if (velocity.abs() >= tolerance.velocity) {
       return BouncingScrollSimulation(
         spring: spring,
         position: position.pixels,
         velocity: velocity,
         leadingExtent: position.minScrollExtent,
-        trailingExtent: position.maxScrollExtent - 36, //36為Loading的size
+        trailingExtent: hReloading ? position.maxScrollExtent - 36 : position.maxScrollExtent, //36為Loading的size
         tolerance: tolerance,
       );
     }
