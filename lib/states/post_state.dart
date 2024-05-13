@@ -62,10 +62,10 @@ class PostState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void postOnChange(PostModel choicedPost, String endDrawerType) {
+  Future<void> postOnChange(PostModel choicedPost, String endDrawerType) async {
     myPostEndDrawerType = endDrawerType;
     this.choicedPost = choicedPost;
-    Future.delayed(Duration.zero).then((value) => notifyListeners());
+    await Future.delayed(Duration.zero).then((value) => notifyListeners());
   }
 
   Future<void> getPostDataByUID(LoginUser userData, {required bool isFirstSearch}) async {

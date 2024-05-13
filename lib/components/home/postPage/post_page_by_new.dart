@@ -124,6 +124,14 @@ class PostPageByNew extends StatelessWidget {
                                       globalKey: globalKey,
                                       userData: userData,
                                       gotoFriendPage: gotoFriendPage,
+                                      bottomSheetFuncs: [
+                                        PostOption(
+                                            icon: Icons.link,
+                                            buttonFunc: () async {
+                                              print("分享");
+                                            },
+                                            funcText: '分享'),
+                                      ],
                                     );
                                     return index != postData.length - 1
                                         ? mainBody

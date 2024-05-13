@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/home/postPage/post_body.dart';
@@ -163,24 +164,24 @@ class MyPosts extends StatelessWidget {
                           globalKey: globalKey,
                           userData: userData,
                           gotoFriendPage: gotoFriendPage,
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                postState.postOnChange(myAllPosts[index], "edit");
-                                globalKey.currentState!.openEndDrawer();
-                              },
-                              icon: Icon(Icons.edit),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                exitCheck(myAllPosts[index].id);
-                              },
-                              icon: Icon(Icons.close),
-                            ),
+                          bottomSheetFuncs: [
+                            PostOption(
+                                icon: Icons.edit,
+                                buttonFunc: () async {
+                                  Navigator.pop(context);
+                                  await postState.postOnChange(myAllPosts[index], "edit");
+                                  globalKey.currentState!.openEndDrawer();
+                                },
+                                funcText: '編輯文章'),
+                            PostOption(
+                                icon: FontAwesomeIcons.commentSlash,
+                                buttonFunc: () {
+                                  Navigator.pop(context);
+                                  exitCheck(myAllPosts[index].id);
+                                },
+                                funcText: '刪除'),
                           ],
-                        )
+                        ),
                       ],
                     );
                   }),

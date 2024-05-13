@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
@@ -209,13 +208,20 @@ class NoPostData extends StatelessWidget {
   }
 }
 
+class PostOption {
+  IconData icon;
+  String funcText;
+  Function buttonFunc;
+  PostOption({required this.icon, required this.buttonFunc, required this.funcText});
+}
+
 class PostBody extends StatelessWidget {
   final PostModel postData;
   final PostState postState;
   final GlobalKey<ScaffoldState> globalKey;
   final LoginUser userData;
   final VoidCallback gotoFriendPage;
-
+  final List<PostOption>? bottomSheetFuncs;
   const PostBody({
     super.key,
     required this.postData,
@@ -223,6 +229,7 @@ class PostBody extends StatelessWidget {
     required this.globalKey,
     required this.userData,
     required this.gotoFriendPage,
+    this.bottomSheetFuncs,
   });
 
   @override
@@ -342,6 +349,112 @@ class PostBody extends StatelessWidget {
               ),
               onTap: () {
                 print("Icon");
+                showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (builder) {
+                      return DraggableScrollableSheet(
+                          expand: false,
+                          minChildSize: 0.25,
+                          initialChildSize: 0.3,
+                          maxChildSize: 0.3,
+                          builder: (context, scrollController) {
+                            List<PostOption> bSheetFuncs = bottomSheetFuncs ?? [];
+                            return Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(10),
+                                  ),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: ScreenSize().width * 0.33,
+                                        ),
+                                        Container(
+                                          alignment: Alignment.topCenter,
+                                          width: ScreenSize().width * 0.33,
+                                          child: Icon(
+                                            Icons.remove,
+                                            size: 35,
+                                            color: normalBgColor2,
+                                          ),
+                                        ),
+                                        Container(
+                                          alignment: Alignment.topRight,
+                                          padding: const EdgeInsets.only(right: 10),
+                                          width: ScreenSize().width * 0.33,
+                                          child: Container(
+                                            color: Colors.transparent,
+                                            padding: const EdgeInsets.all(5),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Icon(
+                                                Icons.close,
+                                                size: 25,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                        physics: ClampingScrollPhysics(),
+                                        child: Column(
+                                          children: bSheetFuncs
+                                              .map((e) => Padding(
+                                                    padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        e.buttonFunc();
+                                                      },
+                                                      child: Container(
+                                                        width: ScreenSize().width,
+                                                        height: 50,
+                                                        decoration: BoxDecoration(
+                                                            color: normalBgColor2, borderRadius: BorderRadius.circular(10)),
+                                                        child: Center(
+                                                          child: SizedBox(
+                                                            width: 100,
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(
+                                                                  e.icon,
+                                                                  color: normalTextColor,
+                                                                  size: 25,
+                                                                ),
+                                                                const SizedBox(width: 5),
+                                                                SizedBox(
+                                                                  width: 70,
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                      e.funcText,
+                                                                      style: TextStyle(color: normalTextColor),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ))
+                                              .toList(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ));
+                          });
+                    });
               },
             ),
           ),
