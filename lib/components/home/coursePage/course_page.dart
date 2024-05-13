@@ -260,19 +260,78 @@ class CoursePage extends StatelessWidget {
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(right: 10),
-                                              child: Container(
-                                                padding: EdgeInsets.all(10),
-                                                color: Colors.transparent,
-                                                child: GestureDetector(
+                                              child: GestureDetector(
+                                                child: Container(
+                                                  padding: EdgeInsets.all(10),
+                                                  color: Colors.transparent,
                                                   child: Icon(
                                                     FontAwesomeIcons.ellipsis,
                                                     color: hintTextColor,
                                                     size: 14,
                                                   ),
-                                                  onTap: () {
-                                                    print("Icon");
-                                                  },
                                                 ),
+                                                onTap: () {
+                                                  print("Icon");
+                                                  showModalBottomSheet(
+                                                      context: context,
+                                                      isScrollControlled: true,
+                                                      backgroundColor: Colors.transparent,
+                                                      builder: (builder) {
+                                                        return DraggableScrollableSheet(
+                                                            expand: false,
+                                                            minChildSize: 0.25,
+                                                            initialChildSize: 0.3,
+                                                            maxChildSize: 0.3,
+                                                            builder: (context, scrollController) {
+                                                              return Container(
+                                                                decoration: const BoxDecoration(
+                                                                  color: Colors.white,
+                                                                  borderRadius: BorderRadius.vertical(
+                                                                    top: Radius.circular(10),
+                                                                  ),
+                                                                ),
+                                                                child: Column(
+                                                                  children: [
+                                                                    Row(
+                                                                      children: [
+                                                                        SizedBox(
+                                                                          width: ScreenSize().width * 0.33,
+                                                                        ),
+                                                                        Container(
+                                                                          alignment: Alignment.topCenter,
+                                                                          width: ScreenSize().width * 0.33,
+                                                                          child: Icon(
+                                                                            Icons.remove,
+                                                                            size: 35,
+                                                                            color: normalBgColor2,
+                                                                          ),
+                                                                        ),
+                                                                        Container(
+                                                                          alignment: Alignment.topRight,
+                                                                          padding: const EdgeInsets.only(right: 10),
+                                                                          width: ScreenSize().width * 0.33,
+                                                                          child: Container(
+                                                                            color: Colors.transparent,
+                                                                            padding: const EdgeInsets.all(5),
+                                                                            child: GestureDetector(
+                                                                              onTap: () {
+                                                                                Navigator.pop(context);
+                                                                              },
+                                                                              child: const Icon(
+                                                                                Icons.close,
+                                                                                size: 25,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            });
+                                                      });
+                                                },
                                               ),
                                             ),
                                           ],
