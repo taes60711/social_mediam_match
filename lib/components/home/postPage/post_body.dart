@@ -420,7 +420,7 @@ class PostBody extends StatelessWidget {
                                                       width: ScreenSize().width,
                                                       height: 45,
                                                       decoration: BoxDecoration(
-                                                          color: googleColor, borderRadius: BorderRadius.circular(10)),
+                                                          color: normalBgColor2, borderRadius: BorderRadius.circular(10)),
                                                       child: Center(
                                                         child: SizedBox(
                                                           width: 100,

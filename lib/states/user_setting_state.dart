@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:http/http.dart' as http;
 import 'package:social_mediam_match/models/user_model.dart';
-
 import '../models/skill_model.dart';
 
 class UserSettingState extends ChangeNotifier {
@@ -95,10 +94,11 @@ class UserSettingState extends ChangeNotifier {
 
   Future<void> imageChange() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery, maxHeight: 150, maxWidth: 150);
 
     if (image != null) {
       File _image = File(image.path);
+
       String base64String = base64Encode(_image.readAsBytesSync());
       base64Img = base64String;
       notifyListeners();
