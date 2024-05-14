@@ -7,12 +7,14 @@ import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 import 'package:social_mediam_match/components/account/login_page.dart';
 import 'package:social_mediam_match/components/account/signUpPage/signup_page.dart';
 import 'package:social_mediam_match/components/Initial/initial_page.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_edit_page.dart';
 import 'package:social_mediam_match/components/home/postPage/editor_page.dart';
 import 'package:social_mediam_match/components/home/userPage/my_posts.dart';
 import 'package:social_mediam_match/components/home/userPage/profile.dart';
 import 'package:social_mediam_match/components/home/userPage/privacy_setting.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
+import 'package:social_mediam_match/states/course_state.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
@@ -86,6 +88,10 @@ class MyApp extends StatelessWidget {
         '/postEdit': (BuildContext context) => ChangeNotifierProvider(
               create: (_) => PostState(),
               child: const EditorPage(),
+            ),
+        '/courseEdit': (BuildContext context) => ChangeNotifierProvider(
+              create: (_) => CourseState(),
+              child: const CourseEditPage(),
             ),
         '/privacySetting': (BuildContext context) => const PrivacySetting(),
         '/profile': (BuildContext context) => ChangeNotifierProvider(

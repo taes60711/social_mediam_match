@@ -48,31 +48,10 @@ class RichTextEditor extends StatelessWidget {
                               }),
                           ElevatedButton(
                             onPressed: () async {
-                              String getVideoID(String url) {
-                                int start = 0;
-                                if (url.contains('/shorts/')) {
-                                  start = url.indexOf('/shorts/') + '/shorts/'.length;
-                                } else if (url.contains('/youtu.be/')) {
-                                  start = url.indexOf('/youtu.be/') + '/youtu.be/'.length;
-                                } else {
-                                  start = url.indexOf('?v=') + '?v='.length;
-                                }
-                                int end = 0;
-                                if (url.contains('&list')) {
-                                  end = url.indexOf('&list');
-                                } else if (url.contains('?si')) {
-                                  end = url.indexOf('?si');
-                                } else {
-                                  end = url.length;
-                                }
-
-                                String tmpId = url.substring(start, end);
-                                return tmpId;
-                              }
-
-                              String youtubeId = 'https://www.youtube.com/embed/${getVideoID(linkController.text)}';
+                              String ytId = RichTextFormat().getYtvideoID(linkController.text);
+                              String ytURL = 'https://www.youtube.com/embed/$ytId';
                               String urlString =
-                                  '<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="$youtubeId"></iframe><p><br></p>';
+                                  '<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="$ytURL"></iframe><p><br></p>';
 
                               await controller.insertText(urlString);
                               Navigator.pop(context);

@@ -6,9 +6,9 @@ import '../global.dart';
 import '../states/services/image_service.dart';
 
 class RichTextFormat {
-  String htmlString;
+  String? htmlString;
   RichTextFormat({
-    required this.htmlString,
+    this.htmlString,
   });
 
   // ["15px", "18px", '24px', '32px', '48px']
@@ -19,7 +19,7 @@ class RichTextFormat {
   };
 
   Future<String> sendPostImgFormat() async {
-    String _htmlString = htmlString;
+    String _htmlString = htmlString ?? "";
     var node = html.parse(htmlString).body;
 
     if (node!.nodeType == Node.ELEMENT_NODE) {
@@ -52,7 +52,7 @@ class RichTextFormat {
   }
 
   String editedTextToWidgetHtml() {
-    String _htmlString = mappingIPAndPort(htmlString);
+    String _htmlString = mappingIPAndPort(htmlString ?? "");
     var node = html.parse(_htmlString).body;
 
     if (node!.nodeType == Node.ELEMENT_NODE) {
@@ -157,13 +157,11 @@ class RichTextFormat {
         }
       });
     }
-
-    // print(htmlString);
     return _htmlString;
   }
 
   Map<String, dynamic> getPostPreView() {
-    String _htmlString = mappingIPAndPort(htmlString);
+    String _htmlString = mappingIPAndPort(htmlString ?? "");
     var node = html.parse(_htmlString).body;
     String resultString = "";
     bool isImage = false;
@@ -178,9 +176,15 @@ class RichTextFormat {
       var allElements = node.querySelectorAll('*');
 
       allElements.forEach((element) {
-        if (element.innerHtml.contains("img")) {
-          isImage = true;
-          resultString = getImage(element.innerHtml);
+        if (!isImage) {
+          if (element.innerHtml.contains("img")) {
+            isImage = true;
+            resultString = getImage(element.innerHtml);
+          } else if (element.localName == "iframe") {
+            String ytId = RichTextFormat().getYtvideoID(element.outerHtml);
+            isImage = true;
+            resultString = "https://img.youtube.com/vi/$ytId/hqdefault.jpg";
+          }
         }
       });
     }
@@ -215,5 +219,31 @@ class RichTextFormat {
     String changedHtmlString = htmlString.replaceAll('\$ip', ip);
     changedHtmlString = changedHtmlString.replaceAll('\$port', port);
     return changedHtmlString;
+  }
+
+  String getYtvideoID(String url) {
+    int start = 0;
+    if (url.contains('/shorts/')) {
+      start = url.indexOf('/shorts/') + '/shorts/'.length;
+    } else if (url.contains('/youtu.be/')) {
+      start = url.indexOf('/youtu.be/') + '/youtu.be/'.length;
+    } else if (url.contains('src=')) {
+      start = url.indexOf('src=') + 'src="https://www.youtube.com/embed/'.length;
+    } else {
+      start = url.indexOf('?v=') + '?v='.length;
+    }
+    int end = 0;
+    if (url.contains('&list')) {
+      end = url.indexOf('&list');
+    } else if (url.contains('?si')) {
+      end = url.indexOf('?si');
+    } else if (url.contains('src=')) {
+      end = url.indexOf('">');
+    } else {
+      end = url.length;
+    }
+
+    String tmpId = url.substring(start, end);
+    return tmpId;
   }
 }

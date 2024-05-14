@@ -131,17 +131,22 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
     int index = 0;
 
     String choicedImg = "";
+
+    void tapedURL(String url) {
+      print("click: $url");
+      if (Platform.isAndroid) {
+        final Uri _url = Uri.parse(url);
+        launchUrl(_url);
+      }
+    }
+
     return (widget.isPreView != true)
         //全文章
         ? HtmlWidget(
             RichTextFormat(htmlString: widget.content).editedTextToWidgetHtml(),
             textStyle: TextStyle(fontSize: fontSize),
             onTapUrl: (url) {
-              print("click: $url");
-              if (Platform.isAndroid) {
-                final Uri _url = Uri.parse(url);
-                launchUrl(_url);
-              }
+              tapedURL(url);
               return false;
             },
             customWidgetBuilder: (element) {
@@ -150,11 +155,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   element.innerHtml,
                   textStyle: TextStyle(fontSize: fontSize),
                   onTapUrl: (url) {
-                    print("click: $url");
-                    if (Platform.isAndroid) {
-                      final Uri _url = Uri.parse(url);
-                      launchUrl(_url);
-                    }
+                    tapedURL(url);
                     return false;
                   },
                   onTapImage: (src) {
@@ -166,15 +167,12 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   },
                 );
               } else if (element.localName == "iframe") {
-                int startIndex = element.outerHtml.indexOf('src=') + 'src="https://www.youtube.com/embed/'.length;
-                int endIndex = element.outerHtml.indexOf('">');
-                String videoId = element.outerHtml.substring(startIndex, endIndex);
-
+                String ytId = RichTextFormat().getYtvideoID(element.outerHtml);
                 index = ytController.length;
 
                 ytController.add(
                   YoutubePlayerController(
-                    initialVideoId: videoId,
+                    initialVideoId: ytId,
                     flags: const YoutubePlayerFlags(
                       autoPlay: false,
                       mute: false,
@@ -204,18 +202,22 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
             bool haveImage = RichTextFormat(htmlString: widget.content).getPostPreView()["IsImage"];
             String resultString = RichTextFormat(htmlString: widget.content).getPostPreView()["resultString"];
 
-            return haveImage
-                ? Image.network(
-                    resultString,
-                    width: ScreenSize().width,
-                    height: 150,
-                    fit: BoxFit.cover,
-                    gaplessPlayback: true,
-                  )
-                : HtmlWidget(
-                    resultString,
-                    textStyle: TextStyle(fontSize: fontSize),
-                  );
+            Widget component;
+            if (haveImage) {
+              component = Image.network(
+                resultString,
+                width: ScreenSize().width,
+                height: 150,
+                fit: BoxFit.cover,
+                gaplessPlayback: true,
+              );
+            } else {
+              component = HtmlWidget(
+                resultString,
+                textStyle: TextStyle(fontSize: fontSize),
+              );
+            }
+            return component;
           });
   }
 }

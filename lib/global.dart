@@ -28,6 +28,7 @@ enum RoutePath {
   signUpPage("/signUp"),
   profilePage("/profile"),
   postEditPage("/postEdit"),
+  courseEditPage("/courseEdit"),
   skillChoicePage("/skillChoice"),
   myPosts("/myposts"),
   privacySettingPage("/privacySetting");

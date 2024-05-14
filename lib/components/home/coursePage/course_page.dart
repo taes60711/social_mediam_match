@@ -13,6 +13,7 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
+import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../skillExChangePage/user_detail.dart';
 
@@ -42,43 +43,89 @@ class CoursePage extends StatelessWidget {
     double startScrollPosition = context.select((CourseState value) => value.startScrollPosition);
     ScrollController scrollController = ScrollController();
     bool floatButtonIsVisiable = context.select((CourseState value) => value.floatButtonIsVisiable);
-    return Scaffold(
-      key: globalKey,
-      floatingActionButton: Visibility(
-        visible: floatButtonIsVisiable,
-        child: FloatingActionButton(
-          mini: true,
-          backgroundColor: normalBgColor2,
-          onPressed: () {
-            scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
-          },
-          child: const Icon(
-            FontAwesomeIcons.angleUp,
-            size: 16,
-          ),
-        ),
-      ),
-      endDrawer: endDrawerType == "userDetail"
-          ? UserDetail(
-              globalKey: globalKey,
-              userData: userData,
-              otherUser: otherUser,
-              gotoFriendPage: gotoFriendPage,
-            )
-          : CourseDetail(
-              courseData: choicedCourse,
-              globalKey: globalKey,
-              userData: userData,
-              gotoFriendPage: gotoFriendPage,
-            ),
-      body: SafeArea(
-        child: StatefulWrapper(
-          onInit: () {
-            courseState.getAllCourseData(searchType: "First");
-          },
-          child: isFirstLoading
-              ? const Loading()
-              : Column(
+
+    return StatefulWrapper(
+      onInit: () async {
+        await courseState.getAllCourseData(searchType: "First");
+      },
+      child: isFirstLoading
+          ? const Loading()
+          : Scaffold(
+              key: globalKey,
+              endDrawer: endDrawerType == "userDetail"
+                  ? UserDetail(
+                      globalKey: globalKey,
+                      userData: userData,
+                      otherUser: otherUser,
+                      gotoFriendPage: gotoFriendPage,
+                    )
+                  : CourseDetail(
+                      courseData: choicedCourse,
+                      globalKey: globalKey,
+                      userData: userData,
+                      gotoFriendPage: gotoFriendPage,
+                    ),
+              floatingActionButton: Visibility(
+                visible: floatButtonIsVisiable,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(RoutePath.courseEditPage.value);
+                      },
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: normalTextColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 1,
+                              offset: Offset(-1, 4), // Shadow position
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          FontAwesomeIcons.penToSquare,
+                          size: 16,
+                          color: Color.fromARGB(255, 247, 147, 100),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () {
+                        scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+                      },
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: normalBgColor2,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 1,
+                              offset: Offset(-1, 4), // Shadow position
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          FontAwesomeIcons.angleUp,
+                          size: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              body: SafeArea(
+                child: Column(
                   children: [
                     Align(
                       alignment: Alignment.topRight,
@@ -361,8 +408,8 @@ class CoursePage extends StatelessWidget {
                     ),
                   ],
                 ),
-        ),
-      ),
+              ),
+            ),
     );
   }
 }
