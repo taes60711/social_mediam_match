@@ -72,7 +72,10 @@ class CoursePage extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed(RoutePath.courseEditPage.value);
+                        Navigator.of(context).pushNamed(RoutePath.courseEditPage.value, arguments: {
+                          "userData": userData,
+                          "courseState": courseState,
+                        });
                       },
                       child: Container(
                         width: 40,

@@ -1,8 +1,10 @@
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/course_model.dart';
+import '../global.dart';
 import '../models/user_model.dart';
 import 'services/db_service.dart';
+import 'package:http/http.dart' as http;
 
 class CourseState extends ChangeNotifier {
   final DBService _dbService = DBService();
@@ -10,9 +12,82 @@ class CourseState extends ChangeNotifier {
   List<CourseModel> topCourseData = [];
   bool isFirstLoading = false, isAddDataLoading = false, isReLoading = false, isTopFirstLoading = false;
 
-  int carouselPageIndex = 0;
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   CourseModel? choicedCourse;
+
+  //サーバーアドレス
+  String url = "http://$ip:$port";
+  List<Map<String, dynamic>> skillList = [];
+  List<String> choicedskillList = [];
+  Future<bool> getSkillListData({LoginUser? userData}) async {
+    bool result = false;
+    var uri = Uri.parse('$url/skill/getList');
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        List<dynamic> jsonData = json.decode(response.body);
+        for (var e in jsonData) {
+          skillList.add({"name": e['name'], "ischoiced": false});
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return result;
+  }
+
+  void choiceSkill(int index) {
+    skillList[index]['ischoiced'] = !skillList[index]['ischoiced'];
+    if (skillList[index]['ischoiced']) {
+      choicedskillList.add(skillList[index]['name']);
+    } else {
+      choicedskillList.remove(skillList[index]['name']);
+    }
+    notifyListeners();
+  }
+
+  bool isPublic = true;
+  void isPublicOnChange() {
+    isPublic = !isPublic;
+    notifyListeners();
+  }
+
+  List<CourseChapterInfo> chapters = [];
+  void addChapter() {
+    chapters.add(CourseChapterInfo(chapter: chapters.length + 1, content: []));
+    print("addChapter");
+    notifyListeners();
+  }
+
+  void deleteChapter(int index) {
+    chapters.remove(chapters[index]);
+    print("deleteChapter");
+    notifyListeners();
+  }
+
+  void addChapterContent(int index, String content) {
+    chapters[index].content.add(content);
+    print("chapterContents");
+    notifyListeners();
+  }
+
+  void deleteChapterContent(int chapterIndex, int contentIndex) {
+    chapters[chapterIndex].content.remove(chapters[chapterIndex].content[contentIndex]);
+    print("deleteChapterContent");
+    notifyListeners();
+  }
+
+  String needLevel = '1';
+  String type = '1';
+  void needLevelChange(String value, String wantChangeValue) {
+    if (wantChangeValue == "needLevel")
+      needLevel = value;
+    else if (wantChangeValue == "type") {
+      type = value;
+    }
+    notifyListeners();
+  }
 
   double startScrollPosition = -1;
   void getStartScrollPos(double pos) {
@@ -45,6 +120,11 @@ class CourseState extends ChangeNotifier {
       choicedCourse = course;
     }
     notifyListeners();
+  }
+
+  Future<bool> createCourse({required CourseCreateModel createCourseData}) async {
+    bool createResult = await _dbService.createCourse(createCourseData: createCourseData);
+    return createResult;
   }
 
   Future<void> getAllCourseData({required String searchType}) async {

@@ -1,23 +1,301 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/title_input.dart';
+import 'package:social_mediam_match/states/course_state.dart';
+
+import '../../../models/course_model.dart';
+import '../../../models/rich_text_format.dart';
+import '../../../models/user_model.dart';
+import '../../utilities/rich_text_view.dart';
+import '../../utilities/style/style_config.dart';
 
 class CourseEditPage extends StatelessWidget {
   const CourseEditPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    print("CourseEditPage");
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("exit"),
-            )
-          ],
-        ),
-      ),
+      body: Consumer<CourseState>(builder: (context, courseState, _) {
+        LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
+        TextEditingController titleController = TextEditingController();
+        TextEditingController contentController = TextEditingController();
+        TextEditingController beforeNeedController = TextEditingController();
+        bool isPublic = context.select((CourseState value) => value.isPublic);
+        GlobalKey<ScaffoldState> key = context.select((CourseState value) => value.globalKey);
+        List<CourseChapterInfo> chapters = context.select((CourseState value) => value.chapters);
+        List<Map<String, dynamic>> skillList = context.select((CourseState value) => value.skillList);
+        List<String> choicedskillList = context.select((CourseState value) => value.choicedskillList);
+        String needLevel = context.select((CourseState value) => value.needLevel);
+        String type = context.select((CourseState value) => value.type);
+        var items = [
+          '1',
+          '2',
+          '3',
+          '4',
+          '5',
+        ];
+        return StatefulWrapper(
+            onInit: () async {
+              await courseState.getSkillListData();
+            },
+            child: Scaffold(
+              body: SafeArea(
+                child: Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("exit"),
+                    ),
+                    TitleInput(title: "標題", textController: titleController),
+                    TitleInput(title: "課程大綱", textController: contentController),
+                    TitleInput(title: "課程前需要", textController: beforeNeedController),
+                    Text("類別"),
+                    DropdownButton(
+                      value: type,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: items.map((String items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Text(items),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        courseState.needLevelChange(newValue ?? "1", "type");
+                      },
+                    ),
+                    Text("課程難度"),
+                    DropdownButton(
+                      value: needLevel,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: items.map((String items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Text(items),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        courseState.needLevelChange(newValue ?? "1", "needLevel");
+                      },
+                    ),
+                    SizedBox(
+                      height: 100,
+                      child: ListView(
+                        children: skillList.asMap().entries.map((e) {
+                          int index = e.key;
+                          String skillName = e.value["name"];
+                          bool ischoiced = e.value['ischoiced'];
+                          return GestureDetector(
+                            onTap: () {
+                              courseState.choiceSkill(index);
+                            },
+                            child: Text(
+                              skillName,
+                              style: TextStyle(color: ischoiced ? normalBgColor : normalBgColor2),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Text("章節"),
+                        ElevatedButton(
+                          onPressed: () {
+                            courseState.addChapter();
+                          },
+                          child: Text("Plus"),
+                        )
+                      ],
+                    ),
+                    Expanded(
+                      child: ListView(
+                        physics: BouncingScrollPhysics(),
+                        children: chapters.asMap().entries.map((e) {
+                          int index = e.key;
+                          CourseChapterInfo chapter = e.value;
+                          return ExpansionTile(
+                            title: Row(
+                              children: [
+                                Expanded(
+                                  child: Text("章節 ${chapter.chapter}"),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    TextEditingController linkController = TextEditingController();
+                                    TextEditingController linkTextController = TextEditingController();
+
+                                    Future<void> setLinkView() {
+                                      return showDialog<void>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text('Link'),
+                                            content: Container(
+                                              margin: const EdgeInsets.symmetric(horizontal: 5),
+                                              width: ScreenSize().width,
+                                              child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                                                TitleInput(title: 'Link Text', textController: linkTextController),
+                                                TitleInput(title: 'URL', textController: linkController)
+                                              ]),
+                                            ),
+                                            actions: [
+                                              ElevatedButton(
+                                                  child: Text('cancel'),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  }),
+                                              ElevatedButton(
+                                                onPressed: () async {
+                                                  String ytId = RichTextFormat().getYtvideoID(linkController.text);
+                                                  String ytURL = 'https://www.youtube.com/embed/$ytId';
+                                                  String content = '{"text":"${linkTextController.text}","url":"$ytURL"}';
+                                                  courseState.addChapterContent(index, content);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text("send"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+
+                                    await setLinkView();
+                                  },
+                                  child: Text("add"),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    courseState.deleteChapter(index);
+                                  },
+                                  child: Text("delete"),
+                                )
+                              ],
+                            ),
+                            children: chapters[index].content.asMap().entries.map((e) {
+                              int contentIndex = e.key;
+                              String content = e.value;
+                              Map<String, dynamic> resultData = jsonDecode(content);
+                              String chapterText = "${resultData['text']}";
+                              String chapterUrl = "${resultData['url']}";
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 5),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 5),
+                                      child: Icon(
+                                        Icons.ondemand_video,
+                                        color: normalBgColor2,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          String vidoeHtml = "<iframe src='${chapterUrl}'></iframe>";
+
+                                          showGeneralDialog(
+                                              barrierColor: Colors.black.withOpacity(0.7),
+                                              transitionBuilder: (context, a1, a2, widget) {
+                                                return Transform.scale(
+                                                  scale: a1.value,
+                                                  child: Opacity(
+                                                    opacity: a1.value,
+                                                    child: SizedBox(
+                                                      height: ScreenSize().height,
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                            child: Container(
+                                                              margin: const EdgeInsets.only(right: 20, bottom: 20),
+                                                              height: 30,
+                                                              width: 30,
+                                                              child: Icon(
+                                                                Icons.close,
+                                                                color: normalTextColor,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          RichTextView(content: vidoeHtml)
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              transitionDuration: Duration(milliseconds: 200),
+                                              barrierDismissible: true,
+                                              barrierLabel: '',
+                                              context: context,
+                                              pageBuilder: (context, animation1, animation2) {
+                                                return Container();
+                                              });
+                                        },
+                                        child: Text(
+                                          chapterText,
+                                          style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          courseState.deleteChapterContent(index, contentIndex);
+                                        },
+                                        child: Text("X")),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            CourseCreateModel courseData = CourseCreateModel(
+                              createdBy: userData.uid,
+                              title: titleController.text,
+                              needLevel: int.parse(needLevel),
+                              content: contentController.text,
+                              beforeNeed: beforeNeedController.text,
+                              chapterList: chapters,
+                              courseLearningSkills: choicedskillList,
+                              type: int.parse(type),
+                              isPublic: isPublic,
+                            );
+                            inspect(courseData);
+                            //courseState.createCourse(createCourseData: courseData);
+                          },
+                          child: Text("createCourse"),
+                        ),
+                        Text("公開"),
+                        Checkbox(
+                            value: isPublic,
+                            onChanged: (value) {
+                              courseState.isPublicOnChange();
+                            }),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ));
+      }),
     );
   }
 }

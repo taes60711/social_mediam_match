@@ -23,6 +23,25 @@ class DBService {
   int size = 8;
   String url = "http://$ip:$port";
 
+  Future<bool> createCourse({required CourseCreateModel createCourseData}) async {
+    String branch = "courses";
+    String searchUrl = '$url/$branch/createCourse';
+
+    bool isSuccess = false;
+
+    final uri = Uri.parse(searchUrl);
+    Map<String, String> headers = {'content-type': 'application/json'};
+
+    String body = createCourseData.courseCreatetoJson();
+
+    try {
+      await http.put(uri, headers: headers, body: body);
+      isSuccess = true;
+    } catch (e) {}
+    print("create Course result : ${isSuccess}");
+    return isSuccess;
+  }
+
   searchStatus allCoursesServerInfo = searchStatus();
   Future<List<CourseModel>> getAllCourses({bool? isFirst}) async {
     String branch = "courses";

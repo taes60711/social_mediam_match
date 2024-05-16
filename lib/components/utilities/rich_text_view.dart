@@ -114,7 +114,10 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                         print("onDoubleTap");
                         imageViewExit();
                       },
-                      child: Image.network(imgUrl)),
+                      child: Image.network(
+                        imgUrl,
+                        gaplessPlayback: true,
+                      )),
                 ),
               ),
             ],

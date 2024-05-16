@@ -83,8 +83,8 @@ class RichTextEditor extends StatelessWidget {
                           margin: const EdgeInsets.symmetric(horizontal: 5),
                           width: ScreenSize().width,
                           child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                            TitleInput(title: 'Link Text', textController: linkTextController),
                             TitleInput(title: 'URL', textController: linkController),
-                            TitleInput(title: 'Link Text', textController: linkTextController)
                           ]),
                         ),
                         actions: [
