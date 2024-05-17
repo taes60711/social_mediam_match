@@ -65,41 +65,40 @@ class CoursePage extends StatelessWidget {
                       userData: userData,
                       gotoFriendPage: gotoFriendPage,
                     ),
-              floatingActionButton: Visibility(
-                visible: floatButtonIsVisiable,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(RoutePath.courseEditPage.value, arguments: {
-                          "userData": userData,
-                          "courseState": courseState,
-                        });
-                      },
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: normalTextColor,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 1,
-                              offset: Offset(-1, 4), // Shadow position
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          FontAwesomeIcons.penToSquare,
-                          size: 16,
-                          color: Color.fromARGB(255, 247, 147, 100),
-                        ),
+              floatingActionButton: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(RoutePath.courseEditPage.value, arguments: {
+                        "userData": userData,
+                      });
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: normalTextColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 1,
+                            offset: Offset(-1, 4),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        FontAwesomeIcons.penToSquare,
+                        size: 16,
+                        color: Color.fromARGB(255, 247, 147, 100),
                       ),
                     ),
-                    SizedBox(height: 10),
-                    GestureDetector(
+                  ),
+                  SizedBox(height: 10),
+                  Visibility(
+                    visible: floatButtonIsVisiable,
+                    child: GestureDetector(
                       onTap: () {
                         scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
                       },
@@ -124,8 +123,8 @@ class CoursePage extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               body: SafeArea(
                 child: Column(

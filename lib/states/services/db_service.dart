@@ -23,6 +23,27 @@ class DBService {
   int size = 8;
   String url = "http://$ip:$port";
 
+  Future<bool> updateCourse({required int courseId, required CourseCreateModel courseUpdateData}) async {
+    String branch = "courses";
+    String searchUrl = '$url/$branch/updateCourse/$courseId';
+
+    bool isSuccess = false;
+
+    final uri = Uri.parse(searchUrl);
+    Map<String, String> headers = {'content-type': 'application/json'};
+
+    String body = courseUpdateData.courseCreatetoJson();
+
+    try {
+      var response = await http.put(uri, headers: headers, body: body);
+      if (response.statusCode != 404) {
+        isSuccess = true;
+      }
+    } catch (e) {}
+    print("update Course result : ${isSuccess}");
+    return isSuccess;
+  }
+
   Future<bool> createCourse({required CourseCreateModel createCourseData}) async {
     String branch = "courses";
     String searchUrl = '$url/$branch/createCourse';
@@ -61,6 +82,32 @@ class DBService {
         }).toList();
         inspect(allCouserData);
         allCoursesServerInfo.pageNumber++;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allCouserData;
+  }
+
+  searchStatus coursesByUserIdServerInfo = searchStatus();
+  Future<List<CourseModel>> getCoursesByUserId(String userId, {bool? isFirst}) async {
+    String branch = "courses";
+
+    if (isFirst != null) {
+      coursesByUserIdServerInfo.pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getCoursesByUserId/$userId?page=${coursesByUserIdServerInfo.pageNumber}&size=$size';
+    final uri = Uri.parse(searchUrl);
+    List<CourseModel> allCouserData = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        allCouserData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+          return CourseModel.toMap(e);
+        }).toList();
+        inspect(allCouserData);
+        coursesServerInfo.pageNumber++;
       }
     } catch (e) {
       print(e);

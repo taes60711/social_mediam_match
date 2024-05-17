@@ -221,10 +221,13 @@ class UserPage extends StatelessWidget {
             );
           }),
       SettingButtonInfo(
-          title: UserPageString().notificationBtn,
-          icon: FontAwesomeIcons.solidBell,
+          title: UserPageString().courseBtn,
+          icon: FontAwesomeIcons.school,
           onPress: () {
-            print("${UserPageString().notificationBtn}");
+            print("${UserPageString().courseBtn}");
+            Navigator.of(context).pushNamed(RoutePath.myCourses.value, arguments: {
+              "userData": userData,
+            });
           }),
       SettingButtonInfo(
           title: UserPageString().settingBtn,
@@ -244,6 +247,12 @@ class UserPage extends StatelessWidget {
           icon: FontAwesomeIcons.userLarge,
           onPress: () {
             print("${UserPageString().friendManagernBtn}");
+          }),
+      SettingButtonInfo(
+          title: UserPageString().notificationBtn,
+          icon: FontAwesomeIcons.solidBell,
+          onPress: () {
+            print("${UserPageString().notificationBtn}");
           }),
       SettingButtonInfo(
           title: UserPageString().guideBtn,

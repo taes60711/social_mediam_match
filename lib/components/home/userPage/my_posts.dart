@@ -10,8 +10,6 @@ import 'package:social_mediam_match/models/post_model.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
-import '../../utilities/rich_text_view.dart';
-import '../../utilities/user_icon.dart';
 import '../postPage/post_comment.dart';
 
 class EditPost extends StatelessWidget {
@@ -44,7 +42,7 @@ class EditPost extends StatelessWidget {
                             icon: const Icon(Icons.arrow_back_ios_sharp),
                           ),
                         ),
-                        RichTextEditor(controller: controller, content: choicedPost!.mainMessage)
+                        RichTextEditor(controller: controller, content: choicedPost.mainMessage)
                       ],
                     ),
                   )

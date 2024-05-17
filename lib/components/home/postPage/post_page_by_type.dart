@@ -48,28 +48,28 @@ class PostPageByType extends StatelessWidget {
                 otherUser: otherUser,
                 gotoFriendPage: gotoFriendPage,
               ),
-              floatingActionButton: Visibility(
-                visible: floatButtonIsVisiable,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    FloatingActionButton(
-                      mini: true,
-                      backgroundColor: normalTextColor,
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(RoutePath.postEditPage.value, arguments: {
-                          "userData": userData,
-                          "postState": postState,
-                          "type": type,
-                        });
-                      },
-                      child: Icon(
-                        FontAwesomeIcons.penToSquare,
-                        size: 16,
-                        color: normalBgColor,
-                      ),
+              floatingActionButton: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FloatingActionButton(
+                    mini: true,
+                    backgroundColor: normalTextColor,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(RoutePath.postEditPage.value, arguments: {
+                        "userData": userData,
+                        "postState": postState,
+                        "type": type,
+                      });
+                    },
+                    child: Icon(
+                      FontAwesomeIcons.penToSquare,
+                      size: 16,
+                      color: normalBgColor,
                     ),
-                    FloatingActionButton(
+                  ),
+                  Visibility(
+                    visible: floatButtonIsVisiable,
+                    child: FloatingActionButton(
                       mini: true,
                       backgroundColor: normalBgColor2,
                       onPressed: () {
@@ -80,8 +80,8 @@ class PostPageByType extends StatelessWidget {
                         size: 16,
                       ),
                     ),
-                  ],
-                ),
+                  )
+                ],
               ),
               body: SafeArea(
                 child: Column(

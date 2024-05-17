@@ -31,6 +31,7 @@ enum RoutePath {
   courseEditPage("/courseEdit"),
   skillChoicePage("/skillChoice"),
   myPosts("/myposts"),
+  myCourses("/mycourses"),
   privacySettingPage("/privacySetting");
 
   final String value;

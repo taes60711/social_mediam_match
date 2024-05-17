@@ -9,6 +9,7 @@ import 'package:social_mediam_match/components/account/signUpPage/signup_page.da
 import 'package:social_mediam_match/components/Initial/initial_page.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_edit_page.dart';
 import 'package:social_mediam_match/components/home/postPage/editor_page.dart';
+import 'package:social_mediam_match/components/home/userPage/my_courses.dart';
 import 'package:social_mediam_match/components/home/userPage/my_posts.dart';
 import 'package:social_mediam_match/components/home/userPage/profile.dart';
 import 'package:social_mediam_match/components/home/userPage/privacy_setting.dart';
@@ -101,6 +102,10 @@ class MyApp extends StatelessWidget {
         '/myposts': (BuildContext context) => ChangeNotifierProvider(
               create: (_) => PostState(),
               child: const MyPosts(),
+            ),
+        '/mycourses': (BuildContext context) => ChangeNotifierProvider(
+              create: (_) => CourseState(),
+              child: const MyCourses(),
             ),
       },
     );

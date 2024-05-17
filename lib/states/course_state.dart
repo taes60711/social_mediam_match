@@ -9,11 +9,36 @@ import 'package:http/http.dart' as http;
 class CourseState extends ChangeNotifier {
   final DBService _dbService = DBService();
   List<CourseModel> courseData = [];
-  List<CourseModel> topCourseData = [];
+  List<CourseModel> myCourseData = [];
   bool isFirstLoading = false, isAddDataLoading = false, isReLoading = false, isTopFirstLoading = false;
 
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   CourseModel? choicedCourse;
+
+  TextEditingController titleController = TextEditingController();
+  TextEditingController contentController = TextEditingController();
+  TextEditingController beforeNeedController = TextEditingController();
+  void courseDataInsertToView(CourseModel courseData) {
+    type = courseData.type.toString();
+    needLevel = courseData.needLevel.toString();
+    for (var element in courseData.courseLearningSkills) {
+      choicedskillList.add(element);
+      int choicedSkillIndex = skillList.indexWhere(
+        (indexEle) =>
+            indexEle ==
+            skillList.firstWhere((e) {
+              return e['name'] == element;
+            }),
+      );
+      skillList[choicedSkillIndex]['ischoiced'] = true;
+    }
+    titleController.text = courseData.title;
+    contentController.text = courseData.content;
+    beforeNeedController.text = courseData.beforeNeed;
+    chapters = courseData.chapterList;
+    isPublic = courseData.isPublic;
+    notifyListeners();
+  }
 
   //サーバーアドレス
   String url = "http://$ip:$port";
@@ -78,8 +103,8 @@ class CourseState extends ChangeNotifier {
     notifyListeners();
   }
 
-  String needLevel = '1';
-  String type = '1';
+  String needLevel = '0';
+  String type = '0';
   void needLevelChange(String value, String wantChangeValue) {
     if (wantChangeValue == "needLevel")
       needLevel = value;
@@ -122,6 +147,13 @@ class CourseState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> updateCourse(
+      {required int courseId, required CourseCreateModel courseUpdateData, required LoginUser userData}) async {
+    bool createResult = await _dbService.updateCourse(courseId: courseId, courseUpdateData: courseUpdateData);
+
+    return createResult;
+  }
+
   Future<bool> createCourse({required CourseCreateModel createCourseData}) async {
     bool createResult = await _dbService.createCourse(createCourseData: createCourseData);
     return createResult;
@@ -142,7 +174,7 @@ class CourseState extends ChangeNotifier {
 
       if (searchType == "AddData") {
         tempCourseData.forEach((e) {
-          topCourseData = [...topCourseData, e];
+          courseData = [...courseData, e];
         });
         isAddDataLoading = false;
       } else {
@@ -160,43 +192,76 @@ class CourseState extends ChangeNotifier {
     }
   }
 
-  Future<void> getCourseDatabyType(int type, {required String searchType}) async {
+  Future<void> getCourseDataByUserId({required String userId, required String searchType}) async {
     try {
       List<CourseModel> tempCourseData = [];
-      if (searchType == "First") {
-        isFirstLoading = true;
-        isTopFirstLoading = true;
-        Future.delayed(Duration.zero).then((value) => notifyListeners());
-        tempCourseData = await _dbService.getCoursesByType(type, isFirst: true);
+      if (searchType == "AddData") {
+        tempCourseData = await _dbService.getAllCourses();
       } else {
-        tempCourseData = await _dbService.getCoursesByType(type);
+        if (searchType == "First") {
+          isFirstLoading = true;
+          Future.delayed(Duration.zero).then((value) => notifyListeners());
+        }
+        tempCourseData = await _dbService.getCoursesByUserId(userId, isFirst: true);
       }
 
-      if (type == 0) {
-        if (searchType == "AddData") {
-          tempCourseData.forEach((e) {
-            topCourseData = [...topCourseData, e];
-          });
-          isAddDataLoading = false;
-        } else {
-          courseData = tempCourseData;
-          if (searchType == "First") {
-            isFirstLoading = false;
-          } else if (searchType == "Reload") {
-            isReLoading = false;
-          }
-        }
+      if (searchType == "AddData") {
+        tempCourseData.forEach((e) {
+          myCourseData = [...myCourseData, e];
+        });
+        isAddDataLoading = false;
       } else {
-        topCourseData = tempCourseData;
+        myCourseData = tempCourseData;
         if (searchType == "First") {
-          isTopFirstLoading = false;
+          isFirstLoading = false;
+        } else if (searchType == "Reload") {
+          isReLoading = false;
         }
       }
+
       notifyListeners();
     } catch (e) {
       print(e);
     }
   }
+
+  // Future<void> getCourseDatabyType(int type, {required String searchType}) async {
+  //   try {
+  //     List<CourseModel> tempCourseData = [];
+  //     if (searchType == "First") {
+  //       isFirstLoading = true;
+  //       isTopFirstLoading = true;
+  //       Future.delayed(Duration.zero).then((value) => notifyListeners());
+  //       tempCourseData = await _dbService.getCoursesByType(type, isFirst: true);
+  //     } else {
+  //       tempCourseData = await _dbService.getCoursesByType(type);
+  //     }
+
+  //     if (type == 0) {
+  //       if (searchType == "AddData") {
+  //         tempCourseData.forEach((e) {
+  //           topCourseData = [...topCourseData, e];
+  //         });
+  //         isAddDataLoading = false;
+  //       } else {
+  //         courseData = tempCourseData;
+  //         if (searchType == "First") {
+  //           isFirstLoading = false;
+  //         } else if (searchType == "Reload") {
+  //           isReLoading = false;
+  //         }
+  //       }
+  //     } else {
+  //       topCourseData = tempCourseData;
+  //       if (searchType == "First") {
+  //         isTopFirstLoading = false;
+  //       }
+  //     }
+  //     notifyListeners();
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   void addData() {
     isAddDataLoading = true;

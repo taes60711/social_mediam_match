@@ -280,7 +280,7 @@ class PostComment extends StatelessWidget {
                                                   children: [
                                                     Expanded(
                                                       child: SingleChildScrollView(
-                                                        physics: const CustomBouncingScrollPhysics(haveReloading: false),
+                                                        physics: const NoLoadingCustomBouncingScrollPhysics(),
                                                         controller: scrollController,
                                                         child: Column(
                                                           children: [

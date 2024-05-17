@@ -21,10 +21,12 @@ class CourseEditPage extends StatelessWidget {
     print("CourseEditPage");
     return Scaffold(
       body: Consumer<CourseState>(builder: (context, courseState, _) {
+        CourseModel? courseData =
+            (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['courseData'] as CourseModel?;
         LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
-        TextEditingController titleController = TextEditingController();
-        TextEditingController contentController = TextEditingController();
-        TextEditingController beforeNeedController = TextEditingController();
+        TextEditingController titleController = context.select((CourseState value) => value.titleController);
+        TextEditingController contentController = context.select((CourseState value) => value.contentController);
+        TextEditingController beforeNeedController = context.select((CourseState value) => value.beforeNeedController);
         bool isPublic = context.select((CourseState value) => value.isPublic);
         GlobalKey<ScaffoldState> key = context.select((CourseState value) => value.globalKey);
         List<CourseChapterInfo> chapters = context.select((CourseState value) => value.chapters);
@@ -33,6 +35,7 @@ class CourseEditPage extends StatelessWidget {
         String needLevel = context.select((CourseState value) => value.needLevel);
         String type = context.select((CourseState value) => value.type);
         var items = [
+          '0',
           '1',
           '2',
           '3',
@@ -42,6 +45,9 @@ class CourseEditPage extends StatelessWidget {
         return StatefulWrapper(
             onInit: () async {
               await courseState.getSkillListData();
+              if (courseData != null) {
+                courseState.courseDataInsertToView(courseData);
+              }
             },
             child: Scaffold(
               body: SafeArea(
@@ -116,7 +122,7 @@ class CourseEditPage extends StatelessWidget {
                     ),
                     Expanded(
                       child: ListView(
-                        physics: BouncingScrollPhysics(),
+                        physics: const BouncingScrollPhysics(),
                         children: chapters.asMap().entries.map((e) {
                           int index = e.key;
                           CourseChapterInfo chapter = e.value;
@@ -199,7 +205,7 @@ class CourseEditPage extends StatelessWidget {
                                     Expanded(
                                       child: GestureDetector(
                                         onTap: () {
-                                          String vidoeHtml = "<iframe src='${chapterUrl}'></iframe>";
+                                          String vidoeHtml = "<iframe src='$chapterUrl'></iframe>";
 
                                           showGeneralDialog(
                                               barrierColor: Colors.black.withOpacity(0.7),
@@ -267,7 +273,7 @@ class CourseEditPage extends StatelessWidget {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            CourseCreateModel courseData = CourseCreateModel(
+                            CourseCreateModel courseUpdateData = CourseCreateModel(
                               createdBy: userData.uid,
                               title: titleController.text,
                               needLevel: int.parse(needLevel),
@@ -278,8 +284,13 @@ class CourseEditPage extends StatelessWidget {
                               type: int.parse(type),
                               isPublic: isPublic,
                             );
-                            inspect(courseData);
-                            //courseState.createCourse(createCourseData: courseData);
+                            inspect(courseUpdateData);
+                            if (courseData != null) {
+                              courseState.updateCourse(
+                                  courseId: courseData.id, courseUpdateData: courseUpdateData, userData: userData);
+                            } else {
+                              //courseState.createCourse(createCourseData: courseUpdateData);
+                            }
                           },
                           child: Text("createCourse"),
                         ),
