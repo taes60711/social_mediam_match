@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
@@ -105,31 +106,36 @@ class ChatRoom extends StatelessWidget {
           width: ScreenSize().width,
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  onPressed: () async {
-                    print("Drawer Close");
-                    friendFuture.closeRoom();
-                    globalKey.currentState!.closeEndDrawer();
-                  },
-                  icon: const Icon(Icons.arrow_back_ios_sharp),
-                ),
-              ),
               Container(
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.only(bottom: 10),
                 width: ScreenSize().width,
-                color: normalBgColor,
-                child: Row(
-                  children: [
-                    UserIcon(
-                      iconSize: 35,
-                      image: ohterUserData.image,
-                    ),
-                    SizedBox(width: 10),
-                    Text(ohterUserData.name ?? ohterUserData.email),
-                  ],
+                color: normalBgColor2.withOpacity(0.1),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          print("Chat Room close");
+                          friendFuture.closeRoom();
+                          globalKey.currentState!.closeEndDrawer();
+                        },
+                        child: Icon(Icons.arrow_back_ios_sharp, color: normalBgColor2),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: UserIcon(
+                          iconSize: 35,
+                          image: ohterUserData.image,
+                        ),
+                      ),
+                      Text(
+                        ohterUserData.name ?? ohterUserData.email,
+                        style: TextStyle(color: normalBgColor2),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Expanded(
@@ -238,11 +244,12 @@ class ChatRoom extends StatelessWidget {
                               },
                             ),
                           ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                          Container(
+                            width: ScreenSize().width,
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              children: [
+                                Expanded(
                                   child: SizedBox(
                                     height: 30,
                                     child: TextField(
@@ -255,21 +262,27 @@ class ChatRoom extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  friendFuture.sendMessage(roomId, userData.uid, messageInput.text);
-                                },
-                                child: Container(
-                                  width: 80,
-                                  height: 30,
-                                  color: Colors.deepOrange,
-                                  child: const Center(
-                                    child: Text("傳送訊息"),
+                                GestureDetector(
+                                  onTap: () {
+                                    friendFuture.sendMessage(roomId, userData.uid, messageInput.text);
+                                  },
+                                  child: Container(
+                                    height: 30,
+                                    margin: EdgeInsets.only(left: 5),
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.send,
+                                        size: 16,
+                                        color: normalTextColor,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           )
                         ],
                       ),
