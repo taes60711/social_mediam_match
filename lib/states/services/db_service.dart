@@ -489,7 +489,9 @@ class DBService {
   Future<void> updateLastTime(String uid) async {
     String branch = "user";
     Map<String, String> headers = {'content-type': 'application/json'};
-    String body = UpdateUser.lastTimupdate(uid: uid, lastLogin: DateTime.now().toIso8601String()).updateLastLoginTimeJson();
+
+    String body =
+        UpdateUser.lastTimupdate(uid: uid, lastLogin: DateTime.now().toUtc().toIso8601String()).updateLastLoginTimeJson();
     await http
         .put(Uri.parse('$url/$branch/updateLoginTime/$uid'), headers: headers, body: body)
         .then((_) => print("MySql LoginTimeUpdate:${_.body}"));
