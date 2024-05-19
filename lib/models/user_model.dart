@@ -65,7 +65,15 @@ class LoginUser extends UserModel {
     if (json['lastlogin'] != null) {
       DateTime dateUtc = DateTime.parse(json['lastlogin']).toUtc();
       Duration duration = DateTime.now().toUtc().difference(dateUtc);
-      formattedTime = "${duration.inDays}";
+      String durationTime = "";
+      if (duration.inMinutes < 60) {
+        durationTime = "${duration.inMinutes} 分";
+      } else if (duration.inMinutes > 60 && duration.inMinutes < 3600) {
+        durationTime = "${duration.inHours} 時${duration.inMinutes % 60} 分";
+      } else if (duration.inMinutes > 3600) {
+        durationTime = "${duration.inDays} 天";
+      }
+      formattedTime = durationTime;
       // DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
       // formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
     }

@@ -1,8 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:social_mediam_match/components/home/firendsPage/chat_room.dart';
-import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/friend_model.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import '../../../models/user_model.dart';
@@ -14,139 +14,135 @@ class FirendsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FriendState friendFuture = context.read<FriendState>();
-    String friendListMessage = context.select((FriendState value) => value.friendListMessage);
+    List<FriendListModel> friendList = context.watch<FriendState>().friendList;
     GlobalKey<ScaffoldState> key = context.select((FriendState value) => value.key);
+    LoginUser ohterUserData = context.select((FriendState value) => value.ohterUserData);
 
-    Widget userComponent;
+    print("firendPage");
 
-    print("UserPage");
-    userComponent = Builder(builder: (context) {
-      if (friendListMessage != "" && friendListMessage != "is already Friend") {
-        List<FriendListModel> data = (jsonDecode(friendListMessage) as List<dynamic>).map((e) {
-          return FriendListModel.fromJson(e);
-        }).toList();
-
-        return Scaffold(
-          key: key,
-          endDrawer: ChatRoom(
-            globalKey: key,
-            userData: userData,
+    return Scaffold(
+        body: Scaffold(
+      key: key,
+      endDrawer: ChatRoom(
+        globalKey: key,
+        ohterUserData: ohterUserData,
+        userData: userData,
+      ),
+      body: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const TabBar(
+              tabs: [
+                Tab(text: '全部'),
+                Tab(text: '好友'),
+              ],
+            ),
           ),
-          body: DefaultTabController(
-            length: 2,
-            child: Scaffold(
-              appBar: AppBar(
-                title: const TabBar(
-                  tabs: [
-                    Tab(text: '全部'),
-                    Tab(text: '好友'),
-                  ],
-                ),
-              ),
-              body: TabBarView(
+          body: TabBarView(
+            children: [
+              Column(
                 children: [
-                  Column(
-                    children: [
-                      const Text("全部列表"),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  friendFuture.openRoom(data[index].roomId);
-                                  key.currentState!.openEndDrawer();
-                                },
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        width: 50,
-                                        height: 50,
-                                        color: Colors.pinkAccent,
-                                      ),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(data[index].roomName),
-                                        data[index].lastMessage != null
-                                            ? Text(
-                                                "${data[index].lastMessage}",
-                                                style: const TextStyle(color: Colors.black54),
-                                              )
-                                            : const Text(""),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      const Text("好友列表"),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            return data[index].roomType == 1
-                                ? Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        friendFuture.openRoom(data[index].roomId);
-                                        key.currentState!.openEndDrawer();
-                                      },
-                                      child: Row(
+                  const Text("全部列表"),
+                  Expanded(
+                    child: friendList.length == 0
+                        ? const Center(
+                            child: Text("Nodata"),
+                          )
+                        : ListView.builder(
+                            itemCount: friendList.length,
+                            itemBuilder: (context, index) {
+                              FriendListModel listInfo = friendList[index];
+                              LoginUser userData = listInfo.userData;
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    friendFuture.openRoom(friendList[index].roomId, userData);
+                                    key.currentState!.openEndDrawer();
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: UserIcon(
+                                            iconSize: 50,
+                                            image: userData.image,
+                                          )),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              width: 50,
-                                              height: 50,
-                                              color: Colors.pinkAccent,
-                                            ),
-                                          ),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(data[index].roomName),
-                                              data[index].lastMessage != null
-                                                  ? Text(
-                                                      "${data[index].lastMessage}",
-                                                      style: const TextStyle(color: Colors.black54),
-                                                    )
-                                                  : const Text(""),
-                                            ],
-                                          ),
+                                          Text(userData.name ?? userData.email),
+                                          friendList[index].lastMessage != null
+                                              ? Text(
+                                                  "${friendList[index].lastMessage}",
+                                                  style: const TextStyle(color: Colors.black54),
+                                                )
+                                              : const Text(""),
                                         ],
                                       ),
-                                    ),
-                                  )
-                                : Container();
-                          },
-                        ),
-                      ),
-                    ],
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                   ),
                 ],
               ),
-            ),
+              Column(
+                children: [
+                  const Text("好友列表"),
+                  Expanded(
+                    child: friendList.length == 0
+                        ? const Center(
+                            child: Text("Nodata"),
+                          )
+                        : ListView.builder(
+                            itemCount: friendList.length,
+                            itemBuilder: (context, index) {
+                              FriendListModel listInfo = friendList[index];
+                              LoginUser userData = listInfo.userData;
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    friendFuture.openRoom(listInfo.roomId, userData);
+                                    key.currentState!.openEndDrawer();
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: UserIcon(
+                                            iconSize: 50,
+                                            image: userData.image,
+                                          )),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(userData.name ?? userData.email),
+                                          listInfo.lastMessage != null
+                                              ? Text(
+                                                  "${listInfo.lastMessage}",
+                                                  style: const TextStyle(color: Colors.black54),
+                                                )
+                                              : const Text(""),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
+            ],
           ),
-        );
-      } else {
-        return const Loading();
-      }
-    });
-
-    return Scaffold(body: userComponent);
+        ),
+      ),
+    ));
   }
 }

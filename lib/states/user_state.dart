@@ -59,8 +59,11 @@ class UserState extends ChangeNotifier {
           isLoading = true;
           notifyListeners();
 
+          //ユーザの資料を取得する
           userData = await _dbService.getUserData(userUID);
+          //最後ログインのタイム更新する
           await _dbService.updateLastTime(userUID);
+          //チャットルームサーバー繋がる
           chatListChannel.friendListConnect(userUID);
           inspect(userData);
 

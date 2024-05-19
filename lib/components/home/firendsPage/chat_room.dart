@@ -1,167 +1,211 @@
-import 'dart:convert';
 import 'dart:developer';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/friend_model.dart';
+import '../../../CustomBouncingScrollPhysics.dart';
 import '../../../models/user_model.dart';
 import '../../../states/friend_state.dart';
 
 class ChatRoom extends StatelessWidget {
   final GlobalKey<ScaffoldState> globalKey;
   final LoginUser userData;
-  const ChatRoom({super.key, required this.globalKey, required this.userData});
+  final LoginUser ohterUserData;
+  const ChatRoom({super.key, required this.globalKey, required this.userData, required this.ohterUserData});
 
   @override
   Widget build(BuildContext context) {
     FriendState friendFuture = context.read<FriendState>();
-    String chatRoomMessage = context.select((FriendState value) => value.chatRoomMesaage);
+    List<ChatRoomMessageModel> messageData = context.select((FriendState value) => value.chatRoomMesaage);
     int roomId = context.select((FriendState value) => value.roomId);
     TextEditingController messageInput = context.select((FriendState value) => value.messageInput);
 
+    inspect(messageData);
+
+    List<dynamic> ss = [];
+
+    for (int i = 0; i < messageData.length; i++) {
+      if (i < messageData.length - 1) {
+        if (i == 0) {
+          ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length));
+        }
+        ss.add(messageData[i]);
+        if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
+            messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length)) {
+          DateTime now = DateTime.now().toUtc();
+          String formattedTime = DateFormat("yyyy-MM-dd ").format(now.toLocal());
+          if (formattedTime == messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length)) {
+            ss.add("今日");
+          } else {
+            ss.add(messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length));
+          }
+        }
+      } else {
+        ss.add(messageData[i]);
+      }
+    }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SizedBox(
+      body: Container(
+        color: Colors.white,
+        height: ScreenSize().height,
         width: ScreenSize().width,
-        child: Drawer(
-          backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(0),
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                onPressed: () async {
+                  print("Drawer Close");
+                  friendFuture.closeRoom();
+                  globalKey.currentState!.closeEndDrawer();
+                },
+                icon: const Icon(Icons.arrow_back_ios_sharp),
+              ),
             ),
-          ),
-          child: Builder(
-            builder: (context) {
-              if (chatRoomMessage != "") {
-                List<ChatRoomMessageModel> messageData = (jsonDecode(chatRoomMessage)['Message'] as List<dynamic>).map((e) {
-                  return ChatRoomMessageModel.fromJson(e);
-                }).toList();
-                inspect(messageData);
-                return Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        onPressed: () async {
-                          print("Drawer Close");
-                          friendFuture.closeRoom();
-                          globalKey.currentState!.closeEndDrawer();
-                        },
-                        icon: const Icon(Icons.arrow_back_ios_sharp),
-                      ),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: messageData.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                              padding: const EdgeInsets.only(
-                                left: 8,
-                                right: 8,
-                                bottom: 8,
-                              ),
-                              child: userData.uid == messageData[index].userId
-                                  ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          messageData[index].sentAt,
-                                          style: TextStyle(fontSize: 10),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(5),
-                                              color: Color.fromARGB(255, 200, 199, 202),
-                                            ),
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                              child: Text(messageData[index].message),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 3),
-                                          child: Container(
-                                            width: 35,
-                                            height: 35,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(18),
-                                              color: Color.fromARGB(255, 117, 64, 223),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 8),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(5),
-                                              color: const Color.fromARGB(255, 196, 175, 233),
-                                            ),
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                              child: Text(messageData[index].message),
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          messageData[index].sentAt,
-                                          style: TextStyle(fontSize: 10),
-                                        ),
-                                      ],
-                                    ));
-                        },
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: SizedBox(
-                              height: 30,
-                              child: TextField(
-                                controller: messageInput,
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.only(top: 5, left: 10),
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Enter Message',
+            Container(
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.only(bottom: 10),
+              width: ScreenSize().width,
+              color: normalBgColor,
+              child: Row(
+                children: [
+                  UserIcon(
+                    iconSize: 35,
+                    image: ohterUserData.image,
+                  ),
+                  SizedBox(width: 10),
+                  Text(ohterUserData.name ?? ohterUserData.email),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                physics: const NoLoadingCustomBouncingScrollPhysics(),
+                itemCount: ss.length,
+                itemBuilder: (context, index) {
+                  Widget component;
+                  if (ss[index].runtimeType == String) {
+                    component = Center(
+                      child: Container(
+                          margin: EdgeInsets.all(2),
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3),
+                            color: Colors.black.withOpacity(0.1),
+                          ),
+                          child: Text(
+                            ss[index],
+                            style: TextStyle(fontSize: 10),
+                          )),
+                    );
+                  } else if (ss[index].runtimeType == ChatRoomMessageModel) {
+                    if (ss[index].userId == userData.uid) {
+                      component = Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              ss[index].sentAt.substring("yyyy-MM-dd ".length),
+                              style: TextStyle(fontSize: 10),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Color.fromARGB(255, 200, 199, 202),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  child: Text(ss[index].message),
                                 ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            friendFuture.sendMessage(roomId, userData.uid, messageInput.text);
-                          },
-                          child: Container(
-                            width: 80,
-                            height: 30,
-                            color: Colors.deepOrange,
-                            child: const Center(
-                              child: Text("傳送訊息"),
+                      );
+                    } else {
+                      component = Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Padding(
+                                padding: const EdgeInsets.only(right: 3),
+                                child: UserIcon(
+                                  iconSize: 35,
+                                  image: ohterUserData.image,
+                                )),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: const Color.fromARGB(255, 196, 175, 233),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  child: Text(ss[index].message),
+                                ),
+                              ),
                             ),
-                          ),
+                            Text(
+                              ss[index].sentAt.substring("yyyy-MM-dd ".length),
+                              style: TextStyle(fontSize: 10),
+                            ),
+                          ],
                         ),
-                      ],
-                    )
-                  ],
-                );
-              } else {
-                return const Loading();
-              }
-            },
-          ),
+                      );
+                    }
+                  } else {
+                    component = Container();
+                  }
+                  return component;
+                },
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: SizedBox(
+                      height: 30,
+                      child: TextField(
+                        controller: messageInput,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.only(top: 5, left: 10),
+                          border: OutlineInputBorder(),
+                          hintText: 'Enter Message',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    friendFuture.sendMessage(roomId, userData.uid, messageInput.text);
+                  },
+                  child: Container(
+                    width: 80,
+                    height: 30,
+                    color: Colors.deepOrange,
+                    child: const Center(
+                      child: Text("傳送訊息"),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );

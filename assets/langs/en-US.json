@@ -74,6 +74,6 @@
   "userpage_guide_btn":"Guide",
 
   "//": "skillExchangePage",
-  "skExChpage_beforDays":"天前",
+  "skExChpage_beforDays":"前",
   "skExChpage_nojobData":"none"
 }
