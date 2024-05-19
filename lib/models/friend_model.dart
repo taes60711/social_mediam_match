@@ -5,7 +5,13 @@ class ChatRoomMessageModel {
   String userId;
   String message;
   String sentAt;
-  ChatRoomMessageModel({required this.userId, required this.message, required this.sentAt});
+  bool needAppearImg;
+  ChatRoomMessageModel({
+    required this.userId,
+    required this.message,
+    required this.sentAt,
+    required this.needAppearImg,
+  });
   factory ChatRoomMessageModel.fromJson(dynamic json) {
     DateTime dateUtc = DateTime.parse(json['sentAt']).toUtc();
 
@@ -16,6 +22,7 @@ class ChatRoomMessageModel {
       userId: json['userId'],
       message: json['message'],
       sentAt: formattedTime,
+      needAppearImg: false,
     );
   }
 }
@@ -27,6 +34,7 @@ class FriendListModel {
   String? lastMessage;
   int roomType;
   LoginUser userData;
+
   FriendListModel({
     required this.roomId,
     required this.roomName,

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -27,17 +26,35 @@ class ChatRoom extends StatelessWidget {
     TextEditingController messageInput = context.select((FriendState value) => value.messageInput);
 
     List<dynamic> ss = [];
-
+    bool test = true;
     for (int i = 0; i < messageData.length; i++) {
       if (i < messageData.length - 1) {
+        DateTime now = DateTime.now().toUtc();
+        String formattedTime = DateFormat("yyyy-MM-dd ").format(now.toLocal());
         if (i == 0) {
-          ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length));
+          if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length)) {
+            ss.add("今日");
+          } else {
+            ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length));
+          }
         }
-        ss.add(messageData[i]);
+
+        if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
+                messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
+            messageData[i].userId != messageData[i + 1].userId) {
+          ss.add(ChatRoomMessageModel(
+              userId: messageData[i].userId,
+              message: messageData[i].message,
+              sentAt: messageData[i].sentAt,
+              needAppearImg: test));
+          test = true;
+        } else {
+          ss.add(ChatRoomMessageModel(
+              userId: messageData[i].userId, message: messageData[i].message, sentAt: "", needAppearImg: test));
+          test = false;
+        }
         if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
             messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length)) {
-          DateTime now = DateTime.now().toUtc();
-          String formattedTime = DateFormat("yyyy-MM-dd ").format(now.toLocal());
           if (formattedTime == messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length)) {
             ss.add("今日");
           } else {
@@ -45,7 +62,15 @@ class ChatRoom extends StatelessWidget {
           }
         }
       } else {
-        ss.add(messageData[i]);
+        if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
+                messageData[i - 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
+            messageData[i].userId != messageData[i - 1].userId) {
+          ss.add(ChatRoomMessageModel(
+              userId: messageData[i].userId,
+              message: messageData[i].message,
+              sentAt: messageData[i].sentAt,
+              needAppearImg: true));
+        }
       }
     }
 
@@ -122,7 +147,7 @@ class ChatRoom extends StatelessWidget {
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
                                           Text(
-                                            ss[index].sentAt.substring("yyyy-MM-dd ".length),
+                                            ss[index].sentAt != "" ? ss[index].sentAt.substring("yyyy-MM-dd ".length) : "",
                                             style: TextStyle(fontSize: 10),
                                           ),
                                           Padding(
@@ -138,6 +163,15 @@ class ChatRoom extends StatelessWidget {
                                               ),
                                             ),
                                           ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 3),
+                                            child: ss[index].needAppearImg
+                                                ? UserIcon(
+                                                    iconSize: 35,
+                                                    image: userData.image,
+                                                  )
+                                                : Container(width: 35),
+                                          ),
                                         ],
                                       ),
                                     );
@@ -149,11 +183,14 @@ class ChatRoom extends StatelessWidget {
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
                                           Padding(
-                                              padding: const EdgeInsets.only(right: 3),
-                                              child: UserIcon(
-                                                iconSize: 35,
-                                                image: ohterUserData.image,
-                                              )),
+                                            padding: const EdgeInsets.only(right: 3),
+                                            child: ss[index].needAppearImg
+                                                ? UserIcon(
+                                                    iconSize: 35,
+                                                    image: ohterUserData.image,
+                                                  )
+                                                : Container(width: 35),
+                                          ),
                                           Padding(
                                             padding: const EdgeInsets.only(right: 8),
                                             child: Container(
@@ -168,7 +205,7 @@ class ChatRoom extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            ss[index].sentAt.substring("yyyy-MM-dd ".length),
+                                            ss[index].sentAt != "" ? ss[index].sentAt.substring("yyyy-MM-dd ".length) : "",
                                             style: TextStyle(fontSize: 10),
                                           ),
                                         ],
