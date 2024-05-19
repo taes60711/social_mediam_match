@@ -46,7 +46,6 @@ class UserDetail extends StatelessWidget {
                   onPressed: () async {
                     print("Drawer Close");
                     globalKey.currentState!.closeEndDrawer();
-                    friendFuture.UserDetailPageClose(userData!.uid);
                   },
                   icon: const Icon(Icons.arrow_back_ios_sharp),
                 ),
@@ -85,7 +84,6 @@ class UserDetail extends StatelessWidget {
                   ? ElevatedButton(
                       onPressed: () {
                         gotoFriendPage();
-                        friendFuture.UserDetailPageClose(userData!.uid);
                       },
                       child: Text("開啟聊天室"),
                     )

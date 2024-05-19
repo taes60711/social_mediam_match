@@ -53,17 +53,14 @@ class FriendState extends ChangeNotifier {
     });
   }
 
-  //ユーザ友達かどうか確認する
-  void UserDetailPageClose(String uid) {
-    isFriend = false;
-    notifyListeners();
-  }
-
   void closefriendList() {
     _friendListChannel.sink.close();
   }
 
+  //ユーザ友達かどうか確認する
   void checkIsFriend(List<String> usersList) {
+    isFriend = false;
+    Future.delayed(Duration.zero).then((value) => notifyListeners());
     List<String> usersListTemp = [];
     usersList.forEach((element) {
       usersListTemp = [...usersListTemp, "\"$element\""];

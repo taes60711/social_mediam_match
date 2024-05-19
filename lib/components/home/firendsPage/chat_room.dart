@@ -164,6 +164,7 @@ class ChatRoom extends StatelessWidget {
                                         )),
                                   );
                                 } else if (ss[index].runtimeType == ChatRoomMessageModel) {
+                                  ChatRoomMessageModel messageData = ss[index];
                                   if (ss[index].userId == userData.uid) {
                                     component = Padding(
                                       padding: const EdgeInsets.only(bottom: 5),
@@ -172,7 +173,7 @@ class ChatRoom extends StatelessWidget {
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
                                           Text(
-                                            ss[index].sentAt != "" ? ss[index].sentAt.substring("yyyy-MM-dd ".length) : "",
+                                            messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
                                             style: TextStyle(fontSize: 10),
                                           ),
                                           Padding(
@@ -184,13 +185,13 @@ class ChatRoom extends StatelessWidget {
                                               ),
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                                child: Text(ss[index].message),
+                                                child: Text(messageData.message),
                                               ),
                                             ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(right: 3),
-                                            child: ss[index].needAppearImg
+                                            child: messageData.needAppearImg
                                                 ? UserIcon(
                                                     iconSize: 35,
                                                     image: userData.image,
@@ -209,7 +210,7 @@ class ChatRoom extends StatelessWidget {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.only(right: 3),
-                                            child: ss[index].needAppearImg
+                                            child: messageData.needAppearImg
                                                 ? UserIcon(
                                                     iconSize: 35,
                                                     image: ohterUserData.image,
@@ -225,12 +226,12 @@ class ChatRoom extends StatelessWidget {
                                               ),
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                                child: Text(ss[index].message),
+                                                child: Text(messageData.message),
                                               ),
                                             ),
                                           ),
                                           Text(
-                                            ss[index].sentAt != "" ? ss[index].sentAt.substring("yyyy-MM-dd ".length) : "",
+                                            messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
                                             style: TextStyle(fontSize: 10),
                                           ),
                                         ],

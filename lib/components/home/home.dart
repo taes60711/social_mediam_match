@@ -90,9 +90,6 @@ class _HomeState extends State<Home> {
           setState(() {
             print("Page Index : $value");
             if (value != 1) {
-              if (widget.friendState.isFriend) {
-                widget.friendState.UserDetailPageClose(widget.userData.uid);
-              }
               Provider.of<SkillExChangeState>(context, listen: false).skillExchangePageDisPose();
             }
             _selectedIndex = value;
