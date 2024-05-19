@@ -9,7 +9,6 @@ class ChatRoomMessageModel {
   factory ChatRoomMessageModel.fromJson(dynamic json) {
     DateTime dateUtc = DateTime.parse(json['sentAt']).toUtc();
 
-    DateTime now = DateTime.now().toUtc();
     DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
     String formattedTime = DateFormat("yyyy-MM-dd a hh:mm").format(dateTime.toLocal());
 

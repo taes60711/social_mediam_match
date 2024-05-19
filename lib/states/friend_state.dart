@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
 import 'package:web_socket_channel/io.dart';
@@ -20,7 +19,7 @@ class FriendState extends ChangeNotifier {
   int roomId = -1;
   LoginUser ohterUserData = LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: 0);
   List<ChatRoomMessageModel> chatRoomMesaage = [];
-
+  bool isLoading = false;
   String channelListUrl;
   FriendState({required this.channelListUrl});
 
@@ -83,13 +82,17 @@ class FriendState extends ChangeNotifier {
   }
 
   Future<void> openRoom(int roomId, LoginUser choicedRoomUser) async {
+    this.roomId = roomId;
+    ohterUserData = choicedRoomUser;
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> initialRoomListener(int roomId) async {
     Future<void> initialConnect() async {
       _chatRoomChannel = IOWebSocketChannel.connect(channelRoomUrl);
       await _chatRoomChannel.ready;
       _chatRoomChannel.sink.add('{"method" : "connect" , "roomid" : $roomId}');
-      this.roomId = roomId;
-      ohterUserData = choicedRoomUser;
-      notifyListeners();
     }
 
     await initialConnect();
@@ -101,6 +104,9 @@ class FriendState extends ChangeNotifier {
       chatRoomMesaage = (jsonDecode(event)['Message'] as List<dynamic>).map((e) {
         return ChatRoomMessageModel.fromJson(e);
       }).toList();
+      if (!isLoading) {
+        isLoading = true;
+      }
       notifyListeners();
 
       if (_isSendMessage) {
@@ -112,6 +118,8 @@ class FriendState extends ChangeNotifier {
 
   void closeRoom() {
     _chatRoomChannel.sink.close();
+    chatRoomMesaage = [];
+    notifyListeners();
   }
 
   void sendMessage(int roomId, String userId, String message) {

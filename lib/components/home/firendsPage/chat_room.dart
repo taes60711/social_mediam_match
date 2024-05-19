@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
@@ -19,11 +21,10 @@ class ChatRoom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FriendState friendFuture = context.read<FriendState>();
+    bool isLoading = context.select((FriendState value) => value.isLoading);
     List<ChatRoomMessageModel> messageData = context.select((FriendState value) => value.chatRoomMesaage);
     int roomId = context.select((FriendState value) => value.roomId);
     TextEditingController messageInput = context.select((FriendState value) => value.messageInput);
-
-    inspect(messageData);
 
     List<dynamic> ss = [];
 
@@ -48,164 +49,177 @@ class ChatRoom extends StatelessWidget {
       }
     }
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        color: Colors.white,
-        height: ScreenSize().height,
-        width: ScreenSize().width,
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(
-                onPressed: () async {
-                  print("Drawer Close");
-                  friendFuture.closeRoom();
-                  globalKey.currentState!.closeEndDrawer();
-                },
-                icon: const Icon(Icons.arrow_back_ios_sharp),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.only(bottom: 10),
-              width: ScreenSize().width,
-              color: normalBgColor,
-              child: Row(
-                children: [
-                  UserIcon(
-                    iconSize: 35,
-                    image: ohterUserData.image,
-                  ),
-                  SizedBox(width: 10),
-                  Text(ohterUserData.name ?? ohterUserData.email),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                physics: const NoLoadingCustomBouncingScrollPhysics(),
-                itemCount: ss.length,
-                itemBuilder: (context, index) {
-                  Widget component;
-                  if (ss[index].runtimeType == String) {
-                    component = Center(
-                      child: Container(
-                          margin: EdgeInsets.all(2),
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3),
-                            color: Colors.black.withOpacity(0.1),
-                          ),
-                          child: Text(
-                            ss[index],
-                            style: TextStyle(fontSize: 10),
-                          )),
-                    );
-                  } else if (ss[index].runtimeType == ChatRoomMessageModel) {
-                    if (ss[index].userId == userData.uid) {
-                      component = Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              ss[index].sentAt.substring("yyyy-MM-dd ".length),
-                              style: TextStyle(fontSize: 10),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Color.fromARGB(255, 200, 199, 202),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  child: Text(ss[index].message),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      component = Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Padding(
-                                padding: const EdgeInsets.only(right: 3),
-                                child: UserIcon(
-                                  iconSize: 35,
-                                  image: ohterUserData.image,
-                                )),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: const Color.fromARGB(255, 196, 175, 233),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  child: Text(ss[index].message),
-                                ),
-                              ),
-                            ),
-                            Text(
-                              ss[index].sentAt.substring("yyyy-MM-dd ".length),
-                              style: TextStyle(fontSize: 10),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  } else {
-                    component = Container();
-                  }
-                  return component;
-                },
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: SizedBox(
-                      height: 30,
-                      child: TextField(
-                        controller: messageInput,
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.only(top: 5, left: 10),
-                          border: OutlineInputBorder(),
-                          hintText: 'Enter Message',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    friendFuture.sendMessage(roomId, userData.uid, messageInput.text);
+    return StatefulWrapper(
+      onInit: () {
+        Future.delayed(Duration(milliseconds: 300)).then((value) => friendFuture.initialRoomListener(roomId));
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Container(
+          color: Colors.white,
+          height: ScreenSize().height,
+          width: ScreenSize().width,
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  onPressed: () async {
+                    print("Drawer Close");
+                    friendFuture.closeRoom();
+                    globalKey.currentState!.closeEndDrawer();
                   },
-                  child: Container(
-                    width: 80,
-                    height: 30,
-                    color: Colors.deepOrange,
-                    child: const Center(
-                      child: Text("傳送訊息"),
-                    ),
-                  ),
+                  icon: const Icon(Icons.arrow_back_ios_sharp),
                 ),
-              ],
-            )
-          ],
+              ),
+              Container(
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.only(bottom: 10),
+                width: ScreenSize().width,
+                color: normalBgColor,
+                child: Row(
+                  children: [
+                    UserIcon(
+                      iconSize: 35,
+                      image: ohterUserData.image,
+                    ),
+                    SizedBox(width: 10),
+                    Text(ohterUserData.name ?? ohterUserData.email),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: !isLoading
+                    ? LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35)
+                    : Column(
+                        children: [
+                          Expanded(
+                            child: ListView.builder(
+                              physics: const NoLoadingCustomBouncingScrollPhysics(),
+                              itemCount: ss.length,
+                              itemBuilder: (context, index) {
+                                Widget component;
+                                if (ss[index].runtimeType == String) {
+                                  component = Center(
+                                    child: Container(
+                                        margin: EdgeInsets.all(2),
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(3),
+                                          color: Colors.black.withOpacity(0.1),
+                                        ),
+                                        child: Text(
+                                          ss[index],
+                                          style: TextStyle(fontSize: 10),
+                                        )),
+                                  );
+                                } else if (ss[index].runtimeType == ChatRoomMessageModel) {
+                                  if (ss[index].userId == userData.uid) {
+                                    component = Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            ss[index].sentAt.substring("yyyy-MM-dd ".length),
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(5),
+                                                color: Color.fromARGB(255, 200, 199, 202),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                                child: Text(ss[index].message),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  } else {
+                                    component = Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Padding(
+                                              padding: const EdgeInsets.only(right: 3),
+                                              child: UserIcon(
+                                                iconSize: 35,
+                                                image: ohterUserData.image,
+                                              )),
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 8),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(5),
+                                                color: const Color.fromARGB(255, 196, 175, 233),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                                child: Text(ss[index].message),
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            ss[index].sentAt.substring("yyyy-MM-dd ".length),
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                } else {
+                                  component = Container();
+                                }
+                                return component;
+                              },
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  child: SizedBox(
+                                    height: 30,
+                                    child: TextField(
+                                      controller: messageInput,
+                                      decoration: const InputDecoration(
+                                        contentPadding: EdgeInsets.only(top: 5, left: 10),
+                                        border: OutlineInputBorder(),
+                                        hintText: 'Enter Message',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  friendFuture.sendMessage(roomId, userData.uid, messageInput.text);
+                                },
+                                child: Container(
+                                  width: 80,
+                                  height: 30,
+                                  color: Colors.deepOrange,
+                                  child: const Center(
+                                    child: Text("傳送訊息"),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );
