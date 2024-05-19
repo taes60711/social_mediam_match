@@ -25,12 +25,17 @@ class ChatRoom extends StatelessWidget {
     int roomId = context.select((FriendState value) => value.roomId);
     TextEditingController messageInput = context.select((FriendState value) => value.messageInput);
 
+    //例: ["2024-04-20",ChatRoomMessageModel,"2024-05-03",ChatRoomMessageModel...]
     List<dynamic> ss = [];
+    //true的時候要顯示使用者圖像
     bool test = true;
     for (int i = 0; i < messageData.length; i++) {
+      //index : 0 - last比較
+      // 防止range over 問題
       if (i < messageData.length - 1) {
         DateTime now = DateTime.now().toUtc();
         String formattedTime = DateFormat("yyyy-MM-dd ").format(now.toLocal());
+        //index 0 先insert時間
         if (i == 0) {
           if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length)) {
             ss.add("今日");
@@ -38,21 +43,26 @@ class ChatRoom extends StatelessWidget {
             ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length));
           }
         }
-
+        //i 與 i + 1 的 message時間不同時 ||  i 與 i + 1 的使用者不同時
         if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
                 messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
             messageData[i].userId != messageData[i + 1].userId) {
+          //這邊的 needAppearImg 應該都要為 false
           ss.add(ChatRoomMessageModel(
               userId: messageData[i].userId,
               message: messageData[i].message,
               sentAt: messageData[i].sentAt,
               needAppearImg: test));
+          // 當下一筆資料為不同使用者或是時間不同時 要顯示頭像 才讓boolean變為true
           test = true;
         } else {
+          //這邊的 needAppearImg 應該都要為 true
           ss.add(ChatRoomMessageModel(
               userId: messageData[i].userId, message: messageData[i].message, sentAt: "", needAppearImg: test));
+          //當下一筆資料為同使用者和時間相同 不要顯示頭像 才讓boolean變為false
           test = false;
         }
+        //i 與 i + 1 的 message時間 不同時insert 時間
         if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
             messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length)) {
           if (formattedTime == messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length)) {
@@ -61,7 +71,9 @@ class ChatRoom extends StatelessWidget {
             ss.add(messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length));
           }
         }
+        //index : index last - last -1 比較
       } else {
+        //當最後一筆資料 與 最後前一筆資料進行比對 時間不同或使用者不同時 顯示頭像
         if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
                 messageData[i - 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
             messageData[i].userId != messageData[i - 1].userId) {
@@ -70,6 +82,13 @@ class ChatRoom extends StatelessWidget {
               message: messageData[i].message,
               sentAt: messageData[i].sentAt,
               needAppearImg: true));
+        } else {
+          //當最後一筆資料 與 最後前一筆資料進行比對 時間和使用者相同時 不顯示頭像
+          ss.add(ChatRoomMessageModel(
+              userId: messageData[i].userId,
+              message: messageData[i].message,
+              sentAt: messageData[i].sentAt,
+              needAppearImg: false));
         }
       }
     }
