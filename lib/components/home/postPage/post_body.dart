@@ -237,6 +237,7 @@ class PostBody extends StatelessWidget {
     Future<void> opneCommentPage({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
       return showDialog(
         context: context,
+        useSafeArea: false,
         barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
         builder: (BuildContext context) {
           return CustomEndDrawer(

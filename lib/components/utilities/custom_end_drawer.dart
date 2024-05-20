@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
 class CustomEndDrawer extends StatefulWidget {
   final Widget child;
@@ -35,14 +36,18 @@ class _CustomEndDrawer extends State<CustomEndDrawer> with SingleTickerProviderS
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
-          child: child,
-        );
-      },
-      child: widget.child,
-    );
+        animation: _animation,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
+            child: child,
+          );
+        },
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: widget.child,
+          ),
+        ));
   }
 }

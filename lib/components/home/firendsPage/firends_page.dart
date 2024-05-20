@@ -23,6 +23,7 @@ class FirendsPage extends StatelessWidget {
     Future<void> opneChatRoomPage({required LoginUser loginUser, required LoginUser choicedRoomUser}) {
       return showDialog(
         context: context,
+        useSafeArea: false,
         barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
         builder: (BuildContext context) {
           return CustomEndDrawer(
@@ -44,7 +45,7 @@ class FirendsPage extends StatelessWidget {
       );
     }
 
-    print("firendPage ${userData.email}");
+    print("firendPage ");
 
     return Scaffold(
         body: Scaffold(

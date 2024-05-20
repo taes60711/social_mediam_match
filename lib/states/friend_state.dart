@@ -140,18 +140,17 @@ class FriendState extends ChangeNotifier {
         .add('{"method" : "loadRoomMessage" , "roomid" : $roomId  , "userid" : "$userId" , "pageNumber" : $pageNumber}');
   }
 
-//還需要對應直接滑掉的狀態也要跑closeRoom
-  void closeRoom({required BuildContext context}) {
-    _chatRoomChannel.sink.close();
-    chatRoomMesaage = [];
-    notifyListeners();
-    Navigator.of(context).pop();
-  }
-
   void sendMessage(int roomId, String userId, String message) {
     messageInput.text = "";
     notifyListeners();
     _chatRoomChannel.sink.add('{"method" : "sendMessage" , "roomid" : $roomId , "userid" : "$userId" , "message" : "$message"}');
     _isSendMessage = true;
+  }
+
+  void closeRoom({required BuildContext context}) {
+    _chatRoomChannel.sink.close();
+    chatRoomMesaage = [];
+    notifyListeners();
+    Navigator.of(context).pop();
   }
 }
