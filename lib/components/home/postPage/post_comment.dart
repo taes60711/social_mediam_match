@@ -93,7 +93,7 @@ class PostComment extends StatelessWidget {
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  physics: const ClampingScrollPhysics(),
+                  physics: const NoLoadingCustomBouncingScrollPhysics(),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
