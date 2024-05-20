@@ -9,6 +9,7 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/friend_model.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import '../../../models/user_model.dart';
+import '../../utilities/custom_end_drawer.dart';
 
 class FirendsPage extends StatelessWidget {
   final LoginUser userData;
@@ -18,19 +19,36 @@ class FirendsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     FriendState friendFuture = context.read<FriendState>();
     List<FriendListModel> friendList = context.watch<FriendState>().friendList;
-    GlobalKey<ScaffoldState> key = context.select((FriendState value) => value.key);
-    LoginUser ohterUserData = context.select((FriendState value) => value.ohterUserData);
 
-    print("firendPage");
+    Future<void> opneChatRoomPage({required LoginUser loginUser, required LoginUser choicedRoomUser}) {
+      return showDialog(
+        context: context,
+        barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
+        builder: (BuildContext context) {
+          return CustomEndDrawer(
+            child: Dismissible(
+              direction: DismissDirection.startToEnd,
+              resizeDuration: const Duration(milliseconds: 1),
+              onDismissed: (_) {
+                friendFuture.closeRoom(context: context);
+                print("Chat Room close");
+              },
+              key: const Key('key'),
+              child: ChatRoom(
+                ohterUserData: choicedRoomUser,
+                userData: loginUser,
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    print("firendPage ${userData.email}");
 
     return Scaffold(
         body: Scaffold(
       key: key,
-      endDrawer: ChatRoom(
-        globalKey: key,
-        ohterUserData: ohterUserData,
-        userData: userData,
-      ),
       body: DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -88,15 +106,15 @@ class FirendsPage extends StatelessWidget {
                             itemCount: friendList.length,
                             itemBuilder: (context, index) {
                               FriendListModel listInfo = friendList[index];
-                              LoginUser userData = listInfo.userData;
+                              LoginUser otherUserData = listInfo.userData;
                               return Container(
                                 decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
                                 child: Padding(
                                   padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
                                   child: GestureDetector(
                                     onTap: () async {
-                                      friendFuture.openRoom(friendList[index].roomId, userData);
-                                      key.currentState!.openEndDrawer();
+                                      friendFuture.openRoom(friendList[index].roomId);
+                                      await opneChatRoomPage(loginUser: userData, choicedRoomUser: friendList[index].userData);
                                     },
                                     child: Container(
                                       color: Colors.transparent,
@@ -106,16 +124,16 @@ class FirendsPage extends StatelessWidget {
                                               padding: const EdgeInsets.all(8.0),
                                               child: UserIcon(
                                                 iconSize: 50,
-                                                image: userData.image,
+                                                image: otherUserData.image,
                                               )),
-                                          Container(
+                                          SizedBox(
                                             width: ScreenSize().width - 100,
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Row(
                                                   children: [
-                                                    Expanded(child: Text(userData.name ?? userData.email)),
+                                                    Expanded(child: Text(otherUserData.name ?? otherUserData.email)),
                                                     friendList[index].sentAt != null
                                                         ? Text(
                                                             "${friendList[index].sentAt}",
@@ -133,7 +151,7 @@ class FirendsPage extends StatelessWidget {
                                                       )
                                                     : const Text(
                                                         "沒有任何訊息",
-                                                        style: const TextStyle(color: Colors.black54),
+                                                        style: TextStyle(color: Colors.black54),
                                                       ),
                                               ],
                                             ),
@@ -182,15 +200,15 @@ class FirendsPage extends StatelessWidget {
                             itemCount: friendList.length,
                             itemBuilder: (context, index) {
                               FriendListModel listInfo = friendList[index];
-                              LoginUser userData = listInfo.userData;
+                              LoginUser otherUserData = listInfo.userData;
                               return Container(
                                 decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
                                 child: Padding(
                                   padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
                                   child: GestureDetector(
                                     onTap: () async {
-                                      friendFuture.openRoom(friendList[index].roomId, userData);
-                                      key.currentState!.openEndDrawer();
+                                      friendFuture.openRoom(friendList[index].roomId);
+                                      await opneChatRoomPage(loginUser: userData, choicedRoomUser: friendList[index].userData);
                                     },
                                     child: Container(
                                       color: Colors.transparent,
@@ -200,16 +218,16 @@ class FirendsPage extends StatelessWidget {
                                               padding: const EdgeInsets.all(8.0),
                                               child: UserIcon(
                                                 iconSize: 50,
-                                                image: userData.image,
+                                                image: otherUserData.image,
                                               )),
-                                          Container(
+                                          SizedBox(
                                             width: ScreenSize().width - 100,
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Row(
                                                   children: [
-                                                    Expanded(child: Text(userData.name ?? userData.email)),
+                                                    Expanded(child: Text(otherUserData.name ?? otherUserData.email)),
                                                     friendList[index].sentAt != null
                                                         ? Text(
                                                             "${friendList[index].sentAt}",
@@ -227,7 +245,7 @@ class FirendsPage extends StatelessWidget {
                                                       )
                                                     : const Text(
                                                         "沒有任何訊息",
-                                                        style: const TextStyle(color: Colors.black54),
+                                                        style: TextStyle(color: Colors.black54),
                                                       ),
                                               ],
                                             ),

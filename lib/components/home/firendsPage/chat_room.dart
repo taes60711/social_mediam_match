@@ -2,7 +2,6 @@ import 'package:any_link_preview/any_link_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
@@ -17,10 +16,9 @@ import '../../../states/friend_state.dart';
 import '../../utilities/loading.dart';
 
 class ChatRoom extends StatelessWidget {
-  final GlobalKey<ScaffoldState> globalKey;
   final LoginUser userData;
   final LoginUser ohterUserData;
-  ChatRoom({super.key, required this.globalKey, required this.userData, required this.ohterUserData});
+  ChatRoom({super.key, required this.userData, required this.ohterUserData});
 
   final _scrollController = ScrollController();
   @override
@@ -126,8 +124,7 @@ class ChatRoom extends StatelessWidget {
                     GestureDetector(
                       onTap: () async {
                         print("Chat Room close");
-                        friendFuture.closeRoom();
-                        globalKey.currentState!.closeEndDrawer();
+                        friendFuture.closeRoom(context: context);
                       },
                       child: Icon(Icons.arrow_back_ios_sharp, color: normalBgColor2),
                     ),

@@ -14,7 +14,6 @@ class FriendState extends ChangeNotifier {
   bool _isSendMessage = false, isFriend = false;
   List<String> members = [];
 
-  final GlobalKey<ScaffoldState> key = GlobalKey();
   TextEditingController messageInput = TextEditingController();
   int roomId = -1;
   LoginUser ohterUserData = LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: 0);
@@ -80,9 +79,8 @@ class FriendState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> openRoom(int roomId, LoginUser choicedRoomUser) async {
+  Future<void> openRoom(int roomId) async {
     this.roomId = roomId;
-    ohterUserData = choicedRoomUser;
     isLoading = false;
     notifyListeners();
   }
@@ -143,10 +141,11 @@ class FriendState extends ChangeNotifier {
   }
 
 //還需要對應直接滑掉的狀態也要跑closeRoom
-  void closeRoom() {
+  void closeRoom({required BuildContext context}) {
     _chatRoomChannel.sink.close();
     chatRoomMesaage = [];
     notifyListeners();
+    Navigator.of(context).pop();
   }
 
   void sendMessage(int roomId, String userId, String message) {
