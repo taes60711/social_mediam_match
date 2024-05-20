@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
 import 'package:web_socket_channel/io.dart';
@@ -143,7 +142,7 @@ class FriendState extends ChangeNotifier {
         .add('{"method" : "loadRoomMessage" , "roomid" : $roomId  , "userid" : "$userId" , "pageNumber" : $pageNumber}');
   }
 
-//還需要對應直接滑掉的狀態 也有跑closeRoom
+//還需要對應直接滑掉的狀態也要跑closeRoom
   void closeRoom() {
     _chatRoomChannel.sink.close();
     chatRoomMesaage = [];
