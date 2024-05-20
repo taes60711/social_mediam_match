@@ -148,159 +148,76 @@ class ChatRoom extends StatelessWidget {
             Expanded(
               child: !isLoading
                   ? LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35)
-                  : ListView.builder(
-                      reverse: true,
-                      physics: const NoLoadingCustomBouncingScrollPhysics(),
-                      controller: _scrollController,
-                      itemCount: ss.length,
-                      itemBuilder: (context, index) {
-                        Widget component;
-                        if (ss[index].runtimeType == String) {
-                          component = Center(
-                            child: Container(
-                                margin: EdgeInsets.all(2),
-                                padding: EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(3),
-                                  color: Colors.black.withOpacity(0.1),
-                                ),
-                                child: Text(
-                                  ss[index],
-                                  style: TextStyle(fontSize: 10),
-                                )),
-                          );
-                        } else if (ss[index].runtimeType == ChatRoomMessageModel) {
-                          ChatRoomMessageModel messageData = ss[index];
-                          List<String> splitStringAndUrls(String input) {
-                            final urlPattern = RegExp(r'https?://\S+');
-                            List<String> parts = [];
-                            int start = 0;
-
-                            for (final match in urlPattern.allMatches(input)) {
-                              if (match.start > start) {
-                                parts.add(input.substring(start, match.start));
-                              }
-                              parts.add(match.group(0)!);
-                              start = match.end;
-                            }
-
-                            if (start < input.length) {
-                              parts.add(input.substring(start));
-                            }
-
-                            return parts;
-                          }
-
-                          List<String> messageContents = splitStringAndUrls(messageData.message);
-
-                          String firstUrl = messageContents.firstWhere((element) {
-                            return element.contains('https');
-                          }, orElse: () => "-1");
-                          if (ss[index].userId == userData.uid) {
-                            component = Padding(
-                              padding: const EdgeInsets.only(bottom: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
+                  : Align(
+                      alignment: Alignment.topCenter,
+                      child: ListView.builder(
+                        reverse: true,
+                        shrinkWrap: true,
+                        physics: const NoLoadingCustomBouncingScrollPhysics(),
+                        controller: _scrollController,
+                        itemCount: ss.length,
+                        itemBuilder: (context, index) {
+                          Widget component;
+                          if (ss[index].runtimeType == String) {
+                            component = Center(
+                              child: Container(
+                                  margin: EdgeInsets.all(2),
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(3),
+                                    color: Colors.black.withOpacity(0.1),
+                                  ),
+                                  child: Text(
+                                    ss[index],
                                     style: TextStyle(fontSize: 10),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                                    child: Container(
-                                      padding: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Color.fromARGB(255, 200, 199, 202),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          ConstrainedBox(
-                                            constraints: BoxConstraints(
-                                              maxWidth: ScreenSize().width * 0.7,
-                                            ),
-                                            child: RichText(
-                                              text: TextSpan(
-                                                children: messageContents.map((e) {
-                                                  if (e.startsWith('https')) {
-                                                    return TextSpan(
-                                                        text: e,
-                                                        style:
-                                                            TextStyle(color: googleColor, decoration: TextDecoration.underline),
-                                                        recognizer: TapGestureRecognizer()
-                                                          ..onTap = () {
-                                                            final Uri _url = Uri.parse(e);
-                                                            launchUrl(_url);
-                                                          });
-                                                  } else {
-                                                    return TextSpan(text: e, style: TextStyle(color: Colors.black));
-                                                  }
-                                                }).toList(),
-                                              ),
-                                            ),
-                                          ),
-                                          firstUrl != "-1"
-                                              ? Padding(
-                                                  padding: const EdgeInsets.only(top: 8),
-                                                  child: ConstrainedBox(
-                                                    constraints:
-                                                        BoxConstraints(maxWidth: ScreenSize().width * 0.65, maxHeight: 70),
-                                                    child: AnyLinkPreview(
-                                                      link: firstUrl,
-                                                      displayDirection: UIDirection.uiDirectionHorizontal,
-                                                      titleStyle: TextStyle(fontSize: 14),
-                                                      backgroundColor: Colors.transparent,
-                                                      boxShadow: [BoxShadow(color: Colors.transparent)],
-                                                      bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
-                                                      borderRadius: 0,
-                                                      bodyMaxLines: 2,
-                                                    ),
-                                                  ),
-                                                )
-                                              : Container(),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 3),
-                                    child: messageData.needAppearImg
-                                        ? UserIcon(
-                                            iconSize: 35,
-                                            image: userData.image,
-                                          )
-                                        : Container(width: 35),
-                                  ),
-                                ],
-                              ),
+                                  )),
                             );
-                          } else {
-                            component = Padding(
-                              padding: const EdgeInsets.only(bottom: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 3),
-                                    child: messageData.needAppearImg
-                                        ? UserIcon(
-                                            iconSize: 35,
-                                            image: ohterUserData.image,
-                                          )
-                                        : Container(width: 35),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: const Color.fromARGB(255, 196, 175, 233),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          } else if (ss[index].runtimeType == ChatRoomMessageModel) {
+                            ChatRoomMessageModel messageData = ss[index];
+                            List<String> splitStringAndUrls(String input) {
+                              final urlPattern = RegExp(r'https?://\S+');
+                              List<String> parts = [];
+                              int start = 0;
+
+                              for (final match in urlPattern.allMatches(input)) {
+                                if (match.start > start) {
+                                  parts.add(input.substring(start, match.start));
+                                }
+                                parts.add(match.group(0)!);
+                                start = match.end;
+                              }
+
+                              if (start < input.length) {
+                                parts.add(input.substring(start));
+                              }
+
+                              return parts;
+                            }
+
+                            List<String> messageContents = splitStringAndUrls(messageData.message);
+
+                            String firstUrl = messageContents.firstWhere((element) {
+                              return element.contains('https');
+                            }, orElse: () => "-1");
+                            if (ss[index].userId == userData.uid) {
+                              component = Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(5),
+                                          color: Color.fromARGB(255, 200, 199, 202),
+                                        ),
                                         child: Column(
                                           children: [
                                             ConstrainedBox(
@@ -350,20 +267,107 @@ class ChatRoom extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Text(
-                                    messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
-                                    style: TextStyle(fontSize: 10),
-                                  ),
-                                ],
-                              ),
-                            );
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 3),
+                                      child: messageData.needAppearImg
+                                          ? UserIcon(
+                                              iconSize: 35,
+                                              image: userData.image,
+                                            )
+                                          : Container(width: 35),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else {
+                              component = Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 3),
+                                      child: messageData.needAppearImg
+                                          ? UserIcon(
+                                              iconSize: 35,
+                                              image: ohterUserData.image,
+                                            )
+                                          : Container(width: 35),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(5),
+                                          color: const Color.fromARGB(255, 196, 175, 233),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                          child: Column(
+                                            children: [
+                                              ConstrainedBox(
+                                                constraints: BoxConstraints(
+                                                  maxWidth: ScreenSize().width * 0.7,
+                                                ),
+                                                child: RichText(
+                                                  text: TextSpan(
+                                                    children: messageContents.map((e) {
+                                                      if (e.startsWith('https')) {
+                                                        return TextSpan(
+                                                            text: e,
+                                                            style: TextStyle(
+                                                                color: googleColor, decoration: TextDecoration.underline),
+                                                            recognizer: TapGestureRecognizer()
+                                                              ..onTap = () {
+                                                                final Uri _url = Uri.parse(e);
+                                                                launchUrl(_url);
+                                                              });
+                                                      } else {
+                                                        return TextSpan(text: e, style: TextStyle(color: Colors.black));
+                                                      }
+                                                    }).toList(),
+                                                  ),
+                                                ),
+                                              ),
+                                              firstUrl != "-1"
+                                                  ? Padding(
+                                                      padding: const EdgeInsets.only(top: 8),
+                                                      child: ConstrainedBox(
+                                                        constraints:
+                                                            BoxConstraints(maxWidth: ScreenSize().width * 0.65, maxHeight: 70),
+                                                        child: AnyLinkPreview(
+                                                          link: firstUrl,
+                                                          displayDirection: UIDirection.uiDirectionHorizontal,
+                                                          titleStyle: TextStyle(fontSize: 14),
+                                                          backgroundColor: Colors.transparent,
+                                                          boxShadow: [BoxShadow(color: Colors.transparent)],
+                                                          bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
+                                                          borderRadius: 0,
+                                                          bodyMaxLines: 2,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Container(),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          } else {
+                            component = Container();
                           }
-                        } else {
-                          component = Container();
-                        }
-                        return component;
-                      },
+                          return component;
+                        },
+                      ),
                     ),
             ),
             Container(
