@@ -310,7 +310,7 @@ class PostBody extends StatelessWidget {
             ),
           ),
           Text(
-            " ${postData.postTime}天前",
+            " ${postData.postTime}前",
             style: TextStyle(
               fontSize: 12,
               color: normalTextColor,

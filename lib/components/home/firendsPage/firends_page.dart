@@ -116,18 +116,25 @@ class FirendsPage extends StatelessWidget {
                                                 Row(
                                                   children: [
                                                     Expanded(child: Text(userData.name ?? userData.email)),
-                                                    Text(
-                                                      friendList[index].sentAt,
-                                                      style: TextStyle(fontSize: 12, color: normalBgColor2),
-                                                    )
+                                                    friendList[index].sentAt != null
+                                                        ? Text(
+                                                            "${friendList[index].sentAt}",
+                                                            style: TextStyle(fontSize: 12, color: normalBgColor2),
+                                                          )
+                                                        : const Text(""),
                                                   ],
                                                 ),
                                                 friendList[index].lastMessage != null
                                                     ? Text(
                                                         "${friendList[index].lastMessage}",
                                                         style: const TextStyle(color: Colors.black54),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow.ellipsis,
                                                       )
-                                                    : const Text(""),
+                                                    : const Text(
+                                                        "沒有任何訊息 趕快跟對方聊天~",
+                                                        style: const TextStyle(color: Colors.black54),
+                                                      ),
                                               ],
                                             ),
                                           ),
@@ -203,18 +210,25 @@ class FirendsPage extends StatelessWidget {
                                                 Row(
                                                   children: [
                                                     Expanded(child: Text(userData.name ?? userData.email)),
-                                                    Text(
-                                                      friendList[index].sentAt,
-                                                      style: TextStyle(fontSize: 12, color: normalBgColor2),
-                                                    )
+                                                    friendList[index].sentAt != null
+                                                        ? Text(
+                                                            "${friendList[index].sentAt}",
+                                                            style: TextStyle(fontSize: 12, color: normalBgColor2),
+                                                          )
+                                                        : const Text(""),
                                                   ],
                                                 ),
                                                 friendList[index].lastMessage != null
                                                     ? Text(
                                                         "${friendList[index].lastMessage}",
                                                         style: const TextStyle(color: Colors.black54),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow.ellipsis,
                                                       )
-                                                    : const Text(""),
+                                                    : const Text(
+                                                        "沒有任何訊息 趕快跟對方聊天~",
+                                                        style: const TextStyle(color: Colors.black54),
+                                                      ),
                                               ],
                                             ),
                                           ),

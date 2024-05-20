@@ -13,7 +13,8 @@ import '../../models/rich_text_format.dart';
 class RichTextView extends StatefulWidget {
   final String content;
   final bool? isPreView;
-  const RichTextView({required this.content, this.isPreView, super.key});
+  final double? fontSize;
+  const RichTextView({required this.content, this.isPreView, this.fontSize, super.key});
 
   @override
   State<RichTextView> createState() => _RichTextViewState();
@@ -127,9 +128,9 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
     );
   }
 
-  double fontSize = 18;
   @override
   Widget build(BuildContext context) {
+    double fontSize = widget.fontSize ?? 18;
     late List<YoutubePlayerController> ytController = [];
     int index = 0;
 

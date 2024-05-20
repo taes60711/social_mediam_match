@@ -1,13 +1,18 @@
+import 'package:any_link_preview/any_link_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/friend_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../CustomBouncingScrollPhysics.dart';
 import '../../../models/user_model.dart';
 import '../../../states/friend_state.dart';
@@ -165,6 +170,31 @@ class ChatRoom extends StatelessWidget {
                                   );
                                 } else if (ss[index].runtimeType == ChatRoomMessageModel) {
                                   ChatRoomMessageModel messageData = ss[index];
+                                  List<String> splitStringAndUrls(String input) {
+                                    final urlPattern = RegExp(r'https?://\S+');
+                                    List<String> parts = [];
+                                    int start = 0;
+
+                                    for (final match in urlPattern.allMatches(input)) {
+                                      if (match.start > start) {
+                                        parts.add(input.substring(start, match.start));
+                                      }
+                                      parts.add(match.group(0)!);
+                                      start = match.end;
+                                    }
+
+                                    if (start < input.length) {
+                                      parts.add(input.substring(start));
+                                    }
+
+                                    return parts;
+                                  }
+
+                                  List<String> messageContents = splitStringAndUrls(messageData.message);
+
+                                  String firstUrl = messageContents.firstWhere((element) {
+                                    return element.contains('https');
+                                  }, orElse: () => "-1");
                                   if (ss[index].userId == userData.uid) {
                                     component = Padding(
                                       padding: const EdgeInsets.only(bottom: 5),
@@ -179,13 +209,57 @@ class ChatRoom extends StatelessWidget {
                                           Padding(
                                             padding: const EdgeInsets.symmetric(horizontal: 8),
                                             child: Container(
+                                              padding: EdgeInsets.all(5),
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.circular(5),
                                                 color: Color.fromARGB(255, 200, 199, 202),
                                               ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                                child: Text(messageData.message),
+                                              child: Column(
+                                                children: [
+                                                  ConstrainedBox(
+                                                    constraints: BoxConstraints(
+                                                      maxWidth: ScreenSize().width * 0.7,
+                                                    ),
+                                                    child: RichText(
+                                                      text: TextSpan(
+                                                        children: messageContents.map((e) {
+                                                          if (e.startsWith('https')) {
+                                                            return TextSpan(
+                                                                text: e,
+                                                                style: TextStyle(
+                                                                    color: googleColor, decoration: TextDecoration.underline),
+                                                                recognizer: TapGestureRecognizer()
+                                                                  ..onTap = () {
+                                                                    final Uri _url = Uri.parse(e);
+                                                                    launchUrl(_url);
+                                                                  });
+                                                          } else {
+                                                            return TextSpan(text: e, style: TextStyle(color: Colors.black));
+                                                          }
+                                                        }).toList(),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  firstUrl != "-1"
+                                                      ? Padding(
+                                                          padding: const EdgeInsets.only(top: 8),
+                                                          child: ConstrainedBox(
+                                                            constraints: BoxConstraints(
+                                                                maxWidth: ScreenSize().width * 0.65, maxHeight: 70),
+                                                            child: AnyLinkPreview(
+                                                              link: firstUrl,
+                                                              displayDirection: UIDirection.uiDirectionHorizontal,
+                                                              titleStyle: TextStyle(fontSize: 14),
+                                                              backgroundColor: Colors.transparent,
+                                                              boxShadow: [BoxShadow(color: Colors.transparent)],
+                                                              bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
+                                                              borderRadius: 0,
+                                                              bodyMaxLines: 2,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Container(),
+                                                ],
                                               ),
                                             ),
                                           ),
@@ -226,7 +300,53 @@ class ChatRoom extends StatelessWidget {
                                               ),
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                                child: Text(messageData.message),
+                                                child: Column(
+                                                  children: [
+                                                    ConstrainedBox(
+                                                      constraints: BoxConstraints(
+                                                        maxWidth: ScreenSize().width * 0.7,
+                                                      ),
+                                                      child: RichText(
+                                                        text: TextSpan(
+                                                          children: messageContents.map((e) {
+                                                            if (e.startsWith('https')) {
+                                                              return TextSpan(
+                                                                  text: e,
+                                                                  style: TextStyle(
+                                                                      color: googleColor, decoration: TextDecoration.underline),
+                                                                  recognizer: TapGestureRecognizer()
+                                                                    ..onTap = () {
+                                                                      final Uri _url = Uri.parse(e);
+                                                                      launchUrl(_url);
+                                                                    });
+                                                            } else {
+                                                              return TextSpan(text: e, style: TextStyle(color: Colors.black));
+                                                            }
+                                                          }).toList(),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    firstUrl != "-1"
+                                                        ? Padding(
+                                                            padding: const EdgeInsets.only(top: 8),
+                                                            child: ConstrainedBox(
+                                                              constraints: BoxConstraints(
+                                                                  maxWidth: ScreenSize().width * 0.65, maxHeight: 70),
+                                                              child: AnyLinkPreview(
+                                                                link: firstUrl,
+                                                                displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                titleStyle: TextStyle(fontSize: 14),
+                                                                backgroundColor: Colors.transparent,
+                                                                boxShadow: [BoxShadow(color: Colors.transparent)],
+                                                                bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
+                                                                borderRadius: 0,
+                                                                bodyMaxLines: 2,
+                                                              ),
+                                                            ),
+                                                          )
+                                                        : Container(),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),

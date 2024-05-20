@@ -31,9 +31,17 @@ class PostModel {
     // DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
     // String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
     DateTime dateUtc = DateTime.parse(json['postTime']).toUtc();
-    Duration duration = DateTime.now().toUtc().difference(dateUtc);
-    String formattedTime = "${duration.inDays}";
 
+    Duration duration = DateTime.now().toUtc().difference(dateUtc);
+    String durationTime = "";
+    if (duration.inMinutes < 60) {
+      durationTime = "${duration.inMinutes} 分";
+    } else if (duration.inMinutes >= 60 && duration.inMinutes < 1440) {
+      durationTime = "${duration.inHours} 時";
+    } else if (duration.inMinutes >= 1440) {
+      durationTime = "${duration.inDays} 天";
+    }
+    String formattedTime = durationTime;
     return PostModel(
       id: json['id'],
       createdBy: json['createdBy'],

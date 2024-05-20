@@ -68,14 +68,12 @@ class LoginUser extends UserModel {
       String durationTime = "";
       if (duration.inMinutes < 60) {
         durationTime = "${duration.inMinutes} 分";
-      } else if (duration.inMinutes > 60 && duration.inMinutes < 3600) {
-        durationTime = "${duration.inHours} 時${duration.inMinutes % 60} 分";
-      } else if (duration.inMinutes > 3600) {
+      } else if (duration.inMinutes >= 60 && duration.inMinutes < 1440) {
+        durationTime = "${duration.inHours} 時";
+      } else if (duration.inMinutes >= 1440) {
         durationTime = "${duration.inDays} 天";
       }
       formattedTime = durationTime;
-      // DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
-      // formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
     }
 
     return LoginUser(

@@ -41,9 +41,9 @@ class FriendState extends ChangeNotifier {
         List<dynamic> firends = jsonDecode(event) as List<dynamic>;
         List<FriendListModel> tempfriendList = [];
         await Future.forEach(firends, (element) async {
-          String userUID = element['memberId'];
+          print("createdBy ${element['createdBy']} lastMessage ${element['lastMessage']} time ${element['sentAt']}");
+          String userUID = element['memberId'] != uid ? element['memberId'] : element['createdBy'];
           LoginUser? userData = await _dbService.getUserData(userUID);
-          print("lastMessage ${element['lastMessage']} time ${element['sentAt']}");
           tempfriendList.add(FriendListModel.fromJson(element, userData));
         });
         friendList = tempfriendList;
