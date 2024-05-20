@@ -132,7 +132,7 @@ class FirendsPage extends StatelessWidget {
                                                         overflow: TextOverflow.ellipsis,
                                                       )
                                                     : const Text(
-                                                        "沒有任何訊息 趕快跟對方聊天~",
+                                                        "沒有任何訊息",
                                                         style: const TextStyle(color: Colors.black54),
                                                       ),
                                               ],
@@ -226,7 +226,7 @@ class FirendsPage extends StatelessWidget {
                                                         overflow: TextOverflow.ellipsis,
                                                       )
                                                     : const Text(
-                                                        "沒有任何訊息 趕快跟對方聊天~",
+                                                        "沒有任何訊息",
                                                         style: const TextStyle(color: Colors.black54),
                                                       ),
                                               ],
