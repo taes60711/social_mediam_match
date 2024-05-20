@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
 import 'package:web_socket_channel/io.dart';
@@ -21,6 +22,8 @@ class FriendState extends ChangeNotifier {
   List<ChatRoomMessageModel> chatRoomMesaage = [];
   bool isLoading = false;
   String channelListUrl;
+  int pageNumber = 0;
+
   FriendState({required this.channelListUrl});
 
   void friendListConnect(String uid) async {
@@ -85,34 +88,62 @@ class FriendState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> initialRoomListener(int roomId) async {
+  Future<void> initialRoomListener(int roomId, String userId) async {
     Future<void> initialConnect() async {
       _chatRoomChannel = IOWebSocketChannel.connect(channelRoomUrl);
       await _chatRoomChannel.ready;
-      _chatRoomChannel.sink.add('{"method" : "connect" , "roomid" : $roomId}');
+      _chatRoomChannel.sink.add('{"method" : "connect" , "roomid" : $roomId , "userid" : "$userId" , "pageNumber" : 0}');
     }
 
     await initialConnect();
 
     _chatRoomChannel.stream.listen((event) {
-      (jsonDecode(event)["Members"] as List<dynamic>).forEach((element) {
-        members = [...members, "\"$element\""];
-      });
-      chatRoomMesaage = (jsonDecode(event)['Message'] as List<dynamic>).map((e) {
-        return ChatRoomMessageModel.fromJson(e);
-      }).toList();
-      if (!isLoading) {
-        isLoading = true;
+      if ((event as String).contains("load:")) {
+        var loadedData = (event).substring("load:".length);
+        List<ChatRoomMessageModel> tempchatRoomMessage = (jsonDecode(loadedData) as List<dynamic>).map((e) {
+          return ChatRoomMessageModel.fromJson(e);
+        }).toList();
+        tempchatRoomMessage.forEach((element) {
+          chatRoomMesaage = [...chatRoomMesaage, element];
+        });
+        isDataAddLoding = false;
+      } else {
+        pageNumber = 0;
+        Future.delayed(Duration.zero).then((value) => notifyListeners);
+        (jsonDecode(event)["Members"] as List<dynamic>).forEach((element) {
+          members = [...members, "\"$element\""];
+        });
+        chatRoomMesaage = (jsonDecode(event)['Message'] as List<dynamic>).map((e) {
+          return ChatRoomMessageModel.fromJson(e);
+        }).toList();
+        if (!isLoading) {
+          isLoading = true;
+        }
       }
       notifyListeners();
 
       if (_isSendMessage) {
+        //友だちリストにラストメッセージ送る
         _friendListChannel.sink.add('{"method" : "sendMessage" , "members" : $members}');
         _isSendMessage = false;
       }
     });
   }
 
+  bool isDataAddLoding = false;
+  void dataAddLoadingChange(bool loading) {
+    isDataAddLoding = loading;
+    notifyListeners();
+  }
+
+  void loadMessage(int roomId, String userId, int number) {
+    pageNumber = number + 1;
+    notifyListeners();
+    _chatRoomChannel.sink
+        .add('{"method" : "loadRoomMessage" , "roomid" : $roomId  , "userid" : "$userId" , "pageNumber" : $pageNumber}');
+  }
+
+//還需要對應直接滑掉的狀態 也有跑closeRoom
   void closeRoom() {
     _chatRoomChannel.sink.close();
     chatRoomMesaage = [];

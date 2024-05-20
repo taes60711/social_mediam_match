@@ -14,6 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../CustomBouncingScrollPhysics.dart';
 import '../../../models/user_model.dart';
 import '../../../states/friend_state.dart';
+import '../../utilities/loading.dart';
 
 class ChatRoom extends StatelessWidget {
   final GlobalKey<ScaffoldState> globalKey;
@@ -27,8 +28,10 @@ class ChatRoom extends StatelessWidget {
     FriendState friendFuture = context.read<FriendState>();
     bool isLoading = context.select((FriendState value) => value.isLoading);
     List<ChatRoomMessageModel> messageData = context.select((FriendState value) => value.chatRoomMesaage);
+    int pageNumber = context.select((FriendState value) => value.pageNumber);
     int roomId = context.select((FriendState value) => value.roomId);
     TextEditingController messageInput = context.select((FriendState value) => value.messageInput);
+    bool isDataAddLoding = context.select((FriendState value) => value.isDataAddLoding);
 
     //例: ["2024-04-20",ChatRoomMessageModel,"2024-05-03",ChatRoomMessageModel...]
     List<dynamic> ss = [];
@@ -97,13 +100,11 @@ class ChatRoom extends StatelessWidget {
         }
       }
     }
-    ss = ss.reversed.toList();
 
     return StatefulWrapper(
       onInit: () {
         Future.delayed(Duration(milliseconds: 300)).then((value) {
-          friendFuture.initialRoomListener(roomId);
-
+          friendFuture.initialRoomListener(roomId, userData.uid);
           if (_scrollController.hasClients) {
             _scrollController.jumpTo(0);
           }
@@ -145,14 +146,32 @@ class ChatRoom extends StatelessWidget {
                 ),
               ),
             ),
+            isDataAddLoding
+                ? const Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Loading(),
+                  )
+                : Container(),
             Expanded(
               child: !isLoading
                   ? LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35)
-                  : Align(
-                      alignment: Alignment.topCenter,
+                  : NotificationListener<ScrollNotification>(
+                      onNotification: (ScrollNotification scrollNotification) {
+                        if (scrollNotification is ScrollUpdateNotification) {
+                          final scrollPosition = scrollNotification.metrics.pixels;
+                          final max = scrollNotification.metrics.maxScrollExtent;
+                          if (scrollPosition >= max && !isDataAddLoding) {
+                            friendFuture.dataAddLoadingChange(true);
+                          }
+                        } else if (scrollNotification is ScrollEndNotification) {
+                          if (isDataAddLoding) {
+                            friendFuture.loadMessage(roomId, userData.uid, pageNumber);
+                          }
+                        }
+                        return false;
+                      },
                       child: ListView.builder(
                         reverse: true,
-                        shrinkWrap: true,
                         physics: const NoLoadingCustomBouncingScrollPhysics(),
                         controller: _scrollController,
                         itemCount: ss.length,
