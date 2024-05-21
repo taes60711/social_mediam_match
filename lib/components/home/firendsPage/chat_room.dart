@@ -36,19 +36,11 @@ class ChatRoom extends StatelessWidget {
     //true的時候要顯示使用者圖像
     bool test = true;
     for (int i = 0; i < messageData.length; i++) {
+      DateTime now = DateTime.now().toUtc();
+      String formattedTime = DateFormat("yyyy-MM-dd ").format(now.toLocal());
       //index : 0 - last比較
       // 防止range over 問題
       if (i < messageData.length - 1) {
-        DateTime now = DateTime.now().toUtc();
-        String formattedTime = DateFormat("yyyy-MM-dd ").format(now.toLocal());
-        //index 0 先insert時間
-        if (i == 0) {
-          if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length)) {
-            ss.add("今日");
-          } else {
-            ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length));
-          }
-        }
         //i 與 i + 1 的 message時間不同時 ||  i 與 i + 1 的使用者不同時
         if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
                 messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
@@ -57,24 +49,27 @@ class ChatRoom extends StatelessWidget {
           ss.add(ChatRoomMessageModel(
               userId: messageData[i].userId,
               message: messageData[i].message,
-              sentAt: messageData[i].sentAt,
-              needAppearImg: test));
+              sentAt: test ? messageData[i].sentAt : "",
+              needAppearImg: true));
           // 當下一筆資料為不同使用者或是時間不同時 要顯示頭像 才讓boolean變為true
           test = true;
         } else {
           //這邊的 needAppearImg 應該都要為 true
           ss.add(ChatRoomMessageModel(
-              userId: messageData[i].userId, message: messageData[i].message, sentAt: "", needAppearImg: test));
+              userId: messageData[i].userId,
+              message: messageData[i].message,
+              sentAt: test ? messageData[i].sentAt : "",
+              needAppearImg: false));
           //當下一筆資料為同使用者和時間相同 不要顯示頭像 才讓boolean變為false
           test = false;
         }
         //i 與 i + 1 的 message時間 不同時insert 時間
         if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
             messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length)) {
-          if (formattedTime == messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length)) {
+          if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length)) {
             ss.add("今日");
           } else {
-            ss.add(messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length));
+            ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length));
           }
         }
         //index : index last - last -1 比較
@@ -91,10 +86,13 @@ class ChatRoom extends StatelessWidget {
         } else {
           //當最後一筆資料 與 最後前一筆資料進行比對 時間和使用者相同時 不顯示頭像
           ss.add(ChatRoomMessageModel(
-              userId: messageData[i].userId,
-              message: messageData[i].message,
-              sentAt: messageData[i].sentAt,
-              needAppearImg: false));
+              userId: messageData[i].userId, message: messageData[i].message, sentAt: "", needAppearImg: true));
+        }
+        //最後一筆補上日期
+        if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length)) {
+          ss.add("今日");
+        } else {
+          ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length));
         }
       }
     }
@@ -223,68 +221,72 @@ class ChatRoom extends StatelessWidget {
                                   padding: const EdgeInsets.only(bottom: 5),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
-                                        style: TextStyle(fontSize: 10),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                                        child: Container(
-                                          padding: EdgeInsets.all(5),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(5),
-                                            color: Color.fromARGB(255, 200, 199, 202),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
+                                            style: TextStyle(fontSize: 10),
                                           ),
-                                          child: Column(
-                                            children: [
-                                              ConstrainedBox(
-                                                constraints: BoxConstraints(
-                                                  maxWidth: ScreenSize().width * 0.7,
-                                                ),
-                                                child: RichText(
-                                                  text: TextSpan(
-                                                    children: messageContents.map((e) {
-                                                      if (e.startsWith('https')) {
-                                                        return TextSpan(
-                                                            text: e,
-                                                            style: TextStyle(
-                                                                color: googleColor, decoration: TextDecoration.underline),
-                                                            recognizer: TapGestureRecognizer()
-                                                              ..onTap = () {
-                                                                final Uri _url = Uri.parse(e);
-                                                                launchUrl(_url);
-                                                              });
-                                                      } else {
-                                                        return TextSpan(text: e, style: TextStyle(color: Colors.black));
-                                                      }
-                                                    }).toList(),
-                                                  ),
-                                                ),
+                                          Padding(
+                                            padding: EdgeInsets.all(4),
+                                            child: Container(
+                                              padding: EdgeInsets.all(5),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(5),
+                                                color: Color.fromARGB(255, 200, 199, 202),
                                               ),
-                                              firstUrl != "-1"
-                                                  ? Padding(
-                                                      padding: const EdgeInsets.only(top: 8),
-                                                      child: ConstrainedBox(
-                                                        constraints:
-                                                            BoxConstraints(maxWidth: ScreenSize().width * 0.65, maxHeight: 70),
-                                                        child: AnyLinkPreview(
-                                                          link: firstUrl,
-                                                          displayDirection: UIDirection.uiDirectionHorizontal,
-                                                          titleStyle: TextStyle(fontSize: 14),
-                                                          backgroundColor: Colors.transparent,
-                                                          boxShadow: [BoxShadow(color: Colors.transparent)],
-                                                          bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
-                                                          borderRadius: 0,
-                                                          bodyMaxLines: 2,
-                                                        ),
+                                              child: Column(
+                                                children: [
+                                                  ConstrainedBox(
+                                                    constraints: BoxConstraints(
+                                                      maxWidth: ScreenSize().width * 0.6,
+                                                    ),
+                                                    child: RichText(
+                                                      text: TextSpan(
+                                                        children: messageContents.map((e) {
+                                                          if (e.startsWith('https')) {
+                                                            return TextSpan(
+                                                                text: e,
+                                                                style: TextStyle(
+                                                                    color: googleColor, decoration: TextDecoration.underline),
+                                                                recognizer: TapGestureRecognizer()
+                                                                  ..onTap = () {
+                                                                    final Uri _url = Uri.parse(e);
+                                                                    launchUrl(_url);
+                                                                  });
+                                                          } else {
+                                                            return TextSpan(text: e, style: TextStyle(color: Colors.black));
+                                                          }
+                                                        }).toList(),
                                                       ),
-                                                    )
-                                                  : Container(),
-                                            ],
+                                                    ),
+                                                  ),
+                                                  firstUrl != "-1"
+                                                      ? Padding(
+                                                          padding: const EdgeInsets.only(top: 8),
+                                                          child: ConstrainedBox(
+                                                            constraints: BoxConstraints(
+                                                                maxWidth: ScreenSize().width * 0.6, maxHeight: 160),
+                                                            child: AnyLinkPreview(
+                                                              link: firstUrl,
+                                                              titleStyle: TextStyle(fontSize: 14),
+                                                              backgroundColor: Colors.transparent,
+                                                              boxShadow: [BoxShadow(color: Colors.transparent)],
+                                                              bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
+                                                              borderRadius: 0,
+                                                              bodyMaxLines: 2,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Container(),
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(right: 3),
@@ -302,8 +304,7 @@ class ChatRoom extends StatelessWidget {
                                 component = Padding(
                                   padding: const EdgeInsets.only(bottom: 5),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.only(right: 3),
@@ -314,68 +315,72 @@ class ChatRoom extends StatelessWidget {
                                               )
                                             : Container(width: 35),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 8),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(5),
-                                            color: const Color.fromARGB(255, 196, 175, 233),
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                            child: Column(
-                                              children: [
-                                                ConstrainedBox(
-                                                  constraints: BoxConstraints(
-                                                    maxWidth: ScreenSize().width * 0.7,
-                                                  ),
-                                                  child: RichText(
-                                                    text: TextSpan(
-                                                      children: messageContents.map((e) {
-                                                        if (e.startsWith('https')) {
-                                                          return TextSpan(
-                                                              text: e,
-                                                              style: TextStyle(
-                                                                  color: googleColor, decoration: TextDecoration.underline),
-                                                              recognizer: TapGestureRecognizer()
-                                                                ..onTap = () {
-                                                                  final Uri _url = Uri.parse(e);
-                                                                  launchUrl(_url);
-                                                                });
-                                                        } else {
-                                                          return TextSpan(text: e, style: TextStyle(color: Colors.black));
-                                                        }
-                                                      }).toList(),
-                                                    ),
-                                                  ),
-                                                ),
-                                                firstUrl != "-1"
-                                                    ? Padding(
-                                                        padding: const EdgeInsets.only(top: 8),
-                                                        child: ConstrainedBox(
-                                                          constraints:
-                                                              BoxConstraints(maxWidth: ScreenSize().width * 0.65, maxHeight: 70),
-                                                          child: AnyLinkPreview(
-                                                            link: firstUrl,
-                                                            displayDirection: UIDirection.uiDirectionHorizontal,
-                                                            titleStyle: TextStyle(fontSize: 14),
-                                                            backgroundColor: Colors.transparent,
-                                                            boxShadow: [BoxShadow(color: Colors.transparent)],
-                                                            bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
-                                                            borderRadius: 0,
-                                                            bodyMaxLines: 2,
-                                                          ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 8),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(5),
+                                                color: const Color.fromARGB(255, 196, 175, 233),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(4),
+                                                child: Column(
+                                                  children: [
+                                                    ConstrainedBox(
+                                                      constraints: BoxConstraints(
+                                                        maxWidth: ScreenSize().width * 0.6,
+                                                      ),
+                                                      child: RichText(
+                                                        text: TextSpan(
+                                                          children: messageContents.map((e) {
+                                                            if (e.startsWith('https')) {
+                                                              return TextSpan(
+                                                                  text: e,
+                                                                  style: TextStyle(
+                                                                      color: googleColor, decoration: TextDecoration.underline),
+                                                                  recognizer: TapGestureRecognizer()
+                                                                    ..onTap = () {
+                                                                      final Uri _url = Uri.parse(e);
+                                                                      launchUrl(_url);
+                                                                    });
+                                                            } else {
+                                                              return TextSpan(text: e, style: TextStyle(color: Colors.black));
+                                                            }
+                                                          }).toList(),
                                                         ),
-                                                      )
-                                                    : Container(),
-                                              ],
+                                                      ),
+                                                    ),
+                                                    firstUrl != "-1"
+                                                        ? Padding(
+                                                            padding: const EdgeInsets.only(top: 8),
+                                                            child: ConstrainedBox(
+                                                              constraints: BoxConstraints(
+                                                                  maxWidth: ScreenSize().width * 0.6, maxHeight: 160),
+                                                              child: AnyLinkPreview(
+                                                                link: firstUrl,
+                                                                titleStyle: TextStyle(fontSize: 14),
+                                                                backgroundColor: Colors.transparent,
+                                                                boxShadow: [BoxShadow(color: Colors.transparent)],
+                                                                bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
+                                                                borderRadius: 0,
+                                                                bodyMaxLines: 2,
+                                                              ),
+                                                            ),
+                                                          )
+                                                        : Container(),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                      Text(
-                                        messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
-                                        style: TextStyle(fontSize: 10),
+                                          Text(
+                                            messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
