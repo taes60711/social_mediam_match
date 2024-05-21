@@ -43,11 +43,20 @@ class _CustomEndDrawer extends State<CustomEndDrawer> with SingleTickerProviderS
             child: child,
           );
         },
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: widget.child,
-          ),
+        child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).padding.top,
+              color: Colors.white,
+            ),
+            Expanded(
+              child: widget.child,
+            ),
+            Container(
+              height: MediaQuery.of(context).padding.bottom,
+              color: Colors.white,
+            ),
+          ],
         ));
   }
 }

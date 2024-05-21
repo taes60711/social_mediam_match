@@ -47,7 +47,12 @@ class FriendState extends ChangeNotifier {
           LoginUser? userData = await _dbService.getUserData(userUID);
           tempfriendList.add(FriendListModel.fromJson(element, userData));
         });
-        friendList = tempfriendList;
+        tempfriendList.sort((a, b) => DateTime.parse(a.sentAt ?? "1997-01-01T00:00:00.000+00:00")
+            .compareTo(DateTime.parse(b.sentAt ?? "1997-01-01T00:00:00.000+00:00")));
+        tempfriendList = tempfriendList.map((e) {
+          return friendListFormatDate(e);
+        }).toList();
+        friendList = tempfriendList.reversed.toList();
       }
 
       notifyListeners();
@@ -150,6 +155,7 @@ class FriendState extends ChangeNotifier {
   void closeRoom({required BuildContext context}) {
     _chatRoomChannel.sink.close();
     chatRoomMesaage = [];
+    isDataAddLoding = false;
     notifyListeners();
     Navigator.of(context).pop();
   }

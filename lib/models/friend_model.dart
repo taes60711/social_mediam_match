@@ -47,31 +47,42 @@ class FriendListModel {
   });
 
   factory FriendListModel.fromJson(dynamic json, LoginUser? userData) {
-    String? formattedTime;
-    if (json['sentAt'] != null) {
-      DateTime sentAtTime =
-          DateFormat("yyyy-MM-dd HH:mm:ss").parse(DateTime.parse(json['sentAt']).toUtc().toString(), true).toLocal();
-      DateTime dateTimeNow = DateFormat("yyyy-MM-dd HH:mm:ss").parse(DateTime.now().toUtc().toString(), true).toLocal();
-      String sentTimeString = sentAtTime.toIso8601String().substring(0, "yyyy-MM-dd".length);
-      String timseNowString = dateTimeNow.toIso8601String().substring(0, "yyyy-MM-dd".length);
-
-      print("dateTimeNow :$timseNowString dateTime :$sentTimeString");
-
-      if (timseNowString != sentTimeString) {
-        formattedTime = sentTimeString;
-      } else {
-        formattedTime = DateFormat("a hh:mm").format(sentAtTime);
-      }
-    }
-
     return FriendListModel(
       roomId: json['roomId'],
       memberId: json['memberId'],
       createdBy: json['createdBy'],
       lastMessage: json['lastMessage'],
-      sentAt: formattedTime,
+      sentAt: json['sentAt'],
       roomType: json['roomType'],
       userData: userData ?? LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: 0),
     );
   }
+}
+
+FriendListModel friendListFormatDate(FriendListModel friendListInfo) {
+  String? formattedTime;
+  if (friendListInfo.sentAt != null) {
+    DateTime sentAtTime =
+        DateFormat("yyyy-MM-dd HH:mm:ss").parse(DateTime.parse(friendListInfo.sentAt ?? "").toUtc().toString(), true).toLocal();
+    DateTime dateTimeNow = DateFormat("yyyy-MM-dd HH:mm:ss").parse(DateTime.now().toUtc().toString(), true).toLocal();
+    String sentTimeString = sentAtTime.toIso8601String().substring(0, "yyyy-MM-dd".length);
+    String timseNowString = dateTimeNow.toIso8601String().substring(0, "yyyy-MM-dd".length);
+
+    print("dateTimeNow :$timseNowString dateTime :$sentTimeString");
+
+    if (timseNowString != sentTimeString) {
+      formattedTime = sentTimeString;
+    } else {
+      formattedTime = DateFormat("a hh:mm").format(sentAtTime);
+    }
+  }
+  return FriendListModel(
+    roomId: friendListInfo.roomId,
+    memberId: friendListInfo.memberId,
+    createdBy: friendListInfo.createdBy,
+    lastMessage: friendListInfo.lastMessage,
+    sentAt: formattedTime,
+    roomType: friendListInfo.roomType,
+    userData: friendListInfo.userData,
+  );
 }
