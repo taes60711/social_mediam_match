@@ -178,6 +178,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   YoutubePlayerController(
                     initialVideoId: ytId,
                     flags: const YoutubePlayerFlags(
+                      disableDragSeek: true,
                       autoPlay: false,
                       mute: false,
                     ),
@@ -189,6 +190,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   child: YoutubePlayer(
                     controller: ytController[index],
                     onReady: () => {},
+                    bottomActions: [CurrentPosition(), ProgressBar(isExpanded: true), RemainingDuration(), FullScreenButton()],
                   ),
                 );
               }

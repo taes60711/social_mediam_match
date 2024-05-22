@@ -2,6 +2,7 @@ import 'package:any_link_preview/any_link_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
@@ -25,8 +26,9 @@ class ChatRoom extends StatelessWidget {
   Widget build(BuildContext context) {
     FriendState friendFuture = context.read<FriendState>();
     bool isLoading = context.select((FriendState value) => value.isLoading);
-    List<ChatRoomMessageModel> messageData = context.select((FriendState value) => value.chatRoomMesaage);
+    List<ChatRoomMessageModel> messageData = context.watch<FriendState>().chatRoomMesaage;
     int pageNumber = context.select((FriendState value) => value.pageNumber);
+    int pageCount = context.select((FriendState value) => value.pageCount);
     int roomId = context.select((FriendState value) => value.roomId);
     TextEditingController messageInput = context.select((FriendState value) => value.messageInput);
     bool isDataAddLoding = context.select((FriendState value) => value.isDataAddLoding);
@@ -97,6 +99,25 @@ class ChatRoom extends StatelessWidget {
       }
     }
 
+    Widget dataAddLoading = Container();
+    if (isDataAddLoding) {
+      if (pageCount > pageNumber) {
+        dataAddLoading = const Padding(padding: EdgeInsets.all(10), child: Loading());
+      } else {
+        dataAddLoading = Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Icon(FontAwesomeIcons.commentSlash, color: normalBgColor),
+                Text(
+                  "沒有資訊",
+                  style: TextStyle(color: normalBgColor),
+                )
+              ],
+            ));
+      }
+    }
+
     return StatefulWrapper(
       onInit: () {
         Future.delayed(Duration(milliseconds: 300)).then((value) {
@@ -141,14 +162,9 @@ class ChatRoom extends StatelessWidget {
                 ),
               ),
             ),
-            isDataAddLoding
-                ? const Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Loading(),
-                  )
-                : Container(),
+            dataAddLoading,
             Expanded(
-              child: !isLoading
+              child: isLoading
                   ? LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35)
                   : Align(
                       alignment: Alignment.topCenter,
@@ -170,7 +186,7 @@ class ChatRoom extends StatelessWidget {
                         child: ListView.builder(
                           reverse: true,
                           shrinkWrap: true,
-                          physics: const NoLoadingCustomBouncingScrollPhysics(),
+                          physics: const ChatRoomCustomBouncingScrollPhysics(),
                           controller: _scrollController,
                           itemCount: ss.length,
                           itemBuilder: (context, index) {

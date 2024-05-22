@@ -11,7 +11,8 @@ import 'post_page.dart';
 class Forum extends StatelessWidget {
   final LoginUser userData;
   final VoidCallback gotoFriendPage;
-  const Forum({super.key, required this.userData, required this.gotoFriendPage});
+  final VoidCallback gotoCoursePage;
+  const Forum({super.key, required this.userData, required this.gotoFriendPage, required this.gotoCoursePage});
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +37,21 @@ class Forum extends StatelessWidget {
             children: [
               CarouselSlider(
                 items: [
-                  Container(
-                    color: Colors.blue,
+                  GestureDetector(
+                    onTap: () {
+                      gotoCoursePage();
+                    },
+                    child: Container(
+                      color: Colors.blue,
+                    ),
                   ),
-                  Container(
-                    color: Colors.deepPurple,
+                  GestureDetector(
+                    onTap: () {
+                      gotoFriendPage();
+                    },
+                    child: Container(
+                      color: Colors.deepPurple,
+                    ),
                   ),
                 ],
                 options: CarouselOptions(

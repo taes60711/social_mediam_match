@@ -31,6 +31,12 @@ class _HomeState extends State<Home> {
     });
   }
 
+  void gotoCourserPage() {
+    setState(() {
+      _selectedIndex = 2;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
@@ -39,6 +45,7 @@ class _HomeState extends State<Home> {
         child: Forum(
           userData: widget.userData,
           gotoFriendPage: gotoFriendPage,
+          gotoCoursePage: gotoCourserPage,
         ),
       ),
       SkillExChangePage(

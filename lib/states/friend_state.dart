@@ -18,9 +18,10 @@ class FriendState extends ChangeNotifier {
   int roomId = -1;
   LoginUser ohterUserData = LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: 0);
   List<ChatRoomMessageModel> chatRoomMesaage = [];
-  bool isLoading = false;
+  bool isLoading = true;
   String channelListUrl;
   int pageNumber = 0;
+  int pageCount = 0;
 
   FriendState({required this.channelListUrl});
 
@@ -86,12 +87,17 @@ class FriendState extends ChangeNotifier {
 
   Future<void> openRoom(int roomId) async {
     this.roomId = roomId;
-    isLoading = false;
+    isLoading = true;
+    pageNumber = 0;
+    pageCount = 0;
+    chatRoomMesaage = [];
+    isDataAddLoding = false;
     notifyListeners();
   }
 
   Future<void> initialRoomListener(int roomId, String userId) async {
     Future<void> initialConnect() async {
+      print("initialConnect");
       _chatRoomChannel = IOWebSocketChannel.connect(channelRoomUrl);
       await _chatRoomChannel.ready;
       _chatRoomChannel.sink.add('{"method" : "connect" , "roomid" : $roomId , "userid" : "$userId" , "pageNumber" : 0}');
@@ -100,28 +106,34 @@ class FriendState extends ChangeNotifier {
     await initialConnect();
 
     _chatRoomChannel.stream.listen((event) {
-      if ((event as String).contains("load:")) {
+      String requestData = (event as String);
+
+      if (requestData.contains("load:")) {
         var loadedData = (event).substring("load:".length);
         List<ChatRoomMessageModel> tempchatRoomMessage = (jsonDecode(loadedData) as List<dynamic>).map((e) {
           return ChatRoomMessageModel.fromJson(e);
         }).toList();
-        tempchatRoomMessage.forEach((element) {
+        for (var element in tempchatRoomMessage) {
           chatRoomMesaage = [...chatRoomMesaage, element];
-        });
+        }
         isDataAddLoding = false;
-      } else {
-        pageNumber = 0;
-        Future.delayed(Duration.zero).then((value) => notifyListeners);
-        (jsonDecode(event)["Members"] as List<dynamic>).forEach((element) {
+      } else if (requestData.contains("connect:")) {
+        var loadedData = (event).substring("connect:".length);
+
+        for (var element in (jsonDecode(loadedData)["Members"] as List<dynamic>)) {
           members = [...members, "\"$element\""];
-        });
-        chatRoomMesaage = (jsonDecode(event)['Message'] as List<dynamic>).map((e) {
+        }
+        chatRoomMesaage = (jsonDecode(loadedData)['Message'] as List<dynamic>).map((e) {
           return ChatRoomMessageModel.fromJson(e);
         }).toList();
-        if (!isLoading) {
-          isLoading = true;
-        }
+        pageCount = jsonDecode(loadedData)['PageCount'];
+        isLoading = false;
+      } else if (requestData.contains("sendMessage:")) {
+        var loadedData = (event).substring("sendMessage:".length);
+        ChatRoomMessageModel tempchatRoomMessage = ChatRoomMessageModel.fromJson(jsonDecode(loadedData)['Message']);
+        chatRoomMesaage.insert(0, tempchatRoomMessage);
       }
+
       notifyListeners();
 
       if (_isSendMessage) {
@@ -154,8 +166,6 @@ class FriendState extends ChangeNotifier {
 
   void closeRoom({required BuildContext context}) {
     _chatRoomChannel.sink.close();
-    chatRoomMesaage = [];
-    isDataAddLoding = false;
     notifyListeners();
     Navigator.of(context).pop();
   }
