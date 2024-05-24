@@ -77,12 +77,21 @@ class FriendState extends ChangeNotifier {
 
   void addFriend(List<String> usersList) {
     List<String> usersListTemp = [];
+    //index 0 : 使用者自己, index 1 : 對方
     usersList.forEach((element) {
       usersListTemp = [...usersListTemp, "\"$element\""];
     });
-    _friendListChannel.sink.add('{"method" : "addFriend","members" : $usersListTemp}');
+    _friendListChannel.sink.add('{"method" : "addFriend", "members" : $usersListTemp}');
     isFriend = true;
     notifyListeners();
+  }
+
+  void deleteFriend(List<String> usersList, int roomId) {
+    List<String> usersListTemp = [];
+    usersList.forEach((element) {
+      usersListTemp = [...usersListTemp, "\"$element\""];
+    });
+    _friendListChannel.sink.add('{"method" : "deleteFriend", "members" : $usersListTemp, "roomid" : $roomId}');
   }
 
   Future<void> openRoom(int roomId) async {

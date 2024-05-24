@@ -39,7 +39,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> _widgetOptions = <Widget>[
+    List<Widget> widgetOptions = <Widget>[
       ChangeNotifierProvider(
         create: (_) => PostState(),
         child: Forum(
@@ -60,12 +60,16 @@ class _HomeState extends State<Home> {
         ),
       ),
       FirendsPage(userData: widget.userData),
-      UserPage(userData: widget.userData, friendState: widget.friendState, gotoFriendPage: gotoFriendPage),
+      UserPage(
+        userData: widget.userData,
+        friendState: widget.friendState,
+        gotoFriendPage: gotoFriendPage,
+      ),
     ];
 
     return Scaffold(
       body: SafeArea(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

@@ -23,6 +23,8 @@ import 'package:social_mediam_match/states/skill_exchange_state.dart';
 import 'package:social_mediam_match/states/user_setting_state.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 
+import 'components/home/userPage/my_friends.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
@@ -107,6 +109,7 @@ class MyApp extends StatelessWidget {
               create: (_) => CourseState(),
               child: const MyCourses(),
             ),
+        '/myFriends': (BuildContext context) => const MyFriends(),
       },
     );
   }

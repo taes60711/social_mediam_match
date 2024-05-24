@@ -247,6 +247,10 @@ class UserPage extends StatelessWidget {
           icon: FontAwesomeIcons.userLarge,
           onPress: () {
             print("${UserPageString().friendManagernBtn}");
+            Navigator.of(context).pushNamed(RoutePath.myFriends.value, arguments: {
+              "userData": userData,
+              "friendState": friendState,
+            });
           }),
       SettingButtonInfo(
           title: UserPageString().notificationBtn,

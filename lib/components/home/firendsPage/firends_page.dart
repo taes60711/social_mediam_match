@@ -78,7 +78,7 @@ class FirendsPage extends StatelessWidget {
                 children: [
                   const Text("全部列表"),
                   Expanded(
-                    child: friendList.length == 0
+                    child: friendList.isEmpty
                         ? SizedBox(
                             height: ScreenSize().height,
                             child: Column(
@@ -172,7 +172,7 @@ class FirendsPage extends StatelessWidget {
                 children: [
                   const Text("好友列表"),
                   Expanded(
-                    child: friendList.length == 0
+                    child: friendList.isEmpty
                         ? SizedBox(
                             height: ScreenSize().height,
                             child: Column(

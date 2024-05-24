@@ -1,5 +1,5 @@
 // ip
-String ip = "61.228.178.4";
+String ip = "114.37.105.252";
 String port = '80';
 
 String webSocketPort = "123";
@@ -32,6 +32,7 @@ enum RoutePath {
   skillChoicePage("/skillChoice"),
   myPosts("/myposts"),
   myCourses("/mycourses"),
+  myFriends("/myFriends"),
   privacySettingPage("/privacySetting");
 
   final String value;

@@ -78,7 +78,7 @@ class MyPosts extends StatelessWidget {
       postState.changeChoicedPostGoodCount(choicedPost: choicedPost, isGood: isGood);
     }
 
-    Future<void> exitCheck(int postId) {
+    Future<void> deletePostCheck(int postId) {
       return showDialog<void>(
         context: context,
         builder: (BuildContext context) {
@@ -175,7 +175,7 @@ class MyPosts extends StatelessWidget {
                                 icon: FontAwesomeIcons.commentSlash,
                                 buttonFunc: () {
                                   Navigator.pop(context);
-                                  exitCheck(myAllPosts[index].id);
+                                  deletePostCheck(myAllPosts[index].id);
                                 },
                                 funcText: '刪除'),
                           ],
