@@ -213,31 +213,6 @@ class FirendsPage extends StatelessWidget {
                     Column(
                       children: [
                         const Text("好友列表"),
-                        Container(
-                          margin: const EdgeInsets.all(10),
-                          width: ScreenSize().width,
-                          height: 36,
-                          child: TextField(
-                            cursorColor: normalBgColor2,
-                            controller: friendListFilterInput,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.search),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-                              ),
-                              contentPadding: const EdgeInsets.all(8),
-                              border: const OutlineInputBorder(),
-                            ),
-                            onChanged: (value) {
-                              friendFuture.friendListFilterInputOnChange(value);
-                            },
-                          ),
-                        ),
                         Expanded(
                           child: filteredList.isEmpty
                               ? SizedBox(
