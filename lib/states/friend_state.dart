@@ -10,7 +10,7 @@ class FriendState extends ChangeNotifier {
   late IOWebSocketChannel _friendListChannel, _chatRoomChannel;
   final DBService _dbService = DBService();
   List<FriendListModel> friendList = [];
-
+  TextEditingController friendListFilterInput = TextEditingController();
   bool _isSendMessage = false, isFriend = false;
   List<String> members = [];
 
@@ -58,6 +58,11 @@ class FriendState extends ChangeNotifier {
 
       notifyListeners();
     });
+  }
+
+  void friendListFilterInputOnChange(String value) {
+    friendListFilterInput.text = value;
+    notifyListeners();
   }
 
   void closefriendList() {

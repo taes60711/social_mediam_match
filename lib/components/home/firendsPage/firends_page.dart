@@ -19,6 +19,18 @@ class FirendsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     FriendState friendFuture = context.read<FriendState>();
     List<FriendListModel> friendList = context.watch<FriendState>().friendList;
+    TextEditingController friendListFilterInput = context.select((FriendState value) => value.friendListFilterInput);
+    List<FriendListModel> filteredList = friendList.where((element) {
+      bool filterRequest = true;
+      String filterString = friendListFilterInput.text;
+      if (filterString != "") {
+        filterRequest = element.userData.email.contains(filterString);
+        if (element.userData.name != null) {
+          filterRequest = element.userData.name!.contains(filterString);
+        }
+      }
+      return filterRequest;
+    }).toList();
 
     Future<void> opneChatRoomPage({required LoginUser loginUser, required LoginUser choicedRoomUser}) {
       return showDialog(
@@ -46,226 +58,285 @@ class FirendsPage extends StatelessWidget {
     }
 
     print("firendPage ");
-
     return Scaffold(
-        body: Scaffold(
+      resizeToAvoidBottomInset: false,
       key: key,
-      body: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: TabBar(
-            tabs: const [
-              SizedBox(
-                height: 25,
-                child: Tab(text: '全部'),
+      body: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            width: ScreenSize().width,
+            height: 36,
+            child: TextField(
+              cursorColor: normalBgColor2,
+              controller: friendListFilterInput,
+              decoration: InputDecoration(
+                hintText: "Search By name",
+                hintStyle: TextStyle(fontSize: 14),
+                prefixIcon: const Icon(Icons.search),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                ),
+                contentPadding: const EdgeInsets.all(8),
+                border: const OutlineInputBorder(),
               ),
-              SizedBox(
-                height: 25,
-                child: Tab(text: '好友'),
-              ),
-            ],
-            isScrollable: true,
-            indicator: UnderlineTabIndicator(
-              borderSide: BorderSide(width: 1.0, color: normalBgColor),
-              insets: const EdgeInsets.symmetric(horizontal: 10),
+              onChanged: (value) {
+                friendFuture.friendListFilterInputOnChange(value);
+              },
             ),
-            labelPadding: const EdgeInsets.only(top: 5, left: 10, right: 10),
-            labelColor: normalBgColor2,
           ),
-          body: TabBarView(
-            children: [
-              Column(
-                children: [
-                  const Text("全部列表"),
-                  Expanded(
-                    child: friendList.isEmpty
-                        ? SizedBox(
-                            height: ScreenSize().height,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 10),
-                                  child: Icon(
-                                    FontAwesomeIcons.usersSlash,
-                                    color: normalBgColor2,
-                                    size: 50,
+          Expanded(
+            child: DefaultTabController(
+              length: 2,
+              child: Scaffold(
+                appBar: TabBar(
+                  tabs: const [
+                    SizedBox(
+                      height: 25,
+                      child: Tab(text: '全部'),
+                    ),
+                    SizedBox(
+                      height: 25,
+                      child: Tab(text: '好友'),
+                    ),
+                  ],
+                  isScrollable: true,
+                  indicator: UnderlineTabIndicator(
+                    borderSide: BorderSide(width: 1.0, color: normalBgColor),
+                    insets: const EdgeInsets.symmetric(horizontal: 10),
+                  ),
+                  labelPadding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+                  labelColor: normalBgColor2,
+                ),
+                body: TabBarView(
+                  children: [
+                    Column(
+                      children: [
+                        const Text("全部列表"),
+                        Expanded(
+                          child: filteredList.isEmpty
+                              ? SizedBox(
+                                  height: ScreenSize().height,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        child: Icon(
+                                          FontAwesomeIcons.usersSlash,
+                                          color: normalBgColor2,
+                                          size: 50,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 15, bottom: 15),
+                                        child: Text(
+                                          "目前沒有好友",
+                                          style: TextStyle(color: normalBgColor2),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15, bottom: 15),
-                                  child: Text(
-                                    "目前沒有好友",
-                                    style: TextStyle(color: normalBgColor2),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        : ListView.builder(
-                            itemCount: friendList.length,
-                            itemBuilder: (context, index) {
-                              FriendListModel listInfo = friendList[index];
-                              LoginUser otherUserData = listInfo.userData;
-                              return Container(
-                                decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      friendFuture.openRoom(friendList[index].roomId);
-                                      await opneChatRoomPage(loginUser: userData, choicedRoomUser: friendList[index].userData);
-                                    },
-                                    child: Container(
-                                      color: Colors.transparent,
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: UserIcon(
-                                                iconSize: 50,
-                                                image: otherUserData.image,
-                                              )),
-                                          SizedBox(
-                                            width: ScreenSize().width - 100,
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                )
+                              : ListView.builder(
+                                  itemCount: filteredList.length,
+                                  itemBuilder: (context, index) {
+                                    FriendListModel listInfo = filteredList[index];
+                                    LoginUser otherUserData = listInfo.userData;
+                                    return Container(
+                                      decoration:
+                                          BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            friendFuture.openRoom(listInfo.roomId);
+                                            await opneChatRoomPage(loginUser: userData, choicedRoomUser: listInfo.userData);
+                                          },
+                                          child: Container(
+                                            color: Colors.transparent,
+                                            child: Row(
                                               children: [
-                                                Row(
-                                                  children: [
-                                                    Expanded(child: Text(otherUserData.name ?? otherUserData.email)),
-                                                    friendList[index].sentAt != null
-                                                        ? Text(
-                                                            "${friendList[index].sentAt}",
-                                                            style: TextStyle(fontSize: 12, color: normalBgColor2),
-                                                          )
-                                                        : const Text(""),
-                                                  ],
-                                                ),
-                                                friendList[index].lastMessage != null
-                                                    ? Text(
-                                                        "${friendList[index].lastMessage}",
-                                                        style: const TextStyle(color: Colors.black54),
-                                                        maxLines: 2,
-                                                        overflow: TextOverflow.ellipsis,
-                                                      )
-                                                    : const Text(
-                                                        "沒有任何訊息",
-                                                        style: TextStyle(color: Colors.black54),
+                                                Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: UserIcon(
+                                                      iconSize: 50,
+                                                      image: otherUserData.image,
+                                                    )),
+                                                SizedBox(
+                                                  width: ScreenSize().width - 100,
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Expanded(child: Text(otherUserData.name ?? otherUserData.email)),
+                                                          friendList[index].sentAt != null
+                                                              ? Text(
+                                                                  "${listInfo.sentAt}",
+                                                                  style: TextStyle(fontSize: 12, color: normalBgColor2),
+                                                                )
+                                                              : const Text(""),
+                                                        ],
                                                       ),
+                                                      listInfo.lastMessage != null
+                                                          ? Text(
+                                                              "${listInfo.lastMessage}",
+                                                              style: const TextStyle(color: Colors.black54),
+                                                              maxLines: 2,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            )
+                                                          : const Text(
+                                                              "沒有任何訊息",
+                                                              style: TextStyle(color: Colors.black54),
+                                                            ),
+                                                    ],
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  },
                                 ),
-                              );
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const Text("好友列表"),
+                        Container(
+                          margin: const EdgeInsets.all(10),
+                          width: ScreenSize().width,
+                          height: 36,
+                          child: TextField(
+                            cursorColor: normalBgColor2,
+                            controller: friendListFilterInput,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.search),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                              ),
+                              contentPadding: const EdgeInsets.all(8),
+                              border: const OutlineInputBorder(),
+                            ),
+                            onChanged: (value) {
+                              friendFuture.friendListFilterInputOnChange(value);
                             },
                           ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  const Text("好友列表"),
-                  Expanded(
-                    child: friendList.isEmpty
-                        ? SizedBox(
-                            height: ScreenSize().height,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 10),
-                                  child: Icon(
-                                    FontAwesomeIcons.usersSlash,
-                                    color: normalBgColor2,
-                                    size: 50,
+                        ),
+                        Expanded(
+                          child: filteredList.isEmpty
+                              ? SizedBox(
+                                  height: ScreenSize().height,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        child: Icon(
+                                          FontAwesomeIcons.usersSlash,
+                                          color: normalBgColor2,
+                                          size: 50,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 15, bottom: 15),
+                                        child: Text(
+                                          "目前沒有好友",
+                                          style: TextStyle(color: normalBgColor2),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15, bottom: 15),
-                                  child: Text(
-                                    "目前沒有好友",
-                                    style: TextStyle(color: normalBgColor2),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        : ListView.builder(
-                            itemCount: friendList.length,
-                            itemBuilder: (context, index) {
-                              FriendListModel listInfo = friendList[index];
-                              LoginUser otherUserData = listInfo.userData;
-                              return Container(
-                                decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      friendFuture.openRoom(friendList[index].roomId);
-                                      await opneChatRoomPage(loginUser: userData, choicedRoomUser: friendList[index].userData);
-                                    },
-                                    child: Container(
-                                      color: Colors.transparent,
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: UserIcon(
-                                                iconSize: 50,
-                                                image: otherUserData.image,
-                                              )),
-                                          SizedBox(
-                                            width: ScreenSize().width - 100,
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                )
+                              : ListView.builder(
+                                  itemCount: filteredList.length,
+                                  itemBuilder: (context, index) {
+                                    FriendListModel listInfo = filteredList[index];
+                                    LoginUser otherUserData = listInfo.userData;
+                                    return Container(
+                                      decoration:
+                                          BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            friendFuture.openRoom(listInfo.roomId);
+                                            await opneChatRoomPage(loginUser: userData, choicedRoomUser: listInfo.userData);
+                                          },
+                                          child: Container(
+                                            color: Colors.transparent,
+                                            child: Row(
                                               children: [
-                                                Row(
-                                                  children: [
-                                                    Expanded(child: Text(otherUserData.name ?? otherUserData.email)),
-                                                    friendList[index].sentAt != null
-                                                        ? Text(
-                                                            "${friendList[index].sentAt}",
-                                                            style: TextStyle(fontSize: 12, color: normalBgColor2),
-                                                          )
-                                                        : const Text(""),
-                                                  ],
-                                                ),
-                                                friendList[index].lastMessage != null
-                                                    ? Text(
-                                                        "${friendList[index].lastMessage}",
-                                                        style: const TextStyle(color: Colors.black54),
-                                                        maxLines: 2,
-                                                        overflow: TextOverflow.ellipsis,
-                                                      )
-                                                    : const Text(
-                                                        "沒有任何訊息",
-                                                        style: TextStyle(color: Colors.black54),
+                                                Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: UserIcon(
+                                                      iconSize: 50,
+                                                      image: otherUserData.image,
+                                                    )),
+                                                SizedBox(
+                                                  width: ScreenSize().width - 100,
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Expanded(child: Text(otherUserData.name ?? otherUserData.email)),
+                                                          friendList[index].sentAt != null
+                                                              ? Text(
+                                                                  "${listInfo.sentAt}",
+                                                                  style: TextStyle(fontSize: 12, color: normalBgColor2),
+                                                                )
+                                                              : const Text(""),
+                                                        ],
                                                       ),
+                                                      listInfo.lastMessage != null
+                                                          ? Text(
+                                                              "${listInfo.lastMessage}",
+                                                              style: const TextStyle(color: Colors.black54),
+                                                              maxLines: 2,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            )
+                                                          : const Text(
+                                                              "沒有任何訊息",
+                                                              style: TextStyle(color: Colors.black54),
+                                                            ),
+                                                    ],
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
-                  ),
-                ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
-    ));
+    );
   }
 }
