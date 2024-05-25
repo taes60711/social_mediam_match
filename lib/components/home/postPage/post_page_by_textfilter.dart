@@ -10,6 +10,7 @@ class PostPageByTextFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController s = TextEditingController();
     return Scaffold(
       body: Column(
         children: [
@@ -22,7 +23,7 @@ class PostPageByTextFilter extends StatelessWidget {
                   height: 36,
                   child: TextField(
                     cursorColor: normalBgColor2,
-                    controller: TextEditingController(),
+                    controller: s,
                     textInputAction: TextInputAction.go,
                     decoration: InputDecoration(
                       hintText: "Search By title",

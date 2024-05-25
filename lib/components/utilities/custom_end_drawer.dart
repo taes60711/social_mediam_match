@@ -43,18 +43,23 @@ class _CustomEndDrawer extends State<CustomEndDrawer> with SingleTickerProviderS
             child: child,
           );
         },
-        child: Column(
+        child: Stack(
           children: [
-            Container(
-              height: MediaQuery.of(context).padding.top,
-              color: Colors.white,
+            Positioned(
+              height: MediaQuery.of(context).viewPadding.top,
+              left: 0,
+              right: 0,
+              child: Container(color: Colors.white),
             ),
-            Expanded(
+            SafeArea(
               child: widget.child,
             ),
-            Container(
-              height: MediaQuery.of(context).padding.bottom,
-              color: Colors.white,
+            Positioned(
+              height: MediaQuery.of(context).viewPadding.bottom,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(color: Colors.white),
             ),
           ],
         ));
