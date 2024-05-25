@@ -19,6 +19,7 @@ import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../postPage/post_body.dart';
 import '../skillExChangePage/user_detail.dart';
+import '../skillExChangePage/users_filter.dart';
 
 class CoursePage extends StatelessWidget {
   final LoginUser userData;
@@ -47,6 +48,27 @@ class CoursePage extends StatelessWidget {
     ScrollController scrollController = ScrollController();
     bool floatButtonIsVisiable = context.select((CourseState value) => value.floatButtonIsVisiable);
 
+    Widget endDrawerWidget;
+    if (endDrawerType == "userDetail") {
+      endDrawerWidget = UserDetail(
+        globalKey: globalKey,
+        userData: userData,
+        otherUser: otherUser,
+        gotoFriendPage: gotoFriendPage,
+      );
+    } else if (endDrawerType == "courseFilter") {
+      endDrawerWidget = UsersFilter(
+        globalKey: globalKey,
+        userData: userData,
+      );
+    } else {
+      endDrawerWidget = CourseDetail(
+        courseData: choicedCourse,
+        globalKey: globalKey,
+        userData: userData,
+        gotoFriendPage: gotoFriendPage,
+      );
+    }
     return BackgroundWidget(
       child: StatefulWrapper(
         onInit: () async {
@@ -55,19 +77,7 @@ class CoursePage extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           key: globalKey,
-          endDrawer: endDrawerType == "userDetail"
-              ? UserDetail(
-                  globalKey: globalKey,
-                  userData: userData,
-                  otherUser: otherUser,
-                  gotoFriendPage: gotoFriendPage,
-                )
-              : CourseDetail(
-                  courseData: choicedCourse,
-                  globalKey: globalKey,
-                  userData: userData,
-                  gotoFriendPage: gotoFriendPage,
-                ),
+          endDrawer: endDrawerWidget,
           floatingActionButton: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -135,7 +145,10 @@ class CoursePage extends StatelessWidget {
                 Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      courseState.openEndDrawer("courseFilter");
+                      globalKey.currentState!.openEndDrawer();
+                    },
                     icon: const Icon(Icons.dehaze_rounded),
                   ),
                 ),
