@@ -15,17 +15,12 @@ class Forum extends StatelessWidget {
   final LoginUser userData;
   final VoidCallback gotoFriendPage;
   final VoidCallback gotoCoursePage;
-  const Forum(
-      {super.key,
-      required this.userData,
-      required this.gotoFriendPage,
-      required this.gotoCoursePage});
+  const Forum({super.key, required this.userData, required this.gotoFriendPage, required this.gotoCoursePage});
 
   @override
   Widget build(BuildContext context) {
     PostState postState = context.read<PostState>();
-    GlobalKey<ScaffoldState> forumGlobalKey =
-        context.select((PostState value) => value.forumGlobalKey);
+    GlobalKey<ScaffoldState> forumGlobalKey = context.select((PostState value) => value.forumGlobalKey);
     List<String> boradList = ["協槓", "技術", "網頁", "韌體", "AI"];
     int selectedboardIndex = context.select((PostState value) => value.selectedboardIndex);
 
@@ -54,8 +49,12 @@ class Forum extends StatelessWidget {
                       resizeDuration: const Duration(milliseconds: 1),
                       onDismissed: (_) => Navigator.of(context).pop(),
                       key: const Key('key'),
-                      child: PostPageByTextFilter(
-                        postState: postState,
+                      child: ChangeNotifierProvider(
+                        create: (_) => PostState(),
+                        child: PostPageByTextFilter(
+                          userData: userData,
+                          gotoFriendPage: gotoFriendPage,
+                        ),
                       ),
                     ),
                   );
@@ -78,8 +77,7 @@ class Forum extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 4),
-                    child:
-                        Text("Search By title", style: TextStyle(color: Colors.grey, fontSize: 14)),
+                    child: Text("Search By title", style: TextStyle(color: Colors.grey, fontSize: 14)),
                   )
                 ],
               ),

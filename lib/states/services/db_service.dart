@@ -348,6 +348,34 @@ class DBService {
     return allpostData;
   }
 
+  searchStatus postByTextFilterServerInfo = searchStatus();
+  Future<List<PostModel>> getPostByTextFilter({required String inputedText, bool? isFirst}) async {
+    String branch = "posts";
+
+    if (isFirst != null) {
+      postByTextFilterServerInfo.pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getPostByTextFilter/$inputedText?page=${postByTextFilterServerInfo.pageNumber}&size=$size';
+    final uri = Uri.parse(searchUrl);
+    List<PostModel> allpostData = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        allpostData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+          print(e);
+          return PostModel.toMap(e);
+        }).toList();
+
+        inspect(allpostData);
+        postByTextFilterServerInfo.pageNumber++;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allpostData;
+  }
+
   searchStatus postByUserIdServerInfo = searchStatus();
   Future<List<PostModel>> getPostDataByUID(LoginUser userData, {bool? isFirst}) async {
     String branch = "posts";

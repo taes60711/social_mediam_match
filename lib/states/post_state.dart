@@ -117,6 +117,34 @@ class PostState extends ChangeNotifier {
     notifyListeners();
   }
 
+  TextEditingController textFilterInput = TextEditingController();
+  Future<void> getPostByTextFilter({required String inputedText, required String searchType}) async {
+    try {
+      List<PostModel> tempPostData = [];
+      if (searchType == "AddData") {
+        tempPostData = await _dbService.getPostByTextFilter(inputedText: inputedText);
+        tempPostData.forEach((e) {
+          postData = [...postData, e];
+        });
+        isDataAddLoding = false;
+      } else {
+        if (searchType == "First") {
+          isFirstLoading = true;
+          Future.delayed(Duration.zero).then((value) => notifyListeners());
+        }
+        tempPostData = await _dbService.getPostByTextFilter(inputedText: inputedText, isFirst: true);
+        print("object ${tempPostData.length}");
+        postData = tempPostData;
+        isFirstLoading = false;
+        isReLoading = false;
+      }
+
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> getPostData({required String searchType}) async {
     try {
       List<PostModel> tempPostData = [];
