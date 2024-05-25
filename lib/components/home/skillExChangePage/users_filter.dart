@@ -141,6 +141,7 @@ class UsersFilter extends StatelessWidget {
                         backEndSkillList,
                         iotSkillList,
                         otherSkillList,
+                        type: "exChange",
                       );
                     },
                     child: Text("篩選"),

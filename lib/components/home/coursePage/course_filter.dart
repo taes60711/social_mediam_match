@@ -134,7 +134,16 @@ class CourseFilter extends StatelessWidget {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () async {},
+                    onPressed: () async {
+                      await skillExChangeFuture.filterButtonOnClick(
+                        userData!.uid,
+                        forntSkillList,
+                        backEndSkillList,
+                        iotSkillList,
+                        otherSkillList,
+                        type: "Course",
+                      );
+                    },
                     child: Text("篩選"),
                   ),
                 ],

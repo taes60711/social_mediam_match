@@ -356,7 +356,8 @@ class DBService {
       postByTextFilterServerInfo.pageNumber = 0;
     }
 
-    String searchUrl = '$url/$branch/getPostByTextFilter/$inputedText?page=${postByTextFilterServerInfo.pageNumber}&size=$size';
+    String searchUrl =
+        '$url/$branch/getPostByTextFilter?inputedText=$inputedText&page=${postByTextFilterServerInfo.pageNumber}&size=$size';
     final uri = Uri.parse(searchUrl);
     List<PostModel> allpostData = [];
     try {

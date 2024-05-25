@@ -122,13 +122,9 @@ class SkillExChangeState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> filterButtonOnClick(
-    String userUid,
-    List<Map<String, dynamic>> forntList,
-    List<Map<String, dynamic>> backendList,
-    List<Map<String, dynamic>> iotList,
-    List<Map<String, dynamic>> otherList,
-  ) async {
+  Future<void> filterButtonOnClick(String userUid, List<Map<String, dynamic>> forntList, List<Map<String, dynamic>> backendList,
+      List<Map<String, dynamic>> iotList, List<Map<String, dynamic>> otherList,
+      {required String type}) async {
     filterSkill = [];
     List<List<Map<String, dynamic>>> allList = [forntList, backendList, iotList, otherList];
     for (var element in allList) {
@@ -139,7 +135,11 @@ class SkillExChangeState extends ChangeNotifier {
       }
     }
     inspect(filterSkill);
-    await getAllUserData(userUid: userUid, filterSkill: filterSkill, searchType: "First");
+    if (type == "exChange") {
+      await getAllUserData(userUid: userUid, filterSkill: filterSkill, searchType: "First");
+    } else if (type == "Course") {
+      print("filterSkill : $filterSkill");
+    }
   }
 
   void openDrawer(String endDrawerType, {LoginUser? otherUser}) {
