@@ -2,10 +2,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_page_by_new.dart';
+import 'package:social_mediam_match/components/home/postPage/post_page_by_textfilter.dart';
 import 'package:social_mediam_match/components/home/postPage/post_page_by_type.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
+import '../../utilities/custom_end_drawer.dart';
 import 'post_page.dart';
 
 class Forum extends StatelessWidget {
@@ -33,6 +36,49 @@ class Forum extends StatelessWidget {
       ),
       body: Column(
         children: [
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                useSafeArea: false,
+                barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
+                builder: (BuildContext context) {
+                  return CustomEndDrawer(
+                    child: Dismissible(
+                      direction: DismissDirection.startToEnd,
+                      resizeDuration: const Duration(milliseconds: 1),
+                      onDismissed: (_) => Navigator.of(context).pop(),
+                      key: const Key('key'),
+                      child: PostPageByTextFilter(
+                        postState: postState,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              width: ScreenSize().width,
+              height: 36,
+              child: const Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Icon(Icons.search, color: Colors.grey),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 4),
+                    child: Text("Search By title", style: TextStyle(color: Colors.grey, fontSize: 14)),
+                  )
+                ],
+              ),
+            ),
+          ),
           Stack(
             children: [
               CarouselSlider(
