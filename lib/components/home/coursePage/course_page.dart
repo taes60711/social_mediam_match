@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_detail.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_filter.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
@@ -19,7 +20,6 @@ import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../postPage/post_body.dart';
 import '../skillExChangePage/user_detail.dart';
-import '../skillExChangePage/users_filter.dart';
 
 class CoursePage extends StatelessWidget {
   final LoginUser userData;
@@ -57,7 +57,7 @@ class CoursePage extends StatelessWidget {
         gotoFriendPage: gotoFriendPage,
       );
     } else if (endDrawerType == "courseFilter") {
-      endDrawerWidget = UsersFilter(
+      endDrawerWidget = CourseFilter(
         globalKey: globalKey,
         userData: userData,
       );
