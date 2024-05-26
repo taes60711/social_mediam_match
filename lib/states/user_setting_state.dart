@@ -22,6 +22,7 @@ class UserSettingState extends ChangeNotifier {
   TextEditingController nameInput = TextEditingController();
   TextEditingController jobInput = TextEditingController();
   TextEditingController introductionInput = TextEditingController();
+  String introductionText = "";
   final GlobalKey<ScaffoldState> key = GlobalKey();
   String type = "";
 
@@ -31,6 +32,7 @@ class UserSettingState extends ChangeNotifier {
       nameInput.text = userData.name ?? "";
       jobInput.text = userData.job ?? "";
       introductionInput.text = userData.introduction ?? "";
+      introductionText = userData.introduction ?? "";
       notifyListeners();
     });
   }
@@ -103,6 +105,12 @@ class UserSettingState extends ChangeNotifier {
       base64Img = base64String;
       notifyListeners();
     }
+  }
+
+  void introductionInputChange(String text) {
+    introductionInput.text = text;
+    introductionText = text;
+    notifyListeners();
   }
 
   //SQLにアップ前にデータ加工する

@@ -29,37 +29,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> with WidgetsBindingObserver {
-  final _scrollController = ScrollController();
-  double keboardHeight = 0;
-  @override
-  void initState() {
-    WidgetsBinding.instance.addObserver(this);
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (MediaQuery.of(context).viewInsets.bottom == 0) {
-        _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
-        print("關閉鍵盤");
-      } else {
-        double bottom = MediaQuery.of(context).viewInsets.bottom;
-        keboardHeight = max(keboardHeight, bottom);
-        _scrollController.animateTo(200, duration: Duration(milliseconds: 500), curve: Curves.ease);
-
-        print("顯示鍵盤 ${keboardHeight}");
-      }
-    });
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     UserSettingState userSettingState = context.read<UserSettingState>();
@@ -68,6 +37,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
     TextEditingController nameInput = context.select((UserSettingState value) => value.nameInput);
     TextEditingController jobInput = context.select((UserSettingState value) => value.jobInput);
     TextEditingController introductionInput = context.select((UserSettingState value) => value.introductionInput);
+    String introductionText = context.select((UserSettingState value) => value.introductionText);
     String base64Img = context.select((UserSettingState value) => value.base64Img);
     bool isFirst = context.select((UserSettingState value) => value.isFirst);
     GlobalKey<ScaffoldState> key = context.select((UserSettingState value) => value.key);
@@ -253,12 +223,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
         userSettingState.getSkillListData(userData: userData);
       },
       child: isFirst
-          ? ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              controller: _scrollController,
-              children: const [Loading()],
-            )
+          ? const Loading()
           : Scaffold(
               resizeToAvoidBottomInset: false,
               key: key,
@@ -274,10 +239,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
               ),
               body: BackgroundWidget(
                 isSafeArea: true,
-                child: ListView(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: _scrollController,
+                child: Column(
                   children: [
                     backButton,
                     Padding(
@@ -323,13 +285,129 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                             const SizedBox(height: 15),
                             skillTitle(type: "have"),
                             skillTitle(type: "want"),
-                            TitleInput(
-                                isMulti: true, title: ProfileString().introductionInputTitle, textController: introductionInput),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 5, bottom: 5),
+                                    child: Text(
+                                      ProfileString().introductionInputTitle,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          backgroundColor: Colors.transparent,
+                                          builder: (builder) {
+                                            return DraggableScrollableSheet(
+                                                expand: false,
+                                                minChildSize: 0.7,
+                                                initialChildSize: 0.9,
+                                                maxChildSize: 0.9,
+                                                builder: (context, scrollController) {
+                                                  return Container(
+                                                    decoration: const BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius: BorderRadius.vertical(
+                                                        top: Radius.circular(10),
+                                                      ),
+                                                    ),
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                          margin: EdgeInsets.only(left: ScreenSize().width * 0.03, top: 20),
+                                                          width: ScreenSize().width,
+                                                          child: Row(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            children: [
+                                                              SizedBox(
+                                                                width: ScreenSize().width * 0.3,
+                                                                child: Align(
+                                                                  alignment: Alignment.centerLeft,
+                                                                  child: GestureDetector(
+                                                                    onTap: () {
+                                                                      userSettingState.introductionInputChange(introductionText);
+                                                                      Navigator.of(context).pop();
+                                                                    },
+                                                                    child: const Icon(Icons.arrow_back_ios),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              //タイトル
+                                                              SizedBox(
+                                                                width: ScreenSize().width * 0.34,
+                                                                child: Align(
+                                                                  alignment: Alignment.center,
+                                                                  child: Text(ProfileString().introductionInputTitle),
+                                                                ),
+                                                              ),
+                                                              //更新ボタン
+                                                              SizedBox(
+                                                                width: ScreenSize().width * 0.3,
+                                                                child: Align(
+                                                                  alignment: Alignment.centerRight,
+                                                                  child: Material(
+                                                                    borderRadius: BorderRadius.circular(8),
+                                                                    child: InkWell(
+                                                                      borderRadius: BorderRadius.circular(8),
+                                                                      onTap: () async {
+                                                                        userSettingState
+                                                                            .introductionInputChange(introductionInput.text);
+                                                                        Navigator.of(context).pop();
+                                                                      },
+                                                                      child: Container(
+                                                                        padding: const EdgeInsets.symmetric(
+                                                                            horizontal: 8, vertical: 3),
+                                                                        child: Text(
+                                                                          ProfileString().updateButtonText,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        TitleInput(
+                                                          isMulti: true,
+                                                          title: "",
+                                                          textController: introductionInput,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                });
+                                          });
+                                    },
+                                    child: Container(
+                                      width: ScreenSize().width,
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: Colors.grey.withOpacity(0.4),
+                                        ),
+                                        color: Colors.grey.withOpacity(0.1),
+                                      ),
+                                      child: Text(
+                                        introductionText,
+                                        maxLines: 6,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
                     ),
-                    Container(height: keboardHeight)
                   ],
                 ),
               ),

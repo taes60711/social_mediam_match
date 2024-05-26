@@ -8,8 +8,15 @@ class TitleInput extends StatelessWidget {
   final TextEditingController textController;
   final bool? isRequired;
   final bool? isMulti;
-  const TitleInput(
-      {super.key, required this.title, this.inputHeight, this.isRequired, this.isMulti, required this.textController});
+
+  const TitleInput({
+    super.key,
+    required this.title,
+    this.inputHeight,
+    this.isRequired,
+    this.isMulti,
+    required this.textController,
+  });
 
   @override
   Widget build(BuildContext context) {

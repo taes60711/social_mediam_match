@@ -20,38 +20,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
-  final _scrollController = ScrollController();
-  double keboardHeight = 0;
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addObserver(this);
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (MediaQuery.of(context).viewInsets.bottom == 0) {
-        _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
-        print("關閉鍵盤");
-      } else {
-        double bottom = MediaQuery.of(context).viewInsets.bottom;
-        keboardHeight = max(keboardHeight, bottom);
-        _scrollController.animateTo(200, duration: Duration(milliseconds: 500), curve: Curves.ease);
-
-        print("顯示鍵盤 ${keboardHeight}");
-      }
-    });
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     TextEditingController emailController = TextEditingController();
@@ -243,10 +211,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: BackgroundWidget(
-        child: ListView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          controller: _scrollController,
+        child: Column(
           children: [
             backButton,
             //ロゴ
@@ -301,9 +266,6 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                       ],
                     ),
                   ),
-                ),
-                Container(
-                  height: keboardHeight,
                 ),
               ],
             ),
