@@ -105,7 +105,6 @@ class RichTextFormat {
   String widgetToEditorHtml(String htmlString) {
     String _htmlString = mappingIPAndPort(htmlString);
 
-    print("_htmlString $_htmlString");
     var node = html.parse(htmlString).body;
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var allElements = node.querySelectorAll('*');
@@ -151,7 +150,6 @@ class RichTextFormat {
       });
     }
 
-    print("_htmlStringsss $_htmlString");
     return _htmlString;
   }
 

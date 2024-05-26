@@ -25,6 +25,71 @@ class RichTextEditor extends StatelessWidget {
           customButtons: [
             InkWell(
               onTap: () async {
+                TextEditingController imageLinkController = TextEditingController();
+
+                Future<void> setLinkView() {
+                  return showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Image Link'),
+                        content: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          width: ScreenSize().width,
+                          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                            TitleInput(title: 'Imgae URL', textController: imageLinkController),
+                          ]),
+                        ),
+                        actions: [
+                          ElevatedButton(
+                              child: Text('cancel'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              }),
+                          ElevatedButton(
+                            onPressed: () async {
+                              String imgUrl = imageLinkController.text;
+                              String urlString = '<img src="$imgUrl">';
+
+                              await controller.insertText(urlString);
+                              Navigator.pop(context);
+                            },
+                            child: Text("send"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+
+                await setLinkView();
+              },
+              child: const SizedBox(
+                width: 26,
+                height: 24,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 1.7,
+                      child: Icon(
+                        FontAwesomeIcons.image,
+                        size: 19,
+                      ),
+                    ),
+                    Positioned(
+                      right: -1.5,
+                      bottom: -6,
+                      child: Icon(
+                        Icons.link,
+                        size: 20,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () async {
                 TextEditingController linkController = TextEditingController();
 
                 Future<void> setLinkView() {
