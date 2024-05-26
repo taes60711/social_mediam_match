@@ -248,40 +248,52 @@ class ChatRoom extends StatelessWidget {
                                           ),
                                           Padding(
                                             padding: EdgeInsets.all(4),
-                                            child: Container(
-                                              padding: EdgeInsets.all(5),
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(5),
-                                                color: Color.fromARGB(255, 200, 199, 202),
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  ConstrainedBox(
-                                                    constraints: BoxConstraints(
-                                                      maxWidth: ScreenSize().width * 0.6,
-                                                    ),
-                                                    child: RichText(
-                                                      text: TextSpan(
-                                                        children: messageContents.map((e) {
-                                                          if (e.startsWith('https')) {
-                                                            return TextSpan(
-                                                                text: e,
-                                                                style: TextStyle(
-                                                                    color: googleColor, decoration: TextDecoration.underline),
-                                                                recognizer: TapGestureRecognizer()
-                                                                  ..onTap = () {
-                                                                    final Uri _url = Uri.parse(e);
-                                                                    launchUrl(_url);
-                                                                  });
-                                                          } else {
-                                                            return TextSpan(text: e, style: TextStyle(color: Colors.black));
-                                                          }
-                                                        }).toList(),
-                                                      ),
-                                                    ),
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  padding: EdgeInsets.all(5),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(5),
+                                                    color: Color.fromARGB(255, 200, 199, 202),
                                                   ),
-                                                  firstUrl != "-1"
-                                                      ? Padding(
+                                                  child: Column(
+                                                    children: [
+                                                      ConstrainedBox(
+                                                        constraints: BoxConstraints(
+                                                          maxWidth: ScreenSize().width * 0.6,
+                                                        ),
+                                                        child: RichText(
+                                                          text: TextSpan(
+                                                            children: messageContents.map((e) {
+                                                              if (e.startsWith('https')) {
+                                                                return TextSpan(
+                                                                    text: e,
+                                                                    style: TextStyle(
+                                                                        color: googleColor, decoration: TextDecoration.underline),
+                                                                    recognizer: TapGestureRecognizer()
+                                                                      ..onTap = () {
+                                                                        final Uri _url = Uri.parse(e);
+                                                                        launchUrl(_url);
+                                                                      });
+                                                              } else {
+                                                                return TextSpan(text: e, style: TextStyle(color: Colors.black));
+                                                              }
+                                                            }).toList(),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                firstUrl != "-1"
+                                                    ? Container(
+                                                        margin: EdgeInsets.only(top: 2),
+                                                        padding: EdgeInsets.all(5),
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(5),
+                                                          color: Color.fromARGB(255, 200, 199, 202),
+                                                        ),
+                                                        child: Padding(
                                                           padding: const EdgeInsets.only(top: 8),
                                                           child: ConstrainedBox(
                                                             constraints: BoxConstraints(
@@ -296,10 +308,9 @@ class ChatRoom extends StatelessWidget {
                                                               bodyMaxLines: 2,
                                                             ),
                                                           ),
-                                                        )
-                                                      : Container(),
-                                                ],
-                                              ),
+                                                        ))
+                                                    : Container(),
+                                              ],
                                             ),
                                           ),
                                         ],
@@ -336,60 +347,72 @@ class ChatRoom extends StatelessWidget {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.only(right: 8),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(5),
-                                                color: const Color.fromARGB(255, 196, 175, 233),
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(4),
-                                                child: Column(
-                                                  children: [
-                                                    ConstrainedBox(
-                                                      constraints: BoxConstraints(
-                                                        maxWidth: ScreenSize().width * 0.6,
-                                                      ),
-                                                      child: RichText(
-                                                        text: TextSpan(
-                                                          children: messageContents.map((e) {
-                                                            if (e.startsWith('https')) {
-                                                              return TextSpan(
-                                                                  text: e,
-                                                                  style: TextStyle(
-                                                                      color: googleColor, decoration: TextDecoration.underline),
-                                                                  recognizer: TapGestureRecognizer()
-                                                                    ..onTap = () {
-                                                                      final Uri _url = Uri.parse(e);
-                                                                      launchUrl(_url);
-                                                                    });
-                                                            } else {
-                                                              return TextSpan(text: e, style: TextStyle(color: Colors.black));
-                                                            }
-                                                          }).toList(),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    firstUrl != "-1"
-                                                        ? Padding(
-                                                            padding: const EdgeInsets.only(top: 8),
-                                                            child: ConstrainedBox(
-                                                              constraints: BoxConstraints(
-                                                                  maxWidth: ScreenSize().width * 0.6, maxHeight: 160),
-                                                              child: AnyLinkPreview(
-                                                                link: firstUrl,
-                                                                titleStyle: TextStyle(fontSize: 14),
-                                                                backgroundColor: Colors.transparent,
-                                                                boxShadow: [BoxShadow(color: Colors.transparent)],
-                                                                bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
-                                                                borderRadius: 0,
-                                                                bodyMaxLines: 2,
-                                                              ),
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(5),
+                                                    color: const Color.fromARGB(255, 196, 175, 233),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.all(4),
+                                                    child: Column(
+                                                      children: [
+                                                        ConstrainedBox(
+                                                          constraints: BoxConstraints(
+                                                            maxWidth: ScreenSize().width * 0.6,
+                                                          ),
+                                                          child: RichText(
+                                                            text: TextSpan(
+                                                              children: messageContents.map((e) {
+                                                                if (e.startsWith('https')) {
+                                                                  return TextSpan(
+                                                                      text: e,
+                                                                      style: TextStyle(
+                                                                          color: googleColor,
+                                                                          decoration: TextDecoration.underline),
+                                                                      recognizer: TapGestureRecognizer()
+                                                                        ..onTap = () {
+                                                                          final Uri _url = Uri.parse(e);
+                                                                          launchUrl(_url);
+                                                                        });
+                                                                } else {
+                                                                  return TextSpan(text: e, style: TextStyle(color: Colors.black));
+                                                                }
+                                                              }).toList(),
                                                             ),
-                                                          )
-                                                        : Container(),
-                                                  ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
+                                                firstUrl != "-1"
+                                                    ? Container(
+                                                        margin: EdgeInsets.only(top: 2),
+                                                        padding: EdgeInsets.all(5),
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(5),
+                                                          color: const Color.fromARGB(255, 196, 175, 233),
+                                                        ),
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(top: 8),
+                                                          child: ConstrainedBox(
+                                                            constraints: BoxConstraints(
+                                                                maxWidth: ScreenSize().width * 0.6, maxHeight: 160),
+                                                            child: AnyLinkPreview(
+                                                              link: firstUrl,
+                                                              titleStyle: TextStyle(fontSize: 14),
+                                                              backgroundColor: Colors.transparent,
+                                                              boxShadow: [BoxShadow(color: Colors.transparent)],
+                                                              bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
+                                                              borderRadius: 0,
+                                                              bodyMaxLines: 2,
+                                                            ),
+                                                          ),
+                                                        ))
+                                                    : Container(),
+                                              ],
                                             ),
                                           ),
                                           Text(

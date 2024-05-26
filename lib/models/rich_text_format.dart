@@ -104,15 +104,8 @@ class RichTextFormat {
 
   String widgetToEditorHtml(String htmlString) {
     String _htmlString = mappingIPAndPort(htmlString);
-    dynamic getKeyByValue(Map<dynamic, dynamic> map, dynamic value) {
-      for (var entry in map.entries) {
-        if (entry.value == value) {
-          return entry.key;
-        }
-      }
-      return null;
-    }
 
+    print("_htmlString $_htmlString");
     var node = html.parse(htmlString).body;
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var allElements = node.querySelectorAll('*');
@@ -157,6 +150,8 @@ class RichTextFormat {
         }
       });
     }
+
+    print("_htmlStringsss $_htmlString");
     return _htmlString;
   }
 
