@@ -188,7 +188,7 @@ class FirendsPage extends StatelessWidget {
                                                       listInfo.lastMessage != null
                                                           ? Text(
                                                               listInfo.lastMessage!.contains("http://\$ip")
-                                                                  ? "画像を送信しました"
+                                                                  ? "傳送了圖像"
                                                                   : "${listInfo.lastMessage}",
                                                               style: const TextStyle(color: Colors.black54),
                                                               maxLines: 2,

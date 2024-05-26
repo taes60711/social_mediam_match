@@ -26,6 +26,9 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
   Future<void> imageView(String imgUrl) {
     double value = 1;
     double zoomSpeed = 0.01 * ScreenSize().height / ScreenSize().width;
+    if (Platform.isAndroid || Platform.isIOS) {
+      zoomSpeed = 0.01;
+    }
     Timer timer = Timer(Duration.zero, () {});
 
     return showDialog<void>(

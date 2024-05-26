@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -123,6 +124,54 @@ class ChatRoom extends StatelessWidget {
               ],
             ));
       }
+    }
+
+    Future<void> imageView(String imgUrl) {
+      return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          void imageViewExit() {
+            Navigator.of(context).pop();
+          }
+
+          return Scaffold(
+            backgroundColor: Colors.black,
+            body: Column(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: GestureDetector(
+                      onTap: () {
+                        imageViewExit();
+                      },
+                      child: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: PhotoView.customChild(
+                    backgroundDecoration: const BoxDecoration(color: Colors.transparent),
+                    child: GestureDetector(
+                        onDoubleTap: () {
+                          print("onDoubleTap");
+                          imageViewExit();
+                        },
+                        child: Image.network(
+                          imgUrl,
+                          gaplessPlayback: true,
+                        )),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
     }
 
     return StatefulWrapper(
@@ -274,9 +323,16 @@ class ChatRoom extends StatelessWidget {
                                                           maxWidth: ScreenSize().width * 0.6,
                                                         ),
                                                         child: firstImageUrl != '-1'
-                                                            ? Image.network(
-                                                                RichTextFormat(htmlString: firstImageUrl)
-                                                                    .mappingIPAndPort(firstImageUrl),
+                                                            ? GestureDetector(
+                                                                onTap: () async {
+                                                                  print(firstImageUrl);
+                                                                  await imageView(RichTextFormat(htmlString: firstImageUrl)
+                                                                      .mappingIPAndPort(firstImageUrl));
+                                                                },
+                                                                child: Image.network(
+                                                                  RichTextFormat(htmlString: firstImageUrl)
+                                                                      .mappingIPAndPort(firstImageUrl),
+                                                                ),
                                                               )
                                                             : RichText(
                                                                 text: TextSpan(
@@ -381,9 +437,16 @@ class ChatRoom extends StatelessWidget {
                                                             maxWidth: ScreenSize().width * 0.6,
                                                           ),
                                                           child: firstImageUrl != '-1'
-                                                              ? Image.network(
-                                                                  RichTextFormat(htmlString: firstImageUrl)
-                                                                      .mappingIPAndPort(firstImageUrl),
+                                                              ? GestureDetector(
+                                                                  onTap: () async {
+                                                                    print(firstImageUrl);
+                                                                    await imageView(RichTextFormat(htmlString: firstImageUrl)
+                                                                        .mappingIPAndPort(firstImageUrl));
+                                                                  },
+                                                                  child: Image.network(
+                                                                    RichTextFormat(htmlString: firstImageUrl)
+                                                                        .mappingIPAndPort(firstImageUrl),
+                                                                  ),
                                                                 )
                                                               : RichText(
                                                                   text: TextSpan(
@@ -485,7 +548,6 @@ class ChatRoom extends StatelessWidget {
 
                         if (image != null) {
                           File _image = File(image.path);
-
                           String base64String = base64Encode(_image.readAsBytesSync());
                           result = base64String;
                         }
