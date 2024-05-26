@@ -289,7 +289,7 @@ class CourseEditPage extends StatelessWidget {
                               courseState.updateCourse(
                                   courseId: courseData.id, courseUpdateData: courseUpdateData, userData: userData);
                             } else {
-                              //courseState.createCourse(createCourseData: courseUpdateData);
+                              courseState.createCourse(createCourseData: courseUpdateData);
                             }
                           },
                           child: Text("createCourse"),

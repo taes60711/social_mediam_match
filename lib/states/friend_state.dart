@@ -5,13 +5,14 @@ import 'package:web_socket_channel/io.dart';
 import '../global.dart';
 import '../models/friend_model.dart';
 import '../models/user_model.dart';
+import 'package:http/http.dart' as http;
 
 class FriendState extends ChangeNotifier {
   late IOWebSocketChannel _friendListChannel, _chatRoomChannel;
   final DBService _dbService = DBService();
   List<FriendListModel> friendList = [];
   TextEditingController friendListFilterInput = TextEditingController();
-  bool _isSendMessage = false, isFriend = false;
+  bool isFriend = false;
   List<String> members = [];
 
   TextEditingController messageInput = TextEditingController();
@@ -114,47 +115,63 @@ class FriendState extends ChangeNotifier {
       print("initialConnect");
       _chatRoomChannel = IOWebSocketChannel.connect(channelRoomUrl);
       await _chatRoomChannel.ready;
-      _chatRoomChannel.sink.add('{"method" : "connect" , "roomid" : $roomId , "userid" : "$userId" , "pageNumber" : 0}');
+      _chatRoomChannel.sink
+          .add('{"method" : "connect" , "roomid" : $roomId , "userid" : "$userId" ,"ip" : "$ip:$port" ,  "pageNumber" : 0}');
     }
 
     await initialConnect();
 
-    _chatRoomChannel.stream.listen((event) {
-      String requestData = (event as String);
+    _chatRoomChannel.stream.listen((event) async {
+      Map<String, dynamic> requestMapData = jsonDecode((event as String));
+      String listendMethod = requestMapData['method'];
 
-      if (requestData.contains("load:")) {
-        var loadedData = (event).substring("load:".length);
-        List<ChatRoomMessageModel> tempchatRoomMessage = (jsonDecode(loadedData) as List<dynamic>).map((e) {
-          return ChatRoomMessageModel.fromJson(e);
-        }).toList();
-        for (var element in tempchatRoomMessage) {
-          chatRoomMesaage = [...chatRoomMesaage, element];
-        }
-        isDataAddLoding = false;
-      } else if (requestData.contains("connect:")) {
-        var loadedData = (event).substring("connect:".length);
+      if (listendMethod == "connect") {
+        String searchUrl = requestMapData['apiUrl'];
+        final uri = Uri.parse(searchUrl);
 
-        for (var element in (jsonDecode(loadedData)["Members"] as List<dynamic>)) {
-          members = [...members, "\"$element\""];
+        try {
+          var response = await http.get(uri);
+          if (response.statusCode != 404) {
+            var loadedData = utf8.decode(response.bodyBytes);
+            for (var element in (jsonDecode(loadedData)["Members"] as List<dynamic>)) {
+              members = [...members, "\"$element\""];
+            }
+            chatRoomMesaage = (jsonDecode(loadedData)['Message'] as List<dynamic>).map((e) {
+              return ChatRoomMessageModel.fromJson(e);
+            }).toList();
+            pageCount = jsonDecode(loadedData)['PageCount'];
+            isLoading = false;
+          }
+        } catch (e) {
+          print(e);
         }
-        chatRoomMesaage = (jsonDecode(loadedData)['Message'] as List<dynamic>).map((e) {
-          return ChatRoomMessageModel.fromJson(e);
-        }).toList();
-        pageCount = jsonDecode(loadedData)['PageCount'];
-        isLoading = false;
-      } else if (requestData.contains("sendMessage:")) {
-        var loadedData = (event).substring("sendMessage:".length);
+      } else if (listendMethod == "load") {
+        String searchUrl = requestMapData['apiUrl'];
+        final uri = Uri.parse(searchUrl);
+
+        try {
+          var response = await http.get(uri);
+          if (response.statusCode != 404) {
+            var loadedData = utf8.decode(response.bodyBytes);
+            List<ChatRoomMessageModel> tempchatRoomMessage = (jsonDecode(loadedData)['Message'] as List<dynamic>).map((e) {
+              return ChatRoomMessageModel.fromJson(e);
+            }).toList();
+            for (var element in tempchatRoomMessage) {
+              chatRoomMesaage = [...chatRoomMesaage, element];
+            }
+            isDataAddLoding = false;
+          }
+        } catch (e) {
+          print(e);
+        }
+      } else if (listendMethod == "sendMessage") {
+        var loadedData = event;
         ChatRoomMessageModel tempchatRoomMessage = ChatRoomMessageModel.fromJson(jsonDecode(loadedData)['Message']);
         chatRoomMesaage.insert(0, tempchatRoomMessage);
+        _friendListChannel.sink.add('{"method" : "sendMessage" , "members" : $members}');
       }
 
       notifyListeners();
-
-      if (_isSendMessage) {
-        //友だちリストにラストメッセージ送る
-        _friendListChannel.sink.add('{"method" : "sendMessage" , "members" : $members}');
-        _isSendMessage = false;
-      }
     });
   }
 
@@ -167,15 +184,29 @@ class FriendState extends ChangeNotifier {
   void loadMessage(int roomId, String userId, int number) {
     pageNumber = number + 1;
     notifyListeners();
-    _chatRoomChannel.sink
-        .add('{"method" : "loadRoomMessage" , "roomid" : $roomId  , "userid" : "$userId" , "pageNumber" : $pageNumber}');
+    _chatRoomChannel.sink.add(
+        '{"method" : "loadRoomMessage" , "roomid" : $roomId  , "ip" : "$ip:$port" , "userid" : "$userId" , "pageNumber" : $pageNumber}');
   }
 
-  void sendMessage(int roomId, String userId, String message) {
+  Future<void> sendMessage(int roomId, String userId, String message) async {
     messageInput.text = "";
     notifyListeners();
-    _chatRoomChannel.sink.add('{"method" : "sendMessage" , "roomid" : $roomId , "userid" : "$userId" , "message" : "$message"}');
-    _isSendMessage = true;
+    String searchUrl = 'http://$ip:$port/chat/createMessage/$roomId';
+
+    final uri = Uri.parse(searchUrl);
+    Map<String, String> headers = {'content-type': 'application/json'};
+    String body = jsonEncode({"userId": userId, "message": message});
+
+    await http.put(uri, headers: headers, body: body).then((value) {
+      var result = utf8.decode(value.bodyBytes);
+      print("message result ${result}");
+      if (result == "true") {
+        _chatRoomChannel.sink
+            .add('{"method" : "sendMessage" , "roomid" : $roomId , "userid" : "$userId" , "message" : "$message"}');
+      } else {
+        print("Message Insert Failed");
+      }
+    });
   }
 
   void closeRoom({required BuildContext context}) {

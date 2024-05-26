@@ -1,8 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
@@ -10,10 +14,13 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/friend_model.dart';
+import 'package:social_mediam_match/models/rich_text_format.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 import '../../../CustomBouncingScrollPhysics.dart';
 import '../../../models/user_model.dart';
 import '../../../states/friend_state.dart';
+import '../../../states/services/image_service.dart';
 import '../../utilities/loading.dart';
 
 class ChatRoom extends StatelessWidget {
@@ -232,6 +239,10 @@ class ChatRoom extends StatelessWidget {
                               String firstUrl = messageContents.firstWhere((element) {
                                 return element.contains('https');
                               }, orElse: () => "-1");
+
+                              String firstImageUrl = messageContents.firstWhere((element) {
+                                return element.contains('http://\$ip:\$port');
+                              }, orElse: () => "-1");
                               if (ss[index].userId == userData.uid) {
                                 component = Padding(
                                   padding: const EdgeInsets.only(bottom: 5),
@@ -262,25 +273,32 @@ class ChatRoom extends StatelessWidget {
                                                         constraints: BoxConstraints(
                                                           maxWidth: ScreenSize().width * 0.6,
                                                         ),
-                                                        child: RichText(
-                                                          text: TextSpan(
-                                                            children: messageContents.map((e) {
-                                                              if (e.startsWith('https')) {
-                                                                return TextSpan(
-                                                                    text: e,
-                                                                    style: TextStyle(
-                                                                        color: googleColor, decoration: TextDecoration.underline),
-                                                                    recognizer: TapGestureRecognizer()
-                                                                      ..onTap = () {
-                                                                        final Uri _url = Uri.parse(e);
-                                                                        launchUrl(_url);
-                                                                      });
-                                                              } else {
-                                                                return TextSpan(text: e, style: TextStyle(color: Colors.black));
-                                                              }
-                                                            }).toList(),
-                                                          ),
-                                                        ),
+                                                        child: firstImageUrl != '-1'
+                                                            ? Image.network(
+                                                                RichTextFormat(htmlString: firstImageUrl)
+                                                                    .mappingIPAndPort(firstImageUrl),
+                                                              )
+                                                            : RichText(
+                                                                text: TextSpan(
+                                                                  children: messageContents.map((e) {
+                                                                    if (e.startsWith('https')) {
+                                                                      return TextSpan(
+                                                                          text: e,
+                                                                          style: TextStyle(
+                                                                              color: googleColor,
+                                                                              decoration: TextDecoration.underline),
+                                                                          recognizer: TapGestureRecognizer()
+                                                                            ..onTap = () {
+                                                                              final Uri _url = Uri.parse(e);
+                                                                              launchUrl(_url);
+                                                                            });
+                                                                    } else {
+                                                                      return TextSpan(
+                                                                          text: e, style: TextStyle(color: Colors.black));
+                                                                    }
+                                                                  }).toList(),
+                                                                ),
+                                                              ),
                                                       ),
                                                     ],
                                                   ),
@@ -362,26 +380,32 @@ class ChatRoom extends StatelessWidget {
                                                           constraints: BoxConstraints(
                                                             maxWidth: ScreenSize().width * 0.6,
                                                           ),
-                                                          child: RichText(
-                                                            text: TextSpan(
-                                                              children: messageContents.map((e) {
-                                                                if (e.startsWith('https')) {
-                                                                  return TextSpan(
-                                                                      text: e,
-                                                                      style: TextStyle(
-                                                                          color: googleColor,
-                                                                          decoration: TextDecoration.underline),
-                                                                      recognizer: TapGestureRecognizer()
-                                                                        ..onTap = () {
-                                                                          final Uri _url = Uri.parse(e);
-                                                                          launchUrl(_url);
-                                                                        });
-                                                                } else {
-                                                                  return TextSpan(text: e, style: TextStyle(color: Colors.black));
-                                                                }
-                                                              }).toList(),
-                                                            ),
-                                                          ),
+                                                          child: firstImageUrl != '-1'
+                                                              ? Image.network(
+                                                                  RichTextFormat(htmlString: firstImageUrl)
+                                                                      .mappingIPAndPort(firstImageUrl),
+                                                                )
+                                                              : RichText(
+                                                                  text: TextSpan(
+                                                                    children: messageContents.map((e) {
+                                                                      if (e.startsWith('https')) {
+                                                                        return TextSpan(
+                                                                            text: e,
+                                                                            style: TextStyle(
+                                                                                color: googleColor,
+                                                                                decoration: TextDecoration.underline),
+                                                                            recognizer: TapGestureRecognizer()
+                                                                              ..onTap = () {
+                                                                                final Uri _url = Uri.parse(e);
+                                                                                launchUrl(_url);
+                                                                              });
+                                                                      } else {
+                                                                        return TextSpan(
+                                                                            text: e, style: TextStyle(color: Colors.black));
+                                                                      }
+                                                                    }).toList(),
+                                                                  ),
+                                                                ),
                                                         ),
                                                       ],
                                                     ),
@@ -448,6 +472,53 @@ class ChatRoom extends StatelessWidget {
                           contentPadding: EdgeInsets.only(top: 5, left: 10),
                           border: OutlineInputBorder(),
                           hintText: 'Enter Message',
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      Future<String> imageChange() async {
+                        final ImagePicker picker = ImagePicker();
+                        final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                        String result = "";
+
+                        if (image != null) {
+                          File _image = File(image.path);
+
+                          String base64String = base64Encode(_image.readAsBytesSync());
+                          result = base64String;
+                        }
+                        return result;
+                      }
+
+                      String imageString = await imageChange();
+                      if (imageString != "") {
+                        String uid = const Uuid().v1();
+                        if (await ImageService().imageIsExist(imageString) != "-1") {
+                          uid = await ImageService().imageIsExist(imageString);
+                        } else {
+                          await ImageService().saveImage(uid, imageString);
+                        }
+                        String sendImgString = "http://\$ip:\$port/images/$uid";
+                        print("sendImgString $sendImgString");
+
+                        friendFuture.sendMessage(roomId, userData.uid, sendImgString);
+                        _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+                      } else {
+                        print("no Image");
+                      }
+                    },
+                    child: Container(
+                      height: 30,
+                      margin: EdgeInsets.only(left: 5),
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
+                      child: Center(
+                        child: Icon(
+                          FontAwesomeIcons.fileImage,
+                          size: 16,
+                          color: normalTextColor,
                         ),
                       ),
                     ),
