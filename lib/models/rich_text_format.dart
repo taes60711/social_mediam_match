@@ -20,7 +20,7 @@ class RichTextFormat {
 
   Future<String> sendPostImgFormat() async {
     String _htmlString = htmlString ?? "";
-    var node = html.parse(htmlString).body;
+    var node = html.parse(_htmlString).body;
 
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var elements = node.querySelectorAll('*');
@@ -107,7 +107,7 @@ class RichTextFormat {
   Future<String> widgetToEditorHtml(String htmlString) async {
     String _htmlString = mappingIPAndPort(htmlString);
 
-    var node = html.parse(htmlString).body;
+    var node = html.parse(_htmlString).body;
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var allElements = node.querySelectorAll('*');
 

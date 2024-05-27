@@ -52,8 +52,7 @@ class EditPost extends StatelessWidget {
             ElevatedButton(
                 onPressed: () async {
                   String content = await controller.getText();
-                  String fomattedContent = await RichTextFormat(htmlString: content).sendPostImgFormat();
-                  postState.updatePostData(choicedPost!.id, fomattedContent);
+                  postState.updatePostData(choicedPost!.id, content);
                   postState.myPostsGlobalKey.currentState!.closeEndDrawer();
                 },
                 child: const Text("更新"))

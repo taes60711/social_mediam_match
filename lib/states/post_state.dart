@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
+import '../models/rich_text_format.dart';
 import '../models/user_model.dart';
 
 class PostState extends ChangeNotifier {
@@ -92,7 +93,8 @@ class PostState extends ChangeNotifier {
   }
 
   Future<void> updatePostData(int postId, String updateMessage) async {
-    await _dbService.updatePost(postId, updateMessage);
+    String fomattedContent = await RichTextFormat(htmlString: updateMessage).sendPostImgFormat();
+    await _dbService.updatePost(postId, fomattedContent);
     int postIndex = myAllPosts.indexWhere((element) => element.id == postId);
     myAllPosts[postIndex].mainMessage = updateMessage;
     notifyListeners();
@@ -240,7 +242,8 @@ class PostState extends ChangeNotifier {
 
   Future<void> createPost(String userUid, String title, String message, int type) async {
     try {
-      await _dbService.createPost(userUid, title, message, type);
+      String fomattedContent = await RichTextFormat(htmlString: message).sendPostImgFormat();
+      await _dbService.createPost(userUid, title, fomattedContent, type);
 
       List<PostModel> tempPostData = await _dbService.getPostsByType(type, isFirst: true);
       postData = [];

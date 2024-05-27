@@ -34,8 +34,7 @@ class EditorPage extends StatelessWidget {
                 GestureDetector(
                   onTap: () async {
                     String content = await controller.getText();
-                    String fomattedContent = await RichTextFormat(htmlString: content).sendPostImgFormat();
-                    await postState.createPost(userData.uid, titleController.text, fomattedContent, type);
+                    await postState.createPost(userData.uid, titleController.text, content, type);
                     Navigator.pop(context);
                   },
                   child: const Text("送出"),

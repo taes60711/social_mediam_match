@@ -77,7 +77,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allCouserData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allCouserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           return CourseModel.toMap(e);
         }).toList();
         inspect(allCouserData);
@@ -103,7 +103,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allCouserData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allCouserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           return CourseModel.toMap(e);
         }).toList();
         inspect(allCouserData);
@@ -129,7 +129,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allCouserData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allCouserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           return CourseModel.toMap(e);
         }).toList();
         inspect(allCouserData);
@@ -201,7 +201,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allpostData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allpostData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           inspect(e);
           return PostCommentModel.toMap(e);
         }).toList();
@@ -334,7 +334,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allpostData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allpostData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           print(e);
           return PostModel.toMap(e);
         }).toList();
@@ -363,7 +363,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allpostData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allpostData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           print(e);
           return PostModel.toMap(e);
         }).toList();
@@ -392,7 +392,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allpostDataByUID = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allpostDataByUID = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           print(e);
           return PostModel.toMap(e, userData: userData);
         }).toList();
@@ -421,7 +421,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allpostnewPosts = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allpostnewPosts = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           print(e);
           return PostModel.toMap(e);
         }).toList();
@@ -450,7 +450,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allpostsByType = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allpostsByType = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           print(e);
           return PostModel.toMap(e);
         }).toList();
@@ -492,7 +492,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allUserData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((element) {
+        allUserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((element) {
           return LoginUser.jsonToModel(element);
         }).toList();
         alluserServerInfo.pageNumber++;
