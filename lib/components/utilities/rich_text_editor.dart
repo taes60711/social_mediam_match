@@ -183,7 +183,7 @@ class RichTextEditor extends StatelessWidget {
           future: RichTextFormat(htmlString: content).widgetToEditorHtml(content),
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator()); // 或者其他的loading组件
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (snapshot.hasData) {
