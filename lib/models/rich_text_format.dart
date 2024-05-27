@@ -119,7 +119,7 @@ class RichTextFormat {
               String pwithSpanString = element.innerHtml.replaceAll(" ", "&nbsp;");
               _htmlString = _htmlString.replaceAll(element.innerHtml, pwithSpanString);
             }
-            if (element.innerHtml.contains("img")) {
+            if (element.innerHtml.contains("http://\$ip:\$port/images/")) {
               String imgURL = _getImage(element.innerHtml);
               String imgUId = imgURL.substring('http://\$ip:\$port/images/'.length);
               String base64Str = await ImageService().getBase64Img(imgUId);

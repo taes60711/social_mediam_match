@@ -201,7 +201,7 @@ class RichTextEditor extends StatelessWidget {
                 },
               );
             } else {
-              return Center(child: Text('No data available'));
+              return const Center(child: Text('No data available'));
             }
           },
         ),
