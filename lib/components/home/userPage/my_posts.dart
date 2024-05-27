@@ -9,6 +9,7 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/services/image_service.dart';
 import '../../../global.dart';
+import '../../../models/rich_text_format.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
 import '../postPage/post_comment.dart';
@@ -51,7 +52,8 @@ class EditPost extends StatelessWidget {
             ElevatedButton(
                 onPressed: () async {
                   String content = await controller.getText();
-                  postState.updatePostData(choicedPost!.id, content);
+                  String fomattedContent = await RichTextFormat(htmlString: content).sendPostImgFormat();
+                  postState.updatePostData(choicedPost!.id, fomattedContent);
                   postState.myPostsGlobalKey.currentState!.closeEndDrawer();
                 },
                 child: const Text("更新"))
