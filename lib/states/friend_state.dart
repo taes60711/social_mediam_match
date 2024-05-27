@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
 import 'package:web_socket_channel/io.dart';
@@ -31,32 +32,38 @@ class FriendState extends ChangeNotifier {
       _friendListChannel = IOWebSocketChannel.connect(channelListUrl);
       print("friendList connect");
       await _friendListChannel.ready;
-      _friendListChannel.sink.add('{"method" : "connect" , "userid" : "$uid"}');
+      _friendListChannel.sink.add('{"method" : "connect" , "ip" : "$ip:$port" , "userid" : "$uid"}');
     }
 
     await initialConnect();
 
     _friendListChannel.stream.listen((event) async {
+      print(event);
       if (event == "is already Friend") {
         isFriend = true;
         print("isFriend check $isFriend");
-      } else if (event != "" && event != "is already Friend") {
-        List<dynamic> firends = jsonDecode(event) as List<dynamic>;
-        List<FriendListModel> tempfriendList = [];
-        await Future.forEach(firends, (element) async {
-          print("createdBy ${element['createdBy']} lastMessage ${element['lastMessage']} time ${element['sentAt']}");
-          String userUID = element['memberId'] != uid ? element['memberId'] : element['createdBy'];
-          LoginUser? userData = await _dbService.getUserData(userUID);
-          tempfriendList.add(FriendListModel.fromJson(element, userData));
-        });
-        tempfriendList.sort((a, b) => DateTime.parse(a.sentAt ?? "1997-01-01T00:00:00.000+00:00")
-            .compareTo(DateTime.parse(b.sentAt ?? "1997-01-01T00:00:00.000+00:00")));
-        tempfriendList = tempfriendList.map((e) {
-          return friendListFormatDate(e);
-        }).toList();
-        friendList = tempfriendList.reversed.toList();
+      } else {
+        Map<String, dynamic> requestMapData = jsonDecode((event));
+        String searchUrl = requestMapData['apiUrl'];
+        final uri = Uri.parse(searchUrl);
+        try {
+          var response = await http.get(uri);
+          if (response.statusCode != 404) {
+            var loadedData = utf8.decode(response.bodyBytes);
+            List<FriendListModel> tempfriendList = (jsonDecode(loadedData) as List<dynamic>).map((e) {
+              return FriendListModel.fromJson(e);
+            }).toList();
+            tempfriendList.sort((a, b) => DateTime.parse(a.sentAt ?? "1997-01-01T00:00:00.000+00:00")
+                .compareTo(DateTime.parse(b.sentAt ?? "1997-01-01T00:00:00.000+00:00")));
+            tempfriendList = tempfriendList.map((e) {
+              return friendListFormatDate(e);
+            }).toList();
+            friendList = tempfriendList.reversed.toList();
+          }
+        } catch (e) {
+          print(e);
+        }
       }
-
       notifyListeners();
     });
   }
@@ -87,7 +94,7 @@ class FriendState extends ChangeNotifier {
     usersList.forEach((element) {
       usersListTemp = [...usersListTemp, "\"$element\""];
     });
-    _friendListChannel.sink.add('{"method" : "addFriend", "members" : $usersListTemp}');
+    _friendListChannel.sink.add('{"method" : "addFriend", "ip" : "$ip:$port" , "members" : $usersListTemp}');
     isFriend = true;
     notifyListeners();
   }
@@ -97,7 +104,8 @@ class FriendState extends ChangeNotifier {
     usersList.forEach((element) {
       usersListTemp = [...usersListTemp, "\"$element\""];
     });
-    _friendListChannel.sink.add('{"method" : "deleteFriend", "members" : $usersListTemp, "roomid" : $roomId}');
+    _friendListChannel.sink
+        .add('{"method" : "deleteFriend", "ip" : "$ip:$port" , "members" : $usersListTemp, "roomid" : $roomId}');
   }
 
   Future<void> openRoom(int roomId) async {
@@ -116,7 +124,7 @@ class FriendState extends ChangeNotifier {
       _chatRoomChannel = IOWebSocketChannel.connect(channelRoomUrl);
       await _chatRoomChannel.ready;
       _chatRoomChannel.sink
-          .add('{"method" : "connect" , "roomid" : $roomId , "userid" : "$userId" ,"ip" : "$ip:$port" ,  "pageNumber" : 0}');
+          .add('{"method" : "connect" , "roomid" : $roomId , "ip" : "$ip:$port" , "userid" : "$userId" ,  "pageNumber" : 0}');
     }
 
     await initialConnect();
@@ -125,50 +133,52 @@ class FriendState extends ChangeNotifier {
       Map<String, dynamic> requestMapData = jsonDecode((event as String));
       String listendMethod = requestMapData['method'];
 
-      if (listendMethod == "connect") {
-        String searchUrl = requestMapData['apiUrl'];
-        final uri = Uri.parse(searchUrl);
-
-        try {
-          var response = await http.get(uri);
-          if (response.statusCode != 404) {
-            var loadedData = utf8.decode(response.bodyBytes);
-            for (var element in (jsonDecode(loadedData)["Members"] as List<dynamic>)) {
-              members = [...members, "\"$element\""];
+      switch (listendMethod) {
+        case "connect":
+          String searchUrl = requestMapData['apiUrl'];
+          final uri = Uri.parse(searchUrl);
+          try {
+            var response = await http.get(uri);
+            if (response.statusCode != 404) {
+              var loadedData = utf8.decode(response.bodyBytes);
+              for (var element in (jsonDecode(loadedData)["Members"] as List<dynamic>)) {
+                members = [...members, "\"$element\""];
+              }
+              chatRoomMesaage = (jsonDecode(loadedData)['Message'] as List<dynamic>).map((e) {
+                return ChatRoomMessageModel.fromJson(e);
+              }).toList();
+              pageCount = jsonDecode(loadedData)['PageCount'];
+              isLoading = false;
             }
-            chatRoomMesaage = (jsonDecode(loadedData)['Message'] as List<dynamic>).map((e) {
-              return ChatRoomMessageModel.fromJson(e);
-            }).toList();
-            pageCount = jsonDecode(loadedData)['PageCount'];
-            isLoading = false;
+          } catch (e) {
+            print(e);
           }
-        } catch (e) {
-          print(e);
-        }
-      } else if (listendMethod == "load") {
-        String searchUrl = requestMapData['apiUrl'];
-        final uri = Uri.parse(searchUrl);
+        case "load":
+          String searchUrl = requestMapData['apiUrl'];
+          final uri = Uri.parse(searchUrl);
 
-        try {
-          var response = await http.get(uri);
-          if (response.statusCode != 404) {
-            var loadedData = utf8.decode(response.bodyBytes);
-            List<ChatRoomMessageModel> tempchatRoomMessage = (jsonDecode(loadedData)['Message'] as List<dynamic>).map((e) {
-              return ChatRoomMessageModel.fromJson(e);
-            }).toList();
-            for (var element in tempchatRoomMessage) {
-              chatRoomMesaage = [...chatRoomMesaage, element];
+          try {
+            var response = await http.get(uri);
+            if (response.statusCode != 404) {
+              var loadedData = utf8.decode(response.bodyBytes);
+              List<ChatRoomMessageModel> tempchatRoomMessage = (jsonDecode(loadedData)['Message'] as List<dynamic>).map((e) {
+                return ChatRoomMessageModel.fromJson(e);
+              }).toList();
+              for (var element in tempchatRoomMessage) {
+                chatRoomMesaage = [...chatRoomMesaage, element];
+              }
+              isDataAddLoding = false;
             }
-            isDataAddLoding = false;
+          } catch (e) {
+            print(e);
           }
-        } catch (e) {
-          print(e);
-        }
-      } else if (listendMethod == "sendMessage") {
-        var loadedData = event;
-        ChatRoomMessageModel tempchatRoomMessage = ChatRoomMessageModel.fromJson(jsonDecode(loadedData)['Message']);
-        chatRoomMesaage.insert(0, tempchatRoomMessage);
-        _friendListChannel.sink.add('{"method" : "sendMessage" , "members" : $members}');
+        case "sendMessage":
+          var loadedData = event;
+          ChatRoomMessageModel tempchatRoomMessage = ChatRoomMessageModel.fromJson(jsonDecode(loadedData)['Message']);
+          chatRoomMesaage.insert(0, tempchatRoomMessage);
+          _friendListChannel.sink.add('{"method" : "sendMessage" , "ip" : "$ip:$port"  , "members" : $members}');
+        default:
+          break;
       }
 
       notifyListeners();

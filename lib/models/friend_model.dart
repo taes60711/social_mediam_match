@@ -46,7 +46,7 @@ class FriendListModel {
     required this.userData,
   });
 
-  factory FriendListModel.fromJson(dynamic json, LoginUser? userData) {
+  factory FriendListModel.fromJson(dynamic json, {LoginUser? userData}) {
     return FriendListModel(
       roomId: json['roomId'],
       memberId: json['memberId'],
@@ -54,7 +54,7 @@ class FriendListModel {
       lastMessage: json['lastMessage'],
       sentAt: json['sentAt'],
       roomType: json['roomType'],
-      userData: userData ?? LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: 0),
+      userData: userData ?? LoginUser.jsonToModel(json['user']),
     );
   }
 }
