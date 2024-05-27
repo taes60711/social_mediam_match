@@ -32,7 +32,7 @@ class RichTextFormat {
             await Future.forEach(document.body?.querySelectorAll('*') ?? [], (e) async {
               if (e.localName == 'img') {
                 String uid = const Uuid().v1();
-                String resultString = getImage(e.outerHtml);
+                String resultString = _getImage(e.outerHtml);
 
                 if (await ImageService().imageIsExist(resultString) != "-1") {
                   uid = await ImageService().imageIsExist(resultString);
@@ -113,11 +113,11 @@ class RichTextFormat {
 
       allElements.forEach((element) async {
         if (element.innerHtml.contains("img")) {
-          String imgURL = getImage(element.innerHtml);
+          String imgURL = _getImage(element.innerHtml);
           String imgUId = imgURL.substring('http://\$ip:\$port/images/'.length);
           String base64Str = await ImageService().getBase64Img(imgUId);
           String base64ImgHtmlStr = element.innerHtml.replaceAll(imgURL, "data:image/jpg;base64,$base64Str");
-          _htmlString = _htmlString.replaceAll(element.innerHtml, base64ImgHtmlStr);
+          _htmlString = _htmlString.replaceAll(mappingIPAndPort(element.innerHtml), base64ImgHtmlStr);
         }
         switch (element.localName) {
           case "p":
@@ -126,6 +126,7 @@ class RichTextFormat {
               String pwithSpanString = element.innerHtml.replaceAll(" ", "&nbsp;");
               _htmlString = _htmlString.replaceAll(element.innerHtml, pwithSpanString);
             }
+
             document.body?.querySelectorAll('*').forEach(
               (e) {
                 if (e.localName == "span" || e.localName == "a") {
@@ -180,7 +181,7 @@ class RichTextFormat {
         if (!isImage) {
           if (element.innerHtml.contains("img")) {
             isImage = true;
-            resultString = getImage(element.innerHtml);
+            resultString = _getImage(element.innerHtml);
           } else if (element.localName == "iframe") {
             String ytId = RichTextFormat().getYtvideoID(element.outerHtml);
             isImage = true;
@@ -196,7 +197,7 @@ class RichTextFormat {
     };
   }
 
-  String getImage(String htmlString) {
+  String _getImage(String htmlString) {
     int startIndex = -1;
     if (htmlString.contains('src="data:image/')) {
       startIndex = htmlString.indexOf('src="data:image/') + 27;
