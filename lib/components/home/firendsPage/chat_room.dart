@@ -102,11 +102,13 @@ class ChatRoom extends StatelessWidget {
           if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
                   messageData[i - 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
               messageData[i].userId != messageData[i - 1].userId) {
-            ss.add(ChatRoomMessageModel(
-                userId: messageData[i].userId,
-                message: messageData[i].message,
-                sentAt: messageData[i].sentAt,
-                needAppearImg: true));
+            ss.add(
+              ChatRoomMessageModel(
+                  userId: messageData[i].userId,
+                  message: messageData[i].message,
+                  sentAt: messageData[i].sentAt,
+                  needAppearImg: true),
+            );
           } else {
             //當最後一筆資料 與 最後前一筆資料進行比對 時間和使用者相同時 不顯示頭像
             ss.add(ChatRoomMessageModel(
@@ -199,7 +201,6 @@ class ChatRoom extends StatelessWidget {
         });
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         body: Column(
           children: [
             Container(
@@ -304,6 +305,19 @@ class ChatRoom extends StatelessWidget {
                                 return element.contains('https');
                               }, orElse: () => "-1");
 
+                              List<String> noContiainText = [
+                                'jpg',
+                                "gif",
+                                "png",
+                                "jpeg",
+                                "svg",
+                                "icon",
+                              ];
+
+                              bool urlPreview = firstUrl != "-1" &&
+                                  noContiainText.any((text) => !firstUrl.contains(text.toUpperCase())) &&
+                                  noContiainText.any((text) => !firstUrl.contains(text));
+
                               String firstImageUrl = messageContents.firstWhere((element) {
                                 return element.contains('http://\$ip:\$port');
                               }, orElse: () => "-1");
@@ -374,7 +388,7 @@ class ChatRoom extends StatelessWidget {
                                                     ],
                                                   ),
                                                 ),
-                                                firstUrl != "-1"
+                                                firstUrl != "-1" && !firstUrl.contains("JPG")
                                                     ? Container(
                                                         margin: EdgeInsets.only(top: 2),
                                                         padding: EdgeInsets.all(5),
@@ -489,7 +503,7 @@ class ChatRoom extends StatelessWidget {
                                                     ),
                                                   ),
                                                 ),
-                                                firstUrl != "-1"
+                                                urlPreview
                                                     ? Container(
                                                         margin: EdgeInsets.only(top: 2),
                                                         padding: EdgeInsets.all(5),
