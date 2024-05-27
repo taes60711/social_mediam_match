@@ -123,7 +123,7 @@ class RichTextFormat {
               String imgURL = _getImage(element.innerHtml);
               String imgUId = imgURL.substring('http://\$ip:\$port/images/'.length);
               String base64Str = await ImageService().getBase64Img(imgUId);
-              String base64ImgHtmlStr = element.innerHtml.replaceAll(imgURL, "data:image/jpg;base64,$base64Str");
+              String base64ImgHtmlStr = element.innerHtml.replaceAll(imgURL, "data:image/jpeg;base64,$base64Str");
               _htmlString = _htmlString.replaceAll(mappingIPAndPort(element.innerHtml), base64ImgHtmlStr);
             }
             document.body?.querySelectorAll('*').forEach(
@@ -157,7 +157,6 @@ class RichTextFormat {
       });
     }
 
-    print("_htmlString $_htmlString");
     return _htmlString;
   }
 
