@@ -51,6 +51,7 @@ class RichTextFormat {
     return _htmlString;
   }
 
+  ///MARK:顯示用html
   String editedTextToWidgetHtml() {
     String _htmlString = mappingIPAndPort(htmlString ?? "");
     var node = html.parse(_htmlString).body;
@@ -102,6 +103,7 @@ class RichTextFormat {
     return _htmlString;
   }
 
+  ///MARK:編輯用Html
   String widgetToEditorHtml(String htmlString) {
     String _htmlString = mappingIPAndPort(htmlString);
 
@@ -109,12 +111,19 @@ class RichTextFormat {
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var allElements = node.querySelectorAll('*');
 
-      allElements.forEach((element) {
+      allElements.forEach((element) async {
         switch (element.localName) {
           case "p":
             var document = html.parse(element.innerHtml);
             if (!element.innerHtml.contains("img") && !element.innerHtml.contains("iframe")) {
               String pwithSpanString = element.innerHtml.replaceAll(" ", "&nbsp;");
+              _htmlString = _htmlString.replaceAll(element.innerHtml, pwithSpanString);
+            }
+            if (element.innerHtml.contains("img")) {
+              String imgURL = getImage(element.innerHtml);
+              String imgUId = imgURL.substring('http://\$ip:\$port/images/'.length);
+              String base64Str = await ImageService().getBase64Img(imgUId);
+              String pwithSpanString = element.innerHtml.replaceAll(imgURL, "data:image/jpg;base64,$base64Str");
               _htmlString = _htmlString.replaceAll(element.innerHtml, pwithSpanString);
             }
             document.body?.querySelectorAll('*').forEach(
@@ -153,6 +162,7 @@ class RichTextFormat {
     return _htmlString;
   }
 
+  ///MARK:取得預覽圖片或影片的圖片
   Map<String, dynamic> getPostPreView() {
     String _htmlString = mappingIPAndPort(htmlString ?? "");
     var node = html.parse(_htmlString).body;

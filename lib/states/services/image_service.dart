@@ -5,6 +5,24 @@ import '../../global.dart';
 class ImageService {
   String url = "http://$ip:$port/images";
 
+  Future<String> getBase64Img(String image) async {
+    String uid = "-1";
+    String searchUrl = '$url/$image';
+    final uri = Uri.parse(searchUrl);
+
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        String base64String = base64Encode(response.bodyBytes);
+        uid = base64String;
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return uid;
+  }
+
   Future<String> imageIsExist(String image) async {
     String uid = "-1";
     String searchUrl = '$url/checkImage';
