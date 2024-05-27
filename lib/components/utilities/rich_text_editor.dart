@@ -179,17 +179,30 @@ class RichTextEditor extends StatelessWidget {
             ),
           ],
         ),
-        QuillHtmlEditor(
-          text: RichTextFormat(htmlString: content).widgetToEditorHtml(content),
-          controller: controller,
-          minHeight: 1,
-          textStyle: TextStyle(fontSize: fontSize),
-          loadingBuilder: (context) {
-            return const Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 0.4,
-              ),
-            );
+        FutureBuilder<String>(
+          future: RichTextFormat(htmlString: content).widgetToEditorHtml(content),
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator()); // 或者其他的loading组件
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              return QuillHtmlEditor(
+                text: snapshot.data,
+                controller: controller,
+                minHeight: 1,
+                textStyle: TextStyle(fontSize: fontSize),
+                loadingBuilder: (context) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 0.4,
+                    ),
+                  );
+                },
+              );
+            } else {
+              return Center(child: Text('No data available'));
+            }
           },
         ),
       ],

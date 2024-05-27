@@ -104,21 +104,14 @@ class RichTextFormat {
   }
 
   ///MARK:編輯用Html
-  String widgetToEditorHtml(String htmlString) {
+  Future<String> widgetToEditorHtml(String htmlString) async {
     String _htmlString = mappingIPAndPort(htmlString);
 
     var node = html.parse(htmlString).body;
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var allElements = node.querySelectorAll('*');
 
-      allElements.forEach((element) async {
-        if (element.innerHtml.contains("img")) {
-          String imgURL = _getImage(element.innerHtml);
-          String imgUId = imgURL.substring('http://\$ip:\$port/images/'.length);
-          String base64Str = await ImageService().getBase64Img(imgUId);
-          String base64ImgHtmlStr = element.innerHtml.replaceAll(imgURL, "data:image/jpg;base64,$base64Str");
-          _htmlString = _htmlString.replaceAll(mappingIPAndPort(element.innerHtml), base64ImgHtmlStr);
-        }
+      await Future.forEach(allElements, (element) async {
         switch (element.localName) {
           case "p":
             var document = html.parse(element.innerHtml);
@@ -126,7 +119,13 @@ class RichTextFormat {
               String pwithSpanString = element.innerHtml.replaceAll(" ", "&nbsp;");
               _htmlString = _htmlString.replaceAll(element.innerHtml, pwithSpanString);
             }
-
+            if (element.innerHtml.contains("img")) {
+              String imgURL = _getImage(element.innerHtml);
+              String imgUId = imgURL.substring('http://\$ip:\$port/images/'.length);
+              String base64Str = await ImageService().getBase64Img(imgUId);
+              String base64ImgHtmlStr = element.innerHtml.replaceAll(imgURL, "data:image/jpg;base64,$base64Str");
+              _htmlString = _htmlString.replaceAll(mappingIPAndPort(element.innerHtml), base64ImgHtmlStr);
+            }
             document.body?.querySelectorAll('*').forEach(
               (e) {
                 if (e.localName == "span" || e.localName == "a") {
@@ -158,6 +157,7 @@ class RichTextFormat {
       });
     }
 
+    print("_htmlString $_htmlString");
     return _htmlString;
   }
 
