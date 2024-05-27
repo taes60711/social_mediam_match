@@ -119,9 +119,9 @@ class RichTextFormat {
               String pwithSpanString = element.innerHtml.replaceAll(" ", "&nbsp;");
               _htmlString = _htmlString.replaceAll(element.innerHtml, pwithSpanString);
             }
-            if (element.innerHtml.contains("http://\$ip:\$port/images/")) {
+            if (element.innerHtml.contains("http://$ip:$port/images/")) {
               String imgURL = _getImage(element.innerHtml);
-              String imgUId = imgURL.substring('http://\$ip:\$port/images/'.length);
+              String imgUId = imgURL.substring('http://$ip:$port/images/'.length);
               String base64Str = await ImageService().getBase64Img(imgUId);
               String base64ImgHtmlStr = element.innerHtml.replaceAll(imgURL, "data:image/jpeg;base64,$base64Str");
               _htmlString = _htmlString.replaceAll(mappingIPAndPort(element.innerHtml), base64ImgHtmlStr);
@@ -156,7 +156,7 @@ class RichTextFormat {
         }
       });
     }
-
+    print("_htmlString $_htmlString");
     return _htmlString;
   }
 
