@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
 import 'package:social_mediam_match/states/course_state.dart';
@@ -10,6 +12,7 @@ import 'package:social_mediam_match/states/course_state.dart';
 import '../../../models/course_model.dart';
 import '../../../models/rich_text_format.dart';
 import '../../../models/user_model.dart';
+import '../../utilities/custom_end_drawer.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/style_config.dart';
 
@@ -134,46 +137,86 @@ class CourseEditPage extends StatelessWidget {
                                 ),
                                 ElevatedButton(
                                   onPressed: () async {
-                                    TextEditingController linkController = TextEditingController();
+                                    // TextEditingController linkController = TextEditingController();
+                                    // TextEditingController linkTextController = TextEditingController();
+
+                                    // Future<void> setLinkView() {
+                                    //   return showDialog<void>(
+                                    //     context: context,
+                                    //     builder: (BuildContext context) {
+                                    //       return AlertDialog(
+                                    //         title: const Text('Link'),
+                                    //         content: Container(
+                                    //           margin: const EdgeInsets.symmetric(horizontal: 5),
+                                    //           width: ScreenSize().width,
+                                    //           child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                                    //             TitleInput(title: 'Link Text', textController: linkTextController),
+                                    //             TitleInput(title: 'URL', textController: linkController)
+                                    //           ]),
+                                    //         ),
+                                    //         actions: [
+                                    //           ElevatedButton(
+                                    //               child: Text('cancel'),
+                                    //               onPressed: () {
+                                    //                 Navigator.pop(context);
+                                    //               }),
+                                    //           ElevatedButton(
+                                    //             onPressed: () async {
+                                    //               String ytId = RichTextFormat().getYtvideoID(linkController.text);
+                                    //               String ytURL = 'https://www.youtube.com/embed/$ytId';
+                                    //               String content = '{"text":"${linkTextController.text}","url":"$ytURL"}';
+                                    //               courseState.addChapterContent(index, content);
+                                    //               Navigator.pop(context);
+                                    //             },
+                                    //             child: Text("send"),
+                                    //           ),
+                                    //         ],
+                                    //       );
+                                    //     },
+                                    //   );
+                                    // }
+
+                                    // await setLinkView();
+
                                     TextEditingController linkTextController = TextEditingController();
+                                    QuillEditorController controller = QuillEditorController();
+                                    showDialog(
+                                      context: context,
+                                      barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
+                                      builder: (BuildContext context) {
+                                        return CustomEndDrawer(
+                                          child: Dismissible(
+                                              direction: DismissDirection.startToEnd,
+                                              resizeDuration: const Duration(milliseconds: 1),
+                                              onDismissed: (_) => Navigator.of(context).pop(),
+                                              key: const Key('key'),
+                                              child: Scaffold(
+                                                body: SafeArea(
+                                                    child: Column(
+                                                  children: [
+                                                    ElevatedButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(context);
+                                                        },
+                                                        child: Text("back")),
+                                                    TitleInput(title: 'Link Text', textController: linkTextController),
+                                                    Expanded(child: RichTextEditor(controller: controller, content: "")),
+                                                    ElevatedButton(
+                                                      onPressed: () async {
+                                                        String text = await controller.getText();
+                                                        String content = '{"text":"${linkTextController.text}","url":"$text"}';
 
-                                    Future<void> setLinkView() {
-                                      return showDialog<void>(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: const Text('Link'),
-                                            content: Container(
-                                              margin: const EdgeInsets.symmetric(horizontal: 5),
-                                              width: ScreenSize().width,
-                                              child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                                                TitleInput(title: 'Link Text', textController: linkTextController),
-                                                TitleInput(title: 'URL', textController: linkController)
-                                              ]),
-                                            ),
-                                            actions: [
-                                              ElevatedButton(
-                                                  child: Text('cancel'),
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  }),
-                                              ElevatedButton(
-                                                onPressed: () async {
-                                                  String ytId = RichTextFormat().getYtvideoID(linkController.text);
-                                                  String ytURL = 'https://www.youtube.com/embed/$ytId';
-                                                  String content = '{"text":"${linkTextController.text}","url":"$ytURL"}';
-                                                  courseState.addChapterContent(index, content);
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text("send"),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    }
-
-                                    await setLinkView();
+                                                        courseState.addChapterContent(index, content);
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text("send"),
+                                                    ),
+                                                  ],
+                                                )),
+                                              )),
+                                        );
+                                      },
+                                    );
                                   },
                                   child: Text("add"),
                                 ),
@@ -188,9 +231,14 @@ class CourseEditPage extends StatelessWidget {
                             children: chapters[index].content.asMap().entries.map((e) {
                               int contentIndex = e.key;
                               String content = e.value;
-                              Map<String, dynamic> resultData = jsonDecode(content);
-                              String chapterText = "${resultData['text']}";
-                              String chapterUrl = "${resultData['url']}";
+
+                              int startIndex = '{"text":"'.length;
+                              int endIndex = content.indexOf('","');
+                              int startUrlIndex = content.indexOf('"url":"') + '"url":"'.length;
+                              int endUrlIndex = content.indexOf('"}');
+                              String chapterText = content.substring(startIndex, endIndex);
+                              String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
+
                               return Padding(
                                 padding: EdgeInsets.symmetric(vertical: 5),
                                 child: Row(
@@ -205,8 +253,6 @@ class CourseEditPage extends StatelessWidget {
                                     Expanded(
                                       child: GestureDetector(
                                         onTap: () {
-                                          String vidoeHtml = "<iframe src='$chapterUrl'></iframe>";
-
                                           showGeneralDialog(
                                               barrierColor: Colors.black.withOpacity(0.7),
                                               transitionBuilder: (context, a1, a2, widget) {
@@ -234,7 +280,7 @@ class CourseEditPage extends StatelessWidget {
                                                               ),
                                                             ),
                                                           ),
-                                                          RichTextView(content: vidoeHtml)
+                                                          RichTextView(content: chapterUrl)
                                                         ],
                                                       ),
                                                     ),

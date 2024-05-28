@@ -170,9 +170,14 @@ class CourseDetail extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: e.content.map((e) {
-                          Map<String, dynamic> resultData = jsonDecode(e);
-                          String chapterText = "${resultData['text']}";
-                          String chapterUrl = "${resultData['url']}";
+                          String content = e;
+                          int startIndex = '{"text":"'.length;
+                          int endIndex = content.indexOf('","');
+                          int startUrlIndex = content.indexOf('"url":"') + '"url":"'.length;
+                          int endUrlIndex = content.indexOf('"}');
+                          String chapterText = content.substring(startIndex, endIndex);
+                          String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
+
                           return Padding(
                             padding: EdgeInsets.symmetric(vertical: 5),
                             child: Row(
@@ -187,8 +192,6 @@ class CourseDetail extends StatelessWidget {
                                 Expanded(
                                   child: GestureDetector(
                                     onTap: () {
-                                      String vidoeHtml = "<iframe src='${chapterUrl}'></iframe>";
-
                                       showGeneralDialog(
                                           barrierColor: Colors.black.withOpacity(0.7),
                                           transitionBuilder: (context, a1, a2, widget) {
@@ -216,7 +219,7 @@ class CourseDetail extends StatelessWidget {
                                                           ),
                                                         ),
                                                       ),
-                                                      RichTextView(content: vidoeHtml)
+                                                      RichTextView(content: chapterUrl)
                                                     ],
                                                   ),
                                                 ),
