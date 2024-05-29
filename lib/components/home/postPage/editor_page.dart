@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
-import '../../../models/rich_text_format.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
 class CustomEndDrawer extends StatefulWidget {
   final Widget child;

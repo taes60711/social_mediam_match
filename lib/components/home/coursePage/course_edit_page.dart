@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +9,6 @@ import 'package:social_mediam_match/components/utilities/title_input.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
 import '../../../models/course_model.dart';
-import '../../../models/rich_text_format.dart';
 import '../../../models/user_model.dart';
 import '../../utilities/custom_end_drawer.dart';
 import '../../utilities/rich_text_view.dart';
@@ -137,47 +135,6 @@ class CourseEditPage extends StatelessWidget {
                                 ),
                                 ElevatedButton(
                                   onPressed: () async {
-                                    // TextEditingController linkController = TextEditingController();
-                                    // TextEditingController linkTextController = TextEditingController();
-
-                                    // Future<void> setLinkView() {
-                                    //   return showDialog<void>(
-                                    //     context: context,
-                                    //     builder: (BuildContext context) {
-                                    //       return AlertDialog(
-                                    //         title: const Text('Link'),
-                                    //         content: Container(
-                                    //           margin: const EdgeInsets.symmetric(horizontal: 5),
-                                    //           width: ScreenSize().width,
-                                    //           child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                                    //             TitleInput(title: 'Link Text', textController: linkTextController),
-                                    //             TitleInput(title: 'URL', textController: linkController)
-                                    //           ]),
-                                    //         ),
-                                    //         actions: [
-                                    //           ElevatedButton(
-                                    //               child: Text('cancel'),
-                                    //               onPressed: () {
-                                    //                 Navigator.pop(context);
-                                    //               }),
-                                    //           ElevatedButton(
-                                    //             onPressed: () async {
-                                    //               String ytId = RichTextFormat().getYtvideoID(linkController.text);
-                                    //               String ytURL = 'https://www.youtube.com/embed/$ytId';
-                                    //               String content = '{"text":"${linkTextController.text}","url":"$ytURL"}';
-                                    //               courseState.addChapterContent(index, content);
-                                    //               Navigator.pop(context);
-                                    //             },
-                                    //             child: Text("send"),
-                                    //           ),
-                                    //         ],
-                                    //       );
-                                    //     },
-                                    //   );
-                                    // }
-
-                                    // await setLinkView();
-
                                     TextEditingController linkTextController = TextEditingController();
                                     QuillEditorController controller = QuillEditorController();
                                     showDialog(

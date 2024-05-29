@@ -44,7 +44,7 @@ class MyCourses extends StatelessWidget {
             ),
             Expanded(
               child: DefaultTabController(
-                  length: 2,
+                  length: 3,
                   child: Scaffold(
                       appBar: TabBar(
                         tabs: const [
@@ -55,6 +55,10 @@ class MyCourses extends StatelessWidget {
                           SizedBox(
                             height: 25,
                             child: Tab(text: '已創建的課程'),
+                          ),
+                          SizedBox(
+                            height: 25,
+                            child: Tab(text: '課程PR文章'),
                           ),
                         ],
                         isScrollable: true,
@@ -316,6 +320,40 @@ class MyCourses extends StatelessWidget {
                                           return mainBody;
                                         }))
                               ],
+                            ),
+                          ),
+                          Scaffold(
+                            floatingActionButton: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pushNamed(RoutePath.courseEditPage.value, arguments: {
+                                  "userData": userData,
+                                });
+                              },
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: normalTextColor,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 1,
+                                      offset: Offset(-1, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(
+                                  FontAwesomeIcons.penToSquare,
+                                  size: 16,
+                                  color: Color.fromARGB(255, 247, 147, 100),
+                                ),
+                              ),
+                            ),
+                            body: Container(
+                              width: 100,
+                              height: 100,
+                              color: Colors.deepPurpleAccent,
                             ),
                           ),
                         ],

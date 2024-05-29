@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:social_mediam_match/components/strings/account/login_strings.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';

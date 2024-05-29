@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
