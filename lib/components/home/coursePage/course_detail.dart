@@ -197,28 +197,29 @@ class CourseDetail extends StatelessWidget {
                                               scale: a1.value,
                                               child: Opacity(
                                                 opacity: a1.value,
-                                                child: SizedBox(
-                                                  height: ScreenSize().height,
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.of(context).pop();
-                                                        },
-                                                        child: Container(
-                                                          margin: const EdgeInsets.only(right: 20, bottom: 20),
-                                                          height: 30,
-                                                          width: 30,
-                                                          child: Icon(
-                                                            Icons.close,
-                                                            color: normalTextColor,
+                                                child: Scaffold(
+                                                  body: SafeArea(
+                                                    child: SingleChildScrollView(
+                                                      child: Column(
+                                                        children: [
+                                                          Text(chapterText),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                            child: Container(
+                                                              alignment: Alignment.topRight,
+                                                              margin: const EdgeInsets.only(right: 20, bottom: 20),
+                                                              child: Icon(
+                                                                Icons.close,
+                                                                color: normalBgColor2,
+                                                              ),
+                                                            ),
                                                           ),
-                                                        ),
+                                                          RichTextView(content: chapterUrl)
+                                                        ],
                                                       ),
-                                                      RichTextView(content: chapterUrl)
-                                                    ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),

@@ -54,11 +54,11 @@ class MyCourses extends StatelessWidget {
                           ),
                           SizedBox(
                             height: 25,
-                            child: Tab(text: '已創建的課程'),
+                            child: Tab(text: '課程PR'),
                           ),
                           SizedBox(
                             height: 25,
-                            child: Tab(text: '課程PR文章'),
+                            child: Tab(text: '課程内容文章'),
                           ),
                         ],
                         isScrollable: true,
