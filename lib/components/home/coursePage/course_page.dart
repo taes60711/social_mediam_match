@@ -60,11 +60,14 @@ class CoursePage extends StatelessWidget {
         userData: userData,
       );
     } else {
-      endDrawerWidget = CourseDetail(
-        courseData: choicedCourse,
-        globalKey: globalKey,
-        userData: userData,
-        gotoFriendPage: gotoFriendPage,
+      endDrawerWidget = ChangeNotifierProvider(
+        create: (_) => CourseState(),
+        child: CourseDetail(
+          courseData: choicedCourse,
+          globalKey: globalKey,
+          userData: userData,
+          gotoFriendPage: gotoFriendPage,
+        ),
       );
     }
     return BackgroundWidget(

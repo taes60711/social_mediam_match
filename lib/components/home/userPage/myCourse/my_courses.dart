@@ -1,18 +1,19 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_detail.dart';
+import 'package:social_mediam_match/components/home/userPage/myCourse/courese_member_manager.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
-import '../../../global.dart';
-import '../../../models/course_model.dart';
-import '../../../models/user_model.dart';
-import '../../utilities/skill_list_view.dart';
-import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
-import '../../utilities/user_icon.dart';
+import '../../../../global.dart';
+import '../../../../models/course_model.dart';
+import '../../../../models/user_model.dart';
+import '../../../utilities/custom_end_drawer.dart';
+import '../../../utilities/skill_list_view.dart';
+import '../../../utilities/style/screen_size.dart';
+import '../../../utilities/style/style_config.dart';
+import '../../../utilities/user_icon.dart';
 
 class MyCourses extends StatelessWidget {
   const MyCourses({super.key});
@@ -22,6 +23,7 @@ class MyCourses extends StatelessWidget {
     CourseState courseState = context.read<CourseState>();
     LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
     List<CourseModel> myCourseData = context.watch<CourseState>().myCourseData;
+    GlobalKey<ScaffoldState> globalKey = context.select((CourseState value) => value.globalKey);
 
     return Scaffold(
       body: SafeArea(
@@ -44,7 +46,7 @@ class MyCourses extends StatelessWidget {
             ),
             Expanded(
               child: DefaultTabController(
-                  length: 3,
+                  length: 2,
                   child: Scaffold(
                       appBar: TabBar(
                         tabs: const [
@@ -54,11 +56,7 @@ class MyCourses extends StatelessWidget {
                           ),
                           SizedBox(
                             height: 25,
-                            child: Tab(text: '課程PR'),
-                          ),
-                          SizedBox(
-                            height: 25,
-                            child: Tab(text: '課程内容文章'),
+                            child: Tab(text: '創建的課程'),
                           ),
                         ],
                         isScrollable: true,
@@ -92,11 +90,31 @@ class MyCourses extends StatelessWidget {
                                             padding: const EdgeInsets.symmetric(horizontal: 10),
                                             child: GestureDetector(
                                               onTap: () {
-                                                inspect(myCourseData[index]);
-                                                Navigator.of(context).pushNamed(RoutePath.courseEditPage.value, arguments: {
-                                                  "userData": userData,
-                                                  "courseData": myCourseData[index],
-                                                });
+                                                print("courseOpen");
+                                                showDialog(
+                                                  context: context,
+                                                  useSafeArea: false,
+                                                  barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
+                                                  builder: (BuildContext context) {
+                                                    return CustomEndDrawer(
+                                                      child: Dismissible(
+                                                        direction: DismissDirection.startToEnd,
+                                                        resizeDuration: const Duration(milliseconds: 1),
+                                                        onDismissed: (_) => Navigator.of(context).pop(),
+                                                        key: const Key('key'),
+                                                        child: ChangeNotifierProvider(
+                                                          create: (_) => CourseState(),
+                                                          child: CourseDetail(
+                                                            globalKey: globalKey,
+                                                            userData: userData,
+                                                            courseData: myCourseData[index],
+                                                            gotoFriendPage: () {},
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
                                               },
                                               child: Container(
                                                 padding: const EdgeInsets.all(0),
@@ -240,7 +258,6 @@ class MyCourses extends StatelessWidget {
                                                               ),
                                                             ),
                                                             onTap: () {
-                                                              print("Icon");
                                                               showModalBottomSheet(
                                                                   context: context,
                                                                   isScrollControlled: true,
@@ -295,6 +312,112 @@ class MyCourses extends StatelessWidget {
                                                                                     ),
                                                                                   ],
                                                                                 ),
+                                                                                Padding(
+                                                                                  padding: const EdgeInsets.only(
+                                                                                      top: 10, right: 10, left: 10),
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () {
+                                                                                      Navigator.pop(context);
+                                                                                      Navigator.of(context).pushNamed(
+                                                                                          RoutePath.courseEditPage.value,
+                                                                                          arguments: {
+                                                                                            "userData": userData,
+                                                                                            "courseData": myCourseData[index],
+                                                                                          });
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      width: ScreenSize().width,
+                                                                                      height: 45,
+                                                                                      decoration: BoxDecoration(
+                                                                                          color: normalBgColor2,
+                                                                                          borderRadius:
+                                                                                              BorderRadius.circular(10)),
+                                                                                      child: Center(
+                                                                                        child: SizedBox(
+                                                                                          width: 100,
+                                                                                          child: Row(
+                                                                                            children: [
+                                                                                              Icon(
+                                                                                                Icons.edit,
+                                                                                                color: normalTextColor,
+                                                                                                size: 25,
+                                                                                              ),
+                                                                                              const SizedBox(width: 5),
+                                                                                              SizedBox(
+                                                                                                width: 70,
+                                                                                                child: Center(
+                                                                                                  child: Text(
+                                                                                                    "編輯",
+                                                                                                    style: TextStyle(
+                                                                                                        color: normalTextColor),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ],
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                Padding(
+                                                                                  padding: const EdgeInsets.only(
+                                                                                      top: 10, right: 10, left: 10),
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () {
+                                                                                      Navigator.pop(context);
+                                                                                      void showMemberManagerPage() {
+                                                                                        showDialog<void>(
+                                                                                            barrierColor: barrierColor,
+                                                                                            context: context,
+                                                                                            builder: (BuildContext context) {
+                                                                                              return ChangeNotifierProvider(
+                                                                                                create: (_) => CourseState(),
+                                                                                                child: CourseMemberManager(
+                                                                                                  courseId:
+                                                                                                      myCourseData[index].id,
+                                                                                                ),
+                                                                                              );
+                                                                                            });
+                                                                                      }
+
+                                                                                      showMemberManagerPage();
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      width: ScreenSize().width,
+                                                                                      height: 45,
+                                                                                      decoration: BoxDecoration(
+                                                                                          color: normalBgColor2,
+                                                                                          borderRadius:
+                                                                                              BorderRadius.circular(10)),
+                                                                                      child: Center(
+                                                                                        child: SizedBox(
+                                                                                          width: 100,
+                                                                                          child: Row(
+                                                                                            children: [
+                                                                                              Icon(
+                                                                                                Icons.edit,
+                                                                                                color: normalTextColor,
+                                                                                                size: 25,
+                                                                                              ),
+                                                                                              const SizedBox(width: 5),
+                                                                                              SizedBox(
+                                                                                                width: 70,
+                                                                                                child: Center(
+                                                                                                  child: Text(
+                                                                                                    "管理成員",
+                                                                                                    style: TextStyle(
+                                                                                                        color: normalTextColor),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ],
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                )
                                                                               ],
                                                                             ),
                                                                           );
@@ -311,7 +434,6 @@ class MyCourses extends StatelessWidget {
                                                       width: ScreenSize().width,
                                                       color: hintTextColor,
                                                     ),
-                                                    // Text("公開有否: ${courseData[index].isPublic}"),
                                                   ],
                                                 ),
                                               ),
@@ -320,40 +442,6 @@ class MyCourses extends StatelessWidget {
                                           return mainBody;
                                         }))
                               ],
-                            ),
-                          ),
-                          Scaffold(
-                            floatingActionButton: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushNamed(RoutePath.courseEditPage.value, arguments: {
-                                  "userData": userData,
-                                });
-                              },
-                              child: Container(
-                                width: 40,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: normalTextColor,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 1,
-                                      offset: Offset(-1, 4),
-                                    ),
-                                  ],
-                                ),
-                                child: const Icon(
-                                  FontAwesomeIcons.penToSquare,
-                                  size: 16,
-                                  color: Color.fromARGB(255, 247, 147, 100),
-                                ),
-                              ),
-                            ),
-                            body: Container(
-                              width: 100,
-                              height: 100,
-                              color: Colors.deepPurpleAccent,
                             ),
                           ),
                         ],

@@ -130,3 +130,26 @@ class CourseCreateModel {
     return returnString;
   }
 }
+
+class AddedCourseMemberModel {
+  int courseId;
+  String memberUid;
+  LoginUser userData;
+  int status;
+
+  AddedCourseMemberModel({
+    required this.courseId,
+    required this.memberUid,
+    required this.userData,
+    required this.status,
+  });
+
+  factory AddedCourseMemberModel.toMap(dynamic json) {
+    return AddedCourseMemberModel(
+      courseId: json['courseId'],
+      memberUid: json['memberUid'],
+      userData: LoginUser.jsonToModel(json['userDTO']),
+      status: json['status'],
+    );
+  }
+}

@@ -147,6 +147,71 @@ class CourseState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> deleteUserFromCourse({required int courseId, required String userUId}) async {
+    bool isAdded = false;
+    try {
+      isAdded = await _dbService.deleteUserFromCourse(courseId: courseId, userUID: userUId);
+      if (isAdded) {
+        int index = addedCourseMembers.indexWhere((element) => element.memberUid == userUId);
+        addedCourseMembers.removeAt(index);
+      }
+    } catch (e) {
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateAddedUserStatus(addedCourseMembers, {required int courseId, required String userUId}) async {
+    bool isAdded = false;
+    try {
+      isAdded = await _dbService.updateAddedUserStatus(courseId: courseId, userUID: userUId);
+      if (isAdded) {
+        int index = addedCourseMembers.indexWhere((element) => element.memberUid == userUId);
+        addedCourseMembers[index].status = 1;
+      }
+    } catch (e) {
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  List<AddedCourseMemberModel> addedCourseMembers = [];
+  Future<void> getAddedCourseMember({required int courseId, bool? isFirst}) async {
+    List<AddedCourseMemberModel> resultData = [];
+    try {
+      resultData = await _dbService.getCourseAddedMember(courseId, isFirst: isFirst);
+      addedCourseMembers = resultData;
+    } catch (e) {
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  bool bIsAddedCourse = true;
+  Future<void> isAddedCourse({required int courseId, required String userUId}) async {
+    bool isAdded = false;
+    try {
+      isAdded = await _dbService.isAddedCourse(courseId: courseId, userUID: userUId);
+      bIsAddedCourse = isAdded;
+    } catch (e) {
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<bool> userAddCourseRequest({required int courseId, required String userUId}) async {
+    bool isSuccess = false;
+    try {
+      await _dbService.userAddCourseRequest(courseId: courseId, userUID: userUId);
+      isSuccess = true;
+      bIsAddedCourse = true;
+    } catch (e) {
+      print(e);
+    }
+    notifyListeners();
+    return isSuccess;
+  }
+
   Future<bool> updateCourse(
       {required int courseId, required CourseCreateModel courseUpdateData, required LoginUser userData}) async {
     bool createResult = await _dbService.updateCourse(courseId: courseId, courseUpdateData: courseUpdateData);
@@ -224,44 +289,6 @@ class CourseState extends ChangeNotifier {
       print(e);
     }
   }
-
-  // Future<void> getCourseDatabyType(int type, {required String searchType}) async {
-  //   try {
-  //     List<CourseModel> tempCourseData = [];
-  //     if (searchType == "First") {
-  //       isFirstLoading = true;
-  //       isTopFirstLoading = true;
-  //       Future.delayed(Duration.zero).then((value) => notifyListeners());
-  //       tempCourseData = await _dbService.getCoursesByType(type, isFirst: true);
-  //     } else {
-  //       tempCourseData = await _dbService.getCoursesByType(type);
-  //     }
-
-  //     if (type == 0) {
-  //       if (searchType == "AddData") {
-  //         tempCourseData.forEach((e) {
-  //           topCourseData = [...topCourseData, e];
-  //         });
-  //         isAddDataLoading = false;
-  //       } else {
-  //         courseData = tempCourseData;
-  //         if (searchType == "First") {
-  //           isFirstLoading = false;
-  //         } else if (searchType == "Reload") {
-  //           isReLoading = false;
-  //         }
-  //       }
-  //     } else {
-  //       topCourseData = tempCourseData;
-  //       if (searchType == "First") {
-  //         isTopFirstLoading = false;
-  //       }
-  //     }
-  //     notifyListeners();
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
 
   void addData() {
     isAddDataLoading = true;

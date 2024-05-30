@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/states/course_state.dart';
 
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
+import '../../utilities/Stateful_wrapper.dart';
 import '../../utilities/custom_end_drawer.dart';
 import '../../utilities/skill_list_view.dart';
 import '../../utilities/user_icon.dart';
@@ -16,14 +20,24 @@ class CourseDetail extends StatelessWidget {
   final LoginUser? userData;
   final GlobalKey<ScaffoldState> globalKey;
   final VoidCallback gotoFriendPage;
-  const CourseDetail({super.key, this.courseData, required this.globalKey, required this.userData, required this.gotoFriendPage});
+
+  const CourseDetail({
+    super.key,
+    this.courseData,
+    required this.globalKey,
+    required this.userData,
+    required this.gotoFriendPage,
+  });
 
   @override
   Widget build(BuildContext context) {
+    CourseState courseState = context.read<CourseState>();
+    bool bIsAddedCourse = context.select((CourseState value) => value.bIsAddedCourse);
     Widget component = Container();
 
     if (courseData != null) {
       CourseModel realCourseData = courseData!;
+      print("isAdded bIsAddedCourse bIsAddedCourse ${bIsAddedCourse}");
 
       Widget breakLine = Container(
         margin: const EdgeInsets.all(5),
@@ -44,9 +58,42 @@ class CourseDetail extends StatelessWidget {
               child: Icon(Icons.arrow_back_ios),
             ),
             SizedBox(height: 5),
-            Text(
-              realCourseData.title,
-              style: TextStyle(fontSize: 19),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  realCourseData.title,
+                  style: TextStyle(fontSize: 19),
+                ),
+                bIsAddedCourse
+                    ? Container()
+                    : GestureDetector(
+                        onTap: () {
+                          courseState.userAddCourseRequest(courseId: realCourseData.id, userUId: userData!.uid);
+                        },
+                        child: Container(
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 30,
+                                height: 30,
+                                margin: const EdgeInsets.only(right: 10),
+                                decoration: BoxDecoration(color: normalBgColor2, borderRadius: BorderRadius.circular(15)),
+                                child: const Icon(
+                                  FontAwesomeIcons.plus,
+                                  size: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                "加入課程",
+                                style: TextStyle(color: normalBgColor2),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+              ],
             ),
             Text(
               "課程類別: ${realCourseData.type}",
@@ -260,7 +307,14 @@ class CourseDetail extends StatelessWidget {
     return BackgroundWidget(
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
-        child: component,
+        child: StatefulWrapper(
+          onInit: () async {
+            if (userData!.uid != courseData!.createdBy) {
+              await courseState.isAddedCourse(courseId: courseData!.id, userUId: userData!.uid);
+            }
+          },
+          child: component,
+        ),
       ),
     );
   }
