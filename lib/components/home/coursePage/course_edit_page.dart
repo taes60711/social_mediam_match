@@ -283,6 +283,7 @@ class CourseEditPage extends StatelessWidget {
                               needLevel: int.parse(needLevel),
                               content: contentController.text,
                               beforeNeed: beforeNeedController.text,
+                              prStory: "",
                               chapterList: chapters,
                               courseLearningSkills: choicedskillList,
                               type: int.parse(type),

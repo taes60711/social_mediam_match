@@ -158,6 +158,9 @@ class CourseDetail extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(height: 20),
+            const Text("詳細介紹:"),
+            RichTextView(content: realCourseData.prStory),
             Column(
               children: realCourseData.chapterList.map((e) {
                 return ExpansionTile(

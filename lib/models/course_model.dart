@@ -33,6 +33,7 @@ class CourseModel {
   int needLevel;
   String content;
   String beforeNeed;
+  String prStory;
   List<CourseChapterInfo> chapterList;
   List<String> courseLearningSkills;
   String postTime;
@@ -47,6 +48,7 @@ class CourseModel {
     required this.needLevel,
     required this.content,
     required this.beforeNeed,
+    required this.prStory,
     required this.chapterList,
     required this.courseLearningSkills,
     required this.postTime,
@@ -75,6 +77,7 @@ class CourseModel {
       needLevel: json['needLevel'],
       content: json['content'],
       beforeNeed: json['beforeNeed'] ?? "none",
+      prStory: json['prStory'] ?? "",
       chapterList: chapterList,
       courseLearningSkills: courseLearningSkillList,
       postTime: formattedTime,
@@ -91,6 +94,7 @@ class CourseCreateModel {
   int needLevel;
   String content;
   String beforeNeed;
+  String prStory;
   List<CourseChapterInfo> chapterList;
   List<String> courseLearningSkills;
   int type;
@@ -102,6 +106,7 @@ class CourseCreateModel {
     required this.needLevel,
     required this.content,
     required this.beforeNeed,
+    required this.prStory,
     required this.chapterList,
     required this.courseLearningSkills,
     required this.type,
@@ -115,6 +120,7 @@ class CourseCreateModel {
       'needLevel': needLevel,
       'content': content,
       'beforeNeed': beforeNeed,
+      'prStory': prStory,
       'courseChapters': chapterList.map((chapter) => chapter.toJson()).toList(),
       'learningkillList': courseLearningSkills,
       'type': type,
