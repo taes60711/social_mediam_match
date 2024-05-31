@@ -10,6 +10,7 @@ class CourseState extends ChangeNotifier {
   final DBService _dbService = DBService();
   List<CourseModel> courseData = [];
   List<CourseModel> myCourseData = [];
+  List<CourseModel> myAddedCourseData = [];
   bool isFirstLoading = false, isAddDataLoading = false, isReLoading = false, isTopFirstLoading = false;
 
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
@@ -244,6 +245,41 @@ class CourseState extends ChangeNotifier {
         isAddDataLoading = false;
       } else {
         courseData = tempCourseData;
+        if (searchType == "First") {
+          isFirstLoading = false;
+        } else if (searchType == "Reload") {
+          isReLoading = false;
+        }
+      }
+
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> getAddedCourses({required String userId, required String searchType}) async {
+    try {
+      List<CourseModel> tempCourseData = [];
+      if (searchType == "AddData") {
+        tempCourseData = await _dbService.getAddedCourses(userId);
+      } else {
+        if (searchType == "First") {
+          isFirstLoading = true;
+          Future.delayed(Duration.zero).then((value) => notifyListeners());
+        }
+
+        tempCourseData = await _dbService.getAddedCourses(userId, isFirst: true);
+      }
+
+      if (searchType == "AddData") {
+        tempCourseData.forEach((e) {
+          myAddedCourseData = [...myAddedCourseData, e];
+        });
+        isAddDataLoading = false;
+      } else {
+        myAddedCourseData = tempCourseData;
+
         if (searchType == "First") {
           isFirstLoading = false;
         } else if (searchType == "Reload") {

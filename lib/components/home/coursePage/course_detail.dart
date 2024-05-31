@@ -208,98 +208,98 @@ class CourseDetail extends StatelessWidget {
             SizedBox(height: 20),
             const Text("詳細介紹:"),
             RichTextView(content: realCourseData.prStory),
-            Column(
-              children: realCourseData.chapterList.map((e) {
-                return ExpansionTile(
-                  title: Text("章節 ${e.chapter}"),
-                  children: [
-                    SizedBox(
-                      width: ScreenSize().width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: e.content.map((e) {
-                          String content = e;
-                          int startIndex = '{"text":"'.length;
-                          int endIndex = content.indexOf('","');
-                          int startUrlIndex = content.indexOf('"url":"') + '"url":"'.length;
-                          int endUrlIndex = content.indexOf('"}');
-                          String chapterText = content.substring(startIndex, endIndex);
-                          String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
+            // Column(
+            //   children: realCourseData.chapterList.map((e) {
+            //     return ExpansionTile(
+            //       title: Text("章節 ${e.chapter}"),
+            //       children: [
+            //         SizedBox(
+            //           width: ScreenSize().width,
+            //           child: Column(
+            //             crossAxisAlignment: CrossAxisAlignment.start,
+            //             children: e.content.map((e) {
+            //               String content = e;
+            //               int startIndex = '{"text":"'.length;
+            //               int endIndex = content.indexOf('","');
+            //               int startUrlIndex = content.indexOf('"url":"') + '"url":"'.length;
+            //               int endUrlIndex = content.indexOf('"}');
+            //               String chapterText = content.substring(startIndex, endIndex);
+            //               String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
 
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 5),
-                                  child: Icon(
-                                    Icons.ondemand_video,
-                                    color: normalBgColor2,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      showGeneralDialog(
-                                          barrierColor: Colors.black.withOpacity(0.7),
-                                          transitionBuilder: (context, a1, a2, widget) {
-                                            return Transform.scale(
-                                              scale: a1.value,
-                                              child: Opacity(
-                                                opacity: a1.value,
-                                                child: Scaffold(
-                                                  body: SafeArea(
-                                                    child: SingleChildScrollView(
-                                                      child: Column(
-                                                        children: [
-                                                          Text(chapterText),
-                                                          GestureDetector(
-                                                            onTap: () {
-                                                              Navigator.of(context).pop();
-                                                            },
-                                                            child: Container(
-                                                              alignment: Alignment.topRight,
-                                                              margin: const EdgeInsets.only(right: 20, bottom: 20),
-                                                              child: Icon(
-                                                                Icons.close,
-                                                                color: normalBgColor2,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          RichTextView(content: chapterUrl)
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          transitionDuration: Duration(milliseconds: 200),
-                                          barrierDismissible: true,
-                                          barrierLabel: '',
-                                          context: context,
-                                          pageBuilder: (context, animation1, animation2) {
-                                            return Container();
-                                          });
-                                    },
-                                    child: Text(
-                                      chapterText,
-                                      style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    )
-                  ],
-                );
-              }).toList(),
-            ),
+            //               return Padding(
+            //                 padding: EdgeInsets.symmetric(vertical: 5),
+            //                 child: Row(
+            //                   children: [
+            //                     Padding(
+            //                       padding: const EdgeInsets.only(right: 5),
+            //                       child: Icon(
+            //                         Icons.ondemand_video,
+            //                         color: normalBgColor2,
+            //                       ),
+            //                     ),
+            //                     Expanded(
+            //                       child: GestureDetector(
+            //                         onTap: () {
+            //                           showGeneralDialog(
+            //                               barrierColor: Colors.black.withOpacity(0.7),
+            //                               transitionBuilder: (context, a1, a2, widget) {
+            //                                 return Transform.scale(
+            //                                   scale: a1.value,
+            //                                   child: Opacity(
+            //                                     opacity: a1.value,
+            //                                     child: Scaffold(
+            //                                       body: SafeArea(
+            //                                         child: SingleChildScrollView(
+            //                                           child: Column(
+            //                                             children: [
+            //                                               Text(chapterText),
+            //                                               GestureDetector(
+            //                                                 onTap: () {
+            //                                                   Navigator.of(context).pop();
+            //                                                 },
+            //                                                 child: Container(
+            //                                                   alignment: Alignment.topRight,
+            //                                                   margin: const EdgeInsets.only(right: 20, bottom: 20),
+            //                                                   child: Icon(
+            //                                                     Icons.close,
+            //                                                     color: normalBgColor2,
+            //                                                   ),
+            //                                                 ),
+            //                                               ),
+            //                                               RichTextView(content: chapterUrl)
+            //                                             ],
+            //                                           ),
+            //                                         ),
+            //                                       ),
+            //                                     ),
+            //                                   ),
+            //                                 );
+            //                               },
+            //                               transitionDuration: Duration(milliseconds: 200),
+            //                               barrierDismissible: true,
+            //                               barrierLabel: '',
+            //                               context: context,
+            //                               pageBuilder: (context, animation1, animation2) {
+            //                                 return Container();
+            //                               });
+            //                         },
+            //                         child: Text(
+            //                           chapterText,
+            //                           style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
+            //                           overflow: TextOverflow.ellipsis,
+            //                         ),
+            //                       ),
+            //                     ),
+            //                   ],
+            //                 ),
+            //               );
+            //             }).toList(),
+            //           ),
+            //         )
+            //       ],
+            //     );
+            //   }).toList(),
+            // ),
           ],
         ),
       );

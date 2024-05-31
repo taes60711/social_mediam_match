@@ -196,6 +196,33 @@ class DBService {
     return allCouserData;
   }
 
+  searchStatus addCoursesServerInfo = searchStatus();
+  Future<List<CourseModel>> getAddedCourses(String userId, {bool? isFirst}) async {
+    String branch = "courses";
+
+    if (isFirst != null) {
+      addCoursesServerInfo.pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getAddedCourses/$userId?page=${addCoursesServerInfo.pageNumber}&size=$size';
+    final uri = Uri.parse(searchUrl);
+    List<CourseModel> allCouserData = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        print(response.body);
+        allCouserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
+          return CourseModel.toMap(e);
+        }).toList();
+        inspect(allCouserData);
+        addCoursesServerInfo.pageNumber++;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allCouserData;
+  }
+
   searchStatus coursesByUserIdServerInfo = searchStatus();
   Future<List<CourseModel>> getCoursesByUserId(String userId, {bool? isFirst}) async {
     String branch = "courses";

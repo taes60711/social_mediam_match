@@ -54,11 +54,20 @@ class CourseEditPage extends StatelessWidget {
               body: SafeArea(
                 child: Column(
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("exit"),
+                    Row(
+                      children: [
+                        Container(
+                          width: ScreenSize().width * 0.33,
+                          alignment: Alignment.centerLeft,
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(Icons.arrow_back_ios),
+                          ),
+                        ),
+                        SizedBox(width: ScreenSize().width * 0.33, child: const Center(child: Text("編輯課程"))),
+                      ],
                     ),
                     TitleInput(title: "標題", textController: titleController),
                     TitleInput(title: "課程大綱", textController: contentController),
