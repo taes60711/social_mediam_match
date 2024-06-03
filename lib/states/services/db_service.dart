@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/models/post_model.dart';
+
 import '../../global.dart';
 import '../../models/user_model.dart';
 
@@ -636,97 +636,5 @@ class DBService {
     }
 
     return allUserData;
-  }
-
-  //ユーザログインのToken更新する
-  Future<void> updateUserToken(String uid, String token) async {
-    String branch = "user";
-    Map<String, String> headers = {'content-type': 'application/json'};
-    String body = UpdateUser.updateToken(uid: uid, token: token).updateupdateTokenJson();
-    await http
-        .put(Uri.parse('$url/$branch/updateToken/$uid'), headers: headers, body: body)
-        .then((_) => print("MySql Login:${_.body}"));
-  }
-
-  //ユーザログインのタイム更新する
-  Future<void> updateLastTime(String uid) async {
-    String branch = "user";
-    Map<String, String> headers = {'content-type': 'application/json'};
-
-    String body =
-        UpdateUser.lastTimupdate(uid: uid, lastLogin: DateTime.now().toUtc().toIso8601String()).updateLastLoginTimeJson();
-    await http
-        .put(Uri.parse('$url/$branch/updateLoginTime/$uid'), headers: headers, body: body)
-        .then((_) => print("MySql LoginTimeUpdate:${_.body}"));
-  }
-
-  //ユーザのデータ取得
-  Future<LoginUser?> getUserData(String uid) async {
-    String branch = "user";
-    final uri = Uri.parse('$url/$branch/$uid');
-    LoginUser? userdata;
-    try {
-      var response = await http.get(uri);
-
-      if (response.statusCode != 404) {
-        userdata = LoginUser.jsonToModel(json.decode(utf8.decode(response.bodyBytes)));
-        print("userData :  ");
-        inspect(userdata);
-      }
-    } catch (e) {
-      print(e);
-    }
-    return userdata;
-  }
-
-  //メソッド：MYSQLにユーザーデータを作成する
-  //param
-  //uid：firebaseからアカウントid,　email：メールアドレス，password：パスワード
-  Future<bool> signUpUser(String uid, String email, String password) async {
-    bool isSucess = false;
-    String branch = "user";
-    try {
-      final uri = Uri.parse('$url/$branch/signUp');
-      Map<String, String> headers = {'content-type': 'application/json'};
-
-      var digest = sha256.convert(utf8.encode(password));
-      print("Digest as hex password: $digest");
-
-      UpdateUser signedUpUserData = UpdateUser.signUp(
-        uid: uid,
-        email: email,
-        password: "$digest",
-        isEmailVerified: false,
-      );
-
-      String body = signedUpUserData.signUpFormJson();
-
-      await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Success:${_.body}"));
-      isSucess = true;
-    } catch (e) {
-      print(e);
-    }
-    return isSucess;
-  }
-
-  //メソッド：MYSQLにユーザーデータを更新する
-  //param
-  //uid：firebaseからアカウントid,　updateData：ユーザの個人情報
-  Future<bool> updateUserData(String uid, UpdateUser updateData) async {
-    bool isSucess = false;
-    String branch = "user";
-    try {
-      final uri = Uri.parse('$url/$branch/update/$uid');
-      Map<String, String> headers = {'content-type': 'application/json'};
-      inspect(updateData);
-      String body = jsonEncode(updateData);
-      await http.put(uri, headers: headers, body: body).then(
-            (_) => print("MySql Update Success:${_.body}"),
-          );
-      isSucess = true;
-    } catch (e) {
-      print(e);
-    }
-    return isSucess;
   }
 }

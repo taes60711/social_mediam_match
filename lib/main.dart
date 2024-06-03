@@ -32,8 +32,6 @@ void main() async {
 
   await SystemChrome.setPreferredOrientations(
     [
-      // DeviceOrientation.landscapeLeft,
-      // DeviceOrientation.landscapeRight,
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ],

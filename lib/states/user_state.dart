@@ -4,19 +4,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/strings/account/login_strings.dart';
-import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
-import 'package:social_mediam_match/states/services/db_service.dart';
+import 'package:social_mediam_match/states/services/user_service.dart';
 
 import '../components/strings/account/sign_up_strings.dart';
 
+class SignUpView extends ChangeNotifier {}
+
+class SignUpLoading extends UserState {}
+
 class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final DBService _dbService = DBService();
-  //サーバーアドレス
-  String url = "http://$ip:$port/user";
+
   //ユーザダータ
   LoginUser? userData;
   //ページローディング
@@ -60,9 +61,9 @@ class UserState extends ChangeNotifier {
           notifyListeners();
 
           //ユーザの資料を取得する
-          userData = await _dbService.getUserData(userUID);
+          userData = await UserService().getUserData(userUID);
           //最後ログインのタイム更新する
-          await _dbService.updateLastTime(userUID);
+          await UserService().updateUserLoginLastTime(userUID);
           //チャットルームサーバー繋がる
           chatListChannel.friendListConnect(userUID);
           inspect(userData);
@@ -70,7 +71,7 @@ class UserState extends ChangeNotifier {
           if (Platform.isAndroid) {
             //取得使用者TOKEN > 通知系統在上架前,先暫時只給安卓使用
             final fcmToken = await FirebaseMessaging.instance.getToken();
-            _dbService.updateUserToken(userUID, fcmToken!);
+            await UserService().updateUserToken(userUID, fcmToken!);
           }
 
           isLoading = false;
@@ -124,7 +125,7 @@ class UserState extends ChangeNotifier {
         (UserCredential value) async {
           print("firebase SiginUp Success:${value.user!.uid}");
 
-          bool isMysqlSignUpSucess = await _dbService.signUpUser(value.user!.uid, email, password);
+          bool isMysqlSignUpSucess = await UserService().signUpUser(value.user!.uid, email, password);
 
           if (isMysqlSignUpSucess) {
             isSucess = true;
@@ -198,9 +199,9 @@ class UserState extends ChangeNotifier {
   Future<bool> updateProfile(String uid, UpdateUser updateData) async {
     bool isSucess = false;
     try {
-      isSucess = await _dbService.updateUserData(uid, updateData);
+      isSucess = await UserService().updateUserData(uid, updateData);
       if (isSucess) {
-        userData = await _dbService.getUserData(uid);
+        userData = await UserService().getUserData(uid);
         notifyListeners();
       }
     } catch (e) {

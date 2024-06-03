@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
-import '../../../global.dart';
+import '../../../enum/skill_type.dart';
 import '../../../models/user_model.dart';
 import '../../../states/skill_exchange_state.dart';
 

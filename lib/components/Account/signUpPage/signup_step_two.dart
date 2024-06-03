@@ -139,23 +139,21 @@ class SignUpStepTwo extends StatelessWidget {
               inspect(gethaveSkill);
               inspect(getWantSkill);
 
-              // UpdateUser updateUserData = UpdateUser.update(
-              //   uid: signUpedUserUID,
-              //   image: "",
-              //   name: nameController.text,
-              //   job: jobController.text,
-              //   introduction: introductionController.text,
-              //   mainSkills: gethaveSkill,
-              //   wantSkills: getWantSkill,
-              // );
-              // bool isSucess = await userFuture.updateProfile(signUpedUserUID, updateUserData);
-
-              // if (isSucess) {
-              //   userFuture.onChangeSignUpPage(3);
-              // }
+              UpdateUser updateUserData = UpdateUser.update(
+                uid: signUpedUserUID,
+                image: "",
+                name: nameController.text,
+                job: jobController.text,
+                introduction: introductionController.text,
+                mainSkills: gethaveSkill,
+                wantSkills: getWantSkill,
+              );
+              bool isSucess = await userFuture.updateProfile(signUpedUserUID, updateUserData);
 
               await Future.delayed(const Duration(seconds: 1)).then((value) => closePop());
-              userFuture.onChangeSignUpPage(3);
+              if (isSucess) {
+                userFuture.onChangeSignUpPage(3);
+              }
             },
           ),
         ),

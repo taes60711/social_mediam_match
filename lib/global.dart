@@ -11,16 +11,6 @@ List<String> forntType = ["javascript", "typescript", "css", "html", "vue", "Rea
 List<String> iotType = ["arduino"];
 List<String> backendType = ["java", "python", "mysql"];
 
-enum SkillType {
-  forntend("前端"),
-  backend("後端"),
-  iot("韌體"),
-  other("其他");
-
-  final String value;
-  const SkillType(this.value);
-}
-
 //Route路徑
 enum RoutePath {
   home("/"),

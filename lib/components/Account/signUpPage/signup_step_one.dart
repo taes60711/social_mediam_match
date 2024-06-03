@@ -68,12 +68,12 @@ class SignUpStepOne extends StatelessWidget {
               loadingPopView();
               log("signUpPage Email:${emailController.text} Pwd:${pwdController.text}");
 
-              await Future.delayed(const Duration(seconds: 1)).then((value) => closePop());
-              userFuture.onChangeSignUpPage(2);
+              // await Future.delayed(const Duration(seconds: 1)).then((value) => closePop());
+              // userFuture.onChangeSignUpPage(2);
 
-              // bool isSignSucess = await userFuture.signUp(emailController.text, pwdController.text);
-              // closePop();
-              // isSignSucess ? userFuture.onChangeSignUpPage(2) : () => print("sign Failed");
+              bool isSignSucess = await userFuture.signUp(emailController.text, pwdController.text);
+              closePop();
+              isSignSucess ? userFuture.onChangeSignUpPage(2) : () => print("sign Failed");
             },
           ),
         ),

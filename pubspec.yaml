@@ -86,7 +86,6 @@ flutter:
     - assets/Logo.png
     - assets/google_w_Logo.png
     - assets/twitter_w_Logo.png
-    - assets/masion.mp3
     - assets/langs/
   fonts:
     - family: GenJyu

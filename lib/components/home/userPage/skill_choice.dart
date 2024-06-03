@@ -4,7 +4,7 @@ import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/user_model.dart';
-import '../../../global.dart';
+import '../../../enum/skill_type.dart';
 import '../../../models/skill_model.dart';
 import '../../../states/user_setting_state.dart';
 

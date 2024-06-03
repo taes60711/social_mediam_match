@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:intl/intl.dart';
-
 class UserModel {
   String uid;
   String? image;
@@ -139,36 +137,7 @@ class UpdateUser extends UserModel {
           wantSkills: wantSkills,
         );
 
-  UpdateUser.updateToken({
-    required String uid,
-    String? token,
-  }) : super(
-          uid: uid,
-          token: token,
-        );
-
-  String updateupdateTokenJson() {
-    return jsonEncode({
-      'uid': uid,
-      "token": token,
-    });
-  }
-
-  UpdateUser.lastTimupdate({
-    required String uid,
-    this.lastLogin,
-  }) : super(
-          uid: uid,
-        );
-
-  String updateLastLoginTimeJson() {
-    return jsonEncode({
-      'uid': uid,
-      "lastlogin": lastLogin,
-    });
-  }
-
-  Map toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'uid': uid,
       'image': image,

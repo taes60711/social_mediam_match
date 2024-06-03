@@ -9,7 +9,7 @@ import 'package:social_mediam_match/states/course_state.dart';
 
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
-import '../../utilities/Stateful_wrapper.dart';
+import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/custom_end_drawer.dart';
 import '../../utilities/skill_list_view.dart';
 import '../../utilities/user_icon.dart';
