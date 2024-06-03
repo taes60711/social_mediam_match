@@ -8,7 +8,7 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
-import '../../utilities/Stateful_wrapper.dart';
+import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/style_config.dart';
 import '../skillExChangePage/user_detail.dart';

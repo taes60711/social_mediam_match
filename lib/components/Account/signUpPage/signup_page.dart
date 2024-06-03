@@ -6,7 +6,7 @@ import 'package:social_mediam_match/components/account/signUpPage/signUP_step_on
 import 'package:social_mediam_match/components/account/signUpPage/signup_first_page.dart';
 import 'package:social_mediam_match/components/account/signUpPage/signup_guide.dart';
 import 'package:social_mediam_match/components/account/signUpPage/signup_step_two.dart';
-import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
@@ -165,6 +165,8 @@ class SignUpPage extends StatelessWidget {
       ),
     );
 
+    // final signUpView = Provider.of<SignUpViewProvider>(context, listen: false);
+
     return StatefulWrapper(
       onInit: () {
         print("getSkillListData");
@@ -204,6 +206,20 @@ class SignUpPage extends StatelessWidget {
                   ),
                 ),
               ),
+
+              // Consumer<SignUpViewProvider>(
+              //   builder: (context, counter, _) {
+              //     // 这里的 counter 就是 MyCountChangeNotifier 的实例
+              //     print("objectsss");
+              //     return ElevatedButton(
+              //       onPressed: () {
+              //         signUpView.onChangeSignUpPage(1);
+              //       },
+              //       child: Text("${signUpView.signUpIndex}"),
+              //     );
+              //   },
+              // ),
+
               SizedBox(
                 height: ScreenSize().safeheight * 0.05,
                 child: stepView,

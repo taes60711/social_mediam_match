@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/states/services/db_service.dart';
 import 'package:web_socket_channel/io.dart';
 import '../global.dart';
 import '../models/friend_model.dart';
@@ -10,7 +9,6 @@ import 'package:http/http.dart' as http;
 
 class FriendState extends ChangeNotifier {
   late IOWebSocketChannel _friendListChannel, _chatRoomChannel;
-  final DBService _dbService = DBService();
   List<FriendListModel> friendList = [];
   TextEditingController friendListFilterInput = TextEditingController();
   bool isFriend = false;

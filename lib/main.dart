@@ -81,8 +81,11 @@ class MyApp extends StatelessWidget {
               create: (_) => InitialState(),
               child: const Initialpage(),
             ),
-        '/signUp': (BuildContext context) => ChangeNotifierProvider(
-              create: (_) => UserSettingState(),
+        '/signUp': (BuildContext context) => MultiProvider(
+              providers: [
+                ChangeNotifierProvider(create: (_) => SignUpViewProvider()),
+                ChangeNotifierProvider(create: (_) => UserSettingState()),
+              ],
               child: const SignUpPage(),
             ),
         '/login': (BuildContext context) => const LoginPage(),

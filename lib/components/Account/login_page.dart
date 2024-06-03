@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     pwdController.text = "toto60811";
 
     void closeResetPwdWindow() {
-      userFuture.resetPwdError = ResetPwdStatus.NoMessage.value;
+      userFuture.resetPwdError = ResetPwdStatus.noMessage.value;
       Navigator.pop(context);
     }
 

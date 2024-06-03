@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 
-import '../../../../global.dart';
+import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
+
 import '../../../../models/course_model.dart';
 import '../../../../models/user_model.dart';
 import '../../../../states/course_state.dart';

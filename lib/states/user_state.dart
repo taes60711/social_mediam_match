@@ -11,9 +11,15 @@ import 'package:social_mediam_match/states/services/user_service.dart';
 
 import '../components/strings/account/sign_up_strings.dart';
 
-class SignUpView extends ChangeNotifier {}
+class SignUpViewProvider extends ChangeNotifier {
+  int signUpIndex = 0;
 
-class SignUpLoading extends UserState {}
+  void onChangeSignUpPage(int toSignUpIndex) {
+    print(toSignUpIndex);
+    signUpIndex = toSignUpIndex;
+    notifyListeners();
+  }
+}
 
 class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -23,7 +29,7 @@ class UserState extends ChangeNotifier {
   //ページローディング
   bool isLoading = false;
   //パスワード忘れたページに送信したメッセージ
-  String resetPwdError = ResetPwdStatus.NoMessage.value;
+  String resetPwdError = ResetPwdStatus.noMessage.value;
   //サインアップステップインデックス
   int signUpIndex = 0;
 
@@ -188,9 +194,9 @@ class UserState extends ChangeNotifier {
       await _auth.sendPasswordResetEmail(email: email);
       print("Email Sended");
 
-      resetPwdError = ResetPwdStatus.Success.value;
+      resetPwdError = ResetPwdStatus.success.value;
     } catch (e) {
-      resetPwdError = ResetPwdStatus.Error.value;
+      resetPwdError = ResetPwdStatus.error.value;
       print("Email Error $resetPwdError");
       notifyListeners();
     }

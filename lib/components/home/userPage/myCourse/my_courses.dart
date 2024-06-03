@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_detail.dart';
 import 'package:social_mediam_match/components/home/userPage/myCourse/added_courses_page.dart';
 import 'package:social_mediam_match/components/home/userPage/myCourse/courese_member_manager.dart';
-import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
 import '../../../../global.dart';

@@ -6,7 +6,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/users_filter.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/user_detail.dart';
 import 'package:social_mediam_match/components/strings/skillExChangePage/skill_change_page_string.dart';
-import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
