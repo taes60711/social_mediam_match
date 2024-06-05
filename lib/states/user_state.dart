@@ -11,16 +11,6 @@ import 'package:social_mediam_match/states/services/user_service.dart';
 
 import '../components/strings/account/sign_up_strings.dart';
 
-class SignUpViewProvider extends ChangeNotifier {
-  int signUpIndex = 0;
-
-  void onChangeSignUpPage(int toSignUpIndex) {
-    print(toSignUpIndex);
-    signUpIndex = toSignUpIndex;
-    notifyListeners();
-  }
-}
-
 class UserState extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 

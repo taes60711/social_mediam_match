@@ -15,6 +15,7 @@ import 'package:social_mediam_match/components/home/userPage/profile.dart';
 import 'package:social_mediam_match/components/home/userPage/privacy_setting.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
+import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_provider.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
