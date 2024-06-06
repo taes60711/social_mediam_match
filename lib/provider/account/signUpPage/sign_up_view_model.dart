@@ -46,9 +46,9 @@ class SignUpViewModel {
 
     loadingPopView();
 
-    String signUpResult = await signUp(email, password);
-    signUpViewProvider.signUpResultChange(signUpResult);
-    // await Future.delayed(const Duration(seconds: 1));
+    // String signUpResult = await signUp(email, password);
+    // signUpViewProvider.signUpResultChange(signUpResult);
+    await Future.delayed(const Duration(seconds: 1));
 
     closePop();
 

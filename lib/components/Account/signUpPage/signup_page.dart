@@ -189,7 +189,6 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
@@ -448,6 +447,15 @@ Widget signUpStepThird(BuildContext context) {
   UserSettingProvider userSettingProvider = Provider.of<UserSettingProvider>(context, listen: false);
   return Column(
     children: [
+      TitleInput(
+        title: StepTwoPage().jobInputTitle,
+        textController: userSettingProvider.jobInput,
+      ),
+      TitleInput(
+        title: StepTwoPage().introInputTitle,
+        textController: userSettingProvider.introductionInput,
+        isMulti: true,
+      ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: CustomButton(

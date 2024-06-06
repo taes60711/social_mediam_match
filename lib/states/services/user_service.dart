@@ -62,7 +62,7 @@ class UserService extends ApiClient {
   //MARK: MYSQLにデータを作成する
   //param
   //uid：firebaseからアカウントid,　email：メールアドレス，password：パスワード
-  Future<bool> signUpUser(String uid, String email, String password) async {
+  Future<bool> sqlSignUp(String uid, String email, String password) async {
     var sha256Password = sha256.convert(utf8.encode(password));
     print("Digest as hex password: $sha256Password");
 
