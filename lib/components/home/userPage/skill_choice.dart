@@ -6,15 +6,15 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import 'package:social_mediam_match/models/user_model.dart';
 import '../../../enum/skill_type.dart';
 import '../../../models/skill_model.dart';
-import '../../../states/user_setting_state.dart';
+import '../../../states/user_setting_provider.dart';
 
 class SkillChoice extends StatelessWidget {
   final List<SkillModel> forntSkillItems, backEndSkillItems, iotSkillItems, otherSkillItems, allSkillItems, allWantSkillItems;
-  final UserSettingState userSettingState;
+  final UserSettingProvider userSettingProvider;
   final String type;
   const SkillChoice(
       {super.key,
-      required this.userSettingState,
+      required this.userSettingProvider,
       required this.forntSkillItems,
       required this.backEndSkillItems,
       required this.iotSkillItems,
@@ -120,7 +120,7 @@ class SkillChoice extends StatelessWidget {
                       });
 
                 if (choicedCount < 5 || changeChoicedSkillLevel) {
-                  userSettingState.checkOnChange(skillInfoItem, choicedLevel: value);
+                  userSettingProvider.checkOnChange(skillInfoItem, choicedLevel: value);
                 } else {
                   print("不能在選擇了");
                   warningPopView();
@@ -154,7 +154,7 @@ class SkillChoice extends StatelessWidget {
                         ? Padding(
                             padding: const EdgeInsets.only(left: 5, top: 2.0),
                             child: GestureDetector(
-                              onTap: () => userSettingState.checkOnChange(skillInfoItem, choicedLevel: "0"),
+                              onTap: () => userSettingProvider.checkOnChange(skillInfoItem, choicedLevel: "0"),
                               child: Icon(FontAwesomeIcons.close, size: 15, color: normalTextColor),
                             ),
                           )

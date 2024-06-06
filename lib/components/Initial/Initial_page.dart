@@ -24,7 +24,7 @@ class Initialpage extends StatelessWidget {
 
     bool isfirstEnterApp = context.select((InitialState value) => value.isfirstEnterApp);
     FriendState friendState = context.select((FriendState value) => value);
-    LoginUser? userData = context.select((UserState value) {
+    LoginUser? userData = context.select((UserProvider value) {
       if (value.userData != null) {
         return LoginUser(
           uid: value.userData!.uid,
@@ -44,12 +44,12 @@ class Initialpage extends StatelessWidget {
         return null;
       }
     });
-    bool isLoading = context.select((UserState value) => value.isLoading);
+    bool isLoading = context.select((UserProvider value) => value.isLoading);
 
     void enterApp() {
       print("firstEnterApp");
 
-      context.read<UserState>().isLoginCheck(friendState);
+      context.read<UserProvider>().isLoginCheck(friendState);
       Timer(Duration(seconds: delayTime), () {
         context.read<InitialState>().onChange();
 

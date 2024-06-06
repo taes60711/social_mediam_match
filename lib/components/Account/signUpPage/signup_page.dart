@@ -24,25 +24,25 @@
 
 //   @override
 //   Widget build(BuildContext context) {
-//     UserState userFuture = context.read<UserState>();
-//     String signError = context.select((UserState value) => value.signError);
-//     int signUpIndex = context.select((UserState value) => value.signUpIndex);
-//     String signUpedUserUID = context.select((UserState value) => value.signUpedUserUID);
-//     TextEditingController emailController = context.select((UserState value) => value.emailController);
-//     TextEditingController pwdController = context.select((UserState value) => value.pwdController);
+//     UserProvider userFuture = context.read<UserProvider>();
+//     String signError = context.select((UserProvider value) => value.signError);
+//     int signUpIndex = context.select((UserProvider value) => value.signUpIndex);
+//     String signUpedUserUID = context.select((UserProvider value) => value.signUpedUserUID);
+//     TextEditingController emailController = context.select((UserProvider value) => value.emailController);
+//     TextEditingController pwdController = context.select((UserProvider value) => value.pwdController);
 
-//     TextEditingController nameController = context.select((UserSettingState value) => value.nameInput);
-//     TextEditingController jobController = context.select((UserSettingState value) => value.jobInput);
-//     TextEditingController introductionController = context.select((UserSettingState value) => value.introductionInput);
+//     TextEditingController nameController = context.select((UserSettingProvider value) => value.nameInput);
+//     TextEditingController jobController = context.select((UserSettingProvider value) => value.jobInput);
+//     TextEditingController introductionController = context.select((UserSettingProvider value) => value.introductionInput);
 
-//     UserSettingState userSettingState = context.read<UserSettingState>();
-//     GlobalKey<ScaffoldState> key = context.select((UserSettingState value) => value.key);
-//     String type = context.select((UserSettingState value) => value.type);
+//     UserSettingProvider UserSettingProvider = context.read<UserSettingProvider>();
+//     GlobalKey<ScaffoldState> key = context.select((UserSettingProvider value) => value.key);
+//     String type = context.select((UserSettingProvider value) => value.type);
 //     //先暫時沒整理
-//     List<SkillModel> forntSkillItems = context.watch<UserSettingState>().forntSkillList;
-//     List<SkillModel> backEndSkillItems = context.watch<UserSettingState>().backEndSkillList;
-//     List<SkillModel> iotSkillItems = context.watch<UserSettingState>().iotSkillList;
-//     List<SkillModel> otherSkillItems = context.watch<UserSettingState>().otherSkillList;
+//     List<SkillModel> forntSkillItems = context.watch<UserSettingProvider>().forntSkillList;
+//     List<SkillModel> backEndSkillItems = context.watch<UserSettingProvider>().backEndSkillList;
+//     List<SkillModel> iotSkillItems = context.watch<UserSettingProvider>().iotSkillList;
+//     List<SkillModel> otherSkillItems = context.watch<UserSettingProvider>().otherSkillList;
 
 //     List<SkillModel> allSkillItems = [];
 //     List<SkillModel> allWantSkillItems = [];
@@ -64,10 +64,6 @@
 //     });
 //     //
 
-//     void returnHomePage() {
-//       Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-//     }
-
 //     Widget signErrorMessage;
 //     if (signError != SignUpError().noError) {
 //       signErrorMessage = SizedBox(
@@ -87,12 +83,6 @@
 //       signErrorMessage = Container();
 //     }
 
-//     Widget signUpFirstPage = SignUpFirstPage(
-//       emailController: emailController,
-//       signErrorMessage: signErrorMessage,
-//       userFuture: userFuture,
-//     );
-
 //     Widget signUpTwicePage = SignUpStepOne(
 //       emailController: emailController,
 //       nameController: nameController,
@@ -106,7 +96,7 @@
 //       signUpedUserUID: signUpedUserUID,
 //       allSkillItems: allSkillItems,
 //       allWantSkillItems: allWantSkillItems,
-//       userSettingState: userSettingState,
+//       UserSettingProvider: UserSettingProvider,
 //       nameController: nameController,
 //       jobController: jobController,
 //       introductionController: introductionController,
@@ -153,7 +143,7 @@
 
 //         resetAllInfo() {
 //           userFuture.onChangeSignUpPage(0);
-//           userSettingState.getSkillListData();
+//           UserSettingProvider.getSkillListData();
 //         }
 
 //         resetAllInfo();
@@ -162,7 +152,7 @@
 //         key: key,
 //         resizeToAvoidBottomInset: false,
 //         endDrawer: SkillChoice(
-//           userSettingState: userSettingState,
+//           UserSettingProvider: UserSettingProvider,
 //           forntSkillItems: forntSkillItems,
 //           backEndSkillItems: backEndSkillItems,
 //           iotSkillItems: iotSkillItems,
@@ -199,15 +189,20 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
-import 'package:social_mediam_match/states/user_setting_state.dart';
+import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
+import 'package:social_mediam_match/states/user_setting_provider.dart';
 
 import '../../../global.dart';
 import '../../../provider/account/signUpPage/sign_up_view_provider.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/basic_top_bar.dart';
+import '../../utilities/custom_button.dart';
+import '../../utilities/style/screen_size.dart';
+import '../../utilities/style/style_config.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -231,7 +226,18 @@ Widget _mainBuild() {
     builder: (context, pageIndex, _) {
       SignUpViewProvider signUpViewProvider = Provider.of<SignUpViewProvider>(context, listen: false);
 
-      List<Widget> signUpAllStepPage = [signUpStepOne(context), signUpStepTwo(context)];
+      List<Widget> signUpAllStepPage = [
+        signUpStepOne(context),
+        signUpStepTwo(context),
+        signUpStepThird(context),
+        signUpStepGuide(context),
+      ];
+      List<String> signUpStepTitle = [
+        FirstPage().title,
+        StepOnePage().title,
+        StepTwoPage().title,
+        StepGuide().title,
+      ];
 
       print("SignUpViewProvider pageIndex Change");
 
@@ -246,7 +252,7 @@ Widget _mainBuild() {
                 signUpViewProvider.onChangeSignUpPage(preIndex);
               }
             },
-            title: FirstPage().title,
+            title: signUpStepTitle[pageIndex],
           ),
           signUpAllStepPage[pageIndex],
         ],
@@ -258,25 +264,159 @@ Widget _mainBuild() {
 Widget signUpStepOne(BuildContext context) {
   SignUpViewProvider signUpViewProvider = Provider.of<SignUpViewProvider>(context, listen: false);
 
+  String googleIconPath = 'assets/google_w_Logo.png';
+  Color googleButtonColor = const Color.fromARGB(255, 93, 161, 238);
+
+  String twitterIconPath = 'assets/twitter_w_Logo.png';
+  Color twitterButtonColor = const Color.fromARGB(255, 41, 41, 41);
+
+  //紹介文章
+  final Widget introductionWidget = SizedBox(
+    width: ScreenSize().width,
+    child: Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        FirstPage().introduction,
+        style: TextStyle(color: hintTextColor, fontSize: 14),
+      ),
+    ),
+  );
+
+  //プライバシー
+  final Widget privacy = Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+    child: SizedBox(
+      width: ScreenSize().width,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            FirstPage().hintText,
+            style: TextStyle(color: hintTextColor, fontSize: 14),
+          ),
+          GestureDetector(
+            onTap: () {
+              print("使用者條款");
+            },
+            child: Text(
+              FirstPage().termText,
+              style: TextStyle(color: normalBgColor, fontSize: 14),
+            ),
+          ),
+          Text(
+            FirstPage().andText,
+            style: TextStyle(color: hintTextColor, fontSize: 14),
+          ),
+          GestureDetector(
+            onTap: () {
+              print("隱私權政策");
+            },
+            child: Text(
+              FirstPage().privacyText,
+              style: TextStyle(color: normalBgColor, fontSize: 14),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  //or テキスト
+  orText() {
+    line({required EdgeInsetsGeometry padding}) {
+      return Expanded(
+        child: Padding(
+          padding: padding,
+          child: Container(
+            height: 1,
+            color: Colors.black45,
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      width: ScreenSize().width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          line(padding: const EdgeInsets.only(left: 20, right: 10)),
+          Text(FirstPage().orText),
+          line(padding: const EdgeInsets.only(left: 10, right: 20)),
+        ],
+      ),
+    );
+  }
+
+  //ボタン
+  //param:
+  //title: ボタン内の文字、　titleColor:　ボタン内の文字の色
+  //backgroundColor: ボタンの色、　onPressed: ボタンの機能関数
+  _button({required title, required titleColor, required backgroundColor, required onPressed, String? iconImg}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: CustomButton(
+        title: title,
+        titleColor: titleColor,
+        iconImg: iconImg,
+        backgroundColor: backgroundColor,
+        onPress: onPressed,
+      ),
+    );
+  }
+
   return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
+      introductionWidget,
+      privacy,
       TitleInput(
         title: FirstPage().emailInputTitle,
         textController: signUpViewProvider.emailController,
       ),
-      ElevatedButton(
-        onPressed: () {
-          signUpViewProvider.onChangeSignUpPage(1);
+      Selector<SignUpViewProvider, String>(
+        selector: (context, provider) => provider.signError,
+        builder: (context, signError, _) {
+          return Text(signError, style: const TextStyle(color: Colors.red));
         },
-        child: Text("to 1"),
       ),
+      _button(
+        title: FirstPage().emailButtonText,
+        titleColor: normalTextColor,
+        backgroundColor: normalBgColor,
+        onPressed: () {
+          print("SignUpViewProvider Btn");
+          SignUpViewModel().emailCheck(context);
+        },
+      ),
+      orText(),
+      _button(
+          title: FirstPage().googleButtonText,
+          titleColor: normalTextColor,
+          backgroundColor: googleButtonColor,
+          iconImg: googleIconPath,
+          onPressed: () {
+            print("Google 登入");
+          }),
+      const SizedBox(height: 10),
+      //ツイッター登録ボタン
+      _button(
+          title: FirstPage().twitterButtonText,
+          titleColor: normalTextColor,
+          backgroundColor: twitterButtonColor,
+          iconImg: twitterIconPath,
+          onPressed: () {
+            print("Twitter 登入");
+          }),
     ],
   );
 }
 
 Widget signUpStepTwo(BuildContext context) {
   SignUpViewProvider signUpViewProvider = Provider.of<SignUpViewProvider>(context, listen: false);
-  UserSettingState userSettingState = Provider.of<UserSettingState>(context, listen: false);
+  UserSettingProvider userSettingProvider = Provider.of<UserSettingProvider>(context, listen: false);
+
   return Column(
     children: [
       TitleInput(
@@ -286,13 +426,56 @@ Widget signUpStepTwo(BuildContext context) {
       ),
       TitleInput(
         title: StepOnePage().nameInputTitle,
-        textController: userSettingState.nameInput,
+        textController: userSettingProvider.nameInput,
       ),
-      ElevatedButton(
-        onPressed: () {
-          print("Email ${signUpViewProvider.emailController.text} Pwd ${signUpViewProvider.pwdController.text}");
-        },
-        child: Text("to 0"),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: CustomButton(
+          title: StepOnePage().signUpButtonText,
+          titleColor: normalTextColor,
+          backgroundColor: normalBgColor,
+          onPress: () async {
+            await SignUpViewModel().signUpStart(context);
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+Widget signUpStepThird(BuildContext context) {
+  SignUpViewProvider signUpViewProvider = Provider.of<SignUpViewProvider>(context, listen: false);
+  UserSettingProvider userSettingProvider = Provider.of<UserSettingProvider>(context, listen: false);
+  return Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: CustomButton(
+          title: StepTwoPage().sendButtonText,
+          titleColor: normalTextColor,
+          backgroundColor: normalBgColor,
+          onPress: () async {
+            signUpViewProvider.onChangeSignUpPage(3);
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+Widget signUpStepGuide(BuildContext context) {
+  return Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: CustomButton(
+          title: StepGuide().skipButtonText,
+          titleColor: normalTextColor,
+          backgroundColor: normalBgColor,
+          onPress: () async {
+            Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+          },
+        ),
       ),
     ],
   );

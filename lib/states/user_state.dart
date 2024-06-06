@@ -9,9 +9,7 @@ import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/services/user_service.dart';
 
-import '../components/strings/account/sign_up_strings.dart';
-
-class UserState extends ChangeNotifier {
+class UserProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //ユーザダータ
@@ -20,27 +18,6 @@ class UserState extends ChangeNotifier {
   bool isLoading = false;
   //パスワード忘れたページに送信したメッセージ
   String resetPwdError = ResetPwdStatus.noMessage.value;
-  //サインアップステップインデックス
-  int signUpIndex = 0;
-
-  //サインアップのインプット
-  TextEditingController emailController = TextEditingController();
-  TextEditingController pwdController = TextEditingController();
-
-  //メソッド：サインアップページチェンジ
-  //param
-  //toSignUpIndex : サインアップのページインデックス
-  Future<int> onChangeSignUpPage(int toSignUpIndex) async {
-    await Future.delayed(Duration.zero);
-    if (toSignUpIndex == 0) {
-      signUpErrorReset();
-      emailController = TextEditingController();
-      pwdController = TextEditingController();
-    }
-    signUpIndex = toSignUpIndex;
-    notifyListeners();
-    return signUpIndex;
-  }
 
   //メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する
   void isLoginCheck(FriendState chatListChannel) {
@@ -104,67 +81,6 @@ class UserState extends ChangeNotifier {
       notifyListeners();
     }
     return isSucess;
-  }
-
-  //Firebaseで登録したユーザUID
-  String signUpedUserUID = "";
-  //サインアップのエラーメッセージ
-  String signError = SignUpError().noError;
-  //メソッド：登録
-  //param
-  //email：メールアドレス，password：パスワード
-  Future<dynamic> signUp(String email, String password) async {
-    bool isSucess = false;
-    try {
-      notifyListeners();
-      await _auth.createUserWithEmailAndPassword(email: email, password: password).then(
-        (UserCredential value) async {
-          print("firebase SiginUp Success:${value.user!.uid}");
-
-          bool isMysqlSignUpSucess = await UserService().signUpUser(value.user!.uid, email, password);
-
-          if (isMysqlSignUpSucess) {
-            isSucess = true;
-            print("Mysql SignUp Sucess");
-            signUpedUserUID = value.user!.uid;
-          }
-        },
-      );
-    } on FirebaseAuthException catch (e) {
-      print("SignUp error ${e.code}");
-      switch (e.code) {
-        case "invalid-email":
-          signError = SignUpError().emailFormatError;
-          break;
-        case "weak-password":
-          signError = SignUpError().pwdWeakError;
-          break;
-        case "channel-error":
-          signError = "channel-error";
-          break;
-      }
-
-      notifyListeners();
-    }
-    return isSucess;
-  }
-
-  //メソッド：メールアドレスかどうか確認
-  //param
-  //email：メールアドレス
-  bool signUpEmailCheck(String email) {
-    bool isEmail = true;
-    if (!email.contains("@")) {
-      signError = SignUpError().emailFormatError;
-      notifyListeners();
-      isEmail = false;
-    }
-    return isEmail;
-  }
-
-  void signUpErrorReset() {
-    signError = SignUpError().noError;
-    notifyListeners();
   }
 
   //メソッド：ログアウト

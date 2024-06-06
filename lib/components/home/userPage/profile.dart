@@ -8,11 +8,11 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
-import 'package:social_mediam_match/states/user_setting_state.dart';
-import 'package:social_mediam_match/states/user_state.dart';
+import 'package:social_mediam_match/states/user_setting_provider.dart';
 import '../../../global.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
+import '../../../states/user_state.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/skill_list_view.dart';
@@ -29,23 +29,23 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
-    UserSettingState userSettingState = context.read<UserSettingState>();
-    UserState userState = context.read<UserState>();
+    UserSettingProvider userSettingProvider = context.read<UserSettingProvider>();
+    UserProvider userProvider = context.read<UserProvider>();
     LoginUser userData = ModalRoute.of(context)!.settings.arguments as LoginUser;
-    TextEditingController nameInput = context.select((UserSettingState value) => value.nameInput);
-    TextEditingController jobInput = context.select((UserSettingState value) => value.jobInput);
-    TextEditingController introductionInput = context.select((UserSettingState value) => value.introductionInput);
-    String introductionText = context.select((UserSettingState value) => value.introductionText);
-    String base64Img = context.select((UserSettingState value) => value.base64Img);
-    bool isFirst = context.select((UserSettingState value) => value.isFirst);
-    GlobalKey<ScaffoldState> key = context.select((UserSettingState value) => value.key);
-    String type = context.select((UserSettingState value) => value.type);
+    TextEditingController nameInput = context.select((UserSettingProvider value) => value.nameInput);
+    TextEditingController jobInput = context.select((UserSettingProvider value) => value.jobInput);
+    TextEditingController introductionInput = context.select((UserSettingProvider value) => value.introductionInput);
+    String introductionText = context.select((UserSettingProvider value) => value.introductionText);
+    String base64Img = context.select((UserSettingProvider value) => value.base64Img);
+    bool isFirst = context.select((UserSettingProvider value) => value.isFirst);
+    GlobalKey<ScaffoldState> key = context.select((UserSettingProvider value) => value.key);
+    String type = context.select((UserSettingProvider value) => value.type);
 
     //先暫時沒整理
-    List<SkillModel> forntSkillItems = context.watch<UserSettingState>().forntSkillList;
-    List<SkillModel> backEndSkillItems = context.watch<UserSettingState>().backEndSkillList;
-    List<SkillModel> iotSkillItems = context.watch<UserSettingState>().iotSkillList;
-    List<SkillModel> otherSkillItems = context.watch<UserSettingState>().otherSkillList;
+    List<SkillModel> forntSkillItems = context.watch<UserSettingProvider>().forntSkillList;
+    List<SkillModel> backEndSkillItems = context.watch<UserSettingProvider>().backEndSkillList;
+    List<SkillModel> iotSkillItems = context.watch<UserSettingProvider>().iotSkillList;
+    List<SkillModel> otherSkillItems = context.watch<UserSettingProvider>().otherSkillList;
 
     List<SkillModel> allSkillItems = [];
     List<SkillModel> allWantSkillItems = [];
@@ -108,7 +108,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
               child: GestureDetector(
                 onTap: () {
                   inspect(userData);
-                  bool isChange = userSettingState.isProfileChange(userData, base64Img, nameInput.text, jobInput.text,
+                  bool isChange = userSettingProvider.isProfileChange(userData, base64Img, nameInput.text, jobInput.text,
                       introductionInput.text, allSkillItems, allWantSkillItems);
                   if (isChange) {
                     exitCheck();
@@ -139,7 +139,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(8),
                   onTap: () async {
-                    UpdateUser updateUserData = userSettingState.reformatData(
+                    UpdateUser updateUserData = userSettingProvider.reformatData(
                       userData.uid,
                       base64Img,
                       nameInput.text,
@@ -151,7 +151,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                       otherSkillItems,
                     );
 
-                    bool isSucess = await userState.updateProfile(userData.uid, updateUserData);
+                    bool isSucess = await userProvider.updateProfile(userData.uid, updateUserData);
 
                     if (isSucess) {
                       Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
@@ -180,7 +180,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
         child: GestureDetector(
           onTap: () {
             print(type);
-            userSettingState.openSkillselectPage(type);
+            userSettingProvider.openSkillselectPage(type);
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,8 +217,8 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
 
     return StatefulWrapper(
       onInit: () {
-        userSettingState.userDataInsertToViewValue(userData);
-        userSettingState.getSkillListData(userData: userData);
+        userSettingProvider.userDataInsertToViewValue(userData);
+        userSettingProvider.getSkillListData(userData: userData);
       },
       child: isFirst
           ? const Loading()
@@ -226,7 +226,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
               resizeToAvoidBottomInset: false,
               key: key,
               endDrawer: SkillChoice(
-                userSettingState: userSettingState,
+                userSettingProvider: userSettingProvider,
                 forntSkillItems: forntSkillItems,
                 backEndSkillItems: backEndSkillItems,
                 iotSkillItems: iotSkillItems,
@@ -265,7 +265,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                                 titleColor: normalTextColor,
                                 backgroundColor: googleColor,
                                 onPress: () async {
-                                  await userSettingState.imageChange();
+                                  await userSettingProvider.imageChange();
                                 },
                               ),
                             ),
@@ -328,7 +328,8 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                                                                   alignment: Alignment.centerLeft,
                                                                   child: GestureDetector(
                                                                     onTap: () {
-                                                                      userSettingState.introductionInputChange(introductionText);
+                                                                      userSettingProvider
+                                                                          .introductionInputChange(introductionText);
                                                                       Navigator.of(context).pop();
                                                                     },
                                                                     child: const Icon(Icons.arrow_back_ios),
@@ -353,7 +354,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                                                                     child: InkWell(
                                                                       borderRadius: BorderRadius.circular(8),
                                                                       onTap: () async {
-                                                                        userSettingState
+                                                                        userSettingProvider
                                                                             .introductionInputChange(introductionInput.text);
                                                                         Navigator.of(context).pop();
                                                                       },

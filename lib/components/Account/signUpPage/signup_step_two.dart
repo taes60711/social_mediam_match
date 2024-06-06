@@ -2,10 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/strings/account/sign_up_strings.dart';
-import 'package:social_mediam_match/states/user_setting_state.dart';
+import 'package:social_mediam_match/states/user_setting_provider.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
+import '../../../provider/account/signUpPage/sign_up_view_provider.dart';
 import '../../../states/user_state.dart';
 import '../../utilities/title_input.dart';
 import '../../utilities/custom_button.dart';
@@ -14,9 +16,9 @@ import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 
 class SignUpStepTwo extends StatelessWidget {
-  final UserState userFuture;
+  final UserProvider userFuture;
   final String signUpedUserUID;
-  final UserSettingState userSettingState;
+  final UserSettingProvider userSettingProvider;
   final List<SkillModel> allSkillItems;
   final List<SkillModel> allWantSkillItems;
   final TextEditingController nameController;
@@ -27,7 +29,7 @@ class SignUpStepTwo extends StatelessWidget {
     super.key,
     required this.userFuture,
     required this.signUpedUserUID,
-    required this.userSettingState,
+    required this.userSettingProvider,
     required this.allSkillItems,
     required this.allWantSkillItems,
     required this.nameController,
@@ -46,7 +48,7 @@ class SignUpStepTwo extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             print(type);
-            userSettingState.openSkillselectPage(type);
+            userSettingProvider.openSkillselectPage(type);
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,7 +154,7 @@ class SignUpStepTwo extends StatelessWidget {
 
               await Future.delayed(const Duration(seconds: 1)).then((value) => closePop());
               if (isSucess) {
-                userFuture.onChangeSignUpPage(3);
+                Provider.of<SignUpViewProvider>(context, listen: false)..onChangeSignUpPage(3);
               }
             },
           ),

@@ -21,7 +21,7 @@ import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
-import 'package:social_mediam_match/states/user_setting_state.dart';
+import 'package:social_mediam_match/states/user_setting_provider.dart';
 import 'package:social_mediam_match/states/user_state.dart';
 
 import 'components/home/userPage/my_friends.dart';
@@ -41,7 +41,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserState()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => FriendState(channelListUrl: channelListUrl)),
         ChangeNotifierProvider(create: (_) => SkillExChangeState()),
       ],
@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
         '/signUp': (BuildContext context) => MultiProvider(
               providers: [
                 ChangeNotifierProvider(create: (_) => SignUpViewProvider()),
-                ChangeNotifierProvider(create: (_) => UserSettingState()),
+                ChangeNotifierProvider(create: (_) => UserSettingProvider()),
               ],
               child: const SignUpPage(),
             ),
@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
             ),
         '/privacySetting': (BuildContext context) => const PrivacySetting(),
         '/profile': (BuildContext context) => ChangeNotifierProvider(
-              create: (_) => UserSettingState(),
+              create: (_) => UserSettingProvider(),
               child: const Profile(),
             ),
         '/myposts': (BuildContext context) => ChangeNotifierProvider(

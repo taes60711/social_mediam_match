@@ -3,7 +3,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import '../../../states/user_state.dart';
@@ -14,7 +13,7 @@ import '../../utilities/style/style_config.dart';
 class SignUpFirstPage extends StatelessWidget {
   final TextEditingController emailController;
   final Widget signErrorMessage;
-  final UserState userFuture;
+  final UserProvider userFuture;
   SignUpFirstPage({
     super.key,
     required this.emailController,
@@ -39,7 +38,7 @@ class SignUpFirstPage extends StatelessWidget {
     );
   }
 
-  //紹介文章
+  ///紹介文章
   final Widget introductionWidget = SizedBox(
     width: ScreenSize().width,
     child: Align(
@@ -51,7 +50,7 @@ class SignUpFirstPage extends StatelessWidget {
     ),
   );
 
-  //プライバシー
+  ///プライバシー
   final Widget privacy = Padding(
     padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
     child: SizedBox(
@@ -143,17 +142,7 @@ class SignUpFirstPage extends StatelessWidget {
         //プライバシー
         privacy,
         //メールアドレス登録ボタン
-        _button(
-            title: FirstPage().emailButtonText,
-            titleColor: normalTextColor,
-            backgroundColor: normalBgColor,
-            onPressed: () {
-              bool isEmail = userFuture.signUpEmailCheck(emailController.text);
-              if (isEmail) {
-                userFuture.onChangeSignUpPage(1);
-                userFuture.signUpErrorReset();
-              }
-            }),
+
         //or テキスト
         orText(),
         //グーグル登録ボタン

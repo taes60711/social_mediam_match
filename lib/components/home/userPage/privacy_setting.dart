@@ -13,7 +13,7 @@ class PrivacySetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserState userFuture = context.read<UserState>();
+    UserProvider userFuture = context.read<UserProvider>();
     FriendState friendState = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['friendState'];
 
     return Scaffold(

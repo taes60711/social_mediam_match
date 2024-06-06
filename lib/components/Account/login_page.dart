@@ -23,8 +23,8 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     TextEditingController emailController = TextEditingController();
     TextEditingController pwdController = TextEditingController();
-    UserState userFuture = context.read<UserState>();
-    String loginError = context.select((UserState value) => value.loginError);
+    UserProvider userFuture = context.read<UserProvider>();
+    String loginError = context.select((UserProvider value) => value.loginError);
     emailController.text = "taes60811@gmail.com";
     pwdController.text = "toto60811";
 
@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
           context: context,
           backgroundColor: Colors.transparent,
           builder: (context) {
-            String resetPwdError = context.select((UserState value) => value.resetPwdError);
+            String resetPwdError = context.select((UserProvider value) => value.resetPwdError);
             return SizedBox(
               height: ScreenSize().height * .55,
               child: Stack(

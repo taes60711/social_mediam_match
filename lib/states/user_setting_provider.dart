@@ -7,7 +7,13 @@ import 'package:http/http.dart' as http;
 import 'package:social_mediam_match/models/user_model.dart';
 import '../models/skill_model.dart';
 
-class UserSettingState extends ChangeNotifier {
+class UserSettingViewProvider extends ChangeNotifier {
+  TextEditingController nameInput = TextEditingController();
+  TextEditingController jobInput = TextEditingController();
+  TextEditingController introductionInput = TextEditingController();
+}
+
+class UserSettingProvider extends ChangeNotifier {
   //ページに遷移すれば（データ一回しか取得ないため），flagを使う
   bool isFirst = true;
   //サーバーアドレス
