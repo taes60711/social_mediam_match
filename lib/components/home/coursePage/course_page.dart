@@ -198,7 +198,7 @@ class CoursePage extends StatelessWidget {
                                     child: Container(
                                       padding: const EdgeInsets.all(0),
                                       color: Colors.transparent,
-                                      width: ScreenSize().width,
+                                      width: ScreenSize.width,
                                       height: 265,
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,7 +242,7 @@ class CoursePage extends StatelessWidget {
                                                 Container(
                                                   margin: EdgeInsets.symmetric(vertical: 5),
                                                   height: 0.3,
-                                                  width: ScreenSize().width,
+                                                  width: ScreenSize.width,
                                                   color: hintTextColor,
                                                 ),
                                                 Padding(
@@ -279,7 +279,7 @@ class CoursePage extends StatelessWidget {
                                           Container(
                                             margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                                             height: 0.3,
-                                            width: ScreenSize().width,
+                                            width: ScreenSize.width,
                                             color: hintTextColor,
                                           ),
                                           Row(
@@ -362,11 +362,11 @@ class CoursePage extends StatelessWidget {
                                                                       Row(
                                                                         children: [
                                                                           SizedBox(
-                                                                            width: ScreenSize().width * 0.33,
+                                                                            width: ScreenSize.width * 0.33,
                                                                           ),
                                                                           Container(
                                                                             alignment: Alignment.topCenter,
-                                                                            width: ScreenSize().width * 0.33,
+                                                                            width: ScreenSize.width * 0.33,
                                                                             child: Icon(
                                                                               Icons.remove,
                                                                               size: 35,
@@ -376,7 +376,7 @@ class CoursePage extends StatelessWidget {
                                                                           Container(
                                                                             alignment: Alignment.topRight,
                                                                             padding: const EdgeInsets.only(right: 10),
-                                                                            width: ScreenSize().width * 0.33,
+                                                                            width: ScreenSize.width * 0.33,
                                                                             child: Container(
                                                                               color: Colors.transparent,
                                                                               padding: const EdgeInsets.all(5),
@@ -406,7 +406,7 @@ class CoursePage extends StatelessWidget {
                                           Container(
                                             margin: EdgeInsets.symmetric(vertical: 5),
                                             height: 0.3,
-                                            width: ScreenSize().width,
+                                            width: ScreenSize.width,
                                             color: hintTextColor,
                                           ),
                                         ],

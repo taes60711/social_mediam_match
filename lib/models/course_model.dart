@@ -83,7 +83,7 @@ class CourseModel {
       postTime: formattedTime,
       type: json['type'],
       isPublic: json['isPublic'],
-      courseCreateduserInfo: LoginUser.jsonToModel(json['user']),
+      courseCreateduserInfo: LoginUser.toModel(json['user']),
     );
   }
 }
@@ -148,7 +148,7 @@ class AddedCourseMemberModel {
     return AddedCourseMemberModel(
       courseId: json['courseId'],
       memberUid: json['memberUid'],
-      userData: LoginUser.jsonToModel(json['userDTO']),
+      userData: LoginUser.toModel(json['userDTO']),
       status: json['status'],
     );
   }

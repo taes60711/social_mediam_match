@@ -16,6 +16,7 @@ import 'package:social_mediam_match/components/home/userPage/privacy_setting.dar
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_provider.dart';
+import 'package:social_mediam_match/provider/skill_provider.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
@@ -84,6 +85,7 @@ class MyApp extends StatelessWidget {
             ),
         '/signUp': (BuildContext context) => MultiProvider(
               providers: [
+                ChangeNotifierProvider(create: (_) => SkillProvider()),
                 ChangeNotifierProvider(create: (_) => SignUpViewProvider()),
                 ChangeNotifierProvider(create: (_) => UserSettingProvider()),
               ],

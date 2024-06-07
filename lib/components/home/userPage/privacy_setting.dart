@@ -19,7 +19,7 @@ class PrivacySetting extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
-          width: ScreenSize().width,
+          width: ScreenSize.width,
           child: Column(
             children: [
               Align(

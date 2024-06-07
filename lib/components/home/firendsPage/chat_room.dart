@@ -206,7 +206,7 @@ class ChatRoom extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(10),
               margin: EdgeInsets.only(bottom: 10),
-              width: ScreenSize().width,
+              width: ScreenSize.width,
               color: normalBgColor2.withOpacity(0.1),
               child: Padding(
                 padding: const EdgeInsets.only(top: 8.0),
@@ -349,7 +349,7 @@ class ChatRoom extends StatelessWidget {
                                                     children: [
                                                       ConstrainedBox(
                                                         constraints: BoxConstraints(
-                                                          maxWidth: ScreenSize().width * 0.6,
+                                                          maxWidth: ScreenSize.width * 0.6,
                                                         ),
                                                         child: firstImageUrl != '-1'
                                                             ? GestureDetector(
@@ -399,8 +399,8 @@ class ChatRoom extends StatelessWidget {
                                                         child: Padding(
                                                           padding: const EdgeInsets.only(top: 8),
                                                           child: ConstrainedBox(
-                                                            constraints: BoxConstraints(
-                                                                maxWidth: ScreenSize().width * 0.6, maxHeight: 160),
+                                                            constraints:
+                                                                BoxConstraints(maxWidth: ScreenSize.width * 0.6, maxHeight: 160),
                                                             child: AnyLinkPreview(
                                                               link: firstUrl,
                                                               titleStyle: TextStyle(fontSize: 14),
@@ -463,7 +463,7 @@ class ChatRoom extends StatelessWidget {
                                                       children: [
                                                         ConstrainedBox(
                                                           constraints: BoxConstraints(
-                                                            maxWidth: ScreenSize().width * 0.6,
+                                                            maxWidth: ScreenSize.width * 0.6,
                                                           ),
                                                           child: firstImageUrl != '-1'
                                                               ? GestureDetector(
@@ -514,8 +514,8 @@ class ChatRoom extends StatelessWidget {
                                                         child: Padding(
                                                           padding: const EdgeInsets.only(top: 8),
                                                           child: ConstrainedBox(
-                                                            constraints: BoxConstraints(
-                                                                maxWidth: ScreenSize().width * 0.6, maxHeight: 160),
+                                                            constraints:
+                                                                BoxConstraints(maxWidth: ScreenSize.width * 0.6, maxHeight: 160),
                                                             child: AnyLinkPreview(
                                                               link: firstUrl,
                                                               titleStyle: TextStyle(fontSize: 14),
@@ -551,7 +551,7 @@ class ChatRoom extends StatelessWidget {
                     ),
             ),
             Container(
-              width: ScreenSize().width,
+              width: ScreenSize.width,
               margin: EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [

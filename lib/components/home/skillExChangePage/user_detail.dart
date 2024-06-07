@@ -30,7 +30,7 @@ class UserDetail extends StatelessWidget {
         friendFuture.checkIsFriend(usersList);
       },
       child: SizedBox(
-        width: ScreenSize().width,
+        width: ScreenSize.width,
         child: Drawer(
           backgroundColor: Colors.white,
           shape: const RoundedRectangleBorder(
@@ -64,14 +64,14 @@ class UserDetail extends StatelessWidget {
                     Text("自我介紹 : ${realOtherUser.introduction ?? ""}"),
                     Text("最後登入時間: ${realOtherUser.lastLogin}"),
                     SizedBox(
-                      width: ScreenSize().width,
+                      width: ScreenSize.width,
                       child: SkillListView(
                         title: skillText,
                         skillList: realOtherUser.mainSkills ?? [],
                       ),
                     ),
                     SizedBox(
-                      width: ScreenSize().width,
+                      width: ScreenSize.width,
                       child: SkillListView(
                         title: wantSkillText,
                         skillList: realOtherUser.wantSkills ?? [],

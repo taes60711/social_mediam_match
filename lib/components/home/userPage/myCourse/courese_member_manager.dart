@@ -27,7 +27,7 @@ class CourseMemberManager extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    width: ScreenSize().width * 0.33,
+                    width: ScreenSize.width * 0.33,
                     alignment: Alignment.centerLeft,
                     child: IconButton(
                       onPressed: () {
@@ -36,7 +36,7 @@ class CourseMemberManager extends StatelessWidget {
                       icon: const Icon(Icons.arrow_back_ios),
                     ),
                   ),
-                  SizedBox(width: ScreenSize().width * 0.33, child: const Center(child: Text("成員管理"))),
+                  SizedBox(width: ScreenSize.width * 0.33, child: const Center(child: Text("成員管理"))),
                 ],
               ),
               Expanded(

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/strings/account/sign_up_strings.dart';
 import 'package:social_mediam_match/states/user_setting_provider.dart';
 import '../../../models/skill_model.dart';
+
 import '../../../models/user_model.dart';
 import '../../../provider/account/signUpPage/sign_up_view_provider.dart';
 import '../../../states/user_state.dart';
@@ -72,7 +73,7 @@ class SignUpStepTwo extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               SizedBox(
-                width: ScreenSize().width,
+                width: ScreenSize.width,
                 child: SkillListView(
                   skillList: skillItems.map((e) => type == "have" ? e.skillHave : e.skillWant).toList(),
                 ),
@@ -130,8 +131,8 @@ class SignUpStepTwo extends StatelessWidget {
               inspect(allSkillItems);
               inspect(allWantSkillItems);
 
-              List<SkillInfo> gethaveSkill = [];
-              List<SkillInfo> getWantSkill = [];
+              List<RequestUserSkillData> gethaveSkill = [];
+              List<RequestUserSkillData> getWantSkill = [];
               for (var element in allSkillItems) {
                 gethaveSkill.add(element.skillHave);
               }

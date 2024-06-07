@@ -45,7 +45,7 @@ class WelcomePage extends StatelessWidget {
         children: [
           //ロゴ
           SizedBox(
-            height: ScreenSize().height * 0.8,
+            height: ScreenSize.height * 0.8,
             child: Center(
               child: SizedBox(
                 width: 180,
@@ -55,7 +55,7 @@ class WelcomePage extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: ScreenSize().height * 0.2,
+            height: ScreenSize.height * 0.2,
             child: FittedBox(
               child: Column(
                 children: [

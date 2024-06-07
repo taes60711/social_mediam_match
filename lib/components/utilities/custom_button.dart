@@ -7,6 +7,7 @@ class CustomButton extends StatelessWidget {
   final Color titleColor;
   final IconData? icon;
   final String? iconImg;
+  final double? width;
   final Color? backgroundColor;
   final double? borderRadius;
   final VoidCallback onPress;
@@ -18,12 +19,12 @@ class CustomButton extends StatelessWidget {
     this.borderRadius,
     required this.onPress,
     this.iconImg,
+    this.width,
     this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
-    double radius = borderRadius ?? 15.0;
     double iconSize = 25;
 
     return icon != null
@@ -49,12 +50,12 @@ class CustomButton extends StatelessWidget {
           )
         : Material(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(radius),
+            borderRadius: BorderRadius.circular(borderRadius ?? 15),
             child: InkWell(
-              borderRadius: BorderRadius.circular(radius),
+              borderRadius: BorderRadius.circular(borderRadius ?? 15),
               onTap: onPress,
               child: Container(
-                width: ScreenSize().width,
+                width: width ?? ScreenSize.width,
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

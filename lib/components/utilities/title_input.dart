@@ -53,7 +53,7 @@ class TitleInput extends StatelessWidget {
                 ),
           isInputMulti
               ? SizedBox(
-                  width: ScreenSize().width,
+                  width: ScreenSize.width,
                   child: TextField(
                     minLines: 3,
                     maxLines: 6,
@@ -71,7 +71,7 @@ class TitleInput extends StatelessWidget {
                   ),
                 )
               : SizedBox(
-                  width: ScreenSize().width,
+                  width: ScreenSize.width,
                   height: viewInputHeight,
                   child: TextField(
                     cursorColor: normalBgColor2,

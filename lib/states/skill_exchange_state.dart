@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/services/db_service.dart';
 
+import '../enum/skill_type.dart';
 import '../global.dart';
 
 class SkillExChangeState extends ChangeNotifier {
@@ -58,7 +59,7 @@ class SkillExChangeState extends ChangeNotifier {
         for (var e in jsonData) {
           Map<String, dynamic> map = {"name": e['name'], "bool": false};
 
-          if (forntType.contains(e['name'])) {
+          if (frontType.contains(e['name'])) {
             forntSkillList = [...forntSkillList, map];
           } else if (backendType.contains(e['name'])) {
             backEndSkillList = [...backEndSkillList, map];

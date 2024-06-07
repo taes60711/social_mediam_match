@@ -67,7 +67,7 @@ class Forum extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(5),
               ),
-              width: ScreenSize().width,
+              width: ScreenSize.width,
               height: 36,
               child: const Row(
                 children: [

@@ -43,7 +43,7 @@ class CourseDetail extends StatelessWidget {
 
       Widget breakLine = Container(
         margin: const EdgeInsets.all(5),
-        width: ScreenSize().width,
+        width: ScreenSize.width,
         height: 0.3,
         color: hintTextColor,
       );
@@ -107,7 +107,7 @@ class CourseDetail extends StatelessWidget {
               style: TextStyle(fontSize: 14),
             ),
             Container(
-              width: ScreenSize().width,
+              width: ScreenSize.width,
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
               decoration: BoxDecoration(
                 color: hintTextColor.withAlpha(50),
@@ -121,7 +121,7 @@ class CourseDetail extends StatelessWidget {
               style: TextStyle(fontSize: 14),
             ),
             Container(
-              width: ScreenSize().width,
+              width: ScreenSize.width,
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
               decoration: BoxDecoration(
                 color: hintTextColor.withAlpha(50),
@@ -224,7 +224,7 @@ class CourseDetail extends StatelessWidget {
                         title: Text("章節 ${e.chapter}"),
                         children: [
                           SizedBox(
-                            width: ScreenSize().width,
+                            width: ScreenSize.width,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: e.content.map((e) {

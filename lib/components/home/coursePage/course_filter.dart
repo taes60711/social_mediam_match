@@ -31,7 +31,7 @@ class CourseFilter extends StatelessWidget {
             child: const Loading(),
           )
         : SizedBox(
-            width: ScreenSize().width,
+            width: ScreenSize.width,
             child: Drawer(
               backgroundColor: Colors.white,
               shape: const RoundedRectangleBorder(
@@ -55,7 +55,7 @@ class CourseFilter extends StatelessWidget {
                     child: ListView(
                       children: [
                         ExpansionTile(
-                          title: Text(SkillType.forntend.value),
+                          title: Text(SkillType.frontend.value),
                           leading: const Icon(Icons.align_horizontal_left),
                           children: forntSkillList.map((e) {
                             return Padding(

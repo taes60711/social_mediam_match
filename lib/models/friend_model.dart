@@ -54,7 +54,7 @@ class FriendListModel {
       lastMessage: json['lastMessage'],
       sentAt: json['sentAt'],
       roomType: json['roomType'],
-      userData: userData ?? LoginUser.jsonToModel(json['user']),
+      userData: userData ?? LoginUser.toModel(json['user']),
     );
   }
 }

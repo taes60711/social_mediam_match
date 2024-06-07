@@ -40,14 +40,14 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
           builder: (context) {
             String resetPwdError = context.select((UserProvider value) => value.resetPwdError);
             return SizedBox(
-              height: ScreenSize().height * .55,
+              height: ScreenSize.height * .55,
               child: Stack(
                 children: [
                   Positioned(
                     top: 30,
                     bottom: 0,
                     child: Container(
-                      width: ScreenSize().width,
+                      width: ScreenSize.width,
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     Widget loginErrorMessage;
     if (loginError != LoginError().noError) {
       loginErrorMessage = SizedBox(
-        width: ScreenSize().width,
+        width: ScreenSize.width,
         child: Align(
           alignment: Alignment.topLeft,
           child: Text(
@@ -164,11 +164,11 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
     //ロゴ
     Widget logo = SizedBox(
-      height: ScreenSize().safeheight * 0.3,
+      height: ScreenSize.safeHeight * 0.3,
       child: SizedBox(
         width: 150,
         height: 150,
-        child: Image.asset('assets/Logo.png'),
+        child: Image.asset(logoImg),
       ),
     );
 
@@ -176,7 +176,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     Widget forgotPwdText = Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: SizedBox(
-        width: ScreenSize().width,
+        width: ScreenSize.width,
         child: Align(
           alignment: Alignment.centerRight,
           child: GestureDetector(
@@ -193,7 +193,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     );
 
     Widget backButton = SizedBox(
-      width: ScreenSize().width,
+      width: ScreenSize.width,
       child: Align(
         alignment: Alignment.topLeft,
         child: IconButton(
@@ -218,7 +218,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
             Column(
               children: [
                 SizedBox(
-                  height: ScreenSize().height * 0.6,
+                  height: ScreenSize.height * 0.6,
                   child: FittedBox(
                     child: Column(
                       children: [

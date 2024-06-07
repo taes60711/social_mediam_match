@@ -52,7 +52,7 @@ class PostModel {
       type: json['type'],
       commentCount: json['count'],
       postTime: formattedTime,
-      postUserInfo: userData ?? LoginUser.jsonToModel(json['user']),
+      postUserInfo: userData ?? LoginUser.toModel(json['user']),
     );
   }
 }
@@ -115,7 +115,7 @@ class PostCommentModel {
       userUid: json['userUid'],
       message: json['message'],
       postTime: formattedTime,
-      commentUserInfo: LoginUser.jsonToModel(json['user']),
+      commentUserInfo: LoginUser.toModel(json['user']),
     );
   }
 }

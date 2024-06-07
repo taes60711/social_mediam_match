@@ -270,11 +270,11 @@ class UserPage extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-            height: ScreenSize().safeheight * 0.05,
+            height: ScreenSize.safeHeight * 0.05,
           ),
           SizedBox(
-            width: ScreenSize().width,
-            height: ScreenSize().safeheight * 0.3,
+            width: ScreenSize.width,
+            height: ScreenSize.safeHeight * 0.3,
             child: FittedBox(
               child: Column(
                 children: [
@@ -304,8 +304,8 @@ class UserPage extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: ScreenSize().width,
-            height: ScreenSize().safeheight * 0.6,
+            width: ScreenSize.width,
+            height: ScreenSize.safeHeight * 0.6,
             child: FittedBox(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -316,7 +316,7 @@ class UserPage extends StatelessWidget {
                     Text(StepTwoPage().haveSkillText),
                     Container(
                       margin: const EdgeInsets.only(top: 10, bottom: 10),
-                      width: ScreenSize().width,
+                      width: ScreenSize.width,
                       child: SkillListView(
                         skillList: userData.mainSkills ?? [],
                         backgroundColor: googleColor,
@@ -326,7 +326,7 @@ class UserPage extends StatelessWidget {
                     Text(StepTwoPage().wantSkillText),
                     Container(
                       margin: const EdgeInsets.only(top: 10, bottom: 30),
-                      width: ScreenSize().width,
+                      width: ScreenSize.width,
                       child: SkillListView(
                         skillList: userData.wantSkills ?? [],
                         backgroundColor: googleColor,
@@ -347,7 +347,7 @@ class UserPage extends StatelessWidget {
                             children: settingButtonInfoList
                                 .map(
                                   (e) => SizedBox(
-                                    width: ScreenSize().width / 4,
+                                    width: ScreenSize.width / 4,
                                     child: CustomButton(
                                         title: e.title,
                                         icon: e.icon,
@@ -363,7 +363,7 @@ class UserPage extends StatelessWidget {
                             children: settingButtonInfoList2
                                 .map(
                                   (e) => SizedBox(
-                                    width: ScreenSize().width / 4,
+                                    width: ScreenSize.width / 4,
                                     child: CustomButton(
                                         title: e.title,
                                         icon: e.icon,

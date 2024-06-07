@@ -11,13 +11,13 @@ class BackgroundWidget extends StatelessWidget {
     print("background render");
     bool isSafeArea = this.isSafeArea ?? true;
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       body: isSafeArea
           ? SafeArea(
               child: Container(
-                width: ScreenSize().width,
-                height: ScreenSize().height,
+                width: ScreenSize.width,
+                height: ScreenSize.height,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/bg.png'),
@@ -28,8 +28,8 @@ class BackgroundWidget extends StatelessWidget {
               ),
             )
           : Container(
-              width: ScreenSize().width,
-              height: ScreenSize().height,
+              width: ScreenSize.width,
+              height: ScreenSize.height,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/bg.png'),

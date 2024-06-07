@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-import 'package:social_mediam_match/models/user_model.dart';
+
 import '../../../enum/skill_type.dart';
 import '../../../models/skill_model.dart';
 import '../../../states/user_setting_provider.dart';
@@ -80,7 +80,7 @@ class SkillChoice extends StatelessWidget {
           initiallyExpanded: true,
           shape: Border.all(color: Colors.transparent),
           children: list.map((e) {
-            SkillInfo skillInfoItem = type == "have" ? e.skillHave : e.skillWant;
+            RequestUserSkillData skillInfoItem = type == "have" ? e.skillHave : e.skillWant;
             String? selectedItem = "${skillInfoItem.level}";
             return PopupMenuButton(
               offset: const Offset(0.0, 22),
@@ -90,7 +90,7 @@ class SkillChoice extends StatelessWidget {
                       (e) => PopupMenuItem(
                         value: e,
                         child: SizedBox(
-                          width: ScreenSize().width,
+                          width: ScreenSize.width,
                           child: skillInfoItem.level.toString() == e
                               ? Row(
                                   children: [
@@ -129,7 +129,7 @@ class SkillChoice extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                 margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                width: ScreenSize().width,
+                width: ScreenSize.width,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   color: skillInfoItem.level > 0 ? normalBgColor : Color.fromARGB(104, 177, 176, 176),
@@ -189,7 +189,7 @@ class SkillChoice extends StatelessWidget {
           Expanded(
             child: ListView(
               children: [
-                expansionWidget(SkillType.forntend.value, forntSkillItems, type),
+                expansionWidget(SkillType.frontend.value, forntSkillItems, type),
                 expansionWidget(SkillType.backend.value, backEndSkillItems, type),
                 expansionWidget(SkillType.iot.value, iotSkillItems, type),
                 expansionWidget(SkillType.other.value, otherSkillItems, type),

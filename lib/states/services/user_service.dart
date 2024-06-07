@@ -20,9 +20,9 @@ class UserService extends ApiClient {
 
     LoginUser? userdata;
 
-    userdata = await handleResponse(
+    userdata = await handleResponse<LoginUser?>(
       responseData,
-      model: LoginUser.jsonToModel,
+      model: LoginUser.toModel,
     );
 
     return userdata;

@@ -28,7 +28,7 @@ class EditPost extends StatelessWidget {
             Text("編輯"),
             choicedPost != null
                 ? Container(
-                    width: ScreenSize().width,
+                    width: ScreenSize.width,
                     child: Column(
                       children: [
                         Align(
@@ -138,7 +138,7 @@ class MyPosts extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    width: ScreenSize().width * 0.33,
+                    width: ScreenSize.width * 0.33,
                     alignment: Alignment.centerLeft,
                     child: IconButton(
                       onPressed: () {
@@ -147,7 +147,7 @@ class MyPosts extends StatelessWidget {
                       icon: const Icon(Icons.arrow_back_ios),
                     ),
                   ),
-                  SizedBox(width: ScreenSize().width * 0.33, child: const Center(child: Text("我的文章"))),
+                  SizedBox(width: ScreenSize.width * 0.33, child: const Center(child: Text("我的文章"))),
                 ],
               ),
               Expanded(

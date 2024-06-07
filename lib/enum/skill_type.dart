@@ -1,5 +1,9 @@
+List<String> frontType = ["javascript", "typescript", "css", "html", "vue", "React", "AndroidStudio", "Flutter", "objective-c"];
+List<String> iotType = ["arduino"];
+List<String> backendType = ["java", "python", "mysql"];
+
 enum SkillType {
-  forntend("前端"),
+  frontend("前端"),
   backend("後端"),
   iot("韌體"),
   other("其他");

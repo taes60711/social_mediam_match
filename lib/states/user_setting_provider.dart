@@ -5,13 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:http/http.dart' as http;
 import 'package:social_mediam_match/models/user_model.dart';
+import '../enum/skill_type.dart';
 import '../models/skill_model.dart';
-
-class UserSettingViewProvider extends ChangeNotifier {
-  TextEditingController nameInput = TextEditingController();
-  TextEditingController jobInput = TextEditingController();
-  TextEditingController introductionInput = TextEditingController();
-}
 
 class UserSettingProvider extends ChangeNotifier {
   //ページに遷移すれば（データ一回しか取得ないため），flagを使う
@@ -55,24 +50,24 @@ class UserSettingProvider extends ChangeNotifier {
           //Switchコンポーネントためにユーザのスキル、勉強したいBool List作成する
           int skillLevel = 0;
 
-          SkillInfo haveSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
-          SkillInfo wantSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
+          RequestUserSkillData haveSkillInfo = RequestUserSkillData(name: e['name'], level: skillLevel, month: 0);
+          RequestUserSkillData wantSkillInfo = RequestUserSkillData(name: e['name'], level: skillLevel, month: 0);
 
           if (userData != null) {
             bool skillCheckBool = userData.mainSkills!.indexWhere((element) => element.name == e['name']) != -1;
             bool wantSkillCheckBool = userData.wantSkills!.indexWhere((element) => element.name == e['name']) != -1;
             if (skillCheckBool) {
               skillLevel = userData.mainSkills!.firstWhere((element) => element.name == e['name']).level;
-              haveSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
+              haveSkillInfo = RequestUserSkillData(name: e['name'], level: skillLevel, month: 0);
             }
             if (wantSkillCheckBool) {
               skillLevel = userData.wantSkills!.firstWhere((element) => element.name == e['name']).level;
-              wantSkillInfo = SkillInfo(name: e['name'], level: skillLevel, month: 0);
+              wantSkillInfo = RequestUserSkillData(name: e['name'], level: skillLevel, month: 0);
             }
           }
 
           //全スキル名前とユーザのスキルリスト組み合わせする
-          if (forntType.contains(e['name'])) {
+          if (frontType.contains(e['name'])) {
             forntSkillList = [...forntSkillList, SkillModel(id: e['id'], skillHave: haveSkillInfo, skillWant: wantSkillInfo)];
           } else if (backendType.contains(e['name'])) {
             backEndSkillList = [...backEndSkillList, SkillModel(id: e['id'], skillHave: haveSkillInfo, skillWant: wantSkillInfo)];
@@ -94,7 +89,7 @@ class UserSettingProvider extends ChangeNotifier {
   }
 
   //いずれスキルに関するやつ変更する
-  void checkOnChange(SkillInfo list, {String? choicedLevel}) {
+  void checkOnChange(RequestUserSkillData list, {String? choicedLevel}) {
     //いずれスキルのレベル変更する
     list.level = int.parse(choicedLevel ?? "0");
     notifyListeners();
@@ -131,8 +126,8 @@ class UserSettingProvider extends ChangeNotifier {
     List<SkillModel> backEndSkillItems,
     List<SkillModel> otherSkillItems,
   ) {
-    List<SkillInfo> gethaveSkill = [];
-    List<SkillInfo> getWantSkill = [];
+    List<RequestUserSkillData> gethaveSkill = [];
+    List<RequestUserSkillData> getWantSkill = [];
 
     //全カテゴリーのスキルリストがリスト化
     List<List<SkillModel>> allcategoryItems = [backEndSkillItems, forntSkillItems, iotSkillItems, otherSkillItems];
@@ -194,7 +189,7 @@ class UserSettingProvider extends ChangeNotifier {
       print("job Change");
     }
 
-    void getSkillListIsChange(List<SkillInfo> userSkillList, List<SkillInfo> skillList) {
+    void getSkillListIsChange(List<RequestUserSkillData> userSkillList, List<RequestUserSkillData> skillList) {
       if (skillList.length != userSkillList.length) {
         isChange = true;
       } else {
@@ -210,8 +205,8 @@ class UserSettingProvider extends ChangeNotifier {
       }
     }
 
-    List<SkillInfo> getHaveSkillList = allSkillItems.map((e) => e.skillHave).toList();
-    List<SkillInfo> getWantSkillList = allWantSkillItems.map((e) => e.skillWant).toList();
+    List<RequestUserSkillData> getHaveSkillList = allSkillItems.map((e) => e.skillHave).toList();
+    List<RequestUserSkillData> getWantSkillList = allWantSkillItems.map((e) => e.skillWant).toList();
     getSkillListIsChange(userData.mainSkills!, getHaveSkillList);
     getSkillListIsChange(userData.wantSkills!, getWantSkillList);
 

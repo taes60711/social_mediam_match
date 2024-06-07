@@ -96,7 +96,7 @@ class PostComment extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
-                      width: ScreenSize().width,
+                      width: ScreenSize.width,
                       color: Color.fromARGB(255, 227, 228, 235),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,7 +143,7 @@ class PostComment extends StatelessWidget {
               ),
               Container(
                 height: 50,
-                width: ScreenSize().width,
+                width: ScreenSize.width,
                 decoration: BoxDecoration(color: normalBgColor2),
                 padding: const EdgeInsets.only(left: 10),
                 child: GestureDetector(
@@ -191,11 +191,11 @@ class PostComment extends StatelessWidget {
                                             Row(
                                               children: [
                                                 SizedBox(
-                                                  width: ScreenSize().width * 0.33,
+                                                  width: ScreenSize.width * 0.33,
                                                 ),
                                                 Container(
                                                   alignment: Alignment.topCenter,
-                                                  width: ScreenSize().width * 0.33,
+                                                  width: ScreenSize.width * 0.33,
                                                   child: Icon(
                                                     Icons.remove,
                                                     size: 35,
@@ -205,7 +205,7 @@ class PostComment extends StatelessWidget {
                                                 Container(
                                                   alignment: Alignment.topRight,
                                                   padding: const EdgeInsets.only(right: 10),
-                                                  width: ScreenSize().width * 0.33,
+                                                  width: ScreenSize.width * 0.33,
                                                   child: Container(
                                                     color: Colors.transparent,
                                                     padding: const EdgeInsets.all(5),

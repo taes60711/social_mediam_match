@@ -52,7 +52,7 @@ class MyFriends extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: ScreenSize().width * 0.33,
+                width: ScreenSize.width * 0.33,
                 alignment: Alignment.centerLeft,
                 child: IconButton(
                   onPressed: () {
@@ -61,7 +61,7 @@ class MyFriends extends StatelessWidget {
                   icon: const Icon(Icons.arrow_back_ios),
                 ),
               ),
-              SizedBox(width: ScreenSize().width * 0.33, child: const Center(child: Text("我的好友"))),
+              SizedBox(width: ScreenSize.width * 0.33, child: const Center(child: Text("我的好友"))),
             ],
           ),
           Expanded(
@@ -86,7 +86,7 @@ class MyFriends extends StatelessWidget {
                                 image: otherUserData.image,
                               )),
                           SizedBox(
-                            width: ScreenSize().width - 100,
+                            width: ScreenSize.width - 100,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

@@ -33,7 +33,7 @@ class MyCourses extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  width: ScreenSize().width * 0.33,
+                  width: ScreenSize.width * 0.33,
                   alignment: Alignment.centerLeft,
                   child: IconButton(
                     onPressed: () {
@@ -42,7 +42,7 @@ class MyCourses extends StatelessWidget {
                     icon: const Icon(Icons.arrow_back_ios),
                   ),
                 ),
-                SizedBox(width: ScreenSize().width * 0.33, child: const Center(child: Text("我的課程"))),
+                SizedBox(width: ScreenSize.width * 0.33, child: const Center(child: Text("我的課程"))),
               ],
             ),
             Expanded(
@@ -121,7 +121,7 @@ class MyCourses extends StatelessWidget {
                                             child: Container(
                                               padding: const EdgeInsets.all(0),
                                               color: Colors.transparent,
-                                              width: ScreenSize().width,
+                                              width: ScreenSize.width,
                                               height: 265,
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +165,7 @@ class MyCourses extends StatelessWidget {
                                                         Container(
                                                           margin: EdgeInsets.symmetric(vertical: 5),
                                                           height: 0.3,
-                                                          width: ScreenSize().width,
+                                                          width: ScreenSize.width,
                                                           color: hintTextColor,
                                                         ),
                                                         Padding(
@@ -202,7 +202,7 @@ class MyCourses extends StatelessWidget {
                                                   Container(
                                                     margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                                                     height: 0.3,
-                                                    width: ScreenSize().width,
+                                                    width: ScreenSize.width,
                                                     color: hintTextColor,
                                                   ),
                                                   Row(
@@ -283,11 +283,11 @@ class MyCourses extends StatelessWidget {
                                                                               Row(
                                                                                 children: [
                                                                                   SizedBox(
-                                                                                    width: ScreenSize().width * 0.33,
+                                                                                    width: ScreenSize.width * 0.33,
                                                                                   ),
                                                                                   Container(
                                                                                     alignment: Alignment.topCenter,
-                                                                                    width: ScreenSize().width * 0.33,
+                                                                                    width: ScreenSize.width * 0.33,
                                                                                     child: Icon(
                                                                                       Icons.remove,
                                                                                       size: 35,
@@ -297,7 +297,7 @@ class MyCourses extends StatelessWidget {
                                                                                   Container(
                                                                                     alignment: Alignment.topRight,
                                                                                     padding: const EdgeInsets.only(right: 10),
-                                                                                    width: ScreenSize().width * 0.33,
+                                                                                    width: ScreenSize.width * 0.33,
                                                                                     child: Container(
                                                                                       color: Colors.transparent,
                                                                                       padding: const EdgeInsets.all(5),
@@ -328,7 +328,7 @@ class MyCourses extends StatelessWidget {
                                                                                         });
                                                                                   },
                                                                                   child: Container(
-                                                                                    width: ScreenSize().width,
+                                                                                    width: ScreenSize.width,
                                                                                     height: 45,
                                                                                     decoration: BoxDecoration(
                                                                                         color: normalBgColor2,
@@ -384,7 +384,7 @@ class MyCourses extends StatelessWidget {
                                                                                     showMemberManagerPage();
                                                                                   },
                                                                                   child: Container(
-                                                                                    width: ScreenSize().width,
+                                                                                    width: ScreenSize.width,
                                                                                     height: 45,
                                                                                     decoration: BoxDecoration(
                                                                                         color: normalBgColor2,
@@ -430,7 +430,7 @@ class MyCourses extends StatelessWidget {
                                                   Container(
                                                     margin: EdgeInsets.symmetric(vertical: 5),
                                                     height: 0.3,
-                                                    width: ScreenSize().width,
+                                                    width: ScreenSize.width,
                                                     color: hintTextColor,
                                                   ),
                                                 ],

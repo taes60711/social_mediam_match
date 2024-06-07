@@ -7,10 +7,6 @@ String branch = "ws";
 String channelListUrl = 'ws://$ip:$webSocketPort/$branch';
 String channelRoomUrl = 'ws://$ip:$webSocketPort/$branch/chatroom';
 
-List<String> forntType = ["javascript", "typescript", "css", "html", "vue", "React", "AndroidStudio", "Flutter", "objective-c"];
-List<String> iotType = ["arduino"];
-List<String> backendType = ["java", "python", "mysql"];
-
 //Route路徑
 enum RoutePath {
   home("/"),

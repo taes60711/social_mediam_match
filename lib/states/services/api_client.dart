@@ -69,14 +69,27 @@ class ApiClient {
 
   //MARK: Response Handle
   ///APIclient取得したデータチェック：Get場合はデータモデルに加工する、Push場合は成功がどうか確認する
-  Future<dynamic> handleResponse<T>(String responseData, {dynamic Function(dynamic json)? model}) async {
+  Future<dynamic> handleResponse<T>(
+    String responseData, {
+    dynamic Function(Map<String, dynamic> json)? model,
+    bool? isList,
+  }) async {
     dynamic result;
     try {
       if (responseData == "null") {
         throw ArgumentError("service error");
       }
       if (model != null) {
-        result = model(json.decode(responseData));
+        if (isList != null) {
+          List<dynamic> listData = json.decode(responseData);
+          result = <T>[];
+          for (var e in listData) {
+            result.add(model(e) as T);
+          }
+        } else {
+          dynamic data = json.decode(responseData);
+          result = model(data);
+        }
       }
     } catch (e) {
       print(e);

@@ -57,7 +57,7 @@ class CourseEditPage extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          width: ScreenSize().width * 0.33,
+                          width: ScreenSize.width * 0.33,
                           alignment: Alignment.centerLeft,
                           child: IconButton(
                             onPressed: () {
@@ -66,7 +66,7 @@ class CourseEditPage extends StatelessWidget {
                             icon: const Icon(Icons.arrow_back_ios),
                           ),
                         ),
-                        SizedBox(width: ScreenSize().width * 0.33, child: const Center(child: Text("編輯課程"))),
+                        SizedBox(width: ScreenSize.width * 0.33, child: const Center(child: Text("編輯課程"))),
                       ],
                     ),
                     TitleInput(title: "標題", textController: titleController),

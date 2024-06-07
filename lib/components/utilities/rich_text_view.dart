@@ -25,7 +25,7 @@ PhotoViewController photoViewController = PhotoViewController();
 class _RichTextViewState extends State<RichTextView> with SingleTickerProviderStateMixin {
   Future<void> imageView(String imgUrl) {
     double value = 1;
-    double zoomSpeed = 0.01 * ScreenSize().height / ScreenSize().width;
+    double zoomSpeed = 0.01 * ScreenSize.height / ScreenSize.width;
     if (Platform.isAndroid || Platform.isIOS) {
       zoomSpeed = 0.01;
     }
@@ -189,7 +189,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                 );
 
                 return SizedBox(
-                  width: ScreenSize().width,
+                  width: ScreenSize.width,
                   child: YoutubePlayer(
                     controller: ytController[index],
                     onReady: () => {},
@@ -215,7 +215,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
             if (haveImage) {
               component = Image.network(
                 resultString,
-                width: ScreenSize().width,
+                width: ScreenSize.width,
                 height: 150,
                 fit: BoxFit.cover,
                 gaplessPlayback: true,

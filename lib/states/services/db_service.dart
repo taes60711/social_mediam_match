@@ -627,7 +627,7 @@ class DBService {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
         allUserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((element) {
-          return LoginUser.jsonToModel(element);
+          return LoginUser.toModel(element);
         }).toList();
         alluserServerInfo.pageNumber++;
       }

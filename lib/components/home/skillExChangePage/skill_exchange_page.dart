@@ -78,7 +78,7 @@ class SkillExchangeLoading extends StatelessWidget {
                               ),
                               const SizedBox(height: 5),
                               Container(
-                                width: ScreenSize().width,
+                                width: ScreenSize.width,
                                 height: 26,
                                 decoration: BoxDecoration(
                                   color: Colors.grey,
@@ -258,7 +258,7 @@ class SkillExChangePage extends StatelessWidget {
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.all(8),
-                                  width: ScreenSize().width,
+                                  width: ScreenSize.width,
                                   decoration: BoxDecoration(
                                     border: Border(
                                       bottom: BorderSide(width: 0.2, color: normalBgColor2),

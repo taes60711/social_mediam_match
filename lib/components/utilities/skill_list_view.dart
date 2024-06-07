@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-import '../../models/user_model.dart';
+import '../../models/skill_model.dart';
 
 class SkillListView extends StatelessWidget {
   final String? title;
   final double? fontSize;
-  //type : List<SkillInfo>場合はスキルのレベルを含む
+  //type : List<RequestUserSkillData>場合はスキルのレベルを含む
   //type : List<String>場合はスキルの名前しかない
   final List<dynamic> skillList;
   final Color? backgroundColor;
@@ -37,7 +37,7 @@ class SkillListView extends StatelessWidget {
                 ),
                 child: Builder(builder: (context) {
                   Widget tagsText;
-                  if (skillList is List<SkillInfo>) {
+                  if (skillList is List<RequestUserSkillData>) {
                     tagsText = Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

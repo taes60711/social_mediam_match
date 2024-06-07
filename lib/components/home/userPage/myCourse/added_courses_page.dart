@@ -64,7 +64,7 @@ class AddedCoursesPage extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(0),
                         color: Colors.transparent,
-                        width: ScreenSize().width,
+                        width: ScreenSize.width,
                         height: 265,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +107,7 @@ class AddedCoursesPage extends StatelessWidget {
                                   Container(
                                     margin: EdgeInsets.symmetric(vertical: 5),
                                     height: 0.3,
-                                    width: ScreenSize().width,
+                                    width: ScreenSize.width,
                                     color: hintTextColor,
                                   ),
                                   Padding(
@@ -144,7 +144,7 @@ class AddedCoursesPage extends StatelessWidget {
                             Container(
                               margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                               height: 0.3,
-                              width: ScreenSize().width,
+                              width: ScreenSize.width,
                               color: hintTextColor,
                             ),
                             Row(
@@ -194,7 +194,7 @@ class AddedCoursesPage extends StatelessWidget {
                             Container(
                               margin: EdgeInsets.symmetric(vertical: 5),
                               height: 0.3,
-                              width: ScreenSize().width,
+                              width: ScreenSize.width,
                               color: hintTextColor,
                             ),
                           ],

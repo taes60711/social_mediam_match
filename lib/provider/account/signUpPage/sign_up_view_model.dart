@@ -4,13 +4,27 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_provider.dart';
 
 import '../../../components/utilities/style/style_config.dart';
+import '../../../global.dart';
 import '../../../states/services/firebase_service.dart';
 import '../../../states/services/user_service.dart';
 
 class SignUpViewModel {
+  BuildContext context;
+  SignUpViewModel({required this.context});
+
+  void bodyPageChange() {
+    SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+    int preIndex = signUpViewProvider.pageIndex - 1;
+    if (preIndex < 0) {
+      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+    } else {
+      signUpViewProvider.onChangeSignUpPage(preIndex);
+    }
+  }
+
   ///メールチェック
-  void emailCheck(BuildContext context) {
-    SignUpViewProvider signUpViewProvider = Provider.of<SignUpViewProvider>(context, listen: false);
+  void emailCheck() {
+    SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
     bool isEmail = signUpViewProvider.signUpEmailCheck(signUpViewProvider.emailController.text);
     if (isEmail) {
       signUpViewProvider.onChangeSignUpPage(1);
@@ -19,7 +33,7 @@ class SignUpViewModel {
   }
 
   ///登録始まる
-  Future<void> signUpStart(BuildContext context) async {
+  Future<void> signUpStart() async {
     Future<void> loadingPopView() {
       return showDialog<void>(
         barrierDismissible: false,
@@ -37,7 +51,7 @@ class SignUpViewModel {
       }
     }
 
-    SignUpViewProvider signUpViewProvider = Provider.of<SignUpViewProvider>(context, listen: false);
+    SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
 
     String email = signUpViewProvider.emailController.text;
     String password = signUpViewProvider.pwdController.text;

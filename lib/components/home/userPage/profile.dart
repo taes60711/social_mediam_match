@@ -96,13 +96,13 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
 
     //パックボタン（画面を離れるよう）
     Widget backButton = Container(
-      margin: EdgeInsets.only(left: ScreenSize().width * 0.03),
-      width: ScreenSize().width,
+      margin: EdgeInsets.only(left: ScreenSize.width * 0.03),
+      width: ScreenSize.width,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            width: ScreenSize().width * 0.3,
+            width: ScreenSize.width * 0.3,
             child: Align(
               alignment: Alignment.centerLeft,
               child: GestureDetector(
@@ -122,7 +122,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
           ),
           //タイトル
           SizedBox(
-            width: ScreenSize().width * 0.34,
+            width: ScreenSize.width * 0.34,
             child: Align(
               alignment: Alignment.center,
               child: Text(ProfileString().title),
@@ -130,7 +130,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
           ),
           //更新ボタン
           SizedBox(
-            width: ScreenSize().width * 0.3,
+            width: ScreenSize.width * 0.3,
             child: Align(
               alignment: Alignment.centerRight,
               child: Material(
@@ -204,7 +204,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
               ),
               const SizedBox(height: 8),
               SizedBox(
-                width: ScreenSize().width,
+                width: ScreenSize.width,
                 child: SkillListView(
                   skillList: skillItems.map((e) => type == "have" ? e.skillHave : e.skillWant).toList(),
                 ),
@@ -241,9 +241,9 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                   children: [
                     backButton,
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: ScreenSize().safeheight * 0.025),
+                      padding: EdgeInsets.symmetric(vertical: ScreenSize.safeHeight * 0.025),
                       child: SizedBox(
-                        height: ScreenSize().safeheight * 0.15,
+                        height: ScreenSize.safeHeight * 0.15,
                         child: FittedBox(
                           child: Column(
                             children: [
@@ -254,7 +254,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                       ),
                     ),
                     SizedBox(
-                      height: ScreenSize().safeheight * 0.05,
+                      height: ScreenSize.safeHeight * 0.05,
                       child: FittedBox(
                         child: Column(
                           children: [
@@ -274,7 +274,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                       ),
                     ),
                     SizedBox(
-                      height: ScreenSize().safeheight * 0.65,
+                      height: ScreenSize.safeHeight * 0.65,
                       child: FittedBox(
                         child: Column(
                           children: [
@@ -317,13 +317,13 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                                                     child: Column(
                                                       children: [
                                                         Container(
-                                                          margin: EdgeInsets.only(left: ScreenSize().width * 0.03, top: 20),
-                                                          width: ScreenSize().width,
+                                                          margin: EdgeInsets.only(left: ScreenSize.width * 0.03, top: 20),
+                                                          width: ScreenSize.width,
                                                           child: Row(
                                                             mainAxisSize: MainAxisSize.min,
                                                             children: [
                                                               SizedBox(
-                                                                width: ScreenSize().width * 0.3,
+                                                                width: ScreenSize.width * 0.3,
                                                                 child: Align(
                                                                   alignment: Alignment.centerLeft,
                                                                   child: GestureDetector(
@@ -338,7 +338,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                                                               ),
                                                               //タイトル
                                                               SizedBox(
-                                                                width: ScreenSize().width * 0.34,
+                                                                width: ScreenSize.width * 0.34,
                                                                 child: Align(
                                                                   alignment: Alignment.center,
                                                                   child: Text(ProfileString().introductionInputTitle),
@@ -346,7 +346,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                                                               ),
                                                               //更新ボタン
                                                               SizedBox(
-                                                                width: ScreenSize().width * 0.3,
+                                                                width: ScreenSize.width * 0.3,
                                                                 child: Align(
                                                                   alignment: Alignment.centerRight,
                                                                   child: Material(
@@ -384,7 +384,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                                           });
                                     },
                                     child: Container(
-                                      width: ScreenSize().width,
+                                      width: ScreenSize.width,
                                       padding: const EdgeInsets.all(8),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),

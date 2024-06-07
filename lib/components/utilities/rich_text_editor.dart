@@ -35,7 +35,7 @@ class RichTextEditor extends StatelessWidget {
                         title: const Text('Image Link'),
                         content: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 5),
-                          width: ScreenSize().width,
+                          width: ScreenSize.width,
                           child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                             TitleInput(title: 'Imgae URL', textController: imageLinkController),
                           ]),
@@ -100,7 +100,7 @@ class RichTextEditor extends StatelessWidget {
                         title: const Text('Link'),
                         content: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 5),
-                          width: ScreenSize().width,
+                          width: ScreenSize.width,
                           child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                             TitleInput(title: 'Youtube URL', textController: linkController),
                           ]),
@@ -146,7 +146,7 @@ class RichTextEditor extends StatelessWidget {
                         title: const Text('Link'),
                         content: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 5),
-                          width: ScreenSize().width,
+                          width: ScreenSize.width,
                           child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                             TitleInput(title: 'Link Text', textController: linkTextController),
                             TitleInput(title: 'URL', textController: linkController),

@@ -31,7 +31,7 @@ class PostPageByTextFilter extends StatelessWidget {
         Expanded(
           child: Container(
             margin: const EdgeInsets.only(left: 10, right: 4, top: 2, bottom: 2),
-            width: ScreenSize().width,
+            width: ScreenSize.width,
             height: 36,
             child: TextField(
               cursorColor: normalBgColor2,

@@ -65,7 +65,7 @@ class FirendsPage extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.all(10),
-            width: ScreenSize().width,
+            width: ScreenSize.width,
             height: 36,
             child: TextField(
               cursorColor: normalBgColor2,
@@ -121,7 +121,7 @@ class FirendsPage extends StatelessWidget {
                         Expanded(
                           child: filteredList.isEmpty
                               ? SizedBox(
-                                  height: ScreenSize().height,
+                                  height: ScreenSize.height,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -170,7 +170,7 @@ class FirendsPage extends StatelessWidget {
                                                       image: otherUserData.image,
                                                     )),
                                                 SizedBox(
-                                                  width: ScreenSize().width - 100,
+                                                  width: ScreenSize.width - 100,
                                                   child: Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -218,7 +218,7 @@ class FirendsPage extends StatelessWidget {
                         Expanded(
                           child: filteredList.isEmpty
                               ? SizedBox(
-                                  height: ScreenSize().height,
+                                  height: ScreenSize.height,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -267,7 +267,7 @@ class FirendsPage extends StatelessWidget {
                                                       image: otherUserData.image,
                                                     )),
                                                 SizedBox(
-                                                  width: ScreenSize().width - 100,
+                                                  width: ScreenSize.width - 100,
                                                   child: Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [

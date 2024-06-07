@@ -67,7 +67,7 @@
 //     Widget signErrorMessage;
 //     if (signError != SignUpError().noError) {
 //       signErrorMessage = SizedBox(
-//         width: ScreenSize().width,
+//         width: ScreenSize.width,
 //         child: Align(
 //           alignment: Alignment.topLeft,
 //           child: Padding(
@@ -165,7 +165,7 @@
 //           child: Column(
 //             children: [
 //               SizedBox(
-//                 height: ScreenSize().safeheight,
+//                 height: ScreenSize.safeheight,
 //                 child: FittedBox(
 //                   alignment: Alignment.topLeft,
 //                   child: Column(
@@ -177,7 +177,7 @@
 //                 ),
 //               ),
 //               SizedBox(
-//                 height: ScreenSize().safeheight * 0.05,
+//                 height: ScreenSize.safeheight * 0.05,
 //                 child: stepView,
 //               ),
 //             ],
@@ -190,8 +190,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
+import 'package:social_mediam_match/enum/skill_type.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
+import 'package:social_mediam_match/provider/skill_provider.dart';
 import 'package:social_mediam_match/states/user_setting_provider.dart';
 
 import '../../../global.dart';
@@ -210,9 +213,13 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     print("signUP build");
 
-    return Scaffold(
-      body: BackgroundWidget(
-        isSafeArea: true,
+    return BackgroundWidget(
+      isSafeArea: true,
+      child: StatefulWrapper(
+        onInit: () async {
+          SkillProvider skillProvider = context.read<SkillProvider>();
+          await skillProvider.getSkillTypeMap();
+        },
         child: _mainBuild(),
       ),
     );
@@ -220,10 +227,10 @@ class SignUpPage extends StatelessWidget {
 }
 
 Widget _mainBuild() {
-  return Selector<SignUpViewProvider, int>(
-    selector: (context, provider) => provider.pageIndex,
-    builder: (context, pageIndex, _) {
-      SignUpViewProvider signUpViewProvider = Provider.of<SignUpViewProvider>(context, listen: false);
+  return Builder(
+    builder: (context) {
+      print("SignUpViewProvider pageIndex Change");
+      int pageIndex = context.select((SignUpViewProvider value) => value.pageIndex);
 
       List<Widget> signUpAllStepPage = [
         signUpStepOne(context),
@@ -238,18 +245,11 @@ Widget _mainBuild() {
         StepGuide().title,
       ];
 
-      print("SignUpViewProvider pageIndex Change");
-
       return Column(
         children: [
-          BasicTopBar(
+          BaseTopBar(
             backFunc: () {
-              int preIndex = signUpViewProvider.pageIndex - 1;
-              if (preIndex < 0) {
-                Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-              } else {
-                signUpViewProvider.onChangeSignUpPage(preIndex);
-              }
+              SignUpViewModel(context: context).bodyPageChange();
             },
             title: signUpStepTitle[pageIndex],
           ),
@@ -261,7 +261,7 @@ Widget _mainBuild() {
 }
 
 Widget signUpStepOne(BuildContext context) {
-  SignUpViewProvider signUpViewProvider = Provider.of<SignUpViewProvider>(context, listen: false);
+  SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
 
   String googleIconPath = 'assets/google_w_Logo.png';
   Color googleButtonColor = const Color.fromARGB(255, 93, 161, 238);
@@ -271,7 +271,7 @@ Widget signUpStepOne(BuildContext context) {
 
   //紹介文章
   final Widget introductionWidget = SizedBox(
-    width: ScreenSize().width,
+    width: ScreenSize.width,
     child: Align(
       alignment: Alignment.centerLeft,
       child: Text(
@@ -285,7 +285,7 @@ Widget signUpStepOne(BuildContext context) {
   final Widget privacy = Padding(
     padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
     child: SizedBox(
-      width: ScreenSize().width,
+      width: ScreenSize.width,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -336,7 +336,7 @@ Widget signUpStepOne(BuildContext context) {
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      width: ScreenSize().width,
+      width: ScreenSize.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -374,9 +374,9 @@ Widget signUpStepOne(BuildContext context) {
         title: FirstPage().emailInputTitle,
         textController: signUpViewProvider.emailController,
       ),
-      Selector<SignUpViewProvider, String>(
-        selector: (context, provider) => provider.signError,
-        builder: (context, signError, _) {
+      Builder(
+        builder: (context) {
+          String signError = context.select((SignUpViewProvider value) => value.signError);
           return Text(signError, style: const TextStyle(color: Colors.red));
         },
       ),
@@ -386,7 +386,7 @@ Widget signUpStepOne(BuildContext context) {
         backgroundColor: normalBgColor,
         onPressed: () {
           print("SignUpViewProvider Btn");
-          SignUpViewModel().emailCheck(context);
+          SignUpViewModel(context: context).emailCheck();
         },
       ),
       orText(),
@@ -413,8 +413,8 @@ Widget signUpStepOne(BuildContext context) {
 }
 
 Widget signUpStepTwo(BuildContext context) {
-  SignUpViewProvider signUpViewProvider = Provider.of<SignUpViewProvider>(context, listen: false);
-  UserSettingProvider userSettingProvider = Provider.of<UserSettingProvider>(context, listen: false);
+  SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+  UserSettingProvider userSettingProvider = context.read<UserSettingProvider>();
 
   return Column(
     children: [
@@ -434,7 +434,7 @@ Widget signUpStepTwo(BuildContext context) {
           titleColor: normalTextColor,
           backgroundColor: normalBgColor,
           onPress: () async {
-            await SignUpViewModel().signUpStart(context);
+            await SignUpViewModel(context: context).signUpStart();
           },
         ),
       ),
@@ -443,8 +443,9 @@ Widget signUpStepTwo(BuildContext context) {
 }
 
 Widget signUpStepThird(BuildContext context) {
-  SignUpViewProvider signUpViewProvider = Provider.of<SignUpViewProvider>(context, listen: false);
-  UserSettingProvider userSettingProvider = Provider.of<UserSettingProvider>(context, listen: false);
+  SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+  UserSettingProvider userSettingProvider = context.read<UserSettingProvider>();
+  SkillProvider skillProvider = context.read<SkillProvider>();
   return Column(
     children: [
       TitleInput(
@@ -455,6 +456,17 @@ Widget signUpStepThird(BuildContext context) {
         title: StepTwoPage().introInputTitle,
         textController: userSettingProvider.introductionInput,
         isMulti: true,
+      ),
+      Builder(
+        builder: (context) {
+          return Column(
+            children: skillProvider.skillMap[SkillType.frontend]!
+                .map(
+                  (e) => Text(e),
+                )
+                .toList(),
+          );
+        },
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

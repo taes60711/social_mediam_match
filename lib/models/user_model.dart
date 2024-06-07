@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:social_mediam_match/models/skill_model.dart';
+
 class UserModel {
   String uid;
   String? image;
@@ -7,8 +9,8 @@ class UserModel {
   String? name;
   String? job;
   String? introduction;
-  List<SkillInfo>? mainSkills;
-  List<SkillInfo>? wantSkills;
+  List<RequestUserSkillData>? mainSkills;
+  List<RequestUserSkillData>? wantSkills;
   UserModel({
     required this.uid,
     this.image,
@@ -35,8 +37,8 @@ class LoginUser extends UserModel {
     String? job,
     String? introduction,
     required this.lastLogin,
-    List<SkillInfo>? mainSkills,
-    List<SkillInfo>? wantSkills,
+    List<RequestUserSkillData>? mainSkills,
+    List<RequestUserSkillData>? wantSkills,
     required this.email,
     required this.isEmailVerified,
     required this.status,
@@ -51,12 +53,13 @@ class LoginUser extends UserModel {
           wantSkills: wantSkills,
         );
 
-  factory LoginUser.jsonToModel(dynamic json) {
+  factory LoginUser.toModel(Map<String, dynamic> json) {
     //Map<String, dynamic> or dynamic
-    List<SkillInfo> mainSkills =
-        (json["skills"] as List<dynamic>).map((e) => SkillInfo(name: e['name'], level: e['level'], month: e['month'])).toList();
-    List<SkillInfo> wantSkills = (json["wantSkills"] as List<dynamic>)
-        .map((e) => SkillInfo(name: e['name'], level: e['level'], month: e['month']))
+    List<RequestUserSkillData> mainSkills = (json["skills"] as List<dynamic>)
+        .map((e) => RequestUserSkillData(name: e['name'], level: e['level'], month: e['month']))
+        .toList();
+    List<RequestUserSkillData> wantSkills = (json["wantSkills"] as List<dynamic>)
+        .map((e) => RequestUserSkillData(name: e['name'], level: e['level'], month: e['month']))
         .toList();
 
     String formattedTime = "";
@@ -123,8 +126,8 @@ class UpdateUser extends UserModel {
     String? name,
     String? job,
     String? introduction,
-    List<SkillInfo>? mainSkills,
-    List<SkillInfo>? wantSkills,
+    List<RequestUserSkillData>? mainSkills,
+    List<RequestUserSkillData>? wantSkills,
     this.isEmailVerified,
     this.password,
   }) : super(
@@ -147,32 +150,8 @@ class UpdateUser extends UserModel {
       'name': name,
       'job': job,
       'introduction': introduction,
-      'skills': mainSkills!.map((e) => e.toJson()).toList(),
-      'wantSkills': wantSkills!.map((e) => e.toJson()).toList(),
-    };
-  }
-}
-
-class SkillInfo {
-  String name;
-  int level;
-  int month;
-
-  SkillInfo({required this.name, required this.level, required this.month});
-
-  factory SkillInfo.fromMap(Map<String, dynamic> json) {
-    return SkillInfo(
-      name: json["name"],
-      level: json["level"],
-      month: json["month"],
-    );
-  }
-
-  Map toJson() {
-    return {
-      'name': name,
-      'level': level,
-      'month': month,
+      'skills': mainSkills!.map((e) => e.toMap()).toList(),
+      'wantSkills': wantSkills!.map((e) => e.toMap()).toList(),
     };
   }
 }

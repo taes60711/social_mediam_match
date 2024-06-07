@@ -40,7 +40,7 @@
 
 //   ///紹介文章
 //   final Widget introductionWidget = SizedBox(
-//     width: ScreenSize().width,
+//     width: ScreenSize.width,
 //     child: Align(
 //       alignment: Alignment.centerLeft,
 //       child: Text(
@@ -54,7 +54,7 @@
 //   final Widget privacy = Padding(
 //     padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
 //     child: SizedBox(
-//       width: ScreenSize().width,
+//       width: ScreenSize.width,
 //       child: Row(
 //         crossAxisAlignment: CrossAxisAlignment.start,
 //         children: [
@@ -105,7 +105,7 @@
 
 //     return Container(
 //       padding: const EdgeInsets.symmetric(vertical: 10),
-//       width: ScreenSize().width,
+//       width: ScreenSize.width,
 //       child: Row(
 //         mainAxisAlignment: MainAxisAlignment.center,
 //         children: [
