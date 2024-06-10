@@ -28,7 +28,7 @@ class SignUpStepOne extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          FirstPage().introduction,
+          StepOnePage.introduction,
           style: TextStyle(color: hintTextColor, fontSize: 14),
         ),
       ),
@@ -43,7 +43,7 @@ class SignUpStepOne extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              FirstPage().hintText,
+              StepOnePage.hintText,
               style: TextStyle(color: hintTextColor, fontSize: 14),
             ),
             GestureDetector(
@@ -51,12 +51,12 @@ class SignUpStepOne extends StatelessWidget {
                 print("使用者條款");
               },
               child: Text(
-                FirstPage().termText,
+                StepOnePage.termText,
                 style: TextStyle(color: normalBgColor, fontSize: 14),
               ),
             ),
             Text(
-              FirstPage().andText,
+              StepOnePage.andText,
               style: TextStyle(color: hintTextColor, fontSize: 14),
             ),
             GestureDetector(
@@ -64,7 +64,7 @@ class SignUpStepOne extends StatelessWidget {
                 print("隱私權政策");
               },
               child: Text(
-                FirstPage().privacyText,
+                StepOnePage.privacyText,
                 style: TextStyle(color: normalBgColor, fontSize: 14),
               ),
             ),
@@ -94,7 +94,7 @@ class SignUpStepOne extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             line(padding: const EdgeInsets.only(left: 20, right: 10)),
-            Text(FirstPage().orText),
+            Text(StepOnePage.orText),
             line(padding: const EdgeInsets.only(left: 10, right: 20)),
           ],
         ),
@@ -123,7 +123,7 @@ class SignUpStepOne extends StatelessWidget {
         introductionWidget,
         privacy,
         TitleInput(
-          title: FirstPage().emailInputTitle,
+          title: StepOnePage.emailInputTitle,
           textController: signUpViewProvider.emailController,
         ),
         Builder(
@@ -133,7 +133,7 @@ class SignUpStepOne extends StatelessWidget {
           },
         ),
         button(
-          title: FirstPage().emailButtonText,
+          title: StepOnePage.emailButtonText,
           titleColor: normalTextColor,
           backgroundColor: normalBgColor,
           onPressed: () {
@@ -143,7 +143,7 @@ class SignUpStepOne extends StatelessWidget {
         ),
         orText(),
         button(
-            title: FirstPage().googleButtonText,
+            title: StepOnePage.googleButtonText,
             titleColor: normalTextColor,
             backgroundColor: googleButtonColor,
             iconImg: googleIconPath,
@@ -153,7 +153,7 @@ class SignUpStepOne extends StatelessWidget {
         const SizedBox(height: 10),
         //ツイッター登録ボタン
         button(
-            title: FirstPage().twitterButtonText,
+            title: StepOnePage.twitterButtonText,
             titleColor: normalTextColor,
             backgroundColor: twitterButtonColor,
             iconImg: twitterIconPath,

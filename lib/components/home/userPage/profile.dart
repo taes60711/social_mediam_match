@@ -173,7 +173,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
     //スキルタイトルボタン、押したらスキル選択ページに遷移する
     skillTitle({required String type}) {
       List<SkillModel> skillItems = type == "have" ? allSkillItems : allWantSkillItems;
-      String title = type == "have" ? StepTwoPage().haveSkillText : StepTwoPage().wantSkillText;
+      String title = type == "have" ? StepThirdPage.haveSkillText : StepThirdPage.wantSkillText;
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
         child: GestureDetector(
@@ -285,7 +285,7 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                             Builder(
                               builder: (context) {
                                 return MultiTitleInput(
-                                  title: StepTwoPage().introInputTitle,
+                                  title: StepThirdPage.introInputTitle,
                                   textController: userSettingProvider.introductionInput,
                                   displayText: userSettingProvider.introductionInput.text,
                                   multiOnChange: (newValue) {

@@ -23,10 +23,10 @@ class FirebaseSerivce {
       print("SignUp error ${e.code}");
       switch (e.code) {
         case "invalid-email":
-          signUpResult = SignUpError().emailFormatError;
+          signUpResult = SignUpError.emailFormatError;
           break;
         case "weak-password":
-          signUpResult = SignUpError().pwdWeakError;
+          signUpResult = SignUpError.pwdWeakError;
           break;
         case "signup-error":
           signUpResult = "signup-error";

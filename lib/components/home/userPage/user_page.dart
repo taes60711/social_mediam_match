@@ -313,7 +313,7 @@ class UserPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     //持っているスキル
-                    Text(StepTwoPage().haveSkillText),
+                    Text(StepThirdPage.haveSkillText),
                     Container(
                       margin: const EdgeInsets.only(top: 10, bottom: 10),
                       width: ScreenSize.width,
@@ -323,7 +323,7 @@ class UserPage extends StatelessWidget {
                       ),
                     ),
                     //勉強したいスキル
-                    Text(StepTwoPage().wantSkillText),
+                    Text(StepThirdPage.wantSkillText),
                     Container(
                       margin: const EdgeInsets.only(top: 10, bottom: 30),
                       width: ScreenSize.width,

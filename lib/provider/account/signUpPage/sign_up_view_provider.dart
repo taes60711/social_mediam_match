@@ -18,13 +18,15 @@ class SignUpViewProvider extends ChangeNotifier {
   int pageIndex = 0;
 
   ///サインアップのエラーメッセージ
-  String signError = SignUpError().noError;
+  String signError = SignUpError.noError;
 
   ///登録成功したらUIDもらってユーザ資料更新為に
   String signedUID = "";
 
+  ///EndDrawerのステータス（スキルページ開くよう）
   SignUpEndDrawerType endDrawerOpenInfo = SignUpEndDrawerType.close;
 
+  ///スキルページ開くとステータス交換
   void changeEndDrawerStatus(SignUpEndDrawerType status) {
     endDrawerOpenInfo = status;
     notifyListeners();
@@ -41,7 +43,7 @@ class SignUpViewProvider extends ChangeNotifier {
   bool signUpEmailCheck(String email) {
     bool isEmail = true;
     if (!email.contains("@")) {
-      signError = SignUpError().emailFormatError;
+      signError = SignUpError.emailFormatError;
       notifyListeners();
       isEmail = false;
     }
@@ -61,7 +63,7 @@ class SignUpViewProvider extends ChangeNotifier {
 
   ///サインアップのエラーメッセージクリア
   void signUpErrorReset() {
-    signError = SignUpError().noError;
+    signError = SignUpError.noError;
     notifyListeners();
   }
 }

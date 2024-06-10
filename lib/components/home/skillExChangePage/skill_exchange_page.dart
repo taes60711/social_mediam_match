@@ -312,13 +312,13 @@ class SkillExChangePage extends StatelessWidget {
                                                     style: TextStyle(fontSize: normalTextSize, color: normalBgColor2))
                                                 : Container(),
                                             //スキルタイトル
-                                            Text(StepTwoPage().haveSkillText, style: TextStyle(fontSize: normalTextSize)),
+                                            Text(StepThirdPage.haveSkillText, style: TextStyle(fontSize: normalTextSize)),
                                             SkillListView(
                                               fontSize: skillTextSize,
                                               skillList: allUserData[index].mainSkills ?? [],
                                             ),
                                             //スキルタイトル
-                                            Text(StepTwoPage().wantSkillText, style: TextStyle(fontSize: normalTextSize)),
+                                            Text(StepThirdPage.wantSkillText, style: TextStyle(fontSize: normalTextSize)),
                                             SkillListView(
                                               fontSize: skillTextSize,
                                               skillList: allUserData[index].wantSkills ?? [],

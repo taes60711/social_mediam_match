@@ -21,17 +21,17 @@ class SignUpStepTwo extends StatelessWidget {
       children: [
         TitleInput(
           isRequired: true,
-          title: StepOnePage().pwdInputTitle,
+          title: StepTwoPage.pwdInputTitle,
           textController: signUpViewProvider.pwdController,
         ),
         TitleInput(
-          title: StepOnePage().nameInputTitle,
+          title: StepTwoPage.nameInputTitle,
           textController: userSettingProvider.nameInput,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: CustomButton(
-            title: StepOnePage().signUpButtonText,
+            title: StepTwoPage.signUpButtonText,
             titleColor: normalTextColor,
             backgroundColor: normalBgColor,
             onPress: () async => await SignUpViewModel(context: context).signUpStart(),
