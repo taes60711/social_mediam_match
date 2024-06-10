@@ -12,10 +12,11 @@ class SignUpViewModel {
   BuildContext context;
   SignUpViewModel({required this.context});
 
-  void bodyPageChange() {
+  ///ページ遷移の関数
+  void backButtonFUnc() {
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
     int preIndex = signUpViewProvider.pageIndex - 1;
-    if (preIndex < 0) {
+    if (preIndex < 0 || preIndex >= 1) {
       Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
     } else {
       signUpViewProvider.onChangeSignUpPage(preIndex);

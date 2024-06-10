@@ -23,9 +23,14 @@ class UserSettingProvider extends ChangeNotifier {
   TextEditingController nameInput = TextEditingController();
   TextEditingController jobInput = TextEditingController();
   TextEditingController introductionInput = TextEditingController();
-  String introductionText = "";
+
   final GlobalKey<ScaffoldState> key = GlobalKey();
   String type = "";
+
+  void inputOnChange(String value) {
+    introductionInput.text = value;
+    notifyListeners();
+  }
 
   userDataInsertToViewValue(LoginUser userData) async {
     Future.delayed(Duration.zero).then((value) {
@@ -33,7 +38,7 @@ class UserSettingProvider extends ChangeNotifier {
       nameInput.text = userData.name ?? "";
       jobInput.text = userData.job ?? "";
       introductionInput.text = userData.introduction ?? "";
-      introductionText = userData.introduction ?? "";
+
       notifyListeners();
     });
   }
@@ -106,12 +111,6 @@ class UserSettingProvider extends ChangeNotifier {
       base64Img = base64String;
       notifyListeners();
     }
-  }
-
-  void introductionInputChange(String text) {
-    introductionInput.text = text;
-    introductionText = text;
-    notifyListeners();
   }
 
   //SQLにアップ前にデータ加工する

@@ -1,163 +1,40 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/strings/account/sign_up_strings.dart';
-import 'package:social_mediam_match/states/user_setting_provider.dart';
-import '../../../models/skill_model.dart';
 
-import '../../../models/user_model.dart';
+import '../../../provider/account/signUpPage/sign_up_view_model.dart';
 import '../../../provider/account/signUpPage/sign_up_view_provider.dart';
-import '../../../states/user_state.dart';
-import '../../utilities/title_input.dart';
+import '../../../provider/home/user_setting_view_provider.dart';
+import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/custom_button.dart';
-import '../../utilities/skill_list_view.dart';
-import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
+import '../../utilities/title_input.dart';
 
 class SignUpStepTwo extends StatelessWidget {
-  final UserProvider userFuture;
-  final String signUpedUserUID;
-  final UserSettingProvider userSettingProvider;
-  final List<SkillModel> allSkillItems;
-  final List<SkillModel> allWantSkillItems;
-  final TextEditingController nameController;
-  final TextEditingController jobController;
-  final TextEditingController introductionController;
-
-  const SignUpStepTwo({
-    super.key,
-    required this.userFuture,
-    required this.signUpedUserUID,
-    required this.userSettingProvider,
-    required this.allSkillItems,
-    required this.allWantSkillItems,
-    required this.nameController,
-    required this.jobController,
-    required this.introductionController,
-  });
+  const SignUpStepTwo({super.key});
 
   @override
   Widget build(BuildContext context) {
-    //スキルタイトルボタン、押したらスキル選択ページに遷移する
-    skillTitle({required String type}) {
-      List<SkillModel> skillItems = type == "have" ? allSkillItems : allWantSkillItems;
-      String title = type == "have" ? StepTwoPage().haveSkillText : StepTwoPage().wantSkillText;
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-        child: GestureDetector(
-          onTap: () {
-            print(type);
-            userSettingProvider.openSkillselectPage(type);
-          },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(title),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 12,
-                    ),
-                  ),
-                  Text(
-                    "(${skillItems.length} / 5)",
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: ScreenSize.width,
-                child: SkillListView(
-                  skillList: skillItems.map((e) => type == "have" ? e.skillHave : e.skillWant).toList(),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    Future<void> loadingPopView() {
-      return showDialog<void>(
-        barrierDismissible: false,
-        barrierColor: barrierColor,
-        context: context,
-        builder: (BuildContext context) {
-          return LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35);
-        },
-      );
-    }
-
-    void closePop() {
-      if (!ModalRoute.of(context)!.isCurrent) {
-        Navigator.of(context).pop();
-      }
-    }
+    SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+    UserSettingViewProvider userSettingProvider = context.read<UserSettingViewProvider>();
 
     return Column(
       children: [
-        Text(StepTwoPage().title),
-        const SizedBox(height: 10),
         TitleInput(
-          title: StepTwoPage().jobInputTitle,
-          textController: jobController,
+          isRequired: true,
+          title: StepOnePage().pwdInputTitle,
+          textController: signUpViewProvider.pwdController,
         ),
         TitleInput(
-          title: StepTwoPage().introInputTitle,
-          textController: introductionController,
-          isMulti: true,
+          title: StepOnePage().nameInputTitle,
+          textController: userSettingProvider.nameInput,
         ),
-        const SizedBox(height: 15),
-        skillTitle(type: "have"),
-        const SizedBox(height: 10),
-        skillTitle(type: "want"),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: CustomButton(
-            title: StepTwoPage().sendButtonText,
+            title: StepOnePage().signUpButtonText,
             titleColor: normalTextColor,
             backgroundColor: normalBgColor,
-            onPress: () async {
-              loadingPopView();
-              print(
-                  "nameController : ${nameController.text} jobController : ${jobController.text} introductionController : ${introductionController.text}");
-              inspect(allSkillItems);
-              inspect(allWantSkillItems);
-
-              List<RequestUserSkillData> gethaveSkill = [];
-              List<RequestUserSkillData> getWantSkill = [];
-              for (var element in allSkillItems) {
-                gethaveSkill.add(element.skillHave);
-              }
-              for (var element in allWantSkillItems) {
-                getWantSkill.add(element.skillWant);
-              }
-              inspect(gethaveSkill);
-              inspect(getWantSkill);
-
-              UpdateUser updateUserData = UpdateUser.update(
-                uid: signUpedUserUID,
-                image: "",
-                name: nameController.text,
-                job: jobController.text,
-                introduction: introductionController.text,
-                mainSkills: gethaveSkill,
-                wantSkills: getWantSkill,
-              );
-              bool isSucess = await userFuture.updateProfile(signUpedUserUID, updateUserData);
-
-              await Future.delayed(const Duration(seconds: 1)).then((value) => closePop());
-              if (isSucess) {
-                Provider.of<SignUpViewProvider>(context, listen: false)..onChangeSignUpPage(3);
-              }
-            },
+            onPress: () async => await SignUpViewModel(context: context).signUpStart(),
           ),
         ),
       ],

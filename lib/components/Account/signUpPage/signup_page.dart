@@ -1,210 +1,21 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print, avoid_function_literals_in_foreach_calls
-
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import 'package:social_mediam_match/components/account/signUpPage/signUP_step_one.dart';
-// import 'package:social_mediam_match/components/account/signUpPage/signup_first_page.dart';
-// import 'package:social_mediam_match/components/account/signUpPage/signup_guide.dart';
-// import 'package:social_mediam_match/components/account/signUpPage/signup_step_two.dart';
-// import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
-// import 'package:social_mediam_match/components/utilities/background_widget.dart';
-// import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-// import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-// import 'package:social_mediam_match/global.dart';
-// import 'package:social_mediam_match/states/user_state.dart';
-
-// import '../../../models/skill_model.dart';
-// import '../../../provider/account/signUpPage/sign_up_view_provider.dart';
-// import '../../../states/user_setting_state.dart';
-// import '../../home/userPage/skill_choice.dart';
-// import '../../strings/account/sign_up_strings.dart';
-
-// class SignUpPage extends StatelessWidget {
-//   const SignUpPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     UserProvider userFuture = context.read<UserProvider>();
-//     String signError = context.select((UserProvider value) => value.signError);
-//     int signUpIndex = context.select((UserProvider value) => value.signUpIndex);
-//     String signUpedUserUID = context.select((UserProvider value) => value.signUpedUserUID);
-//     TextEditingController emailController = context.select((UserProvider value) => value.emailController);
-//     TextEditingController pwdController = context.select((UserProvider value) => value.pwdController);
-
-//     TextEditingController nameController = context.select((UserSettingProvider value) => value.nameInput);
-//     TextEditingController jobController = context.select((UserSettingProvider value) => value.jobInput);
-//     TextEditingController introductionController = context.select((UserSettingProvider value) => value.introductionInput);
-
-//     UserSettingProvider UserSettingProvider = context.read<UserSettingProvider>();
-//     GlobalKey<ScaffoldState> key = context.select((UserSettingProvider value) => value.key);
-//     String type = context.select((UserSettingProvider value) => value.type);
-//     //先暫時沒整理
-//     List<SkillModel> forntSkillItems = context.watch<UserSettingProvider>().forntSkillList;
-//     List<SkillModel> backEndSkillItems = context.watch<UserSettingProvider>().backEndSkillList;
-//     List<SkillModel> iotSkillItems = context.watch<UserSettingProvider>().iotSkillList;
-//     List<SkillModel> otherSkillItems = context.watch<UserSettingProvider>().otherSkillList;
-
-//     List<SkillModel> allSkillItems = [];
-//     List<SkillModel> allWantSkillItems = [];
-//     forntSkillItems.forEach((element) {
-//       if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
-//       if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
-//     });
-//     backEndSkillItems.forEach((element) {
-//       if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
-//       if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
-//     });
-//     iotSkillItems.forEach((element) {
-//       if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
-//       if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
-//     });
-//     otherSkillItems.forEach((element) {
-//       if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
-//       if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
-//     });
-//     //
-
-//     Widget signErrorMessage;
-//     if (signError != SignUpError().noError) {
-//       signErrorMessage = SizedBox(
-//         width: ScreenSize.width,
-//         child: Align(
-//           alignment: Alignment.topLeft,
-//           child: Padding(
-//             padding: const EdgeInsets.only(left: 8.0),
-//             child: Text(
-//               signError,
-//               style: const TextStyle(color: Colors.red),
-//             ),
-//           ),
-//         ),
-//       );
-//     } else {
-//       signErrorMessage = Container();
-//     }
-
-//     Widget signUpTwicePage = SignUpStepOne(
-//       emailController: emailController,
-//       nameController: nameController,
-//       pwdController: pwdController,
-//       signErrorMessage: signErrorMessage,
-//       userFuture: userFuture,
-//     );
-
-//     Widget signUpThirdPage = SignUpStepTwo(
-//       userFuture: userFuture,
-//       signUpedUserUID: signUpedUserUID,
-//       allSkillItems: allSkillItems,
-//       allWantSkillItems: allWantSkillItems,
-//       UserSettingProvider: UserSettingProvider,
-//       nameController: nameController,
-//       jobController: jobController,
-//       introductionController: introductionController,
-//     );
-
-//     Widget guidePage = SignUpGuide(returnHomePage: returnHomePage);
-
-//     List<Widget> signUpPageList = [signUpFirstPage, signUpTwicePage, signUpThirdPage, guidePage];
-//     List<String> signStepList = ["step1", "step2", "step3"];
-
-//     _stepView(List<String> signStepList) {
-//       circle(Color bgColor) {
-//         return Container(
-//           margin: const EdgeInsets.all(5),
-//           width: 10,
-//           height: 10,
-//           decoration: BoxDecoration(
-//             color: bgColor,
-//             borderRadius: BorderRadius.circular(15.0),
-//           ),
-//         );
-//       }
-
-//       return Row(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: signStepList.map((e) {
-//           bool inPage = signStepList.indexOf(e) == signUpIndex - 1;
-//           return inPage ? circle(normalBgColor) : circle(const Color.fromARGB(255, 192, 191, 191));
-//         }).toList(),
-//       );
-//     }
-
-//     Widget stepView;
-//     if (signUpIndex != 0) {
-//       stepView = _stepView(signStepList);
-//     } else {
-//       stepView = Container();
-//     }
-
-//     print("object");
-//     return StatefulWrapper(
-//       onInit: () {
-//         print("getSkillListData");
-
-//         resetAllInfo() {
-//           userFuture.onChangeSignUpPage(0);
-//           UserSettingProvider.getSkillListData();
-//         }
-
-//         resetAllInfo();
-//       },
-//       child: Scaffold(
-//         key: key,
-//         resizeToAvoidBottomInset: false,
-//         endDrawer: SkillChoice(
-//           UserSettingProvider: UserSettingProvider,
-//           forntSkillItems: forntSkillItems,
-//           backEndSkillItems: backEndSkillItems,
-//           iotSkillItems: iotSkillItems,
-//           otherSkillItems: otherSkillItems,
-//           allSkillItems: allSkillItems,
-//           allWantSkillItems: allWantSkillItems,
-//           type: type,
-//         ),
-//         body: BackgroundWidget(
-//           child: Column(
-//             children: [
-//               SizedBox(
-//                 height: ScreenSize.safeheight,
-//                 child: FittedBox(
-//                   alignment: Alignment.topLeft,
-//                   child: Column(
-//                     children: [
-//                       backButton,
-//                       signUpPageList[signUpIndex],
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               SizedBox(
-//                 height: ScreenSize.safeheight * 0.05,
-//                 child: stepView,
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/account/signUpPage/signup_step_two.dart';
+import 'package:social_mediam_match/components/utilities/custom_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
 import 'package:social_mediam_match/enum/skill_type.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
-import 'package:social_mediam_match/provider/skill_provider.dart';
-import 'package:social_mediam_match/states/user_setting_provider.dart';
 
-import '../../../global.dart';
 import '../../../provider/account/signUpPage/sign_up_view_provider.dart';
+import '../../../provider/home/user_setting_view_provider.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/basic_top_bar.dart';
 import '../../utilities/custom_button.dart';
-import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
+import 'signup_guide.dart';
+import 'signup_step_one.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -213,15 +24,86 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     print("signUP build");
 
-    return BackgroundWidget(
-      isSafeArea: true,
-      child: StatefulWrapper(
-        onInit: () async {
-          SkillProvider skillProvider = context.read<SkillProvider>();
-          await skillProvider.getSkillTypeMap();
-        },
-        child: _mainBuild(),
-      ),
+    return Stack(
+      children: [
+        BackgroundWidget(
+          isSafeArea: true,
+          child: StatefulWrapper(
+            onInit: () async {
+              SkillMapProvider skillProvider = context.read<SkillMapProvider>();
+              await skillProvider.userSkillList();
+            },
+            child: _mainBuild(),
+          ),
+        ),
+        Builder(builder: (context) {
+          print("customEndDrawer");
+          SignUpEndDrawerType endDrawer = context.select((SignUpViewProvider value) => value.endDrawerOpenInfo);
+          SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+
+          Widget endDrawerWidget = Container();
+          if (endDrawer == SignUpEndDrawerType.haveSkill) {
+            endDrawerWidget = CustomEndDrawer(
+              child: Dismissible(
+                direction: DismissDirection.startToEnd,
+                resizeDuration: const Duration(milliseconds: 1),
+                onDismissed: (_) => signUpViewProvider.changeEndDrawerStatus(SignUpEndDrawerType.close),
+                key: const Key('key'),
+                child: Consumer<SkillMapProvider>(builder: (context, skillMapProvider, _) {
+                  return Scaffold(
+                    body: Column(
+                      children: skillMapProvider.skillMap[SkillType.frontend]!
+                          .map(
+                            (e) => Row(
+                              children: [
+                                Expanded(child: Text(e.skillHave.name)),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      skillMapProvider.skillLevelChange(e);
+                                    },
+                                    child: Text("${e.skillHave.level}"))
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  );
+                }),
+              ),
+            );
+          } else if (endDrawer == SignUpEndDrawerType.wantSkill) {
+            endDrawerWidget = CustomEndDrawer(
+              child: Dismissible(
+                direction: DismissDirection.startToEnd,
+                resizeDuration: const Duration(milliseconds: 1),
+                onDismissed: (_) => signUpViewProvider.changeEndDrawerStatus(SignUpEndDrawerType.close),
+                key: const Key('key'),
+                child: Consumer<SkillMapProvider>(builder: (context, skillMapProvider, _) {
+                  return Scaffold(
+                    body: Column(
+                      children: skillMapProvider.skillMap[SkillType.frontend]!
+                          .map(
+                            (e) => Row(
+                              children: [
+                                Expanded(child: Text(e.skillWant.name)),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      skillMapProvider.skillLevelChange(e);
+                                    },
+                                    child: Text("${e.skillWant.level}"))
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  );
+                }),
+              ),
+            );
+          }
+          return endDrawerWidget;
+        }),
+      ],
     );
   }
 }
@@ -233,10 +115,10 @@ Widget _mainBuild() {
       int pageIndex = context.select((SignUpViewProvider value) => value.pageIndex);
 
       List<Widget> signUpAllStepPage = [
-        signUpStepOne(context),
-        signUpStepTwo(context),
+        const SignUpStepOne(),
+        const SignUpStepTwo(),
         signUpStepThird(context),
-        signUpStepGuide(context),
+        const SignUpGuide(),
       ];
       List<String> signUpStepTitle = [
         FirstPage().title,
@@ -248,9 +130,7 @@ Widget _mainBuild() {
       return Column(
         children: [
           BaseTopBar(
-            backFunc: () {
-              SignUpViewModel(context: context).bodyPageChange();
-            },
+            backFunc: () => SignUpViewModel(context: context).backButtonFUnc(),
             title: signUpStepTitle[pageIndex],
           ),
           signUpAllStepPage[pageIndex],
@@ -260,213 +140,64 @@ Widget _mainBuild() {
   );
 }
 
-Widget signUpStepOne(BuildContext context) {
-  SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
-
-  String googleIconPath = 'assets/google_w_Logo.png';
-  Color googleButtonColor = const Color.fromARGB(255, 93, 161, 238);
-
-  String twitterIconPath = 'assets/twitter_w_Logo.png';
-  Color twitterButtonColor = const Color.fromARGB(255, 41, 41, 41);
-
-  //紹介文章
-  final Widget introductionWidget = SizedBox(
-    width: ScreenSize.width,
-    child: Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        FirstPage().introduction,
-        style: TextStyle(color: hintTextColor, fontSize: 14),
-      ),
-    ),
-  );
-
-  //プライバシー
-  final Widget privacy = Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
-    child: SizedBox(
-      width: ScreenSize.width,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            FirstPage().hintText,
-            style: TextStyle(color: hintTextColor, fontSize: 14),
-          ),
-          GestureDetector(
-            onTap: () {
-              print("使用者條款");
-            },
-            child: Text(
-              FirstPage().termText,
-              style: TextStyle(color: normalBgColor, fontSize: 14),
-            ),
-          ),
-          Text(
-            FirstPage().andText,
-            style: TextStyle(color: hintTextColor, fontSize: 14),
-          ),
-          GestureDetector(
-            onTap: () {
-              print("隱私權政策");
-            },
-            child: Text(
-              FirstPage().privacyText,
-              style: TextStyle(color: normalBgColor, fontSize: 14),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-
-  //or テキスト
-  orText() {
-    line({required EdgeInsetsGeometry padding}) {
-      return Expanded(
-        child: Padding(
-          padding: padding,
-          child: Container(
-            height: 1,
-            color: Colors.black45,
-          ),
-        ),
-      );
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      width: ScreenSize.width,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          line(padding: const EdgeInsets.only(left: 20, right: 10)),
-          Text(FirstPage().orText),
-          line(padding: const EdgeInsets.only(left: 10, right: 20)),
-        ],
-      ),
-    );
-  }
-
-  //ボタン
-  //param:
-  //title: ボタン内の文字、　titleColor:　ボタン内の文字の色
-  //backgroundColor: ボタンの色、　onPressed: ボタンの機能関数
-  _button({required title, required titleColor, required backgroundColor, required onPressed, String? iconImg}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: CustomButton(
-        title: title,
-        titleColor: titleColor,
-        iconImg: iconImg,
-        backgroundColor: backgroundColor,
-        onPress: onPressed,
-      ),
-    );
-  }
-
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      introductionWidget,
-      privacy,
-      TitleInput(
-        title: FirstPage().emailInputTitle,
-        textController: signUpViewProvider.emailController,
-      ),
-      Builder(
-        builder: (context) {
-          String signError = context.select((SignUpViewProvider value) => value.signError);
-          return Text(signError, style: const TextStyle(color: Colors.red));
-        },
-      ),
-      _button(
-        title: FirstPage().emailButtonText,
-        titleColor: normalTextColor,
-        backgroundColor: normalBgColor,
-        onPressed: () {
-          print("SignUpViewProvider Btn");
-          SignUpViewModel(context: context).emailCheck();
-        },
-      ),
-      orText(),
-      _button(
-          title: FirstPage().googleButtonText,
-          titleColor: normalTextColor,
-          backgroundColor: googleButtonColor,
-          iconImg: googleIconPath,
-          onPressed: () {
-            print("Google 登入");
-          }),
-      const SizedBox(height: 10),
-      //ツイッター登録ボタン
-      _button(
-          title: FirstPage().twitterButtonText,
-          titleColor: normalTextColor,
-          backgroundColor: twitterButtonColor,
-          iconImg: twitterIconPath,
-          onPressed: () {
-            print("Twitter 登入");
-          }),
-    ],
-  );
-}
-
-Widget signUpStepTwo(BuildContext context) {
-  SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
-  UserSettingProvider userSettingProvider = context.read<UserSettingProvider>();
-
-  return Column(
-    children: [
-      TitleInput(
-        isRequired: true,
-        title: StepOnePage().pwdInputTitle,
-        textController: signUpViewProvider.pwdController,
-      ),
-      TitleInput(
-        title: StepOnePage().nameInputTitle,
-        textController: userSettingProvider.nameInput,
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: CustomButton(
-          title: StepOnePage().signUpButtonText,
-          titleColor: normalTextColor,
-          backgroundColor: normalBgColor,
-          onPress: () async {
-            await SignUpViewModel(context: context).signUpStart();
-          },
-        ),
-      ),
-    ],
-  );
-}
-
 Widget signUpStepThird(BuildContext context) {
   SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
-  UserSettingProvider userSettingProvider = context.read<UserSettingProvider>();
-  SkillProvider skillProvider = context.read<SkillProvider>();
+  UserSettingViewProvider userSettingProvider = context.read<UserSettingViewProvider>();
+  print("signUpStepThird");
+
   return Column(
     children: [
       TitleInput(
         title: StepTwoPage().jobInputTitle,
         textController: userSettingProvider.jobInput,
       ),
-      TitleInput(
-        title: StepTwoPage().introInputTitle,
-        textController: userSettingProvider.introductionInput,
-        isMulti: true,
-      ),
       Builder(
         builder: (context) {
-          return Column(
-            children: skillProvider.skillMap[SkillType.frontend]!
-                .map(
-                  (e) => Text(e),
-                )
-                .toList(),
+          print("signUpStepThird introductInput");
+          String displayText = context.select((UserSettingViewProvider value) => value.introductionInput.text);
+          return MultiTitleInput(
+            title: StepTwoPage().introInputTitle,
+            textController: userSettingProvider.introductionInput,
+            displayText: displayText,
+            multiOnChange: (value) => userSettingProvider.inputOnChange(value),
           );
         },
+      ),
+      GestureDetector(
+        onTap: () {
+          SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+          signUpViewProvider.changeEndDrawerStatus(SignUpEndDrawerType.haveSkill);
+        },
+        child: const Row(
+          children: [
+            Text("能教的技能"),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: Icon(
+                Icons.arrow_forward_ios,
+                size: 12,
+              ),
+            ),
+          ],
+        ),
+      ),
+      GestureDetector(
+        onTap: () {
+          SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+          signUpViewProvider.changeEndDrawerStatus(SignUpEndDrawerType.wantSkill);
+        },
+        child: const Row(
+          children: [
+            Text("想學的技能"),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: Icon(
+                Icons.arrow_forward_ios,
+                size: 12,
+              ),
+            ),
+          ],
+        ),
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -476,24 +207,6 @@ Widget signUpStepThird(BuildContext context) {
           backgroundColor: normalBgColor,
           onPress: () async {
             signUpViewProvider.onChangeSignUpPage(3);
-          },
-        ),
-      ),
-    ],
-  );
-}
-
-Widget signUpStepGuide(BuildContext context) {
-  return Column(
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: CustomButton(
-          title: StepGuide().skipButtonText,
-          titleColor: normalTextColor,
-          backgroundColor: normalBgColor,
-          onPress: () async {
-            Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
           },
         ),
       ),

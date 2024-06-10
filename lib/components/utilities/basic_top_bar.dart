@@ -5,7 +5,8 @@ class BaseTopBar extends StatelessWidget {
   final Function backFunc;
   final String? title;
   final dynamic rightWidget;
-  const BaseTopBar({super.key, required this.backFunc, this.title, this.rightWidget});
+  final double? padding;
+  const BaseTopBar({super.key, required this.backFunc, this.title, this.rightWidget, this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +34,13 @@ class BaseTopBar extends StatelessWidget {
             EdgeInsetsGeometry marginEdgeInsets = const EdgeInsets.all(0);
 
             if (index == 0) {
-              marginEdgeInsets = const EdgeInsets.only(left: 10);
+              marginEdgeInsets = EdgeInsets.only(left: padding ?? 10);
             } else if (index == list.length - 1) {
-              marginEdgeInsets = const EdgeInsets.only(right: 10);
+              marginEdgeInsets = EdgeInsets.only(right: padding ?? 10);
             }
 
             return SizedBox(
-              width: ScreenSize.width / 3,
+              width: ScreenSize.width / 3 - (padding ?? 0 * 2),
               height: 30,
               child: Container(
                 margin: marginEdgeInsets,

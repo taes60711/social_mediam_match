@@ -1,29 +1,29 @@
-// import 'package:flutter/material.dart';
-// import 'package:social_mediam_match/components/utilities/custom_button.dart';
-// import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:flutter/material.dart';
 
-// import '../../strings/account/sign_up_strings.dart';
+import '../../../global.dart';
+import '../../strings/account/sign_up_strings.dart';
+import '../../utilities/custom_button.dart';
+import '../../utilities/style/style_config.dart';
 
-// class SignUpGuide extends StatelessWidget {
-//   final Function returnHomePage;
-//   const SignUpGuide({super.key, required this.returnHomePage});
+class SignUpGuide extends StatelessWidget {
+  const SignUpGuide({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         Text(StepGuide().title),
-//         Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-//           child: CustomButton(
-//               title: StepGuide().skipButtonText,
-//               titleColor: normalTextColor,
-//               backgroundColor: normalBgColor,
-//               onPress: () {
-//                 returnHomePage();
-//               }),
-//         ),
-//       ],
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: CustomButton(
+            title: StepGuide().skipButtonText,
+            titleColor: normalTextColor,
+            backgroundColor: normalBgColor,
+            onPress: () async {
+              Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}

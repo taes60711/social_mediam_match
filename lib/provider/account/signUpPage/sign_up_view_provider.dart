@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../components/strings/account/sign_up_strings.dart';
 
+enum SignUpEndDrawerType {
+  haveSkill,
+  wantSkill,
+  close;
+}
+
 class SignUpViewProvider extends ChangeNotifier {
   ///メールインプット
   TextEditingController emailController = TextEditingController();
@@ -16,6 +22,13 @@ class SignUpViewProvider extends ChangeNotifier {
 
   ///登録成功したらUIDもらってユーザ資料更新為に
   String signedUID = "";
+
+  SignUpEndDrawerType endDrawerOpenInfo = SignUpEndDrawerType.close;
+
+  void changeEndDrawerStatus(SignUpEndDrawerType status) {
+    endDrawerOpenInfo = status;
+    notifyListeners();
+  }
 
   ///サインアップページ変更
   void onChangeSignUpPage(int toPageIndex) {
@@ -35,7 +48,7 @@ class SignUpViewProvider extends ChangeNotifier {
     return isEmail;
   }
 
-  ///全部ステップ終わったらUIDもらう、
+  ///すべてステップ終わったらUIDもらう、
   ///またはエラーメッセージ画面に更新する
   void signUpResultChange(String uid) async {
     if (uid.contains("sucess:")) {

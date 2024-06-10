@@ -35,7 +35,6 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
     TextEditingController nameInput = context.select((UserSettingProvider value) => value.nameInput);
     TextEditingController jobInput = context.select((UserSettingProvider value) => value.jobInput);
     TextEditingController introductionInput = context.select((UserSettingProvider value) => value.introductionInput);
-    String introductionText = context.select((UserSettingProvider value) => value.introductionText);
     String base64Img = context.select((UserSettingProvider value) => value.base64Img);
     bool isFirst = context.select((UserSettingProvider value) => value.isFirst);
     GlobalKey<ScaffoldState> key = context.select((UserSettingProvider value) => value.key);
@@ -283,125 +282,17 @@ class _ProfileState extends State<Profile> with WidgetsBindingObserver {
                             const SizedBox(height: 15),
                             skillTitle(type: "have"),
                             skillTitle(type: "want"),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 5, bottom: 5),
-                                    child: Text(
-                                      ProfileString().introductionInputTitle,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                          context: context,
-                                          isScrollControlled: true,
-                                          backgroundColor: Colors.transparent,
-                                          builder: (builder) {
-                                            return DraggableScrollableSheet(
-                                                expand: false,
-                                                minChildSize: 0.7,
-                                                initialChildSize: 0.9,
-                                                maxChildSize: 0.9,
-                                                builder: (context, scrollController) {
-                                                  return Container(
-                                                    decoration: const BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius: BorderRadius.vertical(
-                                                        top: Radius.circular(10),
-                                                      ),
-                                                    ),
-                                                    child: Column(
-                                                      children: [
-                                                        Container(
-                                                          margin: EdgeInsets.only(left: ScreenSize.width * 0.03, top: 20),
-                                                          width: ScreenSize.width,
-                                                          child: Row(
-                                                            mainAxisSize: MainAxisSize.min,
-                                                            children: [
-                                                              SizedBox(
-                                                                width: ScreenSize.width * 0.3,
-                                                                child: Align(
-                                                                  alignment: Alignment.centerLeft,
-                                                                  child: GestureDetector(
-                                                                    onTap: () {
-                                                                      userSettingProvider
-                                                                          .introductionInputChange(introductionText);
-                                                                      Navigator.of(context).pop();
-                                                                    },
-                                                                    child: const Icon(Icons.arrow_back_ios),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              //タイトル
-                                                              SizedBox(
-                                                                width: ScreenSize.width * 0.34,
-                                                                child: Align(
-                                                                  alignment: Alignment.center,
-                                                                  child: Text(ProfileString().introductionInputTitle),
-                                                                ),
-                                                              ),
-                                                              //更新ボタン
-                                                              SizedBox(
-                                                                width: ScreenSize.width * 0.3,
-                                                                child: Align(
-                                                                  alignment: Alignment.centerRight,
-                                                                  child: Material(
-                                                                    borderRadius: BorderRadius.circular(8),
-                                                                    child: InkWell(
-                                                                      borderRadius: BorderRadius.circular(8),
-                                                                      onTap: () async {
-                                                                        userSettingProvider
-                                                                            .introductionInputChange(introductionInput.text);
-                                                                        Navigator.of(context).pop();
-                                                                      },
-                                                                      child: Container(
-                                                                        padding: const EdgeInsets.symmetric(
-                                                                            horizontal: 8, vertical: 3),
-                                                                        child: Text(
-                                                                          ProfileString().updateButtonText,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        TitleInput(
-                                                          isMulti: true,
-                                                          title: "",
-                                                          textController: introductionInput,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                });
-                                          });
-                                    },
-                                    child: Container(
-                                      width: ScreenSize.width,
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
-                                          color: Colors.grey.withOpacity(0.4),
-                                        ),
-                                        color: Colors.grey.withOpacity(0.1),
-                                      ),
-                                      child: Text(
-                                        introductionText,
-                                        maxLines: 6,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            Builder(
+                              builder: (context) {
+                                return MultiTitleInput(
+                                  title: StepTwoPage().introInputTitle,
+                                  textController: userSettingProvider.introductionInput,
+                                  displayText: userSettingProvider.introductionInput.text,
+                                  multiOnChange: (newValue) {
+                                    userSettingProvider.inputOnChange(newValue);
+                                  },
+                                );
+                              },
                             ),
                           ],
                         ),
