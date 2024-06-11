@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'style/screen_size.dart';
 
 class BaseTopBar extends StatelessWidget {
-  final Function backFunc;
+  final Function? backFunc;
+  final dynamic leftWidget;
   final String? title;
   final dynamic rightWidget;
   final double? padding;
-  const BaseTopBar({super.key, required this.backFunc, this.title, this.rightWidget, this.padding});
+  const BaseTopBar({super.key, this.leftWidget, required this.backFunc, this.title, this.rightWidget, this.padding});
 
   @override
   Widget build(BuildContext context) {
     List<Alignment> list = [Alignment.centerLeft, Alignment.center, Alignment.centerRight];
 
     List<Widget> widgetList = [
-      GestureDetector(
-        onTap: () {
-          backFunc();
-        },
-        child: const Icon(Icons.arrow_back_ios),
-      ),
+      leftWidget ??
+          GestureDetector(
+            onTap: () {
+              backFunc!() ?? ();
+            },
+            child: const Icon(Icons.arrow_back_ios),
+          ),
       Text(title ?? ""),
       rightWidget ?? const SizedBox()
     ];

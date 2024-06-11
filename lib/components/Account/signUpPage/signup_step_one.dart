@@ -14,6 +14,7 @@ class SignUpStepOne extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("signUpStepOne");
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
 
     String googleIconPath = 'assets/google_w_Logo.png';

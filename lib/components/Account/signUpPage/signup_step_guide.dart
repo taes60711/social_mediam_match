@@ -5,11 +5,12 @@ import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/custom_button.dart';
 import '../../utilities/style/style_config.dart';
 
-class SignUpGuide extends StatelessWidget {
-  const SignUpGuide({super.key});
+class SignUpStepGuide extends StatelessWidget {
+  const SignUpStepGuide({super.key});
 
   @override
   Widget build(BuildContext context) {
+    print("signUpStepGuide");
     return Column(
       children: [
         Padding(

@@ -1,5 +1,26 @@
 import 'package:flutter/material.dart';
 
+class EndDrawer extends StatelessWidget {
+  final Function onDismissed;
+  final Widget child;
+  const EndDrawer({super.key, required this.onDismissed, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomEndDrawer(
+      child: Dismissible(
+        direction: DismissDirection.startToEnd,
+        resizeDuration: const Duration(milliseconds: 1),
+        onDismissed: (_) {
+          onDismissed();
+        },
+        key: const Key('key'),
+        child: child,
+      ),
+    );
+  }
+}
+
 class CustomEndDrawer extends StatefulWidget {
   final Widget child;
 

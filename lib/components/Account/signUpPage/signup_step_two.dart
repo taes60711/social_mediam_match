@@ -14,6 +14,7 @@ class SignUpStepTwo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("signUpStepTwo");
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
     UserSettingViewProvider userSettingProvider = context.read<UserSettingViewProvider>();
 
