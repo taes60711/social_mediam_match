@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:social_mediam_match/components/account/signUpPage/signup_step_third.dart';
 import 'package:social_mediam_match/components/account/signUpPage/signup_step_two.dart';
-import 'package:social_mediam_match/components/account/signUpPage/skill_choice_setting_page.dart';
+import 'package:social_mediam_match/components/account/skill_choice_setting_page.dart';
 
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 

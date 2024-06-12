@@ -5,12 +5,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 
-import '../../../CustomBouncingScrollPhysics.dart';
-import '../../../enum/skill_type.dart';
-import '../../../models/skill_model.dart';
-import '../../../provider/home/user_setting_view_provider.dart';
-import '../../utilities/custom_end_drawer.dart';
-import '../../utilities/style/screen_size.dart';
+import '../../CustomBouncingScrollPhysics.dart';
+import '../../enum/skill_type.dart';
+import '../../models/skill_model.dart';
+import '../../provider/home/user_setting_view_provider.dart';
+import '../utilities/custom_end_drawer.dart';
+import '../utilities/style/screen_size.dart';
 
 class SkillChoiceSettingPage extends StatelessWidget {
   final SkillChoicePageType skillType;
