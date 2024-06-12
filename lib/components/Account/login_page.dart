@@ -8,8 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
-import 'package:social_mediam_match/states/user_state.dart';
+
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+
+import '../../provider/account/user_state.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

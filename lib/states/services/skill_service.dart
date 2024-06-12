@@ -14,6 +14,7 @@ class SkillService extends ApiClient {
       model: RequestSkillListData.toModel,
       isList: true,
     );
+
     return requestSkillListData;
   }
 }

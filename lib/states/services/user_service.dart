@@ -14,7 +14,7 @@ class UserService extends ApiClient {
   ///MARK: ユーザのデータ取得
   ///Param,
   ///loginedUserUID: FirebaseログインしたユーザUID
-  Future<LoginUser?> getUserData(String loginedUserUID) async {
+  Future<LoginUser?> requestGetUserData(String loginedUserUID) async {
     String responseData = await apiGet('/$loginedUserUID');
     print("Logined User Data :  $responseData");
 
@@ -31,7 +31,7 @@ class UserService extends ApiClient {
   ///MARK: ログインのタイム更新する
   ///Param,
   ///userUID: ログインしたユーザUID
-  Future<void> updateUserLoginLastTime(String userUID) async {
+  Future<void> sqlUpdateUserLoginLastTime(String userUID) async {
     String lastLoginTime = DateTime.now().toUtc().toIso8601String();
     Map<String, dynamic> body = {
       'uid': userUID,
@@ -47,7 +47,7 @@ class UserService extends ApiClient {
   ///MARK: スマホのToken更新する
   ///Param,
   ///userUID: ログインしたユーザUID, token : ユーザスマホのToken
-  Future<void> updateUserToken(String userUID, String token) async {
+  Future<void> sqlUpdateUserToken(String userUID, String token) async {
     Map<String, dynamic> body = {
       'uid': userUID,
       "token": token,
@@ -82,7 +82,7 @@ class UserService extends ApiClient {
   ///MARK: データを更新する
   ///Param,
   ///uid：ログインしたユーザUID,　updateData：ユーザの個人情報
-  Future<bool> updateUserData(String uid, UpdateUser updateData) async {
+  Future<bool> sqlUpdateUserData(String uid, UpdateUser updateData) async {
     Map<String, dynamic> body = updateData.toMap();
 
     String responseData = await apiPush('/update/$uid', body: body);

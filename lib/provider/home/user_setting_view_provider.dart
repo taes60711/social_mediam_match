@@ -55,13 +55,9 @@ class SkillMapProvider extends ChangeNotifier {
     }
   }
 
-  void skillLevelChange(SkillModel changedSkill, int level, String type) {
-    print("skillLevelChange ${changedSkill.skillHave.name}");
-    if (type == "have") {
-      changedSkill.skillHave.level = level;
-    } else {
-      changedSkill.skillWant.level = level;
-    }
+  void skillLevelChange(RequestUserSkillData changedSkill, int level) {
+    print("skillLevelChange ${changedSkill.name}");
+    changedSkill.level = level;
 
     typeListToSkill();
     notifyListeners();

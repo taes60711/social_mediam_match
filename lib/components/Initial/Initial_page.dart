@@ -10,8 +10,8 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import 'package:social_mediam_match/states/initial_state.dart';
-import 'package:social_mediam_match/states/user_state.dart';
 import '../../models/user_model.dart';
+import '../../provider/account/user_state.dart';
 import '../../states/services/dynamic_links.dart';
 import '../../states/services/notification_service.dart';
 

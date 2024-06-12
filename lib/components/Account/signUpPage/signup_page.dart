@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
+
 import 'package:social_mediam_match/components/account/signUpPage/signup_step_third.dart';
 import 'package:social_mediam_match/components/account/signUpPage/signup_step_two.dart';
-import 'package:social_mediam_match/components/utilities/custom_end_drawer.dart';
+import 'package:social_mediam_match/components/account/signUpPage/skill_choice_setting_page.dart';
+
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
-import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+
 import 'package:social_mediam_match/enum/skill_type.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
 
@@ -25,8 +26,6 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     print("signUP build");
 
-    List<int> levelList = [1, 2, 3, 4, 5];
-
     return Stack(
       children: [
         BackgroundWidget(
@@ -43,135 +42,16 @@ class SignUpPage extends StatelessWidget {
           print("customEndDrawer");
           SignUpEndDrawerType endDrawer = context.select((SignUpViewProvider value) => value.endDrawerOpenInfo);
           SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
-
           Widget endDrawerWidget = Container();
           if (endDrawer == SignUpEndDrawerType.haveSkill) {
-            endDrawerWidget = EndDrawer(
-              onDismissed: () => signUpViewProvider.changeEndDrawerStatus(SignUpEndDrawerType.close),
-              child: Consumer<SkillMapProvider>(
-                builder: (context, skillMapProvider, _) {
-                  return Scaffold(
-                    body: SingleChildScrollView(
-                      physics: const NoLoadingCustomBouncingScrollPhysics(),
-                      child: Column(
-                        children: SkillType.values.map((e) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(e.value),
-                              Column(
-                                children: skillMapProvider.skillMap[e]!
-                                    .map(
-                                      (e) => PopupMenuButton(
-                                        itemBuilder: (BuildContext context) {
-                                          return levelList.map(
-                                            (e) {
-                                              return PopupMenuItem(
-                                                value: e,
-                                                child: Text("$e"),
-                                              );
-                                            },
-                                          ).toList();
-                                        },
-                                        onSelected: (value) {
-                                          skillMapProvider.skillLevelChange(e, value, "have");
-                                        },
-                                        child: SizedBox(
-                                          width: ScreenSize.width,
-                                          child: Row(
-                                            children: [
-                                              Expanded(child: Text(e.skillHave.name)),
-                                              e.skillHave.level > 0
-                                                  ? Row(
-                                                      children: [
-                                                        Text("${e.skillHave.level}"),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            skillMapProvider.skillLevelChange(e, 0, "have");
-                                                          },
-                                                          child: const Icon(FontAwesomeIcons.close, size: 15),
-                                                        )
-                                                      ],
-                                                    )
-                                                  : Text("${e.skillHave.level}")
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  );
-                },
-              ),
+            endDrawerWidget = SkillChoiceSettingPage(
+              skillType: SkillChoicePageType.have,
+              onDismissedFunc: () => signUpViewProvider.changeEndDrawerStatus(SignUpEndDrawerType.close),
             );
           } else if (endDrawer == SignUpEndDrawerType.wantSkill) {
-            endDrawerWidget = EndDrawer(
-              onDismissed: () => signUpViewProvider.changeEndDrawerStatus(SignUpEndDrawerType.close),
-              child: Consumer<SkillMapProvider>(builder: (context, skillMapProvider, _) {
-                return Scaffold(
-                  body: SingleChildScrollView(
-                    physics: const NoLoadingCustomBouncingScrollPhysics(),
-                    child: Column(
-                      children: SkillType.values.map((e) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(e.value),
-                            Column(
-                              children: skillMapProvider.skillMap[e]!
-                                  .map(
-                                    (e) => PopupMenuButton(
-                                      itemBuilder: (BuildContext context) {
-                                        return levelList.map(
-                                          (e) {
-                                            return PopupMenuItem(
-                                              value: e,
-                                              child: Text("$e"),
-                                            );
-                                          },
-                                        ).toList();
-                                      },
-                                      onSelected: (value) {
-                                        skillMapProvider.skillLevelChange(e, value, "want");
-                                      },
-                                      child: SizedBox(
-                                        width: ScreenSize.width,
-                                        child: Row(
-                                          children: [
-                                            Expanded(child: Text(e.skillWant.name)),
-                                            e.skillWant.level > 0
-                                                ? Row(
-                                                    children: [
-                                                      Text("${e.skillWant.level}"),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          skillMapProvider.skillLevelChange(e, 0, "want");
-                                                        },
-                                                        child: const Icon(FontAwesomeIcons.close, size: 15),
-                                                      )
-                                                    ],
-                                                  )
-                                                : Text("${e.skillWant.level}")
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          ],
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                );
-              }),
+            endDrawerWidget = SkillChoiceSettingPage(
+              skillType: SkillChoicePageType.want,
+              onDismissedFunc: () => signUpViewProvider.changeEndDrawerStatus(SignUpEndDrawerType.close),
             );
           }
           return endDrawerWidget;

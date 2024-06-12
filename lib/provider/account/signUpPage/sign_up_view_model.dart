@@ -5,8 +5,10 @@ import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_pro
 
 import '../../../components/utilities/style/style_config.dart';
 import '../../../global.dart';
+import '../../../models/user_model.dart';
 import '../../../states/services/firebase_service.dart';
 import '../../../states/services/user_service.dart';
+import '../../home/user_setting_view_provider.dart';
 
 class SignUpViewModel {
   BuildContext context;
@@ -33,6 +35,12 @@ class SignUpViewModel {
     }
   }
 
+  void closePop() {
+    if (!ModalRoute.of(context)!.isCurrent) {
+      Navigator.of(context).pop();
+    }
+  }
+
   ///登録始まる
   Future<void> signUpStart() async {
     Future<void> loadingPopView() {
@@ -46,12 +54,6 @@ class SignUpViewModel {
       );
     }
 
-    void closePop() {
-      if (!ModalRoute.of(context)!.isCurrent) {
-        Navigator.of(context).pop();
-      }
-    }
-
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
 
     String email = signUpViewProvider.emailController.text;
@@ -62,33 +64,76 @@ class SignUpViewModel {
     loadingPopView();
 
     // String signUpResult = await signUp(email, password);
-    // signUpViewProvider.signUpResultChange(signUpResult);
     await Future.delayed(const Duration(seconds: 1));
-
     closePop();
-
     signUpViewProvider.onChangeSignUpPage(2);
   }
 
   ///firebaseServer、MysqlServer登録
   ///email：メールアドレス，password：パスワード
-  Future<String> signUp(String email, String password) async {
+  Future<void> signUp(String email, String password) async {
     String signUpResult = "";
-
+    SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
     String firebaseSignUpResult = await FirebaseSerivce().firebaseSignUp(email, password);
 
     if (firebaseSignUpResult.contains("sucess:")) {
       String tempSignedUID = firebaseSignUpResult.substring(("sucess:").length);
-      bool isMySqlSignUpSucess = await UserService().sqlSignUp(tempSignedUID, email, password);
 
-      if (isMySqlSignUpSucess) {
-        signUpResult = firebaseSignUpResult;
-      } else {
-        signUpResult = "mysql-error";
-      }
+      ///Firebase登録したらSQLにユーザデータ作成する
+      await UserService().sqlSignUp(tempSignedUID, email, password).then((isMySqlSignUpSucess) async {
+        if (isMySqlSignUpSucess) {
+          ///FirebaseからUID取得する
+          signUpResult = firebaseSignUpResult;
+
+          ///登録結果画面を更新する（UID）
+          signUpViewProvider.signUpResultChange(signUpResult);
+
+          ///名前更新するよう（名前輸入あれば）
+          await updateUserData();
+
+          ///画面遷移
+          signUpViewProvider.onChangeSignUpPage(2);
+
+          return;
+        } else {
+          signUpResult = "mysql-error";
+        }
+      });
     } else {
       signUpResult = firebaseSignUpResult;
     }
-    return signUpResult;
+
+    ///登録結果画面を更新する（エラーメッセージ）
+    signUpViewProvider.signUpResultChange(signUpResult);
+  }
+
+  ///ユーザデータ更新する
+  Future<void> updateUserData() async {
+    SkillMapProvider skillMapProvider = context.read<SkillMapProvider>();
+    UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
+    SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+
+    UpdateUser updateData = UpdateUser.update(
+      uid: signUpViewProvider.signedUID,
+      name: userSettingViewProvider.nameInput.text,
+      job: userSettingViewProvider.jobInput.text,
+      introduction: userSettingViewProvider.introductionInput.text,
+      mainSkills: skillMapProvider.haveSkillList,
+      wantSkills: skillMapProvider.wantSkillList,
+    );
+
+    print(
+        "name : ${userSettingViewProvider.nameInput.text} job : ${userSettingViewProvider.jobInput.text} introduction : ${userSettingViewProvider.introductionInput.text}");
+    print("haveSkillList : ${skillMapProvider.haveSkillList} wantSkillList : ${skillMapProvider.wantSkillList}");
+    print("updateData $updateData");
+    // await UserService().sqlUpdateUserData(signUpViewProvider.signedUID, updateData).then(
+    //   (isSucess) async {
+    //     if (isSucess) {
+    //       signUpViewProvider.onChangeSignUpPage(3);
+    //     }
+    //   },
+    // );
+
+    signUpViewProvider.onChangeSignUpPage(3);
   }
 }

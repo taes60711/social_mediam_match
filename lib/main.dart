@@ -22,7 +22,7 @@ import 'package:social_mediam_match/states/initial_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
 import 'package:social_mediam_match/states/user_setting_provider.dart';
-import 'package:social_mediam_match/states/user_state.dart';
+import 'package:social_mediam_match/provider/account/user_state.dart';
 
 import 'components/home/userPage/my_friends.dart';
 import 'provider/home/user_setting_view_provider.dart';
@@ -56,12 +56,15 @@ void main() async {
   );
 }
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,

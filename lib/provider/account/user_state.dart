@@ -34,9 +34,9 @@ class UserProvider extends ChangeNotifier {
           notifyListeners();
 
           //ユーザの資料を取得する
-          userData = await UserService().getUserData(userUID);
+          userData = await UserService().requestGetUserData(userUID);
           //最後ログインのタイム更新する
-          await UserService().updateUserLoginLastTime(userUID);
+          await UserService().sqlUpdateUserLoginLastTime(userUID);
           //チャットルームサーバー繋がる
           chatListChannel.friendListConnect(userUID);
           inspect(userData);
@@ -44,7 +44,7 @@ class UserProvider extends ChangeNotifier {
           if (Platform.isAndroid) {
             //取得使用者TOKEN > 通知系統在上架前,先暫時只給安卓使用
             final fcmToken = await FirebaseMessaging.instance.getToken();
-            await UserService().updateUserToken(userUID, fcmToken!);
+            await UserService().sqlUpdateUserToken(userUID, fcmToken!);
           }
 
           isLoading = false;
@@ -99,7 +99,6 @@ class UserProvider extends ChangeNotifier {
     try {
       await _auth.sendPasswordResetEmail(email: email);
       print("Email Sended");
-
       resetPwdError = ResetPwdStatus.success.value;
     } catch (e) {
       resetPwdError = ResetPwdStatus.error.value;
@@ -108,12 +107,17 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> getUserData(String uid) async {
+    userData = await UserService().requestGetUserData(uid);
+    notifyListeners();
+  }
+
   Future<bool> updateProfile(String uid, UpdateUser updateData) async {
     bool isSucess = false;
     try {
-      isSucess = await UserService().updateUserData(uid, updateData);
+      isSucess = await UserService().sqlUpdateUserData(uid, updateData);
       if (isSucess) {
-        userData = await UserService().getUserData(uid);
+        userData = await UserService().requestGetUserData(uid);
         notifyListeners();
       }
     } catch (e) {

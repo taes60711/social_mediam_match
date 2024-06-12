@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../components/strings/account/sign_up_strings.dart';
-
-enum SignUpEndDrawerType {
-  haveSkill,
-  wantSkill,
-  close;
-}
+import '../../../enum/skill_type.dart';
 
 class SignUpViewProvider extends ChangeNotifier {
   ///メールインプット

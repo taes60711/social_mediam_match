@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print
 import 'dart:convert';
-
 import '../../global.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -60,9 +59,7 @@ class ApiClient {
   }
 
   void _onError(dynamic errorMessage) {
-    if (_onRequestFailed != null) {
-      _onRequestFailed();
-    }
+    _onRequestFailed ?? () {};
 
     print("Error Message : $errorMessage");
   }

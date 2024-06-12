@@ -2,6 +2,7 @@ List<String> frontType = ["javascript", "typescript", "css", "html", "vue", "Rea
 List<String> iotType = ["arduino"];
 List<String> backendType = ["java", "python", "mysql"];
 
+///dataType
 enum SkillType {
   frontend("前端"),
   backend("後端"),
@@ -10,4 +11,15 @@ enum SkillType {
 
   final String value;
   const SkillType(this.value);
+}
+
+enum SkillChoicePageType {
+  have,
+  want;
+}
+
+enum SignUpEndDrawerType {
+  haveSkill,
+  wantSkill,
+  close;
 }
