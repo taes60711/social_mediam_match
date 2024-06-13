@@ -12,7 +12,8 @@ import 'package:social_mediam_match/states/user_setting_provider.dart';
 import '../../../global.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
-import '../../../provider/account/user_state.dart';
+
+import '../../../provider/account/user_provider.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/skill_list_view.dart';

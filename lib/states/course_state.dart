@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import '../global.dart';
 import '../models/user_model.dart';
-import 'services/db_service.dart';
+
 import 'package:http/http.dart' as http;
+
+import '../services/db_service.dart';
 
 class CourseState extends ChangeNotifier {
   final DBService _dbService = DBService();

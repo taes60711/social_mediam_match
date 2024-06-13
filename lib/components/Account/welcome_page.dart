@@ -13,32 +13,6 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String verNumber = "1.0.0";
-    //バージョンテキスト
-    Widget _versionText = Text(
-      "${WelcomeStrings().version} $verNumber",
-      style: const TextStyle(
-        fontSize: 12,
-        color: Color.fromARGB(255, 177, 176, 176),
-      ),
-    );
-
-    //ボタン
-    //param:
-    //title: ボタン内の文字、　titleColor:　ボタン内の文字の色
-    //backgroundColor: ボタンの色、　onPressed: ボタンの機能関数
-    _button({required title, required titleColor, required backgroundColor, required onPressed}) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: CustomButton(
-          title: title,
-          titleColor: titleColor,
-          backgroundColor: backgroundColor,
-          onPress: onPressed,
-        ),
-      );
-    }
-
     return BackgroundWidget(
       isSafeArea: false,
       child: Column(
@@ -87,4 +61,29 @@ class WelcomePage extends StatelessWidget {
       ),
     );
   }
+}
+
+String verNumber = "1.0.0";
+//バージョンテキスト
+Widget _versionText = Text(
+  "${WelcomeStrings().version} $verNumber",
+  style: const TextStyle(
+    fontSize: 12,
+    color: Color.fromARGB(255, 177, 176, 176),
+  ),
+);
+
+///ボタン
+///title: ボタン内の文字、　titleColor:　ボタン内の文字の色
+///backgroundColor: ボタンの色、　onPressed: ボタンの機能関数
+_button({required title, required titleColor, required backgroundColor, required onPressed}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: CustomButton(
+      title: title,
+      titleColor: titleColor,
+      backgroundColor: backgroundColor,
+      onPress: onPressed,
+    ),
+  );
 }

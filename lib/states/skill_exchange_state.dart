@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/user_model.dart';
-import 'package:social_mediam_match/states/services/db_service.dart';
 
 import '../enum/skill_type.dart';
 import '../global.dart';
+import '../services/db_service.dart';
 
 class SkillExChangeState extends ChangeNotifier {
   final DBService _dbService = DBService();

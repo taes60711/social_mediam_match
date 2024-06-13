@@ -1,35 +1,47 @@
-import 'dart:developer';
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/strings/account/login_strings.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
-import 'package:social_mediam_match/states/services/user_service.dart';
 
+import '../../services/firebase_service.dart';
+import '../../services/user_service.dart';
+
+///ユーザ資料について（登録の関数がSignUpViewModel、SignUpViewProivderにいる）
 class UserProvider extends ChangeNotifier {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  ///ユーザでータ
+  LoginUser userData = LoginUser(
+    uid: "-1",
+    token: null,
+    image: null,
+    email: "",
+    isEmailVerified: false,
+    name: null,
+    job: null,
+    lastLogin: "",
+    status: 0,
+    introduction: null,
+    mainSkills: [],
+    wantSkills: [],
+  );
 
-  //ユーザダータ
-  LoginUser? userData;
-  //ページローディング
+  ///ページローディング
   bool isLoading = false;
-  //パスワード忘れたページに送信したメッセージ
+
+  ///パスワード忘れたページに送信したメッセージ
   String resetPwdError = ResetPwdStatus.noMessage.value;
+
+  ///ログインのエラーメッセージ
+  String loginError = LoginError().noError;
 
   //メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する
   void isLoginCheck(FriendState chatListChannel) {
-    Stream<String> colsure() {
-      return _auth.authStateChanges().map((event) {
-        return event != null ? event.uid : "";
-      });
-    }
-
-    if (userData == null) {
-      colsure().listen((String userUID) async {
-        if (userUID != "" && !isLoading) {
+    if (userData.uid == "-1") {
+      FirebaseSerivce().firebaseLoginCheck().listen((String userUID) async {
+        if (userUID != "noUID" && !isLoading) {
           isLoading = true;
           notifyListeners();
 
@@ -39,7 +51,7 @@ class UserProvider extends ChangeNotifier {
           await UserService().sqlUpdateUserLoginLastTime(userUID);
           //チャットルームサーバー繋がる
           chatListChannel.friendListConnect(userUID);
-          inspect(userData);
+          print("LoginedUserData ${userData.uid}");
 
           if (Platform.isAndroid) {
             //取得使用者TOKEN > 通知系統在上架前,先暫時只給安卓使用
@@ -54,61 +66,33 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  //ログインのエラーメッセージ
-  String loginError = LoginError().noError;
-  //メソッド：ログイン
-  //param
-  //email：メールアドレス，password：パスワード
+  ///メソッド：ログイン
+  ///email：メールアドレス，password：パスワード
   Future<bool> signIn(String email, String password) async {
-    bool isSucess = false;
+    bool isSucess = true;
 
-    try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-
-      isSucess = true;
-    } on FirebaseAuthException catch (e) {
-      print("signIn error ${e.code}");
-      switch (e.code) {
-        case "invalid-credential":
-          loginError = LoginError().emailorPwdError;
-          break;
-        case "invalid-email":
-          loginError = LoginError().emailFormatError;
-          break;
-        case "channel-error":
-          loginError = "channel-error";
-      }
+    String signInResult = await FirebaseSerivce().firebaseSignIn(email, password);
+    if (!signInResult.contains("Sucess")) {
+      loginError = signInResult;
+      isSucess = false;
       notifyListeners();
     }
+
     return isSucess;
   }
 
-  //メソッド：ログアウト
+  ///メソッド：ログアウト
   Future<void> signOut(FriendState chatListChannel) async {
-    await _auth.signOut().then((value) {
-      chatListChannel.closefriendList();
-      userData = null;
-      notifyListeners();
-    });
+    await FirebaseSerivce().firebaseSignOut();
+    chatListChannel.closefriendList();
+    userData.uid = "-1";
+    notifyListeners();
   }
 
-  //メソッド：パスワード忘れた場合，パスワードがメール送ってリセット
-  //param
-  //email：ユーザ登録のメールアドレス
+  ///メソッド：パスワード忘れた場合，パスワードがメール送ってリセット
+  ///email：ユーザ登録のメールアドレス
   Future<void> reSetPwd(String email) async {
-    try {
-      await _auth.sendPasswordResetEmail(email: email);
-      print("Email Sended");
-      resetPwdError = ResetPwdStatus.success.value;
-    } catch (e) {
-      resetPwdError = ResetPwdStatus.error.value;
-      print("Email Error $resetPwdError");
-      notifyListeners();
-    }
-  }
-
-  Future<void> getUserData(String uid) async {
-    userData = await UserService().requestGetUserData(uid);
+    resetPwdError = await FirebaseSerivce().reSetPwd(email);
     notifyListeners();
   }
 

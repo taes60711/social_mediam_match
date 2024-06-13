@@ -23,7 +23,7 @@ class SignUpStepOne extends StatelessWidget {
     String twitterIconPath = 'assets/twitter_w_Logo.png';
     Color twitterButtonColor = const Color.fromARGB(255, 41, 41, 41);
 
-//紹介文章
+    //紹介文章
     final Widget introductionWidget = SizedBox(
       width: ScreenSize.width,
       child: Align(

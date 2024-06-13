@@ -3,7 +3,7 @@ import 'package:html/parser.dart' as html;
 import 'package:uuid/uuid.dart';
 
 import '../global.dart';
-import '../states/services/image_service.dart';
+import '../services/image_service.dart';
 
 class RichTextFormat {
   String? htmlString;

@@ -6,6 +6,7 @@ import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_mod
 import '../../../enum/skill_type.dart';
 import '../../../models/skill_model.dart';
 import '../../../provider/account/signUpPage/sign_up_view_provider.dart';
+import '../../../provider/home/skill_map_provider.dart';
 import '../../../provider/home/user_setting_view_provider.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/custom_button.dart';
@@ -38,48 +39,60 @@ class SignUpStepThird extends StatelessWidget {
             );
           },
         ),
-        skillButton(context, SignUpEndDrawerType.haveSkill),
-        skillButton(context, SignUpEndDrawerType.wantSkill),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: CustomButton(
-            title: StepThirdPage.sendButtonText,
-            titleColor: normalTextColor,
-            backgroundColor: normalBgColor,
-            onPress: () async {
-              await SignUpViewModel(context: context).updateUserData();
-            },
-          ),
-        ),
+        skillButton(SignUpEndDrawerType.haveSkill),
+        skillButton(SignUpEndDrawerType.wantSkill),
+        sendBtn(context),
       ],
     );
   }
 }
 
-Widget skillButton(BuildContext context, SignUpEndDrawerType type) {
-  return Column(
-    children: [
-      GestureDetector(
-        onTap: () {
-          SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
-          signUpViewProvider.changeEndDrawerStatus(type);
-        },
-        child: Row(
-          children: [
-            Text(StepThirdPage.haveSkillText),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              child: Icon(
-                Icons.arrow_forward_ios,
-                size: 12,
-              ),
-            ),
-          ],
-        ),
-      ),
-      skillBar(type),
-    ],
+Widget sendBtn(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    child: CustomButton(
+      title: StepThirdPage.sendButtonText,
+      titleColor: normalTextColor,
+      backgroundColor: normalBgColor,
+      onPress: () async {
+        await SignUpViewModel(context: context).updateUserData();
+      },
+    ),
   );
+}
+
+Widget skillButton(SignUpEndDrawerType type) {
+  return Consumer<SkillMapProvider>(builder: (context, skillMapProvider, _) {
+    List<RequestUserSkillData> skillData =
+        type == SignUpEndDrawerType.haveSkill ? skillMapProvider.haveSkillList : skillMapProvider.wantSkillList;
+
+    String btnText = type == SignUpEndDrawerType.haveSkill ? StepThirdPage.haveSkillText : StepThirdPage.wantSkillText;
+
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+            signUpViewProvider.changeEndDrawerStatus(type);
+          },
+          child: Row(
+            children: [
+              Text(btnText),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 12,
+                ),
+              ),
+              Text("(${skillData.length} / 5)"),
+            ],
+          ),
+        ),
+        skillBar(type),
+      ],
+    );
+  });
 }
 
 Widget skillBar(SignUpEndDrawerType type) {
@@ -93,6 +106,7 @@ Widget skillBar(SignUpEndDrawerType type) {
   return Consumer<SkillMapProvider>(builder: (context, skillMapProvider, _) {
     List<RequestUserSkillData> skillData =
         type == SignUpEndDrawerType.haveSkill ? skillMapProvider.haveSkillList : skillMapProvider.wantSkillList;
+
     return SizedBox(
       width: ScreenSize.width,
       child: Wrap(

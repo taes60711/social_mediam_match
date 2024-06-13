@@ -7,7 +7,7 @@ class BaseTopBar extends StatelessWidget {
   final String? title;
   final dynamic rightWidget;
   final double? padding;
-  const BaseTopBar({super.key, this.leftWidget, required this.backFunc, this.title, this.rightWidget, this.padding});
+  const BaseTopBar({super.key, this.leftWidget, this.backFunc, this.title, this.rightWidget, this.padding});
 
   @override
   Widget build(BuildContext context) {

@@ -10,13 +10,12 @@ import 'package:social_mediam_match/states/course_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
 
+import '../../provider/account/user_provider.dart';
 import '../../states/friend_state.dart';
 import 'postPage/forum.dart';
 
 class Home extends StatefulWidget {
-  final LoginUser userData;
-  final FriendState friendState;
-  const Home({super.key, required this.userData, required this.friendState});
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
@@ -39,30 +38,35 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    FriendState friendState = context.read<FriendState>();
+    LoginUser userData = context.watch<UserProvider>().userData;
+
     List<Widget> widgetOptions = <Widget>[
       ChangeNotifierProvider(
         create: (_) => PostState(),
         child: Forum(
-          userData: widget.userData,
+          userData: userData,
           gotoFriendPage: gotoFriendPage,
           gotoCoursePage: gotoCourserPage,
         ),
       ),
       SkillExChangePage(
-        userData: widget.userData,
+        userData: userData,
         gotoFriendPage: gotoFriendPage,
       ),
       ChangeNotifierProvider(
         create: (_) => CourseState(),
         child: CoursePage(
-          userData: widget.userData,
+          userData: userData,
           gotoFriendPage: gotoFriendPage,
         ),
       ),
-      FirendsPage(userData: widget.userData),
+      FirendsPage(
+        userData: userData,
+      ),
       UserPage(
-        userData: widget.userData,
-        friendState: widget.friendState,
+        userData: userData,
+        friendState: friendState,
         gotoFriendPage: gotoFriendPage,
       ),
     ];

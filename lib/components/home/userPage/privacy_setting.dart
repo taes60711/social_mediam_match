@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
-import 'package:social_mediam_match/states/services/dynamic_links.dart';
-import '../../../provider/account/user_state.dart';
-import '../../../states/services/notification_service.dart';
+
+import '../../../provider/account/user_provider.dart';
+
+import '../../../services/dynamic_links.dart';
+import '../../../services/notification_service.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/style/screen_size.dart';
 

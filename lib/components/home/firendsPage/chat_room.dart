@@ -20,8 +20,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import '../../../CustomBouncingScrollPhysics.dart';
 import '../../../models/user_model.dart';
+import '../../../services/image_service.dart';
 import '../../../states/friend_state.dart';
-import '../../../states/services/image_service.dart';
+
 import '../../utilities/loading.dart';
 
 class ChatRoom extends StatelessWidget {

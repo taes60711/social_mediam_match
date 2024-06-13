@@ -3,9 +3,9 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:social_mediam_match/global.dart';
-import 'package:social_mediam_match/states/services/api_client.dart';
+import 'package:social_mediam_match/services/api_client.dart';
 
-import '../../models/user_model.dart';
+import '../models/user_model.dart';
 
 ///ユーザAPIサービス
 class UserService extends ApiClient {
@@ -14,11 +14,11 @@ class UserService extends ApiClient {
   ///MARK: ユーザのデータ取得
   ///Param,
   ///loginedUserUID: FirebaseログインしたユーザUID
-  Future<LoginUser?> requestGetUserData(String loginedUserUID) async {
+  Future<LoginUser> requestGetUserData(String loginedUserUID) async {
     String responseData = await apiGet('/$loginedUserUID');
     print("Logined User Data :  $responseData");
 
-    LoginUser? userdata;
+    LoginUser userdata;
 
     userdata = await handleResponse<LoginUser?>(
       responseData,

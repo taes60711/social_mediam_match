@@ -1,7 +1,7 @@
 import 'package:social_mediam_match/models/skill_model.dart';
-import 'package:social_mediam_match/states/services/api_client.dart';
 
 import '../../global.dart';
+import 'api_client.dart';
 
 class SkillService extends ApiClient {
   SkillService() : super(overrideIp: "$ip:$port/skill");

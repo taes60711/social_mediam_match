@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/provider/home/skill_choice_setting_view_model.dart';
 
 import '../../CustomBouncingScrollPhysics.dart';
 import '../../enum/skill_type.dart';
 import '../../models/skill_model.dart';
-import '../../provider/home/user_setting_view_provider.dart';
+import '../../provider/home/skill_map_provider.dart';
 import '../utilities/custom_end_drawer.dart';
 import '../utilities/style/screen_size.dart';
 
@@ -64,9 +65,9 @@ class SkillChoiceSettingPage extends StatelessWidget {
                                     ).toList();
                                   },
                                   onSelected: (value) {
-                                    skillMapProvider.skillLevelChange(skillInfo, value);
+                                    SKillChoiceSettingViewModel(context: context).skillChoice(skillType, skillInfo, value);
                                   },
-                                  child: skillItem(skillInfo, context),
+                                  child: skillItem(context: context, skillType: skillType, skillInfo: skillInfo),
                                 );
                               }).toList(),
                             ),
@@ -93,9 +94,11 @@ Widget searchBar() {
   );
 }
 
-Widget skillItem(RequestUserSkillData skillInfo, BuildContext context) {
-  SkillMapProvider skillMapProvider = context.read<SkillMapProvider>();
-
+Widget skillItem({
+  required BuildContext context,
+  required SkillChoicePageType skillType,
+  required RequestUserSkillData skillInfo,
+}) {
   Widget wSkillLevel = Text("${skillInfo.level}");
   if (skillInfo.level > 0) {
     wSkillLevel = Row(
@@ -103,7 +106,7 @@ Widget skillItem(RequestUserSkillData skillInfo, BuildContext context) {
         Text("${skillInfo.level}"),
         GestureDetector(
           onTap: () {
-            skillMapProvider.skillLevelChange(skillInfo, 0);
+            SKillChoiceSettingViewModel(context: context).skillChoice(skillType, skillInfo, 0);
           },
           child: const Icon(FontAwesomeIcons.close, size: 15),
         )

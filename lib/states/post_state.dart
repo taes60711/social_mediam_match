@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/post_model.dart';
-import 'package:social_mediam_match/states/services/db_service.dart';
+
 import '../models/rich_text_format.dart';
 import '../models/user_model.dart';
+import '../services/db_service.dart';
 
 class PostState extends ChangeNotifier {
   final DBService _dbService = DBService();

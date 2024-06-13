@@ -6,8 +6,10 @@ import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_pro
 import '../../../components/utilities/style/style_config.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
-import '../../../states/services/firebase_service.dart';
-import '../../../states/services/user_service.dart';
+
+import '../../../services/firebase_service.dart';
+import '../../../services/user_service.dart';
+import '../../home/skill_map_provider.dart';
 import '../../home/user_setting_view_provider.dart';
 
 class SignUpViewModel {
