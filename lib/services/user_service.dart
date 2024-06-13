@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:social_mediam_match/global.dart';
+import 'package:social_mediam_match/route_options.dart';
 import 'package:social_mediam_match/services/api_client.dart';
 
 import '../models/user_model.dart';
@@ -15,15 +16,18 @@ class UserService extends ApiClient {
   ///Param,
   ///loginedUserUID: FirebaseログインしたユーザUID
   Future<LoginUser> requestGetUserData(String loginedUserUID) async {
-    String responseData = await apiGet('/$loginedUserUID');
-    print("Logined User Data :  $responseData");
+    LoginUser userdata = LoginUser(uid: "-1");
+    try {
+      String responseData = await apiGet('/$loginedUserUID');
+      print("Logined User Data :  $responseData");
 
-    LoginUser userdata;
-
-    userdata = await handleResponse<LoginUser?>(
-      responseData,
-      model: LoginUser.toModel,
-    );
+      userdata = await handleResponse<LoginUser>(
+        responseData,
+        model: LoginUser.toModel,
+      );
+    } catch (e) {
+      onRequestFailed(onFailedFunc: () => RouteOptions.pagePushToHome());
+    }
 
     return userdata;
   }

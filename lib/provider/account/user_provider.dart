@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -47,16 +48,18 @@ class UserProvider extends ChangeNotifier {
 
           //ユーザの資料を取得する
           userData = await UserService().requestGetUserData(userUID);
-          //最後ログインのタイム更新する
-          await UserService().sqlUpdateUserLoginLastTime(userUID);
-          //チャットルームサーバー繋がる
-          chatListChannel.friendListConnect(userUID);
-          print("LoginedUserData ${userData.uid}");
+          if (userData.uid != "-1") {
+            //最後ログインのタイム更新する
+            await UserService().sqlUpdateUserLoginLastTime(userUID);
+            //チャットルームサーバー繋がる
+            chatListChannel.friendListConnect(userUID);
+            print("LoginedUserData ${userData.uid}");
 
-          if (Platform.isAndroid) {
-            //取得使用者TOKEN > 通知系統在上架前,先暫時只給安卓使用
-            final fcmToken = await FirebaseMessaging.instance.getToken();
-            await UserService().sqlUpdateUserToken(userUID, fcmToken!);
+            if (Platform.isAndroid) {
+              //取得使用者TOKEN > 通知系統在上架前,先暫時只給安卓使用
+              final fcmToken = await FirebaseMessaging.instance.getToken();
+              await UserService().sqlUpdateUserToken(userUID, fcmToken!);
+            }
           }
 
           isLoading = false;

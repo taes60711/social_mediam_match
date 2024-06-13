@@ -7,6 +7,7 @@ import '../../../components/utilities/style/style_config.dart';
 import '../../../global.dart';
 import '../../../models/user_model.dart';
 
+import '../../../route_options.dart';
 import '../../../services/firebase_service.dart';
 import '../../../services/user_service.dart';
 import '../../home/skill_map_provider.dart';
@@ -21,7 +22,7 @@ class SignUpViewModel {
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
     int preIndex = signUpViewProvider.pageIndex - 1;
     if (preIndex < 0 || preIndex >= 1) {
-      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+      RouteOptions.pagePushToHome();
     } else {
       signUpViewProvider.onChangeSignUpPage(preIndex);
     }

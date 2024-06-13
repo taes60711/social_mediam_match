@@ -1,4 +1,6 @@
 // ip
+import 'package:flutter/material.dart';
+
 String ip = "114.37.133.103";
 String port = '80';
 
@@ -24,3 +26,7 @@ enum RoutePath {
   final String value;
   const RoutePath(this.value);
 }
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+BuildContext globalContext = navigatorKey.currentState!.context;

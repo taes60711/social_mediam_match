@@ -7,13 +7,18 @@ class SkillService extends ApiClient {
   SkillService() : super(overrideIp: "$ip:$port/skill");
 
   Future<List<RequestSkillListData>> requestSkillList() async {
-    String responseData = await apiGet('/getList');
+    List<RequestSkillListData> requestSkillListData = [];
+    try {
+      String responseData = await apiGet('/getList');
 
-    List<RequestSkillListData> requestSkillListData = await handleResponse<RequestSkillListData>(
-      responseData,
-      model: RequestSkillListData.toModel,
-      isList: true,
-    );
+      requestSkillListData = await handleResponse<RequestSkillListData>(
+        responseData,
+        model: RequestSkillListData.toModel,
+        isList: true,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
 
     return requestSkillListData;
   }

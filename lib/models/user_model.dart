@@ -30,18 +30,18 @@ class LoginUser extends UserModel {
   int status;
 
   LoginUser({
-    required String uid,
+    String uid = "-1",
     String? image,
     String? token,
     String? name,
     String? job,
     String? introduction,
-    required this.lastLogin,
+    this.lastLogin = "",
     List<RequestUserSkillData>? mainSkills,
     List<RequestUserSkillData>? wantSkills,
-    required this.email,
-    required this.isEmailVerified,
-    required this.status,
+    this.email = "",
+    this.isEmailVerified = false,
+    this.status = 0,
   }) : super(
           uid: uid,
           image: image,

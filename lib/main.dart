@@ -28,8 +28,6 @@ import 'provider/account/user_provider.dart';
 import 'provider/home/skill_map_provider.dart';
 import 'provider/home/user_setting_view_provider.dart';
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();

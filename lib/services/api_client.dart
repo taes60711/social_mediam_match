@@ -1,15 +1,17 @@
 // ignore_for_file: avoid_print
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:social_mediam_match/route_options.dart';
 import '../../global.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
+import '../components/utilities/custom_button.dart';
+import '../components/utilities/style/style_config.dart';
 
 class ApiClient {
   final String _ip;
-  final Function? _onRequestFailed;
-  ApiClient({String? overrideIp, Function? onRequestFailed})
-      : _ip = overrideIp ?? "$ip:$port",
-        _onRequestFailed = onRequestFailed;
+
+  ApiClient({String? overrideIp}) : _ip = overrideIp ?? "$ip:$port";
 
   ///MARK: API Get Func
   Future<String> apiGet(
@@ -59,8 +61,6 @@ class ApiClient {
   }
 
   void _onError(dynamic errorMessage) {
-    _onRequestFailed ?? () {};
-
     print("Error Message : $errorMessage");
   }
 
@@ -92,5 +92,38 @@ class ApiClient {
       print(e);
     }
     return result;
+  }
+
+  void onRequestFailed({Function? onFailedFunc}) {
+    showDialog<void>(
+      context: globalContext,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(15),
+            width: 180,
+            height: 150,
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                const Expanded(
+                  child: Text('伺服器錯誤'),
+                ),
+                CustomButton(
+                  title: '確認',
+                  titleColor: normalTextColor,
+                  backgroundColor: normalBgColor,
+                  onPress: () {
+                    onFailedFunc != null ? onFailedFunc() : RouteOptions.pagePop();
+                  },
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
