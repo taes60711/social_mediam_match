@@ -17,12 +17,6 @@ class SignUpStepOne extends StatelessWidget {
     print("signUpStepOne");
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
 
-    String googleIconPath = 'assets/google_w_Logo.png';
-    Color googleButtonColor = const Color.fromARGB(255, 93, 161, 238);
-
-    String twitterIconPath = 'assets/twitter_w_Logo.png';
-    Color twitterButtonColor = const Color.fromARGB(255, 41, 41, 41);
-
     //紹介文章
     final Widget introductionWidget = SizedBox(
       width: ScreenSize.width,

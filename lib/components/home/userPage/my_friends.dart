@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 
-import '../../../global.dart';
 import '../../../models/friend_model.dart';
 import '../../../models/user_model.dart';
+import '../../../enum/route_path.dart';
 import '../../../states/friend_state.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';

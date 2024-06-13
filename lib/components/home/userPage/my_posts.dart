@@ -7,8 +7,9 @@ import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/models/post_model.dart';
-import '../../../global.dart';
+
 import '../../../models/user_model.dart';
+import '../../../enum/route_path.dart';
 import '../../../states/post_state.dart';
 import '../postPage/post_comment.dart';
 

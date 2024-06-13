@@ -14,8 +14,9 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
-import '../../../global.dart';
+import '../../../enum/route_path.dart';
 import '../../../models/user_model.dart';
+
 import '../postPage/post_body.dart';
 import '../skillExChangePage/user_detail.dart';
 

@@ -3,13 +3,14 @@ import 'package:social_mediam_match/components/strings/account/login_strings.dar
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-import 'package:social_mediam_match/global.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
 import 'package:social_mediam_match/components/strings/message_strings/account_message.dart';
 
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/route_options.dart';
 
 import '../../provider/account/user_provider.dart';
 
@@ -104,7 +105,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
         userFuture.loginError = LoginError().noError;
       }
 
-      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+      RouteOptions.pagePushToHome();
       resetAllInfo();
     }
 
@@ -157,12 +158,6 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
         ),
       );
     }
-
-    String googleIconPath = 'assets/google_w_Logo.png';
-    Color googleButtonColor = const Color.fromARGB(255, 93, 161, 238);
-
-    String twitterIconPath = 'assets/twitter_w_Logo.png';
-    Color twitterButtonColor = const Color.fromARGB(255, 41, 41, 41);
 
     //ロゴ
     Widget logo = SizedBox(

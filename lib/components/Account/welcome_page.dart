@@ -5,7 +5,8 @@ import 'package:social_mediam_match/components/strings/welcome_strings.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-import '../../global.dart';
+
+import '../../enum/route_path.dart';
 import '../utilities/style/screen_size.dart';
 
 class WelcomePage extends StatelessWidget {

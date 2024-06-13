@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../global.dart';
+import '../../../route_options.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/custom_button.dart';
 import '../../utilities/style/style_config.dart';
@@ -20,7 +19,7 @@ class SignUpStepGuide extends StatelessWidget {
             titleColor: normalTextColor,
             backgroundColor: normalBgColor,
             onPress: () async {
-              Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+              RouteOptions.pagePushToHome();
             },
           ),
         ),
