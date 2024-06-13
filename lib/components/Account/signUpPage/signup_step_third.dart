@@ -21,28 +21,33 @@ class SignUpStepThird extends StatelessWidget {
     UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
     print("signUpStepThird");
 
-    return Column(
-      children: [
-        TitleInput(
-          title: StepThirdPage.jobInputTitle,
-          textController: userSettingViewProvider.jobInput,
+    return SizedBox(
+      height: ScreenSize.height * 0.3,
+      child: FittedBox(
+        child: Column(
+          children: [
+            TitleInput(
+              title: StepThirdPage.jobInputTitle,
+              textController: userSettingViewProvider.jobInput,
+            ),
+            Builder(
+              builder: (context) {
+                print("signUpStepThird introductInput");
+                String displayText = context.select((UserSettingViewProvider value) => value.introductionInput.text);
+                return MultiTitleInput(
+                  title: StepThirdPage.introInputTitle,
+                  textController: userSettingViewProvider.introductionInput,
+                  displayText: displayText,
+                  multiOnChange: (value) => userSettingViewProvider.inputOnChange(value),
+                );
+              },
+            ),
+            skillButton(SignUpEndDrawerType.haveSkill),
+            skillButton(SignUpEndDrawerType.wantSkill),
+            sendBtn(context),
+          ],
         ),
-        Builder(
-          builder: (context) {
-            print("signUpStepThird introductInput");
-            String displayText = context.select((UserSettingViewProvider value) => value.introductionInput.text);
-            return MultiTitleInput(
-              title: StepThirdPage.introInputTitle,
-              textController: userSettingViewProvider.introductionInput,
-              displayText: displayText,
-              multiOnChange: (value) => userSettingViewProvider.inputOnChange(value),
-            );
-          },
-        ),
-        skillButton(SignUpEndDrawerType.haveSkill),
-        skillButton(SignUpEndDrawerType.wantSkill),
-        sendBtn(context),
-      ],
+      ),
     );
   }
 }
@@ -69,6 +74,7 @@ Widget skillButton(SignUpEndDrawerType type) {
     String btnText = type == SignUpEndDrawerType.haveSkill ? StepThirdPage.haveSkillText : StepThirdPage.wantSkillText;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         GestureDetector(
           onTap: () {

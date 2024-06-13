@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/Initial/Initial_page.dart';
+import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
 import 'components/account/login_page.dart';
 import 'components/account/signUpPage/signup_page.dart';
 import 'components/home/coursePage/course_edit_page.dart';
@@ -37,7 +38,10 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
       ),
 
   /// "/login"
-  RoutePath.loginPage.value: (BuildContext context) => const LoginPage(),
+  RoutePath.loginPage.value: (BuildContext context) => ChangeNotifierProvider(
+        create: (_) => LoginProvider(),
+        child: const LoginPage(),
+      ),
 
   /// "/postEdit"
   RoutePath.postEditPage.value: (BuildContext context) => ChangeNotifierProvider(

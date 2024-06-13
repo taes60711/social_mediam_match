@@ -4,6 +4,7 @@ import 'package:social_mediam_match/components/account/signUpPage/signup_step_th
 import 'package:social_mediam_match/components/account/signUpPage/signup_step_two.dart';
 import 'package:social_mediam_match/components/account/skill_choice_setting_page.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/enum/skill_type.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
 import '../../../provider/account/signUpPage/sign_up_view_provider.dart';
@@ -61,11 +62,22 @@ Widget _mainBuild() {
 
       return Column(
         children: [
-          BaseTopBar(
-            backFunc: () => SignUpViewModel(context: context).backButtonFUnc(),
-            title: signUpStepTitle[pageIndex],
+          SizedBox(
+            height: ScreenSize.height * 0.08,
+            child: FittedBox(
+              child: BaseTopBar(
+                backFunc: () => SignUpViewModel(context: context).backButtonFUnc(),
+                title: signUpStepTitle[pageIndex],
+              ),
+            ),
           ),
           signUpAllStepPage[pageIndex],
+          // SizedBox(
+          //   height: ScreenSize.height * 0.4,
+          //   child: FittedBox(
+          //     child: signUpAllStepPage[pageIndex],
+          //   ),
+          // ),
         ],
       );
     },

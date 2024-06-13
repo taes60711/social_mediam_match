@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
+import 'style/style_config.dart';
+
 class BackgroundWidget extends StatelessWidget {
-  final bool? isSafeArea;
+  final bool isSafeArea;
   final Widget child;
-  const BackgroundWidget({super.key, this.isSafeArea, required this.child});
+  const BackgroundWidget({super.key, this.isSafeArea = true, required this.child});
 
   @override
   Widget build(BuildContext context) {
     print("background render");
-    bool isSafeArea = this.isSafeArea ?? true;
+
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
@@ -18,9 +20,9 @@ class BackgroundWidget extends StatelessWidget {
               child: Container(
                 width: ScreenSize.width,
                 height: ScreenSize.height,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/bg.png'),
+                    image: AssetImage(backGround),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -30,9 +32,9 @@ class BackgroundWidget extends StatelessWidget {
           : Container(
               width: ScreenSize.width,
               height: ScreenSize.height,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/bg.png'),
+                  image: AssetImage(backGround),
                   fit: BoxFit.cover,
                 ),
               ),

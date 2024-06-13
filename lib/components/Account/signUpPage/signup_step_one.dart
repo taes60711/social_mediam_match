@@ -112,50 +112,55 @@ class SignUpStepOne extends StatelessWidget {
       );
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        introductionWidget,
-        privacy,
-        TitleInput(
-          title: StepOnePage.emailInputTitle,
-          textController: signUpViewProvider.emailController,
+    return SizedBox(
+      height: ScreenSize.height * 0.4,
+      child: FittedBox(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            introductionWidget,
+            privacy,
+            TitleInput(
+              title: StepOnePage.emailInputTitle,
+              textController: signUpViewProvider.emailController,
+            ),
+            Builder(
+              builder: (context) {
+                String signError = context.select((SignUpViewProvider value) => value.signError);
+                return Text(signError, style: const TextStyle(color: Colors.red));
+              },
+            ),
+            button(
+              title: StepOnePage.emailButtonText,
+              titleColor: normalTextColor,
+              backgroundColor: normalBgColor,
+              onPressed: () {
+                print("SignUpViewProvider Btn");
+                SignUpViewModel(context: context).emailCheck();
+              },
+            ),
+            orText(),
+            button(
+                title: StepOnePage.googleButtonText,
+                titleColor: normalTextColor,
+                backgroundColor: googleButtonColor,
+                iconImg: googleIcon,
+                onPressed: () {
+                  print("Google 登入");
+                }),
+            const SizedBox(height: 10),
+            //ツイッター登録ボタン
+            button(
+                title: StepOnePage.twitterButtonText,
+                titleColor: normalTextColor,
+                backgroundColor: twitterButtonColor,
+                iconImg: twitterIcon,
+                onPressed: () {
+                  print("Twitter 登入");
+                }),
+          ],
         ),
-        Builder(
-          builder: (context) {
-            String signError = context.select((SignUpViewProvider value) => value.signError);
-            return Text(signError, style: const TextStyle(color: Colors.red));
-          },
-        ),
-        button(
-          title: StepOnePage.emailButtonText,
-          titleColor: normalTextColor,
-          backgroundColor: normalBgColor,
-          onPressed: () {
-            print("SignUpViewProvider Btn");
-            SignUpViewModel(context: context).emailCheck();
-          },
-        ),
-        orText(),
-        button(
-            title: StepOnePage.googleButtonText,
-            titleColor: normalTextColor,
-            backgroundColor: googleButtonColor,
-            iconImg: googleIconPath,
-            onPressed: () {
-              print("Google 登入");
-            }),
-        const SizedBox(height: 10),
-        //ツイッター登録ボタン
-        button(
-            title: StepOnePage.twitterButtonText,
-            titleColor: normalTextColor,
-            backgroundColor: twitterButtonColor,
-            iconImg: twitterIconPath,
-            onPressed: () {
-              print("Twitter 登入");
-            }),
-      ],
+      ),
     );
   }
 }

@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_provider.dart';
 
 import '../../../components/utilities/style/style_config.dart';
-import '../../../global.dart';
 import '../../../models/user_model.dart';
 
 import '../../../route_options.dart';
@@ -38,12 +37,6 @@ class SignUpViewModel {
     }
   }
 
-  void closePop() {
-    if (!ModalRoute.of(context)!.isCurrent) {
-      Navigator.of(context).pop();
-    }
-  }
-
   ///登録始まる
   Future<void> signUpStart() async {
     Future<void> loadingPopView() {
@@ -68,7 +61,7 @@ class SignUpViewModel {
 
     // String signUpResult = await signUp(email, password);
     await Future.delayed(const Duration(seconds: 1));
-    closePop();
+    RouteOptions.pagePop();
     signUpViewProvider.onChangeSignUpPage(2);
   }
 

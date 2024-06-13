@@ -20,6 +20,8 @@ void main() async {
     [
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight
     ],
   );
 
