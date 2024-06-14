@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
       child: Column(
         children: [
           // backButton,
-          BaseTopBar(backFunc: () => RouteOptions.pagePushToHome()),
+          BaseTopBar(backFunc: () => RouteOptions.popUntilToHome()),
           //ロゴ
           logo,
           Column(
@@ -50,13 +50,13 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                     //エラーメッセージ
                     errorMessage(),
                     //パスワード忘れるテキスト
-                    forgotPwdText,
+                    forgotPwdText(loginViewContext: context),
                     //ログインボタン
                     _button(
                       title: Login().emailLoginButtonText,
                       titleColor: normalTextColor,
                       backgroundColor: normalBgColor,
-                      onPressed: () async => await LoginViewModel().loginStart(context),
+                      onPressed: () async => await LoginViewModel(loginViewContext: context).loginStart(),
                     ),
                     const SizedBox(height: 10),
 
@@ -138,19 +138,21 @@ Widget errorMessage() {
 }
 
 ///パスワード忘れるテキスト
-Widget forgotPwdText = Padding(
-  padding: const EdgeInsets.symmetric(vertical: 10),
-  child: SizedBox(
-    width: ScreenSize.width,
-    child: Align(
-      alignment: Alignment.centerRight,
-      child: GestureDetector(
-        onTap: () => LoginViewModel().openPwdResetWindow(),
-        child: Text(
-          Login().forgotPassword,
-          style: TextStyle(color: googleButtonColor),
+Widget forgotPwdText({required BuildContext loginViewContext}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 10),
+    child: SizedBox(
+      width: ScreenSize.width,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: GestureDetector(
+          onTap: () => LoginViewModel(loginViewContext: loginViewContext).openPwdResetWindow(),
+          child: Text(
+            Login().forgotPassword,
+            style: TextStyle(color: googleButtonColor),
+          ),
         ),
       ),
     ),
-  ),
-);
+  );
+}

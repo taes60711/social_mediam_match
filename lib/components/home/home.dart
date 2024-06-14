@@ -9,7 +9,6 @@ import 'package:social_mediam_match/states/course_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
 import '../../route_manager.dart';
-import '../../states/friend_state.dart';
 import 'postPage/forum.dart';
 
 class Home extends StatefulWidget {
@@ -48,9 +47,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       const FirendsPage(),
-      UserPage(
-        gotoFriendPage: gotoFriendPage,
-      ),
+      const UserPage(),
     ];
 
     return Scaffold(

@@ -19,7 +19,7 @@ class SignUpStepGuide extends StatelessWidget {
             titleColor: normalTextColor,
             backgroundColor: normalBgColor,
             onPress: () async {
-              RouteOptions.pagePushToHome();
+              RouteOptions.popUntilToHome();
             },
           ),
         ),

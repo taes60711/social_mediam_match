@@ -31,9 +31,9 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
+    LoginUser userData = context.watch<UserProvider>().userData;
     UserSettingProvider userSettingProvider = context.read<UserSettingProvider>();
     UserProvider userProvider = context.read<UserProvider>();
-    LoginUser userData = ModalRoute.of(context)!.settings.arguments as LoginUser;
     TextEditingController nameInput = context.select((UserSettingProvider value) => value.nameInput);
     TextEditingController jobInput = context.select((UserSettingProvider value) => value.jobInput);
     TextEditingController introductionInput = context.select((UserSettingProvider value) => value.introductionInput);

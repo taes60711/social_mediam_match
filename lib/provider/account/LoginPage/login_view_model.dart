@@ -12,24 +12,27 @@ import '../../../components/utilities/style/style_config.dart';
 import '../../../components/utilities/title_input.dart';
 
 class LoginViewModel {
+  BuildContext loginViewContext;
+  LoginViewModel({required this.loginViewContext});
+
   /// パスワードわすれるウインドウズ
   void openPwdResetWindow() {
     showModalBottomSheet(
         context: globalContext,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
-        builder: (context) {
-          return DraggableScrollableSheet(
-              expand: false,
-              minChildSize: 0.65,
-              initialChildSize: 0.75,
-              maxChildSize: 0.75,
-              builder: (context, scrollController) {
-                return ChangeNotifierProvider(
-                  create: (_) => LoginProvider(),
-                  child: Builder(builder: (context) {
-                    TextEditingController emailController = TextEditingController();
-                    String resetPwdError = context.select((LoginProvider value) => value.resetPwdError);
+        builder: (_) {
+          return ChangeNotifierProvider.value(
+            value: loginViewContext.read<LoginProvider>(),
+            child: Builder(builder: (context) {
+              TextEditingController emailController = TextEditingController();
+              String resetPwdError = context.select((LoginProvider value) => value.resetPwdError);
+              return DraggableScrollableSheet(
+                  expand: false,
+                  minChildSize: 0.65,
+                  initialChildSize: 0.75,
+                  maxChildSize: 0.75,
+                  builder: (context, scrollController) {
                     return Stack(
                       children: [
                         Positioned(
@@ -66,7 +69,7 @@ class LoginViewModel {
                         Positioned(
                             right: 25,
                             child: GestureDetector(
-                              onTap: () => RouteOptions.pagePop(),
+                              onTap: () => RouteOptions.pop(),
                               child: Container(
                                 width: 60,
                                 height: 60,
@@ -82,14 +85,14 @@ class LoginViewModel {
                             ))
                       ],
                     );
-                  }),
-                );
-              });
+                  });
+            }),
+          );
         });
   }
 
   /// ログインステップ開始
-  Future<void> loginStart(BuildContext context) async {
+  Future<void> loginStart() async {
     Future<void> loadingPopView() {
       return showDialog<void>(
         barrierDismissible: false,
@@ -101,12 +104,12 @@ class LoginViewModel {
       );
     }
 
-    String inputedEmail = context.read<LoginProvider>().emailController.text;
-    String intputedPwd = context.read<LoginProvider>().pwdController.text;
+    String inputedEmail = loginViewContext.read<LoginProvider>().emailController.text;
+    String intputedPwd = loginViewContext.read<LoginProvider>().pwdController.text;
 
     loadingPopView();
-    bool isLoginSucess = await context.read<LoginProvider>().signIn(inputedEmail, intputedPwd);
-    RouteOptions.pagePop();
-    isLoginSucess ? RouteOptions.pagePushToHome() : () {};
+    bool isLoginSucess = await loginViewContext.read<LoginProvider>().signIn(inputedEmail, intputedPwd);
+    RouteOptions.pop();
+    isLoginSucess ? RouteOptions.popUntilToHome() : () {};
   }
 }

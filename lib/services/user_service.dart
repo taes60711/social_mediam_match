@@ -26,7 +26,7 @@ class UserService extends ApiClient {
         model: LoginUser.toModel,
       );
     } catch (e) {
-      onRequestFailed(onFailedFunc: () => RouteOptions.pagePushToHome());
+      onRequestFailed(onFailedFunc: () => RouteOptions.popUntilToHome());
     }
 
     return userdata;

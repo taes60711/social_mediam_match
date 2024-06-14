@@ -10,6 +10,8 @@ import 'package:social_mediam_match/models/post_model.dart';
 
 import '../../../models/user_model.dart';
 import '../../../enum/route_path.dart';
+import '../../../provider/account/user_provider.dart';
+import '../../../route_options.dart';
 import '../../../states/post_state.dart';
 import '../postPage/post_comment.dart';
 
@@ -67,9 +69,9 @@ class MyPosts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
-    VoidCallback gotoFriendPage =
-        (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['gotoFriendPage'] as VoidCallback;
+    LoginUser userData = context.watch<UserProvider>().userData;
+    gotoFriendPage() => context.read<BottomBarControllerProvider>().bottomBarPageChange(3);
+
     PostState postState = context.read<PostState>();
     List<PostModel> myAllPosts = context.watch<PostState>().myAllPosts;
     GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.myPostsGlobalKey);

@@ -21,7 +21,7 @@ class SignUpViewModel {
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
     int preIndex = signUpViewProvider.pageIndex - 1;
     if (preIndex < 0 || preIndex >= 1) {
-      RouteOptions.pagePushToHome();
+      RouteOptions.popUntilToHome();
     } else {
       signUpViewProvider.onChangeSignUpPage(preIndex);
     }
@@ -61,7 +61,7 @@ class SignUpViewModel {
 
     // String signUpResult = await signUp(email, password);
     await Future.delayed(const Duration(seconds: 1));
-    RouteOptions.pagePop();
+    RouteOptions.pop();
     signUpViewProvider.onChangeSignUpPage(2);
   }
 

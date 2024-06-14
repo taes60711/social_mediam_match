@@ -116,7 +116,7 @@ class ApiClient {
                   titleColor: normalTextColor,
                   backgroundColor: normalBgColor,
                   onPress: () {
-                    onFailedFunc != null ? onFailedFunc() : RouteOptions.pagePop();
+                    onFailedFunc != null ? onFailedFunc() : RouteOptions.pop();
                   },
                 )
               ],

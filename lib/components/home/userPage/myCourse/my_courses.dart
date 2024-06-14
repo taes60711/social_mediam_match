@@ -10,6 +10,7 @@ import 'package:social_mediam_match/states/course_state.dart';
 import '../../../../enum/route_path.dart';
 import '../../../../models/course_model.dart';
 import '../../../../models/user_model.dart';
+import '../../../../provider/account/user_provider.dart';
 import '../../../utilities/custom_end_drawer.dart';
 import '../../../utilities/skill_list_view.dart';
 import '../../../utilities/style/screen_size.dart';
@@ -22,7 +23,7 @@ class MyCourses extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CourseState courseState = context.read<CourseState>();
-    LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
+    LoginUser userData = context.watch<UserProvider>().userData;
     List<CourseModel> myCourseData = context.watch<CourseState>().myCourseData;
     GlobalKey<ScaffoldState> globalKey = context.select((CourseState value) => value.globalKey);
 

@@ -6,9 +6,9 @@ import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
+import 'package:social_mediam_match/route_options.dart';
 import '../../../models/user_model.dart';
 import '../../../enum/route_path.dart';
-import '../../../states/friend_state.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/skill_list_view.dart';
@@ -22,55 +22,37 @@ class SettingButtonInfo {
 }
 
 class UserPage extends StatelessWidget {
-  final VoidCallback gotoFriendPage;
-  const UserPage({super.key, required this.gotoFriendPage});
+  const UserPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     LoginUser userData = context.watch<UserProvider>().userData;
 
-    FriendState friendState = context.read<FriendState>();
-
     List<SettingButtonInfo> settingButtonInfoList = [
       SettingButtonInfo(
-          title: UserPageString().profileBtn,
-          icon: FontAwesomeIcons.solidAddressCard,
-          onPress: () {
-            Navigator.of(context).pushNamed(
-              RoutePath.profilePage.value,
-              arguments: userData,
-            );
-          }),
+        title: UserPageString().profileBtn,
+        icon: FontAwesomeIcons.solidAddressCard,
+        onPress: () => RouteOptions.pushTo(RoutePath.profilePage.value),
+      ),
       SettingButtonInfo(
           title: UserPageString().postBtn,
           icon: FontAwesomeIcons.solidNewspaper,
           onPress: () {
-            Navigator.of(context).pushNamed(
-              RoutePath.myPosts.value,
-              arguments: {
-                "userData": userData,
-                "gotoFriendPage": gotoFriendPage,
-              },
-            );
+            RouteOptions.pushTo(RoutePath.myPosts.value);
           }),
       SettingButtonInfo(
           title: UserPageString().courseBtn,
           icon: FontAwesomeIcons.school,
           onPress: () {
             print("${UserPageString().courseBtn}");
-            Navigator.of(context).pushNamed(RoutePath.myCourses.value, arguments: {
-              "userData": userData,
-            });
+            RouteOptions.pushTo(RoutePath.myCourses.value);
           }),
       SettingButtonInfo(
           title: UserPageString().settingBtn,
           icon: FontAwesomeIcons.gear,
           onPress: () {
             print("${UserPageString().settingBtn}");
-            Navigator.of(context).pushNamed(RoutePath.privacySettingPage.value, arguments: {
-              "userData": userData,
-              "friendState": friendState,
-            });
+            RouteOptions.pushTo(RoutePath.privacySettingPage.value);
           }),
     ];
 
@@ -80,10 +62,7 @@ class UserPage extends StatelessWidget {
           icon: FontAwesomeIcons.userLarge,
           onPress: () {
             print("${UserPageString().friendManagernBtn}");
-            Navigator.of(context).pushNamed(RoutePath.myFriends.value, arguments: {
-              "userData": userData,
-              "friendState": friendState,
-            });
+            RouteOptions.pushTo(RoutePath.myFriends.value);
           }),
       SettingButtonInfo(
           title: UserPageString().notificationBtn,

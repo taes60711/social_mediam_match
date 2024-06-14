@@ -4,12 +4,16 @@ import 'package:social_mediam_match/global.dart';
 import 'enum/route_path.dart';
 
 class RouteOptions {
-  static void pagePop() {
+  static void pop() {
     Navigator.of(globalContext).pop();
   }
 
-  static void pagePushToHome() {
+  static void popUntilToHome() {
     Navigator.of(globalContext).popUntil(ModalRoute.withName(RoutePath.home.value));
+  }
+
+  static void pushTo(String routePath) {
+    Navigator.of(globalContext).pushNamed(routePath);
   }
 }
 
