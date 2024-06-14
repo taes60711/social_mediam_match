@@ -9,14 +9,15 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/friend_model.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
 import '../../../models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
 import '../../utilities/custom_end_drawer.dart';
 
 class FirendsPage extends StatelessWidget {
-  final LoginUser userData;
-  const FirendsPage({super.key, required this.userData});
+  const FirendsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    LoginUser userData = context.watch<UserProvider>().userData;
     FriendState friendFuture = context.read<FriendState>();
     List<FriendListModel> friendList = context.watch<FriendState>().friendList;
     TextEditingController friendListFilterInput = context.select((FriendState value) => value.friendListFilterInput);

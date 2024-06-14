@@ -17,21 +17,21 @@ import 'package:social_mediam_match/states/course_state.dart';
 import '../../../enum/route_path.dart';
 import '../../../models/user_model.dart';
 
+import '../../../provider/account/user_provider.dart';
 import '../postPage/post_body.dart';
 import '../skillExChangePage/user_detail.dart';
 
 class CoursePage extends StatelessWidget {
-  final LoginUser userData;
   final VoidCallback gotoFriendPage;
 
   const CoursePage({
     super.key,
-    required this.userData,
     required this.gotoFriendPage,
   });
 
   @override
   Widget build(BuildContext context) {
+    LoginUser userData = context.watch<UserProvider>().userData;
     CourseState courseState = context.read<CourseState>();
     List<CourseModel> courseData = context.watch<CourseState>().courseData;
 

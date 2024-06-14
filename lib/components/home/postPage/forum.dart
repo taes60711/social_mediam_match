@@ -7,15 +7,15 @@ import 'package:social_mediam_match/components/home/postPage/post_page_by_type.d
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../../models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
 import '../../../states/post_state.dart';
 import '../../utilities/custom_end_drawer.dart';
 import 'post_page.dart';
 
 class Forum extends StatelessWidget {
-  final LoginUser userData;
   final VoidCallback gotoFriendPage;
   final VoidCallback gotoCoursePage;
-  const Forum({super.key, required this.userData, required this.gotoFriendPage, required this.gotoCoursePage});
+  const Forum({super.key, required this.gotoFriendPage, required this.gotoCoursePage});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class Forum extends StatelessWidget {
     GlobalKey<ScaffoldState> forumGlobalKey = context.select((PostState value) => value.forumGlobalKey);
     List<String> boradList = ["協槓", "技術", "網頁", "韌體", "AI"];
     int selectedboardIndex = context.select((PostState value) => value.selectedboardIndex);
-
+    LoginUser userData = context.watch<UserProvider>().userData;
     return Scaffold(
       key: forumGlobalKey,
       endDrawer: ChangeNotifierProvider(

@@ -12,6 +12,7 @@ import '../../../provider/home/skill_map_provider.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/basic_top_bar.dart';
+import '../../utilities/fit_widget.dart';
 import 'signup_step_guide.dart';
 import 'signup_step_one.dart';
 
@@ -62,22 +63,20 @@ Widget _mainBuild() {
 
       return Column(
         children: [
-          SizedBox(
+          FitWidget(
             height: ScreenSize.height * 0.08,
-            child: FittedBox(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: BaseTopBar(
                 backFunc: () => SignUpViewModel(context: context).backButtonFUnc(),
                 title: signUpStepTitle[pageIndex],
               ),
             ),
           ),
-          signUpAllStepPage[pageIndex],
-          // SizedBox(
-          //   height: ScreenSize.height * 0.4,
-          //   child: FittedBox(
-          //     child: signUpAllStepPage[pageIndex],
-          //   ),
-          // ),
+          FitWidget(
+            height: ScreenSize.height * 0.8,
+            child: signUpAllStepPage[pageIndex],
+          ),
         ],
       );
     },

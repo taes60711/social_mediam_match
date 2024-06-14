@@ -18,20 +18,23 @@ class SignUpStepOne extends StatelessWidget {
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
 
     //紹介文章
-    final Widget introductionWidget = SizedBox(
-      width: ScreenSize.width,
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          StepOnePage.introduction,
-          style: TextStyle(color: hintTextColor, fontSize: 14),
+    final Widget introductionWidget = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 5),
+      child: SizedBox(
+        width: ScreenSize.width,
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            StepOnePage.introduction,
+            style: TextStyle(color: hintTextColor, fontSize: 14),
+          ),
         ),
       ),
     );
 
     //プライバシー
     final Widget privacy = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 5),
       child: SizedBox(
         width: ScreenSize.width,
         child: Row(
@@ -112,55 +115,49 @@ class SignUpStepOne extends StatelessWidget {
       );
     }
 
-    return SizedBox(
-      height: ScreenSize.height * 0.4,
-      child: FittedBox(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            introductionWidget,
-            privacy,
-            TitleInput(
-              title: StepOnePage.emailInputTitle,
-              textController: signUpViewProvider.emailController,
-            ),
-            Builder(
-              builder: (context) {
-                String signError = context.select((SignUpViewProvider value) => value.signError);
-                return Text(signError, style: const TextStyle(color: Colors.red));
-              },
-            ),
-            button(
-              title: StepOnePage.emailButtonText,
-              titleColor: normalTextColor,
-              backgroundColor: normalBgColor,
-              onPressed: () {
-                print("SignUpViewProvider Btn");
-                SignUpViewModel(context: context).emailCheck();
-              },
-            ),
-            orText(),
-            button(
-                title: StepOnePage.googleButtonText,
-                titleColor: normalTextColor,
-                backgroundColor: googleButtonColor,
-                iconImg: googleIcon,
-                onPressed: () {
-                  print("Google 登入");
-                }),
-            const SizedBox(height: 10),
-            //ツイッター登録ボタン
-            button(
-                title: StepOnePage.twitterButtonText,
-                titleColor: normalTextColor,
-                backgroundColor: twitterButtonColor,
-                iconImg: twitterIcon,
-                onPressed: () {
-                  print("Twitter 登入");
-                }),
-          ],
+    return Column(
+      children: [
+        introductionWidget,
+        privacy,
+        TitleInput(
+          title: StepOnePage.emailInputTitle,
+          textController: signUpViewProvider.emailController,
         ),
-      ),
+        Builder(
+          builder: (context) {
+            String signError = context.select((SignUpViewProvider value) => value.signError);
+            return Text(signError, style: const TextStyle(color: Colors.red));
+          },
+        ),
+        button(
+          title: StepOnePage.emailButtonText,
+          titleColor: normalTextColor,
+          backgroundColor: normalBgColor,
+          onPressed: () {
+            print("SignUpViewProvider Btn");
+            SignUpViewModel(context: context).emailCheck();
+          },
+        ),
+        orText(),
+        button(
+            title: StepOnePage.googleButtonText,
+            titleColor: normalTextColor,
+            backgroundColor: googleButtonColor,
+            iconImg: googleIcon,
+            onPressed: () {
+              print("Google 登入");
+            }),
+        const SizedBox(height: 10),
+        //ツイッター登録ボタン
+        button(
+            title: StepOnePage.twitterButtonText,
+            titleColor: normalTextColor,
+            backgroundColor: twitterButtonColor,
+            iconImg: twitterIcon,
+            onPressed: () {
+              print("Twitter 登入");
+            }),
+      ],
     );
   }
 }

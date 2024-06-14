@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/Initial/Initial_page.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
@@ -79,3 +80,11 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
   /// "/myFriends"
   RoutePath.myFriends.value: (BuildContext context) => const MyFriends(),
 };
+
+List<BottomNavigationBarItem> bottomBarItems = const <BottomNavigationBarItem>[
+  BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.home), label: '主頁'),
+  BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.solidFaceLaugh), label: '技能交換'),
+  BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.bookOpenReader), label: '課程'),
+  BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.solidComments), label: '聊天室'),
+  BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.solidUser), label: '我的'),
+];

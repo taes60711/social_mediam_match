@@ -2,6 +2,7 @@ import 'package:social_mediam_match/components/strings/account/login_strings.dar
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
+import 'package:social_mediam_match/components/utilities/fit_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 import 'package:flutter/material.dart';
@@ -37,49 +38,48 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
           logo,
           Column(
             children: [
-              SizedBox(
-                height: ScreenSize.height * 0.6,
-                child: FittedBox(
-                  child: Column(
-                    children: [
-                      //メールアドレスInput
-                      TitleInput(title: Login().emailInputTitle, textController: emailController),
-                      //パスワードInput
-                      TitleInput(title: Login().pwdInputTitle, textController: pwdController),
-                      //エラーメッセージ
-                      errorMessage(),
-                      //パスワード忘れるテキスト
-                      forgotPwdText,
-                      //ログインボタン
-                      _button(
-                        title: Login().emailLoginButtonText,
-                        titleColor: normalTextColor,
-                        backgroundColor: normalBgColor,
-                        onPressed: () async => await LoginViewModel().loginStart(context),
-                      ),
-                      const SizedBox(height: 10),
+              FitWidget(
+                height: ScreenSize.safeHeight * 0.6,
+                alignment: Alignment.center,
+                child: Column(
+                  children: [
+                    //メールアドレスInput
+                    TitleInput(title: Login().emailInputTitle, textController: emailController),
+                    //パスワードInput
+                    TitleInput(title: Login().pwdInputTitle, textController: pwdController),
+                    //エラーメッセージ
+                    errorMessage(),
+                    //パスワード忘れるテキスト
+                    forgotPwdText,
+                    //ログインボタン
+                    _button(
+                      title: Login().emailLoginButtonText,
+                      titleColor: normalTextColor,
+                      backgroundColor: normalBgColor,
+                      onPressed: () async => await LoginViewModel().loginStart(context),
+                    ),
+                    const SizedBox(height: 10),
 
-                      //グーグル登録ボタン
-                      _button(
-                          title: Login().googleButtonText,
-                          titleColor: normalTextColor,
-                          backgroundColor: googleButtonColor,
-                          iconImg: googleIcon,
-                          onPressed: () {
-                            print("Google 登入");
-                          }),
-                      const SizedBox(height: 10),
-                      //ツイッター登録ボタン
-                      _button(
-                          title: Login().twitterButtonText,
-                          titleColor: normalTextColor,
-                          backgroundColor: twitterButtonColor,
-                          iconImg: twitterIcon,
-                          onPressed: () {
-                            print("Twitter 登入");
-                          }),
-                    ],
-                  ),
+                    //グーグル登録ボタン
+                    _button(
+                        title: Login().googleButtonText,
+                        titleColor: normalTextColor,
+                        backgroundColor: googleButtonColor,
+                        iconImg: googleIcon,
+                        onPressed: () {
+                          print("Google 登入");
+                        }),
+                    const SizedBox(height: 10),
+                    //ツイッター登録ボタン
+                    _button(
+                        title: Login().twitterButtonText,
+                        titleColor: normalTextColor,
+                        backgroundColor: twitterButtonColor,
+                        iconImg: twitterIcon,
+                        onPressed: () {
+                          print("Twitter 登入");
+                        }),
+                  ],
                 ),
               ),
             ],
@@ -108,7 +108,7 @@ _button({required title, required titleColor, required backgroundColor, required
 
 ///ロゴ
 Widget logo = SizedBox(
-  height: ScreenSize.safeHeight * 0.3,
+  height: ScreenSize.safeHeight * 0.4,
   child: Image.asset(
     logoImg,
     width: 150,

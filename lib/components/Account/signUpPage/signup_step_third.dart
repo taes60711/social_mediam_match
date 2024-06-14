@@ -21,33 +21,31 @@ class SignUpStepThird extends StatelessWidget {
     UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
     print("signUpStepThird");
 
-    return SizedBox(
-      height: ScreenSize.height * 0.3,
-      child: FittedBox(
-        child: Column(
-          children: [
-            TitleInput(
-              title: StepThirdPage.jobInputTitle,
-              textController: userSettingViewProvider.jobInput,
-            ),
-            Builder(
-              builder: (context) {
-                print("signUpStepThird introductInput");
-                String displayText = context.select((UserSettingViewProvider value) => value.introductionInput.text);
-                return MultiTitleInput(
-                  title: StepThirdPage.introInputTitle,
-                  textController: userSettingViewProvider.introductionInput,
-                  displayText: displayText,
-                  multiOnChange: (value) => userSettingViewProvider.inputOnChange(value),
-                );
-              },
-            ),
-            skillButton(SignUpEndDrawerType.haveSkill),
-            skillButton(SignUpEndDrawerType.wantSkill),
-            sendBtn(context),
-          ],
+    return Column(
+      children: [
+        TitleInput(
+          title: StepThirdPage.jobInputTitle,
+          textController: userSettingViewProvider.jobInput,
         ),
-      ),
+        Builder(
+          builder: (context) {
+            print("signUpStepThird introductInput");
+            String displayText = context.select((UserSettingViewProvider value) => value.introductionInput.text);
+            return MultiTitleInput(
+              title: StepThirdPage.introInputTitle,
+              textController: userSettingViewProvider.introductionInput,
+              displayText: displayText,
+              multiOnChange: (value) => userSettingViewProvider.inputOnChange(value),
+            );
+          },
+        ),
+        const SizedBox(height: 10),
+        skillButton(SignUpEndDrawerType.haveSkill),
+        const SizedBox(height: 20),
+        skillButton(SignUpEndDrawerType.wantSkill),
+        const SizedBox(height: 10),
+        sendBtn(context),
+      ],
     );
   }
 }

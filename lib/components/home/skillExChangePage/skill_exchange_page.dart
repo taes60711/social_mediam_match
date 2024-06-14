@@ -12,6 +12,7 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
 import '../../../states/skill_exchange_state.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/skill_list_view.dart';
@@ -146,12 +147,12 @@ class SkillExchangeLoading extends StatelessWidget {
 }
 
 class SkillExChangePage extends StatelessWidget {
-  final LoginUser userData;
   final VoidCallback gotoFriendPage;
-  const SkillExChangePage({super.key, required this.userData, required this.gotoFriendPage});
+  const SkillExChangePage({super.key, required this.gotoFriendPage});
 
   @override
   Widget build(BuildContext context) {
+    LoginUser userData = context.watch<UserProvider>().userData;
     List<LoginUser> allUserData = context.watch<SkillExChangeState>().allUserData;
     GlobalKey<ScaffoldState> globalKey = context.select((SkillExChangeState value) => value.globalKey);
     List<String> filterSkill = context.select((SkillExChangeState value) => value.filterSkill);

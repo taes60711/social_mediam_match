@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/skill_exchange_page.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_page.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
 import 'package:social_mediam_match/components/home/userPage/user_page.dart';
-import 'package:social_mediam_match/models/user_model.dart';
+import 'package:social_mediam_match/route_options.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
-
-import '../../provider/account/user_provider.dart';
+import '../../route_manager.dart';
 import '../../states/friend_state.dart';
 import 'postPage/forum.dart';
 
@@ -22,92 +20,54 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
-
   void gotoFriendPage() {
-    setState(() {
-      _selectedIndex = 3;
-    });
+    context.read<BottomBarControllerProvider>().bottomBarPageChange(3);
   }
 
   void gotoCourserPage() {
-    setState(() {
-      _selectedIndex = 2;
-    });
+    context.read<BottomBarControllerProvider>().bottomBarPageChange(2);
   }
 
   @override
   Widget build(BuildContext context) {
-    FriendState friendState = context.read<FriendState>();
-    LoginUser userData = context.watch<UserProvider>().userData;
-
     List<Widget> widgetOptions = <Widget>[
       ChangeNotifierProvider(
         create: (_) => PostState(),
         child: Forum(
-          userData: userData,
           gotoFriendPage: gotoFriendPage,
           gotoCoursePage: gotoCourserPage,
         ),
       ),
       SkillExChangePage(
-        userData: userData,
         gotoFriendPage: gotoFriendPage,
       ),
       ChangeNotifierProvider(
         create: (_) => CourseState(),
         child: CoursePage(
-          userData: userData,
           gotoFriendPage: gotoFriendPage,
         ),
       ),
-      FirendsPage(
-        userData: userData,
-      ),
+      const FirendsPage(),
       UserPage(
-        userData: userData,
-        friendState: friendState,
         gotoFriendPage: gotoFriendPage,
       ),
     ];
 
     return Scaffold(
       body: SafeArea(
-        child: widgetOptions.elementAt(_selectedIndex),
+        child: widgetOptions.elementAt(context.watch<BottomBarControllerProvider>().index),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.home),
-            label: '主頁',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.solidFaceLaugh),
-            label: '技能交換',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.bookOpenReader),
-            label: '課程',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.solidComments),
-            label: '聊天室',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.solidUser),
-            label: '我的',
-          ),
-        ],
-        currentIndex: _selectedIndex,
+        items: bottomBarItems,
+        currentIndex: context.watch<BottomBarControllerProvider>().index,
         selectedItemColor: Colors.amber[800],
         onTap: (value) {
+          context.read<BottomBarControllerProvider>().bottomBarPageChange(value);
           setState(() {
-            print("Page Index : $value");
             if (value != 1) {
               Provider.of<SkillExChangeState>(context, listen: false).skillExchangePageDisPose();
             }
-            _selectedIndex = value;
           });
         },
       ),

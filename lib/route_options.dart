@@ -12,3 +12,12 @@ class RouteOptions {
     Navigator.of(globalContext).popUntil(ModalRoute.withName(RoutePath.home.value));
   }
 }
+
+class BottomBarControllerProvider extends ChangeNotifier {
+  int index = 0;
+  void bottomBarPageChange(int selectedIndex) {
+    index = selectedIndex;
+    print("selectedIndex : $index");
+    notifyListeners();
+  }
+}

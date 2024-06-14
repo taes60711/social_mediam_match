@@ -8,6 +8,7 @@ import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
 import 'provider/account/user_provider.dart';
 import 'route_manager.dart';
+import 'route_options.dart';
 import 'states/friend_state.dart';
 import 'states/skill_exchange_state.dart';
 
@@ -29,6 +30,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => BottomBarControllerProvider()),
         ChangeNotifierProvider(create: (_) => FriendState(channelListUrl: channelListUrl)),
         ChangeNotifierProvider(create: (_) => SkillExChangeState()),
       ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/strings/welcome_strings.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
+import 'package:social_mediam_match/components/utilities/fit_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 import '../../enum/route_path.dart';
@@ -29,33 +30,31 @@ class WelcomePage extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          FitWidget(
             height: ScreenSize.height * 0.2,
-            child: FittedBox(
-              child: Column(
-                children: [
-                  //登録ボタン
-                  _button(
-                      title: WelcomeStrings().firstButtonText,
-                      titleColor: normalTextColor,
-                      backgroundColor: normalBgColor,
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(RoutePath.signUpPage.value);
-                      }),
-                  const SizedBox(height: 10),
-                  //”ログインページ遷移”ボタン
-                  _button(
-                      title: WelcomeStrings().loginButtonText,
-                      titleColor: normalBgColor2,
-                      backgroundColor: disAbleColor,
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(RoutePath.loginPage.value);
-                      }),
-                  const SizedBox(height: 30),
-                  //バージョンテキスト
-                  _versionText,
-                ],
-              ),
+            child: Column(
+              children: [
+                //登録ボタン
+                _button(
+                    title: WelcomeStrings().firstButtonText,
+                    titleColor: normalTextColor,
+                    backgroundColor: normalBgColor,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(RoutePath.signUpPage.value);
+                    }),
+                const SizedBox(height: 10),
+                //”ログインページ遷移”ボタン
+                _button(
+                    title: WelcomeStrings().loginButtonText,
+                    titleColor: normalBgColor2,
+                    backgroundColor: disAbleColor,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(RoutePath.loginPage.value);
+                    }),
+                const SizedBox(height: 30),
+                //バージョンテキスト
+                _versionText,
+              ],
             ),
           )
         ],
