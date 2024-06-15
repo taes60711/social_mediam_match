@@ -6,7 +6,8 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import '../../../models/user_model.dart';
-import '../../../enum/route_path.dart';
+
+import '../../../pageManager/enum/route_path.dart';
 import '../../utilities/style/style_config.dart';
 import '../skillExChangePage/user_detail.dart';
 import 'post_body.dart';

@@ -6,9 +6,11 @@ import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
-import 'package:social_mediam_match/route_options.dart';
+
 import '../../../models/user_model.dart';
-import '../../../enum/route_path.dart';
+
+import '../../../pageManager/enum/route_path.dart';
+import '../../../pageManager/setting/route_controller.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/skill_list_view.dart';

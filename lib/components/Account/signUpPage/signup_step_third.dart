@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
-
 import '../../../enum/skill_type.dart';
 import '../../../models/skill_model.dart';
 import '../../../provider/account/signUpPage/sign_up_view_provider.dart';

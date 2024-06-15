@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../provider/account/signUpPage/sign_up_view_model.dart';
 import '../../../provider/account/signUpPage/sign_up_view_provider.dart';
 import '../../../provider/home/user_setting_view_provider.dart';

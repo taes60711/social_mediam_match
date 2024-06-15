@@ -4,7 +4,7 @@ import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 
 import '../../../models/friend_model.dart';
 import '../../../models/user_model.dart';
-import '../../../enum/route_path.dart';
+import '../../../pageManager/enum/route_path.dart';
 import '../../../states/friend_state.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';

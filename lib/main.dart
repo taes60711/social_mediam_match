@@ -6,9 +6,11 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
+import 'pageManager/provider/bottom_bar_controller_provider.dart';
+
+import 'pageManager/setting/route_manager.dart';
 import 'provider/account/user_provider.dart';
-import 'route_manager.dart';
-import 'route_options.dart';
+
 import 'states/friend_state.dart';
 import 'states/skill_exchange_state.dart';
 

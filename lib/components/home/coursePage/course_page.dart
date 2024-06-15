@@ -11,22 +11,24 @@ import 'package:social_mediam_match/components/utilities/skill_list_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
+
 import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
-import '../../../enum/route_path.dart';
 import '../../../models/user_model.dart';
 
+import '../../../pageManager/enum/bottom_bar_path.dart';
+import '../../../pageManager/enum/route_path.dart';
+
+import '../../../pageManager/provider/bottom_bar_controller_provider.dart';
 import '../../../provider/account/user_provider.dart';
+
 import '../postPage/post_body.dart';
 import '../skillExChangePage/user_detail.dart';
 
 class CoursePage extends StatelessWidget {
-  final VoidCallback gotoFriendPage;
-
   const CoursePage({
     super.key,
-    required this.gotoFriendPage,
   });
 
   @override
@@ -53,7 +55,9 @@ class CoursePage extends StatelessWidget {
         globalKey: globalKey,
         userData: userData,
         otherUser: otherUser,
-        gotoFriendPage: gotoFriendPage,
+        gotoFriendPage: () {
+          context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+        },
       );
     } else if (endDrawerType == "courseFilter") {
       endDrawerWidget = CourseFilter(
@@ -67,7 +71,9 @@ class CoursePage extends StatelessWidget {
           courseData: choicedCourse,
           globalKey: globalKey,
           userData: userData,
-          gotoFriendPage: gotoFriendPage,
+          gotoFriendPage: () {
+            context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+          },
         ),
       );
     }

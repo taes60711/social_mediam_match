@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 
 import 'package:social_mediam_match/states/friend_state.dart';
 
+import '../../../pageManager/enum/route_path.dart';
 import '../../../provider/account/user_provider.dart';
 
-import '../../../enum/route_path.dart';
 import '../../../services/dynamic_links.dart';
 import '../../../services/notification_service.dart';
 import '../../strings/userPage/user_page_string.dart';

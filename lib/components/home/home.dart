@@ -4,11 +4,13 @@ import 'package:social_mediam_match/components/home/skillExChangePage/skill_exch
 import 'package:social_mediam_match/components/home/coursePage/course_page.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
 import 'package:social_mediam_match/components/home/userPage/user_page.dart';
-import 'package:social_mediam_match/route_options.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
-import '../../route_manager.dart';
+import '../../pageManager/enum/bottom_bar_path.dart';
+import '../../pageManager/provider/bottom_bar_controller_provider.dart';
+
+import '../../pagemanager/setting/bottom_bar_manager.dart';
 import 'postPage/forum.dart';
 
 class Home extends StatefulWidget {
@@ -19,32 +21,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  void gotoFriendPage() {
-    context.read<BottomBarControllerProvider>().bottomBarPageChange(3);
-  }
-
-  void gotoCourserPage() {
-    context.read<BottomBarControllerProvider>().bottomBarPageChange(2);
-  }
-
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
       ChangeNotifierProvider(
         create: (_) => PostState(),
-        child: Forum(
-          gotoFriendPage: gotoFriendPage,
-          gotoCoursePage: gotoCourserPage,
-        ),
+        child: const Forum(),
       ),
-      SkillExChangePage(
-        gotoFriendPage: gotoFriendPage,
-      ),
+      const SkillExChangePage(),
       ChangeNotifierProvider(
         create: (_) => CourseState(),
-        child: CoursePage(
-          gotoFriendPage: gotoFriendPage,
-        ),
+        child: const CoursePage(),
       ),
       const FirendsPage(),
       const UserPage(),
@@ -60,7 +47,13 @@ class _HomeState extends State<Home> {
         currentIndex: context.watch<BottomBarControllerProvider>().index,
         selectedItemColor: Colors.amber[800],
         onTap: (value) {
-          context.read<BottomBarControllerProvider>().bottomBarPageChange(value);
+          BottomBarPath choicedPath = BottomBarPath.home;
+          for (var element in BottomBarPath.values) {
+            if (element.path == value) {
+              choicedPath = element;
+            }
+          }
+          context.read<BottomBarControllerProvider>().bottomBarPageChange(choicedPath);
           setState(() {
             if (value != 1) {
               Provider.of<SkillExChangeState>(context, listen: false).skillExchangePageDisPose();

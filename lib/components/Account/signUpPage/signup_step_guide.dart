@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../route_options.dart';
+import '../../../pageManager/setting/route_controller.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/custom_button.dart';
 import '../../utilities/style/style_config.dart';

@@ -3,13 +3,13 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
-import 'package:social_mediam_match/route_options.dart';
 
 import '../../../components/strings/account/login_strings.dart';
 import '../../../components/utilities/custom_button.dart';
 import '../../../components/utilities/style/screen_size.dart';
 import '../../../components/utilities/style/style_config.dart';
 import '../../../components/utilities/title_input.dart';
+import '../../../pageManager/setting/route_controller.dart';
 
 class LoginViewModel {
   BuildContext loginViewContext;

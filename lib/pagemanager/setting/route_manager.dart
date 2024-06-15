@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/Initial/Initial_page.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
-import 'components/account/login_page.dart';
-import 'components/account/signUpPage/signup_page.dart';
-import 'components/home/coursePage/course_edit_page.dart';
-import 'components/home/postPage/editor_page.dart';
-import 'components/home/userPage/myCourse/my_courses.dart';
-import 'components/home/userPage/my_friends.dart';
-import 'components/home/userPage/my_posts.dart';
-import 'components/home/userPage/privacy_setting.dart';
-import 'components/home/userPage/profile.dart';
-import 'enum/route_path.dart';
-import 'provider/account/signUpPage/sign_up_view_provider.dart';
-import 'provider/home/skill_map_provider.dart';
-import 'provider/home/user_setting_view_provider.dart';
-import 'provider/Initial/initial_provider.dart';
-import 'states/course_state.dart';
-import 'states/post_state.dart';
-import 'states/user_setting_provider.dart';
+import '../../components/account/login_page.dart';
+import '../../components/account/signUpPage/signup_page.dart';
+import '../../components/home/coursePage/course_edit_page.dart';
+import '../../components/home/postPage/editor_page.dart';
+import '../../components/home/userPage/myCourse/my_courses.dart';
+import '../../components/home/userPage/my_friends.dart';
+import '../../components/home/userPage/my_posts.dart';
+import '../../components/home/userPage/privacy_setting.dart';
+import '../../components/home/userPage/profile.dart';
+import '../../provider/Initial/initial_provider.dart';
+import '../../provider/account/signUpPage/sign_up_view_provider.dart';
+import '../../provider/home/skill_map_provider.dart';
+import '../../provider/home/user_setting_view_provider.dart';
+import '../../states/course_state.dart';
+import '../../states/post_state.dart';
+import '../../states/user_setting_provider.dart';
+import '../enum/route_path.dart';
 
 Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder>{
   /// "/"
@@ -80,11 +79,3 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
   /// "/myFriends"
   RoutePath.myFriends.value: (BuildContext context) => const MyFriends(),
 };
-
-List<BottomNavigationBarItem> bottomBarItems = const <BottomNavigationBarItem>[
-  BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.home), label: '主頁'),
-  BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.solidFaceLaugh), label: '技能交換'),
-  BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.bookOpenReader), label: '課程'),
-  BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.solidComments), label: '聊天室'),
-  BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.solidUser), label: '我的'),
-];

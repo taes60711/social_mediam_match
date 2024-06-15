@@ -7,9 +7,9 @@ import 'package:social_mediam_match/components/home/userPage/myCourse/courese_me
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
-import '../../../../enum/route_path.dart';
 import '../../../../models/course_model.dart';
 import '../../../../models/user_model.dart';
+import '../../../../pageManager/enum/route_path.dart';
 import '../../../../provider/account/user_provider.dart';
 import '../../../utilities/custom_end_drawer.dart';
 import '../../../utilities/skill_list_view.dart';

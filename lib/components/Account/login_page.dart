@@ -4,14 +4,13 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/fit_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_view_model.dart';
-import 'package:social_mediam_match/route_options.dart';
+import '../../pageManager/setting/route_controller.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

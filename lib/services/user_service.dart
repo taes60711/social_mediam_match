@@ -3,10 +3,11 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:social_mediam_match/global.dart';
-import 'package:social_mediam_match/route_options.dart';
+
 import 'package:social_mediam_match/services/api_client.dart';
 
 import '../models/user_model.dart';
+import '../pageManager/setting/route_controller.dart';
 
 ///ユーザAPIサービス
 class UserService extends ApiClient {

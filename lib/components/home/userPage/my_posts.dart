@@ -9,9 +9,13 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/models/post_model.dart';
 
 import '../../../models/user_model.dart';
-import '../../../enum/route_path.dart';
+
+import '../../../pageManager/enum/bottom_bar_path.dart';
+import '../../../pageManager/enum/route_path.dart';
+
+import '../../../pageManager/provider/bottom_bar_controller_provider.dart';
 import '../../../provider/account/user_provider.dart';
-import '../../../route_options.dart';
+
 import '../../../states/post_state.dart';
 import '../postPage/post_comment.dart';
 
@@ -70,7 +74,7 @@ class MyPosts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LoginUser userData = context.watch<UserProvider>().userData;
-    gotoFriendPage() => context.read<BottomBarControllerProvider>().bottomBarPageChange(3);
+    gotoFriendPage() => context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
 
     PostState postState = context.read<PostState>();
     List<PostModel> myAllPosts = context.watch<PostState>().myAllPosts;

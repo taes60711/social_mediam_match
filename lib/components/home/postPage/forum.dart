@@ -6,16 +6,18 @@ import 'package:social_mediam_match/components/home/postPage/post_page_by_textfi
 import 'package:social_mediam_match/components/home/postPage/post_page_by_type.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+
 import '../../../models/user_model.dart';
+import '../../../pageManager/enum/bottom_bar_path.dart';
+import '../../../pageManager/provider/bottom_bar_controller_provider.dart';
 import '../../../provider/account/user_provider.dart';
+
 import '../../../states/post_state.dart';
 import '../../utilities/custom_end_drawer.dart';
 import 'post_page.dart';
 
 class Forum extends StatelessWidget {
-  final VoidCallback gotoFriendPage;
-  final VoidCallback gotoCoursePage;
-  const Forum({super.key, required this.gotoFriendPage, required this.gotoCoursePage});
+  const Forum({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,9 @@ class Forum extends StatelessWidget {
         create: (_) => PostState(),
         child: PostPageByType(
           userData: userData,
-          gotoFriendPage: gotoFriendPage,
+          gotoFriendPage: () {
+            context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+          },
           type: selectedboardIndex,
         ),
       ),
@@ -53,7 +57,9 @@ class Forum extends StatelessWidget {
                         create: (_) => PostState(),
                         child: PostPageByTextFilter(
                           userData: userData,
-                          gotoFriendPage: gotoFriendPage,
+                          gotoFriendPage: () {
+                            context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+                          },
                         ),
                       ),
                     ),
@@ -89,7 +95,7 @@ class Forum extends StatelessWidget {
                 items: [
                   GestureDetector(
                     onTap: () {
-                      gotoCoursePage();
+                      context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.course);
                     },
                     child: Container(
                       color: Colors.blue,
@@ -97,7 +103,7 @@ class Forum extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      gotoFriendPage();
+                      context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
                     },
                     child: Container(
                       color: Colors.deepPurple,
@@ -147,14 +153,18 @@ class Forum extends StatelessWidget {
                           create: (_) => PostState(),
                           child: PostPage(
                             userData: userData,
-                            gotoFriendPage: gotoFriendPage,
+                            gotoFriendPage: () {
+                              context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+                            },
                           ),
                         ),
                         ChangeNotifierProvider(
                           create: (_) => PostState(),
                           child: PostPageByNew(
                             userData: userData,
-                            gotoFriendPage: gotoFriendPage,
+                            gotoFriendPage: () {
+                              context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+                            },
                           ),
                         ),
                         Column(

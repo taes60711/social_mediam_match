@@ -12,7 +12,12 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/user_model.dart';
+
+import '../../../pageManager/enum/bottom_bar_path.dart';
+
+import '../../../pageManager/provider/bottom_bar_controller_provider.dart';
 import '../../../provider/account/user_provider.dart';
+
 import '../../../states/skill_exchange_state.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/skill_list_view.dart';
@@ -147,8 +152,9 @@ class SkillExchangeLoading extends StatelessWidget {
 }
 
 class SkillExChangePage extends StatelessWidget {
-  final VoidCallback gotoFriendPage;
-  const SkillExChangePage({super.key, required this.gotoFriendPage});
+  const SkillExChangePage({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +188,9 @@ class SkillExChangePage extends StatelessWidget {
                 globalKey: globalKey,
                 userData: userData,
                 otherUser: otherUser,
-                gotoFriendPage: gotoFriendPage,
+                gotoFriendPage: () {
+                  context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+                },
               ),
         floatingActionButton: Visibility(
           visible: floatButtonIsVisiable,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/global.dart';
 
-import 'enum/route_path.dart';
+import '../enum/route_path.dart';
 
 class RouteOptions {
   static void pop() {
@@ -13,15 +13,7 @@ class RouteOptions {
   }
 
   static void pushTo(String routePath) {
+    print("PushPageTo : $routePath");
     Navigator.of(globalContext).pushNamed(routePath);
-  }
-}
-
-class BottomBarControllerProvider extends ChangeNotifier {
-  int index = 0;
-  void bottomBarPageChange(int selectedIndex) {
-    index = selectedIndex;
-    print("selectedIndex : $index");
-    notifyListeners();
   }
 }

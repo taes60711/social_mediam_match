@@ -1,12 +1,12 @@
 // ignore_for_file: avoid_print
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/route_options.dart';
 import '../../global.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import '../components/utilities/custom_button.dart';
 import '../components/utilities/style/style_config.dart';
+import '../pageManager/setting/route_controller.dart';
 
 class ApiClient {
   final String _ip;
