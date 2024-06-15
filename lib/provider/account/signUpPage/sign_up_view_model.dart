@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_provider.dart';
-import 'package:social_mediam_match/provider/account/user_provider.dart';
-
 import '../../../components/utilities/style/style_config.dart';
 import '../../../models/user_model.dart';
-
 import '../../../pageManager/setting/route_controller.dart';
 import '../../../services/firebase_service.dart';
 import '../../../services/user_service.dart';
-import '../../home/skill_map_provider.dart';
 import '../../home/user_setting_view_provider.dart';
 
 class SignUpViewModel {

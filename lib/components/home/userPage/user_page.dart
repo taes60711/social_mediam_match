@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/skill_bar.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
@@ -9,7 +10,9 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/enum/skill_type.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 import '../../../models/user_model.dart';
-import '../../../pagemanager/setting/route_manager.dart';
+
+import '../../../pageManager/enum/route_path.dart';
+import '../../../pageManager/setting/route_controller.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/style/screen_size.dart';
@@ -112,4 +115,57 @@ Widget userInfo(BuildContext context) {
       ),
     ),
   );
+}
+
+class SettingButtonInfo {
+  String title;
+  IconData icon;
+  VoidCallback onPress;
+  SettingButtonInfo({required this.title, required this.icon, required this.onPress});
+}
+
+class UserPageRouthsettingButtonInfo {
+  static List<SettingButtonInfo> list = [
+    SettingButtonInfo(
+      title: UserPageString().profileBtn,
+      icon: FontAwesomeIcons.solidAddressCard,
+      onPress: () => RouteOptions.pushTo(RoutePath.profilePage.value),
+    ),
+    SettingButtonInfo(
+        title: UserPageString().postBtn,
+        icon: FontAwesomeIcons.solidNewspaper,
+        onPress: () {
+          RouteOptions.pushTo(RoutePath.myPosts.value);
+        }),
+    SettingButtonInfo(
+        title: UserPageString().courseBtn,
+        icon: FontAwesomeIcons.school,
+        onPress: () {
+          RouteOptions.pushTo(RoutePath.myCourses.value);
+        }),
+    SettingButtonInfo(
+        title: UserPageString().settingBtn,
+        icon: FontAwesomeIcons.gear,
+        onPress: () {
+          RouteOptions.pushTo(RoutePath.privacySettingPage.value);
+        }),
+    SettingButtonInfo(
+        title: UserPageString().friendManagernBtn,
+        icon: FontAwesomeIcons.userLarge,
+        onPress: () {
+          RouteOptions.pushTo(RoutePath.myFriends.value);
+        }),
+    SettingButtonInfo(
+        title: UserPageString().notificationBtn,
+        icon: FontAwesomeIcons.solidBell,
+        onPress: () {
+          print(UserPageString().guideBtn);
+        }),
+    SettingButtonInfo(
+        title: UserPageString().guideBtn,
+        icon: Icons.question_answer,
+        onPress: () {
+          print(UserPageString().guideBtn);
+        }),
+  ];
 }

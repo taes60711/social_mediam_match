@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/Initial/Initial_page.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
@@ -12,16 +12,36 @@ import '../../components/home/userPage/my_friends.dart';
 import '../../components/home/userPage/my_posts.dart';
 import '../../components/home/userPage/privacy_setting.dart';
 import '../../components/home/userPage/profile.dart';
-import '../../components/strings/userPage/user_page_string.dart';
+import '../../global.dart';
+import '../../main.dart';
 import '../../provider/Initial/initial_provider.dart';
 import '../../provider/account/signUpPage/sign_up_view_provider.dart';
+import '../../provider/account/user_provider.dart';
 import '../../provider/home/skill_map_provider.dart';
 import '../../provider/home/user_setting_view_provider.dart';
 import '../../states/course_state.dart';
+import '../../states/friend_state.dart';
 import '../../states/post_state.dart';
+import '../../states/skill_exchange_state.dart';
 import '../../states/user_setting_provider.dart';
 import '../enum/route_path.dart';
-import 'route_controller.dart';
+import '../provider/bottom_bar_controller_provider.dart';
+
+/// main
+Widget mainWidget = MultiProvider(
+  providers: [
+    ChangeNotifierProvider(create: (_) => UserProvider()),
+    ChangeNotifierProvider(create: (_) => BottomBarControllerProvider()),
+    ChangeNotifierProvider(create: (_) => FriendState(channelListUrl: channelListUrl)),
+    ChangeNotifierProvider(create: (_) => SkillExChangeState()),
+  ],
+  child: EasyLocalization(
+    supportedLocales: const [Locale('zh', 'TW'), Locale('en', 'US'), Locale('ja', 'JP')],
+    fallbackLocale: const Locale('en', 'US'),
+    path: 'assets/langs',
+    child: const MyApp(),
+  ),
+);
 
 Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder>{
   /// "/"
@@ -82,56 +102,3 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
   /// "/myFriends"
   RoutePath.myFriends.value: (BuildContext context) => const MyFriends(),
 };
-
-class SettingButtonInfo {
-  String title;
-  IconData icon;
-  VoidCallback onPress;
-  SettingButtonInfo({required this.title, required this.icon, required this.onPress});
-}
-
-class UserPageRouthsettingButtonInfo {
-  static List<SettingButtonInfo> list = [
-    SettingButtonInfo(
-      title: UserPageString().profileBtn,
-      icon: FontAwesomeIcons.solidAddressCard,
-      onPress: () => RouteOptions.pushTo(RoutePath.profilePage.value),
-    ),
-    SettingButtonInfo(
-        title: UserPageString().postBtn,
-        icon: FontAwesomeIcons.solidNewspaper,
-        onPress: () {
-          RouteOptions.pushTo(RoutePath.myPosts.value);
-        }),
-    SettingButtonInfo(
-        title: UserPageString().courseBtn,
-        icon: FontAwesomeIcons.school,
-        onPress: () {
-          RouteOptions.pushTo(RoutePath.myCourses.value);
-        }),
-    SettingButtonInfo(
-        title: UserPageString().settingBtn,
-        icon: FontAwesomeIcons.gear,
-        onPress: () {
-          RouteOptions.pushTo(RoutePath.privacySettingPage.value);
-        }),
-    SettingButtonInfo(
-        title: UserPageString().friendManagernBtn,
-        icon: FontAwesomeIcons.userLarge,
-        onPress: () {
-          RouteOptions.pushTo(RoutePath.myFriends.value);
-        }),
-    SettingButtonInfo(
-        title: UserPageString().notificationBtn,
-        icon: FontAwesomeIcons.solidBell,
-        onPress: () {
-          print(UserPageString().guideBtn);
-        }),
-    SettingButtonInfo(
-        title: UserPageString().guideBtn,
-        icon: Icons.question_answer,
-        onPress: () {
-          print(UserPageString().guideBtn);
-        }),
-  ];
-}

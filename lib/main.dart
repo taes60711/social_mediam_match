@@ -28,22 +28,7 @@ void main() async {
     ],
   );
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => BottomBarControllerProvider()),
-        ChangeNotifierProvider(create: (_) => FriendState(channelListUrl: channelListUrl)),
-        ChangeNotifierProvider(create: (_) => SkillExChangeState()),
-      ],
-      child: EasyLocalization(
-        supportedLocales: const [Locale('zh', 'TW'), Locale('en', 'US'), Locale('ja', 'JP')],
-        fallbackLocale: const Locale('en', 'US'),
-        path: 'assets/langs',
-        child: const MyApp(),
-      ),
-    ),
-  );
+  runApp(mainWidget);
 }
 
 class MyApp extends StatelessWidget {

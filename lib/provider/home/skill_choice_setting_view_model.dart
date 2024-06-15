@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/provider/account/user_provider.dart';
-import 'package:social_mediam_match/states/user_setting_provider.dart';
 import '../../components/utilities/custom_button.dart';
 import '../../components/utilities/style/style_config.dart';
 import '../../enum/skill_type.dart';
