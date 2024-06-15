@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_provider.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
 
 import '../../../components/utilities/style/style_config.dart';
 import '../../../models/user_model.dart';
@@ -105,7 +106,6 @@ class SignUpViewModel {
 
   ///ユーザデータ更新する
   Future<void> updateUserData() async {
-    SkillMapProvider skillMapProvider = context.read<SkillMapProvider>();
     UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
 
@@ -114,13 +114,13 @@ class SignUpViewModel {
       name: userSettingViewProvider.nameInput.text,
       job: userSettingViewProvider.jobInput.text,
       introduction: userSettingViewProvider.introductionInput.text,
-      mainSkills: skillMapProvider.haveSkillList,
-      wantSkills: skillMapProvider.wantSkillList,
+      mainSkills: userSettingViewProvider.haveSkillList,
+      wantSkills: userSettingViewProvider.wantSkillList,
     );
 
     print(
         "name : ${userSettingViewProvider.nameInput.text} job : ${userSettingViewProvider.jobInput.text} introduction : ${userSettingViewProvider.introductionInput.text}");
-    print("haveSkillList : ${skillMapProvider.haveSkillList} wantSkillList : ${skillMapProvider.wantSkillList}");
+    print("haveSkillList : ${userSettingViewProvider.haveSkillList} wantSkillList : ${userSettingViewProvider.wantSkillList}");
     print("updateData $updateData");
     // await UserService().sqlUpdateUserData(signUpViewProvider.signedUID, updateData).then(
     //   (isSucess) async {

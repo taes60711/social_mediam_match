@@ -5,7 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/states/friend_state.dart';
-
 import '../../services/firebase_service.dart';
 import '../../services/user_service.dart';
 
@@ -52,7 +51,7 @@ class UserProvider extends ChangeNotifier {
   Future<void> signOut(FriendState chatListChannel) async {
     await FirebaseSerivce().firebaseSignOut();
     chatListChannel.closefriendList();
-    userData.uid = "-1";
+    userData = LoginUser();
     notifyListeners();
   }
 

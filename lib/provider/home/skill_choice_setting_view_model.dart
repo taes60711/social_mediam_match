@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
+import 'package:social_mediam_match/states/user_setting_provider.dart';
 import '../../components/utilities/custom_button.dart';
 import '../../components/utilities/style/style_config.dart';
 import '../../enum/skill_type.dart';
 import '../../models/skill_model.dart';
 import 'skill_map_provider.dart';
+import 'user_setting_view_provider.dart';
 
 class SKillChoiceSettingViewModel {
   BuildContext context;
@@ -45,11 +48,12 @@ class SKillChoiceSettingViewModel {
 
   void skillChoice(SkillChoicePageType skillType, RequestUserSkillData changedSkill, int level) {
     SkillMapProvider skillMapProvider = context.read<SkillMapProvider>();
+    UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
 
     switch (skillType) {
       case SkillChoicePageType.have:
-        bool addMaxLength = skillMapProvider.haveSkillList.length >= 5;
-        bool changeLevel = skillMapProvider.haveSkillList.any((element) => element.name == changedSkill.name);
+        bool addMaxLength = userSettingViewProvider.haveSkillList.length >= 5;
+        bool changeLevel = userSettingViewProvider.haveSkillList.any((element) => element.name == changedSkill.name);
         bool canel = level == 0;
         if (addMaxLength && !changeLevel && !canel) {
           print("can't add");
@@ -59,8 +63,8 @@ class SKillChoiceSettingViewModel {
         }
         break;
       case SkillChoicePageType.want:
-        bool addMaxLength = skillMapProvider.wantSkillList.length >= 5;
-        bool changeLevel = skillMapProvider.wantSkillList.any((element) => element.name == changedSkill.name);
+        bool addMaxLength = userSettingViewProvider.wantSkillList.length >= 5;
+        bool changeLevel = userSettingViewProvider.wantSkillList.any((element) => element.name == changedSkill.name);
         bool canel = level == 0;
         if (addMaxLength && !changeLevel && !canel) {
           print("can't add");
@@ -70,6 +74,6 @@ class SKillChoiceSettingViewModel {
         break;
     }
 
-    skillMapProvider.skillLevelChange(changedSkill, level);
+    userSettingViewProvider.changeSkillList(skillMapProvider.skillLevelChange(changedSkill, level));
   }
 }

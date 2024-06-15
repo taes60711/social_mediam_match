@@ -3,6 +3,7 @@ enum RoutePath {
   home("/"),
   loginPage("/login"),
   signUpPage("/signUp"),
+
   profilePage("/profile"),
   postEditPage("/postEdit"),
   courseEditPage("/courseEdit"),

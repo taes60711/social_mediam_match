@@ -12,9 +12,6 @@ class SkillMapProvider extends ChangeNotifier {
     SkillType.other: [],
   };
 
-  List<RequestUserSkillData> haveSkillList = [];
-  List<RequestUserSkillData> wantSkillList = [];
-
   Future<void> userSkillList() async {
     List<RequestSkillListData> requestSkillListData = await SkillService().requestSkillList();
 
@@ -55,15 +52,16 @@ class SkillMapProvider extends ChangeNotifier {
     }
   }
 
-  void skillLevelChange(RequestUserSkillData changedSkill, int level) {
+  Map<String, List<RequestUserSkillData>> skillLevelChange(RequestUserSkillData changedSkill, int level) {
     print("skillLevelChange ${changedSkill.name}");
     changedSkill.level = level;
-
-    typeListToSkill();
     notifyListeners();
+    return typeListToSkill();
   }
 
-  void typeListToSkill() {
+  Map<String, List<RequestUserSkillData>> typeListToSkill() {
+    List<RequestUserSkillData> haveSkillList = [];
+    List<RequestUserSkillData> wantSkillList = [];
     for (var e in SkillType.values) {
       for (var ele in skillMap[e]!) {
         if (ele.skillHave.level > 0) {
@@ -94,5 +92,8 @@ class SkillMapProvider extends ChangeNotifier {
     ///昇順整列
     haveSkillList.sort((a, b) => a.name.length.compareTo(b.name.length));
     wantSkillList.sort((a, b) => a.name.length.compareTo(b.name.length));
+
+    Map<String, List<RequestUserSkillData>> result = {"haveSkillList": haveSkillList, "wantSkillList": wantSkillList};
+    return result;
   }
 }
