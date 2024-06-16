@@ -37,9 +37,14 @@
   "su_st_two_p_introInputTitle":"自我介紹",
   "su_st_two_p_sentButtonText":"送出",
 
+  "//": "signUp_StepGuide",
+  "stepGuideTitle": "導覽",
+  "skip":"跳過",
+
   "//": "skill",
   "su_st_two_p_haveSkill":"能教的技能",
   "su_st_two_p_wantSkill":"想學的技能",
+  "skill_level":"程度",
 
   "//": "login",
   "login_emailInputTitle":"信箱",

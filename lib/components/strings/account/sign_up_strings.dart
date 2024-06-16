@@ -6,7 +6,7 @@ class SignUpError {
   static String noError = "";
 }
 
-//signup_first_page
+//signup_step_one
 class StepOnePage {
   static String title = tr("su_fp_title");
   static String introduction = tr("su_fp_introduction");
@@ -21,7 +21,7 @@ class StepOnePage {
   static String orText = tr("su_fp_orText");
 }
 
-//signup_step_one
+//signup_step_two
 class StepTwoPage {
   static String title = tr("su_st_one_p_title");
   static String nameInputTitle = tr("su_st_one_p_nameInputTitle");
@@ -29,7 +29,7 @@ class StepTwoPage {
   static String signUpButtonText = tr("su_st_one_p_signUpButtonText");
 }
 
-//signup_step_two
+//signup_step_third
 class StepThirdPage {
   static String title = tr("su_st_two_p_title");
   static String jobInputTitle = tr("su_st_two_p_jobInputTitle");
@@ -37,10 +37,11 @@ class StepThirdPage {
   static String haveSkillText = tr("su_st_two_p_haveSkill");
   static String wantSkillText = tr("su_st_two_p_wantSkill");
   static String sendButtonText = tr("su_st_two_p_sentButtonText");
+  static String skillLevelHint = tr("skill_level");
 }
 
 //signup_guide
 class StepGuide {
-  static String title = "導覽";
-  static String skipButtonText = "跳過";
+  static String title = tr("stepGuideTitle");
+  static String skipButtonText = tr("skip");
 }

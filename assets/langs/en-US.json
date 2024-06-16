@@ -37,9 +37,14 @@
   "su_st_two_p_introInputTitle":"Introduction",
   "su_st_two_p_sentButtonText":"Send",
 
+  "//": "signUp_StepGuide",
+  "stepGuideTitle": "Guide",
+  "skip": "Skip",
+
   "//": "skill",
   "su_st_two_p_haveSkill":"Skill",
   "su_st_two_p_wantSkill":"Learning SKill",
+  "skill_level": "level",
 
   "//": "login",
   "login_emailInputTitle":"Email",

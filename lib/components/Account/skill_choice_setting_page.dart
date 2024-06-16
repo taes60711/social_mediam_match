@@ -10,6 +10,7 @@ import '../../CustomBouncingScrollPhysics.dart';
 import '../../enum/skill_type.dart';
 import '../../models/skill_model.dart';
 import '../../provider/home/skill_map_provider.dart';
+import '../strings/account/sign_up_strings.dart';
 import '../utilities/custom_end_drawer.dart';
 import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
@@ -55,7 +56,7 @@ class SkillChoiceSettingPage extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                                  margin: EdgeInsets.symmetric(vertical: 8),
+                                  margin: const EdgeInsets.symmetric(vertical: 8),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: googleButtonColor.withOpacity(0.8),
@@ -142,15 +143,15 @@ Widget skillItem({
   required RequestUserSkillData skillInfo,
 }) {
   Widget wSkillLevel = Text(
-    "程度: ${skillInfo.level}",
+    "${StepThirdPage.skillLevelHint}: ${skillInfo.level}",
     style: TextStyle(color: normalBgColor2, fontSize: 14),
   );
   if (skillInfo.level > 0) {
     wSkillLevel = Row(
       children: [
         Text(
-          "程度: ${skillInfo.level}",
-          style: TextStyle(color: Colors.white, fontSize: 14),
+          "${StepThirdPage.skillLevelHint}: ${skillInfo.level}",
+          style: const TextStyle(color: Colors.white, fontSize: 14),
         ),
         GestureDetector(
           onTap: () {
@@ -166,8 +167,8 @@ Widget skillItem({
   }
   return Container(
     width: ScreenSize.width,
-    margin: EdgeInsets.symmetric(vertical: 4),
-    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+    margin: const EdgeInsets.symmetric(vertical: 4),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(5),
       color: skillInfo.level > 0 ? normalBgColor : normalBgColor2.withOpacity(0.1),

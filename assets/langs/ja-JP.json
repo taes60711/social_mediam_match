@@ -35,12 +35,16 @@
   "su_st_two_p_title":"個人情報設定",
   "su_st_two_p_jobInputTitle":"職業",
   "su_st_two_p_introInputTitle":"自己紹介",
-
   "su_st_two_p_sentButtonText":"送信する",
+
+  "//": "signUp_StepGuide",
+  "stepGuideTitle": "ガイド",
+  "skip": "スキップ",
 
   "//": "skill",
   "su_st_two_p_haveSkill":"持っているスキル",
   "su_st_two_p_wantSkill":"勉強したいスキル",
+  "skill_level": "程度",
 
   "//": "login",
   "login_emailInputTitle":"メールアドレス",
