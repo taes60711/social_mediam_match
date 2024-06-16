@@ -1,22 +1,22 @@
 import 'package:easy_localization/easy_localization.dart';
 
 class LoginError {
-  String emailFormatError = tr("login_error_invalid-email");
-  String emailorPwdError = tr("login_invalid-credential");
-  String noError = "";
+  static String emailFormatError = tr("login_error_invalid-email");
+  static String emailorPwdError = tr("login_invalid-credential");
+  static String noError = "";
 }
 
 class Login {
-  String emailInputTitle = tr("login_emailInputTitle");
-  String pwdInputTitle = tr("login_pwdInputTitle");
-  String forgotPassword = tr("login_pwdForgot");
-  String emailLoginButtonText = tr("login_emailButtonText");
-  String signUpButtonText = tr("login_singUpButtonText");
-  String googleButtonText = tr("login_googleButtonText");
-  String twitterButtonText = tr("login_twitterButtonText");
+  static String emailInputTitle = tr("login_emailInputTitle");
+  static String pwdInputTitle = tr("login_pwdInputTitle");
+  static String forgotPassword = tr("login_pwdForgot");
+  static String emailLoginButtonText = tr("login_emailButtonText");
+  static String signUpButtonText = tr("login_singUpButtonText");
+  static String googleButtonText = tr("login_googleButtonText");
+  static String twitterButtonText = tr("login_twitterButtonText");
 }
 
 class PasswordForgot {
-  String emailInputTitle = tr("pwdForgot_emailInputTitle");
-  String sendButtonText = tr("pwdForgot_sendButtonText");
+  static String emailInputTitle = tr("pwdForgot_emailInputTitle");
+  static String sendButtonText = tr("pwdForgot_sendButtonText");
 }

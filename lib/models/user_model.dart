@@ -61,6 +61,8 @@ class LoginUser extends UserModel {
     List<RequestUserSkillData> wantSkills = (json["wantSkills"] as List<dynamic>)
         .map((e) => RequestUserSkillData(name: e['name'], level: e['level'], month: e['month']))
         .toList();
+    mainSkills.sort((a, b) => a.name.length.compareTo(b.name.length));
+    wantSkills.sort((a, b) => a.name.length.compareTo(b.name.length));
 
     String formattedTime = "";
     if (json['lastlogin'] != null) {

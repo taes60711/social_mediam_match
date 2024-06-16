@@ -19,10 +19,10 @@ class SignUpViewProvider extends ChangeNotifier {
   String signedUID = "";
 
   ///EndDrawerのステータス（スキルページ開くよう）
-  SignUpEndDrawerType endDrawerOpenInfo = SignUpEndDrawerType.close;
+  SkillEndDrawerType endDrawerOpenInfo = SkillEndDrawerType.close;
 
   ///スキルページ開くとステータス交換
-  void changeEndDrawerStatus(SignUpEndDrawerType status) {
+  void changeEndDrawerStatus(SkillEndDrawerType status) {
     endDrawerOpenInfo = status;
     notifyListeners();
   }

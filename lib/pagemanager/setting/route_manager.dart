@@ -11,7 +11,7 @@ import '../../components/home/userPage/myCourse/my_courses.dart';
 import '../../components/home/userPage/my_friends.dart';
 import '../../components/home/userPage/my_posts.dart';
 import '../../components/home/userPage/privacy_setting.dart';
-import '../../components/home/userPage/profile.dart';
+import '../../components/home/userPage/user_setting.dart';
 import '../../global.dart';
 import '../../main.dart';
 import '../../provider/Initial/initial_provider.dart';
@@ -23,9 +23,8 @@ import '../../states/course_state.dart';
 import '../../states/friend_state.dart';
 import '../../states/post_state.dart';
 import '../../states/skill_exchange_state.dart';
-import '../../states/user_setting_provider.dart';
 import '../enum/route_path.dart';
-import '../provider/bottom_bar_controller_provider.dart';
+import 'bottom_bar_controller_provider.dart';
 
 /// main
 Widget mainWidget = MultiProvider(
@@ -82,9 +81,12 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
   RoutePath.privacySettingPage.value: (BuildContext context) => const PrivacySetting(),
 
   /// "/profile"
-  RoutePath.profilePage.value: (BuildContext context) => ChangeNotifierProvider(
-        create: (_) => UserSettingProvider(),
-        child: const Profile(),
+  RoutePath.profilePage.value: (BuildContext context) => MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => UserSettingViewProvider()),
+          ChangeNotifierProvider(create: (_) => SkillMapProvider()),
+        ],
+        child: const UserSetting(),
       ),
 
   /// "/myposts"

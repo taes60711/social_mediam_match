@@ -17,7 +17,7 @@ class SignUpViewModel {
   void backButtonFUnc() {
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
     int preIndex = signUpViewProvider.pageIndex - 1;
-    if (preIndex < 0 || preIndex >= 1) {
+    if (preIndex < 0) {
       RouteOptions.popUntilToHome();
     } else {
       signUpViewProvider.onChangeSignUpPage(preIndex);
@@ -96,8 +96,8 @@ class SignUpViewModel {
       signUpResult = firebaseSignUpResult;
     }
 
-    ///登録結果画面を更新する（エラーメッセージ）
-    signUpViewProvider.signUpResultChange(signUpResult);
+    // ///登録結果画面を更新する（エラーメッセージ）
+    // signUpViewProvider.signUpResultChange(signUpResult);
   }
 
   ///ユーザデータ更新する

@@ -44,12 +44,12 @@ class SKillChoiceSettingViewModel {
     );
   }
 
-  void skillChoice(SkillChoicePageType skillType, RequestUserSkillData changedSkill, int level) {
+  void skillChoice(SkillEndDrawerType skillType, RequestUserSkillData changedSkill, int level) {
     SkillMapProvider skillMapProvider = context.read<SkillMapProvider>();
     UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
 
     switch (skillType) {
-      case SkillChoicePageType.have:
+      case SkillEndDrawerType.haveSkill:
         bool addMaxLength = userSettingViewProvider.haveSkillList.length >= 5;
         bool changeLevel = userSettingViewProvider.haveSkillList.any((element) => element.name == changedSkill.name);
         bool canel = level == 0;
@@ -60,7 +60,7 @@ class SKillChoiceSettingViewModel {
           return;
         }
         break;
-      case SkillChoicePageType.want:
+      case SkillEndDrawerType.wantSkill:
         bool addMaxLength = userSettingViewProvider.wantSkillList.length >= 5;
         bool changeLevel = userSettingViewProvider.wantSkillList.any((element) => element.name == changedSkill.name);
         bool canel = level == 0;
@@ -70,6 +70,8 @@ class SKillChoiceSettingViewModel {
           return;
         }
         break;
+      case SkillEndDrawerType.close:
+        return;
     }
 
     userSettingViewProvider.changeSkillList(skillMapProvider.skillLevelChange(changedSkill, level));

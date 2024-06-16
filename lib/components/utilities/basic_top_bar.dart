@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 import 'style/screen_size.dart';
 
 class BaseTopBar extends StatelessWidget {
@@ -17,7 +18,7 @@ class BaseTopBar extends StatelessWidget {
       leftWidget ??
           GestureDetector(
             onTap: () {
-              backFunc!() ?? ();
+              backFunc != null ? backFunc!() : RouteOptions.pop();
             },
             child: const Icon(Icons.arrow_back_ios),
           ),

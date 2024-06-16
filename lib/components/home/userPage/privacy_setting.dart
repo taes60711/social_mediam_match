@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 
 import 'package:social_mediam_match/states/friend_state.dart';
 
@@ -53,7 +54,7 @@ class PrivacySetting extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   await userFuture.signOut(friendState);
-                  Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                  RouteOptions.popUntilToHome();
                 },
                 child: Text(signOutButton),
               ),

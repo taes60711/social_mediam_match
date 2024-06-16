@@ -18,9 +18,7 @@ class SignUpStepGuide extends StatelessWidget {
             title: StepGuide.skipButtonText,
             titleColor: normalTextColor,
             backgroundColor: normalBgColor,
-            onPress: () async {
-              RouteOptions.popUntilToHome();
-            },
+            onPress: () => RouteOptions.popUntilToHome(),
           ),
         ),
       ],

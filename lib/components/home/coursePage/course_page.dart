@@ -20,7 +20,7 @@ import '../../../models/user_model.dart';
 import '../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../pageManager/enum/route_path.dart';
 
-import '../../../pageManager/provider/bottom_bar_controller_provider.dart';
+import '../../../pageManager/setting/bottom_bar_controller_provider.dart';
 import '../../../provider/account/user_provider.dart';
 
 import '../postPage/post_body.dart';

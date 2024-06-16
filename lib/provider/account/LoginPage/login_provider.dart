@@ -12,7 +12,7 @@ class LoginProvider extends ChangeNotifier {
   String resetPwdError = ResetPwdStatus.noMessage.value;
 
   ///ログインのエラーメッセージ
-  String loginError = LoginError().noError;
+  String loginError = LoginError.noError;
 
   ///メソッド：ログイン
   ///email：メールアドレス，password：パスワード

@@ -13,12 +13,7 @@ enum SkillType {
   const SkillType(this.value);
 }
 
-enum SkillChoicePageType {
-  have,
-  want;
-}
-
-enum SignUpEndDrawerType {
+enum SkillEndDrawerType {
   haveSkill,
   wantSkill,
   close;

@@ -14,7 +14,7 @@ import '../utilities/custom_end_drawer.dart';
 import '../utilities/style/screen_size.dart';
 
 class SkillChoiceSettingPage extends StatelessWidget {
-  final SkillChoicePageType skillType;
+  final SkillEndDrawerType skillType;
   final Function onDismissedFunc;
   const SkillChoiceSettingPage({super.key, required this.skillType, required this.onDismissedFunc});
 
@@ -49,7 +49,7 @@ class SkillChoiceSettingPage extends StatelessWidget {
                             Column(
                               children: skillMapProvider.skillMap[e]!.map((e) {
                                 RequestUserSkillData skillInfo = e.skillHave;
-                                if (skillType == SkillChoicePageType.want) {
+                                if (skillType == SkillEndDrawerType.wantSkill) {
                                   skillInfo = e.skillWant;
                                 }
 
@@ -96,7 +96,7 @@ Widget searchBar() {
 
 Widget skillItem({
   required BuildContext context,
-  required SkillChoicePageType skillType,
+  required SkillEndDrawerType skillType,
   required RequestUserSkillData skillInfo,
 }) {
   Widget wSkillLevel = Text("${skillInfo.level}");

@@ -61,10 +61,10 @@ class FirebaseSerivce {
       print("signIn error ${e.code}");
       switch (e.code) {
         case "invalid-credential":
-          loginResult = LoginError().emailorPwdError;
+          loginResult = LoginError.emailorPwdError;
           break;
         case "invalid-email":
-          loginResult = LoginError().emailFormatError;
+          loginResult = LoginError.emailFormatError;
           break;
         case "channel-error":
           loginResult = "channel-error";

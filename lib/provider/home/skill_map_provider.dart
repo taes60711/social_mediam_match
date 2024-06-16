@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/models/user_model.dart';
 
 import '../../enum/skill_type.dart';
 import '../../models/skill_model.dart';
@@ -12,17 +13,31 @@ class SkillMapProvider extends ChangeNotifier {
     SkillType.other: [],
   };
 
-  Future<void> userSkillList() async {
+  Future<void> userSkillList({LoginUser? userData}) async {
     List<RequestSkillListData> requestSkillListData = await SkillService().requestSkillList();
 
     List<SkillModel> userSkillInfoList = [];
 
-    ///データベースから資料がレベルに入る
-    for (var skill in requestSkillListData) {
-      RequestUserSkillData haveSkillItem = RequestUserSkillData(name: skill.name, level: 0, month: 0);
-      RequestUserSkillData wantSkillItem = RequestUserSkillData(name: skill.name, level: 0, month: 0);
-      SkillModel skillInfo = SkillModel(id: skill.id, skillHave: haveSkillItem, skillWant: wantSkillItem);
-      userSkillInfoList.add(skillInfo);
+    if (userData != null) {
+      ///データベースから資料がレベルに入る
+      for (var skill in requestSkillListData) {
+        RequestUserSkillData haveSkillItem = userData.mainSkills!.firstWhere((element) => element.name == skill.name,
+            orElse: () => RequestUserSkillData(name: skill.name, level: 0, month: 0));
+        RequestUserSkillData wantSkillItem = userData.wantSkills!.firstWhere((element) => element.name == skill.name,
+            orElse: () => RequestUserSkillData(name: skill.name, level: 0, month: 0));
+
+        SkillModel skillInfo = SkillModel(id: skill.id, skillHave: haveSkillItem, skillWant: wantSkillItem);
+        userSkillInfoList.add(skillInfo);
+      }
+    } else {
+      ///データベースから資料がレベルに入る
+      for (var skill in requestSkillListData) {
+        RequestUserSkillData haveSkillItem = RequestUserSkillData(name: skill.name, level: 0, month: 0);
+        RequestUserSkillData wantSkillItem = RequestUserSkillData(name: skill.name, level: 0, month: 0);
+
+        SkillModel skillInfo = SkillModel(id: skill.id, skillHave: haveSkillItem, skillWant: wantSkillItem);
+        userSkillInfoList.add(skillInfo);
+      }
     }
 
     ///スキルが種類より加工する

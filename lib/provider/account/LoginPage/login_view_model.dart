@@ -50,13 +50,13 @@ class LoginViewModel {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 50),
-                                  TitleInput(title: PasswordForgot().emailInputTitle, textController: emailController),
+                                  TitleInput(title: PasswordForgot.emailInputTitle, textController: emailController),
                                   Text(
                                     resetPwdError,
                                     style: const TextStyle(color: Colors.red),
                                   ),
                                   CustomButton(
-                                    title: PasswordForgot().sendButtonText,
+                                    title: PasswordForgot.sendButtonText,
                                     titleColor: normalTextColor,
                                     backgroundColor: normalBgColor,
                                     onPress: () => context.read<LoginProvider>().reSetPwd(emailController.text),

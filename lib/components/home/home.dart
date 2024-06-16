@@ -8,8 +8,8 @@ import 'package:social_mediam_match/states/course_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
 import '../../pageManager/enum/bottom_bar_path.dart';
-import '../../pageManager/provider/bottom_bar_controller_provider.dart';
 
+import '../../pageManager/setting/bottom_bar_controller_provider.dart';
 import '../../pagemanager/setting/bottom_bar_manager.dart';
 import 'postPage/forum.dart';
 

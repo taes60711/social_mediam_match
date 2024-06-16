@@ -15,7 +15,7 @@ class SignUpStepTwo extends StatelessWidget {
   Widget build(BuildContext context) {
     print("signUpStepTwo");
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
-    UserSettingViewProvider userSettingProvider = context.read<UserSettingViewProvider>();
+    UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
 
     return Column(
       children: [
@@ -26,7 +26,7 @@ class SignUpStepTwo extends StatelessWidget {
         ),
         TitleInput(
           title: StepTwoPage.nameInputTitle,
-          textController: userSettingProvider.nameInput,
+          textController: userSettingViewProvider.nameInput,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

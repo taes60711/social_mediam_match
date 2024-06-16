@@ -61,18 +61,45 @@ Widget _mainBuild() {
         StepGuide.title,
       ];
 
+      List<Widget> signUpLeftWidget = [
+        GestureDetector(
+          onTap: () => SignUpViewModel(context: context).backButtonFUnc(),
+          child: const Icon(Icons.arrow_back_ios),
+        ),
+        GestureDetector(
+          onTap: () => SignUpViewModel(context: context).backButtonFUnc(),
+          child: const Icon(Icons.arrow_back_ios),
+        ),
+        Container(),
+        Container(),
+      ];
+
+      List<Widget> signUpRightWidget = [
+        Container(),
+        Container(),
+        GestureDetector(
+          onTap: () => context.read<SignUpViewProvider>().onChangeSignUpPage(3),
+          child: Text(StepGuide.skipButtonText),
+        ),
+        Container(),
+      ];
+
       return Column(
         children: [
+          //タイトル
           FitWidget(
             height: ScreenSize.height * 0.08,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: BaseTopBar(
-                backFunc: () => SignUpViewModel(context: context).backButtonFUnc(),
+                leftWidget: signUpLeftWidget[pageIndex],
+                rightWidget: signUpRightWidget[pageIndex],
                 title: signUpStepTitle[pageIndex],
               ),
             ),
           ),
+
+          ///登録ステップコンテンツ
           FitWidget(
             height: ScreenSize.height * 0.8,
             child: signUpAllStepPage[pageIndex],
@@ -83,24 +110,25 @@ Widget _mainBuild() {
   );
 }
 
+///登録ステップ用EndDrawer
 Widget endDrawer() {
   return Builder(builder: (context) {
     print("customEndDrawer");
-    SignUpEndDrawerType endDrawer = context.select((SignUpViewProvider value) => value.endDrawerOpenInfo);
+    SkillEndDrawerType endDrawer = context.select((SignUpViewProvider value) => value.endDrawerOpenInfo);
 
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
 
     Widget endDrawerWidget = Container();
 
-    if (endDrawer == SignUpEndDrawerType.haveSkill) {
+    if (endDrawer == SkillEndDrawerType.haveSkill) {
       endDrawerWidget = SkillChoiceSettingPage(
-        skillType: SkillChoicePageType.have,
-        onDismissedFunc: () => signUpViewProvider.changeEndDrawerStatus(SignUpEndDrawerType.close),
+        skillType: SkillEndDrawerType.haveSkill,
+        onDismissedFunc: () => signUpViewProvider.changeEndDrawerStatus(SkillEndDrawerType.close),
       );
-    } else if (endDrawer == SignUpEndDrawerType.wantSkill) {
+    } else if (endDrawer == SkillEndDrawerType.wantSkill) {
       endDrawerWidget = SkillChoiceSettingPage(
-        skillType: SkillChoicePageType.want,
-        onDismissedFunc: () => signUpViewProvider.changeEndDrawerStatus(SignUpEndDrawerType.close),
+        skillType: SkillEndDrawerType.wantSkill,
+        onDismissedFunc: () => signUpViewProvider.changeEndDrawerStatus(SkillEndDrawerType.close),
       );
     }
 

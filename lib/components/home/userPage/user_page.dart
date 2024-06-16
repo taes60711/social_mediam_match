@@ -23,15 +23,19 @@ class UserPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BackgroundWidget(
-      child: Column(
-        children: [
-          SizedBox(height: ScreenSize.safeHeight * 0.05),
-          userInfo(context),
-          skillInfoWithPage(context),
-        ],
-      ),
+      child: _mainBody(context),
     );
   }
+}
+
+Widget _mainBody(BuildContext context) {
+  return Column(
+    children: [
+      SizedBox(height: ScreenSize.safeHeight * 0.05),
+      userInfo(context),
+      skillInfoWithPage(context),
+    ],
+  );
 }
 
 Widget skillInfoWithPage(BuildContext context) {
@@ -45,11 +49,11 @@ Widget skillInfoWithPage(BuildContext context) {
           const SizedBox(height: 30),
           //持っているスキル
           Text(StepThirdPage.haveSkillText),
-          skillBar(SignUpEndDrawerType.haveSkill, proivderType: context.read<UserProvider>()),
+          skillBar(SkillEndDrawerType.haveSkill, proivderType: context.read<UserProvider>()),
 
           //勉強したいスキル
           Text(StepThirdPage.wantSkillText),
-          skillBar(SignUpEndDrawerType.wantSkill, proivderType: context.read<UserProvider>()),
+          skillBar(SkillEndDrawerType.wantSkill, proivderType: context.read<UserProvider>()),
 
           const SizedBox(height: 10),
           //設定ボタン　例：プロフィール、設定、ニュース...

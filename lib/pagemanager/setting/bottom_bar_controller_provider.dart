@@ -9,4 +9,10 @@ class BottomBarControllerProvider extends ChangeNotifier {
     print("BottomBar changeToLabel : ${bottomBarPath.label}  indexChangeTo : $index");
     notifyListeners();
   }
+
+  void bottomBarPageToHome() {
+    index = BottomBarPath.home.path;
+    print("BottomBar indexChangeTo Home : $index");
+    notifyListeners();
+  }
 }

@@ -9,7 +9,7 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 
 import '../../../models/user_model.dart';
 import '../../../pageManager/enum/bottom_bar_path.dart';
-import '../../../pageManager/provider/bottom_bar_controller_provider.dart';
+import '../../../pageManager/setting/bottom_bar_controller_provider.dart';
 import '../../../provider/account/user_provider.dart';
 
 import '../../../states/post_state.dart';

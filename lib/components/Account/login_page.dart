@@ -43,16 +43,16 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                 child: Column(
                   children: [
                     //メールアドレスInput
-                    TitleInput(title: Login().emailInputTitle, textController: emailController),
+                    TitleInput(title: Login.emailInputTitle, textController: emailController),
                     //パスワードInput
-                    TitleInput(title: Login().pwdInputTitle, textController: pwdController),
+                    TitleInput(title: Login.pwdInputTitle, textController: pwdController),
                     //エラーメッセージ
                     errorMessage(),
                     //パスワード忘れるテキスト
                     forgotPwdText(loginViewContext: context),
                     //ログインボタン
                     _button(
-                      title: Login().emailLoginButtonText,
+                      title: Login.emailLoginButtonText,
                       titleColor: normalTextColor,
                       backgroundColor: normalBgColor,
                       onPressed: () async => await LoginViewModel(loginViewContext: context).loginStart(),
@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
                     //グーグル登録ボタン
                     _button(
-                        title: Login().googleButtonText,
+                        title: Login.googleButtonText,
                         titleColor: normalTextColor,
                         backgroundColor: googleButtonColor,
                         iconImg: googleIcon,
@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                     const SizedBox(height: 10),
                     //ツイッター登録ボタン
                     _button(
-                        title: Login().twitterButtonText,
+                        title: Login.twitterButtonText,
                         titleColor: normalTextColor,
                         backgroundColor: twitterButtonColor,
                         iconImg: twitterIcon,
@@ -120,7 +120,7 @@ Widget errorMessage() {
   return Builder(builder: (context) {
     String sLoginError = context.select((LoginProvider value) => value.loginError);
     Widget wErrText = Container();
-    if (sLoginError != LoginError().noError) {
+    if (sLoginError != LoginError.noError) {
       wErrText = SizedBox(
         width: ScreenSize.width,
         child: Align(
@@ -147,7 +147,7 @@ Widget forgotPwdText({required BuildContext loginViewContext}) {
         child: GestureDetector(
           onTap: () => LoginViewModel(loginViewContext: loginViewContext).openPwdResetWindow(),
           child: Text(
-            Login().forgotPassword,
+            Login.forgotPassword,
             style: TextStyle(color: googleButtonColor),
           ),
         ),

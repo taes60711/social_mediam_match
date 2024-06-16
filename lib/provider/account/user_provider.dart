@@ -13,7 +13,7 @@ class UserProvider extends ChangeNotifier {
   ///ユーザでータ
   LoginUser userData = LoginUser();
 
-  ///ページローディング
+  ///isLoginCheckページローディング
   bool isLoading = false;
 
   //メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する

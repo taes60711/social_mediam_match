@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
 import '../../../enum/skill_type.dart';
-import '../../../models/skill_model.dart';
-import '../../../provider/account/signUpPage/sign_up_view_provider.dart';
 import '../../../provider/home/user_setting_view_provider.dart';
 import '../skill_bar.dart';
 import '../../strings/account/sign_up_strings.dart';
@@ -38,9 +36,9 @@ class SignUpStepThird extends StatelessWidget {
           },
         ),
         const SizedBox(height: 10),
-        skillSettingTitleBarBtn(SignUpEndDrawerType.haveSkill),
+        skillSettingTitleBarBtn(SkillEndDrawerType.haveSkill),
         const SizedBox(height: 20),
-        skillSettingTitleBarBtn(SignUpEndDrawerType.wantSkill),
+        skillSettingTitleBarBtn(SkillEndDrawerType.wantSkill),
         const SizedBox(height: 10),
         sendBtn(context),
       ],
@@ -60,41 +58,4 @@ Widget sendBtn(BuildContext context) {
       },
     ),
   );
-}
-
-Widget skillSettingTitleBarBtn(SignUpEndDrawerType type) {
-  return Consumer<UserSettingViewProvider>(builder: (context, userSettingViewProvider, _) {
-    List<RequestUserSkillData> skillData = userSettingViewProvider.haveSkillList;
-    if (type != SignUpEndDrawerType.haveSkill) {
-      skillData = userSettingViewProvider.wantSkillList;
-    }
-
-    String btnText = type == SignUpEndDrawerType.haveSkill ? StepThirdPage.haveSkillText : StepThirdPage.wantSkillText;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        GestureDetector(
-          onTap: () {
-            SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
-            signUpViewProvider.changeEndDrawerStatus(type);
-          },
-          child: Row(
-            children: [
-              Text(btnText),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                child: Icon(
-                  Icons.arrow_forward_ios,
-                  size: 12,
-                ),
-              ),
-              Text("(${skillData.length} / 5)"),
-            ],
-          ),
-        ),
-        skillBar(type, proivderType: context.read<UserSettingViewProvider>()),
-      ],
-    );
-  });
 }

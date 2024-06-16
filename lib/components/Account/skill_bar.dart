@@ -5,32 +5,69 @@ import 'package:social_mediam_match/provider/account/user_provider.dart';
 import '../../enum/skill_type.dart';
 import '../../models/skill_model.dart';
 import '../../provider/home/user_setting_view_provider.dart';
+import '../strings/account/sign_up_strings.dart';
 import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
 
-Widget skillBar(SignUpEndDrawerType type, {required proivderType}) {
+Widget skillSettingTitleBarBtn(SkillEndDrawerType type) {
+  return Builder(builder: (context) {
+    List<RequestUserSkillData> skillData = context.select((UserSettingViewProvider value) => value.haveSkillList);
+    if (type != SkillEndDrawerType.haveSkill) {
+      skillData = context.select((UserSettingViewProvider value) => value.wantSkillList);
+    }
+    String btnText = type == SkillEndDrawerType.haveSkill ? StepThirdPage.haveSkillText : StepThirdPage.wantSkillText;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: () {
+            UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
+            userSettingViewProvider.changeEndDrawerStatus(type);
+          },
+          child: Row(
+            children: [
+              Text(btnText),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 12,
+                ),
+              ),
+              Text("(${skillData.length} / 5)"),
+            ],
+          ),
+        ),
+        skillBar(type, proivderType: context.read<UserSettingViewProvider>()),
+      ],
+    );
+  });
+}
+
+Widget skillBar(SkillEndDrawerType type, {required proivderType}) {
   if (proivderType is UserSettingViewProvider) {
     return Consumer<UserSettingViewProvider>(builder: (context, userSettingViewProvider, _) {
       List<RequestUserSkillData> skillData = userSettingViewProvider.haveSkillList;
-      if (type != SignUpEndDrawerType.haveSkill) {
+      if (type != SkillEndDrawerType.haveSkill) {
         skillData = userSettingViewProvider.wantSkillList;
       }
 
-      return skillContent(skillData);
+      return skillContent(skillData, normalBgColor);
     });
   } else {
     return Consumer<UserProvider>(builder: (context, userProvider, _) {
       List<RequestUserSkillData> skillData = userProvider.userData.mainSkills ?? [];
-      if (type != SignUpEndDrawerType.haveSkill) {
+      if (type != SkillEndDrawerType.haveSkill) {
         skillData = userProvider.userData.wantSkills ?? [];
       }
 
-      return skillContent(skillData);
+      return skillContent(skillData, googleButtonColor);
     });
   }
 }
 
-Widget skillContent(List<RequestUserSkillData> skillData) {
+Widget skillContent(List<RequestUserSkillData> skillData, Color backGroundColor) {
   var levelIcon = {
     1: Icons.filter_1,
     2: Icons.filter_2,
@@ -47,7 +84,7 @@ Widget skillContent(List<RequestUserSkillData> skillData) {
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            color: googleButtonColor,
+            color: backGroundColor,
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
