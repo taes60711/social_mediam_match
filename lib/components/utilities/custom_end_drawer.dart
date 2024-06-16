@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
 class EndDrawer extends StatefulWidget {
   final Function onDismissed;
@@ -44,22 +45,24 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
         },
         child: Stack(
           children: [
-            Positioned(
-              height: MediaQuery.of(context).viewPadding.top,
-              left: 0,
-              right: 0,
-              child: Container(color: Colors.white),
-            ),
             SafeArea(
               child: Dismissible(
-                direction: DismissDirection.startToEnd,
-                resizeDuration: const Duration(milliseconds: 1),
-                onDismissed: (_) {
-                  widget.onDismissed();
-                },
-                key: const Key('key'),
-                child: widget.child,
-              ),
+                  direction: DismissDirection.startToEnd,
+                  resizeDuration: const Duration(milliseconds: 1),
+                  onDismissed: (_) {
+                    widget.onDismissed();
+                  },
+                  key: const Key('key'),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: ScreenSize.width,
+                        height: MediaQuery.of(context).viewPadding.top,
+                        color: Colors.white,
+                      ),
+                      widget.child
+                    ],
+                  )),
             ),
             Positioned(
               height: MediaQuery.of(context).viewPadding.bottom,

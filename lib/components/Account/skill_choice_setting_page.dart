@@ -176,10 +176,11 @@ Widget skillItem({
     child: Row(
       children: [
         Expanded(
-            child: Text(
-          skillInfo.name,
-          style: TextStyle(color: skillInfo.level > 0 ? Colors.white : normalBgColor2, fontSize: 14),
-        )),
+          child: Text(
+            skillInfo.name,
+            style: TextStyle(color: skillInfo.level > 0 ? Colors.white : normalBgColor2, fontSize: 14),
+          ),
+        ),
         wSkillLevel,
       ],
     ),
