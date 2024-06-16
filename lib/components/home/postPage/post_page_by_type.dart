@@ -45,9 +45,7 @@ class PostPageByType extends StatelessWidget {
               key: globalKey,
               endDrawer: UserDetail(
                 globalKey: globalKey,
-                userData: userData,
                 otherUser: otherUser,
-                gotoFriendPage: gotoFriendPage,
               ),
               floatingActionButton: Column(
                 mainAxisAlignment: MainAxisAlignment.end,

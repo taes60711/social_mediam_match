@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/custom_end_drawer.dart';
 
 import '../../../models/friend_model.dart';
 import '../../../models/user_model.dart';
@@ -45,61 +46,65 @@ class MyFriends extends StatelessWidget {
       );
     }
 
-    return Scaffold(
-        body: SafeArea(
-      child: Column(
-        children: [
-          const BaseTopBar(title: "我的好友"),
-          Expanded(
-            child: ListView.builder(
-              physics: const NoLoadingCustomBouncingScrollPhysics(),
-              itemCount: friendList.length,
-              itemBuilder: (context, index) {
-                FriendListModel listInfo = friendList[index];
-                LoginUser otherUserData = listInfo.userData;
-                return Container(
-                  decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
-                    child: Container(
-                      color: Colors.transparent,
-                      child: Row(
-                        children: [
-                          Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: UserIcon(
-                                iconSize: 50,
-                                image: otherUserData.image,
-                              )),
-                          SizedBox(
-                            width: ScreenSize.width - 100,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
+      children: [
+        Scaffold(
+          body: SafeArea(
+            child: Column(
+              children: [
+                const BaseTopBar(title: "我的好友"),
+                Expanded(
+                  child: ListView.builder(
+                    physics: const NoLoadingCustomBouncingScrollPhysics(),
+                    itemCount: friendList.length,
+                    itemBuilder: (context, index) {
+                      FriendListModel listInfo = friendList[index];
+                      LoginUser otherUserData = listInfo.userData;
+                      return Container(
+                        width: ScreenSize.width,
+                        decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
+                          child: Container(
+                            color: Colors.transparent,
+                            child: Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Expanded(child: Text(otherUserData.name ?? otherUserData.email)),
-                                    IconButton(
-                                      onPressed: () {
-                                        deleteFriendCheck(roomId: listInfo.roomId, members: [listInfo.memberId]);
-                                      },
-                                      icon: const Icon(Icons.close),
-                                    ),
-                                  ],
+                                Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: UserIcon(
+                                      iconSize: 50,
+                                      image: otherUserData.image,
+                                    )),
+                                Expanded(
+                                  child: Text(otherUserData.name ?? otherUserData.email),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    deleteFriendCheck(roomId: listInfo.roomId, members: [listInfo.memberId]);
+                                  },
+                                  icon: const Icon(Icons.close),
                                 ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
           ),
-        ],
-      ),
-    ));
+        ),
+        EndDrawer(
+          onDismissed: () {},
+          child: Container(
+            width: 100,
+            height: 100,
+            color: Colors.deepPurple,
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -186,11 +186,7 @@ class SkillExChangePage extends StatelessWidget {
               )
             : UserDetail(
                 globalKey: globalKey,
-                userData: userData,
                 otherUser: otherUser,
-                gotoFriendPage: () {
-                  context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
-                },
               ),
         floatingActionButton: Visibility(
           visible: floatButtonIsVisiable,

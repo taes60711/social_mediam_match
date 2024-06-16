@@ -164,9 +164,7 @@ class CourseDetail extends StatelessWidget {
                         key: const Key('key'),
                         child: UserDetail(
                           globalKey: globalKey,
-                          userData: userData,
                           otherUser: realCourseData.courseCreateduserInfo,
-                          gotoFriendPage: gotoFriendPage,
                         ),
                       ),
                     );

@@ -75,9 +75,7 @@ class PostComment extends StatelessWidget {
           key: globalCommentKey,
           endDrawer: UserDetail(
             globalKey: globalCommentKey,
-            userData: userData,
             otherUser: otherUser,
-            gotoFriendPage: gotoFriendPage,
           ),
           body: Column(
             children: [

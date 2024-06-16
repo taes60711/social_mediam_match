@@ -4,29 +4,32 @@ import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/user_model.dart';
+import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
 
+import '../../../pageManager/enum/bottom_bar_path.dart';
+import '../../../pageManager/setting/bottom_bar_controller_provider.dart';
 import '../../../states/friend_state.dart';
 
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/skill_list_view.dart';
 
 class UserDetail extends StatelessWidget {
-  final LoginUser? userData;
   final LoginUser? otherUser;
   final GlobalKey<ScaffoldState> globalKey;
-  final VoidCallback gotoFriendPage;
-  const UserDetail(
-      {super.key, required this.globalKey, required this.userData, required this.otherUser, required this.gotoFriendPage});
+
+  const UserDetail({super.key, required this.globalKey, required this.otherUser});
 
   @override
   Widget build(BuildContext context) {
     FriendState friendFuture = context.read<FriendState>();
-    LoginUser realOtherUser = otherUser ?? LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: 0);
+    LoginUser userData = context.watch<UserProvider>().userData;
+    LoginUser realOtherUser = otherUser ?? LoginUser();
     bool isFriend = context.select((FriendState value) => value.isFriend);
 
     return StatefulWrapper(
       onInit: () {
-        List<String> usersList = [userData!.uid, realOtherUser.uid];
+        List<String> usersList = [userData.uid, realOtherUser.uid];
         friendFuture.checkIsFriend(usersList);
       },
       child: SizedBox(
@@ -83,13 +86,14 @@ class UserDetail extends StatelessWidget {
               isFriend
                   ? ElevatedButton(
                       onPressed: () {
-                        gotoFriendPage();
+                        RouteOptions.popUntilToHome();
+                        context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
                       },
                       child: Text("開啟聊天室"),
                     )
                   : ElevatedButton(
                       onPressed: () {
-                        List<String> usersList = [userData!.uid, realOtherUser.uid];
+                        List<String> usersList = [userData.uid, realOtherUser.uid];
                         friendFuture.addFriend(usersList);
                       },
                       child: Text("新增好友"),

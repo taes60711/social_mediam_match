@@ -43,9 +43,7 @@ class PostPageByNew extends StatelessWidget {
               key: globalKey,
               endDrawer: UserDetail(
                 globalKey: globalKey,
-                userData: userData,
                 otherUser: otherUser,
-                gotoFriendPage: gotoFriendPage,
               ),
               floatingActionButton: Visibility(
                 visible: floatButtonIsVisiable,

@@ -53,11 +53,7 @@ class CoursePage extends StatelessWidget {
     if (endDrawerType == "userDetail") {
       endDrawerWidget = UserDetail(
         globalKey: globalKey,
-        userData: userData,
         otherUser: otherUser,
-        gotoFriendPage: () {
-          context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
-        },
       );
     } else if (endDrawerType == "courseFilter") {
       endDrawerWidget = CourseFilter(
