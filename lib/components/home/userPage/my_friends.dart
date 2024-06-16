@@ -96,14 +96,14 @@ class MyFriends extends StatelessWidget {
             ),
           ),
         ),
-        EndDrawer(
-          onDismissed: () {},
-          child: Container(
-            width: 100,
-            height: 100,
-            color: Colors.deepPurple,
-          ),
-        ),
+        // EndDrawer(
+        //   onDismissed: () {},
+        //   child: Container(
+        //     width: 100,
+        //     height: 100,
+        //     color: Colors.deepPurple,
+        //   ),
+        // ),
       ],
     );
   }

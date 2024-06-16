@@ -6,12 +6,19 @@ import '../../models/skill_model.dart';
 import '../../services/skill_service.dart';
 
 class SkillMapProvider extends ChangeNotifier {
-  Map<SkillType, List<SkillModel>> skillMap = {
+  Map<SkillType, List<SkillModel>> _skillMap = {
     SkillType.frontend: [],
     SkillType.iot: [],
     SkillType.backend: [],
     SkillType.other: [],
   };
+  Map<SkillType, List<SkillModel>> filteredSkillMap = {
+    SkillType.frontend: [],
+    SkillType.iot: [],
+    SkillType.backend: [],
+    SkillType.other: [],
+  };
+  TextEditingController filterController = TextEditingController();
 
   Future<void> userSkillList({LoginUser? userData}) async {
     List<RequestSkillListData> requestSkillListData = await SkillService().requestSkillList();
@@ -53,20 +60,39 @@ class SkillMapProvider extends ChangeNotifier {
       String skillName = skillInfo.skillHave.name;
       if (frontType.contains(skillName)) {
         ///front
-        skillMap[SkillType.frontend]!.add(skillInfo);
+        _skillMap[SkillType.frontend]!.add(skillInfo);
       } else if (backendType.contains(skillName)) {
         ///back
-        skillMap[SkillType.backend]!.add(skillInfo);
+        _skillMap[SkillType.backend]!.add(skillInfo);
       } else if (iotType.contains(skillName)) {
         ///iot
-        skillMap[SkillType.iot]!.add(skillInfo);
+        _skillMap[SkillType.iot]!.add(skillInfo);
       } else {
         ///other
-        skillMap[SkillType.other]!.add(skillInfo);
+        _skillMap[SkillType.other]!.add(skillInfo);
       }
     }
+
+    filteredSkillMap = _skillMap.map((key, value) {
+      return MapEntry(key, value.map((skill) => SkillModel.copy(skill)).toList());
+    });
   }
 
+  ///スキル名前でフィルター
+  void searchSkillByFilter(String value) {
+    filteredSkillMap = _skillMap.map((key, value) {
+      return MapEntry(key, value.map((skill) => SkillModel.copy(skill)).toList());
+    });
+
+    for (var skillType in SkillType.values) {
+      filteredSkillMap[skillType] =
+          filteredSkillMap[skillType]!.where((element) => element.skillHave.name.contains(value)).toList();
+    }
+
+    notifyListeners();
+  }
+
+  ///スキル程度変える
   Map<String, List<RequestUserSkillData>> skillLevelChange(RequestUserSkillData changedSkill, int level) {
     print("skillLevelChange ${changedSkill.name}");
     changedSkill.level = level;
@@ -74,11 +100,12 @@ class SkillMapProvider extends ChangeNotifier {
     return typeListToSkill();
   }
 
+  ///スキル程度変える用関数
   Map<String, List<RequestUserSkillData>> typeListToSkill() {
     List<RequestUserSkillData> haveSkillList = [];
     List<RequestUserSkillData> wantSkillList = [];
     for (var e in SkillType.values) {
-      for (var ele in skillMap[e]!) {
+      for (var ele in _skillMap[e]!) {
         if (ele.skillHave.level > 0) {
           ///持っているスキル追加または、調整レベル
           if (haveSkillList.any((element) => element.name == ele.skillHave.name)) {

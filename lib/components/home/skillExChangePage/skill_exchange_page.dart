@@ -12,10 +12,6 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/user_model.dart';
-
-import '../../../pageManager/enum/bottom_bar_path.dart';
-
-import '../../../pageManager/setting/bottom_bar_controller_provider.dart';
 import '../../../provider/account/user_provider.dart';
 
 import '../../../states/skill_exchange_state.dart';

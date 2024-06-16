@@ -12,6 +12,7 @@ import '../../models/skill_model.dart';
 import '../../provider/home/skill_map_provider.dart';
 import '../utilities/custom_end_drawer.dart';
 import '../utilities/style/screen_size.dart';
+import '../utilities/style/style_config.dart';
 
 class SkillChoiceSettingPage extends StatelessWidget {
   final SkillEndDrawerType skillType;
@@ -33,47 +34,66 @@ class SkillChoiceSettingPage extends StatelessWidget {
                   backFunc: () => onDismissedFunc(),
                   title: skillType.name,
                 ),
-                searchBar(),
+                searchBar(context),
                 Expanded(
-                  child: SingleChildScrollView(
-                    physics: const NoLoadingCustomBouncingScrollPhysics(),
-                    child: Column(
-                      children: SkillType.values.map((e) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            /// スキル種類
-                            Text(e.value),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: normalBgColor2.withOpacity(0.15),
+                    ),
+                    child: SingleChildScrollView(
+                      physics: const NoLoadingCustomBouncingScrollPhysics(),
+                      child: Column(
+                        children: SkillType.values.map((e) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              /// スキル種類
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                                  margin: EdgeInsets.symmetric(vertical: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: googleButtonColor.withOpacity(0.8),
+                                  ),
+                                  child: Text(e.value, style: const TextStyle(color: Colors.white)),
+                                ),
+                              ),
 
-                            ///各スキルの詳細
-                            Column(
-                              children: skillMapProvider.skillMap[e]!.map((e) {
-                                RequestUserSkillData skillInfo = e.skillHave;
-                                if (skillType == SkillEndDrawerType.wantSkill) {
-                                  skillInfo = e.skillWant;
-                                }
+                              ///各スキルの詳細
+                              Column(
+                                children: skillMapProvider.filteredSkillMap[e]!.map((e) {
+                                  RequestUserSkillData skillInfo = e.skillHave;
+                                  if (skillType == SkillEndDrawerType.wantSkill) {
+                                    skillInfo = e.skillWant;
+                                  }
 
-                                return PopupMenuButton(
-                                  itemBuilder: (BuildContext context) {
-                                    return levelList.map(
-                                      (e) {
-                                        return PopupMenuItem(
-                                          value: e,
-                                          child: Text("$e"),
-                                        );
-                                      },
-                                    ).toList();
-                                  },
-                                  onSelected: (value) {
-                                    SKillChoiceSettingViewModel(context: context).skillChoice(skillType, skillInfo, value);
-                                  },
-                                  child: skillItem(context: context, skillType: skillType, skillInfo: skillInfo),
-                                );
-                              }).toList(),
-                            ),
-                          ],
-                        );
-                      }).toList(),
+                                  return PopupMenuButton(
+                                    itemBuilder: (BuildContext context) {
+                                      return levelList.map(
+                                        (e) {
+                                          return PopupMenuItem(
+                                            value: e,
+                                            child: Text("$e"),
+                                          );
+                                        },
+                                      ).toList();
+                                    },
+                                    onSelected: (value) {
+                                      SKillChoiceSettingViewModel(context: context).skillChoice(skillType, skillInfo, value);
+                                    },
+                                    child: skillItem(context: context, skillType: skillType, skillInfo: skillInfo),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
                 ),
@@ -86,11 +106,33 @@ class SkillChoiceSettingPage extends StatelessWidget {
   }
 }
 
-Widget searchBar() {
+Widget searchBar(BuildContext context) {
   return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     width: ScreenSize.width,
-    height: 80,
-    color: Colors.blueAccent,
+    height: 36,
+    child: TextField(
+      cursorColor: normalBgColor2,
+      controller: context.read<SkillMapProvider>().filterController,
+      decoration: InputDecoration(
+        hintText: "Search By Skill Name",
+        hintStyle: const TextStyle(fontSize: 14),
+        prefixIcon: const Icon(Icons.search),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+        ),
+        contentPadding: const EdgeInsets.all(8),
+        border: const OutlineInputBorder(),
+      ),
+      onChanged: (value) {
+        context.read<SkillMapProvider>().searchSkillByFilter(value);
+      },
+    ),
   );
 }
 
@@ -99,25 +141,44 @@ Widget skillItem({
   required SkillEndDrawerType skillType,
   required RequestUserSkillData skillInfo,
 }) {
-  Widget wSkillLevel = Text("${skillInfo.level}");
+  Widget wSkillLevel = Text(
+    "程度: ${skillInfo.level}",
+    style: TextStyle(color: normalBgColor2, fontSize: 14),
+  );
   if (skillInfo.level > 0) {
     wSkillLevel = Row(
       children: [
-        Text("${skillInfo.level}"),
+        Text(
+          "程度: ${skillInfo.level}",
+          style: TextStyle(color: Colors.white, fontSize: 14),
+        ),
         GestureDetector(
           onTap: () {
             SKillChoiceSettingViewModel(context: context).skillChoice(skillType, skillInfo, 0);
           },
-          child: const Icon(FontAwesomeIcons.close, size: 15),
+          child: const Padding(
+            padding: EdgeInsets.only(left: 4),
+            child: Icon(FontAwesomeIcons.close, size: 14, color: Colors.white),
+          ),
         )
       ],
     );
   }
-  return SizedBox(
+  return Container(
     width: ScreenSize.width,
+    margin: EdgeInsets.symmetric(vertical: 4),
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(5),
+      color: skillInfo.level > 0 ? normalBgColor : normalBgColor2.withOpacity(0.1),
+    ),
     child: Row(
       children: [
-        Expanded(child: Text(skillInfo.name)),
+        Expanded(
+            child: Text(
+          skillInfo.name,
+          style: TextStyle(color: skillInfo.level > 0 ? Colors.white : normalBgColor2, fontSize: 14),
+        )),
         wSkillLevel,
       ],
     ),
