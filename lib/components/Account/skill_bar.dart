@@ -10,39 +10,41 @@ import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
 
 Widget skillSettingTitleBarBtn(SkillEndDrawerType type) {
-  return Builder(builder: (context) {
-    List<RequestUserSkillData> skillData = context.select((UserSettingViewProvider value) => value.haveSkillList);
-    if (type != SkillEndDrawerType.haveSkill) {
-      skillData = context.select((UserSettingViewProvider value) => value.wantSkillList);
-    }
-    String btnText = type == SkillEndDrawerType.haveSkill ? StepThirdPage.haveSkillText : StepThirdPage.wantSkillText;
+  return Builder(
+    builder: (context) {
+      List<RequestUserSkillData> skillData = context.select((UserSettingViewProvider value) => value.haveSkillList);
+      if (type != SkillEndDrawerType.haveSkill) {
+        skillData = context.select((UserSettingViewProvider value) => value.wantSkillList);
+      }
+      String btnText = type == SkillEndDrawerType.haveSkill ? StepThirdPage.haveSkillText : StepThirdPage.wantSkillText;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        GestureDetector(
-          onTap: () {
-            UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
-            userSettingViewProvider.changeEndDrawerStatus(type);
-          },
-          child: Row(
-            children: [
-              Text(btnText),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                child: Icon(
-                  Icons.arrow_forward_ios,
-                  size: 12,
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () {
+              UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
+              userSettingViewProvider.changeEndDrawerStatus(type);
+            },
+            child: Row(
+              children: [
+                Text(btnText),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 12,
+                  ),
                 ),
-              ),
-              Text("(${skillData.length} / 5)"),
-            ],
+                Text("(${skillData.length} / 5)"),
+              ],
+            ),
           ),
-        ),
-        skillBar(type, proivderType: context.read<UserSettingViewProvider>()),
-      ],
-    );
-  });
+          skillBar(type, proivderType: context.read<UserSettingViewProvider>()),
+        ],
+      );
+    },
+  );
 }
 
 Widget skillBar(SkillEndDrawerType type, {required proivderType}) {

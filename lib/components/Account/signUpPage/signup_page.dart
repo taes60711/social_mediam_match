@@ -9,6 +9,7 @@ import 'package:social_mediam_match/enum/skill_type.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
 import '../../../provider/account/signUpPage/sign_up_view_provider.dart';
 import '../../../provider/home/skill_map_provider.dart';
+import '../../../provider/home/user_setting_view_provider.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/basic_top_bar.dart';
@@ -114,21 +115,21 @@ Widget _mainBuild() {
 Widget endDrawer() {
   return Builder(builder: (context) {
     print("customEndDrawer");
-    SkillEndDrawerType endDrawer = context.select((SignUpViewProvider value) => value.endDrawerOpenInfo);
+    SkillEndDrawerType endDrawer = context.select((UserSettingViewProvider value) => value.endDrawerOpenInfo);
 
-    SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+    UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
 
     Widget endDrawerWidget = Container();
 
     if (endDrawer == SkillEndDrawerType.haveSkill) {
       endDrawerWidget = SkillChoiceSettingPage(
         skillType: SkillEndDrawerType.haveSkill,
-        onDismissedFunc: () => signUpViewProvider.changeEndDrawerStatus(SkillEndDrawerType.close),
+        onDismissedFunc: () => userSettingViewProvider.changeEndDrawerStatus(SkillEndDrawerType.close),
       );
     } else if (endDrawer == SkillEndDrawerType.wantSkill) {
       endDrawerWidget = SkillChoiceSettingPage(
         skillType: SkillEndDrawerType.wantSkill,
-        onDismissedFunc: () => signUpViewProvider.changeEndDrawerStatus(SkillEndDrawerType.close),
+        onDismissedFunc: () => userSettingViewProvider.changeEndDrawerStatus(SkillEndDrawerType.close),
       );
     }
 
