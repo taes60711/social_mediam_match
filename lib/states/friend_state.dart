@@ -16,7 +16,7 @@ class FriendState extends ChangeNotifier {
 
   TextEditingController messageInput = TextEditingController();
   int roomId = -1;
-  LoginUser ohterUserData = LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: 0);
+  LoginUser ohterUserData = LoginUser();
   List<ChatRoomMessageModel> chatRoomMesaage = [];
   bool isLoading = true;
   String channelListUrl;

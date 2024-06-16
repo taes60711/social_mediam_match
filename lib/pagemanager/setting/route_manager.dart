@@ -17,6 +17,7 @@ import '../../main.dart';
 import '../../provider/Initial/initial_provider.dart';
 import '../../provider/account/signUpPage/sign_up_view_provider.dart';
 import '../../provider/account/user_provider.dart';
+import '../../provider/home/friend_provider.dart';
 import '../../provider/home/skill_map_provider.dart';
 import '../../provider/home/user_setting_view_provider.dart';
 import '../../states/course_state.dart';
@@ -31,6 +32,7 @@ Widget mainWidget = MultiProvider(
   providers: [
     ChangeNotifierProvider(create: (_) => UserProvider()),
     ChangeNotifierProvider(create: (_) => BottomBarControllerProvider()),
+    ChangeNotifierProvider(create: (_) => FriendProivder()),
     ChangeNotifierProvider(create: (_) => FriendState(channelListUrl: channelListUrl)),
     ChangeNotifierProvider(create: (_) => SkillExChangeState()),
   ],

@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/custom_end_drawer.dart';
-
+import 'package:social_mediam_match/enum/user_detail_end_drawer_type.dart';
 import '../../../models/friend_model.dart';
 import '../../../models/user_model.dart';
+import '../../../provider/home/friend_provider.dart';
 import '../../../states/friend_state.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -65,26 +66,32 @@ class MyFriends extends StatelessWidget {
                         decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
-                          child: Container(
-                            color: Colors.transparent,
-                            child: Row(
-                              children: [
-                                Padding(
+                          child: GestureDetector(
+                            onTap: () {
+                              context.read<FriendProivder>().changeEndDrawerStatus(UserDetailEndDrawerType.open);
+                            },
+                            child: Container(
+                              color: Colors.transparent,
+                              child: Row(
+                                children: [
+                                  Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: UserIcon(
                                       iconSize: 50,
                                       image: otherUserData.image,
-                                    )),
-                                Expanded(
-                                  child: Text(otherUserData.name ?? otherUserData.email),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    deleteFriendCheck(roomId: listInfo.roomId, members: [listInfo.memberId]);
-                                  },
-                                  icon: const Icon(Icons.close),
-                                ),
-                              ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(otherUserData.name ?? otherUserData.email),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      deleteFriendCheck(roomId: listInfo.roomId, members: [listInfo.memberId]);
+                                    },
+                                    icon: const Icon(Icons.close),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -96,15 +103,37 @@ class MyFriends extends StatelessWidget {
             ),
           ),
         ),
-        // EndDrawer(
-        //   onDismissed: () {},
-        //   child: Container(
-        //     width: 100,
-        //     height: 100,
-        //     color: Colors.deepPurple,
-        //   ),
-        // ),
+        endDrawer(),
       ],
     );
   }
+}
+
+///ユーザ詳細ページ用EndDrawer
+Widget endDrawer() {
+  return Builder(
+    builder: (context) {
+      print("customEndDrawer");
+      UserDetailEndDrawerType endDrawer = context.select((FriendProivder value) => value.endDrawerOpenInfo);
+
+      FriendProivder friendProivder = context.read<FriendProivder>();
+
+      Widget endDrawerWidget = Container();
+
+      if (endDrawer == UserDetailEndDrawerType.open) {
+        endDrawerWidget = EndDrawer(
+          onDismissed: () {
+            friendProivder.changeEndDrawerStatus(UserDetailEndDrawerType.close);
+          },
+          child: Container(
+            width: 100,
+            height: 100,
+            color: Colors.deepPurple,
+          ),
+        );
+      }
+
+      return endDrawerWidget;
+    },
+  );
 }
