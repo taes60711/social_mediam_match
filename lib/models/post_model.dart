@@ -27,9 +27,6 @@ class PostModel {
   });
 
   factory PostModel.toMap(dynamic json, {LoginUser? userData}) {
-    // DateTime dateUtc = DateTime.parse(json['postTime']).toUtc();
-    // DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
-    // String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
     DateTime dateUtc = DateTime.parse(json['postTime']).toUtc();
 
     Duration duration = DateTime.now().toUtc().difference(dateUtc);

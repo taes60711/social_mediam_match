@@ -7,7 +7,7 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/friend_model.dart';
-import 'package:social_mediam_match/states/friend_state.dart';
+import 'package:social_mediam_match/provider/friend_provider.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../utilities/custom_end_drawer.dart';
@@ -18,9 +18,9 @@ class FirendsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LoginUser userData = context.watch<UserProvider>().userData;
-    FriendState friendFuture = context.read<FriendState>();
-    List<FriendListModel> friendList = context.watch<FriendState>().friendList;
-    TextEditingController friendListFilterInput = context.select((FriendState value) => value.friendListFilterInput);
+    FriendProvider friendFuture = context.read<FriendProvider>();
+    List<FriendListModel> friendList = context.watch<FriendProvider>().friendList;
+    TextEditingController friendListFilterInput = context.select((FriendProvider value) => value.friendListFilterInput);
     List<FriendListModel> filteredList = friendList.where((element) {
       bool filterRequest = true;
       String filterString = friendListFilterInput.text;
@@ -44,7 +44,7 @@ class FirendsPage extends StatelessWidget {
               direction: DismissDirection.startToEnd,
               resizeDuration: const Duration(milliseconds: 1),
               onDismissed: (_) {
-                friendFuture.closeRoom(context: context);
+                friendFuture.closeRoom();
                 print("Chat Room close");
               },
               key: const Key('key'),

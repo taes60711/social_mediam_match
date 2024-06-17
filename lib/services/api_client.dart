@@ -34,6 +34,27 @@ class ApiClient {
     return utf8.decode(response.bodyBytes);
   }
 
+  ///MARK: API GetBase64Img Func
+  Future<String> apiGet64Img(
+    String url, {
+    Map<String, dynamic>? paramters,
+  }) async {
+    final uri = Uri.parse("http://$_ip$url").replace(queryParameters: paramters);
+    print("Get API  Img Url : $url");
+    Response response = await http.get(uri);
+
+    try {
+      if (response.statusCode != 200) {
+        throw ArgumentError("${response.statusCode}");
+      }
+    } catch (e) {
+      _onError(e);
+      return "null";
+    }
+
+    return base64Encode(response.bodyBytes);
+  }
+
   ///MARK: API Push Func
   Future<String> apiPush(
     String url, {
@@ -57,7 +78,7 @@ class ApiClient {
       return "null";
     }
 
-    return "Success";
+    return response.body;
   }
 
   void _onError(dynamic errorMessage) {
@@ -94,36 +115,40 @@ class ApiClient {
     return result;
   }
 
+  bool _isDialogShowing = false;
   void onRequestFailed({Function? onFailedFunc}) {
-    showDialog<void>(
-      context: globalContext,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          content: Container(
-            padding: const EdgeInsets.all(10),
-            margin: const EdgeInsets.all(15),
-            width: 180,
-            height: 150,
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                const Expanded(
-                  child: Text('伺服器錯誤'),
-                ),
-                CustomButton(
-                  title: '確認',
-                  titleColor: normalTextColor,
-                  backgroundColor: normalBgColor,
-                  onPress: () {
-                    onFailedFunc != null ? onFailedFunc() : RouteOptions.pop();
-                  },
-                )
-              ],
+    if (!_isDialogShowing) {
+      showDialog<void>(
+        context: globalContext,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            content: Container(
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.all(15),
+              width: 180,
+              height: 150,
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  const Expanded(
+                    child: Text('伺服器錯誤'),
+                  ),
+                  CustomButton(
+                    title: '確認',
+                    titleColor: normalTextColor,
+                    backgroundColor: normalBgColor,
+                    onPress: () {
+                      onFailedFunc != null ? onFailedFunc() : RouteOptions.pop();
+                      _isDialogShowing = false;
+                    },
+                  )
+                ],
+              ),
             ),
-          ),
-        );
-      },
-    );
+          );
+        },
+      );
+    }
   }
 }

@@ -21,8 +21,8 @@ import 'package:uuid/uuid.dart';
 import '../../../CustomBouncingScrollPhysics.dart';
 import '../../../models/user_model.dart';
 import '../../../services/image_service.dart';
-import '../../../states/friend_state.dart';
 
+import '../../../provider/friend_provider.dart';
 import '../../utilities/loading.dart';
 
 class ChatRoom extends StatelessWidget {
@@ -33,14 +33,14 @@ class ChatRoom extends StatelessWidget {
   final _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    FriendState friendFuture = context.read<FriendState>();
-    bool isLoading = context.select((FriendState value) => value.isLoading);
-    List<ChatRoomMessageModel> messageData = context.watch<FriendState>().chatRoomMesaage;
-    int pageNumber = context.select((FriendState value) => value.pageNumber);
-    int pageCount = context.select((FriendState value) => value.pageCount);
-    int roomId = context.select((FriendState value) => value.roomId);
-    TextEditingController messageInput = context.select((FriendState value) => value.messageInput);
-    bool isDataAddLoding = context.select((FriendState value) => value.isDataAddLoding);
+    FriendProvider friendFuture = context.read<FriendProvider>();
+    bool isLoading = context.select((FriendProvider value) => value.isLoading);
+    List<ChatRoomMessageModel> messageData = context.watch<FriendProvider>().chatRoomMesaage;
+    int pageNumber = context.select((FriendProvider value) => value.pageNumber);
+    int pageCount = context.select((FriendProvider value) => value.pageCount);
+    int roomId = context.select((FriendProvider value) => value.roomId);
+    TextEditingController messageInput = context.select((FriendProvider value) => value.messageInput);
+    bool isDataAddLoding = context.select((FriendProvider value) => value.isDataAddLoding);
 
     //例: ["2024-04-20",ChatRoomMessageModel,"2024-05-03",ChatRoomMessageModel...]
     List<dynamic> ss = [];
@@ -216,7 +216,7 @@ class ChatRoom extends StatelessWidget {
                     GestureDetector(
                       onTap: () async {
                         print("Chat Room close");
-                        friendFuture.closeRoom(context: context);
+                        friendFuture.closeRoom();
                       },
                       child: Icon(Icons.arrow_back_ios_sharp, color: normalBgColor2),
                     ),
@@ -590,7 +590,7 @@ class ChatRoom extends StatelessWidget {
                         if (await ImageService().imageIsExist(imageString) != "-1") {
                           uid = await ImageService().imageIsExist(imageString);
                         } else {
-                          await ImageService().saveImage(uid, imageString);
+                          await ImageService().saveImg(uid, imageString);
                         }
                         String sendImgString = "http://\$ip:\$port/images/$uid";
                         print("sendImgString $sendImgString");

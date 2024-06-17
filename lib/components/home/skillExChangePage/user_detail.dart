@@ -9,7 +9,7 @@ import 'package:social_mediam_match/provider/account/user_provider.dart';
 
 import '../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../pageManager/setting/bottom_bar_controller_provider.dart';
-import '../../../states/friend_state.dart';
+import '../../../provider/friend_provider.dart';
 
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/skill_list_view.dart';
@@ -22,10 +22,10 @@ class UserDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FriendState friendFuture = context.read<FriendState>();
+    FriendProvider friendFuture = context.read<FriendProvider>();
     LoginUser userData = context.watch<UserProvider>().userData;
     LoginUser realOtherUser = otherUser ?? LoginUser();
-    bool isFriend = context.select((FriendState value) => value.isFriend);
+    bool isFriend = context.select((FriendProvider value) => value.isFriend);
 
     return StatefulWrapper(
       onInit: () {

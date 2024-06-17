@@ -46,7 +46,7 @@ class FriendListModel {
     required this.userData,
   });
 
-  factory FriendListModel.fromJson(dynamic json, {LoginUser? userData}) {
+  factory FriendListModel.toModel(dynamic json, {LoginUser? userData}) {
     return FriendListModel(
       roomId: json['roomId'],
       memberId: json['memberId'],
@@ -67,8 +67,6 @@ FriendListModel friendListFormatDate(FriendListModel friendListInfo) {
     DateTime dateTimeNow = DateFormat("yyyy-MM-dd HH:mm:ss").parse(DateTime.now().toUtc().toString(), true).toLocal();
     String sentTimeString = sentAtTime.toIso8601String().substring(0, "yyyy-MM-dd".length);
     String timseNowString = dateTimeNow.toIso8601String().substring(0, "yyyy-MM-dd".length);
-
-    print("dateTimeNow :$timseNowString dateTime :$sentTimeString");
 
     if (timseNowString != sentTimeString) {
       formattedTime = sentTimeString;

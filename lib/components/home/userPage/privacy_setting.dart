@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 
-import 'package:social_mediam_match/states/friend_state.dart';
-
 import '../../../pageManager/enum/route_path.dart';
 import '../../../provider/account/user_provider.dart';
 
+import '../../../provider/friend_provider.dart';
 import '../../../services/dynamic_links.dart';
 import '../../../services/notification_service.dart';
 import '../../strings/userPage/user_page_string.dart';
@@ -18,7 +17,7 @@ class PrivacySetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserProvider userFuture = context.read<UserProvider>();
-    FriendState friendState = context.read<FriendState>();
+    FriendProvider friendProvider = context.read<FriendProvider>();
 
     return Scaffold(
       body: SafeArea(
@@ -53,7 +52,7 @@ class PrivacySetting extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  await userFuture.signOut(friendState);
+                  await userFuture.signOut(friendProvider);
                   RouteOptions.popUntilToHome();
                 },
                 child: Text(signOutButton),

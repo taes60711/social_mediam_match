@@ -1,14 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
+import 'package:social_mediam_match/services/friend_service.dart';
 import 'package:web_socket_channel/io.dart';
+import '../enum/user_detail_end_drawer_type.dart';
 import '../global.dart';
 import '../models/friend_model.dart';
 import '../models/user_model.dart';
 import 'package:http/http.dart' as http;
 
-class FriendState extends ChangeNotifier {
-  late IOWebSocketChannel _friendListChannel, _chatRoomChannel;
+class FriendProvider extends ChangeNotifier {
+  late IOWebSocketChannel _friendListChannel;
+  late IOWebSocketChannel _chatRoomChannel;
   List<FriendListModel> friendList = [];
   TextEditingController friendListFilterInput = TextEditingController();
   bool isFriend = false;
@@ -19,11 +23,9 @@ class FriendState extends ChangeNotifier {
   LoginUser ohterUserData = LoginUser();
   List<ChatRoomMessageModel> chatRoomMesaage = [];
   bool isLoading = true;
-  String channelListUrl;
+
   int pageNumber = 0;
   int pageCount = 0;
-
-  FriendState({required this.channelListUrl});
 
   void friendListConnect(String uid) async {
     Future<void> initialConnect() async {
@@ -41,26 +43,14 @@ class FriendState extends ChangeNotifier {
         isFriend = true;
         print("isFriend check $isFriend");
       } else {
-        Map<String, dynamic> requestMapData = jsonDecode((event));
-        String searchUrl = requestMapData['apiUrl'];
-        final uri = Uri.parse(searchUrl);
-        try {
-          var response = await http.get(uri);
-          if (response.statusCode != 404) {
-            var loadedData = utf8.decode(response.bodyBytes);
-            List<FriendListModel> tempfriendList = (jsonDecode(loadedData) as List<dynamic>).map((e) {
-              return FriendListModel.fromJson(e);
-            }).toList();
-            tempfriendList.sort((a, b) => DateTime.parse(a.sentAt ?? "1997-01-01T00:00:00.000+00:00")
-                .compareTo(DateTime.parse(b.sentAt ?? "1997-01-01T00:00:00.000+00:00")));
-            tempfriendList = tempfriendList.map((e) {
-              return friendListFormatDate(e);
-            }).toList();
-            friendList = tempfriendList.reversed.toList();
-          }
-        } catch (e) {
-          print(e);
-        }
+        String searchUrl = jsonDecode((event))['apiUrl'];
+        List<FriendListModel> tempfriendList = await FriendService().getFriendList(searchUrl);
+        String initDate = "1997-01-01T00:00:00.000+00:00";
+        tempfriendList.sort((a, b) => DateTime.parse(a.sentAt ?? initDate).compareTo(DateTime.parse(b.sentAt ?? initDate)));
+        tempfriendList = tempfriendList.map((e) {
+          return friendListFormatDate(e);
+        }).toList();
+        friendList = tempfriendList.reversed.toList();
       }
       notifyListeners();
     });
@@ -80,18 +70,18 @@ class FriendState extends ChangeNotifier {
     isFriend = false;
     Future.delayed(Duration.zero).then((value) => notifyListeners());
     List<String> usersListTemp = [];
-    usersList.forEach((element) {
+    for (var element in usersList) {
       usersListTemp = [...usersListTemp, "\"$element\""];
-    });
+    }
     _friendListChannel.sink.add('{"method" : "checkIsFriend","members" : $usersListTemp}');
   }
 
   void addFriend(List<String> usersList) {
     List<String> usersListTemp = [];
     //index 0 : 使用者自己, index 1 : 對方
-    usersList.forEach((element) {
+    for (var element in usersList) {
       usersListTemp = [...usersListTemp, "\"$element\""];
-    });
+    }
     _friendListChannel.sink.add('{"method" : "addFriend", "ip" : "$ip:$port" , "members" : $usersListTemp}');
     isFriend = true;
     notifyListeners();
@@ -99,9 +89,9 @@ class FriendState extends ChangeNotifier {
 
   void deleteFriend(List<String> usersList, int roomId) {
     List<String> usersListTemp = [];
-    usersList.forEach((element) {
+    for (var element in usersList) {
       usersListTemp = [...usersListTemp, "\"$element\""];
-    });
+    }
     _friendListChannel.sink
         .add('{"method" : "deleteFriend", "ip" : "$ip:$port" , "members" : $usersListTemp, "roomid" : $roomId}');
   }
@@ -199,27 +189,22 @@ class FriendState extends ChangeNotifier {
   Future<void> sendMessage(int roomId, String userId, String message) async {
     messageInput.text = "";
     notifyListeners();
-    String searchUrl = 'http://$ip:$port/chat/createMessage/$roomId';
 
-    final uri = Uri.parse(searchUrl);
-    Map<String, String> headers = {'content-type': 'application/json'};
-    String body = jsonEncode({"userId": userId, "message": message});
-
-    await http.put(uri, headers: headers, body: body).then((value) {
-      var result = utf8.decode(value.bodyBytes);
-      print("message result ${result}");
-      if (result == "true") {
-        _chatRoomChannel.sink
-            .add('{"method" : "sendMessage" , "roomid" : $roomId , "userid" : "$userId" , "message" : "$message"}');
-      } else {
-        print("Message Insert Failed");
-      }
-    });
+    if (await FriendService().sendMessage(roomId, userId, message)) {
+      _chatRoomChannel.sink
+          .add('{"method" : "sendMessage" , "roomid" : $roomId , "userid" : "$userId" , "message" : "$message"}');
+    }
   }
 
-  void closeRoom({required BuildContext context}) {
+  void closeRoom() {
     _chatRoomChannel.sink.close();
+    RouteOptions.pop();
+  }
+
+  UserDetailEndDrawerType endDrawerOpenInfo = UserDetailEndDrawerType.close;
+  void changeEndDrawerStatus(UserDetailEndDrawerType status, LoginUser otherUser) {
+    ohterUserData = otherUser;
+    endDrawerOpenInfo = status;
     notifyListeners();
-    Navigator.of(context).pop();
   }
 }

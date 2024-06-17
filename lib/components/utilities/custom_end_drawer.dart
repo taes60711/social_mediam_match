@@ -36,44 +36,40 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-        animation: _animation,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
-            child: child,
-          );
-        },
-        child: Stack(
-          children: [
-            Scaffold(
-              body: Dismissible(
-                direction: DismissDirection.startToEnd,
-                resizeDuration: const Duration(milliseconds: 1),
-                onDismissed: (_) {
-                  widget.onDismissed();
-                },
-                key: const Key('key'),
-                child: Column(
-                  children: [
-                    Container(
-                      width: ScreenSize.width,
-                      height: MediaQuery.of(context).viewPadding.top,
-                      color: Colors.white,
-                    ),
-                    Expanded(child: widget.child),
-                  ],
-                ),
+      animation: _animation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
+          child: child,
+        );
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Dismissible(
+          direction: DismissDirection.startToEnd,
+          resizeDuration: const Duration(milliseconds: 1),
+          onDismissed: (_) {
+            widget.onDismissed();
+          },
+          key: const Key('key'),
+          child: Column(
+            children: [
+              Container(
+                width: ScreenSize.width,
+                height: MediaQuery.of(context).viewPadding.top,
+                color: Colors.white,
               ),
-            ),
-            Positioned(
-              height: MediaQuery.of(context).viewPadding.bottom,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(color: Colors.white),
-            ),
-          ],
-        ));
+              Expanded(child: widget.child),
+              Container(
+                width: ScreenSize.width,
+                height: MediaQuery.of(context).viewPadding.bottom,
+                color: Colors.white,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

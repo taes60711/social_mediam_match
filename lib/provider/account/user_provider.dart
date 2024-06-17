@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/user_model.dart';
-import 'package:social_mediam_match/states/friend_state.dart';
 import '../../services/firebase_service.dart';
 import '../../services/user_service.dart';
+import '../friend_provider.dart';
 
 ///ユーザ資料について（登録の関数がSignUpViewModel、SignUpViewProivderにいる）
 class UserProvider extends ChangeNotifier {
@@ -17,7 +17,7 @@ class UserProvider extends ChangeNotifier {
   bool isLoading = false;
 
   //メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する
-  void isLoginCheck(FriendState chatListChannel) {
+  void isLoginCheck(FriendProvider chatListChannel) {
     if (userData.uid == "-1") {
       FirebaseSerivce().firebaseLoginCheck().listen((String userUID) async {
         if (userUID != "noUID" && !isLoading) {
@@ -48,7 +48,7 @@ class UserProvider extends ChangeNotifier {
   }
 
   ///メソッド：ログアウト
-  Future<void> signOut(FriendState chatListChannel) async {
+  Future<void> signOut(FriendProvider chatListChannel) async {
     await FirebaseSerivce().firebaseSignOut();
     chatListChannel.closefriendList();
     userData = LoginUser();

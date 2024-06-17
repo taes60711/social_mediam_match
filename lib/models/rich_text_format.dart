@@ -37,7 +37,7 @@ class RichTextFormat {
                 if (await ImageService().imageIsExist(resultString) != "-1") {
                   uid = await ImageService().imageIsExist(resultString);
                 } else {
-                  await ImageService().saveImage(uid, resultString);
+                  await ImageService().saveImg(uid, resultString);
                 }
 
                 String imgStringToHttp = '<img src="http://\$ip:\$port/images/$uid">';

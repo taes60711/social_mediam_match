@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
+import 'package:social_mediam_match/components/user_detail_page.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/custom_end_drawer.dart';
 import 'package:social_mediam_match/enum/user_detail_end_drawer_type.dart';
+
 import '../../../models/friend_model.dart';
 import '../../../models/user_model.dart';
-import '../../../provider/home/friend_provider.dart';
-import '../../../states/friend_state.dart';
+import '../../../pageManager/setting/bottom_bar_controller_provider.dart';
+import '../../../provider/friend_provider.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
@@ -17,8 +19,8 @@ class MyFriends extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FriendState friendFuture = context.read<FriendState>();
-    List<FriendListModel> friendList = context.watch<FriendState>().friendList;
+    FriendProvider friendFuture = context.read<FriendProvider>();
+    List<FriendListModel> friendList = context.watch<FriendProvider>().friendList;
 
     Future<void> deleteFriendCheck({required List<String> members, required int roomId}) {
       return showDialog<void>(
@@ -58,17 +60,23 @@ class MyFriends extends StatelessWidget {
                   child: ListView.builder(
                     physics: const NoLoadingCustomBouncingScrollPhysics(),
                     itemCount: friendList.length,
-                    itemBuilder: (context, index) {
+                    itemBuilder: (_, index) {
                       FriendListModel listInfo = friendList[index];
                       LoginUser otherUserData = listInfo.userData;
                       return Container(
                         width: ScreenSize.width,
-                        decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(width: 0.1, color: normalBgColor2),
+                          ),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
                           child: GestureDetector(
                             onTap: () {
-                              context.read<FriendProivder>().changeEndDrawerStatus(UserDetailEndDrawerType.open);
+                              context
+                                  .read<FriendProvider>()
+                                  .changeEndDrawerStatus(UserDetailEndDrawerType.open, listInfo.userData);
                             },
                             child: Container(
                               color: Colors.transparent,
@@ -103,33 +111,29 @@ class MyFriends extends StatelessWidget {
             ),
           ),
         ),
-        endDrawer(),
+        endDrawer(context),
       ],
     );
   }
 }
 
 ///ユーザ詳細ページ用EndDrawer
-Widget endDrawer() {
+Widget endDrawer(BuildContext myfriendContext) {
   return Builder(
     builder: (context) {
       print("customEndDrawer");
-      UserDetailEndDrawerType endDrawer = context.select((FriendProivder value) => value.endDrawerOpenInfo);
+      UserDetailEndDrawerType endDrawer = context.select((FriendProvider value) => value.endDrawerOpenInfo);
 
-      FriendProivder friendProivder = context.read<FriendProivder>();
+      FriendProvider friendProivder = context.read<FriendProvider>();
 
       Widget endDrawerWidget = Container();
 
       if (endDrawer == UserDetailEndDrawerType.open) {
         endDrawerWidget = EndDrawer(
           onDismissed: () {
-            friendProivder.changeEndDrawerStatus(UserDetailEndDrawerType.close);
+            friendProivder.changeEndDrawerStatus(UserDetailEndDrawerType.close, LoginUser());
           },
-          child: Container(
-            width: 100,
-            height: 100,
-            color: Colors.deepPurple,
-          ),
+          child: UserDetailPage(otherUser: context.read<FriendProvider>().ohterUserData),
         );
       }
 
