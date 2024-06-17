@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/provider/account/user_provider.dart';
-
+import 'package:social_mediam_match/models/user_model.dart';
 import '../../enum/skill_type.dart';
 import '../../models/skill_model.dart';
 import '../../provider/home/user_setting_view_provider.dart';
@@ -40,33 +40,39 @@ Widget skillSettingTitleBarBtn(SkillEndDrawerType type) {
               ],
             ),
           ),
-          skillBar(type, proivderType: context.read<UserSettingViewProvider>()),
+          skillBar(type, userSettingProvider: context.read<UserSettingViewProvider>()),
         ],
       );
     },
   );
 }
 
-Widget skillBar(SkillEndDrawerType type, {required proivderType}) {
-  if (proivderType is UserSettingViewProvider) {
-    return Consumer<UserSettingViewProvider>(builder: (context, userSettingViewProvider, _) {
-      List<RequestUserSkillData> skillData = userSettingViewProvider.haveSkillList;
-      if (type != SkillEndDrawerType.haveSkill) {
-        skillData = userSettingViewProvider.wantSkillList;
-      }
-
-      return skillContent(skillData, normalBgColor);
-    });
-  } else {
-    return Consumer<UserProvider>(builder: (context, userProvider, _) {
-      List<RequestUserSkillData> skillData = userProvider.userData.mainSkills ?? [];
-      if (type != SkillEndDrawerType.haveSkill) {
-        skillData = userProvider.userData.wantSkills ?? [];
+///スキルバー
+///param:　skillType:表示されてスキルタイプ　proivderType: 設定用、userData:表示用
+Widget skillBar(SkillEndDrawerType skillType, {dynamic userSettingProvider, LoginUser? userData}) {
+  Widget skillBar = Container();
+  if (userSettingProvider == null) {
+    skillBar = Builder(builder: (context) {
+      List<RequestUserSkillData> skillData = userData!.mainSkills ?? [];
+      if (skillType != SkillEndDrawerType.haveSkill) {
+        skillData = userData.wantSkills ?? [];
       }
 
       return skillContent(skillData, googleButtonColor);
     });
+  } else if (userSettingProvider is UserSettingViewProvider) {
+    skillBar = Consumer<UserSettingViewProvider>(
+      builder: (context, userSettingViewProvider, _) {
+        List<RequestUserSkillData> skillData = userSettingViewProvider.haveSkillList;
+        if (skillType != SkillEndDrawerType.haveSkill) {
+          skillData = userSettingViewProvider.wantSkillList;
+        }
+
+        return skillContent(skillData, normalBgColor);
+      },
+    );
   }
+  return skillBar;
 }
 
 Widget skillContent(List<RequestUserSkillData> skillData, Color backGroundColor) {
@@ -79,32 +85,45 @@ Widget skillContent(List<RequestUserSkillData> skillData, Color backGroundColor)
   };
   return SizedBox(
     width: ScreenSize.width,
-    child: Wrap(
-      children: skillData.map((e) {
-        return Container(
-          margin: const EdgeInsets.only(right: 5, bottom: 5),
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: backGroundColor,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                levelIcon[e.level],
-                color: normalTextColor,
-                size: 18,
+    child: skillData.isEmpty
+        ? Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              margin: const EdgeInsets.only(right: 5, bottom: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: backGroundColor,
               ),
-              const SizedBox(width: 5),
-              Text(
-                e.name,
-                style: TextStyle(color: normalTextColor, fontSize: 14),
-              ),
-            ],
+              child: Text(tr("noskillData")),
+            ),
+          )
+        : Wrap(
+            children: skillData.map((e) {
+              return Container(
+                margin: const EdgeInsets.only(right: 5, bottom: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: backGroundColor,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      levelIcon[e.level],
+                      color: normalTextColor,
+                      size: 18,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      e.name,
+                      style: TextStyle(color: normalTextColor, fontSize: 14),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
           ),
-        );
-      }).toList(),
-    ),
   );
 }

@@ -133,7 +133,12 @@ Widget endDrawer(BuildContext myfriendContext) {
           onDismissed: () {
             friendProivder.changeEndDrawerStatus(UserDetailEndDrawerType.close, LoginUser());
           },
-          child: UserDetailPage(otherUser: context.read<FriendProvider>().ohterUserData),
+          child: UserDetailPage(
+            otherUser: context.read<FriendProvider>().ohterUserData,
+            toChatRoom: () {
+              context.read<FriendProvider>().changeEndDrawerStatus(UserDetailEndDrawerType.close, LoginUser());
+            },
+          ),
         );
       }
 

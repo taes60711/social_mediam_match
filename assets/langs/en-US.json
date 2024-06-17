@@ -80,5 +80,8 @@
 
   "//": "skillExchangePage",
   "skExChpage_beforDays":"前",
-  "skExChpage_nojobData":"none"
+  "skExChpage_nojobData":"none",
+
+  "//": "skillbar",
+  "noskillData": "none"
 }

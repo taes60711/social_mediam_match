@@ -80,5 +80,8 @@
 
   "//": "skillExchangePage",
   "skExChpage_beforDays":"前",
-  "skExChpage_nojobData":"未輸入"
+  "skExChpage_nojobData":"未輸入",
+
+  "//":"skillbar",
+  "noskillData":"沒有設定"
 }
