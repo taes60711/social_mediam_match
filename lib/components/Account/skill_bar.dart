@@ -49,16 +49,29 @@ Widget skillSettingTitleBarBtn(SkillEndDrawerType type) {
 
 ///スキルバー
 ///param:　skillType:表示されてスキルタイプ　proivderType: 設定用、userData:表示用
-Widget skillBar(SkillEndDrawerType skillType, {dynamic userSettingProvider, LoginUser? userData}) {
+Widget skillBar(
+  SkillEndDrawerType skillType, {
+  dynamic userSettingProvider,
+  LoginUser? userData,
+  List<String>? courseSkillData,
+  double? fontSize,
+  Color? backGroundColor,
+}) {
   Widget skillBar = Container();
-  if (userSettingProvider == null) {
+  if (courseSkillData != null) {
+    return noLevelSkillContent(
+      courseSkillData,
+      backGroundColor ?? const Color.fromARGB(255, 236, 157, 120),
+      fontSize: fontSize,
+    );
+  } else if (userSettingProvider == null) {
     skillBar = Builder(builder: (context) {
       List<RequestUserSkillData> skillData = userData!.mainSkills ?? [];
       if (skillType != SkillEndDrawerType.haveSkill) {
         skillData = userData.wantSkills ?? [];
       }
 
-      return skillContent(skillData, googleButtonColor);
+      return skillContent(skillData, backGroundColor ?? googleButtonColor, fontSize: fontSize);
     });
   } else if (userSettingProvider is UserSettingViewProvider) {
     skillBar = Consumer<UserSettingViewProvider>(
@@ -68,14 +81,33 @@ Widget skillBar(SkillEndDrawerType skillType, {dynamic userSettingProvider, Logi
           skillData = userSettingViewProvider.wantSkillList;
         }
 
-        return skillContent(skillData, normalBgColor);
+        return skillContent(skillData, backGroundColor ?? normalBgColor, fontSize: fontSize);
       },
     );
   }
   return skillBar;
 }
 
-Widget skillContent(List<RequestUserSkillData> skillData, Color backGroundColor) {
+Widget noLevelSkillContent(List<String> skillData, Color backGroundColor, {double? fontSize}) {
+  return Wrap(
+    children: skillData.map((e) {
+      return Container(
+        margin: const EdgeInsets.only(right: 5, bottom: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: backGroundColor,
+        ),
+        child: Text(
+          e,
+          style: TextStyle(color: normalTextColor, fontSize: fontSize ?? 14),
+        ),
+      );
+    }).toList(),
+  );
+}
+
+Widget skillContent(List<RequestUserSkillData> skillData, Color backGroundColor, {double? fontSize}) {
   var levelIcon = {
     1: Icons.filter_1,
     2: Icons.filter_2,
@@ -95,7 +127,10 @@ Widget skillContent(List<RequestUserSkillData> skillData, Color backGroundColor)
                 borderRadius: BorderRadius.circular(5),
                 color: backGroundColor,
               ),
-              child: Text(tr("noskillData")),
+              child: Text(
+                tr("noskillData"),
+                style: TextStyle(color: normalTextColor, fontSize: fontSize ?? 14),
+              ),
             ),
           )
         : Wrap(
@@ -118,7 +153,7 @@ Widget skillContent(List<RequestUserSkillData> skillData, Color backGroundColor)
                     const SizedBox(width: 5),
                     Text(
                       e.name,
-                      style: TextStyle(color: normalTextColor, fontSize: 14),
+                      style: TextStyle(color: normalTextColor, fontSize: fontSize ?? 14),
                     ),
                   ],
                 ),

@@ -7,12 +7,12 @@ import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 
+import '../../../enum/skill_type.dart';
 import '../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../pageManager/setting/bottom_bar_controller_provider.dart';
 import '../../../provider/friend_provider.dart';
 
-import '../../strings/userPage/user_page_string.dart';
-import '../../utilities/skill_list_view.dart';
+import '../../account/skill_bar.dart';
 
 class UserDetail extends StatelessWidget {
   final LoginUser? otherUser;
@@ -68,16 +68,16 @@ class UserDetail extends StatelessWidget {
                     Text("最後登入時間: ${realOtherUser.lastLogin}"),
                     SizedBox(
                       width: ScreenSize.width,
-                      child: SkillListView(
-                        title: skillText,
-                        skillList: realOtherUser.mainSkills ?? [],
+                      child: skillBar(
+                        SkillEndDrawerType.haveSkill,
+                        userData: realOtherUser,
                       ),
                     ),
                     SizedBox(
                       width: ScreenSize.width,
-                      child: SkillListView(
-                        title: wantSkillText,
-                        skillList: realOtherUser.wantSkills ?? [],
+                      child: skillBar(
+                        SkillEndDrawerType.wantSkill,
+                        userData: realOtherUser,
                       ),
                     ),
                   ],

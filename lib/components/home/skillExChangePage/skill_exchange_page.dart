@@ -12,11 +12,13 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/user_model.dart';
+import '../../../enum/skill_type.dart';
 import '../../../provider/account/user_provider.dart';
 
 import '../../../states/skill_exchange_state.dart';
+import '../../account/skill_bar.dart';
 import '../../strings/account/sign_up_strings.dart';
-import '../../utilities/skill_list_view.dart';
+
 import '../../utilities/user_icon.dart';
 
 class SkillExchangeLoading extends StatelessWidget {
@@ -314,15 +316,20 @@ class SkillExChangePage extends StatelessWidget {
                                                 : Container(),
                                             //スキルタイトル
                                             Text(StepThirdPage.haveSkillText, style: TextStyle(fontSize: normalTextSize)),
-                                            SkillListView(
+
+                                            skillBar(
+                                              SkillEndDrawerType.haveSkill,
+                                              userData: allUserData[index],
                                               fontSize: skillTextSize,
-                                              skillList: allUserData[index].mainSkills ?? [],
                                             ),
+
                                             //スキルタイトル
                                             Text(StepThirdPage.wantSkillText, style: TextStyle(fontSize: normalTextSize)),
-                                            SkillListView(
+
+                                            skillBar(
+                                              SkillEndDrawerType.wantSkill,
+                                              userData: allUserData[index],
                                               fontSize: skillTextSize,
-                                              skillList: allUserData[index].wantSkills ?? [],
                                             ),
                                           ],
                                         ),

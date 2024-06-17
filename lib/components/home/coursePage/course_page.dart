@@ -7,7 +7,7 @@ import 'package:social_mediam_match/components/home/coursePage/course_filter.dar
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
-import 'package:social_mediam_match/components/utilities/skill_list_view.dart';
+
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
@@ -15,6 +15,7 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
+import '../../../enum/skill_type.dart';
 import '../../../models/user_model.dart';
 
 import '../../../pageManager/enum/bottom_bar_path.dart';
@@ -23,6 +24,7 @@ import '../../../pageManager/enum/route_path.dart';
 import '../../../pageManager/setting/bottom_bar_controller_provider.dart';
 import '../../../provider/account/user_provider.dart';
 
+import '../../account/skill_bar.dart';
 import '../postPage/post_body.dart';
 import '../skillExChangePage/user_detail.dart';
 
@@ -227,10 +229,11 @@ class CoursePage extends StatelessWidget {
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Expanded(
-                                                            child: SkillListView(
-                                                              skillList: courseData[index].courseLearningSkills,
+                                                            child: skillBar(
+                                                              SkillEndDrawerType.close,
+                                                              backGroundColor: normalBgColor2.withAlpha(150),
+                                                              courseSkillData: courseData[index].courseLearningSkills,
                                                               fontSize: 10,
-                                                              backgroundColor: normalBgColor2.withAlpha(150),
                                                             ),
                                                           ),
                                                           Text(

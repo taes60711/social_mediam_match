@@ -8,7 +8,6 @@ import 'package:social_mediam_match/enum/user_detail_end_drawer_type.dart';
 
 import '../../../models/friend_model.dart';
 import '../../../models/user_model.dart';
-import '../../../pageManager/setting/bottom_bar_controller_provider.dart';
 import '../../../provider/friend_provider.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';

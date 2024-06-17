@@ -49,11 +49,17 @@ Widget skillInfoWithPage(BuildContext context) {
           const SizedBox(height: 30),
           //持っているスキル
           Text(StepThirdPage.haveSkillText),
-          skillBar(SkillEndDrawerType.haveSkill, userData: context.read<UserProvider>().userData),
+          skillBar(
+            SkillEndDrawerType.haveSkill,
+            userData: context.read<UserProvider>().userData,
+          ),
 
           //勉強したいスキル
           Text(StepThirdPage.wantSkillText),
-          skillBar(SkillEndDrawerType.wantSkill, userData: context.read<UserProvider>().userData),
+          skillBar(
+            SkillEndDrawerType.wantSkill,
+            userData: context.read<UserProvider>().userData,
+          ),
 
           const SizedBox(height: 10),
           //設定ボタン　例：プロフィール、設定、ニュース...

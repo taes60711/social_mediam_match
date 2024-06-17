@@ -7,11 +7,13 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
+import '../../../enum/skill_type.dart';
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
+import '../../account/skill_bar.dart';
 import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/custom_end_drawer.dart';
-import '../../utilities/skill_list_view.dart';
+
 import '../../utilities/user_icon.dart';
 import '../skillExChangePage/user_detail.dart';
 
@@ -138,8 +140,9 @@ class CourseDetail extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: SkillListView(
-                    skillList: realCourseData.courseLearningSkills,
+                  child: skillBar(
+                    SkillEndDrawerType.close,
+                    courseSkillData: realCourseData.courseLearningSkills,
                     fontSize: 12,
                   ),
                 ),

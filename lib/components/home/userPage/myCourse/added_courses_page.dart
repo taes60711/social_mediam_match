@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 
+import '../../../../enum/skill_type.dart';
 import '../../../../models/course_model.dart';
 import '../../../../models/user_model.dart';
 import '../../../../states/course_state.dart';
+import '../../../account/skill_bar.dart';
 import '../../../utilities/custom_end_drawer.dart';
-import '../../../utilities/skill_list_view.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/style_config.dart';
 import '../../../utilities/user_icon.dart';
@@ -89,10 +90,11 @@ class AddedCoursesPage extends StatelessWidget {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
-                                              child: SkillListView(
-                                                skillList: myAddedCourseData[index].courseLearningSkills,
+                                              child: skillBar(
+                                                SkillEndDrawerType.close,
+                                                backGroundColor: normalBgColor2.withAlpha(150),
+                                                courseSkillData: myAddedCourseData[index].courseLearningSkills,
                                                 fontSize: 10,
-                                                backgroundColor: normalBgColor2.withAlpha(150),
                                               ),
                                             ),
                                             Text(
