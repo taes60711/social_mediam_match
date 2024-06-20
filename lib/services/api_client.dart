@@ -90,7 +90,7 @@ class ApiClient {
   Future<dynamic> handleResponse<T>(
     String responseData, {
     dynamic Function(Map<String, dynamic> json)? model,
-    bool? isList,
+    bool isList = false,
   }) async {
     dynamic result;
     try {
@@ -98,7 +98,7 @@ class ApiClient {
         throw ArgumentError("service error");
       }
       if (model != null) {
-        if (isList != null) {
+        if (isList) {
           List<dynamic> listData = json.decode(responseData);
           result = <T>[];
           for (var e in listData) {

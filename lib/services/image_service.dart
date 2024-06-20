@@ -3,8 +3,8 @@ import '../../global.dart';
 
 class ImageService extends ApiClient {
   ImageService() : super(overrideIp: "$ip:$port/images");
-  String url = "http://$ip:$port/images";
 
+  ///base64画像string取得する
   Future<String> getBase64Img(String image) async {
     String uid = "-1";
     try {
@@ -16,6 +16,7 @@ class ImageService extends ApiClient {
     return uid;
   }
 
+  ///画像がデータベースに存在チェック
   Future<String> imageIsExist(String image) async {
     Map<String, dynamic> body = {
       "image": image,
@@ -28,6 +29,7 @@ class ImageService extends ApiClient {
     return responseData != "null" ? responseData : "Failed";
   }
 
+  ///画像がデータベースに保存
   Future<bool> saveImg(String id, String image) async {
     Map<String, dynamic> body = {
       "id": id,
@@ -40,45 +42,4 @@ class ImageService extends ApiClient {
 
     return responseData != "null" ? true : false;
   }
-
-  // Future<String> imageIsExist(String image) async {
-  //   String uid = "-1";
-  //   String searchUrl = '$url/checkImage';
-  //   Map<String, String> headers = {'content-type': 'application/json'};
-  //   final uri = Uri.parse(searchUrl);
-
-  //   try {
-  //     String body = jsonEncode({"image": image});
-
-  //     var response = await http.put(uri, headers: headers, body: body);
-  //     if (response.statusCode != 404) {
-  //       print(response.body);
-  //       uid = response.body;
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-
-  //   return uid;
-  // }
-
-  // Future<bool> saveImage(String id, String image) async {
-  //   bool isSucess = false;
-  //   String searchUrl = '$url/saveImg';
-  //   Map<String, String> headers = {'content-type': 'application/json'};
-
-  //   final uri = Uri.parse(searchUrl);
-  //   try {
-  //     String body = jsonEncode({"id": id, "image": image});
-
-  //     var response = await http.put(uri, headers: headers, body: body);
-  //     if (response.statusCode != 404) {
-  //       isSucess = true;
-  //       print("saveImage sucess");
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  //   return isSucess;
-  // }
 }

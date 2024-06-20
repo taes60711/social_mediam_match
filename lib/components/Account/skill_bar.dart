@@ -48,12 +48,16 @@ Widget skillSettingTitleBarBtn(SkillEndDrawerType type) {
 }
 
 ///スキルバー
-///param:　skillType:表示されてスキルタイプ　proivderType: 設定用、userData:表示用
+///param: skillType:表示されてスキルタイプ
+/// proivderType: 設定用、userData:表示用
+/// courseSkillData:コース用（ある場合はskillTypeがcloseに設定要る）
 Widget skillBar(
   SkillEndDrawerType skillType, {
+  //スキルデータ
   dynamic userSettingProvider,
   LoginUser? userData,
   List<String>? courseSkillData,
+  //スタイル
   double? fontSize,
   Color? backGroundColor,
 }) {

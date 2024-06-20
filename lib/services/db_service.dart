@@ -511,35 +511,6 @@ class DBService {
     return allpostData;
   }
 
-  searchStatus postByUserIdServerInfo = searchStatus();
-  Future<List<PostModel>> getPostDataByUID(LoginUser userData, {bool? isFirst}) async {
-    String branch = "posts";
-
-    if (isFirst != null) {
-      postByUserIdServerInfo.pageNumber = 0;
-    }
-
-    String searchUrl = '$url/$branch/getPostsByUser/${userData.uid}?page=${postServerInfo.pageNumber}&size=$size';
-
-    final uri = Uri.parse(searchUrl);
-    List<PostModel> allpostDataByUID = [];
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode != 404) {
-        allpostDataByUID = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
-          print(e);
-          return PostModel.toMap(e, userData: userData);
-        }).toList();
-
-        inspect(allpostDataByUID);
-        postByUserIdServerInfo.pageNumber++;
-      }
-    } catch (e) {
-      print(e);
-    }
-    return allpostDataByUID;
-  }
-
   searchStatus newPostServerInfo = searchStatus();
   Future<List<PostModel>> getNewPosts({bool? isFirst}) async {
     String branch = "posts";

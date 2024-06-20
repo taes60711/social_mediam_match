@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/post_model.dart';
+import 'package:social_mediam_match/services/post_service.dart';
 
 import '../models/rich_text_format.dart';
 import '../models/user_model.dart';
@@ -70,17 +71,11 @@ class PostState extends ChangeNotifier {
     await Future.delayed(Duration.zero).then((value) => notifyListeners());
   }
 
-  Future<void> getPostDataByUID(LoginUser userData, {required bool isFirstSearch}) async {
+  Future<void> getPostDataByUID(int page, int size, LoginUser userData) async {
     try {
       List<PostModel> tempPostsData = [];
-      if (isFirstSearch) {
-        tempPostsData = await _dbService.getPostDataByUID(userData, isFirst: isFirstSearch);
-      } else {
-        tempPostsData = await _dbService.getPostDataByUID(userData);
-      }
-      tempPostsData.forEach((e) {
-        myAllPosts = [...myAllPosts, e];
-      });
+      tempPostsData = await PostService().getPostDataByUID(page, size, userData);
+      myAllPosts = tempPostsData;
       notifyListeners();
     } catch (e) {
       print(e);

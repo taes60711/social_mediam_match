@@ -24,6 +24,8 @@ class FriendService extends ApiClient {
     return friendList;
   }
 
+  ///メッセージ送る
+  ///roomid: チャットルームのID roomid: ログインユーザID　message:打ったメッセージ
   Future<bool> sendMessage(int roomId, String userId, String message) async {
     Map<String, dynamic> body = {"userId": userId, "message": message};
 

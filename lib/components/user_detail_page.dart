@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
@@ -13,6 +14,7 @@ import '../pageManager/setting/bottom_bar_controller_provider.dart';
 import '../provider/account/user_provider.dart';
 import '../provider/friend_provider.dart';
 import 'account/skill_bar.dart';
+import 'strings/account/sign_up_strings.dart';
 import 'utilities/user_icon.dart';
 
 class UserDetailPage extends StatelessWidget {
@@ -39,12 +41,19 @@ class UserDetailPage extends StatelessWidget {
               iconSize: 100,
               image: otherUser.image,
             ),
-            Text("名前 : ${otherUser.name ?? otherUser.email}"),
-            Text("身分: ${otherUser.status}"),
-            Text("自我介紹 : ${otherUser.introduction ?? ""}"),
-            Text("最後登入時間: ${otherUser.lastLogin}"),
-            skillBar(SkillEndDrawerType.haveSkill, userData: otherUser),
-            skillBar(SkillEndDrawerType.wantSkill, userData: otherUser),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("名前 : ${otherUser.name ?? otherUser.email}"),
+                Text("身分: ${otherUser.status}"),
+                Text("自我介紹 : ${otherUser.introduction ?? ""}"),
+                Text("最後登入時間: ${otherUser.lastLogin}${tr("skExChpage_beforDays")}"),
+                Text(StepThirdPage.haveSkillText),
+                skillBar(SkillEndDrawerType.haveSkill, userData: otherUser),
+                Text(StepThirdPage.wantSkillText),
+                skillBar(SkillEndDrawerType.wantSkill, userData: otherUser),
+              ],
+            ),
             Builder(
               builder: (context) {
                 bool isFriend = context.select((FriendProvider value) => value.isFriend);

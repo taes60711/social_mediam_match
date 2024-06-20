@@ -6,7 +6,11 @@ import 'style/style_config.dart';
 class BackgroundWidget extends StatelessWidget {
   final bool isSafeArea;
   final Widget child;
-  const BackgroundWidget({super.key, this.isSafeArea = true, required this.child});
+  const BackgroundWidget({
+    super.key,
+    this.isSafeArea = true,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {

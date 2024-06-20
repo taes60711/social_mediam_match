@@ -2,16 +2,23 @@ import 'package:flutter/material.dart';
 
 class StatefulWrapper extends StatefulWidget {
   final Function onInit;
-  final Function? onDispose;
+  final Function onDispose;
   final Widget child;
 
-  const StatefulWrapper({required this.onInit, required this.child, this.onDispose});
+  const StatefulWrapper({
+    super.key,
+    required this.onInit,
+    required this.child,
+    this.onDispose = defaultOnDispose,
+  });
+
+  static void defaultOnDispose() {}
 
   @override
-  _StatefulWrapperState createState() => _StatefulWrapperState();
+  StatefulWrapperState createState() => StatefulWrapperState();
 }
 
-class _StatefulWrapperState extends State<StatefulWrapper> {
+class StatefulWrapperState extends State<StatefulWrapper> {
   @override
   void initState() {
     widget.onInit();
@@ -20,9 +27,7 @@ class _StatefulWrapperState extends State<StatefulWrapper> {
 
   @override
   void dispose() {
-    if (widget.onDispose != null) {
-      widget.onDispose!();
-    }
+    widget.onDispose();
     super.dispose();
   }
 

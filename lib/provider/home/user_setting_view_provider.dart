@@ -20,6 +20,7 @@ class UserSettingViewProvider extends ChangeNotifier {
   List<RequestUserSkillData> haveSkillList = [];
   List<RequestUserSkillData> wantSkillList = [];
 
+  ///編集ページにユーザのデータ画面に入る
   void getUserSettingData(LoginUser userData) {
     nameInput.text = userData.name ?? "";
     jobInput.text = userData.job ?? "";
@@ -30,6 +31,7 @@ class UserSettingViewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  ///ユーザ画像アップロードすると画面にチェンジ
   Future<void> imageChange() async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickerImage = await picker.pickImage(source: ImageSource.gallery, maxHeight: 150, maxWidth: 150);
@@ -43,6 +45,7 @@ class UserSettingViewProvider extends ChangeNotifier {
     }
   }
 
+  ///スキルチェンジ
   void changeSkillList(Map<String, List<RequestUserSkillData>> skillData) {
     haveSkillList = skillData["haveSkillList"]!;
     wantSkillList = skillData["wantSkillList"]!;

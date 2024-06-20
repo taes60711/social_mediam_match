@@ -5,10 +5,17 @@ import 'style/screen_size.dart';
 class BaseTopBar extends StatelessWidget {
   final Function? backFunc;
   final dynamic leftWidget;
-  final String? title;
+  final String title;
   final dynamic rightWidget;
   final double? padding;
-  const BaseTopBar({super.key, this.leftWidget, this.backFunc, this.title, this.rightWidget, this.padding});
+  const BaseTopBar({
+    super.key,
+    this.leftWidget,
+    this.backFunc,
+    this.title = "",
+    this.rightWidget = const SizedBox(),
+    this.padding,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +29,8 @@ class BaseTopBar extends StatelessWidget {
             },
             child: const Icon(Icons.arrow_back_ios),
           ),
-      Text(title ?? ""),
-      rightWidget ?? const SizedBox()
+      Text(title),
+      rightWidget
     ];
 
     return SizedBox(

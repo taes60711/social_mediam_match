@@ -82,7 +82,7 @@ Widget _mainBody(BuildContext context) {
       ///introduction
       Builder(
         builder: (context) {
-          print("signUpStepThird introductInput");
+          print("userSetting introductInput");
           String displayText = context.select((UserSettingViewProvider value) => value.introductionInput.text);
           return MultiTitleInput(
             title: StepThirdPage.introInputTitle,

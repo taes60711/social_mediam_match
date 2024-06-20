@@ -110,14 +110,14 @@ class MyFriends extends StatelessWidget {
             ),
           ),
         ),
-        endDrawer(context),
+        endDrawer(),
       ],
     );
   }
 }
 
 ///ユーザ詳細ページ用EndDrawer
-Widget endDrawer(BuildContext myfriendContext) {
+Widget endDrawer() {
   return Builder(
     builder: (context) {
       print("customEndDrawer");
