@@ -74,6 +74,7 @@ Widget skillInfoWithPage(BuildContext context) {
             ),
             child: GridView.count(
               shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               crossAxisCount: 4,
               children: UserPageRouthsettingButtonInfo.list
                   .map(

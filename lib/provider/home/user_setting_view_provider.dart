@@ -35,7 +35,7 @@ class UserSettingViewProvider extends ChangeNotifier {
   ///ユーザ画像アップロードすると画面にチェンジ
   Future<void> imageChange() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickerImage = await picker.pickImage(source: ImageSource.gallery, maxHeight: 150, maxWidth: 150);
+    final XFile? pickerImage = await picker.pickImage(source: ImageSource.gallery); //, maxHeight: 150, maxWidth: 150
 
     if (pickerImage != null) {
       File image = File(pickerImage.path);
