@@ -1,152 +1,320 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+
 import 'package:social_mediam_match/components/home/firendsPage/chat_room.dart';
-import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/friend_model.dart';
-import 'package:social_mediam_match/states/friend_state.dart';
+import 'package:social_mediam_match/provider/friend_provider.dart';
 import '../../../models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
+import '../../utilities/custom_end_drawer.dart';
 
 class FirendsPage extends StatelessWidget {
-  final LoginUser userData;
-  const FirendsPage({super.key, required this.userData});
+  const FirendsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    FriendState friendFuture = context.read<FriendState>();
-    String friendListMessage = context.select((FriendState value) => value.friendListMessage);
-    GlobalKey<ScaffoldState> key = context.select((FriendState value) => value.key);
+    LoginUser userData = context.watch<UserProvider>().userData;
+    FriendProvider friendFuture = context.read<FriendProvider>();
+    List<FriendListModel> friendList = context.watch<FriendProvider>().friendList;
+    TextEditingController friendListFilterInput = context.select((FriendProvider value) => value.friendListFilterInput);
+    List<FriendListModel> filteredList = friendList.where((element) {
+      bool filterRequest = true;
+      String filterString = friendListFilterInput.text;
+      if (filterString != "") {
+        filterRequest = element.userData.email.contains(filterString);
+        if (element.userData.name != null) {
+          filterRequest = element.userData.name!.contains(filterString);
+        }
+      }
+      return filterRequest;
+    }).toList();
 
-    Widget userComponent;
+    Future<void> opneChatRoomPage({required LoginUser loginUser, required LoginUser choicedRoomUser}) {
+      return showDialog(
+        context: context,
+        useSafeArea: false,
+        barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
+        builder: (BuildContext context) {
+          return CustomEndDrawer(
+            child: Dismissible(
+              direction: DismissDirection.startToEnd,
+              resizeDuration: const Duration(milliseconds: 1),
+              onDismissed: (_) {
+                friendFuture.closeRoom();
+                print("Chat Room close");
+              },
+              key: const Key('key'),
+              child: ChatRoom(
+                ohterUserData: choicedRoomUser,
+                userData: loginUser,
+              ),
+            ),
+          );
+        },
+      );
+    }
 
-    print("UserPage");
-    userComponent = Builder(builder: (context) {
-      if (friendListMessage != "" && friendListMessage != "is already Friend") {
-        List<FriendListModel> data = (jsonDecode(friendListMessage) as List<dynamic>).map((e) {
-          return FriendListModel.fromJson(e);
-        }).toList();
-
-        return Scaffold(
-          key: key,
-          endDrawer: ChatRoom(
-            globalKey: key,
-            userData: userData,
+    print("firendPage ");
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      key: key,
+      body: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            width: ScreenSize.width,
+            height: 36,
+            child: TextField(
+              cursorColor: normalBgColor2,
+              controller: friendListFilterInput,
+              decoration: InputDecoration(
+                hintText: "Search By name",
+                hintStyle: TextStyle(fontSize: 14),
+                prefixIcon: const Icon(Icons.search),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                ),
+                contentPadding: const EdgeInsets.all(8),
+                border: const OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                friendFuture.friendListFilterInputOnChange(value);
+              },
+            ),
           ),
-          body: DefaultTabController(
-            length: 2,
-            child: Scaffold(
-              appBar: AppBar(
-                title: const TabBar(
-                  tabs: [
-                    Tab(text: '全部'),
-                    Tab(text: '好友'),
+          Expanded(
+            child: DefaultTabController(
+              length: 2,
+              child: Scaffold(
+                appBar: TabBar(
+                  tabs: const [
+                    SizedBox(
+                      height: 25,
+                      child: Tab(text: '全部'),
+                    ),
+                    SizedBox(
+                      height: 25,
+                      child: Tab(text: '好友'),
+                    ),
+                  ],
+                  isScrollable: true,
+                  indicator: UnderlineTabIndicator(
+                    borderSide: BorderSide(width: 1.0, color: normalBgColor),
+                    insets: const EdgeInsets.symmetric(horizontal: 10),
+                  ),
+                  labelPadding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+                  labelColor: normalBgColor2,
+                ),
+                body: TabBarView(
+                  children: [
+                    Column(
+                      children: [
+                        const Text("全部列表"),
+                        Expanded(
+                          child: filteredList.isEmpty
+                              ? SizedBox(
+                                  height: ScreenSize.height,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        child: Icon(
+                                          FontAwesomeIcons.usersSlash,
+                                          color: normalBgColor2,
+                                          size: 50,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 15, bottom: 15),
+                                        child: Text(
+                                          "目前沒有好友",
+                                          style: TextStyle(color: normalBgColor2),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : ListView.builder(
+                                  itemCount: filteredList.length,
+                                  itemBuilder: (context, index) {
+                                    FriendListModel listInfo = filteredList[index];
+                                    LoginUser otherUserData = listInfo.userData;
+                                    return Container(
+                                      decoration:
+                                          BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            friendFuture.openRoom(listInfo.roomId);
+                                            await opneChatRoomPage(loginUser: userData, choicedRoomUser: listInfo.userData);
+                                          },
+                                          child: Container(
+                                            color: Colors.transparent,
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: UserIcon(
+                                                      iconSize: 50,
+                                                      image: otherUserData.image,
+                                                    )),
+                                                SizedBox(
+                                                  width: ScreenSize.width - 100,
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Expanded(child: Text(otherUserData.name ?? otherUserData.email)),
+                                                          friendList[index].sentAt != null
+                                                              ? Text(
+                                                                  "${listInfo.sentAt}",
+                                                                  style: TextStyle(fontSize: 12, color: normalBgColor2),
+                                                                )
+                                                              : const Text(""),
+                                                        ],
+                                                      ),
+                                                      listInfo.lastMessage != null
+                                                          ? Text(
+                                                              listInfo.lastMessage!.contains("http://\$ip")
+                                                                  ? "傳送了圖像"
+                                                                  : "${listInfo.lastMessage}",
+                                                              style: const TextStyle(color: Colors.black54),
+                                                              maxLines: 2,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            )
+                                                          : const Text(
+                                                              "沒有任何訊息",
+                                                              style: TextStyle(color: Colors.black54),
+                                                            ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const Text("好友列表"),
+                        Expanded(
+                          child: filteredList.isEmpty
+                              ? SizedBox(
+                                  height: ScreenSize.height,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        child: Icon(
+                                          FontAwesomeIcons.usersSlash,
+                                          color: normalBgColor2,
+                                          size: 50,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 15, bottom: 15),
+                                        child: Text(
+                                          "目前沒有好友",
+                                          style: TextStyle(color: normalBgColor2),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : ListView.builder(
+                                  itemCount: filteredList.length,
+                                  itemBuilder: (context, index) {
+                                    FriendListModel listInfo = filteredList[index];
+                                    LoginUser otherUserData = listInfo.userData;
+                                    return Container(
+                                      decoration:
+                                          BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            friendFuture.openRoom(listInfo.roomId);
+                                            await opneChatRoomPage(loginUser: userData, choicedRoomUser: listInfo.userData);
+                                          },
+                                          child: Container(
+                                            color: Colors.transparent,
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: UserIcon(
+                                                      iconSize: 50,
+                                                      image: otherUserData.image,
+                                                    )),
+                                                SizedBox(
+                                                  width: ScreenSize.width - 100,
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Expanded(child: Text(otherUserData.name ?? otherUserData.email)),
+                                                          friendList[index].sentAt != null
+                                                              ? Text(
+                                                                  "${listInfo.sentAt}",
+                                                                  style: TextStyle(fontSize: 12, color: normalBgColor2),
+                                                                )
+                                                              : const Text(""),
+                                                        ],
+                                                      ),
+                                                      listInfo.lastMessage != null
+                                                          ? Text(
+                                                              "${listInfo.lastMessage}",
+                                                              style: const TextStyle(color: Colors.black54),
+                                                              maxLines: 2,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            )
+                                                          : const Text(
+                                                              "沒有任何訊息",
+                                                              style: TextStyle(color: Colors.black54),
+                                                            ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
-              body: TabBarView(
-                children: [
-                  Column(
-                    children: [
-                      const Text("全部列表"),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  friendFuture.openRoom(data[index].roomId);
-                                  key.currentState!.openEndDrawer();
-                                },
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        width: 50,
-                                        height: 50,
-                                        color: Colors.pinkAccent,
-                                      ),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(data[index].roomName),
-                                        data[index].lastMessage != null
-                                            ? Text(
-                                                "${data[index].lastMessage}",
-                                                style: const TextStyle(color: Colors.black54),
-                                              )
-                                            : const Text(""),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      const Text("好友列表"),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            return data[index].roomType == 1
-                                ? Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        friendFuture.openRoom(data[index].roomId);
-                                        key.currentState!.openEndDrawer();
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              width: 50,
-                                              height: 50,
-                                              color: Colors.pinkAccent,
-                                            ),
-                                          ),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(data[index].roomName),
-                                              data[index].lastMessage != null
-                                                  ? Text(
-                                                      "${data[index].lastMessage}",
-                                                      style: const TextStyle(color: Colors.black54),
-                                                    )
-                                                  : const Text(""),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : Container();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
             ),
           ),
-        );
-      } else {
-        return const Loading();
-      }
-    });
-
-    return Scaffold(body: userComponent);
+        ],
+      ),
+    );
   }
 }

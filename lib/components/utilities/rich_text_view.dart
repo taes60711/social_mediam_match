@@ -13,7 +13,8 @@ import '../../models/rich_text_format.dart';
 class RichTextView extends StatefulWidget {
   final String content;
   final bool? isPreView;
-  const RichTextView({required this.content, this.isPreView, super.key});
+  final double? fontSize;
+  const RichTextView({required this.content, this.isPreView, this.fontSize, super.key});
 
   @override
   State<RichTextView> createState() => _RichTextViewState();
@@ -24,7 +25,10 @@ PhotoViewController photoViewController = PhotoViewController();
 class _RichTextViewState extends State<RichTextView> with SingleTickerProviderStateMixin {
   Future<void> imageView(String imgUrl) {
     double value = 1;
-    double zoomSpeed = 0.01 * ScreenSize().height / ScreenSize().width;
+    double zoomSpeed = 0.01 * ScreenSize.height / ScreenSize.width;
+    if (Platform.isAndroid || Platform.isIOS) {
+      zoomSpeed = 0.01;
+    }
     Timer timer = Timer(Duration.zero, () {});
 
     return showDialog<void>(
@@ -114,7 +118,10 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                         print("onDoubleTap");
                         imageViewExit();
                       },
-                      child: Image.network(imgUrl)),
+                      child: Image.network(
+                        imgUrl,
+                        gaplessPlayback: true,
+                      )),
                 ),
               ),
             ],
@@ -124,24 +131,29 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
     );
   }
 
-  double fontSize = 18;
   @override
   Widget build(BuildContext context) {
+    double fontSize = widget.fontSize ?? 18;
     late List<YoutubePlayerController> ytController = [];
     int index = 0;
 
     String choicedImg = "";
+
+    void tapedURL(String url) {
+      print("click: $url");
+      if (Platform.isAndroid) {
+        final Uri _url = Uri.parse(url);
+        launchUrl(_url);
+      }
+    }
+
     return (widget.isPreView != true)
         //全文章
         ? HtmlWidget(
             RichTextFormat(htmlString: widget.content).editedTextToWidgetHtml(),
             textStyle: TextStyle(fontSize: fontSize),
             onTapUrl: (url) {
-              print("click: $url");
-              if (Platform.isAndroid) {
-                final Uri _url = Uri.parse(url);
-                launchUrl(_url);
-              }
+              tapedURL(url);
               return false;
             },
             customWidgetBuilder: (element) {
@@ -150,11 +162,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   element.innerHtml,
                   textStyle: TextStyle(fontSize: fontSize),
                   onTapUrl: (url) {
-                    print("click: $url");
-                    if (Platform.isAndroid) {
-                      final Uri _url = Uri.parse(url);
-                      launchUrl(_url);
-                    }
+                    tapedURL(url);
                     return false;
                   },
                   onTapImage: (src) {
@@ -166,16 +174,14 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   },
                 );
               } else if (element.localName == "iframe") {
-                int startIndex = element.outerHtml.indexOf('src=') + 'src="https://www.youtube.com/embed/'.length;
-                int endIndex = element.outerHtml.indexOf('">');
-                String videoId = element.outerHtml.substring(startIndex, endIndex);
-
+                String ytId = RichTextFormat().getYtvideoID(element.outerHtml);
                 index = ytController.length;
 
                 ytController.add(
                   YoutubePlayerController(
-                    initialVideoId: videoId,
+                    initialVideoId: ytId,
                     flags: const YoutubePlayerFlags(
+                      disableDragSeek: true,
                       autoPlay: false,
                       mute: false,
                     ),
@@ -183,12 +189,15 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                 );
 
                 return SizedBox(
-                  width: ScreenSize().width,
+                  width: ScreenSize.width,
                   child: YoutubePlayer(
                     controller: ytController[index],
                     onReady: () => {},
+                    bottomActions: [CurrentPosition(), ProgressBar(isExpanded: true), RemainingDuration(), FullScreenButton()],
                   ),
                 );
+              } else {
+                return Container();
               }
             },
             onTapImage: (src) {
@@ -204,18 +213,22 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
             bool haveImage = RichTextFormat(htmlString: widget.content).getPostPreView()["IsImage"];
             String resultString = RichTextFormat(htmlString: widget.content).getPostPreView()["resultString"];
 
-            return haveImage
-                ? Image.network(
-                    resultString,
-                    width: ScreenSize().width,
-                    height: 150,
-                    fit: BoxFit.cover,
-                    gaplessPlayback: true,
-                  )
-                : HtmlWidget(
-                    resultString,
-                    textStyle: TextStyle(fontSize: fontSize),
-                  );
+            Widget component;
+            if (haveImage) {
+              component = Image.network(
+                resultString,
+                width: ScreenSize.width,
+                height: 150,
+                fit: BoxFit.cover,
+                gaplessPlayback: true,
+              );
+            } else {
+              component = HtmlWidget(
+                resultString,
+                textStyle: TextStyle(fontSize: fontSize),
+              );
+            }
+            return component;
           });
   }
 }

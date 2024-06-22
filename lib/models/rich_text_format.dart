@@ -3,12 +3,12 @@ import 'package:html/parser.dart' as html;
 import 'package:uuid/uuid.dart';
 
 import '../global.dart';
-import '../states/services/image_service.dart';
+import '../services/image_service.dart';
 
 class RichTextFormat {
-  String htmlString;
+  String? htmlString;
   RichTextFormat({
-    required this.htmlString,
+    this.htmlString,
   });
 
   // ["15px", "18px", '24px', '32px', '48px']
@@ -19,8 +19,8 @@ class RichTextFormat {
   };
 
   Future<String> sendPostImgFormat() async {
-    String _htmlString = htmlString;
-    var node = html.parse(htmlString).body;
+    String _htmlString = htmlString ?? "";
+    var node = html.parse(_htmlString).body;
 
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var elements = node.querySelectorAll('*');
@@ -32,12 +32,12 @@ class RichTextFormat {
             await Future.forEach(document.body?.querySelectorAll('*') ?? [], (e) async {
               if (e.localName == 'img') {
                 String uid = const Uuid().v1();
-                String resultString = getImage(e.outerHtml);
+                String resultString = _getImage(e.outerHtml);
 
                 if (await ImageService().imageIsExist(resultString) != "-1") {
                   uid = await ImageService().imageIsExist(resultString);
                 } else {
-                  await ImageService().saveImage(uid, resultString);
+                  await ImageService().saveImg(uid, resultString);
                 }
 
                 String imgStringToHttp = '<img src="http://\$ip:\$port/images/$uid">';
@@ -51,8 +51,9 @@ class RichTextFormat {
     return _htmlString;
   }
 
+  ///MARK:顯示用html
   String editedTextToWidgetHtml() {
-    String _htmlString = mappingIPAndPort(htmlString);
+    String _htmlString = mappingIPAndPort(htmlString ?? "");
     var node = html.parse(_htmlString).body;
 
     if (node!.nodeType == Node.ELEMENT_NODE) {
@@ -102,22 +103,15 @@ class RichTextFormat {
     return _htmlString;
   }
 
-  String widgetToEditorHtml(String htmlString) {
+  ///MARK:編輯用Html
+  Future<String> widgetToEditorHtml(String htmlString) async {
     String _htmlString = mappingIPAndPort(htmlString);
-    dynamic getKeyByValue(Map<dynamic, dynamic> map, dynamic value) {
-      for (var entry in map.entries) {
-        if (entry.value == value) {
-          return entry.key;
-        }
-      }
-      return null;
-    }
 
-    var node = html.parse(htmlString).body;
+    var node = html.parse(_htmlString).body;
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var allElements = node.querySelectorAll('*');
 
-      allElements.forEach((element) {
+      await Future.forEach(allElements, (element) async {
         switch (element.localName) {
           case "p":
             var document = html.parse(element.innerHtml);
@@ -125,10 +119,16 @@ class RichTextFormat {
               String pwithSpanString = element.innerHtml.replaceAll(" ", "&nbsp;");
               _htmlString = _htmlString.replaceAll(element.innerHtml, pwithSpanString);
             }
+            if (element.innerHtml.contains("http://$ip:$port/images/")) {
+              String imgURL = _getImage(element.innerHtml);
+              String imgUId = imgURL.substring('http://$ip:$port/images/'.length);
+              String base64Str = await ImageService().getBase64Img(imgUId);
+              String base64ImgHtmlStr = element.innerHtml.replaceAll(imgURL, "data:image/jpeg;base64,$base64Str");
+              _htmlString = _htmlString.replaceAll(mappingIPAndPort(element.innerHtml), base64ImgHtmlStr);
+            }
             document.body?.querySelectorAll('*').forEach(
               (e) {
                 if (e.localName == "span" || e.localName == "a") {
-                  // inspect(e);
                   String htmlUseStyle = '';
                   if (e.className != "") {
                     htmlUseStyle += 'class="${e.className}" ';
@@ -152,18 +152,17 @@ class RichTextFormat {
                 }
               },
             );
-
             break;
         }
       });
     }
-
-    // print(htmlString);
+    print("_htmlString $_htmlString");
     return _htmlString;
   }
 
+  ///MARK:取得預覽圖片或影片的圖片
   Map<String, dynamic> getPostPreView() {
-    String _htmlString = mappingIPAndPort(htmlString);
+    String _htmlString = mappingIPAndPort(htmlString ?? "");
     var node = html.parse(_htmlString).body;
     String resultString = "";
     bool isImage = false;
@@ -178,9 +177,15 @@ class RichTextFormat {
       var allElements = node.querySelectorAll('*');
 
       allElements.forEach((element) {
-        if (element.innerHtml.contains("img")) {
-          isImage = true;
-          resultString = getImage(element.innerHtml);
+        if (!isImage) {
+          if (element.innerHtml.contains("img")) {
+            isImage = true;
+            resultString = _getImage(element.innerHtml);
+          } else if (element.localName == "iframe") {
+            String ytId = RichTextFormat().getYtvideoID(element.outerHtml);
+            isImage = true;
+            resultString = "https://img.youtube.com/vi/$ytId/hqdefault.jpg";
+          }
         }
       });
     }
@@ -191,7 +196,7 @@ class RichTextFormat {
     };
   }
 
-  String getImage(String htmlString) {
+  String _getImage(String htmlString) {
     int startIndex = -1;
     if (htmlString.contains('src="data:image/')) {
       startIndex = htmlString.indexOf('src="data:image/') + 27;
@@ -215,5 +220,31 @@ class RichTextFormat {
     String changedHtmlString = htmlString.replaceAll('\$ip', ip);
     changedHtmlString = changedHtmlString.replaceAll('\$port', port);
     return changedHtmlString;
+  }
+
+  String getYtvideoID(String url) {
+    int start = 0;
+    if (url.contains('/shorts/')) {
+      start = url.indexOf('/shorts/') + '/shorts/'.length;
+    } else if (url.contains('/youtu.be/')) {
+      start = url.indexOf('/youtu.be/') + '/youtu.be/'.length;
+    } else if (url.contains('src=')) {
+      start = url.indexOf('src=') + 'src="https://www.youtube.com/embed/'.length;
+    } else {
+      start = url.indexOf('?v=') + '?v='.length;
+    }
+    int end = 0;
+    if (url.contains('&list')) {
+      end = url.indexOf('&list');
+    } else if (url.contains('?si')) {
+      end = url.indexOf('?si');
+    } else if (url.contains('src=')) {
+      end = url.indexOf('">');
+    } else {
+      end = url.length;
+    }
+
+    String tmpId = url.substring(start, end);
+    return tmpId;
   }
 }

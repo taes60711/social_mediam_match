@@ -1,15 +1,18 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-
+import 'package:social_mediam_match/states/course_state.dart';
+import '../../../enum/skill_end_drawer_type.dart';
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
+import '../../account/skill_bar.dart';
+import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/custom_end_drawer.dart';
-import '../../utilities/skill_list_view.dart';
+
 import '../../utilities/user_icon.dart';
 import '../skillExChangePage/user_detail.dart';
 
@@ -18,18 +21,30 @@ class CourseDetail extends StatelessWidget {
   final LoginUser? userData;
   final GlobalKey<ScaffoldState> globalKey;
   final VoidCallback gotoFriendPage;
-  const CourseDetail({super.key, this.courseData, required this.globalKey, required this.userData, required this.gotoFriendPage});
+  final bool? bIsAdded;
+
+  const CourseDetail({
+    super.key,
+    this.courseData,
+    required this.globalKey,
+    required this.userData,
+    required this.gotoFriendPage,
+    this.bIsAdded,
+  });
 
   @override
   Widget build(BuildContext context) {
+    CourseState courseState = context.read<CourseState>();
+    bool bIsAddedCourse = context.select((CourseState value) => value.bIsAddedCourse);
     Widget component = Container();
 
     if (courseData != null) {
       CourseModel realCourseData = courseData!;
+      print("isAdded bIsAddedCourse bIsAddedCourse ${bIsAddedCourse}");
 
       Widget breakLine = Container(
         margin: const EdgeInsets.all(5),
-        width: ScreenSize().width,
+        width: ScreenSize.width,
         height: 0.3,
         color: hintTextColor,
       );
@@ -46,9 +61,42 @@ class CourseDetail extends StatelessWidget {
               child: Icon(Icons.arrow_back_ios),
             ),
             SizedBox(height: 5),
-            Text(
-              realCourseData.title,
-              style: TextStyle(fontSize: 19),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  realCourseData.title,
+                  style: TextStyle(fontSize: 19),
+                ),
+                bIsAddedCourse
+                    ? Container()
+                    : GestureDetector(
+                        onTap: () {
+                          courseState.userAddCourseRequest(courseId: realCourseData.id, userUId: userData!.uid);
+                        },
+                        child: Container(
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 30,
+                                height: 30,
+                                margin: const EdgeInsets.only(right: 10),
+                                decoration: BoxDecoration(color: normalBgColor2, borderRadius: BorderRadius.circular(15)),
+                                child: const Icon(
+                                  FontAwesomeIcons.plus,
+                                  size: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                "加入課程",
+                                style: TextStyle(color: normalBgColor2),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+              ],
             ),
             Text(
               "課程類別: ${realCourseData.type}",
@@ -60,7 +108,7 @@ class CourseDetail extends StatelessWidget {
               style: TextStyle(fontSize: 14),
             ),
             Container(
-              width: ScreenSize().width,
+              width: ScreenSize.width,
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
               decoration: BoxDecoration(
                 color: hintTextColor.withAlpha(50),
@@ -74,7 +122,7 @@ class CourseDetail extends StatelessWidget {
               style: TextStyle(fontSize: 14),
             ),
             Container(
-              width: ScreenSize().width,
+              width: ScreenSize.width,
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
               decoration: BoxDecoration(
                 color: hintTextColor.withAlpha(50),
@@ -91,8 +139,9 @@ class CourseDetail extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: SkillListView(
-                    skillList: realCourseData.courseLearningSkills,
+                  child: skillBar(
+                    SkillEndDrawerType.close,
+                    courseSkillData: realCourseData.courseLearningSkills,
                     fontSize: 12,
                   ),
                 ),
@@ -117,9 +166,7 @@ class CourseDetail extends StatelessWidget {
                         key: const Key('key'),
                         child: UserDetail(
                           globalKey: globalKey,
-                          userData: userData,
                           otherUser: realCourseData.courseCreateduserInfo,
-                          gotoFriendPage: gotoFriendPage,
                         ),
                       ),
                     );
@@ -160,94 +207,110 @@ class CourseDetail extends StatelessWidget {
                 ),
               ),
             ),
-            Column(
-              children: realCourseData.chapterList.map((e) {
-                return ExpansionTile(
-                  title: Text("章節 ${e.chapter}"),
-                  children: [
-                    SizedBox(
-                      width: ScreenSize().width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: e.content.map((e) {
-                          Map<String, dynamic> resultData = jsonDecode(e);
-                          String chapterText = "${resultData['text']}";
-                          String chapterUrl = "${resultData['url']}";
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 5),
-                                  child: Icon(
-                                    Icons.ondemand_video,
-                                    color: normalBgColor2,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      String vidoeHtml = "<iframe src='${chapterUrl}'></iframe>";
+            SizedBox(height: 20),
+            bIsAdded != null
+                ? Container()
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("詳細介紹:"),
+                      RichTextView(content: realCourseData.prStory),
+                    ],
+                  ),
+            bIsAdded != null
+                ? Column(
+                    children: realCourseData.chapterList.map((e) {
+                      return ExpansionTile(
+                        title: Text("章節 ${e.chapter}"),
+                        children: [
+                          SizedBox(
+                            width: ScreenSize.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: e.content.map((e) {
+                                String content = e;
+                                int startIndex = '{"text":"'.length;
+                                int endIndex = content.indexOf('","');
+                                int startUrlIndex = content.indexOf('"url":"') + '"url":"'.length;
+                                int endUrlIndex = content.indexOf('"}');
+                                String chapterText = content.substring(startIndex, endIndex);
+                                String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
 
-                                      showGeneralDialog(
-                                          barrierColor: Colors.black.withOpacity(0.7),
-                                          transitionBuilder: (context, a1, a2, widget) {
-                                            return Transform.scale(
-                                              scale: a1.value,
-                                              child: Opacity(
-                                                opacity: a1.value,
-                                                child: SizedBox(
-                                                  height: ScreenSize().height,
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.of(context).pop();
-                                                        },
-                                                        child: Container(
-                                                          margin: const EdgeInsets.only(right: 20, bottom: 20),
-                                                          height: 30,
-                                                          width: 30,
-                                                          child: Icon(
-                                                            Icons.close,
-                                                            color: normalTextColor,
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 5),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 5),
+                                        child: Icon(
+                                          Icons.ondemand_video,
+                                          color: normalBgColor2,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            showGeneralDialog(
+                                                barrierColor: Colors.black.withOpacity(0.7),
+                                                transitionBuilder: (context, a1, a2, widget) {
+                                                  return Transform.scale(
+                                                    scale: a1.value,
+                                                    child: Opacity(
+                                                      opacity: a1.value,
+                                                      child: Scaffold(
+                                                        body: SafeArea(
+                                                          child: SingleChildScrollView(
+                                                            child: Column(
+                                                              children: [
+                                                                Text(chapterText),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    Navigator.of(context).pop();
+                                                                  },
+                                                                  child: Container(
+                                                                    alignment: Alignment.topRight,
+                                                                    margin: const EdgeInsets.only(right: 20, bottom: 20),
+                                                                    child: Icon(
+                                                                      Icons.close,
+                                                                      color: normalBgColor2,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                RichTextView(content: chapterUrl)
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                      RichTextView(content: vidoeHtml)
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            );
+                                                    ),
+                                                  );
+                                                },
+                                                transitionDuration: Duration(milliseconds: 200),
+                                                barrierDismissible: true,
+                                                barrierLabel: '',
+                                                context: context,
+                                                pageBuilder: (context, animation1, animation2) {
+                                                  return Container();
+                                                });
                                           },
-                                          transitionDuration: Duration(milliseconds: 200),
-                                          barrierDismissible: true,
-                                          barrierLabel: '',
-                                          context: context,
-                                          pageBuilder: (context, animation1, animation2) {
-                                            return Container();
-                                          });
-                                    },
-                                    child: Text(
-                                      chapterText,
-                                      style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                                          child: Text(
+                                            chapterText,
+                                            style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
+                                );
+                              }).toList(),
                             ),
-                          );
-                        }).toList(),
-                      ),
-                    )
-                  ],
-                );
-              }).toList(),
-            ),
+                          )
+                        ],
+                      );
+                    }).toList(),
+                  )
+                : Container()
           ],
         ),
       );
@@ -255,7 +318,14 @@ class CourseDetail extends StatelessWidget {
     return BackgroundWidget(
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
-        child: component,
+        child: StatefulWrapper(
+          onInit: () async {
+            if (userData!.uid != courseData!.createdBy) {
+              await courseState.isAddedCourse(courseId: courseData!.id, userUId: userData!.uid);
+            }
+          },
+          child: component,
+        ),
       ),
     );
   }

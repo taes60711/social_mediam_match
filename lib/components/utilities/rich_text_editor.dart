@@ -25,6 +25,71 @@ class RichTextEditor extends StatelessWidget {
           customButtons: [
             InkWell(
               onTap: () async {
+                TextEditingController imageLinkController = TextEditingController();
+
+                Future<void> setLinkView() {
+                  return showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Image Link'),
+                        content: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          width: ScreenSize.width,
+                          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                            TitleInput(title: 'Imgae URL', textController: imageLinkController),
+                          ]),
+                        ),
+                        actions: [
+                          ElevatedButton(
+                              child: Text('cancel'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              }),
+                          ElevatedButton(
+                            onPressed: () async {
+                              String imgUrl = imageLinkController.text;
+                              String urlString = '<img src="$imgUrl">';
+
+                              await controller.insertText(urlString);
+                              Navigator.pop(context);
+                            },
+                            child: Text("send"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+
+                await setLinkView();
+              },
+              child: const SizedBox(
+                width: 26,
+                height: 24,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 1.7,
+                      child: Icon(
+                        FontAwesomeIcons.image,
+                        size: 19,
+                      ),
+                    ),
+                    Positioned(
+                      right: -1.5,
+                      bottom: -6,
+                      child: Icon(
+                        Icons.link,
+                        size: 20,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () async {
                 TextEditingController linkController = TextEditingController();
 
                 Future<void> setLinkView() {
@@ -35,7 +100,7 @@ class RichTextEditor extends StatelessWidget {
                         title: const Text('Link'),
                         content: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 5),
-                          width: ScreenSize().width,
+                          width: ScreenSize.width,
                           child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                             TitleInput(title: 'Youtube URL', textController: linkController),
                           ]),
@@ -48,31 +113,10 @@ class RichTextEditor extends StatelessWidget {
                               }),
                           ElevatedButton(
                             onPressed: () async {
-                              String getVideoID(String url) {
-                                int start = 0;
-                                if (url.contains('/shorts/')) {
-                                  start = url.indexOf('/shorts/') + '/shorts/'.length;
-                                } else if (url.contains('/youtu.be/')) {
-                                  start = url.indexOf('/youtu.be/') + '/youtu.be/'.length;
-                                } else {
-                                  start = url.indexOf('?v=') + '?v='.length;
-                                }
-                                int end = 0;
-                                if (url.contains('&list')) {
-                                  end = url.indexOf('&list');
-                                } else if (url.contains('?si')) {
-                                  end = url.indexOf('?si');
-                                } else {
-                                  end = url.length;
-                                }
-
-                                String tmpId = url.substring(start, end);
-                                return tmpId;
-                              }
-
-                              String youtubeId = 'https://www.youtube.com/embed/${getVideoID(linkController.text)}';
+                              String ytId = RichTextFormat().getYtvideoID(linkController.text);
+                              String ytURL = 'https://www.youtube.com/embed/$ytId';
                               String urlString =
-                                  '<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="$youtubeId"></iframe><p><br></p>';
+                                  '<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="$ytURL"></iframe><p><br></p>';
 
                               await controller.insertText(urlString);
                               Navigator.pop(context);
@@ -102,10 +146,10 @@ class RichTextEditor extends StatelessWidget {
                         title: const Text('Link'),
                         content: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 5),
-                          width: ScreenSize().width,
+                          width: ScreenSize.width,
                           child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                            TitleInput(title: 'Link Text', textController: linkTextController),
                             TitleInput(title: 'URL', textController: linkController),
-                            TitleInput(title: 'Link Text', textController: linkTextController)
                           ]),
                         ),
                         actions: [
@@ -135,17 +179,30 @@ class RichTextEditor extends StatelessWidget {
             ),
           ],
         ),
-        QuillHtmlEditor(
-          text: RichTextFormat(htmlString: content).widgetToEditorHtml(content),
-          controller: controller,
-          minHeight: 1,
-          textStyle: TextStyle(fontSize: fontSize),
-          loadingBuilder: (context) {
-            return const Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 0.4,
-              ),
-            );
+        FutureBuilder<String>(
+          future: RichTextFormat(htmlString: content).widgetToEditorHtml(content),
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              return QuillHtmlEditor(
+                text: snapshot.data,
+                controller: controller,
+                minHeight: 1,
+                textStyle: TextStyle(fontSize: fontSize),
+                loadingBuilder: (context) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 0.4,
+                    ),
+                  );
+                },
+              );
+            } else {
+              return const Center(child: Text('No data available'));
+            }
           },
         ),
       ],

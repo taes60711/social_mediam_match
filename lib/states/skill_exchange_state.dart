@@ -3,9 +3,10 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/user_model.dart';
-import 'package:social_mediam_match/states/services/db_service.dart';
 
+import '../enum/skill_type.dart';
 import '../global.dart';
+import '../services/db_service.dart';
 
 class SkillExChangeState extends ChangeNotifier {
   final DBService _dbService = DBService();
@@ -58,7 +59,7 @@ class SkillExChangeState extends ChangeNotifier {
         for (var e in jsonData) {
           Map<String, dynamic> map = {"name": e['name'], "bool": false};
 
-          if (forntType.contains(e['name'])) {
+          if (frontType.contains(e['name'])) {
             forntSkillList = [...forntSkillList, map];
           } else if (backendType.contains(e['name'])) {
             backEndSkillList = [...backEndSkillList, map];
@@ -122,13 +123,9 @@ class SkillExChangeState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> filterButtonOnClick(
-    String userUid,
-    List<Map<String, dynamic>> forntList,
-    List<Map<String, dynamic>> backendList,
-    List<Map<String, dynamic>> iotList,
-    List<Map<String, dynamic>> otherList,
-  ) async {
+  Future<void> filterButtonOnClick(String userUid, List<Map<String, dynamic>> forntList, List<Map<String, dynamic>> backendList,
+      List<Map<String, dynamic>> iotList, List<Map<String, dynamic>> otherList,
+      {required String type}) async {
     filterSkill = [];
     List<List<Map<String, dynamic>>> allList = [forntList, backendList, iotList, otherList];
     for (var element in allList) {
@@ -139,7 +136,11 @@ class SkillExChangeState extends ChangeNotifier {
       }
     }
     inspect(filterSkill);
-    await getAllUserData(userUid: userUid, filterSkill: filterSkill, searchType: "First");
+    if (type == "exChange") {
+      await getAllUserData(userUid: userUid, filterSkill: filterSkill, searchType: "First");
+    } else if (type == "Course") {
+      print("filterSkill : $filterSkill");
+    }
   }
 
   void openDrawer(String endDrawerType, {LoginUser? otherUser}) {

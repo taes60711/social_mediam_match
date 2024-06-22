@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
-import '../../../global.dart';
 import '../../../models/user_model.dart';
+
+import '../../../pageManager/enum/route_path.dart';
 import '../../utilities/style/style_config.dart';
 import '../skillExChangePage/user_detail.dart';
 import 'post_body.dart';
@@ -44,32 +45,30 @@ class PostPageByType extends StatelessWidget {
               key: globalKey,
               endDrawer: UserDetail(
                 globalKey: globalKey,
-                userData: userData,
                 otherUser: otherUser,
-                gotoFriendPage: gotoFriendPage,
               ),
-              floatingActionButton: Visibility(
-                visible: floatButtonIsVisiable,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    FloatingActionButton(
-                      mini: true,
-                      backgroundColor: normalTextColor,
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(RoutePath.postEditPage.value, arguments: {
-                          "userData": userData,
-                          "postState": postState,
-                          "type": type,
-                        });
-                      },
-                      child: Icon(
-                        FontAwesomeIcons.penToSquare,
-                        size: 16,
-                        color: normalBgColor,
-                      ),
+              floatingActionButton: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FloatingActionButton(
+                    mini: true,
+                    backgroundColor: normalTextColor,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(RoutePath.postEditPage.value, arguments: {
+                        "userData": userData,
+                        "postState": postState,
+                        "type": type,
+                      });
+                    },
+                    child: Icon(
+                      FontAwesomeIcons.penToSquare,
+                      size: 16,
+                      color: normalBgColor,
                     ),
-                    FloatingActionButton(
+                  ),
+                  Visibility(
+                    visible: floatButtonIsVisiable,
+                    child: FloatingActionButton(
                       mini: true,
                       backgroundColor: normalBgColor2,
                       onPressed: () {
@@ -80,8 +79,8 @@ class PostPageByType extends StatelessWidget {
                         size: 16,
                       ),
                     ),
-                  ],
-                ),
+                  )
+                ],
               ),
               body: SafeArea(
                 child: Column(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_body.dart';
-import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
@@ -42,9 +42,7 @@ class PostPage extends StatelessWidget {
               key: globalKey,
               endDrawer: UserDetail(
                 globalKey: globalKey,
-                userData: userData,
                 otherUser: otherUser,
-                gotoFriendPage: gotoFriendPage,
               ),
               floatingActionButton: Visibility(
                 visible: floatButtonIsVisiable,

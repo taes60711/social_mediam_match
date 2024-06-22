@@ -37,9 +37,14 @@
   "su_st_two_p_introInputTitle":"自我介紹",
   "su_st_two_p_sentButtonText":"送出",
 
+  "//": "signUp_StepGuide",
+  "stepGuideTitle": "導覽",
+  "skip":"跳過",
+
   "//": "skill",
   "su_st_two_p_haveSkill":"能教的技能",
   "su_st_two_p_wantSkill":"想學的技能",
+  "skill_level":"程度",
 
   "//": "login",
   "login_emailInputTitle":"信箱",
@@ -67,12 +72,20 @@
   "userpage_info_job":"職業",
   "userpage_profile_btn":"個人資料",
   "userpage_post_btn":"我的文章",
+  "userpage_course_btn":"我的課程",
   "userpage_notification_btn":"通知",
   "userpage_setting_btn":"設定",
   "userpage_friendmanger_btn":"好友管理",
   "userpage_guide_btn":"導覽",
+  "mypost_title":"我的文章",
 
   "//": "skillExchangePage",
-  "skExChpage_beforDays":"天前",
-  "skExChpage_nojobData":"未輸入"
+  "skExChpage_beforDays":"前",
+  "skExChpage_nojobData":"未輸入",
+
+  "//":"skillbar",
+  "noskillData":"無",
+  
+  "//": "listView",
+  "NodataCanLoad": "已經沒有資料了!"
 }

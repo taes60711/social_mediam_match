@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/post_model.dart';
-import 'package:social_mediam_match/states/services/db_service.dart';
+import 'package:social_mediam_match/services/post_service.dart';
+
+import '../models/rich_text_format.dart';
 import '../models/user_model.dart';
+import '../services/db_service.dart';
 
 class PostState extends ChangeNotifier {
   final DBService _dbService = DBService();
@@ -68,17 +71,11 @@ class PostState extends ChangeNotifier {
     await Future.delayed(Duration.zero).then((value) => notifyListeners());
   }
 
-  Future<void> getPostDataByUID(LoginUser userData, {required bool isFirstSearch}) async {
+  Future<void> getPostDataByUID(int page, int size, LoginUser userData) async {
     try {
       List<PostModel> tempPostsData = [];
-      if (isFirstSearch) {
-        tempPostsData = await _dbService.getPostDataByUID(userData, isFirst: isFirstSearch);
-      } else {
-        tempPostsData = await _dbService.getPostDataByUID(userData);
-      }
-      tempPostsData.forEach((e) {
-        myAllPosts = [...myAllPosts, e];
-      });
+      tempPostsData = await PostService().getPostDataByUID(page, size, userData);
+      myAllPosts = tempPostsData;
       notifyListeners();
     } catch (e) {
       print(e);
@@ -92,7 +89,8 @@ class PostState extends ChangeNotifier {
   }
 
   Future<void> updatePostData(int postId, String updateMessage) async {
-    await _dbService.updatePost(postId, updateMessage);
+    String fomattedContent = await RichTextFormat(htmlString: updateMessage).sendPostImgFormat();
+    await _dbService.updatePost(postId, fomattedContent);
     int postIndex = myAllPosts.indexWhere((element) => element.id == postId);
     myAllPosts[postIndex].mainMessage = updateMessage;
     notifyListeners();
@@ -115,6 +113,34 @@ class PostState extends ChangeNotifier {
       choicedPost.good += 1;
     }
     notifyListeners();
+  }
+
+  TextEditingController textFilterInput = TextEditingController();
+  Future<void> getPostByTextFilter({required String inputedText, required String searchType}) async {
+    try {
+      List<PostModel> tempPostData = [];
+      if (searchType == "AddData") {
+        tempPostData = await _dbService.getPostByTextFilter(inputedText: inputedText);
+        tempPostData.forEach((e) {
+          postData = [...postData, e];
+        });
+        isDataAddLoding = false;
+      } else {
+        if (searchType == "First") {
+          isFirstLoading = true;
+          Future.delayed(Duration.zero).then((value) => notifyListeners());
+        }
+        tempPostData = await _dbService.getPostByTextFilter(inputedText: inputedText, isFirst: true);
+        print("object ${tempPostData.length}");
+        postData = tempPostData;
+        isFirstLoading = false;
+        isReLoading = false;
+      }
+
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> getPostData({required String searchType}) async {
@@ -212,7 +238,8 @@ class PostState extends ChangeNotifier {
 
   Future<void> createPost(String userUid, String title, String message, int type) async {
     try {
-      await _dbService.createPost(userUid, title, message, type);
+      String fomattedContent = await RichTextFormat(htmlString: message).sendPostImgFormat();
+      await _dbService.createPost(userUid, title, fomattedContent, type);
 
       List<PostModel> tempPostData = await _dbService.getPostsByType(type, isFirst: true);
       postData = [];

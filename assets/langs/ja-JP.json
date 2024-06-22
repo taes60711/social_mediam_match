@@ -35,12 +35,16 @@
   "su_st_two_p_title":"個人情報設定",
   "su_st_two_p_jobInputTitle":"職業",
   "su_st_two_p_introInputTitle":"自己紹介",
-
   "su_st_two_p_sentButtonText":"送信する",
+
+  "//": "signUp_StepGuide",
+  "stepGuideTitle": "ガイド",
+  "skip": "スキップ",
 
   "//": "skill",
   "su_st_two_p_haveSkill":"持っているスキル",
   "su_st_two_p_wantSkill":"勉強したいスキル",
+  "skill_level": "程度",
 
   "//": "login",
   "login_emailInputTitle":"メールアドレス",
@@ -68,12 +72,20 @@
   "userpage_info_job":"職業",
   "userpage_profile_btn":"プロフィール",
   "userpage_post_btn":"My投稿",
+  "userpage_course_btn":"Myコース",
   "userpage_notification_btn":"ニュース",
   "userpage_setting_btn":"設定",
   "userpage_friendmanger_btn":"友だち管理",
   "userpage_guide_btn":"ガイド",
+  "mypost_title": "My投稿",
 
   "//": "skillExchangePage",
-  "skExChpage_beforDays":"日前",
-  "skExChpage_nojobData":"未輸入"
+  "skExChpage_beforDays":"前",
+  "skExChpage_nojobData":"未輸入",
+
+  "//": "skillbar",
+  "noskillData": "なし",
+
+  "//": "listView",
+  "NodataCanLoad": "全て読み込みました!"
 }

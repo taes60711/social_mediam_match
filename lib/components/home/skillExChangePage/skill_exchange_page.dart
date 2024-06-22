@@ -6,15 +6,19 @@ import 'package:shimmer/shimmer.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/users_filter.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/user_detail.dart';
 import 'package:social_mediam_match/components/strings/skillExChangePage/skill_change_page_string.dart';
-import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/user_model.dart';
+import '../../../enum/skill_end_drawer_type.dart';
+import '../../../provider/account/user_provider.dart';
+
 import '../../../states/skill_exchange_state.dart';
+import '../../account/skill_bar.dart';
 import '../../strings/account/sign_up_strings.dart';
-import '../../utilities/skill_list_view.dart';
+
 import '../../utilities/user_icon.dart';
 
 class SkillExchangeLoading extends StatelessWidget {
@@ -78,7 +82,7 @@ class SkillExchangeLoading extends StatelessWidget {
                               ),
                               const SizedBox(height: 5),
                               Container(
-                                width: ScreenSize().width,
+                                width: ScreenSize.width,
                                 height: 26,
                                 decoration: BoxDecoration(
                                   color: Colors.grey,
@@ -146,12 +150,13 @@ class SkillExchangeLoading extends StatelessWidget {
 }
 
 class SkillExChangePage extends StatelessWidget {
-  final LoginUser userData;
-  final VoidCallback gotoFriendPage;
-  const SkillExChangePage({super.key, required this.userData, required this.gotoFriendPage});
+  const SkillExChangePage({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
+    LoginUser userData = context.watch<UserProvider>().userData;
     List<LoginUser> allUserData = context.watch<SkillExChangeState>().allUserData;
     GlobalKey<ScaffoldState> globalKey = context.select((SkillExChangeState value) => value.globalKey);
     List<String> filterSkill = context.select((SkillExChangeState value) => value.filterSkill);
@@ -179,9 +184,7 @@ class SkillExChangePage extends StatelessWidget {
               )
             : UserDetail(
                 globalKey: globalKey,
-                userData: userData,
                 otherUser: otherUser,
-                gotoFriendPage: gotoFriendPage,
               ),
         floatingActionButton: Visibility(
           visible: floatButtonIsVisiable,
@@ -258,7 +261,7 @@ class SkillExChangePage extends StatelessWidget {
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.all(8),
-                                  width: ScreenSize().width,
+                                  width: ScreenSize.width,
                                   decoration: BoxDecoration(
                                     border: Border(
                                       bottom: BorderSide(width: 0.2, color: normalBgColor2),
@@ -312,16 +315,21 @@ class SkillExChangePage extends StatelessWidget {
                                                     style: TextStyle(fontSize: normalTextSize, color: normalBgColor2))
                                                 : Container(),
                                             //スキルタイトル
-                                            Text(StepTwoPage().haveSkillText, style: TextStyle(fontSize: normalTextSize)),
-                                            SkillListView(
+                                            Text(StepThirdPage.haveSkillText, style: TextStyle(fontSize: normalTextSize)),
+
+                                            skillBar(
+                                              SkillEndDrawerType.haveSkill,
+                                              userData: allUserData[index],
                                               fontSize: skillTextSize,
-                                              skillList: allUserData[index].mainSkills ?? [],
                                             ),
+
                                             //スキルタイトル
-                                            Text(StepTwoPage().wantSkillText, style: TextStyle(fontSize: normalTextSize)),
-                                            SkillListView(
+                                            Text(StepThirdPage.wantSkillText, style: TextStyle(fontSize: normalTextSize)),
+
+                                            skillBar(
+                                              SkillEndDrawerType.wantSkill,
+                                              userData: allUserData[index],
                                               fontSize: skillTextSize,
-                                              skillList: allUserData[index].wantSkills ?? [],
                                             ),
                                           ],
                                         ),

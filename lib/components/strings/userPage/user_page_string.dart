@@ -18,6 +18,7 @@ class UserPageString {
   String infoJob = tr("userpage_info_job");
   String profileBtn = tr("userpage_profile_btn");
   String postBtn = tr("userpage_post_btn");
+  String courseBtn = tr("userpage_course_btn");
   String notificationBtn = tr("userpage_notification_btn");
   String settingBtn = tr("userpage_setting_btn");
   String friendManagernBtn = tr("userpage_friendmanger_btn");

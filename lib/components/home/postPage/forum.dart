@@ -2,16 +2,22 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_page_by_new.dart';
+import 'package:social_mediam_match/components/home/postPage/post_page_by_textfilter.dart';
 import 'package:social_mediam_match/components/home/postPage/post_page_by_type.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+
 import '../../../models/user_model.dart';
+import '../../../pageManager/enum/bottom_bar_path.dart';
+import '../../../pageManager/setting/bottom_bar_controller_provider.dart';
+import '../../../provider/account/user_provider.dart';
+
 import '../../../states/post_state.dart';
+import '../../utilities/custom_end_drawer.dart';
 import 'post_page.dart';
 
 class Forum extends StatelessWidget {
-  final LoginUser userData;
-  final VoidCallback gotoFriendPage;
-  const Forum({super.key, required this.userData, required this.gotoFriendPage});
+  const Forum({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,28 +25,89 @@ class Forum extends StatelessWidget {
     GlobalKey<ScaffoldState> forumGlobalKey = context.select((PostState value) => value.forumGlobalKey);
     List<String> boradList = ["協槓", "技術", "網頁", "韌體", "AI"];
     int selectedboardIndex = context.select((PostState value) => value.selectedboardIndex);
-
+    LoginUser userData = context.watch<UserProvider>().userData;
     return Scaffold(
       key: forumGlobalKey,
       endDrawer: ChangeNotifierProvider(
         create: (_) => PostState(),
         child: PostPageByType(
           userData: userData,
-          gotoFriendPage: gotoFriendPage,
+          gotoFriendPage: () {
+            context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+          },
           type: selectedboardIndex,
         ),
       ),
       body: Column(
         children: [
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                useSafeArea: false,
+                barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
+                builder: (BuildContext context) {
+                  return CustomEndDrawer(
+                    child: Dismissible(
+                      direction: DismissDirection.startToEnd,
+                      resizeDuration: const Duration(milliseconds: 1),
+                      onDismissed: (_) => Navigator.of(context).pop(),
+                      key: const Key('key'),
+                      child: ChangeNotifierProvider(
+                        create: (_) => PostState(),
+                        child: PostPageByTextFilter(
+                          userData: userData,
+                          gotoFriendPage: () {
+                            context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+                          },
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              width: ScreenSize.width,
+              height: 36,
+              child: const Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Icon(Icons.search, color: Colors.grey),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 4),
+                    child: Text("Search By title", style: TextStyle(color: Colors.grey, fontSize: 14)),
+                  )
+                ],
+              ),
+            ),
+          ),
           Stack(
             children: [
               CarouselSlider(
                 items: [
-                  Container(
-                    color: Colors.blue,
+                  GestureDetector(
+                    onTap: () {
+                      context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.course);
+                    },
+                    child: Container(
+                      color: Colors.blue,
+                    ),
                   ),
-                  Container(
-                    color: Colors.deepPurple,
+                  GestureDetector(
+                    onTap: () {
+                      context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+                    },
+                    child: Container(
+                      color: Colors.deepPurple,
+                    ),
                   ),
                 ],
                 options: CarouselOptions(
@@ -86,14 +153,18 @@ class Forum extends StatelessWidget {
                           create: (_) => PostState(),
                           child: PostPage(
                             userData: userData,
-                            gotoFriendPage: gotoFriendPage,
+                            gotoFriendPage: () {
+                              context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+                            },
                           ),
                         ),
                         ChangeNotifierProvider(
                           create: (_) => PostState(),
                           child: PostPageByNew(
                             userData: userData,
-                            gotoFriendPage: gotoFriendPage,
+                            gotoFriendPage: () {
+                              context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+                            },
                           ),
                         ),
                         Column(

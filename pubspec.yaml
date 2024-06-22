@@ -60,6 +60,9 @@ dependencies:
   uuid: ^3.0.1
   firebase_dynamic_links: ^5.4.17
   youtube_player_flutter: ^9.0.1
+  any_link_preview: ^3.0.1
+  
+  
 
 dev_dependencies:
   flutter_test:
@@ -83,7 +86,6 @@ flutter:
     - assets/Logo.png
     - assets/google_w_Logo.png
     - assets/twitter_w_Logo.png
-    - assets/masion.mp3
     - assets/langs/
   fonts:
     - family: GenJyu

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
-import '../../../global.dart';
+import '../../../enum/skill_type.dart';
 import '../../../models/user_model.dart';
 import '../../../states/skill_exchange_state.dart';
 
@@ -31,7 +31,7 @@ class UsersFilter extends StatelessWidget {
             child: const Loading(),
           )
         : SizedBox(
-            width: ScreenSize().width,
+            width: ScreenSize.width,
             child: Drawer(
               backgroundColor: Colors.white,
               shape: const RoundedRectangleBorder(
@@ -55,7 +55,7 @@ class UsersFilter extends StatelessWidget {
                     child: ListView(
                       children: [
                         ExpansionTile(
-                          title: Text(SkillType.forntend.value),
+                          title: Text(SkillType.frontend.value),
                           leading: const Icon(Icons.align_horizontal_left),
                           children: forntSkillList.map((e) {
                             return Padding(
@@ -141,6 +141,7 @@ class UsersFilter extends StatelessWidget {
                         backEndSkillList,
                         iotSkillList,
                         otherSkillList,
+                        type: "exChange",
                       );
                     },
                     child: Text("篩選"),

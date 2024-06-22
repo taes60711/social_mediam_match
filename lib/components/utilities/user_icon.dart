@@ -40,7 +40,7 @@ class SquareUserIcon extends StatelessWidget {
   final double width;
   final double height;
   final String? img;
-  const SquareUserIcon({required this.width, required this.height, this.img});
+  const SquareUserIcon({super.key, required this.width, required this.height, this.img});
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +56,17 @@ class SquareUserIcon extends StatelessWidget {
                 gaplessPlayback: true,
                 fit: BoxFit.cover,
               ),
-            ))
+            ),
+          )
         : Container(
             width: width,
             height: height,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               color: const Color.fromARGB(255, 224, 224, 224),
+            ),
+            child: const Center(
+              child: Text("image"),
             ),
           );
   }

@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 
 class ScreenSize {
-  Size screenSize = WidgetsBinding.instance.window.physicalSize;
-  double pixelRatio = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
-  final safepadding = WidgetsBinding.instance.platformDispatcher.implicitView!.padding.top;
-  final bottomPadding = WidgetsBinding.instance.platformDispatcher.implicitView!.padding.bottom;
-  double get width => screenSize.width / pixelRatio;
-  double get height => screenSize.height / pixelRatio;
-  double get safeheight => height - safepadding;
-  double get safeWithBottonheight => height - safepadding - bottomPadding;
+  static Size get _screenSize => WidgetsBinding.instance.window.physicalSize;
+  static double get _pixelRatio => WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
+  static double get topPadding => WidgetsBinding.instance.platformDispatcher.implicitView!.padding.top;
+  static double get bottomPadding => WidgetsBinding.instance.platformDispatcher.implicitView!.padding.bottom;
+  static double get width => _screenSize.width / _pixelRatio;
+  static double get height => _screenSize.height / _pixelRatio;
+  static double get safeHeight => height - topPadding;
+  static double get safeWithBottonHeight => height - topPadding - bottomPadding;
 }

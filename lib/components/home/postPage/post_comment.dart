@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
@@ -9,7 +8,7 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../states/post_state.dart';
-import '../../utilities/Stateful_wrapper.dart';
+import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/style_config.dart';
 import '../skillExChangePage/user_detail.dart';
@@ -76,9 +75,7 @@ class PostComment extends StatelessWidget {
           key: globalCommentKey,
           endDrawer: UserDetail(
             globalKey: globalCommentKey,
-            userData: userData,
             otherUser: otherUser,
-            gotoFriendPage: gotoFriendPage,
           ),
           body: Column(
             children: [
@@ -93,11 +90,11 @@ class PostComment extends StatelessWidget {
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  physics: const ClampingScrollPhysics(),
+                  physics: const NoLoadingCustomBouncingScrollPhysics(),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
-                      width: ScreenSize().width,
+                      width: ScreenSize.width,
                       color: Color.fromARGB(255, 227, 228, 235),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +141,7 @@ class PostComment extends StatelessWidget {
               ),
               Container(
                 height: 50,
-                width: ScreenSize().width,
+                width: ScreenSize.width,
                 decoration: BoxDecoration(color: normalBgColor2),
                 padding: const EdgeInsets.only(left: 10),
                 child: GestureDetector(
@@ -192,11 +189,11 @@ class PostComment extends StatelessWidget {
                                             Row(
                                               children: [
                                                 SizedBox(
-                                                  width: ScreenSize().width * 0.33,
+                                                  width: ScreenSize.width * 0.33,
                                                 ),
                                                 Container(
                                                   alignment: Alignment.topCenter,
-                                                  width: ScreenSize().width * 0.33,
+                                                  width: ScreenSize.width * 0.33,
                                                   child: Icon(
                                                     Icons.remove,
                                                     size: 35,
@@ -206,7 +203,7 @@ class PostComment extends StatelessWidget {
                                                 Container(
                                                   alignment: Alignment.topRight,
                                                   padding: const EdgeInsets.only(right: 10),
-                                                  width: ScreenSize().width * 0.33,
+                                                  width: ScreenSize.width * 0.33,
                                                   child: Container(
                                                     color: Colors.transparent,
                                                     padding: const EdgeInsets.all(5),
@@ -280,7 +277,7 @@ class PostComment extends StatelessWidget {
                                                   children: [
                                                     Expanded(
                                                       child: SingleChildScrollView(
-                                                        physics: const CustomBouncingScrollPhysics(haveReloading: false),
+                                                        physics: const NoLoadingCustomBouncingScrollPhysics(),
                                                         controller: scrollController,
                                                         child: Column(
                                                           children: [

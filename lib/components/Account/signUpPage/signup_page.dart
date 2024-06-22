@@ -1,217 +1,138 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print, avoid_function_literals_in_foreach_calls
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/account/signUpPage/signUP_step_one.dart';
-import 'package:social_mediam_match/components/account/signUpPage/signup_first_page.dart';
-import 'package:social_mediam_match/components/account/signUpPage/signup_guide.dart';
+import 'package:social_mediam_match/components/account/signUpPage/signup_step_third.dart';
 import 'package:social_mediam_match/components/account/signUpPage/signup_step_two.dart';
-import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
-import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/account/skill_choice_setting_page.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-import 'package:social_mediam_match/global.dart';
-import 'package:social_mediam_match/states/user_state.dart';
-
-import '../../../models/skill_model.dart';
-import '../../../states/user_setting_state.dart';
-import '../../home/userPage/skill_choice.dart';
+import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
+import '../../../enum/skill_end_drawer_type.dart';
+import '../../../provider/account/signUpPage/sign_up_view_provider.dart';
+import '../../../provider/home/skill_map_provider.dart';
+import '../../../provider/home/user_setting_view_provider.dart';
 import '../../strings/account/sign_up_strings.dart';
+import '../../utilities/background_widget.dart';
+import '../../utilities/basic_top_bar.dart';
+import '../../utilities/fit_widget.dart';
+import 'signup_step_guide.dart';
+import 'signup_step_one.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    UserState userFuture = context.read<UserState>();
-    String signError = context.select((UserState value) => value.signError);
-    int signUpIndex = context.select((UserState value) => value.signUpIndex);
-    String signUpedUserUID = context.select((UserState value) => value.signUpedUserUID);
-    TextEditingController emailController = context.select((UserState value) => value.emailController);
-    TextEditingController pwdController = context.select((UserState value) => value.pwdController);
+    print("signUP build");
 
-    TextEditingController nameController = context.select((UserSettingState value) => value.nameInput);
-    TextEditingController jobController = context.select((UserSettingState value) => value.jobInput);
-    TextEditingController introductionController = context.select((UserSettingState value) => value.introductionInput);
-
-    UserSettingState userSettingState = context.read<UserSettingState>();
-    GlobalKey<ScaffoldState> key = context.select((UserSettingState value) => value.key);
-    String type = context.select((UserSettingState value) => value.type);
-    //先暫時沒整理
-    List<SkillModel> forntSkillItems = context.watch<UserSettingState>().forntSkillList;
-    List<SkillModel> backEndSkillItems = context.watch<UserSettingState>().backEndSkillList;
-    List<SkillModel> iotSkillItems = context.watch<UserSettingState>().iotSkillList;
-    List<SkillModel> otherSkillItems = context.watch<UserSettingState>().otherSkillList;
-
-    List<SkillModel> allSkillItems = [];
-    List<SkillModel> allWantSkillItems = [];
-    forntSkillItems.forEach((element) {
-      if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
-      if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
-    });
-    backEndSkillItems.forEach((element) {
-      if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
-      if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
-    });
-    iotSkillItems.forEach((element) {
-      if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
-      if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
-    });
-    otherSkillItems.forEach((element) {
-      if (element.skillHave.level > 0) allSkillItems = [...allSkillItems, element];
-      if (element.skillWant.level > 0) allWantSkillItems = [...allWantSkillItems, element];
-    });
-    //
-
-    void returnHomePage() {
-      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-    }
-
-    Widget signErrorMessage;
-    if (signError != SignUpError().noError) {
-      signErrorMessage = SizedBox(
-        width: ScreenSize().width,
-        child: Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: Text(
-              signError,
-              style: const TextStyle(color: Colors.red),
-            ),
+    return Stack(
+      children: [
+        BackgroundWidget(
+          isSafeArea: true,
+          child: StatefulWrapper(
+            onInit: () async {
+              SkillMapProvider skillProvider = context.read<SkillMapProvider>();
+              await skillProvider.userSkillList();
+            },
+            child: _mainBuild(),
           ),
         ),
-      );
-    } else {
-      signErrorMessage = Container();
-    }
-
-    Widget signUpFirstPage = SignUpFirstPage(
-      emailController: emailController,
-      signErrorMessage: signErrorMessage,
-      userFuture: userFuture,
-    );
-
-    Widget signUpTwicePage = SignUpStepOne(
-      emailController: emailController,
-      nameController: nameController,
-      pwdController: pwdController,
-      signErrorMessage: signErrorMessage,
-      userFuture: userFuture,
-    );
-
-    Widget signUpThirdPage = SignUpStepTwo(
-      userFuture: userFuture,
-      signUpedUserUID: signUpedUserUID,
-      allSkillItems: allSkillItems,
-      allWantSkillItems: allWantSkillItems,
-      userSettingState: userSettingState,
-      nameController: nameController,
-      jobController: jobController,
-      introductionController: introductionController,
-    );
-
-    Widget guidePage = SignUpGuide(returnHomePage: returnHomePage);
-
-    List<Widget> signUpPageList = [signUpFirstPage, signUpTwicePage, signUpThirdPage, guidePage];
-    List<String> signStepList = ["step1", "step2", "step3"];
-
-    _stepView(List<String> signStepList) {
-      circle(Color bgColor) {
-        return Container(
-          margin: const EdgeInsets.all(5),
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-        );
-      }
-
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: signStepList.map((e) {
-          bool inPage = signStepList.indexOf(e) == signUpIndex - 1;
-          return inPage ? circle(normalBgColor) : circle(const Color.fromARGB(255, 192, 191, 191));
-        }).toList(),
-      );
-    }
-
-    Widget stepView;
-    if (signUpIndex != 0) {
-      stepView = _stepView(signStepList);
-    } else {
-      stepView = Container();
-    }
-
-    Widget backButton = SizedBox(
-      width: ScreenSize().width,
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: IconButton(
-          onPressed: () {
-            if (signUpIndex == 0) {
-              returnHomePage();
-            } else {
-              userFuture.onChangeSignUpPage(signUpIndex - 1);
-            }
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: normalBgColor2,
-          ),
-        ),
-      ),
-    );
-
-    return StatefulWrapper(
-      onInit: () {
-        print("getSkillListData");
-
-        resetAllInfo() {
-          userFuture.onChangeSignUpPage(0);
-          userSettingState.getSkillListData();
-        }
-
-        resetAllInfo();
-      },
-      child: Scaffold(
-        key: key,
-        resizeToAvoidBottomInset: false,
-        endDrawer: SkillChoice(
-          userSettingState: userSettingState,
-          forntSkillItems: forntSkillItems,
-          backEndSkillItems: backEndSkillItems,
-          iotSkillItems: iotSkillItems,
-          otherSkillItems: otherSkillItems,
-          allSkillItems: allSkillItems,
-          allWantSkillItems: allWantSkillItems,
-          type: type,
-        ),
-        body: BackgroundWidget(
-          child: Column(
-            children: [
-              SizedBox(
-                height: ScreenSize().safeheight,
-                child: FittedBox(
-                  alignment: Alignment.topLeft,
-                  child: Column(
-                    children: [
-                      backButton,
-                      signUpPageList[signUpIndex],
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: ScreenSize().safeheight * 0.05,
-                child: stepView,
-              ),
-            ],
-          ),
-        ),
-      ),
+        endDrawer(),
+      ],
     );
   }
+}
+
+Widget _mainBuild() {
+  return Builder(
+    builder: (context) {
+      print("SignUpViewProvider pageIndex Change");
+      int pageIndex = context.select((SignUpViewProvider value) => value.pageIndex);
+
+      List<Widget> signUpAllStepPage = [
+        const SignUpStepOne(),
+        const SignUpStepTwo(),
+        const SignUpStepThird(),
+        const SignUpStepGuide(),
+      ];
+
+      List<String> signUpStepTitle = [
+        StepOnePage.title,
+        StepTwoPage.title,
+        StepThirdPage.title,
+        StepGuide.title,
+      ];
+
+      List<Widget> signUpLeftWidget = [
+        GestureDetector(
+          onTap: () => SignUpViewModel(context: context).backButtonFUnc(),
+          child: const Icon(Icons.arrow_back_ios),
+        ),
+        GestureDetector(
+          onTap: () => SignUpViewModel(context: context).backButtonFUnc(),
+          child: const Icon(Icons.arrow_back_ios),
+        ),
+        Container(),
+        Container(),
+      ];
+
+      List<Widget> signUpRightWidget = [
+        Container(),
+        Container(),
+        GestureDetector(
+          onTap: () => context.read<SignUpViewProvider>().onChangeSignUpPage(3),
+          child: Text(StepGuide.skipButtonText),
+        ),
+        Container(),
+      ];
+
+      return Column(
+        children: [
+          //タイトル
+          FitWidget(
+            height: ScreenSize.height * 0.08,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: BaseTopBar(
+                leftWidget: signUpLeftWidget[pageIndex],
+                rightWidget: signUpRightWidget[pageIndex],
+                title: signUpStepTitle[pageIndex],
+              ),
+            ),
+          ),
+
+          ///登録ステップコンテンツ
+          FitWidget(
+            height: ScreenSize.height * 0.8,
+            child: signUpAllStepPage[pageIndex],
+          ),
+        ],
+      );
+    },
+  );
+}
+
+///登録ステップ用EndDrawer
+Widget endDrawer() {
+  return Builder(builder: (context) {
+    print("customEndDrawer");
+    SkillEndDrawerType endDrawer = context.select((UserSettingViewProvider value) => value.endDrawerOpenInfo);
+
+    UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
+
+    Widget endDrawerWidget = Container();
+
+    if (endDrawer == SkillEndDrawerType.haveSkill) {
+      endDrawerWidget = SkillChoiceSettingPage(
+        skillType: SkillEndDrawerType.haveSkill,
+        onDismissedFunc: () => userSettingViewProvider.changeEndDrawerStatus(SkillEndDrawerType.close),
+      );
+    } else if (endDrawer == SkillEndDrawerType.wantSkill) {
+      endDrawerWidget = SkillChoiceSettingPage(
+        skillType: SkillEndDrawerType.wantSkill,
+        onDismissedFunc: () => userSettingViewProvider.changeEndDrawerStatus(SkillEndDrawerType.close),
+      );
+    }
+
+    return endDrawerWidget;
+  });
 }

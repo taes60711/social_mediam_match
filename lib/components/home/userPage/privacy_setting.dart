@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/global.dart';
-import 'package:social_mediam_match/states/friend_state.dart';
-import 'package:social_mediam_match/states/services/dynamic_links.dart';
-import '../../../states/services/notification_service.dart';
-import '../../../states/user_state.dart';
+import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
+
+import '../../../pageManager/enum/route_path.dart';
+import '../../../provider/account/user_provider.dart';
+
+import '../../../provider/friend_provider.dart';
+import '../../../services/dynamic_links.dart';
+import '../../../services/notification_service.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/style/screen_size.dart';
 
@@ -13,13 +16,13 @@ class PrivacySetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserState userFuture = context.read<UserState>();
-    FriendState friendState = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['friendState'];
+    UserProvider userFuture = context.read<UserProvider>();
+    FriendProvider friendProvider = context.read<FriendProvider>();
 
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
-          width: ScreenSize().width,
+          width: ScreenSize.width,
           child: Column(
             children: [
               Align(
@@ -49,8 +52,8 @@ class PrivacySetting extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  await userFuture.signOut(friendState);
-                  Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                  await userFuture.signOut(friendProvider);
+                  RouteOptions.popUntilToHome();
                 },
                 child: Text(signOutButton),
               ),

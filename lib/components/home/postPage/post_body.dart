@@ -106,7 +106,7 @@ class PostLoading extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           Container(
-                            width: ScreenSize().width,
+                            width: ScreenSize.width,
                             height: 120,
                             decoration: BoxDecoration(
                               color: Colors.grey,
@@ -181,8 +181,8 @@ class NoPostData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: ScreenSize().width,
-      height: ScreenSize().safeheight,
+      width: ScreenSize.width,
+      height: ScreenSize.safeHeight,
       child: AspectRatio(
         aspectRatio: 16.0 / 9.0,
         child: Column(
@@ -237,6 +237,7 @@ class PostBody extends StatelessWidget {
     Future<void> opneCommentPage({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
       return showDialog(
         context: context,
+        useSafeArea: false,
         barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
         builder: (BuildContext context) {
           return CustomEndDrawer(
@@ -310,7 +311,7 @@ class PostBody extends StatelessWidget {
             ),
           ),
           Text(
-            " ${postData.postTime}天前",
+            " ${postData.postTime}前",
             style: TextStyle(
               fontSize: 12,
               color: normalTextColor,
@@ -374,11 +375,11 @@ class PostBody extends StatelessWidget {
                                   Row(
                                     children: [
                                       SizedBox(
-                                        width: ScreenSize().width * 0.33,
+                                        width: ScreenSize.width * 0.33,
                                       ),
                                       Container(
                                         alignment: Alignment.topCenter,
-                                        width: ScreenSize().width * 0.33,
+                                        width: ScreenSize.width * 0.33,
                                         child: Icon(
                                           Icons.remove,
                                           size: 35,
@@ -388,7 +389,7 @@ class PostBody extends StatelessWidget {
                                       Container(
                                         alignment: Alignment.topRight,
                                         padding: const EdgeInsets.only(right: 10),
-                                        width: ScreenSize().width * 0.33,
+                                        width: ScreenSize.width * 0.33,
                                         child: Container(
                                           color: Colors.transparent,
                                           padding: const EdgeInsets.all(5),
@@ -417,7 +418,7 @@ class PostBody extends StatelessWidget {
                                                       e.buttonFunc();
                                                     },
                                                     child: Container(
-                                                      width: ScreenSize().width,
+                                                      width: ScreenSize.width,
                                                       height: 45,
                                                       decoration: BoxDecoration(
                                                           color: normalBgColor2, borderRadius: BorderRadius.circular(10)),

@@ -1,36 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/user_model.dart';
+import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
+import '../../../enum/skill_end_drawer_type.dart';
+import '../../../pageManager/enum/bottom_bar_path.dart';
+import '../../../pageManager/setting/bottom_bar_controller_provider.dart';
+import '../../../provider/friend_provider.dart';
 
-import '../../../states/friend_state.dart';
-
-import '../../strings/userPage/user_page_string.dart';
-import '../../utilities/skill_list_view.dart';
+import '../../account/skill_bar.dart';
 
 class UserDetail extends StatelessWidget {
-  final LoginUser? userData;
   final LoginUser? otherUser;
   final GlobalKey<ScaffoldState> globalKey;
-  final VoidCallback gotoFriendPage;
-  const UserDetail(
-      {super.key, required this.globalKey, required this.userData, required this.otherUser, required this.gotoFriendPage});
+
+  const UserDetail({super.key, required this.globalKey, required this.otherUser});
 
   @override
   Widget build(BuildContext context) {
-    FriendState friendFuture = context.read<FriendState>();
-    LoginUser realOtherUser = otherUser ?? LoginUser(uid: "", lastLogin: "", email: "", isEmailVerified: false, status: 0);
-    bool isFriend = context.select((FriendState value) => value.isFriend);
+    FriendProvider friendFuture = context.read<FriendProvider>();
+    LoginUser userData = context.watch<UserProvider>().userData;
+    LoginUser realOtherUser = otherUser ?? LoginUser();
+    bool isFriend = context.select((FriendProvider value) => value.isFriend);
 
     return StatefulWrapper(
       onInit: () {
-        List<String> usersList = [userData!.uid, realOtherUser.uid];
+        List<String> usersList = [userData.uid, realOtherUser.uid];
         friendFuture.checkIsFriend(usersList);
       },
       child: SizedBox(
-        width: ScreenSize().width,
+        width: ScreenSize.width,
         child: Drawer(
           backgroundColor: Colors.white,
           shape: const RoundedRectangleBorder(
@@ -46,7 +48,6 @@ class UserDetail extends StatelessWidget {
                   onPressed: () async {
                     print("Drawer Close");
                     globalKey.currentState!.closeEndDrawer();
-                    friendFuture.UserDetailPageClose(userData!.uid);
                   },
                   icon: const Icon(Icons.arrow_back_ios_sharp),
                 ),
@@ -65,17 +66,17 @@ class UserDetail extends StatelessWidget {
                     Text("自我介紹 : ${realOtherUser.introduction ?? ""}"),
                     Text("最後登入時間: ${realOtherUser.lastLogin}"),
                     SizedBox(
-                      width: ScreenSize().width,
-                      child: SkillListView(
-                        title: skillText,
-                        skillList: realOtherUser.mainSkills ?? [],
+                      width: ScreenSize.width,
+                      child: skillBar(
+                        SkillEndDrawerType.haveSkill,
+                        userData: realOtherUser,
                       ),
                     ),
                     SizedBox(
-                      width: ScreenSize().width,
-                      child: SkillListView(
-                        title: wantSkillText,
-                        skillList: realOtherUser.wantSkills ?? [],
+                      width: ScreenSize.width,
+                      child: skillBar(
+                        SkillEndDrawerType.wantSkill,
+                        userData: realOtherUser,
                       ),
                     ),
                   ],
@@ -84,14 +85,14 @@ class UserDetail extends StatelessWidget {
               isFriend
                   ? ElevatedButton(
                       onPressed: () {
-                        gotoFriendPage();
-                        friendFuture.UserDetailPageClose(userData!.uid);
+                        RouteOptions.popUntilToHome();
+                        context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
                       },
                       child: Text("開啟聊天室"),
                     )
                   : ElevatedButton(
                       onPressed: () {
-                        List<String> usersList = [userData!.uid, realOtherUser.uid];
+                        List<String> usersList = [userData.uid, realOtherUser.uid];
                         friendFuture.addFriend(usersList);
                       },
                       child: Text("新增好友"),

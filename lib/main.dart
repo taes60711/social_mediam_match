@@ -2,23 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
-import 'package:social_mediam_match/components/account/login_page.dart';
-import 'package:social_mediam_match/components/account/signUpPage/signup_page.dart';
-import 'package:social_mediam_match/components/Initial/initial_page.dart';
-import 'package:social_mediam_match/components/home/postPage/editor_page.dart';
-import 'package:social_mediam_match/components/home/userPage/my_posts.dart';
-import 'package:social_mediam_match/components/home/userPage/profile.dart';
-import 'package:social_mediam_match/components/home/userPage/privacy_setting.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
-import 'package:social_mediam_match/states/friend_state.dart';
-import 'package:social_mediam_match/states/initial_state.dart';
-import 'package:social_mediam_match/states/post_state.dart';
-import 'package:social_mediam_match/states/skill_exchange_state.dart';
-import 'package:social_mediam_match/states/user_setting_state.dart';
-import 'package:social_mediam_match/states/user_state.dart';
+import 'pageManager/setting/route_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,28 +14,14 @@ void main() async {
 
   await SystemChrome.setPreferredOrientations(
     [
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight
     ],
   );
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => UserState()),
-        ChangeNotifierProvider(create: (_) => FriendState(channelListUrl: channelListUrl)),
-        ChangeNotifierProvider(create: (_) => SkillExChangeState()),
-      ],
-      child: EasyLocalization(
-        supportedLocales: const [Locale('zh', 'TW'), Locale('en', 'US'), Locale('ja', 'JP')],
-        fallbackLocale: const Locale('en', 'US'),
-        path: 'assets/langs',
-        child: const MyApp(),
-      ),
-    ),
-  );
+  runApp(mainWidget);
 }
 
 class MyApp extends StatelessWidget {
@@ -57,6 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
@@ -73,30 +47,7 @@ class MyApp extends StatelessWidget {
           TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
         }),
       ),
-      routes: <String, WidgetBuilder>{
-        '/': (BuildContext context) => ChangeNotifierProvider(
-              create: (_) => InitialState(),
-              child: const Initialpage(),
-            ),
-        '/signUp': (BuildContext context) => ChangeNotifierProvider(
-              create: (_) => UserSettingState(),
-              child: const SignUpPage(),
-            ),
-        '/login': (BuildContext context) => const LoginPage(),
-        '/postEdit': (BuildContext context) => ChangeNotifierProvider(
-              create: (_) => PostState(),
-              child: const EditorPage(),
-            ),
-        '/privacySetting': (BuildContext context) => const PrivacySetting(),
-        '/profile': (BuildContext context) => ChangeNotifierProvider(
-              create: (_) => UserSettingState(),
-              child: const Profile(),
-            ),
-        '/myposts': (BuildContext context) => ChangeNotifierProvider(
-              create: (_) => PostState(),
-              child: const MyPosts(),
-            ),
-      },
+      routes: routeManager,
     );
   }
 }

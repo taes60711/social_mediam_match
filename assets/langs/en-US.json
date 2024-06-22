@@ -37,9 +37,14 @@
   "su_st_two_p_introInputTitle":"Introduction",
   "su_st_two_p_sentButtonText":"Send",
 
+  "//": "signUp_StepGuide",
+  "stepGuideTitle": "Guide",
+  "skip": "Skip",
+
   "//": "skill",
   "su_st_two_p_haveSkill":"Skill",
   "su_st_two_p_wantSkill":"Learning SKill",
+  "skill_level": "level",
 
   "//": "login",
   "login_emailInputTitle":"Email",
@@ -67,12 +72,20 @@
   "userpage_info_job":"Job",
   "userpage_profile_btn":"Profile",
   "userpage_post_btn":"My Post",
+  "userpage_course_btn":"My Course",
   "userpage_notification_btn":"Notification",
   "userpage_setting_btn":"Setting",
   "userpage_friendmanger_btn":"Friends",
   "userpage_guide_btn":"Guide",
+  "mypost_title": "My Post",
 
   "//": "skillExchangePage",
-  "skExChpage_beforDays":"天前",
-  "skExChpage_nojobData":"none"
+  "skExChpage_beforDays":"前",
+  "skExChpage_nojobData":"none",
+
+  "//": "skillbar",
+  "noskillData": "none",
+
+  "//":"listView",
+  "NodataCanLoad":"All Loaded!"
 }

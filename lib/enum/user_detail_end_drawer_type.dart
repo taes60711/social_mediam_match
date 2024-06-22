@@ -1,0 +1,4 @@
+enum UserDetailEndDrawerType {
+  open,
+  close;
+}

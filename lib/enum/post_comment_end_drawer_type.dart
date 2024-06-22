@@ -1,0 +1,4 @@
+enum PostCommentEndDrawerType {
+  open,
+  close;
+}

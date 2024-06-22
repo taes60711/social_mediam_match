@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class InitialState extends ChangeNotifier {
+class InitialProvider extends ChangeNotifier {
   bool isfirstEnterApp = true;
   bool onChange() {
     isfirstEnterApp = false;

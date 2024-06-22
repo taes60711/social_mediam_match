@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/models/post_model.dart';
+
 import '../../global.dart';
 import '../../models/user_model.dart';
 
@@ -23,6 +23,153 @@ class DBService {
   int size = 8;
   String url = "http://$ip:$port";
 
+  searchStatus courseAddedMemberServerInfo = searchStatus();
+  Future<List<AddedCourseMemberModel>> getCourseAddedMember(int courseId, {bool? isFirst}) async {
+    String branch = "courses";
+
+    if (isFirst != null) {
+      courseAddedMemberServerInfo.pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getCourseMember/$courseId?page=${courseAddedMemberServerInfo.pageNumber}&size=5';
+
+    final uri = Uri.parse(searchUrl);
+    List<AddedCourseMemberModel> allAddedMember = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        allAddedMember = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
+          return AddedCourseMemberModel.toMap(e);
+        }).toList();
+        inspect(allAddedMember);
+        courseAddedMemberServerInfo.pageNumber++;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allAddedMember;
+  }
+
+  Future<bool> deleteUserFromCourse({required int courseId, required String userUID}) async {
+    String branch = "courses";
+    String searchUrl = '$url/$branch/deleteUserFromCourse';
+
+    bool isSuccess = false;
+
+    final uri = Uri.parse(searchUrl);
+    Map<String, String> headers = {'content-type': 'application/json'};
+
+    String body = jsonEncode({'courseId': courseId, 'memberUid': userUID});
+
+    try {
+      var response = await http.put(uri, headers: headers, body: body);
+      if (response.statusCode != 404) {
+        isSuccess = true;
+      }
+    } catch (e) {}
+    print("deleteUserFromCourse result : ${isSuccess}");
+    return isSuccess;
+  }
+
+  Future<bool> updateAddedUserStatus({required int courseId, required String userUID}) async {
+    String branch = "courses";
+    String searchUrl = '$url/$branch/updateAddedUserStatus';
+
+    bool isSuccess = false;
+
+    final uri = Uri.parse(searchUrl);
+    Map<String, String> headers = {'content-type': 'application/json'};
+
+    String body = jsonEncode({'courseId': courseId, 'memberUid': userUID});
+
+    try {
+      var response = await http.put(uri, headers: headers, body: body);
+      if (response.statusCode != 404) {
+        isSuccess = true;
+      }
+    } catch (e) {}
+    print("updateAddedUserStatus result : ${isSuccess}");
+    return isSuccess;
+  }
+
+  Future<bool> isAddedCourse({required int courseId, required String userUID}) async {
+    String branch = "courses";
+    String searchUrl = '$url/$branch/getIsAddCourse?courseId=$courseId&userId=$userUID';
+    bool isAdded = false;
+    final uri = Uri.parse(searchUrl);
+
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        isAdded = response.body == 'true' ? true : false;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return isAdded;
+  }
+
+  Future<bool> userAddCourseRequest({required int courseId, required String userUID}) async {
+    String branch = "courses";
+    String searchUrl = '$url/$branch/addCourse';
+
+    bool isSuccess = false;
+
+    final uri = Uri.parse(searchUrl);
+    Map<String, String> headers = {'content-type': 'application/json'};
+
+    String body = jsonEncode({'courseId': courseId, 'memberUid': userUID});
+
+    try {
+      var response = await http.put(uri, headers: headers, body: body);
+      if (response.statusCode != 404) {
+        isSuccess = true;
+      }
+    } catch (e) {}
+    print("userAddCourseRequest result : ${isSuccess}");
+    return isSuccess;
+  }
+
+  Future<bool> updateCourse({required int courseId, required CourseCreateModel courseUpdateData}) async {
+    String branch = "courses";
+    String searchUrl = '$url/$branch/updateCourse/$courseId';
+
+    bool isSuccess = false;
+
+    final uri = Uri.parse(searchUrl);
+    Map<String, String> headers = {'content-type': 'application/json'};
+
+    String body = courseUpdateData.courseCreatetoJson();
+
+    try {
+      var response = await http.put(uri, headers: headers, body: body);
+      if (response.statusCode != 404) {
+        isSuccess = true;
+      }
+    } catch (e) {}
+    print("update Course result : ${isSuccess}");
+    return isSuccess;
+  }
+
+  Future<bool> createCourse({required CourseCreateModel createCourseData}) async {
+    String branch = "courses";
+    String searchUrl = '$url/$branch/createCourse';
+
+    bool isSuccess = false;
+
+    final uri = Uri.parse(searchUrl);
+    Map<String, String> headers = {'content-type': 'application/json'};
+
+    String body = createCourseData.courseCreatetoJson();
+
+    try {
+      await http.put(uri, headers: headers, body: body);
+      isSuccess = true;
+    } catch (e) {}
+    print("create Course result : ${isSuccess}");
+    return isSuccess;
+  }
+
   searchStatus allCoursesServerInfo = searchStatus();
   Future<List<CourseModel>> getAllCourses({bool? isFirst}) async {
     String branch = "courses";
@@ -37,11 +184,64 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allCouserData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allCouserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           return CourseModel.toMap(e);
         }).toList();
         inspect(allCouserData);
         allCoursesServerInfo.pageNumber++;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allCouserData;
+  }
+
+  searchStatus addCoursesServerInfo = searchStatus();
+  Future<List<CourseModel>> getAddedCourses(String userId, {bool? isFirst}) async {
+    String branch = "courses";
+
+    if (isFirst != null) {
+      addCoursesServerInfo.pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getAddedCourses/$userId?page=${addCoursesServerInfo.pageNumber}&size=$size';
+    final uri = Uri.parse(searchUrl);
+    List<CourseModel> allCouserData = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        print(response.body);
+        allCouserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
+          return CourseModel.toMap(e);
+        }).toList();
+        inspect(allCouserData);
+        addCoursesServerInfo.pageNumber++;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return allCouserData;
+  }
+
+  searchStatus coursesByUserIdServerInfo = searchStatus();
+  Future<List<CourseModel>> getCoursesByUserId(String userId, {bool? isFirst}) async {
+    String branch = "courses";
+
+    if (isFirst != null) {
+      coursesByUserIdServerInfo.pageNumber = 0;
+    }
+
+    String searchUrl = '$url/$branch/getCoursesByUserId/$userId?page=${coursesByUserIdServerInfo.pageNumber}&size=$size';
+    final uri = Uri.parse(searchUrl);
+    List<CourseModel> allCouserData = [];
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode != 404) {
+        allCouserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
+          return CourseModel.toMap(e);
+        }).toList();
+        inspect(allCouserData);
+        coursesServerInfo.pageNumber++;
       }
     } catch (e) {
       print(e);
@@ -63,7 +263,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allCouserData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allCouserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           return CourseModel.toMap(e);
         }).toList();
         inspect(allCouserData);
@@ -135,7 +335,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allpostData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allpostData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           inspect(e);
           return PostCommentModel.toMap(e);
         }).toList();
@@ -268,7 +468,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allpostData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allpostData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           print(e);
           return PostModel.toMap(e);
         }).toList();
@@ -282,33 +482,33 @@ class DBService {
     return allpostData;
   }
 
-  searchStatus postByUserIdServerInfo = searchStatus();
-  Future<List<PostModel>> getPostDataByUID(LoginUser userData, {bool? isFirst}) async {
+  searchStatus postByTextFilterServerInfo = searchStatus();
+  Future<List<PostModel>> getPostByTextFilter({required String inputedText, bool? isFirst}) async {
     String branch = "posts";
 
     if (isFirst != null) {
-      postByUserIdServerInfo.pageNumber = 0;
+      postByTextFilterServerInfo.pageNumber = 0;
     }
 
-    String searchUrl = '$url/$branch/getPostsByUser/${userData.uid}?page=${postServerInfo.pageNumber}&size=$size';
-
+    String searchUrl =
+        '$url/$branch/getPostByTextFilter?inputedText=$inputedText&page=${postByTextFilterServerInfo.pageNumber}&size=$size';
     final uri = Uri.parse(searchUrl);
-    List<PostModel> allpostDataByUID = [];
+    List<PostModel> allpostData = [];
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allpostDataByUID = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allpostData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           print(e);
-          return PostModel.toMap(e, userData: userData);
+          return PostModel.toMap(e);
         }).toList();
 
-        inspect(allpostDataByUID);
-        postByUserIdServerInfo.pageNumber++;
+        inspect(allpostData);
+        postByTextFilterServerInfo.pageNumber++;
       }
     } catch (e) {
       print(e);
     }
-    return allpostDataByUID;
+    return allpostData;
   }
 
   searchStatus newPostServerInfo = searchStatus();
@@ -326,7 +526,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allpostnewPosts = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allpostnewPosts = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           print(e);
           return PostModel.toMap(e);
         }).toList();
@@ -355,7 +555,7 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allpostsByType = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((e) {
+        allpostsByType = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
           print(e);
           return PostModel.toMap(e);
         }).toList();
@@ -397,8 +597,8 @@ class DBService {
     try {
       var response = await http.get(uri);
       if (response.statusCode != 404) {
-        allUserData = (json.decode(utf8.decode(response.bodyBytes))['content'] as List<dynamic>).map((element) {
-          return LoginUser.jsonToModel(element);
+        allUserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((element) {
+          return LoginUser.toModel(element);
         }).toList();
         alluserServerInfo.pageNumber++;
       }
@@ -407,95 +607,5 @@ class DBService {
     }
 
     return allUserData;
-  }
-
-  //ユーザログインのToken更新する
-  Future<void> updateUserToken(String uid, String token) async {
-    String branch = "user";
-    Map<String, String> headers = {'content-type': 'application/json'};
-    String body = UpdateUser.updateToken(uid: uid, token: token).updateupdateTokenJson();
-    await http
-        .put(Uri.parse('$url/$branch/updateToken/$uid'), headers: headers, body: body)
-        .then((_) => print("MySql Login:${_.body}"));
-  }
-
-  //ユーザログインのタイム更新する
-  Future<void> updateLastTime(String uid) async {
-    String branch = "user";
-    Map<String, String> headers = {'content-type': 'application/json'};
-    String body = UpdateUser.lastTimupdate(uid: uid, lastLogin: DateTime.now().toIso8601String()).updateLastLoginTimeJson();
-    await http
-        .put(Uri.parse('$url/$branch/updateLoginTime/$uid'), headers: headers, body: body)
-        .then((_) => print("MySql LoginTimeUpdate:${_.body}"));
-  }
-
-  //ユーザのデータ取得
-  Future<LoginUser?> getUserData(String uid) async {
-    String branch = "user";
-    final uri = Uri.parse('$url/$branch/$uid');
-    LoginUser? userdata;
-    try {
-      var response = await http.get(uri);
-
-      if (response.statusCode != 404) {
-        userdata = LoginUser.jsonToModel(json.decode(utf8.decode(response.bodyBytes)));
-        print("userData :  ");
-        inspect(userdata);
-      }
-    } catch (e) {
-      print(e);
-    }
-    return userdata;
-  }
-
-  //メソッド：MYSQLにユーザーデータを作成する
-  //param
-  //uid：firebaseからアカウントid,　email：メールアドレス，password：パスワード
-  Future<bool> signUpUser(String uid, String email, String password) async {
-    bool isSucess = false;
-    String branch = "user";
-    try {
-      final uri = Uri.parse('$url/$branch/signUp');
-      Map<String, String> headers = {'content-type': 'application/json'};
-
-      var digest = sha256.convert(utf8.encode(password));
-      print("Digest as hex password: $digest");
-
-      UpdateUser signedUpUserData = UpdateUser.signUp(
-        uid: uid,
-        email: email,
-        password: "$digest",
-        isEmailVerified: false,
-      );
-
-      String body = signedUpUserData.signUpFormJson();
-
-      await http.put(uri, headers: headers, body: body).then((_) => print("MySql SiginUp Success:${_.body}"));
-      isSucess = true;
-    } catch (e) {
-      print(e);
-    }
-    return isSucess;
-  }
-
-  //メソッド：MYSQLにユーザーデータを更新する
-  //param
-  //uid：firebaseからアカウントid,　updateData：ユーザの個人情報
-  Future<bool> updateUserData(String uid, UpdateUser updateData) async {
-    bool isSucess = false;
-    String branch = "user";
-    try {
-      final uri = Uri.parse('$url/$branch/update/$uid');
-      Map<String, String> headers = {'content-type': 'application/json'};
-      inspect(updateData);
-      String body = jsonEncode(updateData);
-      await http.put(uri, headers: headers, body: body).then(
-            (_) => print("MySql Update Success:${_.body}"),
-          );
-      isSucess = true;
-    } catch (e) {
-      print(e);
-    }
-    return isSucess;
   }
 }
