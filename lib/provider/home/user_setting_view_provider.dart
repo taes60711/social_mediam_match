@@ -48,6 +48,7 @@ class UserSettingViewProvider extends ChangeNotifier {
 
   ///スキルチェンジ
   void changeSkillList(Map<String, List<RequestUserSkillData>> skillData) {
+    print("skillData $skillData");
     haveSkillList = skillData["haveSkillList"]!;
     wantSkillList = skillData["wantSkillList"]!;
     notifyListeners();

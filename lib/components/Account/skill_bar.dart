@@ -18,30 +18,33 @@ Widget skillSettingTitleBarBtn(SkillEndDrawerType type) {
       }
       String btnText = type == SkillEndDrawerType.haveSkill ? StepThirdPage.haveSkillText : StepThirdPage.wantSkillText;
 
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-            onTap: () {
-              UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
-              userSettingViewProvider.changeEndDrawerStatus(type);
-            },
-            child: Row(
-              children: [
-                Text(btnText),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 12,
+      return GestureDetector(
+        onTap: () {
+          UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
+          userSettingViewProvider.changeEndDrawerStatus(type);
+        },
+        child: Container(
+          color: Colors.transparent,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(btnText),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 12,
+                    ),
                   ),
-                ),
-                Text("(${skillData.length} / 5)"),
-              ],
-            ),
+                  Text("(${skillData.length} / 5)"),
+                ],
+              ),
+              skillBar(type, userSettingProvider: context.read<UserSettingViewProvider>()),
+            ],
           ),
-          skillBar(type, userSettingProvider: context.read<UserSettingViewProvider>()),
-        ],
+        ),
       );
     },
   );
