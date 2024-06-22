@@ -14,7 +14,7 @@ class BaseTopBar extends StatelessWidget {
     this.leftWidget,
     this.backFunc,
     this.title = "",
-    this.centerWidget = const SizedBox(),
+    this.centerWidget,
     this.rightWidget = const SizedBox(),
     this.padding = const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
   });

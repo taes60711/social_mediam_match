@@ -215,7 +215,7 @@ Widget mainBody(BuildContext context) {
                   itemChild: ((data, index) {
                     return Column(
                       children: [
-                        /// titlebar
+                        /// 文章TOPbar
                         Container(
                           width: ScreenSize.width,
                           padding: const EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
@@ -390,6 +390,7 @@ Widget postCommentEndDrawer() {
     Widget endDrawerWidget = Container();
     if (postCommentEndDrawer == PostCommentEndDrawerType.open) {
       endDrawerWidget = EndDrawer(
+        title: context.read<PostCommentProvider>().viewChoicedPost.title,
         onDismissed: () {
           postCommentProvider.changeEndDrawerStatus(
             PostCommentEndDrawerType.close,

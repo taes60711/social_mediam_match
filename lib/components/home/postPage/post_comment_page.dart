@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../enum/post_comment_end_drawer_type.dart';
 import '../../../enum/user_detail_end_drawer_type.dart';
 import '../../../models/post_model.dart';
 import '../../../provider/friend_provider.dart';
 import '../../../provider/post/post_comment_provider.dart';
-import '../../utilities/basic_top_bar.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -16,21 +14,17 @@ class PostCommentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PostCommentProvider postCommentProvider = context.read<PostCommentProvider>();
     PostModel viewChoicedPost = context.read<PostCommentProvider>().viewChoicedPost;
     return Scaffold(
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15),
-            child: BaseTopBar(
-              backFunc: () => postCommentProvider.changeEndDrawerStatus(
-                PostCommentEndDrawerType.close,
-                PostModel(),
-              ),
-              title: viewChoicedPost.title,
-            ),
-          ),
+          // BaseTopBar(
+          //   backFunc: () => postCommentProvider.changeEndDrawerStatus(
+          //     PostCommentEndDrawerType.close,
+          //     PostModel(),
+          //   ),
+          //   title: viewChoicedPost.title,
+          // ),
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
