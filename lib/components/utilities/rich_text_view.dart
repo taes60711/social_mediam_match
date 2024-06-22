@@ -196,6 +196,8 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                     bottomActions: [CurrentPosition(), ProgressBar(isExpanded: true), RemainingDuration(), FullScreenButton()],
                   ),
                 );
+              } else {
+                return Container();
               }
             },
             onTapImage: (src) {
