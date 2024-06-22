@@ -12,7 +12,7 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/user_model.dart';
-import '../../../enum/skill_type.dart';
+import '../../../enum/skill_end_drawer_type.dart';
 import '../../../provider/account/user_provider.dart';
 
 import '../../../states/skill_exchange_state.dart';

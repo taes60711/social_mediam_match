@@ -15,7 +15,7 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
-import '../../../enum/skill_type.dart';
+import '../../../enum/skill_end_drawer_type.dart';
 import '../../../models/user_model.dart';
 
 import '../../../pageManager/enum/bottom_bar_path.dart';

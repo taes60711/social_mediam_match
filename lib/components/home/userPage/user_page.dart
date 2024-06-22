@@ -7,8 +7,9 @@ import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/fit_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
-import 'package:social_mediam_match/enum/skill_type.dart';
+
 import 'package:social_mediam_match/provider/account/user_provider.dart';
+import '../../../enum/skill_end_drawer_type.dart';
 import '../../../models/user_model.dart';
 
 import '../../../pageManager/enum/route_path.dart';

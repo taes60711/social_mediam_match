@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 
-import '../../../../enum/skill_type.dart';
+import '../../../../enum/skill_end_drawer_type.dart';
 import '../../../../models/course_model.dart';
 import '../../../../models/user_model.dart';
 import '../../../../states/course_state.dart';

@@ -4,7 +4,7 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/fit_widget.dart';
 import 'package:social_mediam_match/provider/home/user_setting_view_model.dart';
 import 'package:social_mediam_match/provider/home/user_setting_view_provider.dart';
-import '../../../enum/skill_type.dart';
+import '../../../enum/skill_end_drawer_type.dart';
 
 import '../../account/skill_bar.dart';
 import '../../account/skill_choice_setting_page.dart';
@@ -82,7 +82,6 @@ Widget _mainBody(BuildContext context) {
       ///introduction
       Builder(
         builder: (context) {
-          print("userSetting introductInput");
           String displayText = context.select((UserSettingViewProvider value) => value.introductionInput.text);
           return MultiTitleInput(
             title: StepThirdPage.introInputTitle,

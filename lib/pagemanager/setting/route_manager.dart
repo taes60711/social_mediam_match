@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/Initial/Initial_page.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
-import 'package:social_mediam_match/provider/post/post_provider.dart';
+import 'package:social_mediam_match/provider/post/post_comment_provider.dart';
+import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
 import '../../components/account/login_page.dart';
 import '../../components/account/signUpPage/signup_page.dart';
 import '../../components/home/coursePage/course_edit_page.dart';
@@ -14,6 +15,7 @@ import '../../components/home/userPage/my_posts.dart';
 import '../../components/home/userPage/privacy_setting.dart';
 import '../../components/home/userPage/user_setting.dart';
 import '../../main.dart';
+import '../../models/post_model.dart';
 import '../../provider/Initial/initial_provider.dart';
 import '../../provider/account/signUpPage/sign_up_view_provider.dart';
 import '../../provider/account/user_provider.dart';
@@ -92,7 +94,8 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
   /// "/myposts"
   RoutePath.myPosts.value: (BuildContext context) => MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => PostsProvider()),
+          ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostModel>()),
+          ChangeNotifierProvider(create: (_) => PostCommentProvider()),
           ChangeNotifierProvider(create: (_) => PostState()),
         ],
         child: const MyPosts(),

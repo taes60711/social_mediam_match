@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/models/user_model.dart';
-import '../../enum/skill_type.dart';
+import '../../enum/skill_end_drawer_type.dart';
 import '../../models/skill_model.dart';
 import '../../provider/home/user_setting_view_provider.dart';
 import '../strings/account/sign_up_strings.dart';

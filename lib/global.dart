@@ -1,7 +1,7 @@
 // ip
 import 'package:flutter/material.dart';
 
-String ip = "61.228.128.63";
+String ip = "61.228.181.228";
 String port = '80';
 
 String webSocketPort = "123";

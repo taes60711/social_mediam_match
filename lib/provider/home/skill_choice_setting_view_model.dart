@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../components/utilities/custom_button.dart';
 import '../../components/utilities/style/style_config.dart';
-import '../../enum/skill_type.dart';
+
+import '../../enum/skill_end_drawer_type.dart';
 import '../../models/skill_model.dart';
 import 'skill_map_provider.dart';
 import 'user_setting_view_provider.dart';

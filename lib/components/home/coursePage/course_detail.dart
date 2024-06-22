@@ -6,8 +6,7 @@ import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/states/course_state.dart';
-
-import '../../../enum/skill_type.dart';
+import '../../../enum/skill_end_drawer_type.dart';
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
 import '../../account/skill_bar.dart';

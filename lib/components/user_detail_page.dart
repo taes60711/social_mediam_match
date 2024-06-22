@@ -5,7 +5,8 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/enum/user_detail_end_drawer_type.dart';
 
-import '../enum/skill_type.dart';
+import '../enum/skill_end_drawer_type.dart';
+
 import '../models/user_model.dart';
 import '../pageManager/setting/route_controller.dart';
 

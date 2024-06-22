@@ -12,9 +12,3 @@ enum SkillType {
   final String value;
   const SkillType(this.value);
 }
-
-enum SkillEndDrawerType {
-  haveSkill,
-  wantSkill,
-  close;
-}

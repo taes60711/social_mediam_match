@@ -5,8 +5,8 @@ import 'package:social_mediam_match/components/account/signUpPage/signup_step_tw
 import 'package:social_mediam_match/components/account/skill_choice_setting_page.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/enum/skill_type.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
+import '../../../enum/skill_end_drawer_type.dart';
 import '../../../provider/account/signUpPage/sign_up_view_provider.dart';
 import '../../../provider/home/skill_map_provider.dart';
 import '../../../provider/home/user_setting_view_provider.dart';

@@ -7,6 +7,7 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/provider/home/skill_choice_setting_view_model.dart';
 
 import '../../CustomBouncingScrollPhysics.dart';
+import '../../enum/skill_end_drawer_type.dart';
 import '../../enum/skill_type.dart';
 import '../../models/skill_model.dart';
 import '../../provider/home/skill_map_provider.dart';
