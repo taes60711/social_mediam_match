@@ -8,7 +8,7 @@ class BaseTopBar extends StatelessWidget {
   final String title;
   final dynamic centerWidget;
   final dynamic rightWidget;
-  final double? padding;
+  final EdgeInsetsGeometry padding;
   const BaseTopBar({
     super.key,
     this.leftWidget,
@@ -16,7 +16,7 @@ class BaseTopBar extends StatelessWidget {
     this.title = "",
     this.centerWidget = const SizedBox(),
     this.rightWidget = const SizedBox(),
-    this.padding,
+    this.padding = const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
   });
 
   @override
@@ -29,7 +29,14 @@ class BaseTopBar extends StatelessWidget {
             onTap: () {
               backFunc != null ? backFunc!() : RouteOptions.pop();
             },
-            child: const Icon(Icons.arrow_back_ios),
+            child: Container(
+              width: 35,
+              height: 35,
+              color: Colors.transparent,
+              child: const Center(
+                child: Icon(Icons.arrow_back_ios),
+              ),
+            ),
           ),
       centerWidget ?? Text(title),
       rightWidget
@@ -37,31 +44,21 @@ class BaseTopBar extends StatelessWidget {
 
     return SizedBox(
       width: ScreenSize.width,
-      child: Row(
-        children: list.asMap().entries.map(
-          (entry) {
+      child: Padding(
+        padding: padding,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: list.asMap().entries.map((entry) {
             int index = entry.key;
             var e = entry.value;
-
-            EdgeInsetsGeometry marginEdgeInsets = const EdgeInsets.all(0);
-
-            if (index == 0) {
-              marginEdgeInsets = EdgeInsets.only(left: padding ?? 10);
-            } else if (index == list.length - 1) {
-              marginEdgeInsets = EdgeInsets.only(right: padding ?? 10);
-            }
-
-            return SizedBox(
-              width: ScreenSize.width / 3 - (padding ?? 0 * 2),
-              height: 30,
-              child: Container(
-                margin: marginEdgeInsets,
+            return Expanded(
+              child: Align(
                 alignment: e,
                 child: widgetList[index],
               ),
             );
-          },
-        ).toList(),
+          }).toList(),
+        ),
       ),
     );
   }

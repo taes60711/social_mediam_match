@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 
-import '../../components/utilities/style/screen_size.dart';
 import '../../components/utilities/style/style_config.dart';
 
 class MyPostViewModel {
