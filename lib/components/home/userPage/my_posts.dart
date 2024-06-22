@@ -204,136 +204,141 @@ Widget mainBody(BuildContext context) {
             title: tr("mypost_title"),
           ),
           Expanded(
-            child: APIListView<PostModel>(
-              providerList: context.watch<BaseAPIListProvider<PostModel>>().posts,
-              apiFunc: (page, size) {
-                return PostService().getPostDataByUID(page, size, userData);
-              },
-              itemChild: ((data, index) {
-                return Column(
-                  children: [
-                    /// titlebar
-                    Container(
-                      width: ScreenSize.width,
-                      padding: const EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(3),
-                        color: const Color.fromARGB(255, 236, 157, 120),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+            child: Builder(
+              builder: (context) {
+                return APIListView<PostModel>(
+                  providerList: context.watch<BaseAPIListProvider<PostModel>>().listData,
+                  apiFunc: (page, size) {
+                    return PostService().getPostDataByUID(page, size, userData);
+                  },
+                  itemChild: ((data, index) {
+                    return Column(
+                      children: [
+                        /// titlebar
+                        Container(
+                          width: ScreenSize.width,
+                          padding: const EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3),
+                            color: const Color.fromARGB(255, 236, 157, 120),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  context.read<FriendProvider>().changeEndDrawerStatus(
-                                        UserDetailEndDrawerType.open,
-                                        data[index].postUserInfo,
-                                      );
-                                },
-                                child: UserIcon(
-                                  iconSize: 35,
-                                  image: data[index].postUserInfo.image,
-                                ),
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      context.read<FriendProvider>().changeEndDrawerStatus(
+                                            UserDetailEndDrawerType.open,
+                                            data[index].postUserInfo,
+                                          );
+                                    },
+                                    child: UserIcon(
+                                      iconSize: 35,
+                                      image: data[index].postUserInfo.image,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    data[index].postUserInfo.name != ""
+                                        ? data[index].postUserInfo.name ?? ""
+                                        : data[index].postUserInfo.email,
+                                    style: TextStyle(fontSize: 12, color: normalTextColor),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 10),
                               Text(
-                                data[index].postUserInfo.name != ""
-                                    ? data[index].postUserInfo.name ?? ""
-                                    : data[index].postUserInfo.email,
+                                "${data[index].postTime}前",
                                 style: TextStyle(fontSize: 12, color: normalTextColor),
                               ),
                             ],
                           ),
-                          Text(
-                            "${data[index].postTime}前",
-                            style: TextStyle(fontSize: 12, color: normalTextColor),
-                          ),
-                        ],
-                      ),
-                    ),
+                        ),
 
-                    ///文章プレビュー
-                    GestureDetector(
-                      onTap: () {
-                        context.read<PostCommentProvider>().changeEndDrawerStatus(PostCommentEndDrawerType.open, data[index]);
-                      },
-                      child: Container(
-                        color: Colors.transparent,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ///Title
-                            Text(
-                              data[index].title,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
-                            RichTextView(
-                              content: data[index].mainMessage,
-                              isPreView: true,
-                            ),
-                            Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
+                        ///文章プレビュー
+                        GestureDetector(
+                          onTap: () {
+                            context.read<PostCommentProvider>().changeEndDrawerStatus(PostCommentEndDrawerType.open, data[index]);
+                          },
+                          child: Container(
+                            color: Colors.transparent,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ///Title
+                                Text(
+                                  data[index].title,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+                                RichTextView(
+                                  content: data[index].mainMessage,
+                                  isPreView: true,
+                                ),
+                                Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         children: [
-                                          const Icon(FontAwesomeIcons.eye, size: 14, color: Color.fromARGB(255, 63, 63, 63)),
-                                          const SizedBox(width: 5),
-                                          Text("${data[index].viewed}"),
+                                          Row(
+                                            children: [
+                                              const Icon(FontAwesomeIcons.eye, size: 14, color: Color.fromARGB(255, 63, 63, 63)),
+                                              const SizedBox(width: 5),
+                                              Text("${data[index].viewed}"),
+                                            ],
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Row(
+                                            children: [
+                                              const Icon(FontAwesomeIcons.heart,
+                                                  size: 14, color: Color.fromARGB(255, 248, 110, 110)),
+                                              const SizedBox(width: 5),
+                                              Text("${data[index].good}"),
+                                            ],
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Row(
+                                            children: [
+                                              const Icon(FontAwesomeIcons.comment, size: 14, color: Colors.blueAccent),
+                                              const SizedBox(width: 5),
+                                              Text("${data[index].commentCount}"),
+                                            ],
+                                          ),
                                         ],
                                       ),
-                                      const SizedBox(width: 8),
-                                      Row(
-                                        children: [
-                                          const Icon(FontAwesomeIcons.heart, size: 14, color: Color.fromARGB(255, 248, 110, 110)),
-                                          const SizedBox(width: 5),
-                                          Text("${data[index].good}"),
-                                        ],
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Row(
-                                        children: [
-                                          const Icon(FontAwesomeIcons.comment, size: 14, color: Colors.blueAccent),
-                                          const SizedBox(width: 5),
-                                          Text("${data[index].commentCount}"),
-                                        ],
+                                      GestureDetector(
+                                        onTap: () {},
+                                        child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          color: Colors.transparent,
+                                          child: Icon(
+                                            FontAwesomeIcons.ellipsis,
+                                            color: hintTextColor,
+                                            size: 14,
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      padding: const EdgeInsets.all(10),
-                                      color: Colors.transparent,
-                                      child: Icon(
-                                        FontAwesomeIcons.ellipsis,
-                                        color: hintTextColor,
-                                        size: 14,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                                Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+                              ],
                             ),
-                            Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
+                      ],
+                    );
+                  }),
                 );
-              }),
+              },
             ),
           ),
         ],

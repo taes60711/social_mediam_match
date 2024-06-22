@@ -16,7 +16,7 @@ enum LoadDataStatus {
 }
 
 class BaseAPIListProvider<R> extends ChangeNotifier {
-  List<R> posts = [];
+  List<R> listData = [];
   int size = 5;
   int page = 0;
   LoadDataStatus loadStatus = LoadDataStatus.loadingFinish;
@@ -33,14 +33,14 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
       await _loadData(apiFunc: apiFunc);
       page++;
     } else {
-      List<R> tempPostsData = await apiFunc();
-      posts = tempPostsData;
+      List<R> tempData = await apiFunc();
+      listData = tempData;
       page = 1;
     }
+
     if (loadStatus != LoadDataStatus.allDataLoaded) {
       loadStatus = LoadDataStatus.loadingFinish;
     }
-
     render();
   }
 
@@ -50,10 +50,10 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
   }
 
   Future<void> _loadData({required Future<List<R>> Function() apiFunc}) async {
-    int beforegetDataSize = posts.length;
-    List<R> tempPostsData = await apiFunc();
-    posts.addAll(tempPostsData);
-    if (beforegetDataSize >= posts.length) {
+    int beforegetDataSize = listData.length;
+    List<R> tempData = await apiFunc();
+    listData.addAll(tempData);
+    if (beforegetDataSize >= listData.length) {
       loadStatus = LoadDataStatus.allDataLoaded;
     }
   }
