@@ -101,7 +101,7 @@ class APIListView<R> extends StatelessWidget {
                     Visibility(
                       visible: nowLoadDataStatus == LoadDataStatus.wantinSert,
                       child: const Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.only(top: 10, bottom: 50),
                         child: Loading(),
                       ),
                     ),
