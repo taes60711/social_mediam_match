@@ -9,6 +9,7 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
+import 'package:social_mediam_match/provider/post/my_post_view_model.dart';
 import 'package:social_mediam_match/provider/post/post_comment_provider.dart';
 import 'package:social_mediam_match/services/post_service.dart';
 import '../../../enum/post_comment_end_drawer_type.dart';
@@ -315,7 +316,9 @@ Widget mainBody(BuildContext context) {
                                         ],
                                       ),
                                       GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          MyPostViewModel(context: context).showOptionBottomSheet();
+                                        },
                                         child: Container(
                                           padding: const EdgeInsets.all(10),
                                           color: Colors.transparent,

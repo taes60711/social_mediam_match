@@ -6,6 +6,7 @@ class BaseTopBar extends StatelessWidget {
   final Function? backFunc;
   final dynamic leftWidget;
   final String title;
+  final dynamic centerWidget;
   final dynamic rightWidget;
   final double? padding;
   const BaseTopBar({
@@ -13,6 +14,7 @@ class BaseTopBar extends StatelessWidget {
     this.leftWidget,
     this.backFunc,
     this.title = "",
+    this.centerWidget = const SizedBox(),
     this.rightWidget = const SizedBox(),
     this.padding,
   });
@@ -29,7 +31,7 @@ class BaseTopBar extends StatelessWidget {
             },
             child: const Icon(Icons.arrow_back_ios),
           ),
-      Text(title),
+      centerWidget ?? Text(title),
       rightWidget
     ];
 
