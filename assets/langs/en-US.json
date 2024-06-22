@@ -84,5 +84,8 @@
   "skExChpage_nojobData":"none",
 
   "//": "skillbar",
-  "noskillData": "none"
+  "noskillData": "none",
+
+  "//":"listView",
+  "NodataCanLoad":"All Loaded!"
 }

@@ -84,5 +84,8 @@
   "skExChpage_nojobData":"未輸入",
 
   "//": "skillbar",
-  "noskillData": "なし"
+  "noskillData": "なし",
+
+  "//": "listView",
+  "NodataCanLoad": "全て読み込みました!"
 }

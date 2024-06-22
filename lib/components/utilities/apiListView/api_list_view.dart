@@ -1,6 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 import '../loading.dart';
 import '../stateful_wrapper.dart';
@@ -32,6 +35,7 @@ class APIListView<R> extends StatelessWidget {
             );
       },
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         body: NotificationListener<ScrollNotification>(
           onNotification: (ScrollNotification scrollNotification) {
             LoadDataStatus nowLoadDataStatus = context.read<BaseAPIListProvider<R>>().loadStatus;
@@ -39,17 +43,17 @@ class APIListView<R> extends StatelessWidget {
               final scrollPosition = scrollNotification.metrics.pixels;
               final max = scrollNotification.metrics.maxScrollExtent;
 
-              if (nowLoadDataStatus == LoadDataStatus.loadingFinish) {
+              if (nowLoadDataStatus == LoadDataStatus.loadingFinish || nowLoadDataStatus == LoadDataStatus.allDataLoaded) {
+                ///再度読み込み
+                if (scrollPosition < 0) {
+                  context.read<BaseAPIListProvider<R>>().onLodaingStatusChange(LoadDataStatus.wantReload);
+                }
+
                 ///全てデータ読み込みたら追加ロードできなくなる
                 if (nowLoadDataStatus != LoadDataStatus.allDataLoaded) {
                   if (scrollPosition >= max && max != 0) {
                     context.read<BaseAPIListProvider<R>>().onLodaingStatusChange(LoadDataStatus.wantinSert);
                   }
-                }
-
-                ///再度読み込み
-                if (scrollPosition < 0) {
-                  context.read<BaseAPIListProvider<R>>().onLodaingStatusChange(LoadDataStatus.wantReload);
                 }
               }
             }
@@ -106,11 +110,24 @@ class APIListView<R> extends StatelessWidget {
                     Visibility(
                       visible: nowLoadDataStatus == LoadDataStatus.allDataLoaded,
                       child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          color: Colors.brown,
+                        padding: const EdgeInsets.only(top: 10, bottom: 50),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.commentSlash,
+                              color: normalBgColor,
+                              size: 30,
+                            ),
+                            const SizedBox(width: 10),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                tr("NodataCanLoad"),
+                                style: TextStyle(color: normalBgColor2, fontSize: 16),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

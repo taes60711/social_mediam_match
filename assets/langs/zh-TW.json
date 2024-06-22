@@ -84,5 +84,8 @@
   "skExChpage_nojobData":"未輸入",
 
   "//":"skillbar",
-  "noskillData":"無"
+  "noskillData":"無",
+  
+  "//": "listView",
+  "NodataCanLoad": "已經沒有資料了哦!"
 }
