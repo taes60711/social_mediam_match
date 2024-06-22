@@ -19,6 +19,7 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
   List<R> listData = [];
   int size = 5;
   int page = 0;
+  bool isTop = true;
   LoadDataStatus loadStatus = LoadDataStatus.loadingFinish;
 
   Future<void> insertData({
@@ -56,6 +57,11 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
     if (beforegetDataSize >= listData.length) {
       loadStatus = LoadDataStatus.allDataLoaded;
     }
+  }
+
+  void onIsTopChange(bool isTopStatus) {
+    isTop = isTopStatus;
+    render();
   }
 
   Future<void> render() async {

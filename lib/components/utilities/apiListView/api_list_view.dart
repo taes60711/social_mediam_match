@@ -13,6 +13,8 @@ class APIListView<R> extends StatelessWidget {
   final Future<List<R>> Function(int page, int size) apiFunc;
   final List<R> providerList;
   final int size;
+  final bool needToTopWidget;
+  final Widget? customFloatbutton;
 
   const APIListView({
     Key? key,
@@ -20,10 +22,13 @@ class APIListView<R> extends StatelessWidget {
     required this.apiFunc,
     required this.providerList,
     this.size = 5,
+    this.needToTopWidget = true,
+    this.customFloatbutton,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    ScrollController scrollController = ScrollController();
     return StatefulWrapper(
       onInit: () async {
         int page = context.read<BaseAPIListProvider<R>>().page;
@@ -36,6 +41,34 @@ class APIListView<R> extends StatelessWidget {
       },
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        floatingActionButton: Builder(
+          builder: (context) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Visibility(
+                  visible: customFloatbutton != null,
+                  child: customFloatbutton ?? Container(),
+                ),
+                const SizedBox(height: 10),
+                Visibility(
+                  visible: needToTopWidget && !context.select((BaseAPIListProvider<R> value) => value.isTop),
+                  child: FloatingActionButton(
+                    mini: true,
+                    backgroundColor: normalBgColor2,
+                    onPressed: () {
+                      scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+                    },
+                    child: const Icon(
+                      FontAwesomeIcons.angleUp,
+                      size: 16,
+                    ),
+                  ),
+                )
+              ],
+            );
+          },
+        ),
         body: NotificationListener<ScrollNotification>(
           onNotification: (ScrollNotification scrollNotification) {
             LoadDataStatus nowLoadDataStatus = context.read<BaseAPIListProvider<R>>().loadStatus;
@@ -43,10 +76,21 @@ class APIListView<R> extends StatelessWidget {
               final scrollPosition = scrollNotification.metrics.pixels;
               final max = scrollNotification.metrics.maxScrollExtent;
 
+              /// スクロール箇所が最TOPチェック
+              bool isTop = context.read<BaseAPIListProvider<R>>().isTop;
+              if (isTop) {
+                if (scrollPosition >= 20) {
+                  context.read<BaseAPIListProvider<R>>().onIsTopChange(false);
+                }
+              }
+
+              ///
               if (nowLoadDataStatus == LoadDataStatus.loadingFinish || nowLoadDataStatus == LoadDataStatus.allDataLoaded) {
                 ///再度読み込み
-                if (scrollPosition < 0) {
-                  context.read<BaseAPIListProvider<R>>().onLodaingStatusChange(LoadDataStatus.wantReload);
+                if (isTop) {
+                  if (scrollPosition <= 0) {
+                    context.read<BaseAPIListProvider<R>>().onLodaingStatusChange(LoadDataStatus.wantReload);
+                  }
                 }
 
                 ///全てデータ読み込みたら追加ロードできなくなる
@@ -57,7 +101,20 @@ class APIListView<R> extends StatelessWidget {
                 }
               }
             }
+
+            ///API読み込む
             if (scrollNotification is ScrollEndNotification) {
+              final scrollPosition = scrollNotification.metrics.pixels;
+
+              /// スクロール箇所が最TOPチェック
+              bool isTop = context.read<BaseAPIListProvider<R>>().isTop;
+              if (!isTop) {
+                if (scrollPosition < 10) {
+                  context.read<BaseAPIListProvider<R>>().onIsTopChange(true);
+                }
+              }
+
+              ///
               if (nowLoadDataStatus == LoadDataStatus.wantinSert || nowLoadDataStatus == LoadDataStatus.wantReload) {
                 int loadPage = 0;
                 LoadDataType loadDataType = LoadDataType.reload;
@@ -77,18 +134,21 @@ class APIListView<R> extends StatelessWidget {
           },
           child: ListView.builder(
             itemCount: providerList.length,
+            controller: scrollController,
             itemBuilder: (context, index) {
-              LoadDataStatus nowLoadDataStatus = context.read<BaseAPIListProvider<R>>().loadStatus;
               if (index == 0) {
                 return Column(
                   children: [
-                    Visibility(
-                      visible: nowLoadDataStatus == LoadDataStatus.wantReload,
-                      child: const Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Loading(),
-                      ),
-                    ),
+                    Builder(builder: (context) {
+                      LoadDataStatus nowLoadDataStatus = context.select((BaseAPIListProvider<R> value) => value.loadStatus);
+                      return Visibility(
+                        visible: nowLoadDataStatus == LoadDataStatus.wantReload,
+                        child: const Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Loading(),
+                        ),
+                      );
+                    }),
                     this.itemChild(providerList, index),
                   ],
                 );
@@ -96,41 +156,49 @@ class APIListView<R> extends StatelessWidget {
                 return Column(
                   children: [
                     this.itemChild(providerList, index),
-
-                    ///追加データしてる場合表示される
-                    Visibility(
-                      visible: nowLoadDataStatus == LoadDataStatus.wantinSert,
-                      child: const Padding(
-                        padding: EdgeInsets.only(top: 10, bottom: 50),
-                        child: Loading(),
-                      ),
-                    ),
-
-                    ///すべでデータ読み込みたら表示される
-                    Visibility(
-                      visible: nowLoadDataStatus == LoadDataStatus.allDataLoaded,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 50),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                    Builder(
+                      builder: (context) {
+                        LoadDataStatus nowLoadDataStatus = context.select((BaseAPIListProvider<R> value) => value.loadStatus);
+                        return Column(
                           children: [
-                            Icon(
-                              FontAwesomeIcons.commentSlash,
-                              color: normalBgColor,
-                              size: 30,
+                            ///データ読み込んてる場合表示される
+                            Visibility(
+                              visible: nowLoadDataStatus == LoadDataStatus.wantinSert,
+                              child: const Padding(
+                                padding: EdgeInsets.only(top: 10, bottom: 50),
+                                child: Loading(),
+                              ),
                             ),
-                            const SizedBox(width: 10),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: Text(
-                                tr("NodataCanLoad"),
-                                style: TextStyle(color: normalBgColor2, fontSize: 16),
+
+                            ///すべでデータ読み込みたら表示される
+                            Visibility(
+                              visible: nowLoadDataStatus == LoadDataStatus.allDataLoaded,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 10, bottom: 50),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.commentSlash,
+                                      color: normalBgColor,
+                                      size: 30,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8),
+                                      child: Text(
+                                        tr("NodataCanLoad"),
+                                        style: TextStyle(color: normalBgColor2, fontSize: 16),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                    ),
+                        );
+                      },
+                    )
                   ],
                 );
               } else {

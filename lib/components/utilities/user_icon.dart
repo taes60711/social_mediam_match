@@ -56,7 +56,8 @@ class SquareUserIcon extends StatelessWidget {
                 gaplessPlayback: true,
                 fit: BoxFit.cover,
               ),
-            ))
+            ),
+          )
         : Container(
             width: width,
             height: height,
