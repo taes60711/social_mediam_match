@@ -37,8 +37,10 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
       posts = tempPostsData;
       page = 1;
     }
+    if (loadStatus != LoadDataStatus.allDataLoaded) {
+      loadStatus = LoadDataStatus.loadingFinish;
+    }
 
-    loadStatus = LoadDataStatus.loadingFinish;
     render();
   }
 
@@ -48,8 +50,12 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
   }
 
   Future<void> _loadData({required Future<List<R>> Function() apiFunc}) async {
+    int beforegetDataSize = posts.length;
     List<R> tempPostsData = await apiFunc();
     posts.addAll(tempPostsData);
+    if (beforegetDataSize >= posts.length) {
+      loadStatus = LoadDataStatus.allDataLoaded;
+    }
   }
 
   Future<void> render() async {
