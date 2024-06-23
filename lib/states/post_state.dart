@@ -82,20 +82,6 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  Future<void> deletePostData(int postId) async {
-    await _dbService.deletePost(postId);
-    myAllPosts.remove(myAllPosts.where((element) => element.id == postId).first);
-    notifyListeners();
-  }
-
-  Future<void> updatePostData(int postId, String updateMessage) async {
-    String fomattedContent = await RichTextFormat(htmlString: updateMessage).sendPostImgFormat();
-    await _dbService.updatePost(postId, fomattedContent);
-    int postIndex = myAllPosts.indexWhere((element) => element.id == postId);
-    myAllPosts[postIndex].mainMessage = updateMessage;
-    notifyListeners();
-  }
-
   Future<void> updatePostGood(int postId, {String? userUID}) async {
     if (userUID != null) {
       await _dbService.updatePostGood(postId, userUID: userUID);

@@ -162,6 +162,7 @@ Widget mainBody(BuildContext context) {
                                       ),
                                       GestureDetector(
                                         onTap: () {
+                                          context.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: data[index]);
                                           MyPostViewModel(myPostContext: context).showOptionBottomSheet(choicedPost: data[index]);
                                         },
                                         child: Container(

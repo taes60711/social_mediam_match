@@ -68,10 +68,7 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
       ),
 
   /// "/postEdit"
-  RoutePath.postEditPage.value: (BuildContext context) => ChangeNotifierProvider(
-        create: (_) => PostState(),
-        child: const EditorPage(),
-      ),
+  RoutePath.postEditPage.value: (BuildContext context) => const EditorPage(),
 
   /// "/mycourses"
   RoutePath.courseEditPage.value: (BuildContext context) => ChangeNotifierProvider(

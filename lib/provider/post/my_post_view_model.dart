@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
+import 'package:social_mediam_match/services/post_service.dart';
+import '../../components/utilities/apiListView/base_api_list_provider.dart';
 import '../../components/utilities/style/style_config.dart';
 import '../../models/post_model.dart';
+import '../../models/rich_text_format.dart';
 import '../../pageManager/enum/route_path.dart';
 
 class MyPostViewModel {
   BuildContext myPostContext;
   MyPostViewModel({required this.myPostContext});
 
-  Future<void> deletePost({required int postId}) async {
-    print(postId);
+  Future<void> updatePost({required String updateMsg}) async {
+    PostModel updatedData = myPostContext.read<BaseAPIListProvider<PostModel>>().choiceData;
+    String fomattedContent = await RichTextFormat(htmlString: updateMsg).sendPostImgFormat();
+    updatedData.mainMessage = fomattedContent;
+    await PostService().updatePost(postId: updatedData.id, mainMessage: updatedData.mainMessage).then(
+      (isSucess) {
+        if (isSucess) {
+          myPostContext.read<BaseAPIListProvider<PostModel>>().editData(updatedData: updatedData);
+          RouteOptions.pop();
+        }
+      },
+    );
   }
 
-  Future<void> deletePostCheck({required int postId}) {
+  Future<void> deletePostCheck() {
     return showDialog<void>(
       context: myPostContext,
       builder: (BuildContext context) {
@@ -25,8 +39,14 @@ class MyPostViewModel {
             ElevatedButton(
               child: const Text('確定'),
               onPressed: () async {
-                await deletePost(postId: postId);
-                RouteOptions.pop();
+                PostModel wantDeletePost = myPostContext.read<BaseAPIListProvider<PostModel>>().choiceData;
+                await PostService().deletePost(wantDeletePost.id).then((isSucess) {
+                  if (isSucess) {
+                    myPostContext.read<BaseAPIListProvider<PostModel>>().deleteData(choiceData: wantDeletePost);
+                    RouteOptions.pop();
+                    RouteOptions.pop();
+                  }
+                });
               },
             ),
             ElevatedButton(
@@ -89,16 +109,16 @@ class MyPostViewModel {
                                   btnText: "編輯文章",
                                   bntFunc: () {
                                     RouteOptions.pop();
-                                    RouteOptions.pushTo(RoutePath.postEditPage.value, arguments: {
-                                      'postData': choicedPost,
-                                      'postContext': myPostContext,
-                                    });
+                                    RouteOptions.pushTo(
+                                      RoutePath.postEditPage.value,
+                                      arguments: {'postContext': myPostContext},
+                                    );
                                   }),
                               _bottomSheetBtn(
                                   icon: FontAwesomeIcons.commentSlash,
                                   btnText: "刪除",
                                   bntFunc: () {
-                                    deletePostCheck(postId: choicedPost.id);
+                                    deletePostCheck();
                                   }),
                             ],
                           ),

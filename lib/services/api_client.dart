@@ -58,10 +58,10 @@ class ApiClient {
   ///MARK: API Push Func
   Future<String> apiPush(
     String url, {
+    Map<String, String> headers = const {'content-type': 'application/json'},
     required Map<String, dynamic> body,
   }) async {
     final uri = Uri.parse("http://$_ip$url");
-    Map<String, String> headers = {'content-type': 'application/json'};
     print("Push API Url : $url body : ${jsonEncode(body)}");
     Response response = await http.put(
       uri,

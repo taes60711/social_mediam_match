@@ -24,11 +24,33 @@ class PostService extends ApiClient {
         isList: true,
       );
 
+      ///My投稿のAPIからUserDataなし場合使用する
       requestPostDataByUID.map((e) => PostModel.noUserDataPostAddUserData(noUserDatPost: e, userData: userData)).toList();
     } catch (e) {
       onRequestFailed();
     }
 
     return requestPostDataByUID;
+  }
+
+  Future<bool> updatePost({required int postId, required String mainMessage}) async {
+    Map<String, dynamic> body = {
+      "id": postId,
+      "mainMessage": mainMessage,
+    };
+
+    String responseData = await apiPush("/update/$postId", body: body);
+
+    print("updatePost $responseData");
+
+    return responseData != "null" ? true : false;
+  }
+
+  Future<bool> deletePost(int postId) async {
+    String responseData = await apiPush("/delete/$postId", body: {});
+
+    print("deletePost $responseData");
+
+    return responseData != "null" ? true : false;
   }
 }

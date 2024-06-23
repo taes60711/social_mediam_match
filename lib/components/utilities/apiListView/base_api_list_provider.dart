@@ -17,10 +17,26 @@ enum LoadDataStatus {
 
 class BaseAPIListProvider<R> extends ChangeNotifier {
   List<R> listData = [];
+  late R choiceData;
   int size = 5;
   int page = 0;
   bool isTop = true;
   LoadDataStatus loadStatus = LoadDataStatus.loadingFinish;
+
+  void onChoiceData({required R choicedData}) {
+    choiceData = choicedData;
+  }
+
+  void editData({required R updatedData}) {
+    int wantUpdateDataIndex = listData.indexWhere((element) => element == choiceData);
+    listData[wantUpdateDataIndex] = updatedData;
+    render();
+  }
+
+  void deleteData({required R choiceData}) {
+    listData.remove(choiceData);
+    render();
+  }
 
   Future<void> insertData({
     required Future<List<R>> Function() apiFunc,
