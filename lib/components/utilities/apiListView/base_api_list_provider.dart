@@ -38,6 +38,11 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
     render();
   }
 
+  void createData({required R createdData}) {
+    listData.insert(0, createdData);
+    render();
+  }
+
   Future<void> insertData({
     required Future<List<R>> Function() apiFunc,
     required int size,

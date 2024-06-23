@@ -53,4 +53,19 @@ class PostService extends ApiClient {
 
     return responseData != "null" ? true : false;
   }
+
+  Future<bool> createPost(String uid, String title, String message, int type) async {
+    Map<String, dynamic> body = {
+      "createdBy": uid,
+      "title": title,
+      "mainMessage": message,
+      "type": type,
+    };
+
+    String responseData = await apiPush("/createPost", body: body);
+
+    print("updatePost $responseData");
+
+    return responseData != "null" ? true : false;
+  }
 }
