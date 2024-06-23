@@ -15,7 +15,7 @@ class MyPostViewModel {
   MyPostViewModel({required this.myPostContext});
 
   Future<void> updatePost({required String updateMsg}) async {
-    PostModel updatedData = myPostContext.read<BaseAPIListProvider<PostModel>>().choiceData;
+    PostModel updatedData = myPostContext.read<BaseAPIListProvider<PostModel>>().choiceData ?? PostModel();
     String fomattedContent = await RichTextFormat(htmlString: updateMsg).sendPostImgFormat();
     updatedData.mainMessage = fomattedContent;
     await PostService().updatePost(postId: updatedData.id, mainMessage: updatedData.mainMessage).then(
@@ -39,7 +39,7 @@ class MyPostViewModel {
             ElevatedButton(
               child: const Text('確定'),
               onPressed: () async {
-                PostModel wantDeletePost = myPostContext.read<BaseAPIListProvider<PostModel>>().choiceData;
+                PostModel wantDeletePost = myPostContext.read<BaseAPIListProvider<PostModel>>().choiceData ?? PostModel();
                 await PostService().deletePost(wantDeletePost.id).then((isSucess) {
                   if (isSucess) {
                     myPostContext.read<BaseAPIListProvider<PostModel>>().deleteData(choiceData: wantDeletePost);

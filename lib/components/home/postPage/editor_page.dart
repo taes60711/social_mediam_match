@@ -20,7 +20,7 @@ class EditorPage extends StatelessWidget {
     return ChangeNotifierProvider.value(
       value: postContext.read<BaseAPIListProvider<PostModel>>(),
       child: Builder(builder: (context) {
-        PostModel postData = postContext.read<BaseAPIListProvider<PostModel>>().choiceData;
+        PostModel postData = postContext.read<BaseAPIListProvider<PostModel>>().choiceData ?? PostModel();
         return Scaffold(
           resizeToAvoidBottomInset: false,
           body: SafeArea(

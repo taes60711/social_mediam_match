@@ -7,6 +7,8 @@ import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import '../../../models/user_model.dart';
 
+import '../../../pageManager/enum/route_path.dart';
+import '../../../pageManager/setting/route_controller.dart';
 import '../../utilities/style/style_config.dart';
 import '../skillExChangePage/user_detail.dart';
 import 'post_body.dart';
@@ -53,11 +55,10 @@ class PostPageByType extends StatelessWidget {
                     mini: true,
                     backgroundColor: normalTextColor,
                     onPressed: () {
-                      // Navigator.of(context).pushNamed(RoutePath.postEditPage.value, arguments: {
-                      //   "userData": userData,
-                      //   "postState": postState,
-                      //   "type": type,
-                      // });
+                      RouteOptions.pushTo(
+                        RoutePath.postEditPage.value,
+                        arguments: {'postContext': context},
+                      );
                     },
                     child: Icon(
                       FontAwesomeIcons.penToSquare,

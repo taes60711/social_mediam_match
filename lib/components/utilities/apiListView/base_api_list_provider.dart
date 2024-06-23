@@ -17,7 +17,7 @@ enum LoadDataStatus {
 
 class BaseAPIListProvider<R> extends ChangeNotifier {
   List<R> listData = [];
-  late R choiceData;
+  R? choiceData;
   int size = 5;
   int page = 0;
   bool isTop = true;

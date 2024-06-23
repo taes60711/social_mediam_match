@@ -7,10 +7,12 @@ import 'package:social_mediam_match/components/home/userPage/user_page.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
 import 'package:social_mediam_match/states/skill_exchange_state.dart';
+import '../../models/post_model.dart';
 import '../../pageManager/enum/bottom_bar_path.dart';
 
 import '../../pageManager/setting/bottom_bar_controller_provider.dart';
 import '../../pagemanager/setting/bottom_bar_manager.dart';
+import '../utilities/apiListView/base_api_list_provider.dart';
 import 'postPage/forum.dart';
 
 class Home extends StatefulWidget {
@@ -24,8 +26,16 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
-      ChangeNotifierProvider(
-        create: (_) => PostState(),
+      // ChangeNotifierProvider(
+      //   create: (_) => PostState(),
+      //   child: const Forum(),
+      // ),
+
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => PostState()),
+          ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostModel>()),
+        ],
         child: const Forum(),
       ),
       const SkillExChangePage(),
