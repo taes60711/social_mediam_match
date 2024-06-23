@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
-import '../../components/utilities/apiListView/base_api_list_provider.dart';
-import '../../models/post_model.dart';
 import '../../models/rich_text_format.dart';
 import '../../services/post_service.dart';
 import '../account/user_provider.dart';

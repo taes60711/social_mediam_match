@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/services/post_service.dart';
-
-import '../models/rich_text_format.dart';
 import '../models/user_model.dart';
 import '../services/db_service.dart';
 
@@ -222,21 +220,21 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  Future<void> createPost(String userUid, String title, String message, int type) async {
-    try {
-      String fomattedContent = await RichTextFormat(htmlString: message).sendPostImgFormat();
-      await _dbService.createPost(userUid, title, fomattedContent, type);
+  // Future<void> createPost(String userUid, String title, String message, int type) async {
+  //   try {
+  //     String fomattedContent = await RichTextFormat(htmlString: message).sendPostImgFormat();
+  //     await _dbService.createPost(userUid, title, fomattedContent, type);
 
-      List<PostModel> tempPostData = await _dbService.getPostsByType(type, isFirst: true);
-      postData = [];
-      tempPostData.forEach((e) {
-        postData = [...postData, e];
-      });
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
-  }
+  //     List<PostModel> tempPostData = await _dbService.getPostsByType(type, isFirst: true);
+  //     postData = [];
+  //     tempPostData.forEach((e) {
+  //       postData = [...postData, e];
+  //     });
+  //     notifyListeners();
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   Future<void> changePostComment(int uid, int index, String updatedMessage) async {
     await _dbService.updatePostComment(uid, updatedMessage);
