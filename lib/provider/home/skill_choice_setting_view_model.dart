@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 import '../../components/utilities/custom_button.dart';
 import '../../components/utilities/style/style_config.dart';
 
@@ -34,7 +35,7 @@ class SKillChoiceSettingViewModel {
                   titleColor: normalTextColor,
                   backgroundColor: normalBgColor,
                   onPress: () {
-                    Navigator.of(context).pop();
+                    RouteOptions.pop();
                   },
                 )
               ],

@@ -2,9 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
-import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/post_model.dart';
@@ -19,8 +17,6 @@ import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/friend_provider.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
-
-import '../../../states/post_state.dart';
 import '../../user_detail_page.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/custom_end_drawer.dart';
@@ -28,97 +24,11 @@ import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/style_config.dart';
 import '../postPage/post_comment_page.dart';
 
-class EditPost extends StatelessWidget {
-  final PostState postState;
-
-  const EditPost({super.key, required this.postState});
-
-  @override
-  Widget build(BuildContext context) {
-    PostModel? choicedPost = postState.choicedPost;
-    QuillEditorController controller = QuillEditorController();
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Text("編輯"),
-            choicedPost != null
-                ? Container(
-                    width: ScreenSize.width,
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: IconButton(
-                            onPressed: () async {
-                              print("Drawer Close");
-
-                              postState.myPostsGlobalKey.currentState!.closeEndDrawer();
-                            },
-                            icon: const Icon(Icons.arrow_back_ios_sharp),
-                          ),
-                        ),
-                        RichTextEditor(controller: controller, content: choicedPost.mainMessage)
-                      ],
-                    ),
-                  )
-                : Container(),
-            ElevatedButton(
-                onPressed: () async {
-                  String content = await controller.getText();
-                  postState.updatePostData(choicedPost!.id, content);
-                  postState.myPostsGlobalKey.currentState!.closeEndDrawer();
-                },
-                child: const Text("更新"))
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class MyPosts extends StatelessWidget {
   const MyPosts({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // PostState postState = context.read<PostState>();
-    // List<PostModel> myAllPosts = context.watch<PostState>().myAllPosts;
-    // GlobalKey<ScaffoldState> globalKey = context.select((PostState value) => value.myPostsGlobalKey);
-    // String myPostEndDrawerType = context.select((PostState value) => value.myPostEndDrawerType);
-
-    // void changeChoicedPostGoodCount({required PostModel choicedPost, required isGood}) {
-    //   postState.changeChoicedPostGoodCount(choicedPost: choicedPost, isGood: isGood);
-    // }
-
-    // Future<void> deletePostCheck(int postId) {
-    //   return showDialog<void>(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return AlertDialog(
-    //         title: const Text('確認'),
-    //         content: const Text('確定要刪除該篇文章嗎?'),
-    //         actions: <Widget>[
-    //           ElevatedButton(
-    //             child: const Text('確定'),
-    //             onPressed: () {
-    //               postState.deletePostData(postId);
-    //               Navigator.of(context).pop();
-    //               print(postId);
-    //             },
-    //           ),
-    //           ElevatedButton(
-    //             child: const Text('取消'),
-    //             onPressed: () {
-    //               Navigator.of(context).pop();
-    //             },
-    //           ),
-    //         ],
-    //       );
-    //     },
-    //   );
-    // }
-
     return Stack(
       children: [
         mainBody(context),
@@ -127,71 +37,6 @@ class MyPosts extends StatelessWidget {
       ],
     );
   }
-
-  // return StatefulWrapper(
-  //   onInit: () async {
-  //     postState.getPostDataByUID(0, 5, userData);
-  //   },
-
-  //   child: Scaffold(
-  //     key: globalKey,
-  //     endDrawer: myPostEndDrawerType == "edit"
-  //         ? EditPost(postState: postState)
-  //         : PostComment(
-  //             choicedPostData: postState.choicedPost ?? PostModel(postUserInfo: LoginUser()),
-  //             userData: userData,
-  //             globalKey: globalKey,
-  //             gotoFriendPage: () => context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom),
-  //             changeChoicedPostGoodCount: changeChoicedPostGoodCount,
-  //           ),
-  //     body: SafeArea(
-  //       child: Column(
-  //         children: [
-  //           BaseTopBar(
-  //             backFunc: () => RouteOptions.popUntilToHome(),
-  //             title: tr("mypost_title"),
-  //           ),
-  //           Expanded(
-  //             child: ListView.builder(
-  //               itemCount: myAllPosts.length,
-  //               itemBuilder: ((context, index) {
-  //                 return Column(
-  //                   children: [
-  //                     PostBody(
-  //                       postData: myAllPosts[index],
-  //                       postState: postState,
-  //                       globalKey: globalKey,
-  //                       userData: userData,
-  //                       gotoFriendPage: () =>
-  //                           context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom),
-  //                       bottomSheetFuncs: [
-  //                         PostOption(
-  //                             icon: Icons.edit,
-  //                             buttonFunc: () async {
-  //                               RouteOptions.pop();
-  //                               await postState.postOnChange(myAllPosts[index], "edit");
-  //                               globalKey.currentState!.openEndDrawer();
-  //                             },
-  //                             funcText: '編輯文章'),
-  //                         PostOption(
-  //                             icon: FontAwesomeIcons.commentSlash,
-  //                             buttonFunc: () {
-  //                               RouteOptions.pop();
-  //                               deletePostCheck(myAllPosts[index].id);
-  //                             },
-  //                             funcText: '刪除'),
-  //                       ],
-  //                     ),
-  //                   ],
-  //                 );
-  //               }),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   ),
-  // );
 }
 
 Widget mainBody(BuildContext context) {
@@ -317,7 +162,7 @@ Widget mainBody(BuildContext context) {
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                          MyPostViewModel(context: context).showOptionBottomSheet();
+                                          MyPostViewModel(myPostContext: context).showOptionBottomSheet(choicedPost: data[index]);
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.all(10),

@@ -12,8 +12,8 @@ class RouteOptions {
     Navigator.of(globalContext).popUntil(ModalRoute.withName(RoutePath.home.value));
   }
 
-  static void pushTo(String routePath) {
-    print("PushPageTo : $routePath");
-    Navigator.of(globalContext).pushNamed(routePath);
+  static void pushTo(String routePath, {Map<String, dynamic>? arguments}) {
+    print("PushPageTo : $routePath  arguments : $arguments");
+    Navigator.of(globalContext).pushNamed(routePath, arguments: arguments);
   }
 }

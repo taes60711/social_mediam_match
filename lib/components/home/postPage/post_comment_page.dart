@@ -18,13 +18,6 @@ class PostCommentPage extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          // BaseTopBar(
-          //   backFunc: () => postCommentProvider.changeEndDrawerStatus(
-          //     PostCommentEndDrawerType.close,
-          //     PostModel(),
-          //   ),
-          //   title: viewChoicedPost.title,
-          // ),
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),

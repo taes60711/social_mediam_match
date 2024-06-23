@@ -1,59 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
-import 'package:social_mediam_match/components/utilities/title_input.dart';
-import '../../../models/user_model.dart';
-import '../../../states/post_state.dart';
+import 'package:social_mediam_match/models/post_model.dart';
+import '../../../pageManager/setting/route_controller.dart';
+import '../../strings/userPage/user_page_string.dart';
+import '../../utilities/apiListView/base_api_list_provider.dart';
+import '../../utilities/basic_top_bar.dart';
 
 class EditorPage extends StatelessWidget {
   const EditorPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    PostState postState = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postState'];
-    LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
-    int type = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['type'];
+    PostModel postData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postData'];
+    BuildContext postContext = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postContext'];
     QuillEditorController controller = QuillEditorController();
-    TextEditingController titleController = TextEditingController();
-    Widget userComponent = SafeArea(
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back_ios),
-                ),
-                const Text("投稿"),
-                GestureDetector(
+    return ChangeNotifierProvider.value(
+      value: postContext.read<BaseAPIListProvider<PostModel>>(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+          child: Column(
+            children: [
+              BaseTopBar(
+                backFunc: () => RouteOptions.pop(),
+                title: postData.title,
+                rightWidget: GestureDetector(
                   onTap: () async {
+                    print("update");
                     String content = await controller.getText();
-                    await postState.createPost(userData.uid, titleController.text, content, type);
-                    Navigator.pop(context);
+                    print(content);
                   },
-                  child: const Text("送出"),
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    margin: const EdgeInsets.only(right: 10),
+                    width: 80,
+                    height: 35,
+                    child: Text(ProfileString().updateButtonText),
+                  ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          TitleInput(title: '標題', textController: titleController),
-          Expanded(
-            child: SingleChildScrollView(
-              child: RichTextEditor(
-                content: "",
-                controller: controller,
               ),
-            ),
-          )
-        ],
+              Expanded(
+                child: SingleChildScrollView(
+                  child: RichTextEditor(
+                    content: postData.mainMessage,
+                    controller: controller,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
-    return Scaffold(body: userComponent);
   }
 }

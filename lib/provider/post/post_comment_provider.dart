@@ -6,9 +6,10 @@ import '../../models/post_model.dart';
 class PostCommentProvider extends ChangeNotifier {
   PostModel viewChoicedPost = PostModel();
   PostCommentEndDrawerType endDrawerOpenInfo = PostCommentEndDrawerType.close;
+
   void changeEndDrawerStatus(PostCommentEndDrawerType status, PostModel choicedPost) {
-    viewChoicedPost = choicedPost;
     endDrawerOpenInfo = status;
+    viewChoicedPost = choicedPost;
     notifyListeners();
   }
 }
