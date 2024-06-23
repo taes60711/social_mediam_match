@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 import 'package:social_mediam_match/services/post_service.dart';
 import '../../components/utilities/apiListView/base_api_list_provider.dart';
@@ -33,29 +34,54 @@ class MyPostViewModel {
       context: myPostContext,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('確認'),
-          content: const Text('確定要刪除該篇文章嗎?'),
-          actions: <Widget>[
-            ElevatedButton(
-              child: const Text('確定'),
-              onPressed: () async {
-                PostModel wantDeletePost = myPostContext.read<BaseAPIListProvider<PostModel>>().choiceData ?? PostModel();
-                await PostService().deletePost(wantDeletePost.id).then((isSucess) {
-                  if (isSucess) {
-                    myPostContext.read<BaseAPIListProvider<PostModel>>().deleteData(choiceData: wantDeletePost);
-                    RouteOptions.pop();
-                    RouteOptions.pop();
-                  }
-                });
-              },
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(15),
+            width: 150,
+            height: 160,
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                const Expanded(
+                  child: Text('確定要刪除該篇文章嗎?'),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        title: '取消',
+                        titleColor: normalTextColor,
+                        backgroundColor: hintTextColor,
+                        onPress: () {
+                          RouteOptions.pop();
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: CustomButton(
+                        title: '確認',
+                        titleColor: normalTextColor,
+                        backgroundColor: normalBgColor,
+                        onPress: () async {
+                          PostModel wantDeletePost =
+                              myPostContext.read<BaseAPIListProvider<PostModel>>().choiceData ?? PostModel();
+                          await PostService().deletePost(wantDeletePost.id).then((isSucess) {
+                            if (isSucess) {
+                              myPostContext.read<BaseAPIListProvider<PostModel>>().deleteData(choiceData: wantDeletePost);
+                              RouteOptions.pop();
+                              RouteOptions.pop();
+                            }
+                          });
+                        },
+                      ),
+                    )
+                  ],
+                )
+              ],
             ),
-            ElevatedButton(
-              child: const Text('取消'),
-              onPressed: () {
-                RouteOptions.pop();
-              },
-            ),
-          ],
+          ),
         );
       },
     );

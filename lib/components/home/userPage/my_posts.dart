@@ -32,7 +32,7 @@ class MyPosts extends StatelessWidget {
     return Stack(
       children: [
         mainBody(context),
-        endDrawer(),
+        userDetailEndDrawer(),
         postCommentEndDrawer(),
       ],
     );
@@ -60,7 +60,7 @@ Widget mainBody(BuildContext context) {
                   itemChild: ((data, index) {
                     return Column(
                       children: [
-                        /// 文章TOPbar
+                        /// 文章TopBar
                         Container(
                           width: ScreenSize.width,
                           padding: const EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
@@ -74,6 +74,7 @@ Widget mainBody(BuildContext context) {
                             children: [
                               Row(
                                 children: [
+                                  ///アイコン
                                   GestureDetector(
                                     onTap: () {
                                       context.read<FriendProvider>().changeEndDrawerStatus(
@@ -87,6 +88,8 @@ Widget mainBody(BuildContext context) {
                                     ),
                                   ),
                                   const SizedBox(width: 10),
+
+                                  ///ユーザネーム
                                   Text(
                                     data[index].postUserInfo.name != ""
                                         ? data[index].postUserInfo.name ?? ""
@@ -95,6 +98,8 @@ Widget mainBody(BuildContext context) {
                                   ),
                                 ],
                               ),
+
+                              ///期日
                               Text(
                                 "${data[index].postTime}前",
                                 style: TextStyle(fontSize: 12, color: normalTextColor),
@@ -121,63 +126,20 @@ Widget mainBody(BuildContext context) {
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
+
                                 Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+
+                                /// 文章プレビュー
                                 RichTextView(
                                   content: data[index].mainMessage,
                                   isPreView: true,
                                 ),
+
                                 Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              const Icon(FontAwesomeIcons.eye, size: 14, color: Color.fromARGB(255, 63, 63, 63)),
-                                              const SizedBox(width: 5),
-                                              Text("${data[index].viewed}"),
-                                            ],
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Row(
-                                            children: [
-                                              const Icon(FontAwesomeIcons.heart,
-                                                  size: 14, color: Color.fromARGB(255, 248, 110, 110)),
-                                              const SizedBox(width: 5),
-                                              Text("${data[index].good}"),
-                                            ],
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Row(
-                                            children: [
-                                              const Icon(FontAwesomeIcons.comment, size: 14, color: Colors.blueAccent),
-                                              const SizedBox(width: 5),
-                                              Text("${data[index].commentCount}"),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          context.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: data[index]);
-                                          MyPostViewModel(myPostContext: context).showOptionBottomSheet(choicedPost: data[index]);
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(10),
-                                          color: Colors.transparent,
-                                          child: Icon(
-                                            FontAwesomeIcons.ellipsis,
-                                            color: hintTextColor,
-                                            size: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+
+                                ///文章bottomBar
+                                bottomBar(context: context, data: data[index]),
+
                                 Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
                               ],
                             ),
@@ -196,8 +158,69 @@ Widget mainBody(BuildContext context) {
   );
 }
 
-///　ユーザ詳細ページ用EndDrawer
-Widget endDrawer() {
+///文章bottomBar
+Widget bottomBar({required BuildContext context, required PostModel data}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 10),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            ///リーチ数
+            Row(
+              children: [
+                const Icon(FontAwesomeIcons.eye, size: 14, color: Color.fromARGB(255, 63, 63, 63)),
+                const SizedBox(width: 5),
+                Text("${data.viewed}"),
+              ],
+            ),
+            const SizedBox(width: 8),
+
+            ///いいね数
+            Row(
+              children: [
+                const Icon(FontAwesomeIcons.heart, size: 14, color: Color.fromARGB(255, 248, 110, 110)),
+                const SizedBox(width: 5),
+                Text("${data.good}"),
+              ],
+            ),
+            const SizedBox(width: 8),
+
+            ///コメント数
+            Row(
+              children: [
+                const Icon(FontAwesomeIcons.comment, size: 14, color: Colors.blueAccent),
+                const SizedBox(width: 5),
+                Text("${data.commentCount}"),
+              ],
+            ),
+          ],
+        ),
+
+        ///設定ボタン
+        GestureDetector(
+          onTap: () {
+            context.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: data);
+            MyPostViewModel(myPostContext: context).showOptionBottomSheet(choicedPost: data);
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            color: Colors.transparent,
+            child: Icon(
+              FontAwesomeIcons.ellipsis,
+              color: hintTextColor,
+              size: 14,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+/// ユーザ詳細ページ用EndDrawer
+Widget userDetailEndDrawer() {
   return Builder(
     builder: (context) {
       print("customEndDrawer");
@@ -212,6 +235,8 @@ Widget endDrawer() {
           onDismissed: () {
             friendProivder.changeEndDrawerStatus(UserDetailEndDrawerType.close, LoginUser());
           },
+
+          /// ユーザ詳細ページ
           child: UserDetailPage(
             otherUser: context.read<FriendProvider>().ohterUserData,
             toChatRoom: () {
@@ -243,6 +268,8 @@ Widget postCommentEndDrawer() {
             PostModel(),
           );
         },
+
+        ///文章詳細ページ
         child: const PostCommentPage(),
       );
     }

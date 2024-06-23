@@ -13,7 +13,7 @@ class UserSettingViewModel {
   BuildContext context;
   UserSettingViewModel({required this.context});
 
-  ///ユーザ元々データ
+  /// ユーザ元々データ
   Future<void> init() async {
     LoginUser userData = context.watch<UserProvider>().userData;
     SkillMapProvider skillProvider = context.read<SkillMapProvider>();
@@ -23,7 +23,7 @@ class UserSettingViewModel {
     userSettingViewProvider.getUserSettingData(userData);
   }
 
-  ///編集あるかどうかチェック
+  /// 編集あるかどうかチェック
   void checkIsEdit() {
     UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
     LoginUser userData = context.read<UserProvider>().userData;
@@ -83,7 +83,7 @@ class UserSettingViewModel {
                           },
                         ),
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       Expanded(
                         child: CustomButton(
                           title: '確認',
@@ -107,7 +107,7 @@ class UserSettingViewModel {
     }
   }
 
-  ///ユーザデータ更新する
+  /// ユーザデータ更新する
   Future<void> updateUserData() async {
     UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
     LoginUser userData = context.read<UserProvider>().userData;
