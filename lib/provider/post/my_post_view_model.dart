@@ -7,6 +7,7 @@ import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 import 'package:social_mediam_match/services/post_service.dart';
 import '../../components/utilities/apiListView/base_api_list_provider.dart';
 import '../../components/utilities/style/style_config.dart';
+import '../../global.dart';
 import '../../models/post_model.dart';
 import '../../models/rich_text_format.dart';
 import '../../pageManager/enum/route_path.dart';
@@ -31,7 +32,7 @@ class MyPostViewModel {
 
   Future<void> deletePostCheck() {
     return showDialog<void>(
-      context: myPostContext,
+      context: globalContext,
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.zero,
@@ -89,7 +90,7 @@ class MyPostViewModel {
 
   void showOptionBottomSheet({required PostModel choicedPost}) {
     showModalBottomSheet(
-        context: myPostContext,
+        context: globalContext,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (builder) {

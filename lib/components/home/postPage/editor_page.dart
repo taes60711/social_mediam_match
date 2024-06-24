@@ -25,6 +25,7 @@ class EditorPage extends StatelessWidget {
           resizeToAvoidBottomInset: false,
           body: SafeArea(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 BaseTopBar(
                   backFunc: () => RouteOptions.pop(),
@@ -54,6 +55,13 @@ class EditorPage extends StatelessWidget {
                     ),
                   ),
                 ),
+                // const Padding(
+                //   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                //   child: Text(
+                //     "*內文不得為空",
+                //     style: TextStyle(color: Colors.red),
+                //   ),
+                // ),
               ],
             ),
           ),

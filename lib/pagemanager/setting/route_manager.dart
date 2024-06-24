@@ -23,7 +23,6 @@ import '../../provider/friend_provider.dart';
 import '../../provider/home/skill_map_provider.dart';
 import '../../provider/home/user_setting_view_provider.dart';
 import '../../states/course_state.dart';
-import '../../states/post_state.dart';
 import '../../states/skill_exchange_state.dart';
 import '../enum/route_path.dart';
 import 'bottom_bar_controller_provider.dart';
@@ -93,7 +92,6 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
         providers: [
           ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostModel>()),
           ChangeNotifierProvider(create: (_) => PostCommentProvider()),
-          ChangeNotifierProvider(create: (_) => PostState()),
         ],
         child: const MyPosts(),
       ),
