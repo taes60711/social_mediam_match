@@ -23,8 +23,16 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
   bool isTop = true;
   LoadDataStatus loadStatus = LoadDataStatus.loadingFinish;
 
+  void reloadData({required List<R> reloadData}) {
+    page = 0;
+    loadStatus = LoadDataStatus.loadingFinish;
+    listData = reloadData;
+    render();
+  }
+
   void onChoiceData({required R choicedData}) {
     choiceData = choicedData;
+    render();
   }
 
   void editData({required R updatedData}) {

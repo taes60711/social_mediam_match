@@ -23,7 +23,6 @@ import '../../provider/friend_provider.dart';
 import '../../provider/home/skill_map_provider.dart';
 import '../../provider/home/user_setting_view_provider.dart';
 import '../../states/course_state.dart';
-import '../../states/skill_exchange_state.dart';
 import '../enum/route_path.dart';
 import 'bottom_bar_controller_provider.dart';
 
@@ -31,9 +30,8 @@ import 'bottom_bar_controller_provider.dart';
 Widget mainWidget = MultiProvider(
   providers: [
     ChangeNotifierProvider(create: (_) => UserProvider()),
-    ChangeNotifierProvider(create: (_) => BottomBarControllerProvider()),
     ChangeNotifierProvider(create: (_) => FriendProvider()),
-    ChangeNotifierProvider(create: (_) => SkillExChangeState()),
+    ChangeNotifierProvider(create: (_) => BottomBarControllerProvider()),
   ],
   child: EasyLocalization(
     supportedLocales: const [Locale('zh', 'TW'), Locale('en', 'US'), Locale('ja', 'JP')],
@@ -53,8 +51,8 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
   /// "/signUp"
   RoutePath.signUpPage.value: (BuildContext context) => MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => UserSettingViewProvider()),
           ChangeNotifierProvider(create: (_) => SignUpViewProvider()),
+          ChangeNotifierProvider(create: (_) => UserSettingViewProvider()),
           ChangeNotifierProvider(create: (_) => SkillMapProvider()),
         ],
         child: const SignUpPage(),
