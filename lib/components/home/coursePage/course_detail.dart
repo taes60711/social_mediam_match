@@ -11,7 +11,7 @@ import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
 import '../../account/skill_bar.dart';
 import '../../utilities/stateful_wrapper.dart';
-import '../../utilities/custom_end_drawer.dart';
+import '../../utilities/endDrawers/custom_end_drawer.dart';
 
 import '../../utilities/user_icon.dart';
 import '../skillExChangePage/user_detail.dart';

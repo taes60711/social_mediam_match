@@ -57,6 +57,10 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
     required LoadDataType loadDataType,
   }) async {
     loadStatus = LoadDataStatus.loading;
+    if (loadDataType == LoadDataType.initial) {
+      loadStatus = LoadDataStatus.initial;
+    }
+    render();
 
     if (loadDataType == LoadDataType.insert) {
       size = size;

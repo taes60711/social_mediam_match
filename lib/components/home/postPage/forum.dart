@@ -13,7 +13,7 @@ import '../../../pageManager/setting/bottom_bar_controller_provider.dart';
 import '../../../provider/account/user_provider.dart';
 
 import '../../../states/post_state.dart';
-import '../../utilities/custom_end_drawer.dart';
+import '../../utilities/endDrawers/custom_end_drawer.dart';
 import 'post_page.dart';
 
 class Forum extends StatelessWidget {

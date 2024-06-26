@@ -8,21 +8,19 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 import 'package:social_mediam_match/provider/post/my_post_view_model.dart';
-import 'package:social_mediam_match/provider/post/post_comment_provider.dart';
+
 import 'package:social_mediam_match/services/post_service.dart';
-import '../../../enum/post_comment_end_drawer_type.dart';
-import '../../../enum/user_detail_end_drawer_type.dart';
+
 import '../../../models/user_model.dart';
 
 import '../../../provider/account/user_provider.dart';
-import '../../../provider/friend_provider.dart';
+import '../../utilities/endDrawers/post_comment_end_drawer.dart';
+import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
-import '../../user_detail_page.dart';
 import '../../utilities/apiListView/api_list_view.dart';
-import '../../utilities/custom_end_drawer.dart';
+
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/style_config.dart';
-import '../postPage/post_comment_page.dart';
 
 class MyPosts extends StatelessWidget {
   const MyPosts({super.key});
@@ -77,10 +75,7 @@ Widget mainBody(BuildContext context) {
                                   ///アイコン
                                   GestureDetector(
                                     onTap: () {
-                                      context.read<FriendProvider>().changeEndDrawerStatus(
-                                            UserDetailEndDrawerType.open,
-                                            data[index].postUserInfo,
-                                          );
+                                      openUserDetailEndDrawer(context: context, otherUserData: data[index].postUserInfo);
                                     },
                                     child: UserIcon(
                                       iconSize: 35,
@@ -111,7 +106,7 @@ Widget mainBody(BuildContext context) {
                         ///文章プレビュー
                         GestureDetector(
                           onTap: () {
-                            context.read<PostCommentProvider>().changeEndDrawerStatus(PostCommentEndDrawerType.open, data[index]);
+                            openPostCommentEndDrawer(context: context, choicedPost: data[index]);
                           },
                           child: Container(
                             color: Colors.transparent,
@@ -148,6 +143,9 @@ Widget mainBody(BuildContext context) {
                       ],
                     );
                   }),
+                  loadingBuilder: () {
+                    return Container();
+                  },
                 );
               },
             ),
@@ -217,62 +215,4 @@ Widget bottomBar({required BuildContext context, required PostModel data}) {
       ],
     ),
   );
-}
-
-/// ユーザ詳細ページ用EndDrawer
-Widget userDetailEndDrawer() {
-  return Builder(
-    builder: (context) {
-      print("customEndDrawer");
-      UserDetailEndDrawerType endDrawer = context.select((FriendProvider value) => value.endDrawerOpenInfo);
-
-      FriendProvider friendProivder = context.read<FriendProvider>();
-
-      Widget endDrawerWidget = Container();
-
-      if (endDrawer == UserDetailEndDrawerType.open) {
-        endDrawerWidget = EndDrawer(
-          onDismissed: () {
-            friendProivder.changeEndDrawerStatus(UserDetailEndDrawerType.close, LoginUser());
-          },
-
-          /// ユーザ詳細ページ
-          child: UserDetailPage(
-            otherUser: context.read<FriendProvider>().ohterUserData,
-            toChatRoom: () {
-              context.read<FriendProvider>().changeEndDrawerStatus(UserDetailEndDrawerType.close, LoginUser());
-            },
-          ),
-        );
-      }
-
-      return endDrawerWidget;
-    },
-  );
-}
-
-/// 文章詳細ページ用EndDrawer
-Widget postCommentEndDrawer() {
-  return Builder(builder: (context) {
-    print("postCommentEndDrawer");
-    PostCommentEndDrawerType postCommentEndDrawer = context.select((PostCommentProvider value) => value.endDrawerOpenInfo);
-    PostCommentProvider postCommentProvider = context.read<PostCommentProvider>();
-
-    Widget endDrawerWidget = Container();
-    if (postCommentEndDrawer == PostCommentEndDrawerType.open) {
-      endDrawerWidget = EndDrawer(
-        title: context.read<PostCommentProvider>().viewChoicedPost.title,
-        onDismissed: () {
-          postCommentProvider.changeEndDrawerStatus(
-            PostCommentEndDrawerType.close,
-            PostModel(),
-          );
-        },
-
-        ///文章詳細ページ
-        child: const PostCommentPage(),
-      );
-    }
-    return endDrawerWidget;
-  });
 }

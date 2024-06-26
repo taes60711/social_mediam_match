@@ -13,7 +13,7 @@ import '../../../../models/user_model.dart';
 import '../../../../pageManager/enum/route_path.dart';
 import '../../../../provider/account/user_provider.dart';
 import '../../../account/skill_bar.dart';
-import '../../../utilities/custom_end_drawer.dart';
+import '../../../utilities/endDrawers/custom_end_drawer.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/style_config.dart';
 import '../../../utilities/user_icon.dart';

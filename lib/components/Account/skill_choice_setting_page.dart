@@ -11,7 +11,7 @@ import '../../enum/skill_type.dart';
 import '../../models/skill_model.dart';
 import '../../provider/home/skill_map_provider.dart';
 import '../strings/account/sign_up_strings.dart';
-import '../utilities/custom_end_drawer.dart';
+import '../utilities/endDrawers/custom_end_drawer.dart';
 import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
 

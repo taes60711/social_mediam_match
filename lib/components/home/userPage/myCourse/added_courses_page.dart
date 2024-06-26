@@ -8,7 +8,7 @@ import '../../../../models/course_model.dart';
 import '../../../../models/user_model.dart';
 import '../../../../states/course_state.dart';
 import '../../../account/skill_bar.dart';
-import '../../../utilities/custom_end_drawer.dart';
+import '../../../utilities/endDrawers/custom_end_drawer.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/style_config.dart';
 import '../../../utilities/user_icon.dart';

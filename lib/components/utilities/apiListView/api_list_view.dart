@@ -10,6 +10,7 @@ import '../stateful_wrapper.dart';
 
 class APIListView<R> extends StatelessWidget {
   final Widget Function(List<R> data, int index) itemChild;
+  final Widget Function() loadingBuilder;
   final Future<List<R>> Function(int page, int size) apiFunc;
   final List<R> providerList;
   final int size;
@@ -19,6 +20,7 @@ class APIListView<R> extends StatelessWidget {
   const APIListView({
     Key? key,
     required this.itemChild,
+    required this.loadingBuilder,
     required this.apiFunc,
     required this.providerList,
     this.size = 5,
@@ -69,144 +71,152 @@ class APIListView<R> extends StatelessWidget {
             );
           },
         ),
-        body: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollNotification) {
-            LoadDataStatus nowLoadDataStatus = context.read<BaseAPIListProvider<R>>().loadStatus;
-            if (scrollNotification is ScrollUpdateNotification) {
-              final scrollPosition = scrollNotification.metrics.pixels;
-              final max = scrollNotification.metrics.maxScrollExtent;
+        body: Builder(builder: (context) {
+          LoadDataStatus nowLoadingStatus = context.select((BaseAPIListProvider<R> value) => value.loadStatus);
+          return nowLoadingStatus == LoadDataStatus.initial
+              ? loadingBuilder()
+              : NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollNotification) {
+                    LoadDataStatus nowLoadDataStatus = context.read<BaseAPIListProvider<R>>().loadStatus;
+                    if (scrollNotification is ScrollUpdateNotification) {
+                      final scrollPosition = scrollNotification.metrics.pixels;
+                      final max = scrollNotification.metrics.maxScrollExtent;
 
-              /// スクロール箇所が最TOPチェック
-              bool isTop = context.read<BaseAPIListProvider<R>>().isTop;
-              if (isTop) {
-                if (scrollPosition >= 20) {
-                  context.read<BaseAPIListProvider<R>>().onIsTopChange(false);
-                }
-              }
+                      /// スクロール箇所が最TOPチェック
+                      bool isTop = context.read<BaseAPIListProvider<R>>().isTop;
+                      if (isTop) {
+                        if (scrollPosition >= 20) {
+                          context.read<BaseAPIListProvider<R>>().onIsTopChange(false);
+                        }
+                      }
 
-              ///
-              if (nowLoadDataStatus == LoadDataStatus.loadingFinish || nowLoadDataStatus == LoadDataStatus.allDataLoaded) {
-                ///再度読み込み
-                if (isTop) {
-                  if (scrollPosition <= 0) {
-                    context.read<BaseAPIListProvider<R>>().onLodaingStatusChange(LoadDataStatus.wantReload);
-                  }
-                }
+                      ///
+                      if (nowLoadDataStatus == LoadDataStatus.loadingFinish ||
+                          nowLoadDataStatus == LoadDataStatus.allDataLoaded) {
+                        ///再度読み込み
+                        if (isTop) {
+                          if (scrollPosition <= 0) {
+                            context.read<BaseAPIListProvider<R>>().onLodaingStatusChange(LoadDataStatus.wantReload);
+                          }
+                        }
 
-                ///全てデータ読み込みたら追加ロードできなくなる
-                if (nowLoadDataStatus != LoadDataStatus.allDataLoaded) {
-                  if (scrollPosition >= max && max != 0) {
-                    context.read<BaseAPIListProvider<R>>().onLodaingStatusChange(LoadDataStatus.wantinSert);
-                  }
-                }
-              }
-            }
+                        ///全てデータ読み込みたら追加ロードできなくなる
+                        if (nowLoadDataStatus != LoadDataStatus.allDataLoaded) {
+                          if (scrollPosition >= max && max != 0) {
+                            context.read<BaseAPIListProvider<R>>().onLodaingStatusChange(LoadDataStatus.wantinSert);
+                          }
+                        }
+                      }
+                    }
 
-            ///API読み込む
-            if (scrollNotification is ScrollEndNotification) {
-              final scrollPosition = scrollNotification.metrics.pixels;
+                    ///API読み込む
+                    if (scrollNotification is ScrollEndNotification) {
+                      final scrollPosition = scrollNotification.metrics.pixels;
 
-              /// スクロール箇所が最TOPチェック
-              bool isTop = context.read<BaseAPIListProvider<R>>().isTop;
-              if (!isTop) {
-                if (scrollPosition < 10) {
-                  context.read<BaseAPIListProvider<R>>().onIsTopChange(true);
-                }
-              }
+                      /// スクロール箇所が最TOPチェック
+                      bool isTop = context.read<BaseAPIListProvider<R>>().isTop;
+                      if (!isTop) {
+                        if (scrollPosition < 10) {
+                          context.read<BaseAPIListProvider<R>>().onIsTopChange(true);
+                        }
+                      }
 
-              ///
-              if (nowLoadDataStatus == LoadDataStatus.wantinSert || nowLoadDataStatus == LoadDataStatus.wantReload) {
-                int loadPage = 0;
-                LoadDataType loadDataType = LoadDataType.reload;
-                if (nowLoadDataStatus == LoadDataStatus.wantinSert) {
-                  loadPage = context.read<BaseAPIListProvider<R>>().page;
-                  loadDataType = LoadDataType.insert;
-                }
+                      ///
+                      if (nowLoadDataStatus == LoadDataStatus.wantinSert || nowLoadDataStatus == LoadDataStatus.wantReload) {
+                        int loadPage = 0;
+                        LoadDataType loadDataType = LoadDataType.reload;
+                        if (nowLoadDataStatus == LoadDataStatus.wantinSert) {
+                          loadPage = context.read<BaseAPIListProvider<R>>().page;
+                          loadDataType = LoadDataType.insert;
+                        }
 
-                context.read<BaseAPIListProvider<R>>().insertData(
-                      apiFunc: () async => await apiFunc(loadPage, size),
-                      size: size,
-                      loadDataType: loadDataType,
-                    );
-              }
-            }
-            return false;
-          },
-          child: ListView.builder(
-            itemCount: providerList.length,
-            controller: scrollController,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return Column(
-                  children: [
-                    Builder(builder: (context) {
-                      LoadDataStatus nowLoadDataStatus = context.select((BaseAPIListProvider<R> value) => value.loadStatus);
-                      return Visibility(
-                        visible: nowLoadDataStatus == LoadDataStatus.wantReload,
-                        child: const Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Loading(),
-                        ),
-                      );
-                    }),
-                    this.itemChild(providerList, index),
-                  ],
-                );
-              } else if (index == providerList.length - 1) {
-                return Column(
-                  children: [
-                    this.itemChild(providerList, index),
-                    Builder(
-                      builder: (context) {
-                        LoadDataStatus nowLoadDataStatus = context.select((BaseAPIListProvider<R> value) => value.loadStatus);
+                        context.read<BaseAPIListProvider<R>>().insertData(
+                              apiFunc: () async => await apiFunc(loadPage, size),
+                              size: size,
+                              loadDataType: loadDataType,
+                            );
+                      }
+                    }
+                    return false;
+                  },
+                  child: ListView.builder(
+                    itemCount: providerList.length,
+                    controller: scrollController,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
                         return Column(
                           children: [
-                            ///データ読み込んてる場合表示される
-                            Visibility(
-                              visible: nowLoadDataStatus == LoadDataStatus.wantinSert,
-                              child: const Padding(
-                                padding: EdgeInsets.only(top: 10, bottom: 50),
-                                child: Loading(),
-                              ),
-                            ),
-
-                            ///すべでデータ読み込みたら表示される
-                            Visibility(
-                              visible: nowLoadDataStatus == LoadDataStatus.allDataLoaded,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 10, bottom: 50),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                            Builder(builder: (context) {
+                              LoadDataStatus nowLoadDataStatus =
+                                  context.select((BaseAPIListProvider<R> value) => value.loadStatus);
+                              return Visibility(
+                                visible: nowLoadDataStatus == LoadDataStatus.wantReload,
+                                child: const Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Loading(),
+                                ),
+                              );
+                            }),
+                            this.itemChild(providerList, index),
+                          ],
+                        );
+                      } else if (index == providerList.length - 1) {
+                        return Column(
+                          children: [
+                            this.itemChild(providerList, index),
+                            Builder(
+                              builder: (context) {
+                                LoadDataStatus nowLoadDataStatus =
+                                    context.select((BaseAPIListProvider<R> value) => value.loadStatus);
+                                return Column(
                                   children: [
-                                    Icon(
-                                      FontAwesomeIcons.commentSlash,
-                                      color: normalBgColor,
-                                      size: 30,
+                                    ///データ読み込んてる場合表示される
+                                    Visibility(
+                                      visible: nowLoadDataStatus == LoadDataStatus.wantinSert,
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(top: 10, bottom: 50),
+                                        child: Loading(),
+                                      ),
                                     ),
-                                    const SizedBox(width: 10),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8),
-                                      child: Text(
-                                        tr("NodataCanLoad"),
-                                        style: TextStyle(color: normalBgColor2, fontSize: 16),
+
+                                    ///すべでデータ読み込みたら表示される
+                                    Visibility(
+                                      visible: nowLoadDataStatus == LoadDataStatus.allDataLoaded,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 10, bottom: 50),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              FontAwesomeIcons.commentSlash,
+                                              color: normalBgColor,
+                                              size: 30,
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 8),
+                                              child: Text(
+                                                tr("NodataCanLoad"),
+                                                style: TextStyle(color: normalBgColor2, fontSize: 16),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
-                                ),
-                              ),
-                            ),
+                                );
+                              },
+                            )
                           ],
                         );
-                      },
-                    )
-                  ],
+                      } else {
+                        return this.itemChild(providerList, index);
+                      }
+                    },
+                  ),
                 );
-              } else {
-                return this.itemChild(providerList, index);
-              }
-            },
-          ),
-        ),
+        }),
       ),
     );
   }

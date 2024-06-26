@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+///MARK: NormalUserIcon
 class UserIcon extends StatelessWidget {
   final double iconSize;
   final String? image;
@@ -36,6 +37,7 @@ class UserIcon extends StatelessWidget {
   }
 }
 
+///MARK: SquareUserIcon
 class SquareUserIcon extends StatelessWidget {
   final double width;
   final double height;

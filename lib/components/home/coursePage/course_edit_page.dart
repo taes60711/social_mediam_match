@@ -10,7 +10,7 @@ import 'package:social_mediam_match/states/course_state.dart';
 
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
-import '../../utilities/custom_end_drawer.dart';
+import '../../utilities/endDrawers/custom_end_drawer.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/style_config.dart';
 

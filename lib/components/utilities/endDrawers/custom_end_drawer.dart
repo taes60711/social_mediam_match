@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
+///MARK: Base EndDrawer
 class EndDrawer extends StatefulWidget {
   final Function onDismissed;
   final String title;
