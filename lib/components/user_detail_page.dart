@@ -29,6 +29,7 @@ class UserDetailPage extends StatelessWidget {
         context.read<FriendProvider>().checkIsFriend(usersList);
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: Column(
           children: [
             UserIcon(

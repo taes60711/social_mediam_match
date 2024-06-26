@@ -131,19 +131,30 @@ class APIListView<R> extends StatelessWidget {
                       }
 
                       ///
-                      if (nowLoadDataStatus == LoadDataStatus.wantinSert || nowLoadDataStatus == LoadDataStatus.wantReload) {
-                        int loadPage = 0;
-                        LoadDataType loadDataType = LoadDataType.reload;
-                        if (nowLoadDataStatus == LoadDataStatus.wantinSert) {
-                          loadPage = context.read<BaseAPIListProvider<R>>().page;
-                          loadDataType = LoadDataType.insert;
-                        }
-
+                      if (nowLoadDataStatus == LoadDataStatus.wantinSert) {
+                        int loadPage = context.read<BaseAPIListProvider<R>>().page;
                         context.read<BaseAPIListProvider<R>>().insertData(
                               apiFunc: () async => await apiFunc(loadPage, size),
                               size: size,
-                              loadDataType: loadDataType,
+                              loadDataType: LoadDataType.insert,
                             );
+                      } else if (nowLoadDataStatus == LoadDataStatus.wantReload) {
+                        int loadPage = 0;
+                        context
+                            .read<BaseAPIListProvider<R>>()
+                            .insertData(
+                              apiFunc: () async => await apiFunc(loadPage, size),
+                              size: size,
+                              loadDataType: LoadDataType.reload,
+                            )
+                            .then(
+                          (_) async {
+                            int preLoadPage = context.read<BaseAPIListProvider<R>>().page;
+                            await context
+                                .read<BaseAPIListProvider<R>>()
+                                .preLoad(apiFunc: () async => await apiFunc(preLoadPage, size));
+                          },
+                        );
                       }
                     }
                     return false;
@@ -152,7 +163,7 @@ class APIListView<R> extends StatelessWidget {
                     itemCount: providerList.length,
                     controller: scrollController,
                     physics: nowLoadingStatus != LoadDataStatus.allDataLoaded
-                        ? const NoBouncingScrollPhysics()
+                        ? const BouncingScrollPhysics()
                         : const CustomBouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       if (index == 0) {

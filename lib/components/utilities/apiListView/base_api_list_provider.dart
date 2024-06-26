@@ -65,8 +65,8 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
     } else {
       if (loadDataType == LoadDataType.initial) {
         loadStatus = LoadDataStatus.initial;
-        size = size;
       }
+      size = size;
       render();
 
       List<R> tempData = await apiFunc();
