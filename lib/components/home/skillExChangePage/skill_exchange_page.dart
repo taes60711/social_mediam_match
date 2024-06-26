@@ -11,6 +11,7 @@ import 'package:social_mediam_match/services/user_service.dart';
 
 import '../../../enum/skill_end_drawer_type.dart';
 import '../../account/skill_bar.dart';
+import '../../utilities/endDrawers/skill_change_filter_end_drawer.dart';
 import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../strings/skillExChangePage/skill_change_page_string.dart';
@@ -146,40 +147,35 @@ class SkillExChangePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        _mainBody(),
+        _mainBody(context),
         userDetailEndDrawer(),
+        skillChangeEndDrawer(),
       ],
     );
   }
 }
 
-Widget _mainBody() {
-  // LoginUser userData = context.watch<UserProvider>().userData;
+Widget _mainBody(BuildContext context) {
   return Column(
     children: [
-      // ElevatedButton(
-      //   onPressed: () async {
-      //     context.read<SkillChangeProvider>().onChangeSkillFilter(['japanese']);
-      //     List<LoginUser> s = await UserService()
-      //         .getAllUserData(0, 5, userUid: userData.uid, filterSkill: context.read<SkillChangeProvider>().filterSkill);
-      //     context.read<BaseAPIListProvider<LoginUser>>().reloadData(reloadData: s);
-      //     List<String> filterSkill = context.read<SkillChangeProvider>().filterSkill;
-      //     print(filterSkill);
-      //   },
-      //   child: Text("Test"),
-      // ),
       BaseTopBar(
         leftWidget: Container(),
-        rightWidget: GestureDetector(onTap: () {}, child: const Icon(Icons.dehaze_rounded)),
+        rightWidget: GestureDetector(
+          onTap: () {
+            openSkillChangeEndDrawer(context: context);
+          },
+          child: const Icon(Icons.dehaze_rounded),
+        ),
       ),
       Expanded(
         child: Builder(
           builder: (context) {
             LoginUser userData = context.watch<UserProvider>().userData;
             List<String> filterSkill = context.select((SkillChangeProvider value) => value.filterSkill);
-            print("filterSkill: $filterSkill");
+
             return APIListView<LoginUser>(
               apiFunc: (page, size) {
+                print("page $page size $size filterSkill: $filterSkill");
                 return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filterSkill);
               },
               providerList: context.watch<BaseAPIListProvider<LoginUser>>().listData,

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../enum/user_detail_end_drawer_type.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/friend_provider.dart';
 import '../../user_detail_page.dart';
 import 'custom_end_drawer.dart';
+
+enum UserDetailEndDrawerType {
+  open,
+  close;
+}
 
 ///Before use need ParentWidget Create FriendProvider
 

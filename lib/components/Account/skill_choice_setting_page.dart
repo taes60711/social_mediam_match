@@ -42,7 +42,7 @@ class SkillChoiceSettingPage extends StatelessWidget {
                       color: normalBgColor2.withOpacity(0.15),
                     ),
                     child: SingleChildScrollView(
-                      physics: const NoLoadingCustomBouncingScrollPhysics(),
+                      physics: const NoBouncingScrollPhysics(),
                       child: Column(
                         children: SkillType.values.map((e) {
                           return Column(

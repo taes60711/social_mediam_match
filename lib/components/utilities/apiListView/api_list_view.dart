@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
+import '../../../CustomBouncingScrollPhysics.dart';
 import '../loading.dart';
 import '../stateful_wrapper.dart';
 
@@ -35,11 +36,19 @@ class APIListView<R> extends StatelessWidget {
       onInit: () async {
         int page = context.read<BaseAPIListProvider<R>>().page;
 
-        await context.read<BaseAPIListProvider<R>>().insertData(
+        await context
+            .read<BaseAPIListProvider<R>>()
+            .insertData(
               apiFunc: () async => await apiFunc(page, size),
               size: size,
               loadDataType: LoadDataType.initial,
-            );
+            )
+            .then(
+          (_) async {
+            int preLoadPage = context.read<BaseAPIListProvider<R>>().page;
+            await context.read<BaseAPIListProvider<R>>().preLoad(apiFunc: () async => await apiFunc(preLoadPage, size));
+          },
+        );
       },
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -93,7 +102,7 @@ class APIListView<R> extends StatelessWidget {
                       ///
                       if (nowLoadDataStatus == LoadDataStatus.loadingFinish ||
                           nowLoadDataStatus == LoadDataStatus.allDataLoaded) {
-                        ///再度読み込み
+                        ///再度読み込む
                         if (isTop) {
                           if (scrollPosition <= 0) {
                             context.read<BaseAPIListProvider<R>>().onLodaingStatusChange(LoadDataStatus.wantReload);
@@ -142,6 +151,9 @@ class APIListView<R> extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: providerList.length,
                     controller: scrollController,
+                    physics: nowLoadingStatus != LoadDataStatus.allDataLoaded
+                        ? const NoBouncingScrollPhysics()
+                        : const CustomBouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       if (index == 0) {
                         return Column(
@@ -168,11 +180,12 @@ class APIListView<R> extends StatelessWidget {
                               builder: (context) {
                                 LoadDataStatus nowLoadDataStatus =
                                     context.select((BaseAPIListProvider<R> value) => value.loadStatus);
+
                                 return Column(
                                   children: [
                                     ///データ読み込んてる場合表示される
                                     Visibility(
-                                      visible: nowLoadDataStatus == LoadDataStatus.wantinSert,
+                                      visible: nowLoadDataStatus == LoadDataStatus.loading,
                                       child: const Padding(
                                         padding: EdgeInsets.only(top: 10, bottom: 50),
                                         child: Loading(),

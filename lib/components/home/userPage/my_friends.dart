@@ -55,7 +55,7 @@ class MyFriends extends StatelessWidget {
                 const BaseTopBar(title: "我的好友"),
                 Expanded(
                   child: ListView.builder(
-                    physics: const NoLoadingCustomBouncingScrollPhysics(),
+                    physics: const NoBouncingScrollPhysics(),
                     itemCount: friendList.length,
                     itemBuilder: (_, index) {
                       FriendListModel listInfo = friendList[index];

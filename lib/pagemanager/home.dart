@@ -68,11 +68,6 @@ class _HomeState extends State<Home> {
             }
           }
           context.read<BottomBarControllerProvider>().bottomBarPageChange(choicedPath);
-          // setState(() {
-          //   if (value != 1) {
-          //     Provider.of<SkillExChangeState>(context, listen: false).skillExchangePageDisPose();
-          //   }
-          // });
         },
       ),
     );

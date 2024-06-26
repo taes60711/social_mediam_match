@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../enum/post_comment_end_drawer_type.dart';
 import '../../../models/post_model.dart';
 import '../../../provider/post/post_comment_provider.dart';
 import '../../home/postPage/post_comment_page.dart';
 import 'custom_end_drawer.dart';
+
+enum PostCommentEndDrawerType {
+  open,
+  close;
+}
 
 ///Before use need ParentWidget Create PostCommentProvider
 

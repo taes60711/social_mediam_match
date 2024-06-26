@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../enum/post_comment_end_drawer_type.dart';
+import '../../components/utilities/endDrawers/post_comment_end_drawer.dart';
 import '../../models/post_model.dart';
 
 class PostCommentProvider extends ChangeNotifier {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 import 'package:social_mediam_match/services/friend_service.dart';
 import 'package:web_socket_channel/io.dart';
-import '../enum/user_detail_end_drawer_type.dart';
+import '../components/utilities/endDrawers/user_detail_end_drawer.dart';
 import '../global.dart';
 import '../models/friend_model.dart';
 import '../models/user_model.dart';

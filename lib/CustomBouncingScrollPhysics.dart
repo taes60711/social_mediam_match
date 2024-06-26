@@ -13,7 +13,10 @@ class CustomBouncingScrollPhysics extends ScrollPhysics {
 
   @override
   CustomBouncingScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return CustomBouncingScrollPhysics(parent: buildParent(ancestor), decelerationRate: decelerationRate);
+    return CustomBouncingScrollPhysics(
+      parent: buildParent(ancestor),
+      decelerationRate: decelerationRate,
+    );
   }
 
   double frictionFactor(double overscrollFraction) {
@@ -77,7 +80,7 @@ class CustomBouncingScrollPhysics extends ScrollPhysics {
         position: position.pixels,
         velocity: velocity,
         leadingExtent: position.minScrollExtent,
-        trailingExtent: position.maxScrollExtent - 36, //36為Loading的size
+        trailingExtent: position.maxScrollExtent - 80,
         tolerance: tolerance,
       );
     }
@@ -121,8 +124,8 @@ class CustomBouncingScrollPhysics extends ScrollPhysics {
   }
 }
 
-class NoLoadingCustomBouncingScrollPhysics extends ScrollPhysics {
-  const NoLoadingCustomBouncingScrollPhysics({
+class NoBouncingScrollPhysics extends ScrollPhysics {
+  const NoBouncingScrollPhysics({
     this.decelerationRate = ScrollDecelerationRate.normal,
     super.parent,
   });
@@ -130,8 +133,11 @@ class NoLoadingCustomBouncingScrollPhysics extends ScrollPhysics {
   final ScrollDecelerationRate decelerationRate;
 
   @override
-  NoLoadingCustomBouncingScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return NoLoadingCustomBouncingScrollPhysics(parent: buildParent(ancestor), decelerationRate: decelerationRate);
+  NoBouncingScrollPhysics applyTo(ScrollPhysics? ancestor) {
+    return NoBouncingScrollPhysics(
+      parent: buildParent(ancestor),
+      decelerationRate: decelerationRate,
+    );
   }
 
   double frictionFactor(double overscrollFraction) {

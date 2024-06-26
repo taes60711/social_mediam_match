@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../enum/user_detail_end_drawer_type.dart';
 import '../../../models/post_model.dart';
 import '../../../provider/friend_provider.dart';
 import '../../../provider/post/post_comment_provider.dart';
+import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';

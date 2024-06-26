@@ -16,6 +16,7 @@ enum LoadDataStatus {
 }
 
 class BaseAPIListProvider<R> extends ChangeNotifier {
+  List<R> _preLoadData = [];
   List<R> listData = [];
   R? choiceData;
   int size = 5;
@@ -57,39 +58,41 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
     required LoadDataType loadDataType,
   }) async {
     loadStatus = LoadDataStatus.loading;
-    if (loadDataType == LoadDataType.initial) {
-      loadStatus = LoadDataStatus.initial;
-    }
-    render();
-
     if (loadDataType == LoadDataType.insert) {
-      size = size;
-      await _loadData(apiFunc: apiFunc);
-      page++;
+      listData.addAll(_preLoadData);
+      render();
+      await preLoad(apiFunc: apiFunc);
     } else {
+      if (loadDataType == LoadDataType.initial) {
+        loadStatus = LoadDataStatus.initial;
+        size = size;
+      }
+      render();
+
       List<R> tempData = await apiFunc();
       listData = tempData;
       page = 1;
     }
+  }
 
-    if (loadStatus != LoadDataStatus.allDataLoaded) {
-      loadStatus = LoadDataStatus.loadingFinish;
+  Future<void> preLoad({required Future<List<R>> Function() apiFunc}) async {
+    int beforeGetDataSize = listData.length;
+    List<R> tempPreLoadData = await apiFunc();
+    _preLoadData = tempPreLoadData;
+    if (beforeGetDataSize >= listData.length && tempPreLoadData.isEmpty) {
+      loadStatus = LoadDataStatus.allDataLoaded;
+    } else {
+      if (loadStatus != LoadDataStatus.allDataLoaded) {
+        loadStatus = LoadDataStatus.loadingFinish;
+      }
     }
+    page++;
     render();
   }
 
   void onLodaingStatusChange(LoadDataStatus loadDataStatus) {
     loadStatus = loadDataStatus;
     render();
-  }
-
-  Future<void> _loadData({required Future<List<R>> Function() apiFunc}) async {
-    int beforegetDataSize = listData.length;
-    List<R> tempData = await apiFunc();
-    listData.addAll(tempData);
-    if (beforegetDataSize >= listData.length) {
-      loadStatus = LoadDataStatus.allDataLoaded;
-    }
   }
 
   void onIsTopChange(bool isTopStatus) {
