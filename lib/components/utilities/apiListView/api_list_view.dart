@@ -69,7 +69,7 @@ class APIListView<R> extends StatelessWidget {
           LoadDataStatus nowLoadingStatus = context.select((BaseAPIListProvider<R> value) => value.loadStatus);
           return nowLoadingStatus == LoadDataStatus.initial
               ? loadingBuilder()
-              : listenViewer(
+              : listenListView(
                   context,
                   child: ListView.builder(
                     itemCount: providerList.length,
@@ -129,7 +129,8 @@ class APIListView<R> extends StatelessWidget {
     );
   }
 
-  Widget listenViewer(BuildContext context, {required child}) {
+  ///
+  Widget listenListView(BuildContext context, {required child}) {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollNotification) {
         LoadDataStatus nowLoadDataStatus = context.read<BaseAPIListProvider<R>>().loadStatus;
