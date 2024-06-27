@@ -129,7 +129,7 @@ class APIListView<R> extends StatelessWidget {
     );
   }
 
-  ///
+  ///LisViewの状態をリスン
   Widget listenListView(BuildContext context, {required child}) {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollNotification) {
