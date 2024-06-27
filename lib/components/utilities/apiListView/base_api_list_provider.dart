@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../CustomBouncingScrollPhysics.dart';
-
 enum LoadDataType {
   initial,
   insert,
@@ -103,16 +101,6 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
   void onIsTopChange(bool isTopStatus) {
     isTop = isTopStatus;
     render();
-  }
-
-  ScrollPhysics? scrollPhysics() {
-    if (listData.length < size) {
-      return const AlwaysScrollableScrollPhysics();
-    } else if (loadStatus != LoadDataStatus.allDataLoaded) {
-      return const BouncingScrollPhysics();
-    } else {
-      return const CustomBouncingScrollPhysics();
-    }
   }
 
   Future<void> render() async {

@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import '../../../CustomBouncingScrollPhysics.dart';
 import '../loading.dart';
 import '../stateful_wrapper.dart';
 
@@ -74,7 +75,7 @@ class APIListView<R> extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: providerList.length,
                     controller: scrollController,
-                    physics: context.read<BaseAPIListProvider<R>>().scrollPhysics(),
+                    physics: scrollPhysics(context, providerList),
                     itemBuilder: (context, index) {
                       if (providerList.length == 1) {
                         return Column(
@@ -196,7 +197,19 @@ class APIListView<R> extends StatelessWidget {
     );
   }
 
-  ///はじめロード、プリロードデータ
+  /// スクロール制御方
+  ScrollPhysics? scrollPhysics(BuildContext context, List<R> providerList) {
+    LoadDataStatus nowLoadDataStatus = context.read<BaseAPIListProvider<R>>().loadStatus;
+    if (providerList.length < size) {
+      return const AlwaysScrollableScrollPhysics();
+    } else if (nowLoadDataStatus != LoadDataStatus.allDataLoaded) {
+      return const BouncingScrollPhysics();
+    } else {
+      return const CustomBouncingScrollPhysics();
+    }
+  }
+
+  /// はじめロード、プリロードデータ
   Future<void> initLoadData(BuildContext context, {required LoadDataType loadDataType}) async {
     int page = 0;
 
@@ -215,7 +228,7 @@ class APIListView<R> extends StatelessWidget {
     );
   }
 
-  ///データ読み込んてる場合表示される
+  /// データ読み込んてる場合表示される
   Widget loadingWidget() {
     return Builder(builder: (context) {
       LoadDataStatus nowLoadDataStatus = context.select((BaseAPIListProvider<R> value) => value.loadStatus);
@@ -229,7 +242,7 @@ class APIListView<R> extends StatelessWidget {
     });
   }
 
-  ///すべでデータ読み込みたら表示される
+  /// すべでデータ読み込みたら表示される
   Widget allDataLoadedWidget() {
     return Builder(builder: (context) {
       LoadDataStatus nowLoadDataStatus = context.select((BaseAPIListProvider<R> value) => value.loadStatus);
@@ -260,7 +273,7 @@ class APIListView<R> extends StatelessWidget {
     });
   }
 
-  ///再度読み込む時表示される
+  /// 再度読み込む時表示される
   Widget reloadWidget() {
     return Builder(builder: (context) {
       LoadDataStatus nowLoadDataStatus = context.select((BaseAPIListProvider<R> value) => value.loadStatus);
