@@ -6,21 +6,23 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
-import 'package:social_mediam_match/provider/home/skill_change_provider.dart';
+import 'package:social_mediam_match/provider/home/skill_change_view_provider.dart';
 import 'package:social_mediam_match/services/user_service.dart';
 
 import '../../../enum/skill_end_drawer_type.dart';
+import '../../../provider/home/skill_change_view_model.dart';
 import '../../account/skill_bar.dart';
 import '../../utilities/endDrawers/skill_change_filter_end_drawer.dart';
 import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../strings/skillExChangePage/skill_change_page_string.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
+import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 
-class SkillExchangeLoading extends StatelessWidget {
-  const SkillExchangeLoading({super.key});
+class SkillChangeLoading extends StatelessWidget {
+  const SkillChangeLoading({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -140,17 +142,22 @@ class SkillExchangeLoading extends StatelessWidget {
   }
 }
 
-class SkillExChangePage extends StatelessWidget {
-  const SkillExChangePage({super.key});
+class SkillChangePage extends StatelessWidget {
+  const SkillChangePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        _mainBody(context),
-        userDetailEndDrawer(),
-        skillChangeEndDrawer(),
-      ],
+    return StatefulWrapper(
+      onInit: () async {
+        await SkillChangeViewModel(context: context).init();
+      },
+      child: Stack(
+        children: [
+          _mainBody(context),
+          userDetailEndDrawer(),
+          skillChangeEndDrawer(),
+        ],
+      ),
     );
   }
 }
@@ -171,12 +178,12 @@ Widget _mainBody(BuildContext context) {
         child: Builder(
           builder: (context) {
             LoginUser userData = context.watch<UserProvider>().userData;
-            List<String> filterSkill = context.select((SkillChangeProvider value) => value.filterSkill);
+            List<String> filteredSkill = context.select((SkillChangeProvider value) => value.filteredSkill);
 
             return APIListView<LoginUser>(
               apiFunc: (page, size) {
-                print("page $page size $size filterSkill: $filterSkill");
-                return UserService().getAllUserData(page, 8, userUid: userData.uid, filterSkill: filterSkill);
+                print("page $page size $size filterSkill: $filteredSkill");
+                return UserService().getAllUserData(page, 8, userUid: userData.uid, filterSkill: filteredSkill);
               },
               providerList: context.watch<BaseAPIListProvider<LoginUser>>().listData,
               itemChild: (data, index) {
@@ -245,7 +252,7 @@ Widget _mainBody(BuildContext context) {
                 );
               },
               loadingBuilder: () {
-                return const SkillExchangeLoading();
+                return const SkillChangeLoading();
               },
             );
           },

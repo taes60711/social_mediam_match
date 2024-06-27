@@ -32,23 +32,29 @@ class APIListView<R> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScrollController scrollController = ScrollController();
+
+    ///はじめロード、プリロードデータ
+    Future<void> initLoadData({required LoadDataType loadDataType}) async {
+      int page = 0;
+
+      await context
+          .read<BaseAPIListProvider<R>>()
+          .insertData(
+            apiFunc: () async => await apiFunc(page, size),
+            size: size,
+            loadDataType: loadDataType,
+          )
+          .then(
+        (_) async {
+          int preLoadPage = context.read<BaseAPIListProvider<R>>().page;
+          await context.read<BaseAPIListProvider<R>>().preLoad(apiFunc: () async => await apiFunc(preLoadPage, size));
+        },
+      );
+    }
+
     return StatefulWrapper(
       onInit: () async {
-        int page = context.read<BaseAPIListProvider<R>>().page;
-
-        await context
-            .read<BaseAPIListProvider<R>>()
-            .insertData(
-              apiFunc: () async => await apiFunc(page, size),
-              size: size,
-              loadDataType: LoadDataType.initial,
-            )
-            .then(
-          (_) async {
-            int preLoadPage = context.read<BaseAPIListProvider<R>>().page;
-            await context.read<BaseAPIListProvider<R>>().preLoad(apiFunc: () async => await apiFunc(preLoadPage, size));
-          },
-        );
+        initLoadData(loadDataType: LoadDataType.initial);
       },
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -130,7 +136,7 @@ class APIListView<R> extends StatelessWidget {
                         }
                       }
 
-                      ///
+                      ///追加データ
                       if (nowLoadDataStatus == LoadDataStatus.wantinSert) {
                         int loadPage = context.read<BaseAPIListProvider<R>>().page;
                         context.read<BaseAPIListProvider<R>>().insertData(
@@ -138,23 +144,10 @@ class APIListView<R> extends StatelessWidget {
                               size: size,
                               loadDataType: LoadDataType.insert,
                             );
+
+                        ///リロードデータ
                       } else if (nowLoadDataStatus == LoadDataStatus.wantReload) {
-                        int loadPage = 0;
-                        context
-                            .read<BaseAPIListProvider<R>>()
-                            .insertData(
-                              apiFunc: () async => await apiFunc(loadPage, size),
-                              size: size,
-                              loadDataType: LoadDataType.reload,
-                            )
-                            .then(
-                          (_) async {
-                            int preLoadPage = context.read<BaseAPIListProvider<R>>().page;
-                            await context
-                                .read<BaseAPIListProvider<R>>()
-                                .preLoad(apiFunc: () async => await apiFunc(preLoadPage, size));
-                          },
-                        );
+                        initLoadData(loadDataType: LoadDataType.reload);
                       }
                     }
                     return false;
@@ -196,7 +189,8 @@ class APIListView<R> extends StatelessWidget {
                                   children: [
                                     ///データ読み込んてる場合表示される
                                     Visibility(
-                                      visible: nowLoadDataStatus == LoadDataStatus.loading,
+                                      visible: nowLoadDataStatus != LoadDataStatus.allDataLoaded &&
+                                          nowLoadDataStatus != LoadDataStatus.loadingFinish,
                                       child: const Padding(
                                         padding: EdgeInsets.only(top: 10, bottom: 50),
                                         child: Loading(),

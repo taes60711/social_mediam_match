@@ -18,6 +18,11 @@ void openUserDetailEndDrawer({required BuildContext context, required LoginUser 
   context.read<FriendProvider>().changeEndDrawerStatus(UserDetailEndDrawerType.open, otherUserData);
 }
 
+///MARK: void ユーザ詳細ページ開くように
+void closeUserDetailEndDrawer({required BuildContext context}) {
+  context.read<FriendProvider>().changeEndDrawerStatus(UserDetailEndDrawerType.close, LoginUser());
+}
+
 ///MARK: Widget ユーザ詳細ページ用EndDrawer
 Widget userDetailEndDrawer() {
   return Builder(
@@ -25,21 +30,19 @@ Widget userDetailEndDrawer() {
       print("userDetailEndDrawer");
       UserDetailEndDrawerType endDrawer = context.select((FriendProvider value) => value.endDrawerOpenInfo);
 
-      FriendProvider friendProivder = context.read<FriendProvider>();
-
       Widget endDrawerWidget = Container();
 
       if (endDrawer == UserDetailEndDrawerType.open) {
         endDrawerWidget = EndDrawer(
           onDismissed: () {
-            friendProivder.changeEndDrawerStatus(UserDetailEndDrawerType.close, LoginUser());
+            closeUserDetailEndDrawer(context: context);
           },
 
           /// ユーザ詳細ページ
           child: UserDetailPage(
             otherUser: context.read<FriendProvider>().ohterUserData,
             toChatRoom: () {
-              context.read<FriendProvider>().changeEndDrawerStatus(UserDetailEndDrawerType.close, LoginUser());
+              closeUserDetailEndDrawer(context: context);
             },
           ),
         );

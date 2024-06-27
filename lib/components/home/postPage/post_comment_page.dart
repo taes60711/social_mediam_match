@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../models/post_model.dart';
-import '../../../provider/friend_provider.dart';
 import '../../../provider/post/post_comment_provider.dart';
 import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../utilities/rich_text_view.dart';
@@ -39,10 +38,7 @@ class PostCommentPage extends StatelessWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                context.read<FriendProvider>().changeEndDrawerStatus(
-                                      UserDetailEndDrawerType.open,
-                                      viewChoicedPost.postUserInfo,
-                                    );
+                                openUserDetailEndDrawer(context: context, otherUserData: viewChoicedPost.postUserInfo);
                               },
                               child: UserIcon(
                                 iconSize: 35,

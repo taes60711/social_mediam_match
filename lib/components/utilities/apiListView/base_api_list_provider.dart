@@ -24,11 +24,12 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
   bool isTop = true;
   LoadDataStatus loadStatus = LoadDataStatus.loadingFinish;
 
-  void reloadData({required List<R> reloadData}) {
-    page = 0;
-    loadStatus = LoadDataStatus.loadingFinish;
-    listData = reloadData;
-    render();
+  Future<void> reloadData({required Future<List<R>> Function() apiFunc}) async {
+    loadStatus = LoadDataStatus.loading;
+    List<R> tempReloadData = await apiFunc();
+    listData = tempReloadData;
+    page = 1;
+    // render();
   }
 
   void onChoiceData({required R choicedData}) {
