@@ -75,7 +75,7 @@ class APIListView<R> extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: providerList.length,
                     controller: scrollController,
-                    physics: scrollPhysics(context, providerList),
+                    physics: scrollPhysics(context),
                     itemBuilder: (context, index) {
                       if (providerList.length == 1) {
                         return Column(
@@ -142,7 +142,10 @@ class APIListView<R> extends StatelessWidget {
           /// スクロール箇所が最TOPチェック
           bool isTop = context.read<BaseAPIListProvider<R>>().isTop;
           if (isTop) {
-            if (scrollPosition >= 20) {
+            bool isPostLargetwo = scrollPosition >= 20;
+            bool isDataSizeLargeSearchSize =
+                context.read<BaseAPIListProvider<R>>().listData.length > context.read<BaseAPIListProvider<R>>().size;
+            if (isPostLargetwo && isDataSizeLargeSearchSize) {
               context.read<BaseAPIListProvider<R>>().onIsTopChange(false);
             }
           }
@@ -198,9 +201,10 @@ class APIListView<R> extends StatelessWidget {
   }
 
   /// スクロール制御方
-  ScrollPhysics? scrollPhysics(BuildContext context, List<R> providerList) {
+  ScrollPhysics? scrollPhysics(BuildContext context) {
     LoadDataStatus nowLoadDataStatus = context.read<BaseAPIListProvider<R>>().loadStatus;
-    if (providerList.length < size) {
+
+    if (context.read<BaseAPIListProvider<R>>().listData.length < size) {
       return const AlwaysScrollableScrollPhysics();
     } else if (nowLoadDataStatus != LoadDataStatus.allDataLoaded) {
       return const BouncingScrollPhysics();
