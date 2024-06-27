@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../CustomBouncingScrollPhysics.dart';
+
 enum LoadDataType {
   initial,
   insert,
@@ -29,7 +31,7 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
     List<R> tempReloadData = await apiFunc();
     listData = tempReloadData;
     page = 1;
-    // render();
+    render();
   }
 
   void onChoiceData({required R choicedData}) {
@@ -77,10 +79,12 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
   }
 
   Future<void> preLoad({required Future<List<R>> Function() apiFunc}) async {
-    int beforeGetDataSize = listData.length;
     List<R> tempPreLoadData = await apiFunc();
     _preLoadData = tempPreLoadData;
-    if (beforeGetDataSize >= listData.length && tempPreLoadData.isEmpty) {
+    if (tempPreLoadData.isEmpty) {
+      loadStatus = LoadDataStatus.allDataLoaded;
+    } else if (tempPreLoadData.length < size) {
+      listData.addAll(_preLoadData);
       loadStatus = LoadDataStatus.allDataLoaded;
     } else {
       if (loadStatus != LoadDataStatus.allDataLoaded) {
@@ -99,6 +103,16 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
   void onIsTopChange(bool isTopStatus) {
     isTop = isTopStatus;
     render();
+  }
+
+  ScrollPhysics? scrollPhysics() {
+    if (listData.length < size) {
+      return const AlwaysScrollableScrollPhysics();
+    } else if (loadStatus != LoadDataStatus.allDataLoaded) {
+      return const BouncingScrollPhysics();
+    } else {
+      return const CustomBouncingScrollPhysics();
+    }
   }
 
   Future<void> render() async {

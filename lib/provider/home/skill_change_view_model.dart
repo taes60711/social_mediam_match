@@ -20,13 +20,13 @@ class SkillChangeViewModel {
   Future<void> filterSearchStart() async {
     LoginUser userData = context.read<UserProvider>().userData;
     List<String> filteredSkills = context.read<SkillChangeProvider>().filteredSkill;
-    context.read<BaseAPIListProvider<LoginUser>>().reloadData(
-          apiFunc: () async => await UserService().getAllUserData(0, 8, userUid: userData.uid, filterSkill: filteredSkills),
+    await context.read<BaseAPIListProvider<LoginUser>>().reloadData(
+          apiFunc: () async => await UserService().getAllUserData(0, 5, userUid: userData.uid, filterSkill: filteredSkills),
         );
     int preLoadPage = context.read<BaseAPIListProvider<LoginUser>>().page;
     await context.read<BaseAPIListProvider<LoginUser>>().preLoad(
           apiFunc: () async =>
-              await UserService().getAllUserData(preLoadPage, 8, userUid: userData.uid, filterSkill: filteredSkills),
+              await UserService().getAllUserData(preLoadPage, 5, userUid: userData.uid, filterSkill: filteredSkills),
         );
     // ignore: use_build_context_synchronously
     closeSkillChangeEndDrawer(context: context);
