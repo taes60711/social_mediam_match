@@ -7,6 +7,52 @@ import '../models/user_model.dart';
 class PostService extends ApiClient {
   PostService() : super(overrideIp: "$ip:$port/posts");
 
+  Future<List<PostModel>> getPostByType(int type, int page, int size) async {
+    List<PostModel> requestPostDataByNew = [];
+
+    Map<String, dynamic> paramters = {
+      'page': '$page',
+      'size': '$size',
+    };
+
+    try {
+      String responseData = await apiGet('/getPostsByType/$type', paramters: paramters);
+
+      requestPostDataByNew = await handleResponse<PostModel>(
+        responseData,
+        model: PostModel.toMap,
+        isList: true,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return requestPostDataByNew;
+  }
+
+  Future<List<PostModel>> getNewPosts(int page, int size) async {
+    List<PostModel> requestPostDataByNew = [];
+
+    Map<String, dynamic> paramters = {
+      'page': '$page',
+      'size': '$size',
+    };
+
+    try {
+      String responseData = await apiGet('/getNewPosts', paramters: paramters);
+
+      requestPostDataByNew = await handleResponse<PostModel>(
+        responseData,
+        model: PostModel.toMap,
+        isList: true,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return requestPostDataByNew;
+  }
+
   ///人気文章取得する
   Future<List<PostModel>> getPostDataByViewer(int page, int size) async {
     List<PostModel> requestPostDataByUID = [];

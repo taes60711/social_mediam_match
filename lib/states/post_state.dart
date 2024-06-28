@@ -127,32 +127,6 @@ class PostState extends ChangeNotifier {
     }
   }
 
-  Future<void> getPostData({required String searchType}) async {
-    try {
-      List<PostModel> tempPostData = [];
-      if (searchType == "AddData") {
-        tempPostData = await _dbService.getPostData();
-        tempPostData.forEach((e) {
-          postData = [...postData, e];
-        });
-        isDataAddLoding = false;
-      } else {
-        if (searchType == "First") {
-          isFirstLoading = true;
-          Future.delayed(Duration.zero).then((value) => notifyListeners());
-        }
-        tempPostData = await _dbService.getPostData(isFirst: true);
-        postData = tempPostData;
-        isFirstLoading = false;
-        isReLoading = false;
-      }
-
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
-  }
-
   void canLoadingChange(bool loading) {
     isCanLoading = loading;
     notifyListeners();
@@ -166,58 +140,6 @@ class PostState extends ChangeNotifier {
   void reLoadingPage() {
     isReLoading = true;
     notifyListeners();
-  }
-
-  Future<void> getNewsPostData({required String searchType}) async {
-    try {
-      List<PostModel> tempPostData = [];
-      if (searchType == "AddData") {
-        tempPostData = await _dbService.getNewPosts();
-        tempPostData.forEach((e) {
-          postData = [...postData, e];
-        });
-        isDataAddLoding = false;
-      } else {
-        if (searchType == "First") {
-          isFirstLoading = true;
-          Future.delayed(Duration.zero).then((value) => notifyListeners());
-        }
-        tempPostData = await _dbService.getNewPosts(isFirst: true);
-        postData = tempPostData;
-        isFirstLoading = false;
-        isReLoading = false;
-      }
-
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> getPostDataByType(int type, {required String searchType}) async {
-    try {
-      List<PostModel> tempPostData = [];
-      if (searchType == "AddData") {
-        tempPostData = await _dbService.getPostsByType(type);
-        tempPostData.forEach((e) {
-          postData = [...postData, e];
-        });
-        isDataAddLoding = false;
-      } else {
-        if (searchType == "First") {
-          isFirstLoading = true;
-          Future.delayed(Duration.zero).then((value) => notifyListeners());
-        }
-        tempPostData = await _dbService.getPostsByType(type, isFirst: true);
-        postData = tempPostData;
-        isFirstLoading = false;
-        isReLoading = false;
-      }
-
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
   }
 
   // Future<void> createPost(String userUid, String title, String message, int type) async {

@@ -422,34 +422,6 @@ class DBService {
   //   });
   // }
 
-  searchStatus postServerInfo = searchStatus();
-  Future<List<PostModel>> getPostData({bool? isFirst}) async {
-    String branch = "posts";
-
-    if (isFirst != null) {
-      postServerInfo.pageNumber = 0;
-    }
-
-    String searchUrl = '$url/$branch/getAll?page=${postServerInfo.pageNumber}&size=$size';
-    final uri = Uri.parse(searchUrl);
-    List<PostModel> allpostData = [];
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode != 404) {
-        allpostData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
-          print(e);
-          return PostModel.toMap(e);
-        }).toList();
-
-        inspect(allpostData);
-        postServerInfo.pageNumber++;
-      }
-    } catch (e) {
-      print(e);
-    }
-    return allpostData;
-  }
-
   searchStatus postByTextFilterServerInfo = searchStatus();
   Future<List<PostModel>> getPostByTextFilter({required String inputedText, bool? isFirst}) async {
     String branch = "posts";
@@ -477,64 +449,6 @@ class DBService {
       print(e);
     }
     return allpostData;
-  }
-
-  searchStatus newPostServerInfo = searchStatus();
-  Future<List<PostModel>> getNewPosts({bool? isFirst}) async {
-    String branch = "posts";
-
-    if (isFirst != null) {
-      newPostServerInfo.pageNumber = 0;
-    }
-
-    String searchUrl = '$url/$branch/getNewPosts?page=${newPostServerInfo.pageNumber}&size=$size';
-
-    final uri = Uri.parse(searchUrl);
-    List<PostModel> allpostnewPosts = [];
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode != 404) {
-        allpostnewPosts = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
-          print(e);
-          return PostModel.toMap(e);
-        }).toList();
-
-        inspect(allpostnewPosts);
-        newPostServerInfo.pageNumber++;
-      }
-    } catch (e) {
-      print(e);
-    }
-    return allpostnewPosts;
-  }
-
-  searchStatus postsByTypeServerInfo = searchStatus();
-  Future<List<PostModel>> getPostsByType(int type, {bool? isFirst}) async {
-    String branch = "posts";
-
-    if (isFirst != null) {
-      postsByTypeServerInfo.pageNumber = 0;
-    }
-
-    String searchUrl = '$url/$branch/getPostsByType/$type?page=${postsByTypeServerInfo.pageNumber}&size=$size';
-
-    final uri = Uri.parse(searchUrl);
-    List<PostModel> allpostsByType = [];
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode != 404) {
-        allpostsByType = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
-          print(e);
-          return PostModel.toMap(e);
-        }).toList();
-
-        inspect(allpostsByType);
-        postsByTypeServerInfo.pageNumber++;
-      }
-    } catch (e) {
-      print(e);
-    }
-    return allpostsByType;
   }
 
   //メソッド：MYSQLにユーザーデータを取得する
