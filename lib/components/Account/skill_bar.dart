@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/models/user_model.dart';
-import '../../enum/skill_end_drawer_type.dart';
 import '../../models/skill_model.dart';
 import '../../provider/home/user_setting_view_provider.dart';
 import '../strings/account/sign_up_strings.dart';
+import '../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
 
@@ -20,8 +20,7 @@ Widget skillSettingTitleBarBtn(SkillEndDrawerType type) {
 
       return GestureDetector(
         onTap: () {
-          UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
-          userSettingViewProvider.changeEndDrawerStatus(type);
+          openSkillSettingEndDrawer(context: context, type: type);
         },
         child: Container(
           color: Colors.transparent,

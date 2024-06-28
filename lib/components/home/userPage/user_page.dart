@@ -9,13 +9,13 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 
 import 'package:social_mediam_match/provider/account/user_provider.dart';
-import '../../../enum/skill_end_drawer_type.dart';
 import '../../../models/user_model.dart';
 
 import '../../../pageManager/enum/route_path.dart';
 import '../../../pageManager/setting/route_controller.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../strings/userPage/user_page_string.dart';
+import '../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../../utilities/style/screen_size.dart';
 
 class UserPage extends StatelessWidget {

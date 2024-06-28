@@ -7,13 +7,13 @@ import 'package:social_mediam_match/components/home/userPage/myCourse/courese_me
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
-import '../../../../enum/skill_end_drawer_type.dart';
 import '../../../../models/course_model.dart';
 import '../../../../models/user_model.dart';
 import '../../../../pageManager/enum/route_path.dart';
 import '../../../../provider/account/user_provider.dart';
 import '../../../account/skill_bar.dart';
 import '../../../utilities/endDrawers/custom_end_drawer.dart';
+import '../../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/style_config.dart';
 import '../../../utilities/user_icon.dart';

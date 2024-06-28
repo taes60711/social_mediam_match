@@ -8,11 +8,10 @@ import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 import 'package:social_mediam_match/provider/home/skill_change_view_provider.dart';
 import 'package:social_mediam_match/services/user_service.dart';
-
-import '../../../enum/skill_end_drawer_type.dart';
 import '../../../provider/home/skill_change_view_model.dart';
 import '../../account/skill_bar.dart';
 import '../../utilities/endDrawers/skill_change_filter_end_drawer.dart';
+import '../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../strings/skillExChangePage/skill_change_page_string.dart';

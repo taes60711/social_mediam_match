@@ -6,12 +6,12 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/home/skill_choice_setting_view_model.dart';
 
 import '../../CustomBouncingScrollPhysics.dart';
-import '../../enum/skill_end_drawer_type.dart';
 import '../../enum/skill_type.dart';
 import '../../models/skill_model.dart';
 import '../../provider/home/skill_map_provider.dart';
 import '../strings/account/sign_up_strings.dart';
 import '../utilities/endDrawers/custom_end_drawer.dart';
+import '../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
 

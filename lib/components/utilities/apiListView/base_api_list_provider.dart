@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 enum LoadDataType {
@@ -72,6 +74,7 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
 
       List<R> tempData = await apiFunc();
       listData = tempData;
+      inspect(listData);
       page = 1;
     }
   }
@@ -79,6 +82,7 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
   Future<void> preLoad({required Future<List<R>> Function() apiFunc}) async {
     List<R> tempPreLoadData = await apiFunc();
     _preLoadData = tempPreLoadData;
+    inspect(_preLoadData);
     if (tempPreLoadData.isEmpty) {
       loadStatus = LoadDataStatus.allDataLoaded;
     } else if (tempPreLoadData.length < size) {

@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 
-import '../enum/skill_end_drawer_type.dart';
-
 import '../models/user_model.dart';
 import '../pageManager/setting/route_controller.dart';
 
@@ -14,6 +12,7 @@ import '../provider/account/user_provider.dart';
 import '../provider/friend_provider.dart';
 import 'account/skill_bar.dart';
 import 'strings/account/sign_up_strings.dart';
+import 'utilities/endDrawers/skill_setting_end_drawer.dart';
 import 'utilities/user_icon.dart';
 
 class UserDetailPage extends StatelessWidget {
@@ -39,10 +38,10 @@ class UserDetailPage extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("名前 : ${otherUser.name ?? otherUser.email}"),
-                Text("身分: ${otherUser.status}"),
-                Text("自我介紹 : ${otherUser.introduction ?? ""}"),
-                Text("最後登入時間: ${otherUser.lastLogin}${tr("skExChpage_beforDays")}"),
+                Text("${tr("user_nickName")} : ${otherUser.name ?? otherUser.email}"),
+                Text("${tr("user_status")} : ${otherUser.status}"),
+                Text("${tr("user_introduction")} : ${otherUser.introduction ?? ""}"),
+                Text("${tr("user_lastLogin_time")} : ${otherUser.lastLogin}${tr("skExChpage_beforDays")}"),
                 Text(StepThirdPage.haveSkillText),
                 skillBar(SkillEndDrawerType.haveSkill, userData: otherUser),
                 Text(StepThirdPage.wantSkillText),
@@ -61,14 +60,14 @@ class UserDetailPage extends StatelessWidget {
                             RouteOptions.popUntilToHome();
                             context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
                           },
-                          child: Text("開啟聊天室"),
+                          child: Text(tr("toChatRoom")),
                         )
                       : ElevatedButton(
                           onPressed: () {
                             List<String> usersList = [context.watch<UserProvider>().userData.uid, otherUser.uid];
                             context.read<FriendProvider>().addFriend(usersList);
                           },
-                          child: Text("新增好友"),
+                          child: Text(tr("addFriend")),
                         );
                 },
               ),

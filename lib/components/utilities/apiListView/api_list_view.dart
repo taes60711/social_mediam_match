@@ -227,6 +227,7 @@ class APIListView<R> extends StatelessWidget {
         .then(
       (_) async {
         int preLoadPage = context.read<BaseAPIListProvider<R>>().page;
+        print("initLoadData $preLoadPage");
         await context.read<BaseAPIListProvider<R>>().preLoad(apiFunc: () async => await apiFunc(preLoadPage, size));
       },
     );

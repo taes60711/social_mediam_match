@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
-
-import '../../../../enum/skill_end_drawer_type.dart';
 import '../../../../models/course_model.dart';
 import '../../../../models/user_model.dart';
 import '../../../../states/course_state.dart';
 import '../../../account/skill_bar.dart';
 import '../../../utilities/endDrawers/custom_end_drawer.dart';
+import '../../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/style_config.dart';
 import '../../../utilities/user_icon.dart';

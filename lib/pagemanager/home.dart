@@ -7,8 +7,8 @@ import 'package:social_mediam_match/components/home/userPage/user_page.dart';
 import 'package:social_mediam_match/provider/home/skill_change_view_provider.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 import 'package:social_mediam_match/states/post_state.dart';
-import '../models/post_model.dart';
 import '../models/user_model.dart';
+import '../provider/post/post_comment_provider.dart';
 import 'enum/bottom_bar_path.dart';
 
 import 'setting/bottom_bar_controller_provider.dart';
@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => PostState()),
-          ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostModel>()),
+          ChangeNotifierProvider(create: (_) => PostCommentProvider()),
         ],
         child: const Forum(),
       ),

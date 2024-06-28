@@ -21,6 +21,7 @@ import '../../utilities/apiListView/api_list_view.dart';
 
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/style_config.dart';
+import '../postPage/post_body.dart';
 
 class MyPosts extends StatelessWidget {
   const MyPosts({super.key});
@@ -144,7 +145,7 @@ Widget mainBody(BuildContext context) {
                     );
                   }),
                   loadingBuilder: () {
-                    return Container();
+                    return const PostLoading();
                   },
                 );
               },

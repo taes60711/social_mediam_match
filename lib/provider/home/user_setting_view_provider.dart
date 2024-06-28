@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
-import '../../enum/skill_end_drawer_type.dart';
+import '../../components/utilities/endDrawers/skill_setting_end_drawer.dart';
 
 import '../../models/skill_model.dart';
 

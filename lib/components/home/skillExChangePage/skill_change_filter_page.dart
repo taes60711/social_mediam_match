@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/home/skill_change_view_model.dart';
@@ -56,7 +57,7 @@ class SkillChangeFilterPage extends StatelessWidget {
               onPressed: () async {
                 SkillChangeViewModel(context: context).filterSearchStart();
               },
-              child: const Text("篩選"),
+              child: Text(tr("skillFilterSearch")),
             ),
           ],
         ),

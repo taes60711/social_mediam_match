@@ -15,7 +15,6 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
-import '../../../enum/skill_end_drawer_type.dart';
 import '../../../models/user_model.dart';
 
 import '../../../pageManager/enum/bottom_bar_path.dart';
@@ -25,6 +24,7 @@ import '../../../pageManager/setting/bottom_bar_controller_provider.dart';
 import '../../../provider/account/user_provider.dart';
 
 import '../../account/skill_bar.dart';
+import '../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../postPage/post_body.dart';
 import '../skillExChangePage/user_detail.dart';
 
