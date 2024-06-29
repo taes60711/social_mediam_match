@@ -4,6 +4,7 @@ import 'package:social_mediam_match/components/home/postPage/post_comment_page.d
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/post/post_provider.dart';
 
+import '../../components/utilities/apiListView/base_api_list_provider.dart';
 import '../../components/utilities/endDrawers/post_comment_end_drawer.dart';
 import '../../models/post_model.dart';
 import '../../models/rich_text_format.dart';
@@ -52,22 +53,27 @@ class PostViewModel {
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (builder) {
-          return DraggableScrollableSheet(
-            expand: false,
-            minChildSize: 0.75,
-            initialChildSize: 0.85,
-            maxChildSize: 0.85,
-            builder: (context, scrollController) {
-              return Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(10),
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostCommentModel>()),
+            ],
+            child: DraggableScrollableSheet(
+              expand: false,
+              minChildSize: 0.55,
+              initialChildSize: 0.6,
+              maxChildSize: 0.6,
+              builder: (context, scrollController) {
+                return Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(10),
+                    ),
                   ),
-                ),
-                child: const PostCommentPage(),
-              );
-            },
+                  child: PostCommentPage(choicedPost: choicedPost),
+                );
+              },
+            ),
           );
         });
   }

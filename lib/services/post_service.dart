@@ -7,6 +7,29 @@ import '../models/user_model.dart';
 class PostService extends ApiClient {
   PostService() : super(overrideIp: "$ip:$port/posts");
 
+  Future<List<PostCommentModel>> getPostCommentData(int page, int size, int postId) async {
+    List<PostCommentModel> requestPostCommentData = [];
+
+    Map<String, dynamic> paramters = {
+      'page': '$page',
+      'size': '$size',
+    };
+
+    try {
+      String responseData = await apiGet('/getPostComment/$postId', paramters: paramters);
+
+      requestPostCommentData = await handleResponse<PostCommentModel>(
+        responseData,
+        model: PostCommentModel.toMap,
+        isList: true,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return requestPostCommentData;
+  }
+
   ///フィルターした文章取得する
   Future<List<PostModel>> getPostByTextFilter(int page, int size, String inputedText) async {
     List<PostModel> requestPostDataByNew = [];

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
 
@@ -69,28 +70,50 @@ class PostDetailPage extends StatelessWidget {
               children: [
                 Builder(builder: (context) {
                   bool isGood = context.select((PostProvider value) => value.isGood);
-                  return ElevatedButton(
-                    onPressed: () async {
-                      PostViewModel(postContext: context).updatePostGood(isGood: isGood, viewChoicedPost: viewChoicedPost);
-                    },
-                    child: isGood ? const Text("收回讚") : const Text("讚"),
+                  return Container(
+                    margin: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        border: Border.all(width: .7, color: normalBgColor), borderRadius: BorderRadius.circular(20)),
+                    child: GestureDetector(
+                      onTap: () {
+                        PostViewModel(postContext: context).updatePostGood(isGood: isGood, viewChoicedPost: viewChoicedPost);
+                      },
+                      child: Icon(
+                        isGood ? FontAwesomeIcons.solidThumbsUp : FontAwesomeIcons.thumbsUp,
+                        color: normalBgColor,
+                        size: 16,
+                      ),
+                    ),
                   );
                 }),
                 Builder(builder: (context) {
                   int choicedPostGoodCount = context.select((PostCommentProvider value) => value.viewChoicedPost.good);
-                  return Text(" $choicedPostGoodCount 個讚");
+                  return Text(
+                    "$choicedPostGoodCount",
+                    style: TextStyle(
+                      color: normalBgColor,
+                    ),
+                  );
                 }),
               ],
             ),
+            const SizedBox(height: 10),
             GestureDetector(
               onTap: () {
                 PostViewModel(postContext: context).showPostCommentPageSheet(choicedPost: viewChoicedPost);
               },
-              child: Text(
-                "有${viewChoicedPost.commentCount}則回復",
+              child: Container(
+                width: ScreenSize.width,
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+                color: normalBgColor2,
+                child: Text(
+                  "觀看${viewChoicedPost.commentCount}則回復",
+                  style: TextStyle(color: normalTextColor),
+                ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
           ],
         ),
       ),

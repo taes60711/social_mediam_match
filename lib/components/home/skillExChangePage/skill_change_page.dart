@@ -112,7 +112,7 @@ Widget _mainBody(BuildContext context) {
             return APIListView<LoginUser>(
               apiFunc: (page, size) {
                 print("page $page size $size filterSkill: $filteredSkill");
-                return UserService().getAllUserData(page, 5, userUid: userData.uid, filterSkill: filteredSkill);
+                return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filteredSkill);
               },
               providerList: context.watch<BaseAPIListProvider<LoginUser>>().listData,
               itemChild: (data, index) {
