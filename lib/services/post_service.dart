@@ -7,7 +7,33 @@ import '../models/user_model.dart';
 class PostService extends ApiClient {
   PostService() : super(overrideIp: "$ip:$port/posts");
 
-  Future<List<PostModel>> getPostByType(int type, int page, int size) async {
+  ///フィルターした文章取得する
+  Future<List<PostModel>> getPostByTextFilter(int page, int size, String inputedText) async {
+    List<PostModel> requestPostDataByNew = [];
+
+    Map<String, dynamic> paramters = {
+      'page': '$page',
+      'size': '$size',
+      'inputedText': inputedText,
+    };
+
+    try {
+      String responseData = await apiGet('/getPostByTextFilter', paramters: paramters);
+
+      requestPostDataByNew = await handleResponse<PostModel>(
+        responseData,
+        model: PostModel.toMap,
+        isList: true,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return requestPostDataByNew;
+  }
+
+  ///看板文章取得する
+  Future<List<PostModel>> getPostByType(int page, int size, int type) async {
     List<PostModel> requestPostDataByNew = [];
 
     Map<String, dynamic> paramters = {
@@ -30,6 +56,7 @@ class PostService extends ApiClient {
     return requestPostDataByNew;
   }
 
+  ///最新文章取得する
   Future<List<PostModel>> getNewPosts(int page, int size) async {
     List<PostModel> requestPostDataByNew = [];
 
@@ -104,6 +131,15 @@ class PostService extends ApiClient {
     return requestPostDataByUID;
   }
 
+  ///文章View数更新
+  Future<bool> updatePostViewCount(int postId) async {
+    String responseData = await apiPush("/moveToPost/$postId", body: {});
+
+    print("updatePostViewCount $responseData");
+
+    return responseData != "null" ? true : false;
+  }
+
   ///文章更新
   Future<bool> updatePost({required int postId, required String mainMessage}) async {
     Map<String, dynamic> body = {
@@ -118,7 +154,7 @@ class PostService extends ApiClient {
     return responseData != "null" ? true : false;
   }
 
-  ///文章削除
+  /// 文章削除
   Future<bool> deletePost(int postId) async {
     String responseData = await apiPush("/delete/$postId", body: {});
 
@@ -127,7 +163,7 @@ class PostService extends ApiClient {
     return responseData != "null" ? true : false;
   }
 
-  ///文章作成
+  /// 文章作成
   Future<bool> createPost(String uid, String title, String message, int type) async {
     Map<String, dynamic> body = {
       "createdBy": uid,
@@ -137,6 +173,39 @@ class PostService extends ApiClient {
     };
 
     String responseData = await apiPush("/createPost", body: body);
+
+    print("updatePost $responseData");
+
+    return responseData != "null" ? true : false;
+  }
+
+  /// 入っている文章”いいね”したことがあるチェック
+  Future<bool> checkIsPostGood({required int postId, required String userUID}) async {
+    bool ischeck = false;
+    try {
+      String responseData = await apiGet('/checkIsPostGood/$postId/$userUID');
+
+      print("checkIsPostGood $responseData");
+      if (responseData == "true") {
+        ischeck = true;
+      }
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return ischeck;
+  }
+
+  /// 文章”いいね”更新
+  Future<bool> updatePostGood(int postId, {String? userUID}) async {
+    Map<String, dynamic> body = {};
+
+    if (userUID != null) {
+      body = {"goodedUserUID": userUID};
+      print("Good");
+    }
+
+    String responseData = await apiPush("/updatePostGood/$postId", body: body);
 
     print("updatePost $responseData");
 

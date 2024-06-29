@@ -1,4 +1,9 @@
 {
+  
+  "//": "serverErr",
+  "serverErrorContent": "サービスエラー",
+  "errConfirm": "確認",
+
   "//": "welcomePage",
   "version":"ver",
   "first_use_button":"Start",

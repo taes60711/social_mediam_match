@@ -16,6 +16,7 @@ import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../strings/skillExChangePage/skill_change_page_string.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
+import '../../utilities/loading.dart';
 import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -25,118 +26,47 @@ class SkillChangeLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Row(
+    return ListView.builder(
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Container(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  loadingGreyContainer(width: 65, height: 100, borderRadius: 2),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Container(
-                            width: 65,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 60,
-                                height: 13,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Container(
-                                width: 30,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Container(
-                                width: ScreenSize.width,
-                                height: 26,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Container(
-                                width: 70,
-                                height: 12,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Container(
-                                width: 150,
-                                height: 13,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Container(
-                                width: 70,
-                                height: 12,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Container(
-                                width: 150,
-                                height: 12,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: 40,
-                          height: 12,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
+                        loadingGreyContainer(width: 60, height: 13),
+                        const SizedBox(height: 5),
+                        loadingGreyContainer(width: 30, height: 10),
+                        const SizedBox(height: 5),
+                        loadingGreyContainer(width: ScreenSize.width, height: 26),
+                        const SizedBox(height: 5),
+                        loadingGreyContainer(width: 70, height: 12),
+                        const SizedBox(height: 5),
+                        loadingGreyContainer(width: 150, height: 13),
+                        const SizedBox(height: 5),
+                        loadingGreyContainer(width: 70, height: 12),
+                        const SizedBox(height: 5),
+                        loadingGreyContainer(width: 150, height: 13),
                       ],
                     ),
                   ),
-                ),
-              );
-            },
+                  loadingGreyContainer(width: 40, height: 12),
+                ],
+              ),
+            ),
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 }

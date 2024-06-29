@@ -19,9 +19,9 @@ import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 
+import '../../utilities/loading.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/style_config.dart';
-import '../postPage/post_body.dart';
 
 class MyPosts extends StatelessWidget {
   const MyPosts({super.key});
@@ -32,7 +32,7 @@ class MyPosts extends StatelessWidget {
       children: [
         mainBody(context),
         userDetailEndDrawer(),
-        postCommentEndDrawer(),
+        postDetailEndDrawer(),
       ],
     );
   }
@@ -107,7 +107,7 @@ Widget mainBody(BuildContext context) {
                         ///文章プレビュー
                         GestureDetector(
                           onTap: () {
-                            openPostCommentEndDrawer(context: context, choicedPost: data[index]);
+                            openPostDetailEndDrawer(context: context, choicedPost: data[index]);
                           },
                           child: Container(
                             color: Colors.transparent,

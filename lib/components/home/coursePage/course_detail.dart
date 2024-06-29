@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/user_detail_page.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -14,7 +15,6 @@ import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/endDrawers/custom_end_drawer.dart';
 
 import '../../utilities/user_icon.dart';
-import '../skillExChangePage/user_detail.dart';
 
 class CourseDetail extends StatelessWidget {
   final CourseModel? courseData;
@@ -164,8 +164,7 @@ class CourseDetail extends StatelessWidget {
                         resizeDuration: const Duration(milliseconds: 1),
                         onDismissed: (_) => Navigator.of(context).pop(),
                         key: const Key('key'),
-                        child: UserDetail(
-                          globalKey: globalKey,
+                        child: UserDetailPage(
                           otherUser: realCourseData.courseCreateduserInfo,
                         ),
                       ),

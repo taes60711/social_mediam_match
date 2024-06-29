@@ -1,144 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/post_model.dart';
-import 'package:social_mediam_match/services/post_service.dart';
-import '../models/user_model.dart';
-import '../services/db_service.dart';
+import '../../components/utilities/endDrawers/post_board_end_drawer.dart';
+import '../../components/utilities/endDrawers/post_page_by_text_filter_end_drawer.dart';
+import '../../models/user_model.dart';
+import '../../services/db_service.dart';
 
-class PostState extends ChangeNotifier {
+class PostProvider extends ChangeNotifier {
   final DBService _dbService = DBService();
-  final GlobalKey<ScaffoldState> forumGlobalKey = GlobalKey();
-  bool floatButtonIsVisiable = false;
 
-  bool isCanLoading = true;
-  List<PostModel> postData = [];
   bool isGood = false;
   List<getPostCommentModel> postCommentData = [];
   List<TextEditingController> postCommentMessageController = [];
   TextEditingController postCommentInput = TextEditingController();
-  bool isFirstLoading = true;
-  bool isDataAddLoding = false;
-  bool isReLoading = false;
+
   bool isPostCommentLoading = false;
   bool isPostCommentDataAddLoding = false;
   bool isPostCommentReLoading = false;
 
-  final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   final GlobalKey<ScaffoldState> globalCommentKey = GlobalKey();
   String endDrawerType = "";
   PostModel? choicedPostData;
-  LoginUser? otherUser;
-
-  List<PostModel> myAllPosts = [];
-  PostModel? choicedPost;
-  bool myPostsIsFirstLoading = false;
-  GlobalKey<ScaffoldState> myPostsGlobalKey = GlobalKey();
+  LoginUser otherUser = LoginUser();
   TextEditingController messageInput = TextEditingController();
-  String myPostEndDrawerType = "";
-
-  double startScrollPosition = -1;
-  void getStartScrollPos(double pos) {
-    startScrollPosition = pos;
-    notifyListeners();
-  }
-
-  void floatButtonVisiableChange(double posheight) {
-    if (posheight < 40) {
-      if (floatButtonIsVisiable) {
-        floatButtonIsVisiable = false;
-        notifyListeners();
-      }
-    } else {
-      if (!floatButtonIsVisiable) {
-        floatButtonIsVisiable = true;
-        notifyListeners();
-      }
-    }
-  }
-
-  int selectedboardIndex = 0;
-  void boardOnChange(int type) {
-    selectedboardIndex = type;
-    forumGlobalKey.currentState!.openEndDrawer();
-    notifyListeners();
-  }
-
-  Future<void> postOnChange(PostModel choicedPost, String endDrawerType) async {
-    myPostEndDrawerType = endDrawerType;
-    this.choicedPost = choicedPost;
-    await Future.delayed(Duration.zero).then((value) => notifyListeners());
-  }
-
-  Future<void> getPostDataByUID(int page, int size, LoginUser userData) async {
-    try {
-      List<PostModel> tempPostsData = [];
-      tempPostsData = await PostService().getPostDataByUID(page, size, userData);
-      myAllPosts = tempPostsData;
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> updatePostGood(int postId, {String? userUID}) async {
-    if (userUID != null) {
-      await _dbService.updatePostGood(postId, userUID: userUID);
-    } else {
-      await _dbService.updatePostGood(postId);
-    }
-    isGood = !isGood;
-    notifyListeners();
-  }
-
-  void changeChoicedPostGoodCount({required PostModel choicedPost, required isGood}) {
-    if (isGood) {
-      choicedPost.good -= 1;
-    } else {
-      choicedPost.good += 1;
-    }
-    notifyListeners();
-  }
-
   TextEditingController textFilterInput = TextEditingController();
-  Future<void> getPostByTextFilter({required String inputedText, required String searchType}) async {
-    try {
-      List<PostModel> tempPostData = [];
-      if (searchType == "AddData") {
-        tempPostData = await _dbService.getPostByTextFilter(inputedText: inputedText);
-        tempPostData.forEach((e) {
-          postData = [...postData, e];
-        });
-        isDataAddLoding = false;
-      } else {
-        if (searchType == "First") {
-          isFirstLoading = true;
-          Future.delayed(Duration.zero).then((value) => notifyListeners());
-        }
-        tempPostData = await _dbService.getPostByTextFilter(inputedText: inputedText, isFirst: true);
-        print("object ${tempPostData.length}");
-        postData = tempPostData;
-        isFirstLoading = false;
-        isReLoading = false;
-      }
 
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void canLoadingChange(bool loading) {
-    isCanLoading = loading;
-    notifyListeners();
-  }
-
-  void addData() {
-    isDataAddLoding = true;
-    notifyListeners();
-  }
-
-  void reLoadingPage() {
-    isReLoading = true;
+  void changeIsGoodStatus(bool changedGood) {
+    isGood = changedGood;
     notifyListeners();
   }
 
@@ -205,9 +93,7 @@ class PostState extends ChangeNotifier {
         } else if (searchType == "Reload") {
           isPostCommentReLoading = true;
         }
-        isGood = await _dbService.checkIsPostGood(postId, loginUserUID!);
-        print(postId);
-        print(isGood);
+        // isGood = await _dbService.checkIsPostGood(postId, loginUserUID!);
         Future.delayed(Duration.zero).then((value) => notifyListeners());
         tempPostCommentData = await _dbService.getPostCommentData(postId, isFirst: true);
         List<getPostCommentModel> tempGetPostCommentData = [];
@@ -275,15 +161,29 @@ class PostState extends ChangeNotifier {
       {GlobalKey<ScaffoldState>? globalKey, LoginUser? otherUser, LoginUser? loginUserData, PostModel? choicedPostData}) async {
     this.endDrawerType = endDrawerType;
     if (this.endDrawerType == "userDetail") {
-      this.otherUser = otherUser;
+      this.otherUser = otherUser ?? LoginUser();
       globalKey?.currentState!.openEndDrawer();
     } else {
       this.choicedPostData = choicedPostData;
       if (loginUserData!.uid != choicedPostData!.createdBy) {
         print("moveToPost");
-        await _dbService.moveToPost(choicedPostData.id);
+        // await _dbService.moveToPost(choicedPostData.id);
       }
     }
+    notifyListeners();
+  }
+
+  PostBoardEndDrawerType endDrawerOpenInfo = PostBoardEndDrawerType.close;
+  int selectedboardIndex = 0;
+  void changeEndDrawerStatus(PostBoardEndDrawerType status, int boardType) {
+    endDrawerOpenInfo = status;
+    selectedboardIndex = boardType;
+    notifyListeners();
+  }
+
+  PostPageBytextFilterEndDrawerType postPageBytextFilterEndDrawerOpenInfo = PostPageBytextFilterEndDrawerType.close;
+  void changePostPageBytextFilterEndDrawerStatus(PostPageBytextFilterEndDrawerType status) {
+    postPageBytextFilterEndDrawerOpenInfo = status;
     notifyListeners();
   }
 }

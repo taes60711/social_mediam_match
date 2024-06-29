@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../components/utilities/apiListView/base_api_list_provider.dart';
@@ -20,15 +22,25 @@ class SkillChangeViewModel {
   Future<void> filterSearchStart() async {
     LoginUser userData = context.read<UserProvider>().userData;
     List<String> filteredSkills = context.read<SkillChangeProvider>().filteredSkill;
+    int loadSize = context.read<BaseAPIListProvider<LoginUser>>().size;
     await context.read<BaseAPIListProvider<LoginUser>>().reloadData(
-          apiFunc: () async => await UserService().getAllUserData(0, 5, userUid: userData.uid, filterSkill: filteredSkills),
+          apiFunc: () async => await UserService().getAllUserData(
+            0,
+            loadSize,
+            userUid: userData.uid,
+            filterSkill: filteredSkills,
+          ),
         );
     int preLoadPage = context.read<BaseAPIListProvider<LoginUser>>().page;
     await context.read<BaseAPIListProvider<LoginUser>>().preLoad(
-          apiFunc: () async =>
-              await UserService().getAllUserData(preLoadPage, 5, userUid: userData.uid, filterSkill: filteredSkills),
+          apiFunc: () async => await UserService().getAllUserData(
+            preLoadPage,
+            loadSize,
+            userUid: userData.uid,
+            filterSkill: filteredSkills,
+          ),
         );
-    // ignore: use_build_context_synchronously
+
     closeSkillChangeEndDrawer(context: context);
   }
 }

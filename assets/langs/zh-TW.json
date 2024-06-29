@@ -1,4 +1,8 @@
 {
+  "//": "serverErr",
+  "serverErrorContent":"伺服器錯誤",
+  "errConfirm":"確認",
+
   "//": "welcomePage",
   "version":"版本",
   "first_use_button":"第一次使用",

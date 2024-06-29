@@ -7,7 +7,6 @@ import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 
 import '../../global.dart';
-import '../../models/user_model.dart';
 
 class searchStatus {
   int pageNumber;
@@ -348,66 +347,6 @@ class DBService {
     return allpostData;
   }
 
-  Future<void> updatePostGood(int postId, {String? userUID}) async {
-    String branch = "posts";
-    String searchUrl = '$url/$branch/updatePostGood/$postId';
-    Map<String, String> headers = {'content-type': 'application/json'};
-    final uri = Uri.parse(searchUrl);
-    var response;
-    try {
-      if (userUID != null) {
-        String body = jsonEncode({"goodedUserUID": userUID});
-        response = await http.put(uri, headers: headers, body: body);
-        print("Good");
-      } else {
-        String body = jsonEncode({"": ""});
-        response = await http.put(uri, headers: headers, body: body);
-        print("takeBackGood");
-      }
-      inspect(response);
-      if (response.statusCode != 404) {
-        print("updatePostGood sucess");
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<bool> checkIsPostGood(int postId, String userUID) async {
-    String branch = "posts";
-    String searchUrl = '$url/$branch/checkIsPostGood/$postId/$userUID';
-    bool ischeck = false;
-    final uri = Uri.parse(searchUrl);
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode != 404) {
-        print("checkIsPostGood: ${response.body}");
-        if (response.body == "true") {
-          ischeck = true;
-        }
-        print("checkIsPostGood");
-      }
-    } catch (e) {
-      print(e);
-    }
-    return ischeck;
-  }
-
-  Future<void> moveToPost(int postId) async {
-    String branch = "posts";
-    String searchUrl = '$url/$branch/moveToPost/$postId';
-
-    final uri = Uri.parse(searchUrl);
-    try {
-      var response = await http.put(uri);
-      if (response.statusCode != 404) {
-        print("moveToPost update sucess");
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
   // Future<void> createPost(String uid, String title, String message, int type) async {
   //   String branch = "posts";
   //   String searchUrl = '$url/$branch/createPost';
@@ -421,73 +360,4 @@ class DBService {
   //     print("MySql Post Create :${_.body}");
   //   });
   // }
-
-  searchStatus postByTextFilterServerInfo = searchStatus();
-  Future<List<PostModel>> getPostByTextFilter({required String inputedText, bool? isFirst}) async {
-    String branch = "posts";
-
-    if (isFirst != null) {
-      postByTextFilterServerInfo.pageNumber = 0;
-    }
-
-    String searchUrl =
-        '$url/$branch/getPostByTextFilter?inputedText=$inputedText&page=${postByTextFilterServerInfo.pageNumber}&size=$size';
-    final uri = Uri.parse(searchUrl);
-    List<PostModel> allpostData = [];
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode != 404) {
-        allpostData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
-          print(e);
-          return PostModel.toMap(e);
-        }).toList();
-
-        inspect(allpostData);
-        postByTextFilterServerInfo.pageNumber++;
-      }
-    } catch (e) {
-      print(e);
-    }
-    return allpostData;
-  }
-
-  //メソッド：MYSQLにユーザーデータを取得する
-  searchStatus alluserServerInfo = searchStatus();
-  Future<List<LoginUser>> getAllUserData(
-      {String? userUid, required List<String> filterSkill, required bool isFirstSearch}) async {
-    String branch = "user";
-
-    if (isFirstSearch) {
-      alluserServerInfo = searchStatus();
-    }
-
-    String searchUrl = '$url/$branch/getDataBySkillFilter?page=${alluserServerInfo.pageNumber}&size=$size';
-    if (userUid != null) {
-      searchUrl += "&userUid=$userUid";
-    }
-    if (filterSkill.isNotEmpty) {
-      String searchkey = "";
-      for (var element in filterSkill) {
-        searchkey += "$element,";
-      }
-      searchUrl += "&skillName=$searchkey";
-    }
-
-    final uri = Uri.parse(searchUrl);
-    List<LoginUser> allUserData = [];
-
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode != 404) {
-        allUserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((element) {
-          return LoginUser.toModel(element);
-        }).toList();
-        alluserServerInfo.pageNumber++;
-      }
-    } catch (e) {
-      print(e);
-    }
-
-    return allUserData;
-  }
 }

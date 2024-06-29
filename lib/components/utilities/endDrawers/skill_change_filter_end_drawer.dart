@@ -29,15 +29,13 @@ Widget skillChangeEndDrawer() {
     print("skillChangeEndDrawer");
     SkillChangeEndDrawerType postCommentEndDrawer = context.select((SkillChangeProvider value) => value.endDrawerOpenInfo);
 
-    SkillChangeProvider skillChangeProvider = context.read<SkillChangeProvider>();
-
     Widget endDrawerWidget = Container();
 
     if (postCommentEndDrawer == SkillChangeEndDrawerType.open) {
       endDrawerWidget = EndDrawer(
         title: tr("skillFilterTitle"),
         onDismissed: () {
-          skillChangeProvider.changeEndDrawerStatus(SkillChangeEndDrawerType.close);
+          closeSkillChangeEndDrawer(context: context);
         },
 
         ///文章詳細ページ

@@ -5,6 +5,16 @@ import '../../models/post_model.dart';
 
 class PostCommentProvider extends ChangeNotifier {
   PostModel viewChoicedPost = PostModel();
+
+  void updateChoicedPostGoodCount({required bool isPlus}) {
+    if (isPlus) {
+      viewChoicedPost.good++;
+    } else {
+      viewChoicedPost.good--;
+    }
+    notifyListeners();
+  }
+
   PostCommentEndDrawerType endDrawerOpenInfo = PostCommentEndDrawerType.close;
 
   void changeEndDrawerStatus(PostCommentEndDrawerType status, PostModel choicedPost) {

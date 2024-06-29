@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../models/post_model.dart';
 import '../../../provider/post/post_comment_provider.dart';
-import '../../home/postPage/post_comment_page.dart';
+import '../../home/postPage/post_detail_page.dart';
 import 'custom_end_drawer.dart';
 
 enum PostCommentEndDrawerType {
@@ -14,17 +14,20 @@ enum PostCommentEndDrawerType {
 ///Before use need ParentWidget Create PostCommentProvider
 
 ///MARK: void 文章詳細ページ開くように
-void openPostCommentEndDrawer({required BuildContext context, required PostModel choicedPost}) {
+void openPostDetailEndDrawer({required BuildContext context, required PostModel choicedPost}) {
   context.read<PostCommentProvider>().changeEndDrawerStatus(PostCommentEndDrawerType.open, choicedPost);
 }
 
+///MARK: void 文章詳細ページ閉じるように
+void closePostDetailEndDrawer({required BuildContext context}) {
+  context.read<PostCommentProvider>().changeEndDrawerStatus(PostCommentEndDrawerType.close, PostModel());
+}
+
 ///MARK: widget 文章詳細ページ用EndDrawer
-Widget postCommentEndDrawer() {
+Widget postDetailEndDrawer() {
   return Builder(builder: (context) {
     print("postCommentEndDrawer");
     PostCommentEndDrawerType postCommentEndDrawer = context.select((PostCommentProvider value) => value.endDrawerOpenInfo);
-
-    PostCommentProvider postCommentProvider = context.read<PostCommentProvider>();
 
     Widget endDrawerWidget = Container();
 
@@ -32,11 +35,11 @@ Widget postCommentEndDrawer() {
       endDrawerWidget = EndDrawer(
         title: context.read<PostCommentProvider>().viewChoicedPost.title,
         onDismissed: () {
-          postCommentProvider.changeEndDrawerStatus(PostCommentEndDrawerType.close, PostModel());
+          closePostDetailEndDrawer(context: context);
         },
 
         ///文章詳細ページ
-        child: const PostCommentPage(),
+        child: const PostDetailPage(),
       );
     }
     return endDrawerWidget;

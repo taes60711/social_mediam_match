@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,6 +8,7 @@ import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
 import '../../utilities/endDrawers/post_comment_end_drawer.dart';
 import '../../utilities/endDrawers/user_detail_end_drawer.dart';
+import '../../utilities/loading.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -72,7 +74,7 @@ class PostPageByNew extends StatelessWidget {
 
                         ///期日
                         Text(
-                          "${data[index].postTime}前",
+                          "${data[index].postTime}${tr("skExChpage_beforDays")}",
                           style: TextStyle(fontSize: 12, color: normalTextColor),
                         ),
                       ],
@@ -82,7 +84,7 @@ class PostPageByNew extends StatelessWidget {
                   ///文章プレビュー
                   GestureDetector(
                     onTap: () {
-                      openPostCommentEndDrawer(context: context, choicedPost: data[index]);
+                      openPostDetailEndDrawer(context: context, choicedPost: data[index]);
                     },
                     child: Container(
                       color: Colors.transparent,

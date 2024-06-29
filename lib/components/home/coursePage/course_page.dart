@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_detail.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_filter.dart';
+import 'package:social_mediam_match/components/user_detail_page.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
@@ -26,7 +27,6 @@ import '../../../provider/account/user_provider.dart';
 import '../../account/skill_bar.dart';
 import '../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../postPage/post_body.dart';
-import '../skillExChangePage/user_detail.dart';
 
 class CoursePage extends StatelessWidget {
   const CoursePage({
@@ -45,7 +45,7 @@ class CoursePage extends StatelessWidget {
     GlobalKey<ScaffoldState> globalKey = context.select((CourseState value) => value.globalKey);
     CourseModel? choicedCourse = context.select((CourseState value) => value.choicedCourse);
     String endDrawerType = context.select((CourseState value) => value.endDrawerType);
-    LoginUser? otherUser = context.select((CourseState value) => value.otherUser);
+    LoginUser otherUser = context.select((CourseState value) => value.otherUser) ?? LoginUser();
 
     double startScrollPosition = context.select((CourseState value) => value.startScrollPosition);
     ScrollController scrollController = ScrollController();
@@ -53,8 +53,7 @@ class CoursePage extends StatelessWidget {
 
     Widget endDrawerWidget;
     if (endDrawerType == "userDetail") {
-      endDrawerWidget = UserDetail(
-        globalKey: globalKey,
+      endDrawerWidget = UserDetailPage(
         otherUser: otherUser,
       );
     } else if (endDrawerType == "courseFilter") {

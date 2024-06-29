@@ -7,12 +7,14 @@ class EndDrawer extends StatefulWidget {
   final Function onDismissed;
   final String title;
   final Widget child;
+  final bool isNeedTopbar;
 
   const EndDrawer({
     super.key,
     required this.onDismissed,
     this.title = "",
     required this.child,
+    this.isNeedTopbar = true,
   });
 
   @override
@@ -68,14 +70,17 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
                 height: MediaQuery.of(context).viewPadding.top,
                 color: Colors.white,
               ),
-              Container(
-                color: Colors.white,
-                child: BaseTopBar(
-                  title: widget.title,
-                  backFunc: () async {
-                    await _controller.reverse();
-                    widget.onDismissed();
-                  },
+              Visibility(
+                visible: widget.isNeedTopbar,
+                child: Container(
+                  color: Colors.white,
+                  child: BaseTopBar(
+                    title: widget.title,
+                    backFunc: () async {
+                      await _controller.reverse();
+                      widget.onDismissed();
+                    },
+                  ),
                 ),
               ),
               Expanded(child: widget.child),

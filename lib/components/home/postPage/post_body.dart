@@ -1,179 +1,15 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
-import '../../../states/post_state.dart';
+import '../../../provider/post/post_provider.dart';
 import '../../utilities/endDrawers/custom_end_drawer.dart';
-import '../../utilities/rich_text_view.dart';
+
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
-import 'post_comment.dart';
-
-class PostLoading extends StatelessWidget {
-  const PostLoading({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: ListView.builder(
-        itemCount: 5,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Container(
-              padding: const EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3),
-                color: const Color.fromARGB(255, 214, 214, 214),
-              ),
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
-                highlightColor: Colors.grey[100]!,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Container(
-                        width: 35,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(35 / 2),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 80,
-                            height: 13,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Container(
-                            width: 100,
-                            height: 13,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 40,
-                      height: 13,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            subtitle: Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                height: 200,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 50,
-                            height: 13,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Container(
-                            width: ScreenSize.width,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(3),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                width: 40,
-                                height: 13,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                width: 40,
-                                height: 13,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                width: 40,
-                                height: 13,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: Container(
-                            width: 25,
-                            height: 11,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
+import 'post_comment_page.dart';
 
 class NoPostData extends StatelessWidget {
   const NoPostData({super.key});
@@ -217,7 +53,7 @@ class PostOption {
 
 class PostBody extends StatelessWidget {
   final PostModel postData;
-  final PostState postState;
+  final PostProvider postProvider;
   final GlobalKey<ScaffoldState> globalKey;
   final LoginUser userData;
   final VoidCallback gotoFriendPage;
@@ -225,7 +61,7 @@ class PostBody extends StatelessWidget {
   const PostBody({
     super.key,
     required this.postData,
-    required this.postState,
+    required this.postProvider,
     required this.globalKey,
     required this.userData,
     required this.gotoFriendPage,
@@ -234,35 +70,31 @@ class PostBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> opneCommentPage({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
-      return showDialog(
-        context: context,
-        useSafeArea: false,
-        barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
-        builder: (BuildContext context) {
-          return CustomEndDrawer(
-            child: Dismissible(
-              direction: DismissDirection.startToEnd,
-              resizeDuration: const Duration(milliseconds: 1),
-              onDismissed: (_) => Navigator.of(context).pop(),
-              key: const Key('key'),
-              child: PostComment(
-                choicedPostData: choicedPostData,
-                userData: userData,
-                globalKey: globalKey,
-                gotoFriendPage: gotoFriendPage,
-                changeChoicedPostGoodCount: changeChoicedPostGoodCount,
-                postState: postState,
-              ),
-            ),
-          );
-        },
-      );
-    }
-
-    void changeChoicedPostGoodCount({required PostModel choicedPost, required isGood}) {
-      postState.changeChoicedPostGoodCount(choicedPost: choicedPost, isGood: isGood);
-    }
+    // Future<void> opneCommentPage({required PostModel choicedPostData, required Function changeChoicedPostGoodCount}) {
+    //   return showDialog(
+    //     context: context,
+    //     useSafeArea: false,
+    //     barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
+    //     builder: (BuildContext context) {
+    //       return CustomEndDrawer(
+    //         child: Dismissible(
+    //           direction: DismissDirection.startToEnd,
+    //           resizeDuration: const Duration(milliseconds: 1),
+    //           onDismissed: (_) => Navigator.of(context).pop(),
+    //           key: const Key('key'),
+    //           child: PostComment(
+    //             choicedPostData: choicedPostData,
+    //             userData: userData,
+    //             globalKey: globalKey,
+    //             gotoFriendPage: gotoFriendPage,
+    //             changeChoicedPostGoodCount: changeChoicedPostGoodCount,
+    //             postProvider: postProvider,
+    //           ),
+    //         ),
+    //       );
+    //     },
+    //   );
+    // }
 
     iconWithText(IconData icon, Color iconColor, String text) {
       return Row(
@@ -463,50 +295,6 @@ class PostBody extends StatelessWidget {
       ],
     );
 
-    Widget mainBody = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-              onTap: () {
-                inspect(postData.postUserInfo);
-                if (userData.uid != postData.postUserInfo.uid) {
-                  postState.openDrawer("userDetail", globalKey: globalKey, otherUser: postData.postUserInfo);
-                }
-              },
-              child: postedUserInfo),
-          GestureDetector(
-            onTap: () async {
-              opneCommentPage(
-                choicedPostData: postData,
-                changeChoicedPostGoodCount: changeChoicedPostGoodCount,
-              );
-
-              await postState.openDrawer("movetoPost", loginUserData: userData, choicedPostData: postData);
-            },
-            child: Container(
-              color: Colors.transparent,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  postTitle,
-                  breakLine,
-                  RichTextView(
-                    content: postData.mainMessage,
-                    isPreView: true,
-                  ),
-                  breakLine,
-                  postEvaluate,
-                  breakLine,
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-    return mainBody;
+    return Container();
   }
 }

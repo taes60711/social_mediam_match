@@ -1,15 +1,13 @@
 import 'dart:convert';
-import 'dart:developer';
+
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
 import '../enum/skill_type.dart';
 import '../global.dart';
-import '../services/db_service.dart';
 
 class SkillExChangeState extends ChangeNotifier {
-  final DBService _dbService = DBService();
   //サーバーアドレス
   String url = "http://$ip:$port";
   List<LoginUser> allUserData = [];
@@ -79,34 +77,6 @@ class SkillExChangeState extends ChangeNotifier {
     return result;
   }
 
-  Future<void> getAllUserData({required String userUid, required List<String> filterSkill, required String searchType}) async {
-    try {
-      List<LoginUser> userData = [];
-      if (searchType == "First") {
-        isFirstLoading = true;
-        Future.delayed(Duration.zero).then((value) => notifyListeners());
-      }
-
-      if (searchType == "AddData") {
-        userData = await _dbService.getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: false);
-        for (var element in userData) {
-          allUserData.add(element);
-        }
-        isAddDataLoading = false;
-      } else {
-        userData = await _dbService.getAllUserData(userUid: userUid, filterSkill: filterSkill, isFirstSearch: true);
-        allUserData = userData;
-        if (searchType == "First") {
-          isFirstLoading = false;
-        } else if (searchType == "Reload") {
-          isReLoading = false;
-        }
-      }
-      inspect(allUserData);
-      notifyListeners();
-    } catch (e) {}
-  }
-
   void addData() {
     isAddDataLoading = true;
     notifyListeners();
@@ -121,38 +91,5 @@ class SkillExChangeState extends ChangeNotifier {
     int index = list.indexWhere((element) => element['name'] == skillName);
     list[index]['bool'] = !list[index]['bool'];
     notifyListeners();
-  }
-
-  Future<void> filterButtonOnClick(String userUid, List<Map<String, dynamic>> forntList, List<Map<String, dynamic>> backendList,
-      List<Map<String, dynamic>> iotList, List<Map<String, dynamic>> otherList,
-      {required String type}) async {
-    filterSkill = [];
-    List<List<Map<String, dynamic>>> allList = [forntList, backendList, iotList, otherList];
-    for (var element in allList) {
-      for (var e in element) {
-        if (e['bool']) {
-          filterSkill.add(e['name']);
-        }
-      }
-    }
-    inspect(filterSkill);
-    if (type == "exChange") {
-      await getAllUserData(userUid: userUid, filterSkill: filterSkill, searchType: "First");
-    } else if (type == "Course") {
-      print("filterSkill : $filterSkill");
-    }
-  }
-
-  void openDrawer(String endDrawerType, {LoginUser? otherUser}) {
-    this.endDrawerType = endDrawerType;
-    if (this.endDrawerType == "userDetail") {
-      this.otherUser = otherUser;
-    }
-    notifyListeners();
-    globalKey.currentState!.openEndDrawer();
-  }
-
-  void closeDrawer() {
-    globalKey.currentState!.openEndDrawer();
   }
 }
