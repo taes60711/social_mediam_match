@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+
 import 'package:social_mediam_match/models/user_model.dart';
 
 class PostModel {
@@ -109,35 +110,59 @@ class UpdatePostModel {
   }
 }
 
-class PostCommentModel {
+class PostCommentTextEditorModel {
   int uid;
   int postId;
   String userUid;
   String message;
   String postTime;
   LoginUser commentUserInfo;
+  bool isEditor;
+  TextEditingController textEditingController;
 
-  PostCommentModel({
+  PostCommentTextEditorModel({
     required this.uid,
     required this.postId,
     required this.userUid,
     required this.message,
     required this.postTime,
     required this.commentUserInfo,
+    required this.isEditor,
+    required this.textEditingController,
   });
 
-  factory PostCommentModel.toMap(dynamic json) {
-    DateTime dateUtc = DateTime.parse(json['postTime']).toUtc();
-    DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
-    String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
+  factory PostCommentTextEditorModel.toMap(dynamic json) {
+    // DateTime dateUtc = DateTime.parse(json['postTime']).toUtc();
+    // DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
+    // String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
 
-    return PostCommentModel(
+    String formattedTime = "";
+    if (json['postTime'] != null) {
+      DateTime dateUtc = DateTime.parse(json['postTime']).toUtc();
+      Duration duration = DateTime.now().toUtc().difference(dateUtc);
+      String durationTime = "";
+      if (duration.inMinutes < 60) {
+        durationTime = "${duration.inMinutes} 分";
+      } else if (duration.inMinutes >= 60 && duration.inMinutes < 1440) {
+        durationTime = "${duration.inHours} 時";
+      } else if (duration.inMinutes >= 1440) {
+        durationTime = "${duration.inDays} 天";
+      }
+      formattedTime = durationTime;
+    }
+
+    TextEditingController controller = TextEditingController();
+    controller.text = json['message'];
+
+    return PostCommentTextEditorModel(
       uid: json['id'],
       postId: json['postId'],
       userUid: json['userUid'],
       message: json['message'],
       postTime: formattedTime,
       commentUserInfo: LoginUser.toModel(json['user']),
+      isEditor: false,
+      textEditingController: controller,
     );
   }
 }

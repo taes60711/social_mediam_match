@@ -7,8 +7,8 @@ import '../models/user_model.dart';
 class PostService extends ApiClient {
   PostService() : super(overrideIp: "$ip:$port/posts");
 
-  Future<List<PostCommentModel>> getPostCommentData(int page, int size, int postId) async {
-    List<PostCommentModel> requestPostCommentData = [];
+  Future<List<PostCommentTextEditorModel>> getPostCommentData(int page, int size, int postId) async {
+    List<PostCommentTextEditorModel> requestPostCommentData = [];
 
     Map<String, dynamic> paramters = {
       'page': '$page',
@@ -18,9 +18,9 @@ class PostService extends ApiClient {
     try {
       String responseData = await apiGet('/getPostComment/$postId', paramters: paramters);
 
-      requestPostCommentData = await handleResponse<PostCommentModel>(
+      requestPostCommentData = await handleResponse<PostCommentTextEditorModel>(
         responseData,
-        model: PostCommentModel.toMap,
+        model: PostCommentTextEditorModel.toMap,
         isList: true,
       );
     } catch (e) {

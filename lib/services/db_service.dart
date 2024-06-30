@@ -319,34 +319,6 @@ class DBService {
     return index;
   }
 
-  searchStatus postCommentServerInfo = searchStatus();
-  Future<List<PostCommentModel>> getPostCommentData(int postId, {bool? isFirst}) async {
-    String branch = "posts";
-
-    if (isFirst != null) {
-      postCommentServerInfo.pageNumber = 0;
-    }
-
-    String searchUrl = '$url/$branch/getPostComment/$postId?page=${postCommentServerInfo.pageNumber}&size=$size';
-
-    final uri = Uri.parse(searchUrl);
-    List<PostCommentModel> allpostData = [];
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode != 404) {
-        allpostData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
-          inspect(e);
-          return PostCommentModel.toMap(e);
-        }).toList();
-        postCommentServerInfo.pageNumber++;
-        inspect(allpostData);
-      }
-    } catch (e) {
-      print(e);
-    }
-    return allpostData;
-  }
-
   // Future<void> createPost(String uid, String title, String message, int type) async {
   //   String branch = "posts";
   //   String searchUrl = '$url/$branch/createPost';

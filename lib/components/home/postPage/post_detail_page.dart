@@ -66,37 +66,44 @@ class PostDetailPage extends StatelessWidget {
             RichTextView(content: viewChoicedPost.mainMessage),
             const SizedBox(height: 10),
             Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
-            Row(
-              children: [
-                Builder(builder: (context) {
-                  bool isGood = context.select((PostProvider value) => value.isGood);
-                  return Container(
-                    margin: EdgeInsets.all(5),
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        border: Border.all(width: .7, color: normalBgColor), borderRadius: BorderRadius.circular(20)),
-                    child: GestureDetector(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                children: [
+                  Builder(builder: (context) {
+                    bool isGood = context.select((PostProvider value) => value.isGood);
+                    return GestureDetector(
                       onTap: () {
                         PostViewModel(postContext: context).updatePostGood(isGood: isGood, viewChoicedPost: viewChoicedPost);
                       },
-                      child: Icon(
-                        isGood ? FontAwesomeIcons.solidThumbsUp : FontAwesomeIcons.thumbsUp,
-                        color: normalBgColor,
-                        size: 16,
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                border: Border.all(width: .7, color: normalBgColor), borderRadius: BorderRadius.circular(20)),
+                            child: Icon(
+                              isGood ? FontAwesomeIcons.solidThumbsUp : FontAwesomeIcons.thumbsUp,
+                              color: normalBgColor,
+                              size: 16,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  );
-                }),
-                Builder(builder: (context) {
-                  int choicedPostGoodCount = context.select((PostCommentProvider value) => value.viewChoicedPost.good);
-                  return Text(
-                    "$choicedPostGoodCount",
-                    style: TextStyle(
-                      color: normalBgColor,
-                    ),
-                  );
-                }),
-              ],
+                    );
+                  }),
+                  Builder(builder: (context) {
+                    int choicedPostGoodCount = context.select((PostCommentProvider value) => value.viewChoicedPost.good);
+                    return Text(
+                      "$choicedPostGoodCount",
+                      style: TextStyle(
+                        color: normalBgColor,
+                      ),
+                    );
+                  }),
+                ],
+              ),
             ),
             const SizedBox(height: 10),
             GestureDetector(
@@ -108,7 +115,7 @@ class PostDetailPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
                 color: normalBgColor2,
                 child: Text(
-                  "觀看${viewChoicedPost.commentCount}則回復",
+                  "${viewChoicedPost.commentCount}則回復",
                   style: TextStyle(color: normalTextColor),
                 ),
               ),

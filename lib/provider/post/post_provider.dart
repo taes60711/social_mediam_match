@@ -14,12 +14,6 @@ class PostProvider extends ChangeNotifier {
   List<TextEditingController> postCommentMessageController = [];
   TextEditingController postCommentInput = TextEditingController();
 
-  bool isPostCommentLoading = false;
-  bool isPostCommentDataAddLoding = false;
-  bool isPostCommentReLoading = false;
-
-  final GlobalKey<ScaffoldState> globalCommentKey = GlobalKey();
-  String endDrawerType = "";
   PostModel? choicedPostData;
   LoginUser otherUser = LoginUser();
   TextEditingController messageInput = TextEditingController();
@@ -66,73 +60,6 @@ class PostProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getPostCommentData(int postId, {String? loginUserUID, required String searchType}) async {
-    try {
-      List<PostCommentModel> tempPostCommentData = [];
-      if (searchType == "AddData") {
-        isPostCommentDataAddLoding = true;
-        tempPostCommentData = await _dbService.getPostCommentData(postId);
-        notifyListeners();
-
-        tempPostCommentData.forEach((e) {
-          postCommentData.add(
-            getPostCommentModel(
-                uid: e.uid,
-                postId: postId,
-                userUid: e.userUid,
-                message: e.message,
-                isEditor: false,
-                postTime: e.postTime,
-                commentUserInfo: e.commentUserInfo),
-          );
-          postCommentMessageController.add(TextEditingController());
-        });
-      } else {
-        if (searchType == "First") {
-          isPostCommentLoading = true;
-        } else if (searchType == "Reload") {
-          isPostCommentReLoading = true;
-        }
-        // isGood = await _dbService.checkIsPostGood(postId, loginUserUID!);
-        Future.delayed(Duration.zero).then((value) => notifyListeners());
-        tempPostCommentData = await _dbService.getPostCommentData(postId, isFirst: true);
-        List<getPostCommentModel> tempGetPostCommentData = [];
-        postCommentMessageController.clear();
-        tempPostCommentData.forEach((e) {
-          tempGetPostCommentData.add(
-            getPostCommentModel(
-                uid: e.uid,
-                postId: postId,
-                userUid: e.userUid,
-                message: e.message,
-                isEditor: false,
-                postTime: e.postTime,
-                commentUserInfo: e.commentUserInfo),
-          );
-          postCommentMessageController.add(TextEditingController());
-        });
-        postCommentData = tempGetPostCommentData;
-      }
-
-      isPostCommentDataAddLoding = false;
-      isPostCommentReLoading = false;
-      isPostCommentLoading = false;
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void postAddData() {
-    isPostCommentDataAddLoding = true;
-    notifyListeners();
-  }
-
-  void postReLoadingPage() {
-    isPostCommentReLoading = true;
-    notifyListeners();
-  }
-
   Future<void> createPostComment(int postId, String message, LoginUser commentUser) async {
     try {
       int lastIndex = await _dbService.createPostComment(postId, commentUser.uid, message);
@@ -155,22 +82,6 @@ class PostProvider extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
-  }
-
-  Future<void> openDrawer(String endDrawerType,
-      {GlobalKey<ScaffoldState>? globalKey, LoginUser? otherUser, LoginUser? loginUserData, PostModel? choicedPostData}) async {
-    this.endDrawerType = endDrawerType;
-    if (this.endDrawerType == "userDetail") {
-      this.otherUser = otherUser ?? LoginUser();
-      globalKey?.currentState!.openEndDrawer();
-    } else {
-      this.choicedPostData = choicedPostData;
-      if (loginUserData!.uid != choicedPostData!.createdBy) {
-        print("moveToPost");
-        // await _dbService.moveToPost(choicedPostData.id);
-      }
-    }
-    notifyListeners();
   }
 
   PostBoardEndDrawerType endDrawerOpenInfo = PostBoardEndDrawerType.close;

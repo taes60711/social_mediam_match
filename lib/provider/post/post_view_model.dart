@@ -55,7 +55,7 @@ class PostViewModel {
         builder: (builder) {
           return MultiProvider(
             providers: [
-              ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostCommentModel>()),
+              ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostCommentTextEditorModel>()),
             ],
             child: DraggableScrollableSheet(
               expand: false,

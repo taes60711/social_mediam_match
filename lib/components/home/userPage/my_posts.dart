@@ -14,6 +14,7 @@ import 'package:social_mediam_match/services/post_service.dart';
 import '../../../models/user_model.dart';
 
 import '../../../provider/account/user_provider.dart';
+import '../../../provider/post/post_view_model.dart';
 import '../../utilities/endDrawers/post_comment_end_drawer.dart';
 import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
@@ -107,7 +108,7 @@ Widget mainBody(BuildContext context) {
                         ///文章プレビュー
                         GestureDetector(
                           onTap: () {
-                            openPostDetailEndDrawer(context: context, choicedPost: data[index]);
+                            PostViewModel(postContext: context).postDetailInit(choicedPost: data[index]);
                           },
                           child: Container(
                             color: Colors.transparent,
