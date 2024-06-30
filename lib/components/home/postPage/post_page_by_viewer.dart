@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/post_model.dart';
@@ -13,7 +14,6 @@ import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
-import '../userPage/my_posts.dart';
 
 class PostPageByViewer extends StatelessWidget {
   const PostPageByViewer({super.key});
@@ -124,4 +124,65 @@ class PostPageByViewer extends StatelessWidget {
       ),
     );
   }
+}
+
+///文章bottomBar
+Widget bottomBar({required BuildContext context, required PostModel data}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 10),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            ///リーチ数
+            Row(
+              children: [
+                const Icon(FontAwesomeIcons.eye, size: 14, color: Color.fromARGB(255, 63, 63, 63)),
+                const SizedBox(width: 5),
+                Text("${data.viewed}"),
+              ],
+            ),
+            const SizedBox(width: 8),
+
+            ///いいね数
+            Row(
+              children: [
+                const Icon(FontAwesomeIcons.heart, size: 14, color: Color.fromARGB(255, 248, 110, 110)),
+                const SizedBox(width: 5),
+                Text("${data.good}"),
+              ],
+            ),
+            const SizedBox(width: 8),
+
+            ///コメント数
+            Row(
+              children: [
+                const Icon(FontAwesomeIcons.comment, size: 14, color: Colors.blueAccent),
+                const SizedBox(width: 5),
+                Text("${data.commentCount}"),
+              ],
+            ),
+          ],
+        ),
+
+        ///設定ボタン
+        GestureDetector(
+          onTap: () {
+            context.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: data);
+            PostViewModel(postContext: context).showOptionBottomSheet(choicedPost: data);
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            color: Colors.transparent,
+            child: Icon(
+              FontAwesomeIcons.ellipsis,
+              color: hintTextColor,
+              size: 14,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

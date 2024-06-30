@@ -52,15 +52,28 @@ class APIListView<R> extends StatelessWidget {
                 const SizedBox(height: 10),
                 Visibility(
                   visible: needToTopWidget && !context.select((BaseAPIListProvider<R> value) => value.isTop),
-                  child: FloatingActionButton(
-                    mini: true,
-                    backgroundColor: normalBgColor2,
-                    onPressed: () {
+                  child: GestureDetector(
+                    onTap: () {
                       scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.ease);
                     },
-                    child: const Icon(
-                      FontAwesomeIcons.angleUp,
-                      size: 16,
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: normalBgColor2,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        FontAwesomeIcons.angleUp,
+                        size: 16,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 )

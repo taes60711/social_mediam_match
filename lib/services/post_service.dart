@@ -7,8 +7,9 @@ import '../models/user_model.dart';
 class PostService extends ApiClient {
   PostService() : super(overrideIp: "$ip:$port/posts");
 
-  Future<List<PostCommentTextEditorModel>> getPostCommentData(int page, int size, int postId) async {
-    List<PostCommentTextEditorModel> requestPostCommentData = [];
+  ///MARK: 人気文章取得する
+  Future<List<PostModel>> getPostDataByViewer(int page, int size) async {
+    List<PostModel> requestPostDataByUID = [];
 
     Map<String, dynamic> paramters = {
       'page': '$page',
@@ -16,21 +17,21 @@ class PostService extends ApiClient {
     };
 
     try {
-      String responseData = await apiGet('/getPostComment/$postId', paramters: paramters);
+      String responseData = await apiGet('/getAll', paramters: paramters);
 
-      requestPostCommentData = await handleResponse<PostCommentTextEditorModel>(
+      requestPostDataByUID = await handleResponse<PostModel>(
         responseData,
-        model: PostCommentTextEditorModel.toMap,
+        model: PostModel.toMap,
         isList: true,
       );
     } catch (e) {
       onRequestFailed();
     }
 
-    return requestPostCommentData;
+    return requestPostDataByUID;
   }
 
-  ///フィルターした文章取得する
+  /// フィルターした文章取得する
   Future<List<PostModel>> getPostByTextFilter(int page, int size, String inputedText) async {
     List<PostModel> requestPostDataByNew = [];
 
@@ -55,7 +56,7 @@ class PostService extends ApiClient {
     return requestPostDataByNew;
   }
 
-  ///看板文章取得する
+  /// 看板文章取得する
   Future<List<PostModel>> getPostByType(int page, int size, int type) async {
     List<PostModel> requestPostDataByNew = [];
 
@@ -79,7 +80,7 @@ class PostService extends ApiClient {
     return requestPostDataByNew;
   }
 
-  ///最新文章取得する
+  /// 最新文章取得する
   Future<List<PostModel>> getNewPosts(int page, int size) async {
     List<PostModel> requestPostDataByNew = [];
 
@@ -103,31 +104,7 @@ class PostService extends ApiClient {
     return requestPostDataByNew;
   }
 
-  ///人気文章取得する
-  Future<List<PostModel>> getPostDataByViewer(int page, int size) async {
-    List<PostModel> requestPostDataByUID = [];
-
-    Map<String, dynamic> paramters = {
-      'page': '$page',
-      'size': '$size',
-    };
-
-    try {
-      String responseData = await apiGet('/getAll', paramters: paramters);
-
-      requestPostDataByUID = await handleResponse<PostModel>(
-        responseData,
-        model: PostModel.toMap,
-        isList: true,
-      );
-    } catch (e) {
-      onRequestFailed();
-    }
-
-    return requestPostDataByUID;
-  }
-
-  ///My投稿取得する
+  /// My投稿取得する
   Future<List<PostModel>> getPostDataByUID(int page, int size, LoginUser userData) async {
     List<PostModel> requestPostDataByUID = [];
 
@@ -154,7 +131,7 @@ class PostService extends ApiClient {
     return requestPostDataByUID;
   }
 
-  ///文章View数更新
+  ///MARK: 文章View数更新
   Future<bool> updatePostViewCount(int postId) async {
     String responseData = await apiPush("/moveToPost/$postId", body: {});
 
@@ -163,7 +140,23 @@ class PostService extends ApiClient {
     return responseData != "null" ? true : false;
   }
 
-  ///文章更新
+  ///MARK: 文章作成
+  Future<bool> createPost(String uid, String title, String message, int type) async {
+    Map<String, dynamic> body = {
+      "createdBy": uid,
+      "title": title,
+      "mainMessage": message,
+      "type": type,
+    };
+
+    String responseData = await apiPush("/createPost", body: body);
+
+    print("updatePost $responseData");
+
+    return responseData != "null" ? true : false;
+  }
+
+  /// 文章編集
   Future<bool> updatePost({required int postId, required String mainMessage}) async {
     Map<String, dynamic> body = {
       "id": postId,
@@ -182,22 +175,6 @@ class PostService extends ApiClient {
     String responseData = await apiPush("/delete/$postId", body: {});
 
     print("deletePost $responseData");
-
-    return responseData != "null" ? true : false;
-  }
-
-  /// 文章作成
-  Future<bool> createPost(String uid, String title, String message, int type) async {
-    Map<String, dynamic> body = {
-      "createdBy": uid,
-      "title": title,
-      "mainMessage": message,
-      "type": type,
-    };
-
-    String responseData = await apiPush("/createPost", body: body);
-
-    print("updatePost $responseData");
 
     return responseData != "null" ? true : false;
   }
@@ -231,6 +208,69 @@ class PostService extends ApiClient {
     String responseData = await apiPush("/updatePostGood/$postId", body: body);
 
     print("updatePost $responseData");
+
+    return responseData != "null" ? true : false;
+  }
+
+  ///MARK: 文章”コメント”取得する
+  Future<List<PostCommentTextEditorModel>> getPostCommentData(int page, int size, int postId) async {
+    List<PostCommentTextEditorModel> requestPostCommentData = [];
+
+    Map<String, dynamic> paramters = {
+      'page': '$page',
+      'size': '$size',
+    };
+
+    try {
+      String responseData = await apiGet('/getPostComment/$postId', paramters: paramters);
+
+      requestPostCommentData = await handleResponse<PostCommentTextEditorModel>(
+        responseData,
+        model: PostCommentTextEditorModel.toMap,
+        isList: true,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return requestPostCommentData;
+  }
+
+  ///MARK: 文章 ”コメント” 作成
+  Future<int> createPostComment({required int postUID, required String userUID, required String message}) async {
+    Map<String, dynamic> body = {};
+
+    body = {"postId": postUID, "userUid": userUID, "message": message};
+
+    String responseData = await apiPush("/createPostComment", body: body);
+
+    int index = int.parse(responseData);
+    return index;
+  }
+
+  /// 文章 ”コメント” 編集
+  Future<bool> updatePostComment({required int id, required String mainMessage}) async {
+    Map<String, dynamic> body = {};
+
+    body = {
+      "id": id,
+      "message": mainMessage,
+    };
+
+    String responseData = await apiPush("/updatePostComment/$id", body: body);
+
+    print("updatePostComment $responseData");
+
+    return responseData != "null" ? true : false;
+  }
+
+  /// 文章 ”コメント” 削除
+  Future<bool> deletePostComment({required int id}) async {
+    Map<String, dynamic> body = {};
+
+    String responseData = await apiPush("/deletePostComment/$id", body: body);
+
+    print("deletePostComment $responseData");
 
     return responseData != "null" ? true : false;
   }

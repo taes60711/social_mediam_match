@@ -13,8 +13,9 @@ import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
-import '../userPage/my_posts.dart';
+
 import 'post_body.dart';
+import 'post_page_by_viewer.dart';
 
 class PostPageByNew extends StatelessWidget {
   const PostPageByNew({super.key});

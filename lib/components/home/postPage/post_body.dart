@@ -4,12 +4,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/post/post_provider.dart';
-import '../../utilities/endDrawers/custom_end_drawer.dart';
 
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
-import 'post_comment_page.dart';
 
 class NoPostData extends StatelessWidget {
   const NoPostData({super.key});

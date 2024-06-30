@@ -1,12 +1,19 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/provider/post/post_comment_provider.dart';
 
 import '../../components/utilities/apiListView/base_api_list_provider.dart';
 import '../../components/utilities/custom_button.dart';
 import '../../components/utilities/style/style_config.dart';
 import '../../global.dart';
 import '../../models/post_model.dart';
+import '../../models/user_model.dart';
 import '../../pageManager/setting/route_controller.dart';
+import '../../services/post_service.dart';
+import '../account/user_provider.dart';
 
 class PostCommentViewModel {
   BuildContext postCommentContext;
@@ -18,14 +25,17 @@ class PostCommentViewModel {
     postCommentContext.read<BaseAPIListProvider<PostCommentTextEditorModel>>().editData(updatedData: editorData);
   }
 
-  void commetMessageOnChange(PostCommentTextEditorModel editorData, String changeMessage) {
+  Future<void> commetMessageOnChange(PostCommentTextEditorModel editorData, String changeMessage) async {
     postCommentContext.read<BaseAPIListProvider<PostCommentTextEditorModel>>().onChoiceData(choicedData: editorData);
+    await PostService().updatePostComment(id: editorData.uid, mainMessage: changeMessage);
+
     editorData.message = changeMessage;
     postCommentContext.read<BaseAPIListProvider<PostCommentTextEditorModel>>().editData(updatedData: editorData);
     editerStatusOnChange(editorData);
   }
 
-  void commetMessageOnDelete(PostCommentTextEditorModel choiceData) {
+  Future<void> commetMessageOnDelete(PostCommentTextEditorModel choiceData) async {
+    await PostService().deletePostComment(id: choiceData.uid);
     postCommentContext.read<BaseAPIListProvider<PostCommentTextEditorModel>>().deleteData(choiceData: choiceData);
   }
 
@@ -44,7 +54,7 @@ class PostCommentViewModel {
               children: [
                 const SizedBox(height: 10),
                 const Expanded(
-                  child: Text('確定要刪除該篇文章嗎?'),
+                  child: Text('確定要刪除該篇留言嗎?'),
                 ),
                 Row(
                   children: [
@@ -80,7 +90,23 @@ class PostCommentViewModel {
     );
   }
 
-  void commetMessageOnCreate(PostCommentTextEditorModel choiceData) {
-    postCommentContext.read<BaseAPIListProvider<PostCommentTextEditorModel>>().createData(createdData: choiceData);
+  Future<void> commetMessageOnCreate({required int postUID, required String message}) async {
+    LoginUser loginUserData = postCommentContext.read<UserProvider>().userData;
+    int uid = await PostService().createPostComment(postUID: postUID, userUID: loginUserData.uid, message: message);
+    DateTime dateUtc = DateTime.now().toUtc();
+    DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
+    String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
+    PostCommentTextEditorModel commentTextEditorModel = PostCommentTextEditorModel(
+      uid: uid,
+      postId: postUID,
+      userUid: loginUserData.uid,
+      message: message,
+      postTime: formattedTime,
+      commentUserInfo: loginUserData,
+      isEditor: false,
+      textEditingController: TextEditingController(),
+    );
+    postCommentContext.read<BaseAPIListProvider<PostCommentTextEditorModel>>().createData(createdData: commentTextEditorModel);
+    postCommentContext.read<PostCommentProvider>().afterPostCeate();
   }
 }

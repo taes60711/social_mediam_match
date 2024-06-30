@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
+
 import 'package:social_mediam_match/models/course_model.dart';
-import 'package:social_mediam_match/models/post_model.dart';
 
 import '../../global.dart';
 
@@ -18,7 +17,6 @@ class searchStatus {
 }
 
 class DBService {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
   int size = 8;
   String url = "http://$ip:$port";
 
@@ -272,51 +270,6 @@ class DBService {
       print(e);
     }
     return allCouserData;
-  }
-
-  Future<void> updatePostComment(int postId, String mainMessage) async {
-    String branch = "posts";
-    String searchUrl = '$url/$branch/updatePostComment/$postId';
-    Map<String, String> headers = {'content-type': 'application/json'};
-
-    String body = UpdateCommentPostModel(id: postId, message: mainMessage).updatePost();
-    final uri = Uri.parse(searchUrl);
-    try {
-      var response = await http.put(uri, headers: headers, body: body);
-      if (response.statusCode != 404) {
-        print("update sucess");
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> deletePostComment(int uId) async {
-    String branch = "posts";
-    String searchUrl = '$url/$branch/deletePostComment/$uId';
-
-    final uri = Uri.parse(searchUrl);
-    try {
-      var response = await http.put(uri);
-      if (response.statusCode != 404) {
-        print("delete sucess");
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<int> createPostComment(int postUId, String uid, String message) async {
-    String branch = "posts";
-    String searchUrl = '$url/$branch/createPostComment';
-
-    final uri = Uri.parse(searchUrl);
-    Map<String, String> headers = {'content-type': 'application/json'};
-    String body = jsonEncode({"postId": postUId, "userUid": uid, "message": message});
-
-    Response result = await http.put(uri, headers: headers, body: body);
-    int index = int.parse(result.body);
-    return index;
   }
 
   // Future<void> createPost(String uid, String title, String message, int type) async {

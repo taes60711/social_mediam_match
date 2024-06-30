@@ -6,6 +6,13 @@ import '../../models/post_model.dart';
 class PostCommentProvider extends ChangeNotifier {
   PostModel viewChoicedPost = PostModel();
 
+  TextEditingController postCommentInput = TextEditingController();
+
+  void afterPostCeate() {
+    postCommentInput.text = "";
+    notifyListeners();
+  }
+
   void updateChoicedPostGoodCount({required bool isPlus}) {
     if (isPlus) {
       viewChoicedPost.good++;

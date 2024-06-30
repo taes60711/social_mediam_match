@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_comment_page.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/post/post_provider.dart';
 
 import '../../components/utilities/apiListView/base_api_list_provider.dart';
+import '../../components/utilities/basic_top_bar.dart';
 import '../../components/utilities/endDrawers/post_comment_end_drawer.dart';
+import '../../components/utilities/style/style_config.dart';
+import '../../global.dart';
 import '../../models/post_model.dart';
 import '../../models/rich_text_format.dart';
+import '../../pageManager/setting/route_controller.dart';
 import '../../services/post_service.dart';
 import '../account/user_provider.dart';
 import 'post_comment_provider.dart';
@@ -15,13 +20,6 @@ import 'post_comment_provider.dart';
 class PostViewModel {
   BuildContext postContext;
   PostViewModel({required this.postContext});
-
-  Future<void> createPost({required String title, required String msg, required int type}) async {
-    LoginUser userData = postContext.read<UserProvider>().userData;
-    String fomattedContent = await RichTextFormat(htmlString: msg).sendPostImgFormat();
-    // postContext.read<BaseAPIListProvider<PostModel>>().createData(createdData: createdData);
-    await PostService().createPost(userData.uid, title, fomattedContent, type);
-  }
 
   Future<void> postDetailInit({required PostModel choicedPost}) async {
     openPostDetailEndDrawer(context: postContext, choicedPost: choicedPost);
@@ -32,6 +30,13 @@ class PostViewModel {
     if (choicedPost.createdBy != userData.uid) {
       await PostService().updatePostViewCount(choicedPost.id);
     }
+  }
+
+  Future<void> createPost({required String title, required String msg, required int type}) async {
+    LoginUser userData = postContext.read<UserProvider>().userData;
+    String fomattedContent = await RichTextFormat(htmlString: msg).sendPostImgFormat();
+    // postContext.read<BaseAPIListProvider<PostModel>>().createData(createdData: createdData);
+    await PostService().createPost(userData.uid, title, fomattedContent, type);
   }
 
   Future<void> updatePostGood({required bool isGood, required PostModel viewChoicedPost}) async {
@@ -47,6 +52,64 @@ class PostViewModel {
     postContext.read<PostProvider>().changeIsGoodStatus(!isGood);
   }
 
+  void showOptionBottomSheet({required PostModel choicedPost}) {
+    showModalBottomSheet(
+        context: globalContext,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (builder) {
+          return DraggableScrollableSheet(
+              expand: false,
+              minChildSize: 0.25,
+              initialChildSize: 0.3,
+              maxChildSize: 0.3,
+              builder: (context, scrollController) {
+                return Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(10),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        BaseTopBar(
+                          leftWidget: Container(),
+                          centerWidget: Icon(
+                            Icons.remove,
+                            size: 35,
+                            color: normalBgColor2,
+                          ),
+                          rightWidget: Container(
+                            color: Colors.transparent,
+                            padding: const EdgeInsets.all(5),
+                            child: GestureDetector(
+                              onTap: () => RouteOptions.pop(),
+                              child: const Icon(
+                                Icons.close,
+                                size: 25,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              _bottomSheetBtn(
+                                  icon: Icons.edit,
+                                  btnText: "分享",
+                                  bntFunc: () {
+                                    RouteOptions.pop();
+                                  }),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ));
+              });
+        });
+  }
+
   void showPostCommentPageSheet({required PostModel choicedPost}) {
     showModalBottomSheet(
         context: postContext,
@@ -56,6 +119,7 @@ class PostViewModel {
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostCommentTextEditorModel>()),
+              ChangeNotifierProvider(create: (_) => PostCommentProvider()),
             ],
             child: DraggableScrollableSheet(
               expand: false,
@@ -77,4 +141,38 @@ class PostViewModel {
           );
         });
   }
+}
+
+Widget _bottomSheetBtn({required IconData icon, required String btnText, required bntFunc}) {
+  return GestureDetector(
+    onTap: () {
+      bntFunc();
+    },
+    child: Container(
+      margin: const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+      height: 45,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: normalBgColor2,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: normalTextColor,
+            size: 25,
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 70,
+            child: Text(
+              btnText,
+              style: TextStyle(color: normalTextColor),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }

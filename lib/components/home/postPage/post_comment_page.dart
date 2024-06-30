@@ -12,6 +12,7 @@ import 'package:social_mediam_match/provider/post/post_comment_view_model.dart';
 import 'package:social_mediam_match/services/post_service.dart';
 
 import '../../../pageManager/setting/route_controller.dart';
+import '../../../provider/post/post_comment_provider.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
 import '../../utilities/style/style_config.dart';
 
@@ -38,55 +39,48 @@ class PostCommentPage extends StatelessWidget {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Row(
-            children: [
-              Expanded(
-                child: SizedBox(
-                  height: 30,
-                  child: TextField(
-                    controller: TextEditingController(),
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.only(top: 5, left: 10),
-                      border: OutlineInputBorder(),
-                      hintText: 'Enter Message',
+        Builder(builder: (context) {
+          TextEditingController postCommentInput = context.read<PostCommentProvider>().postCommentInput;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 30,
+                    child: TextField(
+                      controller: postCommentInput,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.only(top: 5, left: 10),
+                        border: OutlineInputBorder(),
+                        hintText: 'Enter Message',
+                      ),
                     ),
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  LoginUser loginUserData = context.read<UserProvider>().userData;
-                  PostCommentTextEditorModel commentTextEditorModel = PostCommentTextEditorModel(
-                    uid: 0,
-                    postId: 0,
-                    userUid: '',
-                    message: '',
-                    postTime: '',
-                    commentUserInfo: loginUserData,
-                    isEditor: false,
-                    textEditingController: TextEditingController(),
-                  );
-                  PostCommentViewModel(postCommentContext: context).commetMessageOnCreate(commentTextEditorModel);
-                },
-                child: Container(
-                  height: 30,
-                  margin: EdgeInsets.only(left: 5),
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
-                  child: Center(
-                    child: Icon(
-                      FontAwesomeIcons.fileImage,
-                      size: 16,
-                      color: normalTextColor,
+                GestureDetector(
+                  onTap: () {
+                    PostCommentViewModel(postCommentContext: context)
+                        .commetMessageOnCreate(postUID: choicedPost.id, message: postCommentInput.text);
+                  },
+                  child: Container(
+                    height: 30,
+                    margin: EdgeInsets.only(left: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
+                    child: Center(
+                      child: Icon(
+                        FontAwesomeIcons.fileImage,
+                        size: 16,
+                        color: normalTextColor,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
+              ],
+            ),
+          );
+        }),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),

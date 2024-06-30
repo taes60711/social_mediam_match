@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/post_model.dart';
+import '../../../pageManager/enum/route_path.dart';
+import '../../../pageManager/setting/route_controller.dart';
 import '../../../services/post_service.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../utilities/apiListView/api_list_view.dart';
@@ -14,8 +16,9 @@ import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
-import '../userPage/my_posts.dart';
+
 import 'post_body.dart';
+import 'post_page_by_viewer.dart';
 
 class PostPageByType extends StatelessWidget {
   const PostPageByType({super.key});
@@ -36,6 +39,33 @@ class PostPageByType extends StatelessWidget {
               return const PostLoading();
             },
             noDataBuilder: const NoPostData(),
+            customFloatbutton: GestureDetector(
+              onTap: () {
+                RouteOptions.pushTo(
+                  RoutePath.postEditPage.value,
+                  arguments: {'postContext': context},
+                );
+              },
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.edit,
+                  size: 18,
+                  color: normalBgColor,
+                ),
+              ),
+            ),
             itemChild: ((data, index) {
               return Column(
                 children: [
