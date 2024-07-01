@@ -28,12 +28,11 @@ class PostPageByType extends StatelessWidget {
     return Scaffold(
       body: Builder(
         builder: (context) {
-          int selectedboardIndex = context.select((PostProvider value) => value.selectedboardIndex);
-          print("PostPageByType $selectedboardIndex");
+          int selectedboardType = context.select((PostProvider value) => value.selectedboardIndex);
           return APIListView<PostModel>(
             providerList: context.watch<BaseAPIListProvider<PostModel>>().listData,
             apiFunc: (page, size) {
-              return PostService().getPostByType(page, size, selectedboardIndex);
+              return PostService().getPostByType(page, size, selectedboardType);
             },
             loadingBuilder: () {
               return const PostLoading();
@@ -41,9 +40,13 @@ class PostPageByType extends StatelessWidget {
             noDataBuilder: const NoPostData(),
             customFloatbutton: GestureDetector(
               onTap: () {
+                context.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: PostModel());
                 RouteOptions.pushTo(
                   RoutePath.postEditPage.value,
-                  arguments: {'postContext': context},
+                  arguments: {
+                    'postContext': context,
+                    'postBoradType': selectedboardType,
+                  },
                 );
               },
               child: Container(

@@ -6,7 +6,6 @@ import '../../components/utilities/endDrawers/post_page_by_text_filter_end_drawe
 class PostProvider extends ChangeNotifier {
   bool isGood = false;
 
-  TextEditingController messageInput = TextEditingController();
   TextEditingController textFilterInput = TextEditingController();
 
   void changeIsGoodStatus(bool changedGood) {

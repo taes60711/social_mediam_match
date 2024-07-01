@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_detail.dart';
 import 'package:social_mediam_match/components/home/userPage/myCourse/added_courses_page.dart';
 import 'package:social_mediam_match/components/home/userPage/myCourse/courese_member_manager.dart';
+import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/states/course_state.dart';
 
@@ -32,20 +33,8 @@ class MyCourses extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            Row(
-              children: [
-                Container(
-                  width: ScreenSize.width * 0.33,
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
-                    },
-                    icon: const Icon(Icons.arrow_back_ios),
-                  ),
-                ),
-                SizedBox(width: ScreenSize.width * 0.33, child: const Center(child: Text("我的課程"))),
-              ],
+            BaseTopBar(
+              title: "我的課程",
             ),
             Expanded(
               child: DefaultTabController(

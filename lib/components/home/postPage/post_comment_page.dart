@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
@@ -53,7 +53,7 @@ class PostCommentPage extends StatelessWidget {
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.only(top: 5, left: 10),
                         border: OutlineInputBorder(),
-                        hintText: 'Enter Message',
+                        hintText: 'コメントを追加',
                       ),
                     ),
                   ),
@@ -70,7 +70,7 @@ class PostCommentPage extends StatelessWidget {
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
                     child: Center(
                       child: Icon(
-                        FontAwesomeIcons.fileImage,
+                        Icons.send,
                         size: 16,
                         color: normalTextColor,
                       ),

@@ -3,6 +3,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../models/post_model.dart';
 import '../../../services/post_service.dart';
 import '../../../provider/post/post_provider.dart';
@@ -37,14 +38,7 @@ class PostPageByTextFilter extends StatelessWidget {
               controller: textFilterInput,
               textInputAction: TextInputAction.search,
               onSubmitted: (value) async {
-                int loadSize = context.read<BaseAPIListProvider<PostModel>>().size;
-                await context.read<BaseAPIListProvider<PostModel>>().reloadData(
-                      apiFunc: () async => await PostService().getPostByTextFilter(0, loadSize, textFilterInput.text),
-                    );
-                int preLoadPage = context.read<BaseAPIListProvider<PostModel>>().page;
-                await context.read<BaseAPIListProvider<PostModel>>().preLoad(
-                      apiFunc: () async => await PostService().getPostByTextFilter(preLoadPage, loadSize, textFilterInput.text),
-                    );
+                await PostViewModel(postContext: context).searchPostByTextFilter(textFilterInput.text);
               },
               decoration: InputDecoration(
                 hintText: "Search By title",

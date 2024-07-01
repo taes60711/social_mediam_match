@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_comment_page.dart';
@@ -35,8 +36,19 @@ class PostViewModel {
   Future<void> createPost({required String title, required String msg, required int type}) async {
     LoginUser userData = postContext.read<UserProvider>().userData;
     String fomattedContent = await RichTextFormat(htmlString: msg).sendPostImgFormat();
-    // postContext.read<BaseAPIListProvider<PostModel>>().createData(createdData: createdData);
-    await PostService().createPost(userData.uid, title, fomattedContent, type);
+    DateTime dateUtc = DateTime.now().toUtc();
+    DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
+    String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
+    // await PostService().createPost(userData.uid, title, fomattedContent, type);
+    PostModel createdData = PostModel(
+      id: 0,
+      createdBy: userData.uid,
+      title: title,
+      mainMessage: fomattedContent,
+      postTime: formattedTime,
+      type: type,
+    );
+    postContext.read<BaseAPIListProvider<PostModel>>().createData(createdData: createdData);
   }
 
   Future<void> updatePostGood({required bool isGood, required PostModel viewChoicedPost}) async {
@@ -50,6 +62,17 @@ class PostViewModel {
       postContext.read<PostCommentProvider>().updateChoicedPostGoodCount(isPlus: true);
     }
     postContext.read<PostProvider>().changeIsGoodStatus(!isGood);
+  }
+
+  Future<void> searchPostByTextFilter(String keyword) async {
+    int loadSize = postContext.read<BaseAPIListProvider<PostModel>>().size;
+    await postContext.read<BaseAPIListProvider<PostModel>>().reloadData(
+          apiFunc: () async => await PostService().getPostByTextFilter(0, loadSize, keyword),
+        );
+    int preLoadPage = postContext.read<BaseAPIListProvider<PostModel>>().page;
+    await postContext.read<BaseAPIListProvider<PostModel>>().preLoad(
+          apiFunc: () async => await PostService().getPostByTextFilter(preLoadPage, loadSize, keyword),
+        );
   }
 
   void showOptionBottomSheet({required PostModel choicedPost}) {

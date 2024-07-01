@@ -26,7 +26,6 @@ import '../../../provider/account/user_provider.dart';
 
 import '../../account/skill_bar.dart';
 import '../../utilities/endDrawers/skill_setting_end_drawer.dart';
-import '../postPage/post_body.dart';
 
 class CoursePage extends StatelessWidget {
   const CoursePage({
