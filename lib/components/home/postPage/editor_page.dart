@@ -6,6 +6,7 @@ import 'package:social_mediam_match/components/utilities/title_input.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../pageManager/setting/route_controller.dart';
+import '../../../provider/post/edit_page_model.dart';
 import '../../../provider/post/my_post_view_model.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
@@ -36,9 +37,10 @@ class EditorPage extends StatelessWidget {
                     String content = await controller.getText();
                     String title = titleInputController.text;
                     if (postData.mainMessage != content || postData.title != title) {
-                      print("edited");
+                      EditPageModel().editorExitCheck();
+                    } else {
+                      RouteOptions.pop();
                     }
-                    RouteOptions.pop();
                   },
                   title: "文章編輯",
                   rightWidget: GestureDetector(
@@ -46,7 +48,7 @@ class EditorPage extends StatelessWidget {
                       await controller.getText().then(
                         (content) {
                           if (titleInputController.text == "" || content == "") {
-                            print("can't Create / Update");
+                            EditPageModel().createPostCheck(titleInputController.text, content);
                           } else {
                             postData.id == -1
                                 ? PostViewModel(postContext: postContext)

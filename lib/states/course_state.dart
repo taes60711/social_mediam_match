@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/course_model.dart';
+import '../components/utilities/endDrawers/course_detail_end_drawer.dart';
+import '../components/utilities/endDrawers/course_filter_end_drawer.dart';
 import '../global.dart';
 import '../models/user_model.dart';
 
@@ -335,6 +337,18 @@ class CourseState extends ChangeNotifier {
 
   void reLoadingPage() {
     isReLoading = true;
+    notifyListeners();
+  }
+
+  CourseDetailEndDrawerType endDrawerOpenInfo = CourseDetailEndDrawerType.close;
+  void changeEndDrawerStatus(CourseDetailEndDrawerType status) {
+    endDrawerOpenInfo = status;
+    notifyListeners();
+  }
+
+  CourseFilterEndDrawerType filterEndDrawerOpenInfo = CourseFilterEndDrawerType.close;
+  void changeFilterEndDrawerStatus(CourseFilterEndDrawerType status) {
+    filterEndDrawerOpenInfo = status;
     notifyListeners();
   }
 }

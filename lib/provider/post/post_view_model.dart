@@ -39,7 +39,7 @@ class PostViewModel {
     DateTime dateUtc = DateTime.now().toUtc();
     DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
     String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
-    // await PostService().createPost(userData.uid, title, fomattedContent, type);
+    await PostService().createPost(userData.uid, title, fomattedContent, type);
     PostModel createdData = PostModel(
       id: 0,
       createdBy: userData.uid,

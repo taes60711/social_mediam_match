@@ -271,18 +271,4 @@ class DBService {
     }
     return allCouserData;
   }
-
-  // Future<void> createPost(String uid, String title, String message, int type) async {
-  //   String branch = "posts";
-  //   String searchUrl = '$url/$branch/createPost';
-
-  //   final uri = Uri.parse(searchUrl);
-
-  //   Map<String, String> headers = {'content-type': 'application/json'};
-  //   String body = CreatePostModel(createdByUId: uid, title: title, mainMessage: message, type: type).createPost();
-
-  //   await http.put(uri, headers: headers, body: body).then((_) {
-  //     print("MySql Post Create :${_.body}");
-  //   });
-  // }
 }

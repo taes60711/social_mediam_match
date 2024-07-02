@@ -20,7 +20,7 @@ class ApiClient {
     Map<String, dynamic>? paramters,
   }) async {
     final uri = Uri.parse("http://$_ip$url").replace(queryParameters: paramters);
-    print("Get API  Url : $url");
+    print("Get API  Url : $_ip$url");
     Response response = await http.get(uri);
 
     try {

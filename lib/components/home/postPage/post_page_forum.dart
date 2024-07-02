@@ -11,6 +11,7 @@ import '../../utilities/apiListView/base_api_list_provider.dart';
 import '../../utilities/endDrawers/post_board_end_drawer.dart';
 import '../../utilities/endDrawers/post_comment_end_drawer.dart';
 import '../../utilities/endDrawers/post_page_by_text_filter_end_drawer.dart';
+import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import 'post_page_by_viewer.dart';
 
 class PostPageForum extends StatelessWidget {
@@ -132,6 +133,7 @@ class PostPageForum extends StatelessWidget {
           postBoardEndDrawer(),
           postPageBytextFilterEndDrawer(),
           postDetailEndDrawer(),
+          userDetailEndDrawer(),
         ],
       ),
     );

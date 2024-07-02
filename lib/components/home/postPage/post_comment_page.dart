@@ -14,6 +14,7 @@ import 'package:social_mediam_match/services/post_service.dart';
 import '../../../pageManager/setting/route_controller.dart';
 import '../../../provider/post/post_comment_provider.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
+import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../utilities/style/style_config.dart';
 
 class PostCommentPage extends StatelessWidget {
@@ -102,7 +103,7 @@ class PostCommentPage extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 5),
                         child: GestureDetector(
                           onTap: () {
-                            // openUserDetailEndDrawer(context: context, otherUserData: data[index].commentUserInfo);
+                            openUserDetailEndDrawer(context: context, otherUserData: data[index].commentUserInfo);
                           },
                           child: UserIcon(
                             iconSize: 35,
