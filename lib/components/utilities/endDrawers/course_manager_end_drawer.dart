@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/states/course_state.dart';
+import 'package:social_mediam_match/provider/course_state.dart';
 import '../../../models/course_model.dart';
 import '../../home/userPage/myCourse/courses_member_manager.dart';
 import '../apiListView/base_api_list_provider.dart';

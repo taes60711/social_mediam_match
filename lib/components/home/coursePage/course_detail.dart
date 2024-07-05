@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/models/course_model.dart';
-import 'package:social_mediam_match/states/course_state.dart';
+import 'package:social_mediam_match/provider/course_state.dart';
 
 import '../../account/skill_bar.dart';
 import '../../utilities/endDrawers/skill_setting_end_drawer.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/states/course_state.dart';
+import 'package:social_mediam_match/provider/course_state.dart';
 import '../../home/coursePage/course_filter.dart';
 import 'custom_end_drawer.dart';
 

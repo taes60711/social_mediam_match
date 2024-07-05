@@ -6,7 +6,7 @@ import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
-import 'package:social_mediam_match/states/course_state.dart';
+import 'package:social_mediam_match/provider/course_state.dart';
 
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';

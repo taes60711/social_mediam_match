@@ -7,7 +7,6 @@ import 'package:social_mediam_match/models/course_model.dart';
 import '../../global.dart';
 
 class DBService {
-  int size = 8;
   String url = "http://$ip:$port";
 
   Future<bool> deleteUserFromCourse({required int courseId, required String userUID}) async {

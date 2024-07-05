@@ -23,7 +23,7 @@ import '../../provider/friend_provider.dart';
 import '../../provider/home/skill_map_provider.dart';
 import '../../provider/home/user_setting_view_provider.dart';
 import '../../provider/post/post_provider.dart';
-import '../../states/course_state.dart';
+import '../../provider/course_state.dart';
 import '../enum/route_path.dart';
 import 'bottom_bar_controller_provider.dart';
 

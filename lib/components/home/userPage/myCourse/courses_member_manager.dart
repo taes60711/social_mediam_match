@@ -218,7 +218,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/states/course_state.dart';
+import 'package:social_mediam_match/provider/course_state.dart';
 
 import '../../../../models/course_model.dart';
 import '../../../../services/course_service.dart';
@@ -239,7 +239,8 @@ class CourseMemberManager extends StatelessWidget {
         itemChild: ((data, index) {
           return Column(
             children: [
-              Text(data[index].memberUid),
+              Text("${data[index].status}"),
+              Text(data[index].userData.email),
             ],
           );
         }),
