@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/states/course_state.dart';
+import '../../home/coursePage/course_filter.dart';
 import 'custom_end_drawer.dart';
 
 enum CourseFilterEndDrawerType {
@@ -10,17 +11,17 @@ enum CourseFilterEndDrawerType {
 
 ///Before use need ParentWidget Create CourseState
 
-///MARK: void コース詳細ページ開くように
+///MARK: void コースフィルターページ開くように
 void openCourseFilterEndDrawer({required BuildContext context}) {
   context.read<CourseState>().changeFilterEndDrawerStatus(CourseFilterEndDrawerType.open);
 }
 
-///MARK: void コース詳細ページ開くように
+///MARK: void コースフィルターページ開くように
 void closeCourseFilterEndDrawer({required BuildContext context}) {
   context.read<CourseState>().changeFilterEndDrawerStatus(CourseFilterEndDrawerType.close);
 }
 
-///MARK: Widget コース詳細ページ用EndDrawer
+///MARK: Widget コースフィルターページ用EndDrawer
 Widget courseFilterEndDrawer() {
   return Builder(
     builder: (context) {
@@ -35,12 +36,8 @@ Widget courseFilterEndDrawer() {
             closeCourseFilterEndDrawer(context: context);
           },
 
-          /// ユーザ詳細ページ
-          child: Container(
-            width: 100,
-            height: 20,
-            color: const Color.fromARGB(255, 165, 63, 26),
-          ),
+          /// コースフィルターページ
+          child: const CourseFilterPage(),
         );
       }
 

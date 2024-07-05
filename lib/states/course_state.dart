@@ -5,20 +5,15 @@ import '../components/utilities/endDrawers/course_detail_end_drawer.dart';
 import '../components/utilities/endDrawers/course_filter_end_drawer.dart';
 import '../global.dart';
 import '../models/user_model.dart';
-
 import 'package:http/http.dart' as http;
-
 import '../services/db_service.dart';
 
 class CourseState extends ChangeNotifier {
   final DBService _dbService = DBService();
-  List<CourseModel> courseData = [];
-  List<CourseModel> myCourseData = [];
-  List<CourseModel> myAddedCourseData = [];
+
   bool isFirstLoading = false, isAddDataLoading = false, isReLoading = false, isTopFirstLoading = false;
 
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
-  CourseModel? choicedCourse;
 
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
@@ -119,39 +114,6 @@ class CourseState extends ChangeNotifier {
     notifyListeners();
   }
 
-  double startScrollPosition = -1;
-  void getStartScrollPos(double pos) {
-    startScrollPosition = pos;
-    notifyListeners();
-  }
-
-  bool floatButtonIsVisiable = false;
-  void floatButtonVisiableChange(double posheight) {
-    if (posheight < 40) {
-      if (floatButtonIsVisiable) {
-        floatButtonIsVisiable = false;
-        notifyListeners();
-      }
-    } else {
-      if (!floatButtonIsVisiable) {
-        floatButtonIsVisiable = true;
-        notifyListeners();
-      }
-    }
-  }
-
-  String endDrawerType = "";
-  LoginUser? otherUser;
-  void openEndDrawer(String type, {LoginUser? user, CourseModel? course}) {
-    endDrawerType = type;
-    if (type == "userDetail") {
-      otherUser = user;
-    } else {
-      choicedCourse = course;
-    }
-    notifyListeners();
-  }
-
   Future<void> deleteUserFromCourse({required int courseId, required String userUId}) async {
     bool isAdded = false;
     try {
@@ -181,16 +143,6 @@ class CourseState extends ChangeNotifier {
   }
 
   List<AddedCourseMemberModel> addedCourseMembers = [];
-  Future<void> getAddedCourseMember({required int courseId, bool? isFirst}) async {
-    List<AddedCourseMemberModel> resultData = [];
-    try {
-      resultData = await _dbService.getCourseAddedMember(courseId, isFirst: isFirst);
-      addedCourseMembers = resultData;
-    } catch (e) {
-      print(e);
-    }
-    notifyListeners();
-  }
 
   bool bIsAddedCourse = true;
   Future<void> isAddedCourse({required int courseId, required String userUId}) async {
@@ -229,107 +181,6 @@ class CourseState extends ChangeNotifier {
     return createResult;
   }
 
-  Future<void> getAllCourseData({required String searchType}) async {
-    try {
-      List<CourseModel> tempCourseData = [];
-      if (searchType == "AddData") {
-        tempCourseData = await _dbService.getAllCourses();
-      } else {
-        if (searchType == "First") {
-          isFirstLoading = true;
-          Future.delayed(Duration.zero).then((value) => notifyListeners());
-        }
-        tempCourseData = await _dbService.getAllCourses(isFirst: true);
-      }
-
-      if (searchType == "AddData") {
-        tempCourseData.forEach((e) {
-          courseData = [...courseData, e];
-        });
-        isAddDataLoading = false;
-      } else {
-        courseData = tempCourseData;
-        if (searchType == "First") {
-          isFirstLoading = false;
-        } else if (searchType == "Reload") {
-          isReLoading = false;
-        }
-      }
-
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> getAddedCourses({required String userId, required String searchType}) async {
-    try {
-      List<CourseModel> tempCourseData = [];
-      if (searchType == "AddData") {
-        tempCourseData = await _dbService.getAddedCourses(userId);
-      } else {
-        if (searchType == "First") {
-          isFirstLoading = true;
-          Future.delayed(Duration.zero).then((value) => notifyListeners());
-        }
-
-        tempCourseData = await _dbService.getAddedCourses(userId, isFirst: true);
-      }
-
-      if (searchType == "AddData") {
-        tempCourseData.forEach((e) {
-          myAddedCourseData = [...myAddedCourseData, e];
-        });
-        isAddDataLoading = false;
-      } else {
-        myAddedCourseData = tempCourseData;
-
-        if (searchType == "First") {
-          isFirstLoading = false;
-        } else if (searchType == "Reload") {
-          isReLoading = false;
-        }
-      }
-
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> getCourseDataByUserId({required String userId, required String searchType}) async {
-    try {
-      List<CourseModel> tempCourseData = [];
-      if (searchType == "AddData") {
-        tempCourseData = await _dbService.getAllCourses();
-      } else {
-        if (searchType == "First") {
-          isFirstLoading = true;
-          Future.delayed(Duration.zero).then((value) => notifyListeners());
-        }
-        tempCourseData = await _dbService.getCoursesByUserId(userId, isFirst: true);
-      }
-
-      if (searchType == "AddData") {
-        tempCourseData.forEach((e) {
-          myCourseData = [...myCourseData, e];
-        });
-        isAddDataLoading = false;
-      } else {
-        myCourseData = tempCourseData;
-        if (searchType == "First") {
-          isFirstLoading = false;
-        } else if (searchType == "Reload") {
-          isReLoading = false;
-        }
-      }
-
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
-  }
-
   void addData() {
     isAddDataLoading = true;
     notifyListeners();
@@ -340,15 +191,19 @@ class CourseState extends ChangeNotifier {
     notifyListeners();
   }
 
+  CourseModel choicedCourse = CourseModel(courseCreateduserInfo: LoginUser());
+
   CourseDetailEndDrawerType endDrawerOpenInfo = CourseDetailEndDrawerType.close;
-  void changeEndDrawerStatus(CourseDetailEndDrawerType status) {
+  void changeEndDrawerStatus(CourseDetailEndDrawerType status, CourseModel opendCourse) {
     endDrawerOpenInfo = status;
+    choicedCourse = opendCourse;
     notifyListeners();
   }
 
   CourseFilterEndDrawerType filterEndDrawerOpenInfo = CourseFilterEndDrawerType.close;
   void changeFilterEndDrawerStatus(CourseFilterEndDrawerType status) {
     filterEndDrawerOpenInfo = status;
+
     notifyListeners();
   }
 }

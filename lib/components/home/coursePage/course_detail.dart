@@ -1,108 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/user_detail_page.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
-import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
-import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/states/course_state.dart';
-import '../../../models/course_model.dart';
-import '../../../models/user_model.dart';
+
 import '../../account/skill_bar.dart';
 import '../../utilities/endDrawers/skill_setting_end_drawer.dart';
-import '../../utilities/stateful_wrapper.dart';
-import '../../utilities/endDrawers/custom_end_drawer.dart';
-
+import '../../utilities/endDrawers/user_detail_end_drawer.dart';
+import '../../utilities/rich_text_view.dart';
+import '../../utilities/style/screen_size.dart';
+import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
 
 class CourseDetail extends StatelessWidget {
-  final CourseModel? courseData;
-  final LoginUser? userData;
-  final GlobalKey<ScaffoldState> globalKey;
-  final VoidCallback gotoFriendPage;
-  final bool? bIsAdded;
-
-  const CourseDetail({
-    super.key,
-    this.courseData,
-    required this.globalKey,
-    required this.userData,
-    required this.gotoFriendPage,
-    this.bIsAdded,
-  });
+  const CourseDetail({super.key});
 
   @override
   Widget build(BuildContext context) {
-    CourseState courseState = context.read<CourseState>();
-    bool bIsAddedCourse = context.select((CourseState value) => value.bIsAddedCourse);
-    Widget component = Container();
+    CourseModel openedCourse = context.read<CourseState>().choicedCourse;
 
-    if (courseData != null) {
-      CourseModel realCourseData = courseData!;
-      print("isAdded bIsAddedCourse bIsAddedCourse ${bIsAddedCourse}");
-
-      Widget breakLine = Container(
-        margin: const EdgeInsets.all(5),
-        width: ScreenSize.width,
-        height: 0.3,
-        color: hintTextColor,
-      );
-
-      component = Padding(
-        padding: const EdgeInsets.all(10.0),
+    return BackgroundWidget(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(Icons.arrow_back_ios),
-            ),
-            SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  realCourseData.title,
+                  openedCourse.title,
                   style: TextStyle(fontSize: 19),
                 ),
-                bIsAddedCourse
-                    ? Container()
-                    : GestureDetector(
-                        onTap: () {
-                          courseState.userAddCourseRequest(courseId: realCourseData.id, userUId: userData!.uid);
-                        },
-                        child: Container(
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 30,
-                                height: 30,
-                                margin: const EdgeInsets.only(right: 10),
-                                decoration: BoxDecoration(color: normalBgColor2, borderRadius: BorderRadius.circular(15)),
-                                child: const Icon(
-                                  FontAwesomeIcons.plus,
-                                  size: 15,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                "加入課程",
-                                style: TextStyle(color: normalBgColor2),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
               ],
             ),
+            Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
             Text(
-              "課程類別: ${realCourseData.type}",
+              "課程類別: ${openedCourse.type}",
               style: TextStyle(fontSize: 12, color: hintTextColor),
             ),
-            breakLine,
+            Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
             Text(
               "課程前需求:",
               style: TextStyle(fontSize: 14),
@@ -114,9 +50,9 @@ class CourseDetail extends StatelessWidget {
                 color: hintTextColor.withAlpha(50),
                 borderRadius: BorderRadius.circular(3),
               ),
-              child: Text(realCourseData.beforeNeed),
+              child: Text(openedCourse.beforeNeed),
             ),
-            breakLine,
+            Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
             Text(
               "課程內容:",
               style: TextStyle(fontSize: 14),
@@ -128,7 +64,7 @@ class CourseDetail extends StatelessWidget {
                 color: hintTextColor.withAlpha(50),
                 borderRadius: BorderRadius.circular(3),
               ),
-              child: Text(realCourseData.content),
+              child: Text(openedCourse.content),
             ),
             SizedBox(height: 5),
             Text(
@@ -141,36 +77,20 @@ class CourseDetail extends StatelessWidget {
                 Expanded(
                   child: skillBar(
                     SkillEndDrawerType.close,
-                    courseSkillData: realCourseData.courseLearningSkills,
+                    courseSkillData: openedCourse.courseLearningSkills,
                     fontSize: 12,
                   ),
                 ),
                 Text(
-                  "難度: ${realCourseData.needLevel}",
+                  "難度: ${openedCourse.needLevel}",
                   style: TextStyle(fontSize: 12),
                 ),
               ],
             ),
-            breakLine,
+            Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
             GestureDetector(
               onTap: () {
-                showDialog(
-                  context: context,
-                  barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
-                  builder: (BuildContext context) {
-                    return CustomEndDrawer(
-                      child: Dismissible(
-                        direction: DismissDirection.startToEnd,
-                        resizeDuration: const Duration(milliseconds: 1),
-                        onDismissed: (_) => Navigator.of(context).pop(),
-                        key: const Key('key'),
-                        child: UserDetailPage(
-                          otherUser: realCourseData.courseCreateduserInfo,
-                        ),
-                      ),
-                    );
-                  },
-                );
+                openUserDetailEndDrawer(context: context, otherUserData: openedCourse.courseCreateduserInfo);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
@@ -189,17 +109,17 @@ class CourseDetail extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: UserIcon(
                             iconSize: 35,
-                            image: realCourseData.courseCreateduserInfo.image,
+                            image: openedCourse.courseCreateduserInfo.image,
                           ),
                         ),
                         Text(
-                          "${realCourseData.courseCreateduserInfo.name != "" ? realCourseData.courseCreateduserInfo.name ?? "" : realCourseData.courseCreateduserInfo.email}",
+                          "${openedCourse.courseCreateduserInfo.name != "" ? openedCourse.courseCreateduserInfo.name ?? "" : openedCourse.courseCreateduserInfo.email}",
                           style: TextStyle(fontSize: 14),
                         ),
                       ],
                     ),
                     Text(
-                      "最終更新日 : ${realCourseData.postTime}",
+                      "最終更新日 : ${openedCourse.postTime}",
                       style: TextStyle(color: normalBgColor2, fontSize: 13),
                     ),
                   ],
@@ -207,123 +127,106 @@ class CourseDetail extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20),
-            bIsAdded != null
-                ? Container()
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("詳細介紹:"),
-                      RichTextView(content: realCourseData.prStory),
-                    ],
-                  ),
-            bIsAdded != null
-                ? Column(
-                    children: realCourseData.chapterList.map((e) {
-                      return ExpansionTile(
-                        title: Text("章節 ${e.chapter}"),
-                        children: [
-                          SizedBox(
-                            width: ScreenSize.width,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: e.content.map((e) {
-                                String content = e;
-                                int startIndex = '{"text":"'.length;
-                                int endIndex = content.indexOf('","');
-                                int startUrlIndex = content.indexOf('"url":"') + '"url":"'.length;
-                                int endUrlIndex = content.indexOf('"}');
-                                String chapterText = content.substring(startIndex, endIndex);
-                                String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("詳細介紹:"),
+                RichTextView(content: openedCourse.prStory),
+              ],
+            ),
+            Column(
+              children: openedCourse.chapterList.map((e) {
+                return ExpansionTile(
+                  title: Text("章節 ${e.chapter}"),
+                  children: [
+                    SizedBox(
+                      width: ScreenSize.width,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: e.content.map((e) {
+                          String content = e;
+                          int startIndex = '{"text":"'.length;
+                          int endIndex = content.indexOf('","');
+                          int startUrlIndex = content.indexOf('"url":"') + '"url":"'.length;
+                          int endUrlIndex = content.indexOf('"}');
+                          String chapterText = content.substring(startIndex, endIndex);
+                          String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
 
-                                return Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 5),
-                                  child: Row(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 5),
-                                        child: Icon(
-                                          Icons.ondemand_video,
-                                          color: normalBgColor2,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            showGeneralDialog(
-                                                barrierColor: Colors.black.withOpacity(0.7),
-                                                transitionBuilder: (context, a1, a2, widget) {
-                                                  return Transform.scale(
-                                                    scale: a1.value,
-                                                    child: Opacity(
-                                                      opacity: a1.value,
-                                                      child: Scaffold(
-                                                        body: SafeArea(
-                                                          child: SingleChildScrollView(
-                                                            child: Column(
-                                                              children: [
-                                                                Text(chapterText),
-                                                                GestureDetector(
-                                                                  onTap: () {
-                                                                    Navigator.of(context).pop();
-                                                                  },
-                                                                  child: Container(
-                                                                    alignment: Alignment.topRight,
-                                                                    margin: const EdgeInsets.only(right: 20, bottom: 20),
-                                                                    child: Icon(
-                                                                      Icons.close,
-                                                                      color: normalBgColor2,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                RichTextView(content: chapterUrl)
-                                                              ],
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: Icon(
+                                    Icons.ondemand_video,
+                                    color: normalBgColor2,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showGeneralDialog(
+                                          barrierColor: Colors.black.withOpacity(0.7),
+                                          transitionBuilder: (context, a1, a2, widget) {
+                                            return Transform.scale(
+                                              scale: a1.value,
+                                              child: Opacity(
+                                                opacity: a1.value,
+                                                child: Scaffold(
+                                                  body: SafeArea(
+                                                    child: SingleChildScrollView(
+                                                      child: Column(
+                                                        children: [
+                                                          Text(chapterText),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                            child: Container(
+                                                              alignment: Alignment.topRight,
+                                                              margin: const EdgeInsets.only(right: 20, bottom: 20),
+                                                              child: Icon(
+                                                                Icons.close,
+                                                                color: normalBgColor2,
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
+                                                          RichTextView(content: chapterUrl)
+                                                        ],
                                                       ),
                                                     ),
-                                                  );
-                                                },
-                                                transitionDuration: Duration(milliseconds: 200),
-                                                barrierDismissible: true,
-                                                barrierLabel: '',
-                                                context: context,
-                                                pageBuilder: (context, animation1, animation2) {
-                                                  return Container();
-                                                });
+                                                  ),
+                                                ),
+                                              ),
+                                            );
                                           },
-                                          child: Text(
-                                            chapterText,
-                                            style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                          transitionDuration: Duration(milliseconds: 200),
+                                          barrierDismissible: true,
+                                          barrierLabel: '',
+                                          context: context,
+                                          pageBuilder: (context, animation1, animation2) {
+                                            return Container();
+                                          });
+                                    },
+                                    child: Text(
+                                      chapterText,
+                                      style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
-                                );
-                              }).toList(),
+                                ),
+                              ],
                             ),
-                          )
-                        ],
-                      );
-                    }).toList(),
-                  )
-                : Container()
+                          );
+                        }).toList(),
+                      ),
+                    )
+                  ],
+                );
+              }).toList(),
+            )
           ],
-        ),
-      );
-    }
-    return BackgroundWidget(
-      child: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: StatefulWrapper(
-          onInit: () async {
-            if (userData!.uid != courseData!.createdBy) {
-              await courseState.isAddedCourse(courseId: courseData!.id, userUId: userData!.uid);
-            }
-          },
-          child: component,
         ),
       ),
     );

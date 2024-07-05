@@ -45,6 +45,7 @@ class _HomeState extends State<Home> {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => CourseState()),
+          ChangeNotifierProvider(create: (_) => SkillChangeProvider()),
           ChangeNotifierProvider(create: (_) => BaseAPIListProvider<CourseModel>()),
         ],
         child: const CoursePage(),

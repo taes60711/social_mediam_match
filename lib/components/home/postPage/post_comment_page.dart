@@ -87,6 +87,7 @@ class PostCommentPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: APIListView<PostCommentTextEditorModel>(
               size: 8,
+              needToTopWidget: false,
               apiFunc: (page, size) {
                 return PostService().getPostCommentData(page, size, choicedPost.id);
               },

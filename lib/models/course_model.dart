@@ -42,18 +42,18 @@ class CourseModel {
   LoginUser courseCreateduserInfo;
 
   CourseModel({
-    required this.id,
-    required this.createdBy,
-    required this.title,
-    required this.needLevel,
-    required this.content,
-    required this.beforeNeed,
-    required this.prStory,
-    required this.chapterList,
-    required this.courseLearningSkills,
-    required this.postTime,
-    required this.type,
-    required this.isPublic,
+    this.id = -1,
+    this.createdBy = "",
+    this.title = "",
+    this.needLevel = -1,
+    this.content = "",
+    this.beforeNeed = "",
+    this.prStory = "",
+    this.chapterList = const [],
+    this.courseLearningSkills = const [],
+    this.postTime = "yyyy-MM-dd HH:mm:ss",
+    this.type = -1,
+    this.isPublic = false,
     required this.courseCreateduserInfo,
   });
 

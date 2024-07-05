@@ -158,11 +158,10 @@ class APIListView<R> extends StatelessWidget {
 
           /// スクロール箇所が最TOPチェック
           bool isTop = context.read<BaseAPIListProvider<R>>().isTop;
-          if (isTop) {
-            bool isPostLargetwo = scrollPosition >= 20;
-            bool isDataSizeLargeSearchSize =
-                context.read<BaseAPIListProvider<R>>().listData.length > context.read<BaseAPIListProvider<R>>().size;
-            if (isPostLargetwo && isDataSizeLargeSearchSize) {
+          if (isTop && needToTopWidget) {
+            bool isPosNotInTop = scrollPosition >= 20;
+
+            if (isPosNotInTop) {
               context.read<BaseAPIListProvider<R>>().onIsTopChange(false);
             }
           }
@@ -191,7 +190,7 @@ class APIListView<R> extends StatelessWidget {
 
           /// スクロール箇所が最TOPチェック
           bool isTop = context.read<BaseAPIListProvider<R>>().isTop;
-          if (!isTop) {
+          if (!isTop && needToTopWidget) {
             if (scrollPosition < 10) {
               context.read<BaseAPIListProvider<R>>().onIsTopChange(true);
             }

@@ -20,33 +20,6 @@ class DBService {
   int size = 8;
   String url = "http://$ip:$port";
 
-  searchStatus courseAddedMemberServerInfo = searchStatus();
-  Future<List<AddedCourseMemberModel>> getCourseAddedMember(int courseId, {bool? isFirst}) async {
-    String branch = "courses";
-
-    if (isFirst != null) {
-      courseAddedMemberServerInfo.pageNumber = 0;
-    }
-
-    String searchUrl = '$url/$branch/getCourseMember/$courseId?page=${courseAddedMemberServerInfo.pageNumber}&size=5';
-
-    final uri = Uri.parse(searchUrl);
-    List<AddedCourseMemberModel> allAddedMember = [];
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode != 404) {
-        allAddedMember = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
-          return AddedCourseMemberModel.toMap(e);
-        }).toList();
-        inspect(allAddedMember);
-        courseAddedMemberServerInfo.pageNumber++;
-      }
-    } catch (e) {
-      print(e);
-    }
-    return allAddedMember;
-  }
-
   Future<bool> deleteUserFromCourse({required int courseId, required String userUID}) async {
     String branch = "courses";
     String searchUrl = '$url/$branch/deleteUserFromCourse';
@@ -165,59 +138,6 @@ class DBService {
     } catch (e) {}
     print("create Course result : ${isSuccess}");
     return isSuccess;
-  }
-
-  searchStatus allCoursesServerInfo = searchStatus();
-  Future<List<CourseModel>> getAllCourses({bool? isFirst}) async {
-    String branch = "courses";
-
-    if (isFirst != null) {
-      allCoursesServerInfo.pageNumber = 0;
-    }
-
-    String searchUrl = '$url/$branch/getAllCourses?page=${allCoursesServerInfo.pageNumber}&size=$size';
-    final uri = Uri.parse(searchUrl);
-    List<CourseModel> allCouserData = [];
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode != 404) {
-        allCouserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
-          return CourseModel.toMap(e);
-        }).toList();
-        inspect(allCouserData);
-        allCoursesServerInfo.pageNumber++;
-      }
-    } catch (e) {
-      print(e);
-    }
-    return allCouserData;
-  }
-
-  searchStatus addCoursesServerInfo = searchStatus();
-  Future<List<CourseModel>> getAddedCourses(String userId, {bool? isFirst}) async {
-    String branch = "courses";
-
-    if (isFirst != null) {
-      addCoursesServerInfo.pageNumber = 0;
-    }
-
-    String searchUrl = '$url/$branch/getAddedCourses/$userId?page=${addCoursesServerInfo.pageNumber}&size=$size';
-    final uri = Uri.parse(searchUrl);
-    List<CourseModel> allCouserData = [];
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode != 404) {
-        print(response.body);
-        allCouserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
-          return CourseModel.toMap(e);
-        }).toList();
-        inspect(allCouserData);
-        addCoursesServerInfo.pageNumber++;
-      }
-    } catch (e) {
-      print(e);
-    }
-    return allCouserData;
   }
 
   searchStatus coursesByUserIdServerInfo = searchStatus();
