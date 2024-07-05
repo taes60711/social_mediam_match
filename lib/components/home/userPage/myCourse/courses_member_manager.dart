@@ -218,6 +218,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/states/course_state.dart';
 
 import '../../../../models/course_model.dart';
 import '../../../../services/course_service.dart';
@@ -229,21 +230,23 @@ class CourseMemberManager extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return APIListView<AddedCourseMemberModel>(
-      providerList: context.watch<BaseAPIListProvider<AddedCourseMemberModel>>().listData,
-      apiFunc: (page, size) {
-        return CourseService().getCourseAddedMember(page, size, 19);
-      },
-      itemChild: ((data, index) {
-        return Column(
-          children: [
-            Text(data[index].memberUid),
-          ],
-        );
-      }),
-      loadingBuilder: () {
-        return Container();
-      },
+    return Scaffold(
+      body: APIListView<AddedCourseMemberModel>(
+        providerList: context.watch<BaseAPIListProvider<AddedCourseMemberModel>>().listData,
+        apiFunc: (page, size) {
+          return CourseService().getCourseAddedMember(page, size, context.read<CourseState>().choicedCourseId);
+        },
+        itemChild: ((data, index) {
+          return Column(
+            children: [
+              Text(data[index].memberUid),
+            ],
+          );
+        }),
+        loadingBuilder: () {
+          return Container();
+        },
+      ),
     );
   }
 }

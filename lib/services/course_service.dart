@@ -77,6 +77,30 @@ class CourseService extends ApiClient {
     return requestCreatedCourseData;
   }
 
+  /// フィルターしたコース(まだ使っていない)
+  Future<List<CourseModel>> getCoursesByFilter(int page, int size, int type) async {
+    List<CourseModel> requestFilteredCourseData = [];
+
+    Map<String, dynamic> paramters = {
+      'page': '$page',
+      'size': '$size',
+    };
+
+    try {
+      String responseData = await apiGet('/getCoursesByType/$type', paramters: paramters);
+
+      requestFilteredCourseData = await handleResponse<CourseModel>(
+        responseData,
+        model: CourseModel.toMap,
+        isList: true,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return requestFilteredCourseData;
+  }
+
   /// コース管理
   Future<List<AddedCourseMemberModel>> getCourseAddedMember(int page, int size, int courseId) async {
     List<AddedCourseMemberModel> requestCourseAddedMemberData = [];

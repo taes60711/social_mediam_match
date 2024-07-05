@@ -43,7 +43,7 @@ Widget courseDetailEndDrawer() {
           },
 
           /// コース詳細ページ
-          child: CourseDetail(),
+          child: const CourseDetail(),
         );
       }
 

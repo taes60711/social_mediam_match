@@ -1,20 +1,10 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 
 import 'package:social_mediam_match/models/course_model.dart';
 
 import '../../global.dart';
-
-class searchStatus {
-  int pageNumber;
-  int totalPage;
-  searchStatus({
-    this.pageNumber = 0,
-    this.totalPage = 0,
-  });
-}
 
 class DBService {
   int size = 8;
@@ -138,57 +128,5 @@ class DBService {
     } catch (e) {}
     print("create Course result : ${isSuccess}");
     return isSuccess;
-  }
-
-  searchStatus coursesByUserIdServerInfo = searchStatus();
-  Future<List<CourseModel>> getCoursesByUserId(String userId, {bool? isFirst}) async {
-    String branch = "courses";
-
-    if (isFirst != null) {
-      coursesByUserIdServerInfo.pageNumber = 0;
-    }
-
-    String searchUrl = '$url/$branch/getCoursesByUserId/$userId?page=${coursesByUserIdServerInfo.pageNumber}&size=$size';
-    final uri = Uri.parse(searchUrl);
-    List<CourseModel> allCouserData = [];
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode != 404) {
-        allCouserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
-          return CourseModel.toMap(e);
-        }).toList();
-        inspect(allCouserData);
-        coursesServerInfo.pageNumber++;
-      }
-    } catch (e) {
-      print(e);
-    }
-    return allCouserData;
-  }
-
-  searchStatus coursesServerInfo = searchStatus();
-  Future<List<CourseModel>> getCoursesByType(int type, {bool? isFirst}) async {
-    String branch = "courses";
-
-    if (isFirst != null) {
-      coursesServerInfo.pageNumber = 0;
-    }
-
-    String searchUrl = '$url/$branch/getCoursesByType/$type?page=${coursesServerInfo.pageNumber}&size=$size';
-    final uri = Uri.parse(searchUrl);
-    List<CourseModel> allCouserData = [];
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode != 404) {
-        allCouserData = (json.decode(utf8.decode(response.bodyBytes)) as List<dynamic>).map((e) {
-          return CourseModel.toMap(e);
-        }).toList();
-        inspect(allCouserData);
-        coursesServerInfo.pageNumber++;
-      }
-    } catch (e) {
-      print(e);
-    }
-    return allCouserData;
   }
 }

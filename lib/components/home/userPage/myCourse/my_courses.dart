@@ -444,9 +444,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/userPage/myCourse/added_courses_page.dart';
-import 'package:social_mediam_match/components/home/userPage/myCourse/courses_member_manager.dart';
 import 'package:social_mediam_match/components/home/userPage/myCourse/created_courses_page.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/endDrawers/course_manager_end_drawer.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import '../../../utilities/apiListView/base_api_list_provider.dart';
 import '../../../utilities/endDrawers/course_detail_end_drawer.dart';
@@ -460,69 +460,60 @@ class MyCourses extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            const BaseTopBar(
-              title: "我的文章",
-            ),
-            Expanded(
-              child: DefaultTabController(
-                length: 3,
-                child: Scaffold(
-                  appBar: TabBar(
-                    tabs: const [
-                      SizedBox(
-                        height: 25,
-                        child: Tab(text: '已加入的課程'),
+            Column(
+              children: [
+                const BaseTopBar(
+                  title: "我的文章",
+                ),
+                Expanded(
+                  child: DefaultTabController(
+                    length: 2,
+                    child: Scaffold(
+                      appBar: TabBar(
+                        tabs: const [
+                          SizedBox(
+                            height: 25,
+                            child: Tab(text: '已加入的課程'),
+                          ),
+                          SizedBox(
+                            height: 25,
+                            child: Tab(text: '創建的課程'),
+                          ),
+                        ],
+                        isScrollable: true,
+                        indicator: UnderlineTabIndicator(
+                          borderSide: BorderSide(width: 1.0, color: normalBgColor),
+                          insets: const EdgeInsets.symmetric(horizontal: 10),
+                        ),
+                        labelPadding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+                        labelColor: normalBgColor2,
                       ),
-                      SizedBox(
-                        height: 25,
-                        child: Tab(text: '創建的課程'),
+                      body: TabBarView(
+                        children: [
+                          MultiProvider(
+                            providers: [
+                              ChangeNotifierProvider(create: (_) => BaseAPIListProvider<CourseModel>()),
+                            ],
+                            child: const AddedCoursesPage(),
+                          ),
+                          MultiProvider(
+                            providers: [
+                              ChangeNotifierProvider(create: (_) => BaseAPIListProvider<CourseModel>()),
+                            ],
+                            child: const CreatedCoursesPage(),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        height: 25,
-                        child: Tab(text: '已加入課程成員管理(開發中 暫)'),
-                      ),
-                    ],
-                    isScrollable: true,
-                    indicator: UnderlineTabIndicator(
-                      borderSide: BorderSide(width: 1.0, color: normalBgColor),
-                      insets: const EdgeInsets.symmetric(horizontal: 10),
                     ),
-                    labelPadding: const EdgeInsets.only(top: 5, left: 10, right: 10),
-                    labelColor: normalBgColor2,
-                  ),
-                  body: TabBarView(
-                    children: [
-                      MultiProvider(
-                        providers: [
-                          ChangeNotifierProvider(create: (_) => BaseAPIListProvider<CourseModel>()),
-                        ],
-                        child: const AddedCoursesPage(),
-                      ),
-                      MultiProvider(
-                        providers: [
-                          ChangeNotifierProvider(create: (_) => BaseAPIListProvider<CourseModel>()),
-                        ],
-                        child: const CreatedCoursesPage(),
-                      ),
-                      MultiProvider(
-                        providers: [
-                          ChangeNotifierProvider(create: (_) => BaseAPIListProvider<AddedCourseMemberModel>()),
-                        ],
-                        child: const CourseMemberManager(),
-                      ),
-                    ],
                   ),
                 ),
-              ),
-            ),
-            Stack(
-              children: [
-                courseDetailEndDrawer(),
-                userDetailEndDrawer(),
               ],
-            )
+            ),
+            courseDetailEndDrawer(),
+            courseManagerEndDrawer(),
+            userDetailEndDrawer(),
           ],
         ),
       ),

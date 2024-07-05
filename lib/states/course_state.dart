@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import '../components/utilities/endDrawers/course_detail_end_drawer.dart';
 import '../components/utilities/endDrawers/course_filter_end_drawer.dart';
+import '../components/utilities/endDrawers/course_manager_end_drawer.dart';
 import '../global.dart';
 import '../models/user_model.dart';
 import 'package:http/http.dart' as http;
@@ -10,10 +11,6 @@ import '../services/db_service.dart';
 
 class CourseState extends ChangeNotifier {
   final DBService _dbService = DBService();
-
-  bool isFirstLoading = false, isAddDataLoading = false, isReLoading = false, isTopFirstLoading = false;
-
-  final GlobalKey<ScaffoldState> globalKey = GlobalKey();
 
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
@@ -181,18 +178,7 @@ class CourseState extends ChangeNotifier {
     return createResult;
   }
 
-  void addData() {
-    isAddDataLoading = true;
-    notifyListeners();
-  }
-
-  void reLoadingPage() {
-    isReLoading = true;
-    notifyListeners();
-  }
-
   CourseModel choicedCourse = CourseModel(courseCreateduserInfo: LoginUser());
-
   CourseDetailEndDrawerType endDrawerOpenInfo = CourseDetailEndDrawerType.close;
   void changeEndDrawerStatus(CourseDetailEndDrawerType status, CourseModel opendCourse) {
     endDrawerOpenInfo = status;
@@ -203,7 +189,14 @@ class CourseState extends ChangeNotifier {
   CourseFilterEndDrawerType filterEndDrawerOpenInfo = CourseFilterEndDrawerType.close;
   void changeFilterEndDrawerStatus(CourseFilterEndDrawerType status) {
     filterEndDrawerOpenInfo = status;
+    notifyListeners();
+  }
 
+  CourseManagerEndDrawerType courseManagerEndDrawerOpenInfo = CourseManagerEndDrawerType.close;
+  int choicedCourseId = -1;
+  void courseManagerEndDrawerStatus(CourseManagerEndDrawerType status, int changedCourseId) {
+    courseManagerEndDrawerOpenInfo = status;
+    choicedCourseId = changedCourseId;
     notifyListeners();
   }
 }

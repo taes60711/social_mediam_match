@@ -29,7 +29,6 @@ class CourseEditPage extends StatelessWidget {
         TextEditingController contentController = context.select((CourseState value) => value.contentController);
         TextEditingController beforeNeedController = context.select((CourseState value) => value.beforeNeedController);
         bool isPublic = context.select((CourseState value) => value.isPublic);
-        GlobalKey<ScaffoldState> key = context.select((CourseState value) => value.globalKey);
         List<CourseChapterInfo> chapters = context.select((CourseState value) => value.chapters);
         List<Map<String, dynamic>> skillList = context.select((CourseState value) => value.skillList);
         List<String> choicedskillList = context.select((CourseState value) => value.choicedskillList);
