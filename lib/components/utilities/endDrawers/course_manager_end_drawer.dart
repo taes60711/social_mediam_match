@@ -34,17 +34,19 @@ Widget courseManagerEndDrawer() {
 
       if (endDrawer == CourseManagerEndDrawerType.open) {
         endDrawerWidget = EndDrawer(
-            onDismissed: () {
-              closecourseManagerEndDrawer(context: context);
-            },
+          title: "管理成員",
+          onDismissed: () {
+            closecourseManagerEndDrawer(context: context);
+          },
 
-            /// コース管理ページ
-            child: MultiProvider(
-              providers: [
-                ChangeNotifierProvider(create: (_) => BaseAPIListProvider<AddedCourseMemberModel>()),
-              ],
-              child: CourseMemberManager(),
-            ));
+          /// コース管理ページ
+          child: MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (_) => BaseAPIListProvider<AddedCourseMemberModel>()),
+            ],
+            child: CourseMemberManager(),
+          ),
+        );
       }
 
       return endDrawerWidget;

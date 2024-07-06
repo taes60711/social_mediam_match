@@ -15,56 +15,42 @@ class CourseMemberManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: APIListView<AddedCourseMemberModel>(
         providerList: context.watch<BaseAPIListProvider<AddedCourseMemberModel>>().listData,
         apiFunc: (page, size) {
           return CourseService().getCourseAddedMember(page, size, context.read<CourseState>().choicedCourseId);
         },
         itemChild: ((data, index) {
-          return data[index].status == 0
-              ? Row(
+          return Row(
+            children: [
+              Expanded(
+                child: Row(
                   children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          UserIcon(iconSize: 35, image: data[index].userData.image),
-                          Text("${data[index].status}"),
-                          Text("未加入"),
-                        ],
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        CoursesViewModel(courseContext: context).updateCourseMemberStatus(updateData: data[index]);
-                      },
-                      child: Text("O"),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        CoursesViewModel(courseContext: context).deleteCourseMember(deletedMember: data[index]);
-                      },
-                      child: Text("X"),
-                    ),
+                    UserIcon(iconSize: 35, image: data[index].userData.image),
+                    Text(
+                        "${data[index].userData.name == "" || data[index].userData.name == null ? data[index].userData.email : data[index].userData.name}"),
+                    Text(data[index].status == 0 ? "未加入" : "已加入"),
                   ],
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        UserIcon(iconSize: 35, image: data[index].userData.image),
-                        Text("${data[index].status}"),
-                        Text("已加入"),
-                      ],
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        CoursesViewModel(courseContext: context).deleteCourseMember(deletedMember: data[index]);
-                      },
-                      child: Text("X"),
-                    ),
-                  ],
-                );
+                ),
+              ),
+              Visibility(
+                visible: data[index].status == 0,
+                child: ElevatedButton(
+                  onPressed: () {
+                    CoursesViewModel(courseContext: context).updateCourseMemberStatus(updateData: data[index]);
+                  },
+                  child: Text("O"),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  CoursesViewModel(courseContext: context).deleteCourseMember(deletedMember: data[index]);
+                },
+                child: Text("X"),
+              ),
+            ],
+          );
         }),
         loadingBuilder: () {
           return Container();
