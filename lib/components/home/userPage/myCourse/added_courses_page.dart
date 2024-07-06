@@ -5,10 +5,10 @@ import 'package:social_mediam_match/services/course_service.dart';
 
 import '../../../../models/user_model.dart';
 import '../../../../provider/account/user_provider.dart';
+import '../../../../provider/corses_view_model.dart';
 import '../../../account/skill_bar.dart';
 import '../../../utilities/apiListView/api_list_view.dart';
 import '../../../utilities/apiListView/base_api_list_provider.dart';
-import '../../../utilities/endDrawers/course_detail_end_drawer.dart';
 import '../../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../../utilities/style/screen_size.dart';
@@ -29,7 +29,7 @@ class AddedCoursesPage extends StatelessWidget {
       itemChild: ((data, index) {
         return GestureDetector(
           onTap: () {
-            openCourseDetailEndDrawer(context: context, openedCourse: data[index]);
+            CoursesViewModel(courseContext: context).courseDetailInit(openedCourse: data[index]);
           },
           child: Container(
             color: Colors.transparent,

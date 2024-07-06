@@ -111,60 +111,7 @@ class CourseState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteUserFromCourse({required int courseId, required String userUId}) async {
-    bool isAdded = false;
-    try {
-      isAdded = await _dbService.deleteUserFromCourse(courseId: courseId, userUID: userUId);
-      if (isAdded) {
-        int index = addedCourseMembers.indexWhere((element) => element.memberUid == userUId);
-        addedCourseMembers.removeAt(index);
-      }
-    } catch (e) {
-      print(e);
-    }
-    notifyListeners();
-  }
-
-  Future<void> updateAddedUserStatus(addedCourseMembers, {required int courseId, required String userUId}) async {
-    bool isAdded = false;
-    try {
-      isAdded = await _dbService.updateAddedUserStatus(courseId: courseId, userUID: userUId);
-      if (isAdded) {
-        int index = addedCourseMembers.indexWhere((element) => element.memberUid == userUId);
-        addedCourseMembers[index].status = 1;
-      }
-    } catch (e) {
-      print(e);
-    }
-    notifyListeners();
-  }
-
   List<AddedCourseMemberModel> addedCourseMembers = [];
-
-  bool bIsAddedCourse = true;
-  Future<void> isAddedCourse({required int courseId, required String userUId}) async {
-    bool isAdded = false;
-    try {
-      isAdded = await _dbService.isAddedCourse(courseId: courseId, userUID: userUId);
-      bIsAddedCourse = isAdded;
-    } catch (e) {
-      print(e);
-    }
-    notifyListeners();
-  }
-
-  Future<bool> userAddCourseRequest({required int courseId, required String userUId}) async {
-    bool isSuccess = false;
-    try {
-      await _dbService.userAddCourseRequest(courseId: courseId, userUID: userUId);
-      isSuccess = true;
-      bIsAddedCourse = true;
-    } catch (e) {
-      print(e);
-    }
-    notifyListeners();
-    return isSuccess;
-  }
 
   Future<bool> updateCourse(
       {required int courseId, required CourseCreateModel courseUpdateData, required LoginUser userData}) async {
@@ -176,6 +123,18 @@ class CourseState extends ChangeNotifier {
   Future<bool> createCourse({required CourseCreateModel createCourseData}) async {
     bool createResult = await _dbService.createCourse(createCourseData: createCourseData);
     return createResult;
+  }
+
+  bool isSignedUp = false;
+  void courseSignedUp({required bool isSucess}) async {
+    isSignedUp = isSucess;
+    notifyListeners();
+  }
+
+  bool bIsAddedCourse = true;
+  void isAddedCourse({required bool isAdded}) async {
+    bIsAddedCourse = isAdded;
+    notifyListeners();
   }
 
   CourseModel choicedCourse = CourseModel(courseCreateduserInfo: LoginUser());

@@ -3,10 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/skill_bar.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/skill_setting_end_drawer.dart';
+import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/course_model.dart';
+import 'package:social_mediam_match/provider/corses_view_model.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 
+import '../../../provider/home/skill_change_view_model.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
 import '../../utilities/endDrawers/course_detail_end_drawer.dart';
@@ -21,13 +24,18 @@ class CoursePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        _mainBuild(context),
-        courseDetailEndDrawer(),
-        userDetailEndDrawer(),
-        courseFilterEndDrawer(),
-      ],
+    return StatefulWrapper(
+      onInit: () async {
+        await SkillChangeViewModel(context: context).init();
+      },
+      child: Stack(
+        children: [
+          _mainBuild(context),
+          courseDetailEndDrawer(),
+          userDetailEndDrawer(),
+          courseFilterEndDrawer(),
+        ],
+      ),
     );
   }
 }
@@ -46,10 +54,14 @@ Widget _mainBuild(BuildContext context) {
       ),
       Expanded(
         child: APIListView<CourseModel>(
+          apiFunc: (int page, int size) {
+            return CourseService().getAllCourses(page, size);
+          },
+          providerList: context.watch<BaseAPIListProvider<CourseModel>>().listData,
           itemChild: (List<CourseModel> data, int index) {
             return GestureDetector(
               onTap: () {
-                openCourseDetailEndDrawer(context: context, openedCourse: data[index]);
+                CoursesViewModel(courseContext: context).courseDetailInit(openedCourse: data[index]);
               },
               child: Container(
                 color: Colors.transparent,
@@ -172,10 +184,6 @@ Widget _mainBuild(BuildContext context) {
           loadingBuilder: () {
             return const PostLoading();
           },
-          apiFunc: (int page, int size) {
-            return CourseService().getAllCourses(page, size);
-          },
-          providerList: context.watch<BaseAPIListProvider<CourseModel>>().listData,
         ),
       ),
     ],

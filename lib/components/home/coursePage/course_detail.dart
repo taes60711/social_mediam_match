@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/models/course_model.dart';
+import 'package:social_mediam_match/provider/corses_view_model.dart';
 import 'package:social_mediam_match/provider/course_state.dart';
 
 import '../../account/skill_bar.dart';
@@ -39,7 +40,7 @@ class CourseDetail extends StatelessWidget {
               style: TextStyle(fontSize: 12, color: hintTextColor),
             ),
             Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
-            Text(
+            const Text(
               "課程前需求:",
               style: TextStyle(fontSize: 14),
             ),
@@ -53,7 +54,7 @@ class CourseDetail extends StatelessWidget {
               child: Text(openedCourse.beforeNeed),
             ),
             Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
-            Text(
+            const Text(
               "課程內容:",
               style: TextStyle(fontSize: 14),
             ),
@@ -66,8 +67,8 @@ class CourseDetail extends StatelessWidget {
               ),
               child: Text(openedCourse.content),
             ),
-            SizedBox(height: 5),
-            Text(
+            const SizedBox(height: 5),
+            const Text(
               "學習技能:",
               style: TextStyle(fontSize: 14),
             ),
@@ -126,106 +127,131 @@ class CourseDetail extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("詳細介紹:"),
-                RichTextView(content: openedCourse.prStory),
-              ],
-            ),
-            Column(
-              children: openedCourse.chapterList.map((e) {
-                return ExpansionTile(
-                  title: Text("章節 ${e.chapter}"),
-                  children: [
-                    SizedBox(
-                      width: ScreenSize.width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: e.content.map((e) {
-                          String content = e;
-                          int startIndex = '{"text":"'.length;
-                          int endIndex = content.indexOf('","');
-                          int startUrlIndex = content.indexOf('"url":"') + '"url":"'.length;
-                          int endUrlIndex = content.indexOf('"}');
-                          String chapterText = content.substring(startIndex, endIndex);
-                          String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
+            const SizedBox(height: 20),
+            Builder(builder: (context) {
+              bool isAdded = context.select((CourseState value) => value.bIsAddedCourse);
+              bool isSignedUp = context.select((CourseState value) => value.isSignedUp);
+              return Visibility(
+                  visible: !isSignedUp && !isAdded,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      CoursesViewModel(courseContext: context).courseSignUp(courseId: openedCourse.id);
+                    },
+                    child: const Text("申請"),
+                  ));
+            }),
+            Builder(builder: (context) {
+              bool isAdded = context.select((CourseState value) => value.bIsAddedCourse);
+              return Column(
+                children: [
+                  Visibility(
+                    visible: !isAdded,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("詳細介紹:"),
+                        RichTextView(content: openedCourse.prStory),
+                      ],
+                    ),
+                  ),
+                  Visibility(
+                    visible: isAdded,
+                    child: Column(
+                      children: openedCourse.chapterList.map((e) {
+                        return ExpansionTile(
+                          title: Text("章節 ${e.chapter}"),
+                          children: [
+                            SizedBox(
+                              width: ScreenSize.width,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: e.content.map((e) {
+                                  String content = e;
+                                  int startIndex = '{"text":"'.length;
+                                  int endIndex = content.indexOf('","');
+                                  int startUrlIndex = content.indexOf('"url":"') + '"url":"'.length;
+                                  int endUrlIndex = content.indexOf('"}');
+                                  String chapterText = content.substring(startIndex, endIndex);
+                                  String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
 
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 5),
-                                  child: Icon(
-                                    Icons.ondemand_video,
-                                    color: normalBgColor2,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      showGeneralDialog(
-                                          barrierColor: Colors.black.withOpacity(0.7),
-                                          transitionBuilder: (context, a1, a2, widget) {
-                                            return Transform.scale(
-                                              scale: a1.value,
-                                              child: Opacity(
-                                                opacity: a1.value,
-                                                child: Scaffold(
-                                                  body: SafeArea(
-                                                    child: SingleChildScrollView(
-                                                      child: Column(
-                                                        children: [
-                                                          Text(chapterText),
-                                                          GestureDetector(
-                                                            onTap: () {
-                                                              Navigator.of(context).pop();
-                                                            },
-                                                            child: Container(
-                                                              alignment: Alignment.topRight,
-                                                              margin: const EdgeInsets.only(right: 20, bottom: 20),
-                                                              child: Icon(
-                                                                Icons.close,
-                                                                color: normalBgColor2,
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 5),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 5),
+                                          child: Icon(
+                                            Icons.ondemand_video,
+                                            color: normalBgColor2,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              showGeneralDialog(
+                                                  barrierColor: Colors.black.withOpacity(0.7),
+                                                  transitionBuilder: (context, a1, a2, widget) {
+                                                    return Transform.scale(
+                                                      scale: a1.value,
+                                                      child: Opacity(
+                                                        opacity: a1.value,
+                                                        child: Scaffold(
+                                                          body: SafeArea(
+                                                            child: SingleChildScrollView(
+                                                              child: Column(
+                                                                children: [
+                                                                  Text(chapterText),
+                                                                  GestureDetector(
+                                                                    onTap: () {
+                                                                      Navigator.of(context).pop();
+                                                                    },
+                                                                    child: Container(
+                                                                      alignment: Alignment.topRight,
+                                                                      margin: const EdgeInsets.only(right: 20, bottom: 20),
+                                                                      child: Icon(
+                                                                        Icons.close,
+                                                                        color: normalBgColor2,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  RichTextView(content: chapterUrl)
+                                                                ],
                                                               ),
                                                             ),
                                                           ),
-                                                          RichTextView(content: chapterUrl)
-                                                        ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          transitionDuration: Duration(milliseconds: 200),
-                                          barrierDismissible: true,
-                                          barrierLabel: '',
-                                          context: context,
-                                          pageBuilder: (context, animation1, animation2) {
-                                            return Container();
-                                          });
-                                    },
-                                    child: Text(
-                                      chapterText,
-                                      style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
-                                      overflow: TextOverflow.ellipsis,
+                                                    );
+                                                  },
+                                                  transitionDuration: Duration(milliseconds: 200),
+                                                  barrierDismissible: true,
+                                                  barrierLabel: '',
+                                                  context: context,
+                                                  pageBuilder: (context, animation1, animation2) {
+                                                    return Container();
+                                                  });
+                                            },
+                                            child: Text(
+                                              chapterText,
+                                              style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    )
-                  ],
-                );
-              }).toList(),
-            )
+                                  );
+                                }).toList(),
+                              ),
+                            )
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              );
+            })
           ],
         ),
       ),

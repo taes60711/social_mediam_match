@@ -124,4 +124,66 @@ class CourseService extends ApiClient {
 
     return requestCourseAddedMemberData;
   }
+
+  /// 参加するかどうか確認
+  Future<bool> isAddedCourse({required int courseId, required String userUID}) async {
+    bool isAdded = false;
+    Map<String, dynamic> paramters = {
+      'courseId': '$courseId',
+      'userId': userUID,
+    };
+    try {
+      String responseData = await apiGet('/getIsAddCourse', paramters: paramters);
+
+      if (responseData == "true") {
+        isAdded = true;
+      }
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return isAdded;
+  }
+
+  /// コースを申請
+  Future<bool> signUpCourse({required int courseId, required String userUID}) async {
+    Map<String, dynamic> body = {
+      "courseId": courseId,
+      "memberUid": userUID,
+    };
+
+    String responseData = await apiPush("/addCourse", body: body);
+
+    print("signUpCourse $responseData");
+
+    return responseData != "null" ? true : false;
+  }
+
+  ///コースが申請したユーザ認める
+  Future<bool> updateAddedUserStatus({required int courseId, required String userUID}) async {
+    Map<String, dynamic> body = {
+      "courseId": courseId,
+      "memberUid": userUID,
+    };
+
+    String responseData = await apiPush("/updateAddedUserStatus", body: body);
+
+    print("updateAddedUserStatus $responseData");
+
+    return responseData != "null" ? true : false;
+  }
+
+  ///コースが申請した、参加してるユーザ削除
+  Future<bool> deleteUserFromCourse({required int courseId, required String userUID}) async {
+    Map<String, dynamic> body = {
+      "courseId": courseId,
+      "memberUid": userUID,
+    };
+
+    String responseData = await apiPush("/deleteUserFromCourse", body: body);
+
+    print("updateAddedUserStatus $responseData");
+
+    return responseData != "null" ? true : false;
+  }
 }
