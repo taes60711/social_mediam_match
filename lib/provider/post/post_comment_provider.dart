@@ -23,8 +23,7 @@ class PostCommentProvider extends ChangeNotifier {
   }
 
   PostCommentEndDrawerType endDrawerOpenInfo = PostCommentEndDrawerType.close;
-
-  void changeEndDrawerStatus(PostCommentEndDrawerType status, PostModel choicedPost) {
+  Future<void> changeEndDrawerStatus(PostCommentEndDrawerType status, PostModel choicedPost) async {
     endDrawerOpenInfo = status;
     viewChoicedPost = choicedPost;
     notifyListeners();

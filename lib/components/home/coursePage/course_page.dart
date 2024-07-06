@@ -9,6 +9,10 @@ import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/provider/corses_view_model.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 
+import '../../../models/user_model.dart';
+import '../../../pagemanager/enum/route_path.dart';
+import '../../../pagemanager/setting/route_controller.dart';
+import '../../../provider/account/user_provider.dart';
 import '../../../provider/home/skill_change_view_model.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
@@ -43,21 +47,48 @@ class CoursePage extends StatelessWidget {
 Widget _mainBuild(BuildContext context) {
   return Column(
     children: [
-      BaseTopBar(
-        leftWidget: Container(),
-        rightWidget: GestureDetector(
-          onTap: () {
-            openCourseFilterEndDrawer(context: context);
-          },
-          child: const Icon(Icons.dehaze_rounded),
-        ),
-      ),
+      // BaseTopBar(
+      //   leftWidget: Container(),
+      //   rightWidget: GestureDetector(
+      //     onTap: () {
+      //       openCourseFilterEndDrawer(context: context);
+      //     },
+      //     child: const Icon(Icons.dehaze_rounded),
+      //   ),
+      // ),
       Expanded(
         child: APIListView<CourseModel>(
           apiFunc: (int page, int size) {
             return CourseService().getAllCourses(page, size);
           },
           providerList: context.watch<BaseAPIListProvider<CourseModel>>().listData,
+          customFloatbutton: GestureDetector(
+            onTap: () {
+              LoginUser userData = context.read<UserProvider>().userData;
+              RouteOptions.pushTo(RoutePath.courseEditPage.value, arguments: {
+                "userData": userData,
+              });
+            },
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.edit,
+                size: 18,
+                color: normalBgColor,
+              ),
+            ),
+          ),
           itemChild: (List<CourseModel> data, int index) {
             return GestureDetector(
               onTap: () {

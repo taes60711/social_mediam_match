@@ -19,6 +19,7 @@ class PostDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PostModel viewChoicedPost = context.read<PostCommentProvider>().viewChoicedPost;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(

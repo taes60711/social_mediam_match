@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/utilities/loading.dart';
 
 import '../../../models/post_model.dart';
 import '../../../provider/post/post_comment_provider.dart';
@@ -37,6 +38,7 @@ Widget postDetailEndDrawer() {
         onDismissed: () {
           closePostDetailEndDrawer(context: context);
         },
+        loadingBuilder: const DetailPageLoading(),
 
         ///文章詳細ページ
         child: const PostDetailPage(),

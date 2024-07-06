@@ -97,7 +97,7 @@ class SignUpViewModel {
     }
 
     // ///登録結果画面を更新する（エラーメッセージ）
-    // signUpViewProvider.signUpResultChange(signUpResult);
+    signUpViewProvider.signUpResultChange(signUpResult);
   }
 
   ///ユーザデータ更新する
@@ -118,14 +118,14 @@ class SignUpViewModel {
         "name : ${userSettingViewProvider.nameInput.text} job : ${userSettingViewProvider.jobInput.text} introduction : ${userSettingViewProvider.introductionInput.text}");
     print("haveSkillList : ${userSettingViewProvider.haveSkillList} wantSkillList : ${userSettingViewProvider.wantSkillList}");
     print("updateData $updateData");
-    // await UserService().sqlUpdateUserData(signUpViewProvider.signedUID, updateData).then(
-    //   (isSucess) async {
-    //     if (isSucess) {
-    //       signUpViewProvider.onChangeSignUpPage(3);
-    //     }
-    //   },
-    // );
+    await UserService().sqlUpdateUserData(signUpViewProvider.signedUID, updateData).then(
+      (isSucess) async {
+        if (isSucess) {
+          signUpViewProvider.onChangeSignUpPage(3);
+        }
+      },
+    );
 
-    signUpViewProvider.onChangeSignUpPage(3);
+    // signUpViewProvider.onChangeSignUpPage(3);
   }
 }

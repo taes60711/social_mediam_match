@@ -6,6 +6,7 @@ import 'package:social_mediam_match/provider/account/user_provider.dart';
 import '../../components/utilities/custom_button.dart';
 import '../../components/utilities/style/style_config.dart';
 import '../../models/user_model.dart';
+import '../../services/user_service.dart';
 import 'skill_map_provider.dart';
 import 'user_setting_view_provider.dart';
 
@@ -125,13 +126,13 @@ class UserSettingViewModel {
         "name : ${userSettingViewProvider.nameInput.text} job : ${userSettingViewProvider.jobInput.text} introduction : ${userSettingViewProvider.introductionInput.text}");
     print("haveSkillList : ${userSettingViewProvider.haveSkillList} wantSkillList : ${userSettingViewProvider.wantSkillList}");
     print("updateData $updateData");
-    // await UserService().sqlUpdateUserData(userData.uid, updateData).then(
-    //   (isSucess) async {
-    //     if (isSucess) {
-
-    //     }
-    //   },
-    // );
-    RouteOptions.pop();
+    await UserService().sqlUpdateUserData(userData.uid, updateData).then(
+      (isSucess) async {
+        if (isSucess) {
+          RouteOptions.pop();
+        }
+      },
+    );
+    // RouteOptions.pop();
   }
 }
