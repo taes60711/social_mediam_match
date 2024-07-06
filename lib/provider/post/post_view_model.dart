@@ -22,6 +22,11 @@ class PostViewModel {
   BuildContext postContext;
   PostViewModel({required this.postContext});
 
+  Future<void> getTopPost() async {
+    List<PostModel> requestPostData = await PostService().getPostByType(0, 3, -1);
+    postContext.read<PostProvider>().getTopPost(requestPostData);
+  }
+
   Future<void> postDetailInit({required PostModel choicedPost}) async {
     openPostDetailEndDrawer(context: postContext, choicedPost: choicedPost);
     LoginUser userData = postContext.read<UserProvider>().userData;
