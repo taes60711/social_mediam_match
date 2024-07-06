@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
-import '../../../enum/skill_end_drawer_type.dart';
 import '../../../provider/home/user_setting_view_provider.dart';
+import '../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../skill_bar.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/custom_button.dart';

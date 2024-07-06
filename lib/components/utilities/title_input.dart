@@ -154,14 +154,19 @@ Widget _topBar(
     required Function(String) multiOnChange}) {
   return BaseTopBar(
     title: title,
+    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
     backFunc: () => Navigator.of(context).pop(),
-    padding: 8,
     rightWidget: GestureDetector(
       onTap: () {
         multiOnChange(textController.text);
         Navigator.of(context).pop();
       },
-      child: const Text("保存"),
+      child: Container(
+        color: Colors.transparent,
+        width: 35,
+        height: 35,
+        child: const Text("保存"),
+      ),
     ),
   );
 }

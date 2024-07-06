@@ -13,6 +13,32 @@ import '../pageManager/setting/route_controller.dart';
 class UserService extends ApiClient {
   UserService() : super(overrideIp: "$ip:$port/user");
 
+  Future<List<LoginUser>> getAllUserData(int page, int size, {required String userUid, required List<String> filterSkill}) async {
+    List<LoginUser> users = [];
+
+    try {
+      Map<String, dynamic> params = {
+        'page': '$page',
+        'size': '$size',
+        'userUid': userUid,
+        'skillName': filterSkill,
+      };
+
+      String responseData = await apiGet('/getDataBySkillFilter', paramters: params);
+
+      print("getAllUserData usersData: $responseData");
+
+      users = await handleResponse<LoginUser>(
+        responseData,
+        isList: true,
+        model: LoginUser.toModel,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+    return users;
+  }
+
   ///MARK: ユーザのデータ取得
   ///Param,
   ///loginedUserUID: FirebaseログインしたユーザUID

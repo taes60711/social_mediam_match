@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
-import '../../enum/skill_end_drawer_type.dart';
+import '../../components/utilities/endDrawers/skill_setting_end_drawer.dart';
 
 import '../../models/skill_model.dart';
 
@@ -35,7 +35,7 @@ class UserSettingViewProvider extends ChangeNotifier {
   ///ユーザ画像アップロードすると画面にチェンジ
   Future<void> imageChange() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickerImage = await picker.pickImage(source: ImageSource.gallery, maxHeight: 150, maxWidth: 150);
+    final XFile? pickerImage = await picker.pickImage(source: ImageSource.gallery); //, maxHeight: 150, maxWidth: 150
 
     if (pickerImage != null) {
       File image = File(pickerImage.path);

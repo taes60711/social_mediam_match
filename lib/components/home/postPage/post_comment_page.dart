@@ -1,107 +1,223 @@
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
-import '../../../enum/post_comment_end_drawer_type.dart';
-import '../../../enum/user_detail_end_drawer_type.dart';
-import '../../../models/post_model.dart';
-import '../../../provider/friend_provider.dart';
+import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
+import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/user_icon.dart';
+import 'package:social_mediam_match/models/post_model.dart';
+import 'package:social_mediam_match/models/user_model.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
+import 'package:social_mediam_match/provider/post/post_comment_view_model.dart';
+import 'package:social_mediam_match/services/post_service.dart';
+
+import '../../../pageManager/setting/route_controller.dart';
 import '../../../provider/post/post_comment_provider.dart';
-import '../../utilities/basic_top_bar.dart';
-import '../../utilities/rich_text_view.dart';
-import '../../utilities/style/screen_size.dart';
+import '../../utilities/apiListView/base_api_list_provider.dart';
+import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../utilities/style/style_config.dart';
-import '../../utilities/user_icon.dart';
 
 class PostCommentPage extends StatelessWidget {
-  const PostCommentPage({super.key});
+  final PostModel choicedPost;
+  const PostCommentPage({super.key, required this.choicedPost});
 
   @override
   Widget build(BuildContext context) {
-    PostCommentProvider postCommentProvider = context.read<PostCommentProvider>();
-    PostModel viewChoicedPost = context.read<PostCommentProvider>().viewChoicedPost;
-    return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15),
-            child: BaseTopBar(
-              backFunc: () => postCommentProvider.changeEndDrawerStatus(
-                PostCommentEndDrawerType.close,
-                PostModel(),
+    return Column(
+      children: [
+        BaseTopBar(
+          leftWidget: Container(),
+          title: "留言",
+          rightWidget: Container(
+            color: Colors.transparent,
+            padding: const EdgeInsets.all(5),
+            child: GestureDetector(
+              onTap: () => RouteOptions.pop(),
+              child: const Icon(
+                Icons.close,
+                size: 25,
               ),
-              title: viewChoicedPost.title,
             ),
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: ScreenSize.width,
-                    padding: const EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3),
-                      color: const Color.fromARGB(255, 236, 157, 120),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                context.read<FriendProvider>().changeEndDrawerStatus(
-                                      UserDetailEndDrawerType.open,
-                                      viewChoicedPost.postUserInfo,
-                                    );
-                              },
-                              child: UserIcon(
-                                iconSize: 35,
-                                image: viewChoicedPost.postUserInfo.image,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              viewChoicedPost.postUserInfo.name != ""
-                                  ? viewChoicedPost.postUserInfo.name ?? ""
-                                  : viewChoicedPost.postUserInfo.email,
-                              style: TextStyle(fontSize: 12, color: normalTextColor),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          "${viewChoicedPost.postTime}前",
-                          style: TextStyle(fontSize: 12, color: normalTextColor),
-                        ),
-                      ],
+        ),
+        Builder(builder: (context) {
+          TextEditingController postCommentInput = context.read<PostCommentProvider>().postCommentInput;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 30,
+                    child: TextField(
+                      controller: postCommentInput,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.only(top: 5, left: 10),
+                        border: OutlineInputBorder(),
+                        hintText: 'コメントを追加',
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  RichTextView(content: viewChoicedPost.mainMessage),
-                  const SizedBox(height: 10),
-                  Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
-                  // Row(
-                  //   children: [
-                  //     ElevatedButton(
-                  //       onPressed: () async {
-                  //         isGood
-                  //             ? await postState.updatePostGood(choicedPostData.id)
-                  //             : await postState.updatePostGood(choicedPostData.id, userUID: userData.uid);
-                  //         changeChoicedPostGoodCount(choicedPost: choicedPostData, isGood: isGood);
-                  //       },
-                  //       child: isGood ? Text("收回讚") : Text("讚"),
-                  //     ),
-                  //     Text(" ${choicedPostData.good} 個讚"),
-                  //   ],
-                  // ),
-                ],
+                ),
+                GestureDetector(
+                  onTap: () {
+                    PostCommentViewModel(postCommentContext: context)
+                        .commetMessageOnCreate(postUID: choicedPost.id, message: postCommentInput.text);
+                  },
+                  child: Container(
+                    height: 30,
+                    margin: EdgeInsets.only(left: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
+                    child: Center(
+                      child: Icon(
+                        Icons.send,
+                        size: 16,
+                        color: normalTextColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: APIListView<PostCommentTextEditorModel>(
+              size: 8,
+              needToTopWidget: false,
+              apiFunc: (page, size) {
+                return PostService().getPostCommentData(page, size, choicedPost.id);
+              },
+              providerList: context.watch<BaseAPIListProvider<PostCommentTextEditorModel>>().listData,
+              itemChild: (data, index) {
+                return Container(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  width: ScreenSize.width,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ///アイコン
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: GestureDetector(
+                          onTap: () {
+                            openUserDetailEndDrawer(context: context, otherUserData: data[index].commentUserInfo);
+                          },
+                          child: UserIcon(
+                            iconSize: 35,
+                            image: data[index].commentUserInfo.image,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ///ユーザネーム
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                data[index].commentUserInfo.name != ""
+                                    ? data[index].commentUserInfo.name ?? ""
+                                    : data[index].commentUserInfo.email,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+
+                              const SizedBox(width: 8),
+
+                              ///期日
+                              Text(
+                                data[index].postTime,
+                                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                          !data[index].isEditor
+                              ? Text(
+                                  data[index].message,
+                                  style: const TextStyle(fontSize: 14),
+                                )
+                              : SizedBox(
+                                  width: ScreenSize.width - 75,
+                                  height: 30,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          controller: data[index].textEditingController,
+                                          decoration: const InputDecoration(
+                                            contentPadding: EdgeInsets.only(top: -21),
+                                            border: InputBorder.none,
+                                          ),
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          PostCommentViewModel(postCommentContext: context)
+                                              .commetMessageOnChange(data[index], data[index].textEditingController.text);
+                                        },
+                                        child: const Icon(Icons.check),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          PostCommentViewModel(postCommentContext: context).editerStatusOnChange(data[index]);
+                                        },
+                                        child: const Icon(Icons.close),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                          Builder(builder: (context) {
+                            LoginUser loginUserData = context.read<UserProvider>().userData;
+                            return Visibility(
+                              visible: data[index].commentUserInfo.uid == loginUserData.uid,
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      PostCommentViewModel(postCommentContext: context).editerStatusOnChange(data[index]);
+                                    },
+                                    child: const Text(
+                                      "編輯",
+                                      style: TextStyle(fontSize: 11, color: Colors.grey),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  GestureDetector(
+                                    onTap: () {
+                                      PostCommentViewModel(postCommentContext: context).deleteCommentPostCheck(data[index]);
+                                    },
+                                    child: const Text(
+                                      "刪除",
+                                      style: TextStyle(fontSize: 11, color: Colors.grey),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          }),
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              },
+              loadingBuilder: () {
+                return Container();
+              },
+              noDataBuilder: Center(
+                child: Text("コメントありません"),
               ),
             ),
-          )
-        ],
-      ),
+          ),
+        ),
+      ],
     );
   }
 }

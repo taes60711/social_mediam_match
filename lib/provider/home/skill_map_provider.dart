@@ -6,7 +6,7 @@ import '../../models/skill_model.dart';
 import '../../services/skill_service.dart';
 
 class SkillMapProvider extends ChangeNotifier {
-  Map<SkillType, List<SkillModel>> _skillMap = {
+  final Map<SkillType, List<SkillModel>> _skillMap = {
     SkillType.frontend: [],
     SkillType.iot: [],
     SkillType.backend: [],
@@ -105,7 +105,7 @@ class SkillMapProvider extends ChangeNotifier {
     List<RequestUserSkillData> haveSkillList = [];
     List<RequestUserSkillData> wantSkillList = [];
     for (var e in SkillType.values) {
-      for (var ele in _skillMap[e]!) {
+      for (var ele in filteredSkillMap[e]!) {
         if (ele.skillHave.level > 0) {
           ///持っているスキル追加または、調整レベル
           if (haveSkillList.any((element) => element.name == ele.skillHave.name)) {

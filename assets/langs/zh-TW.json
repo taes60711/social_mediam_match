@@ -1,4 +1,8 @@
 {
+  "//": "serverErr",
+  "serverErrorContent":"伺服器錯誤",
+  "errConfirm":"確認",
+
   "//": "welcomePage",
   "version":"版本",
   "first_use_button":"第一次使用",
@@ -85,7 +89,19 @@
 
   "//":"skillbar",
   "noskillData":"無",
+
+  "//": "skillchangeFilterPage",
+  "skillFilterTitle": "選擇技能",
+  "skillFilterSearch": "篩選",
   
   "//": "listView",
-  "NodataCanLoad": "已經沒有資料了!"
+  "NodataCanLoad": "已經沒有資料了!",
+
+  "//": "userDetail",
+  "toChatRoom": "開啟聊天室",
+  "addFriend":"新增好友",
+  "user_nickName":"名稱",
+  "user_status": "身分",
+  "user_introduction": "自我介紹",
+  "user_lastLogin_time": "最後登入時間"
 }

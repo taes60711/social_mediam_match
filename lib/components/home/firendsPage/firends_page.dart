@@ -10,7 +10,7 @@ import 'package:social_mediam_match/models/friend_model.dart';
 import 'package:social_mediam_match/provider/friend_provider.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
-import '../../utilities/custom_end_drawer.dart';
+import '../../utilities/endDrawers/custom_end_drawer.dart';
 
 class FirendsPage extends StatelessWidget {
   const FirendsPage({super.key});
@@ -39,19 +39,16 @@ class FirendsPage extends StatelessWidget {
         useSafeArea: false,
         barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
         builder: (BuildContext context) {
-          return CustomEndDrawer(
-            child: Dismissible(
-              direction: DismissDirection.startToEnd,
-              resizeDuration: const Duration(milliseconds: 1),
-              onDismissed: (_) {
-                friendFuture.closeRoom();
-                print("Chat Room close");
-              },
-              key: const Key('key'),
-              child: ChatRoom(
-                ohterUserData: choicedRoomUser,
-                userData: loginUser,
-              ),
+          return EndDrawer(
+            isNeedTopbar: false,
+            onDismissed: () {
+              friendFuture.closeRoom();
+            },
+
+            /// コース詳細ページ
+            child: ChatRoom(
+              ohterUserData: choicedRoomUser,
+              userData: loginUser,
             ),
           );
         },

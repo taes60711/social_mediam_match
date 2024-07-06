@@ -4,14 +4,13 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/fit_widget.dart';
 import 'package:social_mediam_match/provider/home/user_setting_view_model.dart';
 import 'package:social_mediam_match/provider/home/user_setting_view_provider.dart';
-import '../../../enum/skill_end_drawer_type.dart';
 
 import '../../account/skill_bar.dart';
-import '../../account/skill_choice_setting_page.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/custom_button.dart';
+import '../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -34,7 +33,7 @@ class UserSetting extends StatelessWidget {
             child: _mainBody(context),
           ),
         ),
-        endDrawer(),
+        skillSettingEndDrawer(),
       ],
     );
   }
@@ -138,29 +137,4 @@ Widget avatarEdit(BuildContext context) {
       },
     ),
   );
-}
-
-Widget endDrawer() {
-  return Builder(builder: (context) {
-    print("customEndDrawer");
-    SkillEndDrawerType endDrawer = context.select((UserSettingViewProvider value) => value.endDrawerOpenInfo);
-
-    UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
-
-    Widget endDrawerWidget = Container();
-
-    if (endDrawer == SkillEndDrawerType.haveSkill) {
-      endDrawerWidget = SkillChoiceSettingPage(
-        skillType: SkillEndDrawerType.haveSkill,
-        onDismissedFunc: () => userSettingViewProvider.changeEndDrawerStatus(SkillEndDrawerType.close),
-      );
-    } else if (endDrawer == SkillEndDrawerType.wantSkill) {
-      endDrawerWidget = SkillChoiceSettingPage(
-        skillType: SkillEndDrawerType.wantSkill,
-        onDismissedFunc: () => userSettingViewProvider.changeEndDrawerStatus(SkillEndDrawerType.close),
-      );
-    }
-
-    return endDrawerWidget;
-  });
 }

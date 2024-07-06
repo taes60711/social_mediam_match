@@ -1,4 +1,8 @@
 {
+  "//": "serverErr",
+  "serverErrorContent": "サービスエラー",
+  "errConfirm": "確認",
+
   "//": "welcomePage",
   "version":"Ver",
   "first_use_button":"始める",
@@ -86,6 +90,18 @@
   "//": "skillbar",
   "noskillData": "なし",
 
+  "//": "skillchangeFilterPage",
+  "skillFilterTitle": "フィルター",
+  "skillFilterSearch": "検索",
+
   "//": "listView",
-  "NodataCanLoad": "全て読み込みました!"
+  "NodataCanLoad": "全て読み込みました!",
+
+  "//": "userDetail",
+  "toChatRoom": "トーク",
+  "addFriend": "フレンドになる",
+  "user_nickName": "名前",
+  "user_status": "身分",
+  "user_introduction": "自己紹介",
+  "user_lastLogin_time": "最後登入時間"
 }

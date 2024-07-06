@@ -3,16 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/provider/home/skill_choice_setting_view_model.dart';
 
 import '../../CustomBouncingScrollPhysics.dart';
-import '../../enum/skill_end_drawer_type.dart';
 import '../../enum/skill_type.dart';
 import '../../models/skill_model.dart';
 import '../../provider/home/skill_map_provider.dart';
 import '../strings/account/sign_up_strings.dart';
-import '../utilities/custom_end_drawer.dart';
+import '../utilities/endDrawers/custom_end_drawer.dart';
+import '../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
 
@@ -27,15 +26,12 @@ class SkillChoiceSettingPage extends StatelessWidget {
 
     return EndDrawer(
       onDismissed: () => onDismissedFunc(),
+      title: skillType.name,
       child: Consumer<SkillMapProvider>(
         builder: (context, skillMapProvider, _) {
           return Scaffold(
             body: Column(
               children: [
-                BaseTopBar(
-                  backFunc: () => onDismissedFunc(),
-                  title: skillType.name,
-                ),
                 searchBar(context),
                 Expanded(
                   child: Container(
@@ -46,7 +42,7 @@ class SkillChoiceSettingPage extends StatelessWidget {
                       color: normalBgColor2.withOpacity(0.15),
                     ),
                     child: SingleChildScrollView(
-                      physics: const NoLoadingCustomBouncingScrollPhysics(),
+                      physics: const NoBouncingScrollPhysics(),
                       child: Column(
                         children: SkillType.values.map((e) {
                           return Column(

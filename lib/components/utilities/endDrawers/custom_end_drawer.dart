@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
+///MARK: Base EndDrawer
 class EndDrawer extends StatefulWidget {
   final Function onDismissed;
+  final String title;
   final Widget child;
-  const EndDrawer({super.key, required this.onDismissed, required this.child});
+  final bool isNeedTopbar;
+
+  const EndDrawer({
+    super.key,
+    required this.onDismissed,
+    this.title = "",
+    required this.child,
+    this.isNeedTopbar = true,
+  });
 
   @override
   State<EndDrawer> createState() => _EndDrawerState();
@@ -58,6 +69,19 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
                 width: ScreenSize.width,
                 height: MediaQuery.of(context).viewPadding.top,
                 color: Colors.white,
+              ),
+              Visibility(
+                visible: widget.isNeedTopbar,
+                child: Container(
+                  color: Colors.white,
+                  child: BaseTopBar(
+                    title: widget.title,
+                    backFunc: () async {
+                      await _controller.reverse();
+                      widget.onDismissed();
+                    },
+                  ),
+                ),
               ),
               Expanded(child: widget.child),
               Container(

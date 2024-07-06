@@ -16,8 +16,8 @@ void main() async {
     [
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight
+      // DeviceOrientation.landscapeLeft,
+      // DeviceOrientation.landscapeRight
     ],
   );
 
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       locale: context.locale,
       debugShowCheckedModeBanner: false,
       scrollBehavior: ScrollConfiguration.of(context).copyWith(
-        physics: const CustomBouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        physics: const NoBouncingScrollPhysics(),
       ),
       theme: ThemeData(
         fontFamily: 'GenJyu',

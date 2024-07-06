@@ -1,16 +1,96 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
-
-import '../../components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/services/post_service.dart';
+import '../../components/utilities/apiListView/base_api_list_provider.dart';
 import '../../components/utilities/style/style_config.dart';
+import '../../global.dart';
+import '../../models/post_model.dart';
+import '../../models/rich_text_format.dart';
+import '../../pageManager/enum/route_path.dart';
 
 class MyPostViewModel {
-  BuildContext context;
-  MyPostViewModel({required this.context});
-  void showOptionBottomSheet() {
+  BuildContext myPostContext;
+  MyPostViewModel({required this.myPostContext});
+
+  Future<void> updatePost({required String updateMsg}) async {
+    PostModel updatedData = myPostContext.read<BaseAPIListProvider<PostModel>>().choiceData ?? PostModel();
+    String fomattedContent = await RichTextFormat(htmlString: updateMsg).sendPostImgFormat();
+    updatedData.mainMessage = fomattedContent;
+    await PostService().updatePost(postId: updatedData.id, mainMessage: updatedData.mainMessage).then(
+      (isSucess) {
+        if (isSucess) {
+          myPostContext.read<BaseAPIListProvider<PostModel>>().editData(updatedData: updatedData);
+          RouteOptions.pop();
+        }
+      },
+    );
+  }
+
+  Future<void> deletePostCheck() {
+    return showDialog<void>(
+      context: globalContext,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(15),
+            width: 150,
+            height: 160,
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                const Expanded(
+                  child: Text('確定要刪除該篇文章嗎?'),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        title: '取消',
+                        titleColor: normalTextColor,
+                        backgroundColor: hintTextColor,
+                        onPress: () {
+                          RouteOptions.pop();
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: CustomButton(
+                        title: '確認',
+                        titleColor: normalTextColor,
+                        backgroundColor: normalBgColor,
+                        onPress: () async {
+                          PostModel wantDeletePost =
+                              myPostContext.read<BaseAPIListProvider<PostModel>>().choiceData ?? PostModel();
+                          await PostService().deletePost(wantDeletePost.id).then((isSucess) {
+                            if (isSucess) {
+                              myPostContext.read<BaseAPIListProvider<PostModel>>().deleteData(choiceData: wantDeletePost);
+                              RouteOptions.pop();
+                              RouteOptions.pop();
+                            }
+                          });
+                        },
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showOptionBottomSheet({required PostModel choicedPost}) {
     showModalBottomSheet(
-        context: context,
+        context: globalContext,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (builder) {
@@ -20,7 +100,6 @@ class MyPostViewModel {
               initialChildSize: 0.3,
               maxChildSize: 0.3,
               builder: (context, scrollController) {
-                // List<PostOption> bSheetFuncs = bottomSheetFuncs ?? [];
                 return Container(
                     decoration: const BoxDecoration(
                       color: Colors.white,
@@ -48,57 +127,66 @@ class MyPostViewModel {
                               ),
                             ),
                           ),
-                        )
-                        // Expanded(
-                        //   child: SingleChildScrollView(
-                        //     physics:const ClampingScrollPhysics(),
-                        //     child: Column(
-                        //       children: bSheetFuncs
-                        //           .map((e) => Padding(
-                        //                 padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
-                        //                 child: GestureDetector(
-                        //                   onTap: () {
-                        //                     e.buttonFunc();
-                        //                   },
-                        //                   child: Container(
-                        //                     width: ScreenSize.width,
-                        //                     height: 45,
-                        //                     decoration:
-                        //                         BoxDecoration(color: normalBgColor2, borderRadius: BorderRadius.circular(10)),
-                        //                     child: Center(
-                        //                       child: SizedBox(
-                        //                         width: 100,
-                        //                         child: Row(
-                        //                           children: [
-                        //                             Icon(
-                        //                               e.icon,
-                        //                               color: normalTextColor,
-                        //                               size: 25,
-                        //                             ),
-                        //                             const SizedBox(width: 5),
-                        //                             SizedBox(
-                        //                               width: 70,
-                        //                               child: Center(
-                        //                                 child: Text(
-                        //                                   e.funcText,
-                        //                                   style: TextStyle(color: normalTextColor),
-                        //                                 ),
-                        //                               ),
-                        //                             ),
-                        //                           ],
-                        //                         ),
-                        //                       ),
-                        //                     ),
-                        //                   ),
-                        //                 ),
-                        //               ))
-                        //           .toList(),
-                        //     ),
-                        //   ),
-                        // ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              _bottomSheetBtn(
+                                  icon: Icons.edit,
+                                  btnText: "編輯文章",
+                                  bntFunc: () {
+                                    RouteOptions.pop();
+                                    RouteOptions.pushTo(
+                                      RoutePath.postEditPage.value,
+                                      arguments: {'postContext': myPostContext},
+                                    );
+                                  }),
+                              _bottomSheetBtn(
+                                  icon: FontAwesomeIcons.commentSlash,
+                                  btnText: "刪除",
+                                  bntFunc: () {
+                                    deletePostCheck();
+                                  }),
+                            ],
+                          ),
+                        ),
                       ],
                     ));
               });
         });
   }
+}
+
+Widget _bottomSheetBtn({required IconData icon, required String btnText, required bntFunc}) {
+  return GestureDetector(
+    onTap: () {
+      bntFunc();
+    },
+    child: Container(
+      margin: const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+      height: 45,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: normalBgColor2,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: normalTextColor,
+            size: 25,
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 70,
+            child: Text(
+              btnText,
+              style: TextStyle(color: normalTextColor),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }

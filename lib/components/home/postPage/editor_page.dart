@@ -1,59 +1,88 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
-import '../../../models/user_model.dart';
-import '../../../states/post_state.dart';
+import 'package:social_mediam_match/models/post_model.dart';
+import 'package:social_mediam_match/provider/post/post_view_model.dart';
+import '../../../pageManager/setting/route_controller.dart';
+import '../../../provider/post/edit_page_model.dart';
+import '../../../provider/post/my_post_view_model.dart';
+import '../../strings/userPage/user_page_string.dart';
+import '../../utilities/apiListView/base_api_list_provider.dart';
+import '../../utilities/basic_top_bar.dart';
 
 class EditorPage extends StatelessWidget {
   const EditorPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    PostState postState = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postState'];
-    LoginUser userData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['userData'] as LoginUser;
-    int type = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['type'];
+    BuildContext postContext = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postContext'];
+    int postBoradType = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postBoradType'] ?? -1;
+    TextEditingController titleInputController = TextEditingController();
     QuillEditorController controller = QuillEditorController();
-    TextEditingController titleController = TextEditingController();
-    Widget userComponent = SafeArea(
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return ChangeNotifierProvider.value(
+      value: postContext.read<BaseAPIListProvider<PostModel>>(),
+      child: Builder(builder: (context) {
+        PostModel postData = postContext.read<BaseAPIListProvider<PostModel>>().choiceData ?? PostModel();
+        titleInputController.text = postData.title;
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back_ios),
-                ),
-                const Text("投稿"),
-                GestureDetector(
-                  onTap: () async {
+                BaseTopBar(
+                  backFunc: () async {
                     String content = await controller.getText();
-                    await postState.createPost(userData.uid, titleController.text, content, type);
-                    Navigator.pop(context);
+                    String title = titleInputController.text;
+                    if (postData.mainMessage != content || postData.title != title) {
+                      EditPageModel().editorExitCheck();
+                    } else {
+                      RouteOptions.pop();
+                    }
                   },
-                  child: const Text("送出"),
+                  title: "文章編輯",
+                  rightWidget: GestureDetector(
+                    onTap: () async {
+                      await controller.getText().then(
+                        (content) {
+                          if (titleInputController.text == "" || content == "") {
+                            EditPageModel().createPostCheck(titleInputController.text, content);
+                          } else {
+                            postData.id == -1
+                                ? PostViewModel(postContext: postContext)
+                                    .createPost(title: titleInputController.text, msg: content, type: postBoradType)
+                                : MyPostViewModel(myPostContext: postContext).updatePost(updateMsg: content);
+                            RouteOptions.pop();
+                          }
+                        },
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      margin: const EdgeInsets.only(right: 10),
+                      width: 80,
+                      height: 35,
+                      child: Text(postData.id == -1 ? "新增" : ProfileString().updateButtonText),
+                    ),
+                  ),
+                ),
+                TitleInput(title: 'Title', textController: titleInputController),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: RichTextEditor(
+                      content: postData.mainMessage,
+                      controller: controller,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 10),
-          TitleInput(title: '標題', textController: titleController),
-          Expanded(
-            child: SingleChildScrollView(
-              child: RichTextEditor(
-                content: "",
-                controller: controller,
-              ),
-            ),
-          )
-        ],
-      ),
+        );
+      }),
     );
-    return Scaffold(body: userComponent);
   }
 }

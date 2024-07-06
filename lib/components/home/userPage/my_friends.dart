@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
-import 'package:social_mediam_match/components/user_detail_page.dart';
+import 'package:social_mediam_match/components/utilities/endDrawers/user_detail_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
-import 'package:social_mediam_match/components/utilities/custom_end_drawer.dart';
-import 'package:social_mediam_match/enum/user_detail_end_drawer_type.dart';
 
 import '../../../models/friend_model.dart';
 import '../../../models/user_model.dart';
@@ -57,7 +55,7 @@ class MyFriends extends StatelessWidget {
                 const BaseTopBar(title: "我的好友"),
                 Expanded(
                   child: ListView.builder(
-                    physics: const NoLoadingCustomBouncingScrollPhysics(),
+                    physics: const NoBouncingScrollPhysics(),
                     itemCount: friendList.length,
                     itemBuilder: (_, index) {
                       FriendListModel listInfo = friendList[index];
@@ -73,9 +71,7 @@ class MyFriends extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
                           child: GestureDetector(
                             onTap: () {
-                              context
-                                  .read<FriendProvider>()
-                                  .changeEndDrawerStatus(UserDetailEndDrawerType.open, listInfo.userData);
+                              openUserDetailEndDrawer(context: context, otherUserData: otherUserData);
                             },
                             child: Container(
                               color: Colors.transparent,
@@ -110,38 +106,8 @@ class MyFriends extends StatelessWidget {
             ),
           ),
         ),
-        endDrawer(),
+        userDetailEndDrawer(),
       ],
     );
   }
-}
-
-///ユーザ詳細ページ用EndDrawer
-Widget endDrawer() {
-  return Builder(
-    builder: (context) {
-      print("customEndDrawer");
-      UserDetailEndDrawerType endDrawer = context.select((FriendProvider value) => value.endDrawerOpenInfo);
-
-      FriendProvider friendProivder = context.read<FriendProvider>();
-
-      Widget endDrawerWidget = Container();
-
-      if (endDrawer == UserDetailEndDrawerType.open) {
-        endDrawerWidget = EndDrawer(
-          onDismissed: () {
-            friendProivder.changeEndDrawerStatus(UserDetailEndDrawerType.close, LoginUser());
-          },
-          child: UserDetailPage(
-            otherUser: context.read<FriendProvider>().ohterUserData,
-            toChatRoom: () {
-              context.read<FriendProvider>().changeEndDrawerStatus(UserDetailEndDrawerType.close, LoginUser());
-            },
-          ),
-        );
-      }
-
-      return endDrawerWidget;
-    },
-  );
 }

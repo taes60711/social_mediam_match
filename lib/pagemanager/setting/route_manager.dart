@@ -22,9 +22,8 @@ import '../../provider/account/user_provider.dart';
 import '../../provider/friend_provider.dart';
 import '../../provider/home/skill_map_provider.dart';
 import '../../provider/home/user_setting_view_provider.dart';
-import '../../states/course_state.dart';
-import '../../states/post_state.dart';
-import '../../states/skill_exchange_state.dart';
+import '../../provider/post/post_provider.dart';
+import '../../provider/course_state.dart';
 import '../enum/route_path.dart';
 import 'bottom_bar_controller_provider.dart';
 
@@ -32,9 +31,8 @@ import 'bottom_bar_controller_provider.dart';
 Widget mainWidget = MultiProvider(
   providers: [
     ChangeNotifierProvider(create: (_) => UserProvider()),
-    ChangeNotifierProvider(create: (_) => BottomBarControllerProvider()),
     ChangeNotifierProvider(create: (_) => FriendProvider()),
-    ChangeNotifierProvider(create: (_) => SkillExChangeState()),
+    ChangeNotifierProvider(create: (_) => BottomBarControllerProvider()),
   ],
   child: EasyLocalization(
     supportedLocales: const [Locale('zh', 'TW'), Locale('en', 'US'), Locale('ja', 'JP')],
@@ -54,8 +52,8 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
   /// "/signUp"
   RoutePath.signUpPage.value: (BuildContext context) => MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => UserSettingViewProvider()),
           ChangeNotifierProvider(create: (_) => SignUpViewProvider()),
+          ChangeNotifierProvider(create: (_) => UserSettingViewProvider()),
           ChangeNotifierProvider(create: (_) => SkillMapProvider()),
         ],
         child: const SignUpPage(),
@@ -68,10 +66,7 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
       ),
 
   /// "/postEdit"
-  RoutePath.postEditPage.value: (BuildContext context) => ChangeNotifierProvider(
-        create: (_) => PostState(),
-        child: const EditorPage(),
-      ),
+  RoutePath.postEditPage.value: (BuildContext context) => const EditorPage(),
 
   /// "/mycourses"
   RoutePath.courseEditPage.value: (BuildContext context) => ChangeNotifierProvider(
@@ -95,8 +90,8 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
   RoutePath.myPosts.value: (BuildContext context) => MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostModel>()),
+          ChangeNotifierProvider(create: (_) => PostProvider()),
           ChangeNotifierProvider(create: (_) => PostCommentProvider()),
-          ChangeNotifierProvider(create: (_) => PostState()),
         ],
         child: const MyPosts(),
       ),

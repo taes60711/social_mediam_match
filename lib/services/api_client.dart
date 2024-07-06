@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 import 'dart:convert';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../global.dart';
 import 'package:http/http.dart';
@@ -19,7 +20,7 @@ class ApiClient {
     Map<String, dynamic>? paramters,
   }) async {
     final uri = Uri.parse("http://$_ip$url").replace(queryParameters: paramters);
-    print("Get API  Url : $url");
+    print("Get API  Url : $_ip$url");
     Response response = await http.get(uri);
 
     try {
@@ -58,10 +59,10 @@ class ApiClient {
   ///MARK: API Push Func
   Future<String> apiPush(
     String url, {
+    Map<String, String> headers = const {'content-type': 'application/json'},
     required Map<String, dynamic> body,
   }) async {
     final uri = Uri.parse("http://$_ip$url");
-    Map<String, String> headers = {'content-type': 'application/json'};
     print("Push API Url : $url body : ${jsonEncode(body)}");
     Response response = await http.put(
       uri,
@@ -118,6 +119,7 @@ class ApiClient {
   bool _isDialogShowing = false;
   void onRequestFailed({Function? onFailedFunc}) {
     if (!_isDialogShowing) {
+      _isDialogShowing = true;
       showDialog<void>(
         context: globalContext,
         builder: (BuildContext context) {
@@ -131,11 +133,11 @@ class ApiClient {
               child: Column(
                 children: [
                   const SizedBox(height: 10),
-                  const Expanded(
-                    child: Text('伺服器錯誤'),
+                  Expanded(
+                    child: Text(tr("serverErrorContent")),
                   ),
                   CustomButton(
-                    title: '確認',
+                    title: tr("errConfirm"),
                     titleColor: normalTextColor,
                     backgroundColor: normalBgColor,
                     onPress: () {

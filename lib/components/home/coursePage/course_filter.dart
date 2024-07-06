@@ -1,154 +1,64 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
-import 'package:social_mediam_match/components/utilities/loading.dart';
-import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import '../../../provider/home/skill_change_view_provider.dart';
+import '../../utilities/style/screen_size.dart';
+import '../../utilities/style/style_config.dart';
 
-import '../../../enum/skill_type.dart';
-import '../../../models/user_model.dart';
-import '../../../states/skill_exchange_state.dart';
-
-class CourseFilter extends StatelessWidget {
-  final GlobalKey<ScaffoldState> globalKey;
-  final LoginUser? userData;
-  const CourseFilter({super.key, required this.globalKey, this.userData});
+class CourseFilterPage extends StatelessWidget {
+  const CourseFilterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    SkillExChangeState skillExChangeFuture = context.read<SkillExChangeState>();
-    List<Map<String, dynamic>> forntSkillList = context.watch<SkillExChangeState>().forntSkillList;
-    List<Map<String, dynamic>> backEndSkillList = context.watch<SkillExChangeState>().backEndSkillList;
-    List<Map<String, dynamic>> iotSkillList = context.watch<SkillExChangeState>().iotSkillList;
-    List<Map<String, dynamic>> otherSkillList = context.watch<SkillExChangeState>().otherSkillList;
-    bool isFirst = context.select((SkillExChangeState value) => value.isFirst);
-
-    return isFirst
-        ? StatefulWrapper(
-            onInit: () {
-              skillExChangeFuture.getSkillList();
-            },
-            child: const Loading(),
-          )
-        : SizedBox(
-            width: ScreenSize.width,
-            child: Drawer(
-              backgroundColor: Colors.white,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(0),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      onPressed: () async {
-                        print("Drawer Close");
-                        globalKey.currentState!.closeEndDrawer();
-                      },
-                      icon: const Icon(Icons.arrow_back_ios_sharp),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: normalBgColor2.withOpacity(0.1),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Builder(
+                builder: (context) {
+                  List<String> skillList = context.select((SkillChangeProvider value) => value.skillList);
+                  List<String> filteredSkill = context.watch<SkillChangeProvider>().filteredSkill;
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: skillList.map((e) {
+                        return GestureDetector(
+                          onTap: () {
+                            context.read<SkillChangeProvider>().onChangeSkillFilter(e);
+                          },
+                          child: Container(
+                            width: ScreenSize.width,
+                            margin: const EdgeInsets.symmetric(vertical: 4),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color:
+                                  filteredSkill.any((element) => element == e) ? normalBgColor : normalBgColor2.withOpacity(0.1),
+                            ),
+                            child: Text(e),
+                          ),
+                        );
+                      }).toList(),
                     ),
-                  ),
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        ExpansionTile(
-                          title: Text(SkillType.frontend.value),
-                          leading: const Icon(Icons.align_horizontal_left),
-                          children: forntSkillList.map((e) {
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Row(
-                                children: [
-                                  Expanded(child: Text(e['name'])),
-                                  Switch(
-                                      value: e['bool'],
-                                      onChanged: (value) {
-                                        skillExChangeFuture.filterOnChange(forntSkillList, e['name']);
-                                      }),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                        ExpansionTile(
-                          title: Text(SkillType.backend.value),
-                          leading: const Icon(Icons.align_horizontal_left),
-                          children: backEndSkillList.map((e) {
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Row(
-                                children: [
-                                  Expanded(child: Text(e['name'])),
-                                  Switch(
-                                      value: e['bool'],
-                                      onChanged: (value) {
-                                        skillExChangeFuture.filterOnChange(backEndSkillList, e['name']);
-                                      }),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                        ExpansionTile(
-                          title: Text(SkillType.iot.value),
-                          leading: const Icon(Icons.align_horizontal_left),
-                          children: iotSkillList.map((e) {
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Row(
-                                children: [
-                                  Expanded(child: Text(e['name'])),
-                                  Switch(
-                                      value: e['bool'],
-                                      onChanged: (value) {
-                                        skillExChangeFuture.filterOnChange(iotSkillList, e['name']);
-                                      }),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                        ExpansionTile(
-                          title: Text(SkillType.other.value),
-                          leading: const Icon(Icons.align_horizontal_left),
-                          children: otherSkillList.map((e) {
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Row(
-                                children: [
-                                  Expanded(child: Text(e['name'])),
-                                  Switch(
-                                      value: e['bool'],
-                                      onChanged: (value) {
-                                        skillExChangeFuture.filterOnChange(otherSkillList, e['name']);
-                                      }),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await skillExChangeFuture.filterButtonOnClick(
-                        userData!.uid,
-                        forntSkillList,
-                        backEndSkillList,
-                        iotSkillList,
-                        otherSkillList,
-                        type: "Course",
-                      );
-                    },
-                    child: Text("篩選"),
-                  ),
-                ],
+                  );
+                },
               ),
             ),
-          );
+            ElevatedButton(
+              onPressed: () async {},
+              child: Text(tr("skillFilterSearch")),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
