@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
@@ -16,60 +15,11 @@ import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../strings/skillExChangePage/skill_change_page_string.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
+
 import '../../utilities/loading.dart';
 import '../../utilities/stateful_wrapper.dart';
-import '../../utilities/style/screen_size.dart';
+
 import '../../utilities/style/style_config.dart';
-
-class SkillChangeLoading extends StatelessWidget {
-  const SkillChangeLoading({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 5,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Container(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  loadingGreyContainer(width: 65, height: 100, borderRadius: 2),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        loadingGreyContainer(width: 60, height: 13),
-                        const SizedBox(height: 5),
-                        loadingGreyContainer(width: 30, height: 10),
-                        const SizedBox(height: 5),
-                        loadingGreyContainer(width: ScreenSize.width, height: 26),
-                        const SizedBox(height: 5),
-                        loadingGreyContainer(width: 70, height: 12),
-                        const SizedBox(height: 5),
-                        loadingGreyContainer(width: 150, height: 13),
-                        const SizedBox(height: 5),
-                        loadingGreyContainer(width: 70, height: 12),
-                        const SizedBox(height: 5),
-                        loadingGreyContainer(width: 150, height: 13),
-                      ],
-                    ),
-                  ),
-                  loadingGreyContainer(width: 40, height: 12),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
 
 class SkillChangePage extends StatelessWidget {
   const SkillChangePage({super.key});

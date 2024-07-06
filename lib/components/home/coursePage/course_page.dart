@@ -47,15 +47,15 @@ class CoursePage extends StatelessWidget {
 Widget _mainBuild(BuildContext context) {
   return Column(
     children: [
-      BaseTopBar(
-        leftWidget: Container(),
-        rightWidget: GestureDetector(
-          onTap: () {
-            openCourseFilterEndDrawer(context: context);
-          },
-          child: const Icon(Icons.dehaze_rounded),
-        ),
-      ),
+      // BaseTopBar(
+      //   leftWidget: Container(),
+      //   rightWidget: GestureDetector(
+      //     onTap: () {
+      //       openCourseFilterEndDrawer(context: context);
+      //     },
+      //     child: const Icon(Icons.dehaze_rounded),
+      //   ),
+      // ),
       Expanded(
         child: APIListView<CourseModel>(
           apiFunc: (int page, int size) {

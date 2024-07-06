@@ -38,7 +38,7 @@ Widget postDetailEndDrawer() {
         onDismissed: () {
           closePostDetailEndDrawer(context: context);
         },
-        loadingBuilder: const PostLoading(),
+        loadingBuilder: const DetailPageLoading(),
 
         ///文章詳細ページ
         child: const PostDetailPage(),

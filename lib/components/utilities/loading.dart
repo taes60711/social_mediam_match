@@ -177,13 +177,112 @@ class PostLoading extends StatelessWidget {
   }
 }
 
+class DetailPageLoading extends StatelessWidget {
+  const DetailPageLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      loadingGreyContainer(width: 50, height: 50, borderRadius: 25),
+                      const SizedBox(width: 10),
+                      loadingGreyContainer(width: 50, height: 15),
+                    ],
+                  ),
+                  loadingGreyContainer(width: 60, height: 15),
+                ],
+              ),
+              const SizedBox(height: 10),
+              loadingGreyContainer(width: ScreenSize.width - 20, height: 15),
+              const SizedBox(height: 5),
+              loadingGreyContainer(width: 300, height: 200),
+              const SizedBox(height: 5),
+              loadingGreyContainer(width: 150, height: 50),
+              const SizedBox(height: 5),
+              loadingGreyContainer(width: ScreenSize.width - 40, height: 15),
+              const SizedBox(height: 5),
+              loadingGreyContainer(width: 300, height: 200),
+              const SizedBox(height: 5),
+              loadingGreyContainer(width: 200, height: 15),
+              const SizedBox(height: 5),
+              loadingGreyContainer(width: 80, height: 80),
+              const SizedBox(height: 5),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SkillChangeLoading extends StatelessWidget {
+  const SkillChangeLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Container(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                loadingGreyContainer(width: 65, height: 100, borderRadius: 2),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      loadingGreyContainer(width: 60, height: 13),
+                      const SizedBox(height: 5),
+                      loadingGreyContainer(width: 30, height: 10),
+                      const SizedBox(height: 5),
+                      loadingGreyContainer(width: ScreenSize.width, height: 26),
+                      const SizedBox(height: 5),
+                      loadingGreyContainer(width: 70, height: 12),
+                      const SizedBox(height: 5),
+                      loadingGreyContainer(width: 150, height: 13),
+                      const SizedBox(height: 5),
+                      loadingGreyContainer(width: 70, height: 12),
+                      const SizedBox(height: 5),
+                      loadingGreyContainer(width: 150, height: 13),
+                    ],
+                  ),
+                ),
+                loadingGreyContainer(width: 40, height: 12),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 Widget loadingGreyContainer({required double width, required double height, double? borderRadius}) {
-  return Container(
-    width: width,
-    height: height,
-    decoration: BoxDecoration(
-      color: Colors.grey,
-      borderRadius: BorderRadius.circular(borderRadius ?? 8),
+  return Shimmer.fromColors(
+    baseColor: Colors.grey[300]!,
+    highlightColor: Colors.grey[100]!,
+    child: Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.grey,
+        borderRadius: BorderRadius.circular(borderRadius ?? 8),
+      ),
     ),
   );
 }

@@ -40,7 +40,7 @@ Widget courseDetailEndDrawer() {
           onDismissed: () {
             closeCourseDetailEndDrawer(context: context);
           },
-          loadingBuilder: const PostLoading(),
+          loadingBuilder: Loading(),
 
           /// コース詳細ページ
           child: const CourseDetail(),
