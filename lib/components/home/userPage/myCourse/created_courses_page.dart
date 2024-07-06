@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/provider/corses_view_model.dart';
 
 import '../../../../models/course_model.dart';
 import '../../../../models/user_model.dart';
@@ -8,7 +9,6 @@ import '../../../../services/course_service.dart';
 import '../../../account/skill_bar.dart';
 import '../../../utilities/apiListView/api_list_view.dart';
 import '../../../utilities/apiListView/base_api_list_provider.dart';
-import '../../../utilities/endDrawers/course_manager_end_drawer.dart';
 import '../../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/style_config.dart';
@@ -27,7 +27,7 @@ class CreatedCoursesPage extends StatelessWidget {
       itemChild: ((data, index) {
         return GestureDetector(
           onTap: () {
-            opencourseManagerEndDrawer(context: context, courseId: data[index].id);
+            CoursesViewModel(courseContext: context).openCreatedCourseModal(courseData: data[index]);
           },
           child: Container(
             color: Colors.transparent,
