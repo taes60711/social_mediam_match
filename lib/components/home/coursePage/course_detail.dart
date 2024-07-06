@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/provider/corses_view_model.dart';
 import 'package:social_mediam_match/provider/course_state.dart';
@@ -32,6 +33,24 @@ class CourseDetail extends StatelessWidget {
                   openedCourse.title,
                   style: TextStyle(fontSize: 19),
                 ),
+                Builder(builder: (context) {
+                  bool isAdded = context.select((CourseState value) => value.bIsAddedCourse);
+
+                  return Visibility(
+                    visible: !isAdded,
+                    child: CustomButton(
+                      verticalMargin: 5,
+                      borderRadius: 10,
+                      width: 55,
+                      title: "申請",
+                      onPress: () {
+                        CoursesViewModel(courseContext: context).courseSignUp(courseId: openedCourse.id);
+                      },
+                      titleColor: normalTextColor,
+                      backgroundColor: googleButtonColor.withOpacity(0.8),
+                    ),
+                  );
+                }),
               ],
             ),
             Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
@@ -128,18 +147,6 @@ class CourseDetail extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Builder(builder: (context) {
-              bool isAdded = context.select((CourseState value) => value.bIsAddedCourse);
-              bool isSignedUp = context.select((CourseState value) => value.isSignedUp);
-              return Visibility(
-                  visible: !isSignedUp && !isAdded,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      CoursesViewModel(courseContext: context).courseSignUp(courseId: openedCourse.id);
-                    },
-                    child: const Text("申請"),
-                  ));
-            }),
             Builder(builder: (context) {
               bool isAdded = context.select((CourseState value) => value.bIsAddedCourse);
               return Column(

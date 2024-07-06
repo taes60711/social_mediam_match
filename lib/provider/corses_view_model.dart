@@ -26,13 +26,13 @@ class CoursesViewModel {
     openCourseDetailEndDrawer(context: courseContext, openedCourse: openedCourse);
     LoginUser userData = courseContext.read<UserProvider>().userData;
     bool isAdded = await CourseService().isAddedCourse(courseId: openedCourse.id, userUID: userData.uid);
-    courseContext.read<CourseState>().isAddedCourse(isAdded: isAdded);
+    courseContext.read<CourseState>().courseSignedUp(isAdded: isAdded);
   }
 
   Future<void> courseSignUp({required int courseId}) async {
     LoginUser userData = courseContext.read<UserProvider>().userData;
     bool isSignedUp = await CourseService().signUpCourse(userUID: userData.uid, courseId: courseId);
-    courseContext.read<CourseState>().courseSignedUp(isSucess: isSignedUp);
+    courseContext.read<CourseState>().courseSignedUp(isAdded: isSignedUp);
   }
 
   Future<void> updateCourseMemberStatus({required AddedCourseMemberModel updateData}) async {
@@ -56,7 +56,7 @@ class CoursesViewModel {
           contentPadding: EdgeInsets.zero,
           content: SizedBox(
             width: 150,
-            height: 180,
+            height: 240,
             child: Column(
               children: [
                 BaseTopBar(
@@ -71,6 +71,16 @@ class CoursesViewModel {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     children: [
+                      CustomButton(
+                        title: '開啟課程',
+                        titleColor: normalTextColor,
+                        backgroundColor: normalBgColor2,
+                        onPress: () {
+                          RouteOptions.pop();
+                          CoursesViewModel(courseContext: courseContext).courseDetailInit(openedCourse: courseData);
+                        },
+                      ),
+                      const SizedBox(height: 20),
                       CustomButton(
                         title: '編輯課程',
                         titleColor: normalTextColor,

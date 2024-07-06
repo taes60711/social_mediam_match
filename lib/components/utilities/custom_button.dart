@@ -8,6 +8,7 @@ class CustomButton extends StatelessWidget {
   final IconData? icon;
   final String? iconImg;
   final double? width;
+  final double verticalMargin;
   final Color? backgroundColor;
   final double? borderRadius;
   final VoidCallback onPress;
@@ -20,6 +21,7 @@ class CustomButton extends StatelessWidget {
     required this.onPress,
     this.iconImg,
     this.width,
+    this.verticalMargin = 10,
     this.icon,
   });
 
@@ -56,7 +58,7 @@ class CustomButton extends StatelessWidget {
               onTap: onPress,
               child: Container(
                 width: width ?? ScreenSize.width,
-                margin: const EdgeInsets.symmetric(vertical: 10),
+                margin: EdgeInsets.symmetric(vertical: verticalMargin),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

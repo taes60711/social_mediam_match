@@ -125,14 +125,8 @@ class CourseState extends ChangeNotifier {
     return createResult;
   }
 
-  bool isSignedUp = false;
-  void courseSignedUp({required bool isSucess}) async {
-    isSignedUp = isSucess;
-    notifyListeners();
-  }
-
   bool bIsAddedCourse = true;
-  void isAddedCourse({required bool isAdded}) async {
+  void courseSignedUp({required bool isAdded}) async {
     bIsAddedCourse = isAdded;
     notifyListeners();
   }

@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 import '../models/user_model.dart';
 import '../pageManager/setting/route_controller.dart';
@@ -48,27 +50,34 @@ class UserDetailPage extends StatelessWidget {
                 skillBar(SkillEndDrawerType.wantSkill, userData: otherUser),
               ],
             ),
+            const SizedBox(height: 20),
             Visibility(
               visible: otherUser.uid != context.watch<UserProvider>().userData.uid,
               child: Builder(
                 builder: (context) {
                   bool isFriend = context.select((FriendProvider value) => value.isFriend);
                   return isFriend
-                      ? ElevatedButton(
-                          onPressed: () {
+                      ? CustomButton(
+                          title: tr("toChatRoom"),
+                          titleColor: normalTextColor,
+                          backgroundColor: normalBgColor.withOpacity(0.9),
+                          width: 100,
+                          verticalMargin: 8,
+                          onPress: () {
                             toChatRoom!() ?? () {};
                             RouteOptions.popUntilToHome();
                             context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
-                          },
-                          child: Text(tr("toChatRoom")),
-                        )
-                      : ElevatedButton(
-                          onPressed: () {
+                          })
+                      : CustomButton(
+                          title: tr("addFriend"),
+                          titleColor: normalTextColor,
+                          backgroundColor: normalBgColor.withOpacity(0.9),
+                          width: 100,
+                          verticalMargin: 8,
+                          onPress: () {
                             List<String> usersList = [context.watch<UserProvider>().userData.uid, otherUser.uid];
                             context.read<FriendProvider>().addFriend(usersList);
-                          },
-                          child: Text(tr("addFriend")),
-                        );
+                          });
                 },
               ),
             ),
