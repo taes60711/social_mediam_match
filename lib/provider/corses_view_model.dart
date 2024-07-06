@@ -56,11 +56,12 @@ class CoursesViewModel {
           contentPadding: EdgeInsets.zero,
           content: SizedBox(
             width: 150,
-            height: 240,
+            height: 230,
             child: Column(
               children: [
                 BaseTopBar(
                   leftWidget: Container(),
+                  title: "請選擇",
                   rightWidget: GestureDetector(
                     onTap: () => RouteOptions.pop(),
                     child: const Icon(Icons.close),
@@ -80,7 +81,7 @@ class CoursesViewModel {
                           CoursesViewModel(courseContext: courseContext).courseDetailInit(openedCourse: courseData);
                         },
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 15),
                       CustomButton(
                         title: '編輯課程',
                         titleColor: normalTextColor,
@@ -94,7 +95,7 @@ class CoursesViewModel {
                           });
                         },
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 15),
                       CustomButton(
                         title: '管理成員',
                         titleColor: normalTextColor,
