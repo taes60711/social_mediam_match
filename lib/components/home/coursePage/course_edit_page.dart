@@ -2,15 +2,16 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:social_mediam_match/components/utilities/endDrawers/custom_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
+import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
 import 'package:social_mediam_match/provider/course_state.dart';
 
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
-import '../../utilities/endDrawers/custom_end_drawer.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/style_config.dart';
 
@@ -149,36 +150,32 @@ class CourseEditPage extends StatelessWidget {
                                       context: context,
                                       barrierColor: const Color.fromRGBO(0, 0, 0, 0.3),
                                       builder: (BuildContext context) {
-                                        return CustomEndDrawer(
-                                          child: Dismissible(
-                                              direction: DismissDirection.startToEnd,
-                                              resizeDuration: const Duration(milliseconds: 1),
-                                              onDismissed: (_) => Navigator.of(context).pop(),
-                                              key: const Key('key'),
-                                              child: Scaffold(
-                                                body: SafeArea(
-                                                    child: Column(
-                                                  children: [
-                                                    ElevatedButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(context);
-                                                        },
-                                                        child: Text("back")),
-                                                    TitleInput(title: 'Link Text', textController: linkTextController),
-                                                    Expanded(child: RichTextEditor(controller: controller, content: "")),
-                                                    ElevatedButton(
-                                                      onPressed: () async {
-                                                        String text = await controller.getText();
-                                                        String content = '{"text":"${linkTextController.text}","url":"$text"}';
+                                        return EndDrawer(
+                                          onDismissed: () => RouteOptions.pop(),
+                                          child: Scaffold(
+                                            body: SafeArea(
+                                                child: Column(
+                                              children: [
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text("back")),
+                                                TitleInput(title: 'Link Text', textController: linkTextController),
+                                                Expanded(child: RichTextEditor(controller: controller, content: "")),
+                                                ElevatedButton(
+                                                  onPressed: () async {
+                                                    String text = await controller.getText();
+                                                    String content = '{"text":"${linkTextController.text}","url":"$text"}';
 
-                                                        courseState.addChapterContent(index, content);
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text("send"),
-                                                    ),
-                                                  ],
-                                                )),
-                                              )),
+                                                    courseState.addChapterContent(index, content);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text("send"),
+                                                ),
+                                              ],
+                                            )),
+                                          ),
                                         );
                                       },
                                     );

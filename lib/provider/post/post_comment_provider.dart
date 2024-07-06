@@ -23,17 +23,9 @@ class PostCommentProvider extends ChangeNotifier {
   }
 
   PostCommentEndDrawerType endDrawerOpenInfo = PostCommentEndDrawerType.close;
-  bool test = false;
   Future<void> changeEndDrawerStatus(PostCommentEndDrawerType status, PostModel choicedPost) async {
     endDrawerOpenInfo = status;
     viewChoicedPost = choicedPost;
-    notifyListeners();
-    if (status == PostCommentEndDrawerType.open) {
-      await Future.delayed(const Duration(milliseconds: 305));
-      test = true;
-    } else {
-      test = false;
-    }
     notifyListeners();
   }
 }

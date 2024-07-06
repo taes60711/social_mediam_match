@@ -7,6 +7,7 @@ class EndDrawer extends StatefulWidget {
   final Function onDismissed;
   final String title;
   final Widget child;
+  final Widget? loadingBuilder;
   final bool isNeedTopbar;
 
   const EndDrawer({
@@ -14,6 +15,7 @@ class EndDrawer extends StatefulWidget {
     required this.onDismissed,
     this.title = "",
     required this.child,
+    this.loadingBuilder,
     this.isNeedTopbar = true,
   });
 
@@ -24,6 +26,7 @@ class EndDrawer extends StatefulWidget {
 class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  bool loading = true;
 
   @override
   void initState() {
@@ -35,7 +38,13 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
     _animation = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
-    _controller.forward();
+    _controller.forward().whenComplete(() async {
+      await Future.delayed(const Duration(milliseconds: 20));
+      if (widget.loadingBuilder != null) {
+        loading = false;
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -83,7 +92,13 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
                   ),
                 ),
               ),
-              Expanded(child: widget.child),
+              Expanded(
+                child: widget.loadingBuilder != null && loading
+                    ? Scaffold(
+                        body: widget.loadingBuilder,
+                      )
+                    : widget.child,
+              ),
               Container(
                 width: ScreenSize.width,
                 height: MediaQuery.of(context).viewPadding.bottom,
@@ -94,71 +109,5 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
         ),
       ),
     );
-  }
-}
-
-//未來淘汰
-class CustomEndDrawer extends StatefulWidget {
-  final Widget child;
-
-  const CustomEndDrawer({super.key, required this.child});
-
-  @override
-  _CustomEndDrawer createState() => _CustomEndDrawer();
-}
-
-class _CustomEndDrawer extends State<CustomEndDrawer> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-    _animation = Tween<double>(begin: 1, end: 0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-        animation: _animation,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(_animation.value * MediaQuery.of(context).size.width, 0),
-            child: child,
-          );
-        },
-        child: Stack(
-          children: [
-            Positioned(
-              height: MediaQuery.of(context).viewPadding.top,
-              left: 0,
-              right: 0,
-              child: Container(color: Colors.white),
-            ),
-            SafeArea(
-              child: widget.child,
-            ),
-            Positioned(
-              height: MediaQuery.of(context).viewPadding.bottom,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(color: Colors.white),
-            ),
-          ],
-        ));
   }
 }

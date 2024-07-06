@@ -4,6 +4,7 @@ import 'package:social_mediam_match/provider/course_state.dart';
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
 import '../../home/coursePage/course_detail.dart';
+import '../loading.dart';
 import 'custom_end_drawer.dart';
 
 enum CourseDetailEndDrawerType {
@@ -39,6 +40,7 @@ Widget courseDetailEndDrawer() {
           onDismissed: () {
             closeCourseDetailEndDrawer(context: context);
           },
+          loadingBuilder: const PostLoading(),
 
           /// コース詳細ページ
           child: const CourseDetail(),

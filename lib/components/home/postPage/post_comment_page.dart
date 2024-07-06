@@ -104,6 +104,7 @@ class PostCommentPage extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 5),
                         child: GestureDetector(
                           onTap: () {
+                            RouteOptions.pop();
                             openUserDetailEndDrawer(context: context, otherUserData: data[index].commentUserInfo);
                           },
                           child: UserIcon(
