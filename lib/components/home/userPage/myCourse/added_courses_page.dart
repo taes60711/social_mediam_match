@@ -92,59 +92,59 @@ class AddedCoursesPage extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          height: 0.3,
+                          width: ScreenSize.width,
+                          color: hintTextColor,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            openUserDetailEndDrawer(context: context, otherUserData: data[index].courseCreateduserInfo);
+                          },
+                          child: Container(
+                            color: Colors.transparent,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    const Text(
+                                      "作成者:",
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                                      child: UserIcon(
+                                        iconSize: 25,
+                                        image: data[index].courseCreateduserInfo.image,
+                                      ),
+                                    ),
+                                    Text(
+                                      data[index].courseCreateduserInfo.name != ""
+                                          ? data[index].courseCreateduserInfo.name ?? ""
+                                          : data[index].courseCreateduserInfo.email,
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  "最終更新日:${data[index].postTime}",
+                                  style: TextStyle(fontSize: 11, color: hintTextColor),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          height: 0.3,
+                          width: ScreenSize.width,
+                          color: hintTextColor,
+                        ),
                       ],
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    height: 0.3,
-                    width: ScreenSize.width,
-                    color: hintTextColor,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      openUserDetailEndDrawer(context: context, otherUserData: data[index].courseCreateduserInfo);
-                    },
-                    child: Container(
-                      color: Colors.transparent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              const Text(
-                                "作成者:",
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 5),
-                                child: UserIcon(
-                                  iconSize: 25,
-                                  image: data[index].courseCreateduserInfo.image,
-                                ),
-                              ),
-                              Text(
-                                data[index].courseCreateduserInfo.name != ""
-                                    ? data[index].courseCreateduserInfo.name ?? ""
-                                    : data[index].courseCreateduserInfo.email,
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "最終更新日:${data[index].postTime}",
-                            style: TextStyle(fontSize: 11, color: hintTextColor),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    height: 0.3,
-                    width: ScreenSize.width,
-                    color: hintTextColor,
                   ),
                 ],
               ),
