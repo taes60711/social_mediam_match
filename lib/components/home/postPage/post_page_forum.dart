@@ -145,7 +145,7 @@ class PostPageForum extends StatelessWidget {
                         labelColor: normalBgColor2,
                       ),
                       body: Padding(
-                        padding: const EdgeInsets.only(top: 5),
+                        padding: const EdgeInsets.only(top: 8),
                         child: TabBarView(
                           children: [
                             MultiProvider(

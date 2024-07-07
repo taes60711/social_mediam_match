@@ -42,228 +42,28 @@ class CourseEditPage extends StatelessWidget {
                   ),
                   Expanded(
                     child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Builder(builder: (context) {
-                            TextEditingController titleController =
-                                context.select((CourseProvider value) => value.titleController);
-                            return TitleInput(title: "標題", textController: titleController);
-                          }),
-                          Builder(builder: (context) {
-                            TextEditingController contentController =
-                                context.select((CourseProvider value) => value.contentController);
-                            String contentText = context.select((CourseProvider value) => value.contentText);
-                            return MultiTitleInput(
-                              title: "課程大綱",
-                              textController: contentController,
-                              displayText: contentText,
-                              multiOnChange: (String value) => context.read<CourseProvider>().contentOnChange(value),
-                            );
-                          }),
-                          Builder(builder: (context) {
-                            TextEditingController beforeNeedController =
-                                context.select((CourseProvider value) => value.beforeNeedController);
-                            String beforeNeedText = context.select((CourseProvider value) => value.beforeNeedText);
-                            return MultiTitleInput(
-                              title: "課程前需要",
-                              textController: beforeNeedController,
-                              displayText: beforeNeedText,
-                              multiOnChange: (String value) => context.read<CourseProvider>().beforeNeedOnChange(value),
-                            );
-                          }),
-                          Builder(builder: (context) {
-                            var items = ['0', '1', '2', '3', '4', '5'];
-                            String needLevel = context.select((CourseProvider value) => value.needLevel);
-                            return Row(
-                              children: [
-                                const Text("課程難度"),
-                                const SizedBox(width: 10),
-                                DropdownButton(
-                                  value: needLevel,
-                                  icon: const Icon(Icons.keyboard_arrow_down),
-                                  items: items.map((String items) {
-                                    return DropdownMenuItem(
-                                      value: items,
-                                      child: Text(items),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newValue) {
-                                    context.read<CourseProvider>().needLevelChange(newValue ?? "1", "needLevel");
-                                  },
-                                ),
-                              ],
-                            );
-                          }),
-                          Builder(builder: (context) {
-                            List<String> choicedSkillList = context.watch<CourseProvider>().choicedSkillList;
-                            return GestureDetector(
-                              onTap: () {
-                                openCoursEditSkillEndDrawer(context: context);
-                              },
-                              child: Container(
-                                width: ScreenSize.width,
-                                color: Colors.transparent,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text("學習的技能"),
-                                    const SizedBox(height: 5),
-                                    choicedSkillList.isEmpty
-                                        ? Container(
-                                            margin: const EdgeInsets.only(right: 5, bottom: 5),
-                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(5),
-                                              color: normalBgColor,
-                                            ),
-                                            child: Text(
-                                              tr("noskillData"),
-                                              style: TextStyle(color: normalTextColor, fontSize: 14),
-                                            ),
-                                          )
-                                        : skillBar(SkillEndDrawerType.close, courseSkillData: choicedSkillList),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }),
-                          const SizedBox(height: 15),
-                          Builder(builder: (context) {
-                            String prStory = context.select((CourseProvider value) => value.prStory);
-                            return Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    CourseViewModel(courseContext: context).openRichEditPage(prStory: prStory);
-                                  },
-                                  child: const Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text("詳細介紹 "),
-                                      ),
-                                      Icon(Icons.edit),
-                                      Text("編輯 "),
-                                      SizedBox(width: 10)
-                                    ],
-                                  ),
-                                ),
-                                RichTextView(content: prStory),
-                              ],
-                            );
-                          }),
-                          const SizedBox(height: 15),
-                          Builder(builder: (context) {
-                            List<CourseChapterInfo> chapters = context.watch<CourseProvider>().chapters;
-                            return Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    const Text("章節"),
-                                    const SizedBox(width: 10),
-                                    GestureDetector(
-                                      onTap: () {
-                                        context.read<CourseProvider>().addChapter();
-                                      },
-                                      child: Container(
-                                        width: 30,
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(15),
-                                          color: normalBgColor2,
-                                        ),
-                                        child: const Icon(
-                                          FontAwesomeIcons.plus,
-                                          color: Colors.white,
-                                          size: 12,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  children: chapters.asMap().entries.map((e) {
-                                    int index = e.key;
-                                    CourseChapterInfo chapter = e.value;
-                                    return ExpansionTile(
-                                      title: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text("章節 ${chapter.chapter}"),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              CourseViewModel(courseContext: context).openRichEditPage(chapterIndex: index);
-                                            },
-                                            child: Text("add"),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              context.read<CourseProvider>().deleteChapter(index);
-                                            },
-                                            child: Text("delete"),
-                                          )
-                                        ],
-                                      ),
-                                      children: chapters[index].content.asMap().entries.map((e) {
-                                        int contentIndex = e.key;
-                                        String content = e.value;
-
-                                        int startIndex = '{"text":"'.length;
-                                        int endIndex = content.indexOf('","');
-                                        int startUrlIndex = content.indexOf('"url":"') + '"url":"'.length;
-                                        int endUrlIndex = content.indexOf('"}');
-                                        String chapterText = content.substring(startIndex, endIndex);
-                                        String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
-
-                                        return Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 5),
-                                          child: Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(right: 5),
-                                                child: Icon(
-                                                  Icons.ondemand_video,
-                                                  color: normalBgColor2,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    CourseViewModel(courseContext: context).openCourseChapterContentPage(
-                                                      chapterText: chapterText,
-                                                      chapterUrl: chapterUrl,
-                                                    );
-                                                  },
-                                                  child: Text(
-                                                    chapterText,
-                                                    style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
-                                                    overflow: TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ),
-                                              ElevatedButton(
-                                                  onPressed: () {
-                                                    context.read<CourseProvider>().deleteChapterContent(index, contentIndex);
-                                                  },
-                                                  child: Text("X")),
-                                            ],
-                                          ),
-                                        );
-                                      }).toList(),
-                                    );
-                                  }).toList(),
-                                )
-                              ],
-                            );
-                          }),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            courseTitleEdit(),
+                            courseContentEdit(),
+                            courseBeforeNeedEdit(),
+                            courseLeveEdit(),
+                            courseLearningSkillEdit(),
+                            const SizedBox(height: 15),
+                            courseDetailEdit(),
+                            const SizedBox(height: 15),
+                            courseChapterEdit(),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  Builder(builder: (context) {
-                    bool isPublic = context.select((CourseProvider value) => value.isPublic);
-                    return Row(
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Row(
                       children: [
                         CustomButton(
                           title: "保存",
@@ -278,16 +78,31 @@ class CourseEditPage extends StatelessWidget {
                             CourseViewModel(courseContext: courseContext).courseCreateOrUpdate(courseId: id);
                           },
                         ),
-                        const SizedBox(width: 10),
-                        const Text("公開"),
-                        Checkbox(
-                            value: isPublic,
-                            onChanged: (value) {
+                        Builder(builder: (context) {
+                          bool isPublic = context.select((CourseProvider value) => value.isPublic);
+                          return GestureDetector(
+                            onTap: () {
                               context.read<CourseProvider>().isPublicOnChange();
-                            }),
+                            },
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                  activeColor: normalBgColor,
+                                  side: MaterialStateBorderSide.resolveWith(
+                                    (states) => BorderSide(width: 0.8, color: normalBgColor),
+                                  ),
+                                  value: isPublic,
+                                  onChanged: (value) {},
+                                ),
+                                const Text("公開"),
+                              ],
+                            ),
+                          );
+                        }),
                       ],
-                    );
-                  }),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -297,4 +112,278 @@ class CourseEditPage extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget courseTitleEdit() {
+  return Builder(builder: (context) {
+    TextEditingController titleController = context.select((CourseProvider value) => value.titleController);
+    return TitleInput(
+      title: "標題",
+      textController: titleController,
+      padding: EdgeInsets.zero,
+    );
+  });
+}
+
+Widget courseContentEdit() {
+  return Builder(builder: (context) {
+    TextEditingController contentController = context.select((CourseProvider value) => value.contentController);
+    String contentText = context.select((CourseProvider value) => value.contentText);
+    return MultiTitleInput(
+      title: "課程大綱",
+      textController: contentController,
+      displayText: contentText,
+      padding: EdgeInsets.zero,
+      multiOnChange: (String value) => context.read<CourseProvider>().contentOnChange(value),
+    );
+  });
+}
+
+Widget courseBeforeNeedEdit() {
+  return Builder(builder: (context) {
+    TextEditingController beforeNeedController = context.select((CourseProvider value) => value.beforeNeedController);
+    String beforeNeedText = context.select((CourseProvider value) => value.beforeNeedText);
+    return MultiTitleInput(
+      title: "課程前需要",
+      textController: beforeNeedController,
+      displayText: beforeNeedText,
+      padding: EdgeInsets.zero,
+      multiOnChange: (String value) => context.read<CourseProvider>().beforeNeedOnChange(value),
+    );
+  });
+}
+
+Widget courseLeveEdit() {
+  return Builder(builder: (context) {
+    var items = ['0', '1', '2', '3', '4', '5'];
+    String needLevel = context.select((CourseProvider value) => value.needLevel);
+    return Row(
+      children: [
+        const Text("課程難度"),
+        const SizedBox(width: 10),
+        DropdownButton(
+          value: needLevel,
+          icon: const Icon(Icons.keyboard_arrow_down),
+          items: items.map((String items) {
+            return DropdownMenuItem(
+              value: items,
+              child: Text(items),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            context.read<CourseProvider>().needLevelChange(newValue ?? "1", "needLevel");
+          },
+        ),
+      ],
+    );
+  });
+}
+
+Widget courseLearningSkillEdit() {
+  return Builder(builder: (context) {
+    List<String> choicedSkillList = context.watch<CourseProvider>().choicedSkillList;
+    return GestureDetector(
+      onTap: () {
+        openCoursEditSkillEndDrawer(context: context);
+      },
+      child: Container(
+        width: ScreenSize.width,
+        color: Colors.transparent,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("學習的技能"),
+            const SizedBox(height: 5),
+            choicedSkillList.isEmpty
+                ? Container(
+                    margin: const EdgeInsets.only(right: 5, bottom: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: normalBgColor,
+                    ),
+                    child: Text(
+                      tr("noskillData"),
+                      style: TextStyle(color: normalTextColor, fontSize: 14),
+                    ),
+                  )
+                : skillBar(SkillEndDrawerType.close, courseSkillData: choicedSkillList),
+          ],
+        ),
+      ),
+    );
+  });
+}
+
+Widget courseDetailEdit() {
+  return Builder(builder: (context) {
+    String prStory = context.select((CourseProvider value) => value.prStory);
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            CourseViewModel(courseContext: context).openRichEditPage(prStory: prStory);
+          },
+          child: Row(
+            children: [
+              const Expanded(
+                child: Text("詳細介紹"),
+              ),
+              Icon(
+                Icons.edit,
+                size: 18,
+                color: normalBgColor,
+              ),
+              const SizedBox(width: 5),
+              Text(
+                "編輯",
+                style: TextStyle(
+                  color: normalBgColor2,
+                ),
+              ),
+            ],
+          ),
+        ),
+        RichTextView(content: prStory),
+      ],
+    );
+  });
+}
+
+Widget courseChapterEdit() {
+  return Builder(builder: (context) {
+    List<CourseChapterInfo> chapters = context.watch<CourseProvider>().chapters;
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            context.read<CourseProvider>().addChapter();
+          },
+          child: Row(
+            children: [
+              const Text("章節"),
+              Container(
+                width: 30,
+                height: 30,
+                color: Colors.transparent,
+                child: Icon(
+                  FontAwesomeIcons.plus,
+                  color: normalBgColor2,
+                  size: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Column(
+          children: chapters.asMap().entries.map((e) {
+            int index = e.key;
+            CourseChapterInfo chapter = e.value;
+            return ExpansionTile(
+              title: Row(
+                children: [
+                  Expanded(
+                    child: Text("章節 ${chapter.chapter}"),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      CourseViewModel(courseContext: context).openRichEditPage(chapterIndex: index);
+                    },
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: normalBgColor2,
+                      ),
+                      child: const Icon(
+                        FontAwesomeIcons.plus,
+                        color: Colors.white,
+                        size: 12,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  GestureDetector(
+                    onTap: () {
+                      context.read<CourseProvider>().deleteChapter(index);
+                    },
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: normalBgColor2,
+                      ),
+                      child: const Icon(
+                        FontAwesomeIcons.minus,
+                        color: Colors.white,
+                        size: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              children: chapters[index].content.asMap().entries.map((e) {
+                int contentIndex = e.key;
+                String content = e.value;
+
+                int startIndex = '{"text":"'.length;
+                int endIndex = content.indexOf('","');
+                int startUrlIndex = content.indexOf('"url":"') + '"url":"'.length;
+                int endUrlIndex = content.indexOf('"}');
+                String chapterText = content.substring(startIndex, endIndex);
+                String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5),
+                        child: Icon(
+                          Icons.ondemand_video,
+                          color: normalBgColor2,
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            CourseViewModel(courseContext: context).openCourseChapterContentPage(
+                              chapterText: chapterText,
+                              chapterUrl: chapterUrl,
+                            );
+                          },
+                          child: Text(
+                            chapterText,
+                            style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          context.read<CourseProvider>().deleteChapterContent(index, contentIndex);
+                        },
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          color: Colors.transparent,
+                          child: Icon(
+                            FontAwesomeIcons.close,
+                            color: normalBgColor2,
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            );
+          }).toList(),
+        )
+      ],
+    );
+  });
 }

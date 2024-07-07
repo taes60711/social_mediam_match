@@ -54,86 +54,90 @@ Widget _mainBody(BuildContext context) {
         ),
       ),
       Expanded(
-        child: Builder(
-          builder: (context) {
-            LoginUser userData = context.watch<UserProvider>().userData;
-            List<String> filteredSkill = context.select((SkillChangeProvider value) => value.filteredSkill);
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Builder(
+            builder: (context) {
+              LoginUser userData = context.watch<UserProvider>().userData;
+              List<String> filteredSkill = context.select((SkillChangeProvider value) => value.filteredSkill);
 
-            return APIListView<LoginUser>(
-              apiFunc: (page, size) {
-                return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filteredSkill);
-              },
-              providerList: context.watch<BaseAPIListProvider<LoginUser>>().listData,
-              itemChild: (data, index) {
-                return GestureDetector(
-                  onTap: () {
-                    openUserDetailEndDrawer(context: context, otherUserData: data[index]);
-                  },
-                  child: Container(
-                    color: Colors.transparent,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SquareUserIcon(
-                          width: 65,
-                          height: 100,
-                          img: data[index].image,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              //名前
-                              Text(
-                                data[index].name != "" ? data[index].name ?? "" : data[index].email,
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              //職業
-                              Text(
-                                data[index].job ?? SkillChangePageString.skExChpagenojobData,
-                                style: TextStyle(
-                                  color: hintTextColor,
-                                  fontSize: 13,
-                                ),
-                              ),
-                              //持っているスキル
-                              Text(
-                                StepThirdPage.haveSkillText,
-                                style: const TextStyle(fontSize: 13),
-                              ),
-                              skillBar(
-                                SkillEndDrawerType.haveSkill,
-                                userData: data[index],
-                                fontSize: 12,
-                              ),
-                              Text(
-                                StepThirdPage.wantSkillText,
-                                style: const TextStyle(fontSize: 13),
-                              ),
-                              skillBar(
-                                SkillEndDrawerType.wantSkill,
-                                userData: data[index],
-                                fontSize: 12,
-                              ),
-                            ],
+              return APIListView<LoginUser>(
+                apiFunc: (page, size) {
+                  return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filteredSkill);
+                },
+                providerList: context.watch<BaseAPIListProvider<LoginUser>>().listData,
+                itemChild: (data, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      openUserDetailEndDrawer(context: context, otherUserData: data[index]);
+                    },
+                    child: Container(
+                      color: Colors.transparent,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SquareUserIcon(
+                            width: 65,
+                            height: 100,
+                            img: data[index].image,
                           ),
-                        ),
-                        //最後ログイン期日
-                        Text(
-                          "${data[index].lastLogin}${SkillChangePageString.skExChpagebeforDays}",
-                          style: TextStyle(color: hintTextColor, fontSize: 12),
-                        ),
-                      ],
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                //名前
+                                Text(
+                                  data[index].name != "" ? data[index].name ?? "" : data[index].email,
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                                //職業
+                                Text(
+                                  data[index].job ?? SkillChangePageString.skExChpagenojobData,
+                                  style: TextStyle(
+                                    color: hintTextColor,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                                //持っているスキル
+                                Text(
+                                  StepThirdPage.haveSkillText,
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                                skillBar(
+                                  SkillEndDrawerType.haveSkill,
+                                  userData: data[index],
+                                  fontSize: 12,
+                                ),
+                                Text(
+                                  StepThirdPage.wantSkillText,
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                                skillBar(
+                                  SkillEndDrawerType.wantSkill,
+                                  userData: data[index],
+                                  fontSize: 12,
+                                ),
+                              ],
+                            ),
+                          ),
+                          //最後ログイン期日
+                          Text(
+                            "${data[index].lastLogin}${SkillChangePageString.skExChpagebeforDays}",
+                            style: TextStyle(color: hintTextColor, fontSize: 12),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-              loadingBuilder: () {
-                return const SkillChangeLoading();
-              },
-            );
-          },
+                  );
+                },
+                loadingBuilder: () {
+                  return const SkillChangeLoading();
+                },
+              );
+            },
+          ),
         ),
       )
     ],

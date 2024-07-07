@@ -51,10 +51,7 @@ class CourseRichTextEdit extends StatelessWidget {
                   RouteOptions.pop();
                 }),
           ),
-          Visibility(
-            visible: prStory != null,
-            child: TitleInput(title: "標題", textController: titleController),
-          ),
+          TitleInput(title: "標題", textController: titleController),
           SingleChildScrollView(
             child: RichTextEditor(controller: controller, content: prStory ?? ""),
           ),

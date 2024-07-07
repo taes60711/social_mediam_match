@@ -47,21 +47,24 @@ class MyCourses extends StatelessWidget {
                         labelPadding: const EdgeInsets.only(top: 5, left: 10, right: 10),
                         labelColor: normalBgColor2,
                       ),
-                      body: TabBarView(
-                        children: [
-                          MultiProvider(
-                            providers: [
-                              ChangeNotifierProvider(create: (_) => BaseAPIListProvider<CourseModel>()),
-                            ],
-                            child: const AddedCoursesPage(),
-                          ),
-                          MultiProvider(
-                            providers: [
-                              ChangeNotifierProvider(create: (_) => BaseAPIListProvider<CourseModel>()),
-                            ],
-                            child: const CreatedCoursesPage(),
-                          ),
-                        ],
+                      body: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: TabBarView(
+                          children: [
+                            MultiProvider(
+                              providers: [
+                                ChangeNotifierProvider(create: (_) => BaseAPIListProvider<CourseModel>()),
+                              ],
+                              child: const AddedCoursesPage(),
+                            ),
+                            MultiProvider(
+                              providers: [
+                                ChangeNotifierProvider(create: (_) => BaseAPIListProvider<CourseModel>()),
+                              ],
+                              child: const CreatedCoursesPage(),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

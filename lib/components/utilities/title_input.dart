@@ -60,6 +60,7 @@ class MultiTitleInput extends StatelessWidget {
   final Function(String) multiOnChange;
   final String title;
   final bool? isRequired;
+  final EdgeInsetsGeometry padding;
 
   const MultiTitleInput({
     super.key,
@@ -68,13 +69,14 @@ class MultiTitleInput extends StatelessWidget {
     required this.displayText,
     required this.multiOnChange,
     this.isRequired,
+    this.padding = const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
   });
 
   @override
   Widget build(BuildContext context) {
     bool isInputRequired = isRequired ?? false;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+      padding: padding,
       child: SizedBox(
         width: ScreenSize.width,
         child: Column(
@@ -176,13 +178,14 @@ class TitleInput extends StatelessWidget {
   final double? inputHeight;
   final TextEditingController textController;
   final bool? isRequired;
-
+  final EdgeInsetsGeometry padding;
   const TitleInput({
     super.key,
     required this.title,
     this.inputHeight,
     this.isRequired,
     required this.textController,
+    this.padding = const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
   });
 
   @override
@@ -191,7 +194,7 @@ class TitleInput extends StatelessWidget {
     double viewInputHeight = inputHeight ?? 36;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+      padding: padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
