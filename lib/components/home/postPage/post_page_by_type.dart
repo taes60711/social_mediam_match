@@ -42,7 +42,7 @@ class PostPageByType extends StatelessWidget {
               onTap: () {
                 context.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: PostModel());
                 RouteOptions.pushTo(
-                  RoutePath.postEditPage.value,
+                  RoutePath.postEditPage,
                   arguments: {
                     'postContext': context,
                     'postBoradType': selectedboardType,

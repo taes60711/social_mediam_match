@@ -141,31 +141,31 @@ class UserPageRouthsettingButtonInfo {
     SettingButtonInfo(
       title: UserPageString().profileBtn,
       icon: FontAwesomeIcons.solidAddressCard,
-      onPress: () => RouteOptions.pushTo(RoutePath.profilePage.value),
+      onPress: () => RouteOptions.pushTo(RoutePath.profilePage),
     ),
     SettingButtonInfo(
         title: UserPageString().postBtn,
         icon: FontAwesomeIcons.solidNewspaper,
         onPress: () {
-          RouteOptions.pushTo(RoutePath.myPosts.value);
+          RouteOptions.pushTo(RoutePath.myPosts);
         }),
     SettingButtonInfo(
         title: UserPageString().courseBtn,
         icon: FontAwesomeIcons.school,
         onPress: () {
-          RouteOptions.pushTo(RoutePath.myCourses.value);
+          RouteOptions.pushTo(RoutePath.myCourses);
         }),
     SettingButtonInfo(
         title: UserPageString().settingBtn,
         icon: FontAwesomeIcons.gear,
         onPress: () {
-          RouteOptions.pushTo(RoutePath.privacySettingPage.value);
+          RouteOptions.pushTo(RoutePath.privacySettingPage);
         }),
     SettingButtonInfo(
         title: UserPageString().friendManagernBtn,
         icon: FontAwesomeIcons.userLarge,
         onPress: () {
-          RouteOptions.pushTo(RoutePath.myFriends.value);
+          RouteOptions.pushTo(RoutePath.myFriends);
         }),
     SettingButtonInfo(
         title: UserPageString().notificationBtn,

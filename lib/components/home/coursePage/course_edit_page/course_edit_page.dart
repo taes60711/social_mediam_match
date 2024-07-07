@@ -10,12 +10,11 @@ import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
-import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
-import 'package:social_mediam_match/provider/account/user_provider.dart';
+
 import 'package:social_mediam_match/provider/corse_view_model.dart';
-import 'package:social_mediam_match/services/course_service.dart';
 
 import '../../../../models/course_model.dart';
+
 import '../../../../provider/course_provider.dart';
 
 import '../../../utilities/basic_top_bar.dart';
@@ -27,6 +26,7 @@ class CourseEditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CourseModel? courseData = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['courseData'] as CourseModel?;
+    BuildContext courseContext = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['context'] as BuildContext;
     return StatefulWrapper(
       onInit: () async {
         await CourseViewModel(courseContext: context).courseEditInit(courseData: courseData);
@@ -271,24 +271,11 @@ class CourseEditPage extends StatelessWidget {
                           verticalMargin: 8,
                           backgroundColor: normalBgColor,
                           onPress: () async {
-                            int? courseId;
+                            int? id;
                             if (courseData != null) {
-                              courseId = courseData.id;
+                              id = courseData.id;
                             }
-                            await CourseService().createOrUpdateCourse(
-                              courseId: courseId,
-                              createdBy: context.read<UserProvider>().userData.uid,
-                              title: context.read<CourseProvider>().titleController.text,
-                              needLevel: context.read<CourseProvider>().needLevel,
-                              content: context.read<CourseProvider>().contentText,
-                              beforeNeed: context.read<CourseProvider>().beforeNeedText,
-                              prStory: context.read<CourseProvider>().prStory,
-                              chapterList: context.read<CourseProvider>().chapters,
-                              courseLearningSkills: context.read<CourseProvider>().choicedSkillList,
-                              type: "1",
-                              isPublic: isPublic,
-                            );
-                            RouteOptions.pop();
+                            CourseViewModel(courseContext: courseContext).courseCreateOrUpdate(courseId: id);
                           },
                         ),
                         const SizedBox(width: 10),

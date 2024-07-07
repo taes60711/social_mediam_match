@@ -8,10 +8,8 @@ import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/provider/corse_view_model.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 
-import '../../../models/user_model.dart';
 import '../../../pagemanager/enum/route_path.dart';
 import '../../../pagemanager/setting/route_controller.dart';
-import '../../../provider/account/user_provider.dart';
 import '../../../provider/home/skill_change_view_model.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
@@ -63,9 +61,8 @@ Widget _mainBuild(BuildContext context) {
           providerList: context.watch<BaseAPIListProvider<CourseModel>>().listData,
           customFloatbutton: GestureDetector(
             onTap: () {
-              LoginUser userData = context.read<UserProvider>().userData;
-              RouteOptions.pushTo(RoutePath.courseEditPage.value, arguments: {
-                "userData": userData,
+              RouteOptions.pushTo(RoutePath.courseEditPage, arguments: {
+                'context': context,
               });
             },
             child: Container(

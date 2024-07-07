@@ -39,6 +39,30 @@ class CourseViewModel {
     courseContext.read<CourseProvider>().editPageInit(requestSkillList: skillList, courseData: courseData);
   }
 
+  Future<void> courseCreateOrUpdate({int? courseId}) async {
+    await CourseService().createOrUpdateCourse(
+      courseId: courseId,
+      createdBy: courseContext.read<UserProvider>().userData.uid,
+      title: courseContext.read<CourseProvider>().titleController.text,
+      needLevel: courseContext.read<CourseProvider>().needLevel,
+      content: courseContext.read<CourseProvider>().contentText,
+      beforeNeed: courseContext.read<CourseProvider>().beforeNeedText,
+      prStory: courseContext.read<CourseProvider>().prStory,
+      chapterList: courseContext.read<CourseProvider>().chapters,
+      courseLearningSkills: courseContext.read<CourseProvider>().choicedSkillList,
+      type: "1",
+      isPublic: courseContext.read<CourseProvider>().isPublic,
+    );
+    RouteOptions.pop();
+    courseContext
+        .read<BaseAPIListProvider<CourseModel>>()
+        .reloadData(apiFunc: () async => await CourseService().getAllCourses(0, 5));
+    int preLoadPage = courseContext.read<BaseAPIListProvider<CourseModel>>().page;
+    await courseContext
+        .read<BaseAPIListProvider<CourseModel>>()
+        .preLoad(apiFunc: () async => await CourseService().getAllCourses(preLoadPage, 5));
+  }
+
   void openRichEditPage({int? chapterIndex, String? prStory}) {
     showModalBottomSheet(
       isScrollControlled: true,
@@ -144,11 +168,10 @@ class CourseViewModel {
                         titleColor: normalTextColor,
                         backgroundColor: normalBgColor2,
                         onPress: () {
-                          LoginUser userData = courseContext.read<UserProvider>().userData;
                           RouteOptions.pop();
-                          RouteOptions.pushTo(RoutePath.courseEditPage.value, arguments: {
-                            "userData": userData,
+                          RouteOptions.pushTo(RoutePath.courseEditPage, arguments: {
                             "courseData": courseData,
+                            'context': courseContext,
                           });
                         },
                       ),
