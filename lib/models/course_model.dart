@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
@@ -85,49 +83,6 @@ class CourseModel {
       isPublic: json['isPublic'],
       courseCreateduserInfo: LoginUser.toModel(json['user']),
     );
-  }
-}
-
-class CourseCreateModel {
-  String createdBy;
-  String title;
-  int needLevel;
-  String content;
-  String beforeNeed;
-  String prStory;
-  List<CourseChapterInfo> chapterList;
-  List<String> courseLearningSkills;
-  int type;
-  bool isPublic;
-
-  CourseCreateModel({
-    required this.createdBy,
-    required this.title,
-    required this.needLevel,
-    required this.content,
-    required this.beforeNeed,
-    required this.prStory,
-    required this.chapterList,
-    required this.courseLearningSkills,
-    required this.type,
-    required this.isPublic,
-  });
-
-  String courseCreatetoJson() {
-    String returnString = jsonEncode({
-      'createdBy': createdBy,
-      'title': title,
-      'needLevel': needLevel,
-      'content': content,
-      'beforeNeed': beforeNeed,
-      'prStory': prStory,
-      'courseChapters': chapterList.map((chapter) => chapter.toJson()).toList(),
-      'learningkillList': courseLearningSkills,
-      'type': type,
-      'isPublic': isPublic,
-    });
-
-    return returnString;
   }
 }
 

@@ -5,18 +5,8 @@ import '../components/utilities/endDrawers/course_edit_skill_choice_end_drawer.d
 import '../components/utilities/endDrawers/course_filter_end_drawer.dart';
 import '../components/utilities/endDrawers/course_manager_end_drawer.dart';
 import '../models/user_model.dart';
-import '../services/db_service.dart';
 
 class CourseProvider extends ChangeNotifier {
-  final DBService _dbService = DBService();
-
-  Future<bool> updateCourse(
-      {required int courseId, required CourseCreateModel courseUpdateData, required LoginUser userData}) async {
-    bool createResult = await _dbService.updateCourse(courseId: courseId, courseUpdateData: courseUpdateData);
-
-    return createResult;
-  }
-
   // MARK: EditView
   bool isPublic = true;
   TextEditingController titleController = TextEditingController();
