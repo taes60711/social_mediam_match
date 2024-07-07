@@ -10,27 +10,10 @@ import '../services/db_service.dart';
 class CourseProvider extends ChangeNotifier {
   final DBService _dbService = DBService();
 
-  void addChapterContent(int index, String content) {
-    chapters[index].content.add(content);
-    print("chapterContents");
-    notifyListeners();
-  }
-
-  void deleteChapterContent(int chapterIndex, int contentIndex) {
-    chapters[chapterIndex].content.remove(chapters[chapterIndex].content[contentIndex]);
-    print("deleteChapterContent");
-    notifyListeners();
-  }
-
   Future<bool> updateCourse(
       {required int courseId, required CourseCreateModel courseUpdateData, required LoginUser userData}) async {
     bool createResult = await _dbService.updateCourse(courseId: courseId, courseUpdateData: courseUpdateData);
 
-    return createResult;
-  }
-
-  Future<bool> createCourse({required CourseCreateModel createCourseData}) async {
-    bool createResult = await _dbService.createCourse(createCourseData: createCourseData);
     return createResult;
   }
 
@@ -41,6 +24,7 @@ class CourseProvider extends ChangeNotifier {
   TextEditingController beforeNeedController = TextEditingController();
   String contentText = "";
   String beforeNeedText = "";
+  String prStory = "";
   String needLevel = '0';
   String type = '0';
 
@@ -59,6 +43,7 @@ class CourseProvider extends ChangeNotifier {
       needLevel = "${courseData.needLevel}";
       choicedSkillList = courseData.courseLearningSkills;
       chapters = courseData.chapterList;
+      prStory = courseData.prStory;
     }
 
     skillList = [...skillList, ...requestSkillList];
@@ -74,6 +59,23 @@ class CourseProvider extends ChangeNotifier {
   void deleteChapter(int index) {
     chapters.remove(chapters[index]);
     print("deleteChapter");
+    notifyListeners();
+  }
+
+  void addChapterContent(int index, String content) {
+    chapters[index].content.add(content);
+    print("chapterContents");
+    notifyListeners();
+  }
+
+  void deleteChapterContent(int chapterIndex, int contentIndex) {
+    chapters[chapterIndex].content.remove(chapters[chapterIndex].content[contentIndex]);
+    print("deleteChapterContent");
+    notifyListeners();
+  }
+
+  void prStoryOnChange(String changedPrStory) {
+    prStory = changedPrStory;
     notifyListeners();
   }
 

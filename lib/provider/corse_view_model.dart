@@ -7,9 +7,11 @@ import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 import 'package:social_mediam_match/services/skill_service.dart';
 
+import '../components/home/coursePage/course_edit_page/course_rich_text_edit.dart';
 import '../components/utilities/apiListView/base_api_list_provider.dart';
 import '../components/utilities/endDrawers/course_detail_end_drawer.dart';
 import '../components/utilities/endDrawers/course_manager_end_drawer.dart';
+import '../components/utilities/rich_text_view.dart';
 import '../components/utilities/style/style_config.dart';
 import '../global.dart';
 import '../models/course_model.dart';
@@ -35,6 +37,53 @@ class CourseViewModel {
     List<RequestSkillListData> requestSkillList = await SkillService().requestSkillList();
     List<String> skillList = requestSkillList.map((e) => e.name).toList();
     courseContext.read<CourseProvider>().editPageInit(requestSkillList: skillList, courseData: courseData);
+  }
+
+  void openRichEditPage({int? chapterIndex, String? prStory}) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      enableDrag: false,
+      context: courseContext,
+      backgroundColor: Colors.white,
+      useSafeArea: true,
+      builder: (builder) {
+        return FractionallySizedBox(
+          heightFactor: 1,
+          child: CourseRichTextEdit(
+            index: chapterIndex,
+            courseContext: courseContext,
+            prStory: prStory,
+          ),
+        );
+      },
+    );
+  }
+
+  void openCourseChapterContentPage({required String chapterText, required String chapterUrl}) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      enableDrag: false,
+      context: courseContext,
+      backgroundColor: Colors.white,
+      useSafeArea: true,
+      builder: (builder) {
+        return FractionallySizedBox(
+          heightFactor: 1,
+          child: Scaffold(
+            body: Column(
+              children: [
+                BaseTopBar(title: chapterText),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: RichTextView(content: chapterUrl),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> courseSignUp({required int courseId}) async {
