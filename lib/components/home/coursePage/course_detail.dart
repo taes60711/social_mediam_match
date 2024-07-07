@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/models/course_model.dart';
-import 'package:social_mediam_match/provider/corses_view_model.dart';
-import 'package:social_mediam_match/provider/course_state.dart';
+import 'package:social_mediam_match/provider/corse_view_model.dart';
 
+import '../../../provider/course_provider.dart';
 import '../../account/skill_bar.dart';
 import '../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../../utilities/endDrawers/user_detail_end_drawer.dart';
@@ -19,7 +19,7 @@ class CourseDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CourseModel openedCourse = context.read<CourseState>().choicedCourse;
+    CourseModel openedCourse = context.read<CourseProvider>().choicedCourse;
 
     return BackgroundWidget(
       child: Builder(builder: (context) {
@@ -35,7 +35,7 @@ class CourseDetail extends StatelessWidget {
                     style: TextStyle(fontSize: 19),
                   ),
                   Builder(builder: (context) {
-                    bool isAdded = context.select((CourseState value) => value.bIsAddedCourse);
+                    bool isAdded = context.select((CourseProvider value) => value.bIsAddedCourse);
 
                     return Visibility(
                       visible: !isAdded,
@@ -45,7 +45,7 @@ class CourseDetail extends StatelessWidget {
                         width: 55,
                         title: "申請",
                         onPress: () {
-                          CoursesViewModel(courseContext: context).courseSignUp(courseId: openedCourse.id);
+                          CourseViewModel(courseContext: context).courseSignUp(courseId: openedCourse.id);
                         },
                         titleColor: normalTextColor,
                         backgroundColor: googleButtonColor.withOpacity(0.8),
@@ -149,7 +149,7 @@ class CourseDetail extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Builder(builder: (context) {
-                bool isAdded = context.select((CourseState value) => value.bIsAddedCourse);
+                bool isAdded = context.select((CourseProvider value) => value.bIsAddedCourse);
                 return Column(
                   children: [
                     Visibility(
@@ -183,7 +183,7 @@ class CourseDetail extends StatelessWidget {
                                     String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
 
                                     return Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 5),
+                                      padding: const EdgeInsets.symmetric(vertical: 5),
                                       child: Row(
                                         children: [
                                           Padding(

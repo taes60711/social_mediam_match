@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/provider/corses_view_model.dart';
+import 'package:social_mediam_match/provider/corse_view_model.dart';
 
 import '../../../../models/course_model.dart';
 import '../../../../models/user_model.dart';
@@ -27,7 +27,7 @@ class CreatedCoursesPage extends StatelessWidget {
       itemChild: ((data, index) {
         return GestureDetector(
           onTap: () {
-            CoursesViewModel(courseContext: context).openCreatedCourseModal(courseData: data[index]);
+            CourseViewModel(courseContext: context).openCreatedCourseModal(courseData: data[index]);
           },
           child: Container(
             color: Colors.transparent,

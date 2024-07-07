@@ -7,7 +7,8 @@ import 'package:social_mediam_match/provider/post/post_comment_provider.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
 import '../../components/account/login_page.dart';
 import '../../components/account/signUpPage/signup_page.dart';
-import '../../components/home/coursePage/course_edit_page.dart';
+
+import '../../components/home/coursePage/course_edit_page/course_edit_page.dart';
 import '../../components/home/postPage/editor_page.dart';
 import '../../components/home/userPage/myCourse/my_courses.dart';
 import '../../components/home/userPage/my_friends.dart';
@@ -19,11 +20,11 @@ import '../../models/post_model.dart';
 import '../../provider/Initial/initial_provider.dart';
 import '../../provider/account/signUpPage/sign_up_view_provider.dart';
 import '../../provider/account/user_provider.dart';
+import '../../provider/course_provider.dart';
 import '../../provider/friend_provider.dart';
 import '../../provider/home/skill_map_provider.dart';
 import '../../provider/home/user_setting_view_provider.dart';
 import '../../provider/post/post_provider.dart';
-import '../../provider/course_state.dart';
 import '../enum/route_path.dart';
 import 'bottom_bar_controller_provider.dart';
 
@@ -70,7 +71,7 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
 
   /// "/mycourses"
   RoutePath.courseEditPage.value: (BuildContext context) => ChangeNotifierProvider(
-        create: (_) => CourseState(),
+        create: (_) => CourseProvider(),
         child: const CourseEditPage(),
       ),
 
@@ -98,7 +99,7 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
 
   /// "/mycourses"
   RoutePath.myCourses.value: (BuildContext context) => ChangeNotifierProvider(
-        create: (_) => CourseState(),
+        create: (_) => CourseProvider(),
         child: const MyCourses(),
       ),
 

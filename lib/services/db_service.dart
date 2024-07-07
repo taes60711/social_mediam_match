@@ -7,27 +7,6 @@ import '../../global.dart';
 class DBService {
   String url = "http://$ip:$port";
 
-  // Future<bool> userAddCourseRequest({required int courseId, required String userUID}) async {
-  //   String branch = "courses";
-  //   String searchUrl = '$url/$branch/addCourse';
-
-  //   bool isSuccess = false;
-
-  //   final uri = Uri.parse(searchUrl);
-  //   Map<String, String> headers = {'content-type': 'application/json'};
-
-  //   String body = jsonEncode({'courseId': courseId, 'memberUid': userUID});
-
-  //   try {
-  //     var response = await http.put(uri, headers: headers, body: body);
-  //     if (response.statusCode != 404) {
-  //       isSuccess = true;
-  //     }
-  //   } catch (e) {}
-  //   print("userAddCourseRequest result : ${isSuccess}");
-  //   return isSuccess;
-  // }
-
   Future<bool> updateCourse({required int courseId, required CourseCreateModel courseUpdateData}) async {
     String branch = "courses";
     String searchUrl = '$url/$branch/updateCourse/$courseId';

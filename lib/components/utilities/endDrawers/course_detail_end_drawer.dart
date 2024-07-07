@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/provider/course_state.dart';
+
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
+import '../../../provider/course_provider.dart';
 import '../../home/coursePage/course_detail.dart';
 import '../loading.dart';
 import 'custom_end_drawer.dart';
@@ -16,13 +17,13 @@ enum CourseDetailEndDrawerType {
 
 ///MARK: void コース詳細ページ開くように
 void openCourseDetailEndDrawer({required BuildContext context, required CourseModel openedCourse}) {
-  context.read<CourseState>().changeEndDrawerStatus(CourseDetailEndDrawerType.open, openedCourse);
+  context.read<CourseProvider>().changeEndDrawerStatus(CourseDetailEndDrawerType.open, openedCourse);
 }
 
 ///MARK: void コース詳細ページ開くように
 void closeCourseDetailEndDrawer({required BuildContext context}) {
   context
-      .read<CourseState>()
+      .read<CourseProvider>()
       .changeEndDrawerStatus(CourseDetailEndDrawerType.close, CourseModel(courseCreateduserInfo: LoginUser()));
 }
 
@@ -31,7 +32,7 @@ Widget courseDetailEndDrawer() {
   return Builder(
     builder: (context) {
       print("courseDetailEndDrawer");
-      CourseDetailEndDrawerType endDrawer = context.select((CourseState value) => value.endDrawerOpenInfo);
+      CourseDetailEndDrawerType endDrawer = context.select((CourseProvider value) => value.endDrawerOpenInfo);
 
       Widget endDrawerWidget = Container();
 

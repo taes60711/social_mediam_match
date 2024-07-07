@@ -84,7 +84,7 @@ class PostCommentPage extends StatelessWidget {
         }),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            padding: const EdgeInsets.only(left: 15.0, right: 15, top: 10),
             child: APIListView<PostCommentTextEditorModel>(
               size: 8,
               needToTopWidget: false,
@@ -174,6 +174,8 @@ class PostCommentPage extends StatelessWidget {
                                     ],
                                   ),
                                 ),
+
+                          const SizedBox(height: 3),
                           Builder(builder: (context) {
                             LoginUser loginUserData = context.read<UserProvider>().userData;
                             return Visibility(
@@ -186,7 +188,7 @@ class PostCommentPage extends StatelessWidget {
                                     },
                                     child: const Text(
                                       "編輯",
-                                      style: TextStyle(fontSize: 11, color: Colors.grey),
+                                      style: TextStyle(fontSize: 12, color: Colors.grey),
                                     ),
                                   ),
                                   const SizedBox(width: 10),
@@ -196,7 +198,7 @@ class PostCommentPage extends StatelessWidget {
                                     },
                                     child: const Text(
                                       "刪除",
-                                      style: TextStyle(fontSize: 11, color: Colors.grey),
+                                      style: TextStyle(fontSize: 12, color: Colors.grey),
                                     ),
                                   )
                                 ],

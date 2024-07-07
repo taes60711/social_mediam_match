@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
-import 'package:social_mediam_match/provider/corses_view_model.dart';
-import 'package:social_mediam_match/provider/course_state.dart';
+import 'package:social_mediam_match/provider/corse_view_model.dart';
 
 import '../../../../models/course_model.dart';
+import '../../../../provider/course_provider.dart';
 import '../../../../services/course_service.dart';
 import '../../../utilities/apiListView/api_list_view.dart';
 import '../../../utilities/apiListView/base_api_list_provider.dart';
@@ -19,7 +19,7 @@ class CourseMemberManager extends StatelessWidget {
       body: APIListView<AddedCourseMemberModel>(
         providerList: context.watch<BaseAPIListProvider<AddedCourseMemberModel>>().listData,
         apiFunc: (page, size) {
-          return CourseService().getCourseAddedMember(page, size, context.read<CourseState>().choicedCourseId);
+          return CourseService().getCourseAddedMember(page, size, context.read<CourseProvider>().choicedCourseId);
         },
         itemChild: ((data, index) {
           return Row(
@@ -38,14 +38,14 @@ class CourseMemberManager extends StatelessWidget {
                 visible: data[index].status == 0,
                 child: ElevatedButton(
                   onPressed: () {
-                    CoursesViewModel(courseContext: context).updateCourseMemberStatus(updateData: data[index]);
+                    CourseViewModel(courseContext: context).updateCourseMemberStatus(updateData: data[index]);
                   },
                   child: Text("O"),
                 ),
               ),
               ElevatedButton(
                 onPressed: () {
-                  CoursesViewModel(courseContext: context).deleteCourseMember(deletedMember: data[index]);
+                  CourseViewModel(courseContext: context).deleteCourseMember(deletedMember: data[index]);
                 },
                 child: Text("X"),
               ),

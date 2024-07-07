@@ -15,7 +15,7 @@ class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
     required this.title,
-    required this.titleColor,
+    this.titleColor = Colors.white,
     required this.backgroundColor,
     this.borderRadius,
     required this.onPress,

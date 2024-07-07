@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/skill_bar.dart';
-import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/skill_setting_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/course_model.dart';
-import 'package:social_mediam_match/provider/corses_view_model.dart';
+import 'package:social_mediam_match/provider/corse_view_model.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 
 import '../../../models/user_model.dart';
@@ -92,7 +91,7 @@ Widget _mainBuild(BuildContext context) {
           itemChild: (List<CourseModel> data, int index) {
             return GestureDetector(
               onTap: () {
-                CoursesViewModel(courseContext: context).courseDetailInit(openedCourse: data[index]);
+                CourseViewModel(courseContext: context).courseDetailInit(openedCourse: data[index]);
               },
               child: Container(
                 color: Colors.transparent,

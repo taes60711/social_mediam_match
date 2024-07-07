@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
-import 'package:social_mediam_match/provider/course_state.dart';
 import 'package:social_mediam_match/services/course_service.dart';
+import 'package:social_mediam_match/services/skill_service.dart';
 
 import '../components/utilities/apiListView/base_api_list_provider.dart';
 import '../components/utilities/endDrawers/course_detail_end_drawer.dart';
@@ -13,26 +13,34 @@ import '../components/utilities/endDrawers/course_manager_end_drawer.dart';
 import '../components/utilities/style/style_config.dart';
 import '../global.dart';
 import '../models/course_model.dart';
+import '../models/skill_model.dart';
 import '../models/user_model.dart';
 import '../pagemanager/enum/route_path.dart';
 import '../pagemanager/setting/route_controller.dart';
 import 'account/user_provider.dart';
+import 'course_provider.dart';
 
-class CoursesViewModel {
+class CourseViewModel {
   BuildContext courseContext;
-  CoursesViewModel({required this.courseContext});
+  CourseViewModel({required this.courseContext});
 
   Future<void> courseDetailInit({required CourseModel openedCourse}) async {
     openCourseDetailEndDrawer(context: courseContext, openedCourse: openedCourse);
     LoginUser userData = courseContext.read<UserProvider>().userData;
     bool isAdded = await CourseService().isAddedCourse(courseId: openedCourse.id, userUID: userData.uid);
-    courseContext.read<CourseState>().courseSignedUp(isAdded: isAdded);
+    courseContext.read<CourseProvider>().courseSignedUp(isAdded: isAdded);
+  }
+
+  Future<void> courseEditInit({CourseModel? courseData}) async {
+    List<RequestSkillListData> requestSkillList = await SkillService().requestSkillList();
+    List<String> skillList = requestSkillList.map((e) => e.name).toList();
+    courseContext.read<CourseProvider>().editPageInit(requestSkillList: skillList, courseData: courseData);
   }
 
   Future<void> courseSignUp({required int courseId}) async {
     LoginUser userData = courseContext.read<UserProvider>().userData;
     bool isSignedUp = await CourseService().signUpCourse(userUID: userData.uid, courseId: courseId);
-    courseContext.read<CourseState>().courseSignedUp(isAdded: isSignedUp);
+    courseContext.read<CourseProvider>().courseSignedUp(isAdded: isSignedUp);
   }
 
   Future<void> updateCourseMemberStatus({required AddedCourseMemberModel updateData}) async {
@@ -78,7 +86,7 @@ class CoursesViewModel {
                         backgroundColor: normalBgColor2,
                         onPress: () {
                           RouteOptions.pop();
-                          CoursesViewModel(courseContext: courseContext).courseDetailInit(openedCourse: courseData);
+                          CourseViewModel(courseContext: courseContext).courseDetailInit(openedCourse: courseData);
                         },
                       ),
                       const SizedBox(height: 15),
