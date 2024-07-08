@@ -7,6 +7,7 @@ import 'package:social_mediam_match/provider/corse_view_model.dart';
 
 import '../../../provider/course_provider.dart';
 import '../../account/skill_bar.dart';
+import '../../utilities/custom_expansion_title.dart';
 import '../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../utilities/rich_text_view.dart';
@@ -154,15 +155,14 @@ class CourseDetail extends StatelessWidget {
                   bool isAdded = context.select((CourseProvider value) => value.bIsAddedCourse);
                   return Column(
                     children: [
-                      Visibility(
-                        visible: !isAdded,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text("詳細介紹:"),
-                            RichTextView(content: openedCourse.prStory),
-                          ],
-                        ),
+                      CustomExpansionTile(
+                        initiallyExpanded: !isAdded,
+                        title: const Text("詳細介紹"),
+                        collapsedTrailingWidget: const Icon(Icons.keyboard_arrow_up),
+                        expandedTrailingWidget: const Icon(Icons.keyboard_arrow_down),
+                        children: <Widget>[
+                          RichTextView(content: openedCourse.prStory),
+                        ],
                       ),
                       Visibility(
                         visible: isAdded,
