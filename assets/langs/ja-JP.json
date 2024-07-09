@@ -3,6 +3,12 @@
   "serverErrorContent": "サービスエラー",
   "errConfirm": "確認",
 
+  "//": "modal",
+  "confirm": "はい",
+  "cancel": "いいえ",
+  "friend_delete_title": "削除確認",
+  "friend_delete_check": "本当に削除してよろしいでしょうか",
+
   "//": "welcomePage",
   "version":"Ver",
   "first_use_button":"始める",
@@ -82,6 +88,7 @@
   "userpage_friendmanger_btn":"友だち管理",
   "userpage_guide_btn":"ガイド",
   "mypost_title": "My投稿",
+  "myfriend_title": "Myフレンド",
 
   "//": "skillExchangePage",
   "skExChpage_beforDays":"前",
@@ -89,6 +96,7 @@
 
   "//": "skillbar",
   "noskillData": "なし",
+  "skillSearchHintText": "名前で検索",
 
   "//": "skillchangeFilterPage",
   "skillFilterTitle": "フィルター",

@@ -10,7 +10,7 @@ enum CourseFilterEndDrawerType {
   close;
 }
 
-///Before use need ParentWidget Create CourseState
+///Before use need ParentWidget Create CourseProvider
 
 ///MARK: void コースフィルターページ開くように
 void openCourseFilterEndDrawer({required BuildContext context}) {

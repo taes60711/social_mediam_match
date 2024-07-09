@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 import 'package:social_mediam_match/services/friend_service.dart';
 import 'package:web_socket_channel/io.dart';
+import '../components/utilities/endDrawers/chat_room_end_drawer.dart';
 import '../components/utilities/endDrawers/user_detail_end_drawer.dart';
 import '../global.dart';
 import '../models/friend_model.dart';
@@ -96,16 +96,6 @@ class FriendProvider extends ChangeNotifier {
         .add('{"method" : "deleteFriend", "ip" : "$ip:$port" , "members" : $usersListTemp, "roomid" : $roomId}');
   }
 
-  Future<void> openRoom(int roomId) async {
-    this.roomId = roomId;
-    isLoading = true;
-    pageNumber = 0;
-    pageCount = 0;
-    chatRoomMesaage = [];
-    isDataAddLoding = false;
-    notifyListeners();
-  }
-
   Future<void> initialRoomListener(int roomId, String userId) async {
     Future<void> initialConnect() async {
       print("initialConnect");
@@ -196,15 +186,30 @@ class FriendProvider extends ChangeNotifier {
     }
   }
 
-  void closeRoom() {
-    _chatRoomChannel.sink.close();
-    RouteOptions.pop();
+  Future<void> openRoom(int roomId, LoginUser roomMember) async {
+    this.roomId = roomId;
+    ohterUserData = roomMember;
+    isLoading = true;
+    pageNumber = 0;
+    pageCount = 0;
+    chatRoomMesaage = [];
+    isDataAddLoding = false;
+    notifyListeners();
   }
 
   UserDetailEndDrawerType endDrawerOpenInfo = UserDetailEndDrawerType.close;
   void changeEndDrawerStatus(UserDetailEndDrawerType status, LoginUser otherUser) {
     ohterUserData = otherUser;
     endDrawerOpenInfo = status;
+    notifyListeners();
+  }
+
+  ChatRoomEndDrawerType chatRoomEndDrawerOpenInfo = ChatRoomEndDrawerType.close;
+  void changeChatRoomEndDrawerStatus(ChatRoomEndDrawerType status) {
+    if (status == ChatRoomEndDrawerType.close) {
+      _chatRoomChannel.sink.close();
+    }
+    chatRoomEndDrawerOpenInfo = status;
     notifyListeners();
   }
 }

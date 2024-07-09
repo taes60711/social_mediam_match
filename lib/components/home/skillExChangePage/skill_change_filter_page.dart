@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/provider/home/skill_change_view_model.dart';
 
 import '../../../provider/home/skill_change_view_provider.dart';
@@ -53,12 +54,13 @@ class SkillChangeFilterPage extends StatelessWidget {
                 },
               ),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                SkillChangeViewModel(context: context).filterSearchStart();
-              },
-              child: Text(tr("skillFilterSearch")),
-            ),
+            CustomButton(
+                title: tr("skillFilterSearch"),
+                backgroundColor: normalBgColor,
+                onPress: () {
+                  SkillChangeViewModel(context: context).filterSearchStart();
+                }),
+            const SizedBox(height: 10),
           ],
         ),
       ),

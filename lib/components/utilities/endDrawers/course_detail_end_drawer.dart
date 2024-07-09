@@ -13,7 +13,7 @@ enum CourseDetailEndDrawerType {
   close;
 }
 
-///Before use need ParentWidget Create CourseState
+///Before use need ParentWidget Create CourseProvider
 
 ///MARK: void コース詳細ページ開くように
 void openCourseDetailEndDrawer({required BuildContext context, required CourseModel openedCourse}) {

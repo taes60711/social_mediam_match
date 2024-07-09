@@ -28,35 +28,39 @@ class CourseRichTextEdit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextEditingController titleController = TextEditingController();
-    return Scaffold(
-      body: Column(
-        children: [
-          BaseTopBar(
-            title: prStory != null ? "詳細介紹" : "章節$index",
-            rightWidget: CustomButton(
-                width: 55,
-                verticalMargin: 2,
-                borderRadius: 8,
-                title: "保存",
-                backgroundColor: normalBgColor2.withOpacity(0.8),
-                onPress: () async {
-                  String editedContent = await controller.getText();
-                  if (prStory != null) {
-                    courseContext.read<CourseProvider>().prStoryOnChange(editedContent);
-                  } else {
-                    String chapterFormattedStr = '{"text":"${titleController.text}","url":"$editedContent"}';
-                    courseContext.read<CourseProvider>().addChapterContent(index ?? -1, chapterFormattedStr);
-                  }
+    return Column(
+      children: [
+        BaseTopBar(
+          title: prStory != null ? "詳細介紹" : "章節$index",
+          rightWidget: CustomButton(
+              width: 55,
+              verticalMargin: 2,
+              borderRadius: 8,
+              title: "保存",
+              backgroundColor: normalBgColor2.withOpacity(0.8),
+              onPress: () async {
+                String editedContent = await controller.getText();
+                if (prStory != null) {
+                  courseContext.read<CourseProvider>().prStoryOnChange(editedContent);
+                } else {
+                  String chapterFormattedStr = '{"text":"${titleController.text}","url":"$editedContent"}';
+                  courseContext.read<CourseProvider>().addChapterContent(index ?? -1, chapterFormattedStr);
+                }
 
-                  RouteOptions.pop();
-                }),
+                RouteOptions.pop();
+              }),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                prStory != null ? Container() : TitleInput(title: "標題", textController: titleController),
+                RichTextEditor(controller: controller, content: prStory ?? ""),
+              ],
+            ),
           ),
-          TitleInput(title: "標題", textController: titleController),
-          SingleChildScrollView(
-            child: RichTextEditor(controller: controller, content: prStory ?? ""),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

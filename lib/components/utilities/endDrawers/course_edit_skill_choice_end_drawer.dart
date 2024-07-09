@@ -11,7 +11,7 @@ enum CourseEditSkillChoiceEndDrawerType {
   close;
 }
 
-///Before use need ParentWidget Create CourseState
+///Before use need ParentWidget Create CourseProvider
 
 ///MARK: void コース編集ページのスキルページ開くように
 void openCoursEditSkillEndDrawer({required BuildContext context}) {

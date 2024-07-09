@@ -16,6 +16,7 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/friend_model.dart';
 import 'package:social_mediam_match/models/rich_text_format.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import '../../../CustomBouncingScrollPhysics.dart';
@@ -23,16 +24,17 @@ import '../../../models/user_model.dart';
 import '../../../services/image_service.dart';
 
 import '../../../provider/friend_provider.dart';
+import '../../utilities/endDrawers/chat_room_end_drawer.dart';
 import '../../utilities/loading.dart';
 
 class ChatRoom extends StatelessWidget {
-  final LoginUser userData;
-  final LoginUser ohterUserData;
-  ChatRoom({super.key, required this.userData, required this.ohterUserData});
+  ChatRoom({super.key});
 
   final _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
+    LoginUser userData = context.watch<UserProvider>().userData;
+    LoginUser ohterUserData = context.watch<FriendProvider>().ohterUserData;
     FriendProvider friendFuture = context.read<FriendProvider>();
     bool isLoading = context.select((FriendProvider value) => value.isLoading);
     List<ChatRoomMessageModel> messageData = context.watch<FriendProvider>().chatRoomMesaage;
@@ -216,7 +218,7 @@ class ChatRoom extends StatelessWidget {
                     GestureDetector(
                       onTap: () async {
                         print("Chat Room close");
-                        friendFuture.closeRoom();
+                        closecChatRoomEndDrawer(context: context);
                       },
                       child: Icon(Icons.arrow_back_ios_sharp, color: normalBgColor2),
                     ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
@@ -24,18 +25,18 @@ class MyFriends extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('確認'),
-            content: const Text('確定要刪除好友?'),
+            title: Text(tr("friend_delete_title")),
+            content: Text(tr("friend_delete_check")),
             actions: <Widget>[
               ElevatedButton(
-                child: const Text('確定'),
+                child: Text(tr("confirm")),
                 onPressed: () {
                   friendFuture.deleteFriend(members, roomId);
                   Navigator.of(context).pop();
                 },
               ),
               ElevatedButton(
-                child: const Text('取消'),
+                child: Text(tr("cancel")),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -52,7 +53,7 @@ class MyFriends extends StatelessWidget {
           body: SafeArea(
             child: Column(
               children: [
-                const BaseTopBar(title: "我的好友"),
+                BaseTopBar(title: tr("myfriend_title")),
                 Expanded(
                   child: ListView.builder(
                     physics: const NoBouncingScrollPhysics(),
