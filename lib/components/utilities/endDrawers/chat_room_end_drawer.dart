@@ -35,10 +35,12 @@ Widget chatRoomEndDrawer() {
       if (endDrawer == ChatRoomEndDrawerType.open) {
         endDrawerWidget = EndDrawer(
           isNeedTopbar: false,
-          onDismissed: () {},
+          onDismissed: () {
+            closecChatRoomEndDrawer(context: context);
+          },
           loadingBuilder: const Loading(),
 
-          /// コース詳細ページ
+          /// チャットルームページ
           child: ChatRoom(),
         );
       }
