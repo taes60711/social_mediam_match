@@ -111,9 +111,62 @@ class CourseViewModel {
   }
 
   Future<void> courseSignUp({required int courseId}) async {
-    LoginUser userData = courseContext.read<UserProvider>().userData;
-    bool isSignedUp = await CourseService().signUpCourse(userUID: userData.uid, courseId: courseId);
-    courseContext.read<CourseProvider>().courseSignedUp(isAdded: isSignedUp);
+    showDialog<void>(
+      context: globalContext,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: SizedBox(
+            width: 150,
+            height: 150,
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                BaseTopBar(
+                  leftWidget: Container(),
+                  centerWidget: const Text("確認要申請?"),
+                  rightWidget: GestureDetector(
+                    onTap: () => RouteOptions.pop(),
+                    child: const Icon(Icons.close),
+                  ),
+                ),
+                const Expanded(child: SizedBox(height: 10)),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CustomButton(
+                          title: '取消',
+                          titleColor: normalTextColor,
+                          backgroundColor: hintTextColor,
+                          onPress: () {
+                            RouteOptions.pop();
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: CustomButton(
+                          title: '確認',
+                          titleColor: normalTextColor,
+                          backgroundColor: normalBgColor,
+                          onPress: () async {
+                            LoginUser userData = courseContext.read<UserProvider>().userData;
+                            bool isSignedUp = await CourseService().signUpCourse(userUID: userData.uid, courseId: courseId);
+                            courseContext.read<CourseProvider>().courseSignedUp(isAdded: isSignedUp);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> updateCourseMemberStatus({required AddedCourseMemberModel updateData}) async {
