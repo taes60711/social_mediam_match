@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
@@ -191,55 +192,15 @@ class CourseDetail extends StatelessWidget {
                                             Padding(
                                               padding: const EdgeInsets.only(right: 5),
                                               child: Icon(
-                                                Icons.ondemand_video,
+                                                FontAwesomeIcons.fileCode,
                                                 color: normalBgColor2,
                                               ),
                                             ),
                                             Expanded(
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  showGeneralDialog(
-                                                      barrierColor: Colors.black.withOpacity(0.7),
-                                                      transitionBuilder: (context, a1, a2, widget) {
-                                                        return Transform.scale(
-                                                          scale: a1.value,
-                                                          child: Opacity(
-                                                            opacity: a1.value,
-                                                            child: Scaffold(
-                                                              body: SafeArea(
-                                                                child: SingleChildScrollView(
-                                                                  child: Column(
-                                                                    children: [
-                                                                      Text(chapterText),
-                                                                      GestureDetector(
-                                                                        onTap: () {
-                                                                          Navigator.of(context).pop();
-                                                                        },
-                                                                        child: Container(
-                                                                          alignment: Alignment.topRight,
-                                                                          margin: const EdgeInsets.only(right: 20, bottom: 20),
-                                                                          child: Icon(
-                                                                            Icons.close,
-                                                                            color: normalBgColor2,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      RichTextView(content: chapterUrl)
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                      transitionDuration: Duration(milliseconds: 200),
-                                                      barrierDismissible: true,
-                                                      barrierLabel: '',
-                                                      context: context,
-                                                      pageBuilder: (context, animation1, animation2) {
-                                                        return Container();
-                                                      });
+                                                  CourseViewModel(courseContext: context).openCourseChapterContentPage(
+                                                      chapterText: chapterText, chapterUrl: chapterUrl);
                                                 },
                                                 child: Text(
                                                   chapterText,
