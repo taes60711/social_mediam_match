@@ -24,6 +24,24 @@ class FriendService extends ApiClient {
     return friendList;
   }
 
+  Future<ChatRoomModel> getChatRoomMsg(String apiUrl) async {
+    ChatRoomModel roomMsg = ChatRoomModel(chatRoomMsg: []);
+
+    try {
+      String url = apiUrl.substring("http://$ip:$port".length);
+      String responseData = await apiGet(url);
+
+      roomMsg = await handleResponse<ChatRoomModel>(
+        responseData,
+        model: ChatRoomModel.toModel,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return roomMsg;
+  }
+
   ///メッセージ送る
   ///roomid: チャットルームのID roomid: ログインユーザID　message:打ったメッセージ
   Future<bool> sendMessage(int roomId, String userId, String message) async {

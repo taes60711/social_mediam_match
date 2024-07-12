@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/friend_provider.dart';
 
 import '../../home/firendsPage/chat_room.dart';
-import '../loading.dart';
 import 'custom_end_drawer.dart';
 
 enum ChatRoomEndDrawerType {
@@ -38,7 +37,6 @@ Widget chatRoomEndDrawer() {
           onDismissed: () {
             closecChatRoomEndDrawer(context: context);
           },
-          loadingBuilder: const Loading(),
 
           /// チャットルームページ
           child: ChatRoom(),

@@ -37,7 +37,7 @@ class ChatRoom extends StatelessWidget {
     LoginUser ohterUserData = context.watch<FriendProvider>().ohterUserData;
     FriendProvider friendFuture = context.read<FriendProvider>();
     bool isLoading = context.select((FriendProvider value) => value.isLoading);
-    List<ChatRoomMessageModel> messageData = context.watch<FriendProvider>().chatRoomMesaage;
+    List<ChatRoomMsg> messageData = context.watch<FriendProvider>().chatRoomMesaage;
     int pageNumber = context.select((FriendProvider value) => value.pageNumber);
     int pageCount = context.select((FriendProvider value) => value.pageCount);
     int roomId = context.select((FriendProvider value) => value.roomId);
@@ -50,7 +50,7 @@ class ChatRoom extends StatelessWidget {
     bool test = true;
     if (messageData.length == 1) {
       {
-        ss.add(ChatRoomMessageModel(
+        ss.add(ChatRoomMsg(
             userId: messageData[0].userId, message: messageData[0].message, sentAt: messageData[0].sentAt, needAppearImg: true));
 
         DateTime now = DateTime.now().toUtc();
@@ -73,7 +73,7 @@ class ChatRoom extends StatelessWidget {
                   messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
               messageData[i].userId != messageData[i + 1].userId) {
             //這邊的 needAppearImg 應該都要為 false
-            ss.add(ChatRoomMessageModel(
+            ss.add(ChatRoomMsg(
                 userId: messageData[i].userId,
                 message: messageData[i].message,
                 sentAt: test ? messageData[i].sentAt : "",
@@ -82,7 +82,7 @@ class ChatRoom extends StatelessWidget {
             test = true;
           } else {
             //這邊的 needAppearImg 應該都要為 true
-            ss.add(ChatRoomMessageModel(
+            ss.add(ChatRoomMsg(
                 userId: messageData[i].userId,
                 message: messageData[i].message,
                 sentAt: test ? messageData[i].sentAt : "",
@@ -106,7 +106,7 @@ class ChatRoom extends StatelessWidget {
                   messageData[i - 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
               messageData[i].userId != messageData[i - 1].userId) {
             ss.add(
-              ChatRoomMessageModel(
+              ChatRoomMsg(
                   userId: messageData[i].userId,
                   message: messageData[i].message,
                   sentAt: messageData[i].sentAt,
@@ -114,8 +114,7 @@ class ChatRoom extends StatelessWidget {
             );
           } else {
             //當最後一筆資料 與 最後前一筆資料進行比對 時間和使用者相同時 不顯示頭像
-            ss.add(ChatRoomMessageModel(
-                userId: messageData[i].userId, message: messageData[i].message, sentAt: "", needAppearImg: true));
+            ss.add(ChatRoomMsg(userId: messageData[i].userId, message: messageData[i].message, sentAt: "", needAppearImg: true));
           }
           //最後一筆補上日期
           if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length)) {
@@ -280,8 +279,8 @@ class ChatRoom extends StatelessWidget {
                                       style: TextStyle(fontSize: 10),
                                     )),
                               );
-                            } else if (ss[index].runtimeType == ChatRoomMessageModel) {
-                              ChatRoomMessageModel messageData = ss[index];
+                            } else if (ss[index].runtimeType == ChatRoomMsg) {
+                              ChatRoomMsg messageData = ss[index];
                               List<String> splitStringAndUrls(String input) {
                                 final urlPattern = RegExp(r'https?://\S+');
                                 List<String> parts = [];
