@@ -16,8 +16,6 @@ void main() async {
     [
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
-      // DeviceOrientation.landscapeLeft,
-      // DeviceOrientation.landscapeRight
     ],
   );
 
@@ -42,7 +40,8 @@ class MyApp extends StatelessWidget {
         fontFamily: 'GenJyu',
         useMaterial3: false,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        pageTransitionsTheme: const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
+        pageTransitionsTheme:
+            const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
           TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
           TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
         }),

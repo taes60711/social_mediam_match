@@ -15,6 +15,7 @@ class RichTextEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     final customToolBarList = [ToolBarStyle.color, ToolBarStyle.size, ToolBarStyle.image];
     double fontSize = 18;
+    String nowStr = "";
     return Column(
       children: [
         ToolBar.scroll(
@@ -183,7 +184,9 @@ class RichTextEditor extends StatelessWidget {
           future: RichTextFormat(htmlString: content).widgetToEditorHtml(content),
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (snapshot.hasData) {
@@ -199,9 +202,25 @@ class RichTextEditor extends StatelessWidget {
                     ),
                   );
                 },
+                onTextChanged: (value) {
+                  RegExp chineseRegex = RegExp(r'[\u4e00-\u9fa5]');
+                  if (chineseRegex.hasMatch(value)) {
+                    RegExp regExp = RegExp(r'<p><br><\/p>');
+                    RegExp sregExp = RegExp(r'<br><\/p>');
+                    if (!regExp.hasMatch(value) && sregExp.hasMatch(value)) {
+                      String s = value.replaceAll("<br></p>", "</p>");
+                      controller.clear();
+                      controller.insertText(s);
+                      controller.focus();
+                    }
+                  }
+                  print(value);
+                },
               );
             } else {
-              return const Center(child: Text('No data available'));
+              return const Center(
+                child: Text('No data available'),
+              );
             }
           },
         ),
