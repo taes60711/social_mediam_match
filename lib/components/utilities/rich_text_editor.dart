@@ -204,17 +204,20 @@ class RichTextEditor extends StatelessWidget {
                 },
                 onTextChanged: (value) {
                   RegExp chineseRegex = RegExp(r'[\u4e00-\u9fa5]');
-                  if (chineseRegex.hasMatch(value)) {
+                  RegExp japaneseRegex = RegExp(r'[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]');
+                  if (chineseRegex.hasMatch(value) || japaneseRegex.hasMatch(value)) {
                     RegExp regExp = RegExp(r'<p><br><\/p>');
                     RegExp sregExp = RegExp(r'<br><\/p>');
                     if (!regExp.hasMatch(value) && sregExp.hasMatch(value)) {
-                      String s = value.replaceAll("<br></p>", "</p>");
+                      String replacedText = value.replaceAll("<br></p>", "</p>");
                       controller.clear();
-                      controller.insertText(s);
+                      controller.insertText(replacedText);
                       controller.focus();
                     }
                   }
-                  print(value);
+                },
+                onFocusChanged: (p0) {
+                  controller.focus();
                 },
               );
             } else {
