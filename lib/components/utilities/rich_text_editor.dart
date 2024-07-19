@@ -15,7 +15,6 @@ class RichTextEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     final customToolBarList = [ToolBarStyle.color, ToolBarStyle.size, ToolBarStyle.image];
     double fontSize = 18;
-    String nowStr = "";
     return Column(
       children: [
         ToolBar.scroll(
