@@ -7,8 +7,8 @@ import 'package:social_mediam_match/components/home/userPage/user_page.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/provider/home/skill_change_view_provider.dart';
 import 'package:social_mediam_match/provider/post/post_provider.dart';
-import 'package:social_mediam_match/provider/course_state.dart';
 import '../models/user_model.dart';
+import '../provider/course_provider.dart';
 import '../provider/post/post_comment_provider.dart';
 import 'enum/bottom_bar_path.dart';
 
@@ -44,7 +44,7 @@ class _HomeState extends State<Home> {
       ),
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => CourseState()),
+          ChangeNotifierProvider(create: (_) => CourseProvider()),
           ChangeNotifierProvider(create: (_) => SkillChangeProvider()),
           ChangeNotifierProvider(create: (_) => BaseAPIListProvider<CourseModel>()),
         ],

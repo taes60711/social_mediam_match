@@ -12,6 +12,9 @@ import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
 import '../../utilities/basic_top_bar.dart';
 
+QuillEditorController controller = QuillEditorController();
+TextEditingController titleInputController = TextEditingController();
+
 class EditorPage extends StatelessWidget {
   const EditorPage({super.key});
 
@@ -19,8 +22,7 @@ class EditorPage extends StatelessWidget {
   Widget build(BuildContext context) {
     BuildContext postContext = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postContext'];
     int postBoradType = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postBoradType'] ?? -1;
-    TextEditingController titleInputController = TextEditingController();
-    QuillEditorController controller = QuillEditorController();
+
     return ChangeNotifierProvider.value(
       value: postContext.read<BaseAPIListProvider<PostModel>>(),
       child: Builder(builder: (context) {

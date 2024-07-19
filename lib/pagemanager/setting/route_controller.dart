@@ -12,8 +12,12 @@ class RouteOptions {
     Navigator.of(globalContext).popUntil(ModalRoute.withName(RoutePath.home.value));
   }
 
-  static void pushTo(String routePath, {Map<String, dynamic>? arguments}) {
+  static void pushTo(RoutePath routePath, {Map<String, dynamic>? arguments}) {
     print("PushPageTo : $routePath  arguments : $arguments");
-    Navigator.of(globalContext).pushNamed(routePath, arguments: arguments);
+    Navigator.of(globalContext).pushNamed(routePath.value, arguments: arguments);
+  }
+
+  static popAndPushTo(RoutePath routePath, {Map<String, dynamic>? arguments}) {
+    Navigator.of(globalContext).pushNamed(routePath.value, arguments: arguments);
   }
 }

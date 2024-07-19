@@ -137,7 +137,7 @@ class MyPostViewModel {
                                   bntFunc: () {
                                     RouteOptions.pop();
                                     RouteOptions.pushTo(
-                                      RoutePath.postEditPage.value,
+                                      RoutePath.postEditPage,
                                       arguments: {'postContext': myPostContext},
                                     );
                                   }),

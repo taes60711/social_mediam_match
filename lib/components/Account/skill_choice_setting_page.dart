@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -113,7 +114,7 @@ Widget searchBar(BuildContext context) {
       cursorColor: normalBgColor2,
       controller: context.read<SkillMapProvider>().filterController,
       decoration: InputDecoration(
-        hintText: "Search By Skill Name",
+        hintText: tr("skillSearchHintText"),
         hintStyle: const TextStyle(fontSize: 14),
         prefixIcon: const Icon(Icons.search),
         enabledBorder: OutlineInputBorder(

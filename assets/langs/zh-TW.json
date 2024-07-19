@@ -3,6 +3,12 @@
   "serverErrorContent":"伺服器錯誤",
   "errConfirm":"確認",
 
+  "//": "modal",
+  "confirm":"確認",
+  "cancel":"取消",
+  "friend_delete_title": "刪除確認",
+  "friend_delete_check":"確定要刪除好友?",
+
   "//": "welcomePage",
   "version":"版本",
   "first_use_button":"第一次使用",
@@ -82,6 +88,7 @@
   "userpage_friendmanger_btn":"好友管理",
   "userpage_guide_btn":"導覽",
   "mypost_title":"我的文章",
+  "myfriend_title":"我的好友",
 
   "//": "skillExchangePage",
   "skExChpage_beforDays":"前",
@@ -89,6 +96,7 @@
 
   "//":"skillbar",
   "noskillData":"無",
+  "skillSearchHintText":"請輸入名稱",
 
   "//": "skillchangeFilterPage",
   "skillFilterTitle": "選擇技能",

@@ -1,24 +1,44 @@
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
-class ChatRoomMessageModel {
+class ChatRoomModel {
+  int pageCount;
+  List<String> members;
+  List<ChatRoomMsg> chatRoomMsg;
+
+  ChatRoomModel({
+    this.pageCount = -1,
+    this.members = const [],
+    required this.chatRoomMsg,
+  });
+  factory ChatRoomModel.toModel(dynamic json) {
+    return ChatRoomModel(
+      pageCount: json['PageCount'],
+      members: (json["Members"] as List<dynamic>).map((e) => "\"$e\"").toList(),
+      chatRoomMsg: (json["Message"] as List<dynamic>).map((e) => ChatRoomMsg.toModel(e)).toList(), //json['Message'],
+    );
+  }
+}
+
+class ChatRoomMsg {
   String userId;
   String message;
   String sentAt;
   bool needAppearImg;
-  ChatRoomMessageModel({
+
+  ChatRoomMsg({
     required this.userId,
     required this.message,
     required this.sentAt,
     required this.needAppearImg,
   });
-  factory ChatRoomMessageModel.fromJson(dynamic json) {
+  factory ChatRoomMsg.toModel(dynamic json) {
     DateTime dateUtc = DateTime.parse(json['sentAt']).toUtc();
 
     DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
     String formattedTime = DateFormat("yyyy-MM-dd a hh:mm").format(dateTime.toLocal());
 
-    return ChatRoomMessageModel(
+    return ChatRoomMsg(
       userId: json['userId'],
       message: json['message'],
       sentAt: formattedTime,

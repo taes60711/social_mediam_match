@@ -1,8 +1,14 @@
 {
   
   "//": "serverErr",
-  "serverErrorContent": "サービスエラー",
-  "errConfirm": "確認",
+  "serverErrorContent": "service Error",
+  "errConfirm": "OK",
+
+  "//": "modal",
+  "confirm": "OK",
+  "cancel": "Cancel",
+  "friend_delete_title": "Delete Check",
+  "friend_delete_check": "確定要刪除好友?",
 
   "//": "welcomePage",
   "version":"ver",
@@ -83,13 +89,15 @@
   "userpage_friendmanger_btn":"Friends",
   "userpage_guide_btn":"Guide",
   "mypost_title": "My Post",
+  "myfriend_title": "Friends Manager",
 
   "//": "skillExchangePage",
-  "skExChpage_beforDays":"前",
+  "skExChpage_beforDays":"ago",
   "skExChpage_nojobData":"none",
 
   "//": "skillbar",
   "noskillData": "none",
+  "skillSearchHintText": "Search By Name",
 
   "//": "skillchangeFilterPage",
   "skillFilterTitle": "Filter",

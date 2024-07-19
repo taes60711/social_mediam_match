@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 import 'package:social_mediam_match/services/friend_service.dart';
 import 'package:web_socket_channel/io.dart';
+
+import '../components/utilities/endDrawers/chat_room_end_drawer.dart';
 import '../components/utilities/endDrawers/user_detail_end_drawer.dart';
 import '../global.dart';
 import '../models/friend_model.dart';
 import '../models/user_model.dart';
-import 'package:http/http.dart' as http;
 
 class FriendProvider extends ChangeNotifier {
   late IOWebSocketChannel _friendListChannel;
@@ -21,7 +21,7 @@ class FriendProvider extends ChangeNotifier {
   TextEditingController messageInput = TextEditingController();
   int roomId = -1;
   LoginUser ohterUserData = LoginUser();
-  List<ChatRoomMessageModel> chatRoomMesaage = [];
+  List<ChatRoomMsg> chatRoomMesaage = [];
   bool isLoading = true;
 
   int pageNumber = 0;
@@ -32,7 +32,14 @@ class FriendProvider extends ChangeNotifier {
       _friendListChannel = IOWebSocketChannel.connect(channelListUrl);
       print("friendList connect");
       await _friendListChannel.ready;
-      _friendListChannel.sink.add('{"method" : "connect" , "ip" : "$ip:$port" , "userid" : "$uid"}');
+
+      Map<String, dynamic> map = {
+        "method": "connect",
+        "ip": "$ip:$port",
+        "userid": uid,
+      };
+
+      _friendListChannel.sink.add(jsonEncode(map));
     }
 
     await initialConnect();
@@ -96,16 +103,6 @@ class FriendProvider extends ChangeNotifier {
         .add('{"method" : "deleteFriend", "ip" : "$ip:$port" , "members" : $usersListTemp, "roomid" : $roomId}');
   }
 
-  Future<void> openRoom(int roomId) async {
-    this.roomId = roomId;
-    isLoading = true;
-    pageNumber = 0;
-    pageCount = 0;
-    chatRoomMesaage = [];
-    isDataAddLoding = false;
-    notifyListeners();
-  }
-
   Future<void> initialRoomListener(int roomId, String userId) async {
     Future<void> initialConnect() async {
       print("initialConnect");
@@ -124,45 +121,25 @@ class FriendProvider extends ChangeNotifier {
       switch (listendMethod) {
         case "connect":
           String searchUrl = requestMapData['apiUrl'];
-          final uri = Uri.parse(searchUrl);
-          try {
-            var response = await http.get(uri);
-            if (response.statusCode != 404) {
-              var loadedData = utf8.decode(response.bodyBytes);
-              for (var element in (jsonDecode(loadedData)["Members"] as List<dynamic>)) {
-                members = [...members, "\"$element\""];
-              }
-              chatRoomMesaage = (jsonDecode(loadedData)['Message'] as List<dynamic>).map((e) {
-                return ChatRoomMessageModel.fromJson(e);
-              }).toList();
-              pageCount = jsonDecode(loadedData)['PageCount'];
-              isLoading = false;
-            }
-          } catch (e) {
-            print(e);
-          }
+
+          ChatRoomModel chatRoomModel = await FriendService().getChatRoomMsg(searchUrl);
+
+          pageCount = chatRoomModel.pageCount;
+          members = chatRoomModel.members;
+          chatRoomMesaage = chatRoomModel.chatRoomMsg;
+
+          isLoading = false;
+
         case "load":
           String searchUrl = requestMapData['apiUrl'];
-          final uri = Uri.parse(searchUrl);
+          ChatRoomModel chatRoomModel = await FriendService().getChatRoomMsg(searchUrl);
+          chatRoomMesaage = [...chatRoomMesaage, ...chatRoomModel.chatRoomMsg];
 
-          try {
-            var response = await http.get(uri);
-            if (response.statusCode != 404) {
-              var loadedData = utf8.decode(response.bodyBytes);
-              List<ChatRoomMessageModel> tempchatRoomMessage = (jsonDecode(loadedData)['Message'] as List<dynamic>).map((e) {
-                return ChatRoomMessageModel.fromJson(e);
-              }).toList();
-              for (var element in tempchatRoomMessage) {
-                chatRoomMesaage = [...chatRoomMesaage, element];
-              }
-              isDataAddLoding = false;
-            }
-          } catch (e) {
-            print(e);
-          }
+          isDataAddLoding = false;
+
         case "sendMessage":
           var loadedData = event;
-          ChatRoomMessageModel tempchatRoomMessage = ChatRoomMessageModel.fromJson(jsonDecode(loadedData)['Message']);
+          ChatRoomMsg tempchatRoomMessage = ChatRoomMsg.toModel(jsonDecode(loadedData)['Message']);
           chatRoomMesaage.insert(0, tempchatRoomMessage);
           _friendListChannel.sink.add('{"method" : "sendMessage" , "ip" : "$ip:$port"  , "members" : $members}');
         default:
@@ -196,15 +173,30 @@ class FriendProvider extends ChangeNotifier {
     }
   }
 
-  void closeRoom() {
-    _chatRoomChannel.sink.close();
-    RouteOptions.pop();
+  Future<void> openRoom(int roomId, LoginUser roomMember) async {
+    this.roomId = roomId;
+    ohterUserData = roomMember;
+    isLoading = true;
+    pageNumber = 0;
+    pageCount = 0;
+    chatRoomMesaage = [];
+    isDataAddLoding = false;
+    notifyListeners();
   }
 
   UserDetailEndDrawerType endDrawerOpenInfo = UserDetailEndDrawerType.close;
   void changeEndDrawerStatus(UserDetailEndDrawerType status, LoginUser otherUser) {
     ohterUserData = otherUser;
     endDrawerOpenInfo = status;
+    notifyListeners();
+  }
+
+  ChatRoomEndDrawerType chatRoomEndDrawerOpenInfo = ChatRoomEndDrawerType.close;
+  void changeChatRoomEndDrawerStatus(ChatRoomEndDrawerType status) {
+    if (status == ChatRoomEndDrawerType.close) {
+      _chatRoomChannel.sink.close();
+    }
+    chatRoomEndDrawerOpenInfo = status;
     notifyListeners();
   }
 }

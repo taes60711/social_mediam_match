@@ -6,8 +6,11 @@ import 'package:social_mediam_match/components/utilities/background_widget.dart'
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/fit_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
 
-import '../../pageManager/enum/route_path.dart';
+import '../../global.dart';
+
+import '../../pagemanager/enum/route_path.dart';
 import '../utilities/style/screen_size.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -40,7 +43,7 @@ class WelcomePage extends StatelessWidget {
                     titleColor: normalTextColor,
                     backgroundColor: normalBgColor,
                     onPressed: () {
-                      Navigator.of(context).pushNamed(RoutePath.signUpPage.value);
+                      RouteOptions.pushTo(RoutePath.signUpPage);
                     }),
                 const SizedBox(height: 10),
                 //”ログインページ遷移”ボタン
@@ -49,7 +52,7 @@ class WelcomePage extends StatelessWidget {
                     titleColor: normalBgColor2,
                     backgroundColor: disAbleColor,
                     onPressed: () {
-                      Navigator.of(context).pushNamed(RoutePath.loginPage.value);
+                      RouteOptions.pushTo(RoutePath.loginPage);
                     }),
                 const SizedBox(height: 30),
                 //バージョンテキスト
@@ -63,10 +66,9 @@ class WelcomePage extends StatelessWidget {
   }
 }
 
-String verNumber = "1.0.0";
 //バージョンテキスト
 Widget _versionText = Text(
-  "${WelcomeStrings().version} $verNumber",
+  "${WelcomeStrings().version} $appVer",
   style: const TextStyle(
     fontSize: 12,
     color: Color.fromARGB(255, 177, 176, 176),

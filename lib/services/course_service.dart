@@ -5,6 +5,43 @@ import 'api_client.dart';
 class CourseService extends ApiClient {
   CourseService() : super(overrideIp: "$ip:$port/courses");
 
+  Future<bool> createOrUpdateCourse({
+    int? courseId,
+    required String createdBy,
+    required String title,
+    required String needLevel,
+    required String content,
+    required String beforeNeed,
+    required String prStory,
+    required List<CourseChapterInfo> chapterList,
+    required List<String> courseLearningSkills,
+    required String type,
+    required bool isPublic,
+  }) async {
+    Map<String, dynamic> body = {
+      'createdBy': createdBy,
+      'title': title,
+      'needLevel': needLevel,
+      'content': content,
+      'beforeNeed': beforeNeed,
+      'prStory': prStory,
+      'courseChapters': chapterList.map((chapter) => chapter.toJson()).toList(),
+      'learningkillList': courseLearningSkills,
+      'type': type,
+      'isPublic': isPublic,
+    };
+
+    String url = "/createCourse";
+    if (courseId != null) {
+      url = "/updateCourse/$courseId";
+    }
+    String responseData = await apiPush(url, body: body);
+
+    print("createCourse $responseData");
+
+    return responseData != "null" ? true : false;
+  }
+
   /// 全てコース
   Future<List<CourseModel>> getAllCourses(int page, int size) async {
     List<CourseModel> requestAllCourseData = [];

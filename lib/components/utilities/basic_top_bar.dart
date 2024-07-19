@@ -48,16 +48,24 @@ class BaseTopBar extends StatelessWidget {
         padding: padding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: list.asMap().entries.map((entry) {
-            int index = entry.key;
-            var e = entry.value;
-            return Expanded(
+          children: [
+            Expanded(
               child: Align(
-                alignment: e,
-                child: widgetList[index],
+                alignment: list[0],
+                child: widgetList[0],
               ),
-            );
-          }).toList(),
+            ),
+            Align(
+              alignment: list[1],
+              child: widgetList[1],
+            ),
+            Expanded(
+              child: Align(
+                alignment: list[2],
+                child: widgetList[2],
+              ),
+            ),
+          ],
         ),
       ),
     );
