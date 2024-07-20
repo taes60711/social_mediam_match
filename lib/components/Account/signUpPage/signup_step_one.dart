@@ -114,7 +114,7 @@ class SignUpStepOne extends StatelessWidget {
             : RowImgBtn(
                 title: title,
                 titleColor: titleColor,
-                iconImg: iconImg,
+                img: iconImg,
                 backgroundColor: backgroundColor,
                 onPress: () {
                   onPressed();
