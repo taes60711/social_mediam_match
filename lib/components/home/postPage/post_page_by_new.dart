@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
 
 import '../../../models/post_model.dart';
 import '../../../services/post_service.dart';
@@ -13,8 +14,6 @@ import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
-
-import 'post_body.dart';
 import 'post_page_by_viewer.dart';
 
 class PostPageByNew extends StatelessWidget {
@@ -35,7 +34,7 @@ class PostPageByNew extends StatelessWidget {
               loadingBuilder: () {
                 return const PostLoading();
               },
-              noDataBuilder: const NoPostData(),
+              noDataBuilder: PostViewUtilities.noPostData(),
               itemChild: ((data, index) {
                 return Column(
                   children: [

@@ -71,7 +71,11 @@ class FirendsPage extends StatelessWidget {
                                                 padding: const EdgeInsets.only(right: 10),
                                                 child: Row(
                                                   children: [
-                                                    Expanded(child: Text(otherUserData.name ?? otherUserData.email)),
+                                                    Expanded(
+                                                      child: Text(
+                                                        otherUserData.name ?? otherUserData.email,
+                                                      ),
+                                                    ),
                                                     listInfo.sentAt != null
                                                         ? Text(
                                                             "${listInfo.sentAt}",

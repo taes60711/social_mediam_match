@@ -4,11 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 
-class NoPostData extends StatelessWidget {
-  const NoPostData({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+class PostViewUtilities {
+  static Widget noPostData() {
     return SizedBox(
       width: ScreenSize.width,
       height: ScreenSize.safeHeight,
