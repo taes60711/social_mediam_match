@@ -9,15 +9,15 @@ class RowImgBtn extends StatelessWidget {
   final String img;
   final double? width;
   final double verticalMargin;
-  final Color? backgroundColor;
-  final double? borderRadius;
+  final Color? btnColor;
+  final double? btnRadius;
   final Function onPress;
   const RowImgBtn({
     super.key,
     required this.title,
     this.titleColor = Colors.white,
-    required this.backgroundColor,
-    this.borderRadius,
+    required this.btnColor,
+    this.btnRadius,
     required this.onPress,
     required this.img,
     this.width,
@@ -29,26 +29,22 @@ class RowImgBtn extends StatelessWidget {
     double iconSize = 25;
 
     return Material(
-      color: backgroundColor,
-      borderRadius: BorderRadius.circular(borderRadius ?? 15),
+      color: btnColor,
+      borderRadius: BorderRadius.circular(btnRadius ?? 15),
       child: InkWell(
-        borderRadius: BorderRadius.circular(borderRadius ?? 15),
-        onTap: () {
-          onPress();
-        },
+        borderRadius: BorderRadius.circular(btnRadius ?? 15),
+        onTap: () => onPress(),
         child: Container(
           width: width ?? ScreenSize.width,
           margin: EdgeInsets.symmetric(vertical: verticalMargin),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
+              Image.asset(
+                img,
                 width: iconSize,
                 height: iconSize,
-                child: Image.asset(
-                  img,
-                  fit: BoxFit.contain,
-                ),
+                fit: BoxFit.contain,
               ),
               const SizedBox(width: 10),
               Text(
@@ -85,19 +81,15 @@ class TextBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color btnBgColor = btnColor ?? normalBgColor;
-    double btnW = btnWidth ?? ScreenSize.width;
     return Material(
-      color: btnBgColor,
+      color: btnColor ?? normalBgColor,
       borderRadius: BorderRadius.circular(btnRadius),
       child: InkWell(
         borderRadius: BorderRadius.circular(btnRadius),
-        onTap: () {
-          onPress();
-        },
+        onTap: () => onPress(),
         child: Container(
           alignment: Alignment.center,
-          width: btnW,
+          width: btnWidth ?? ScreenSize.width,
           margin: EdgeInsets.symmetric(vertical: verticalMargin),
           child: Text(
             title,
@@ -129,9 +121,7 @@ class ColIconBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        onPress();
-      },
+      onTap: () => onPress(),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Column(

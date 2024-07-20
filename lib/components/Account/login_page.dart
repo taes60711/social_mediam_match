@@ -106,7 +106,7 @@ _button({required title, required titleColor, required backgroundColor, required
             title: title,
             titleColor: titleColor,
             img: iconImg,
-            backgroundColor: backgroundColor,
+            btnColor: backgroundColor,
             onPress: () {
               onPressed();
             },
