@@ -57,22 +57,22 @@ class UserDetailPage extends StatelessWidget {
                 builder: (context) {
                   bool isFriend = context.select((FriendProvider value) => value.isFriend);
                   return isFriend
-                      ? CustomButton(
+                      ? TextBtn(
                           title: tr("toChatRoom"),
                           titleColor: normalTextColor,
-                          backgroundColor: normalBgColor.withOpacity(0.9),
-                          width: 100,
+                          btnColor: normalBgColor.withOpacity(0.9),
+                          btnWidth: 100,
                           verticalMargin: 8,
                           onPress: () {
                             toChatRoom!() ?? () {};
                             RouteOptions.popUntilToHome();
                             context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
                           })
-                      : CustomButton(
+                      : TextBtn(
                           title: tr("addFriend"),
                           titleColor: normalTextColor,
-                          backgroundColor: normalBgColor.withOpacity(0.9),
-                          width: 100,
+                          btnColor: normalBgColor.withOpacity(0.9),
+                          btnWidth: 100,
                           verticalMargin: 8,
                           onPress: () {
                             List<String> usersList = [context.watch<UserProvider>().userData.uid, otherUser.uid];

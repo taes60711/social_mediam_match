@@ -21,6 +21,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import '../../../CustomBouncingScrollPhysics.dart';
 import '../../../models/user_model.dart';
+import '../../../pagemanager/setting/route_controller.dart';
 import '../../../services/image_service.dart';
 
 import '../../../provider/friend_provider.dart';
@@ -149,10 +150,6 @@ class ChatRoom extends StatelessWidget {
       return showDialog<void>(
         context: context,
         builder: (BuildContext context) {
-          void imageViewExit() {
-            Navigator.of(context).pop();
-          }
-
           return Scaffold(
             backgroundColor: Colors.black,
             body: Column(
@@ -163,7 +160,7 @@ class ChatRoom extends StatelessWidget {
                     padding: const EdgeInsets.all(15),
                     child: GestureDetector(
                       onTap: () {
-                        imageViewExit();
+                        RouteOptions.pop();
                       },
                       child: const Icon(
                         Icons.arrow_back_ios,
@@ -178,7 +175,7 @@ class ChatRoom extends StatelessWidget {
                     child: GestureDetector(
                         onDoubleTap: () {
                           print("onDoubleTap");
-                          imageViewExit();
+                          RouteOptions.pop();
                         },
                         child: Image.network(
                           imgUrl,

@@ -32,12 +32,12 @@ class CourseRichTextEdit extends StatelessWidget {
       children: [
         BaseTopBar(
           title: prStory != null ? "詳細介紹" : "章節$index",
-          rightWidget: CustomButton(
-              width: 55,
+          rightWidget: TextBtn(
+              btnWidth: 55,
               verticalMargin: 2,
-              borderRadius: 8,
+              btnRadius: 8,
               title: "保存",
-              backgroundColor: normalBgColor2.withOpacity(0.8),
+              btnColor: normalBgColor2.withOpacity(0.8),
               onPress: () async {
                 String editedContent = await controller.getText();
                 if (prStory != null) {

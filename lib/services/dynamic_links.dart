@@ -6,8 +6,8 @@ class DynamicLinks {
     final String url = "https://app.social_mediam_match?ref=$refCode";
 
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-        androidParameters: AndroidParameters(packageName: "com.example.social_mediam_match", minimumVersion: 0),
-        iosParameters: IOSParameters(bundleId: "com.example.social_mediam_match", minimumVersion: "0"),
+        androidParameters: const AndroidParameters(packageName: "com.example.social_mediam_match", minimumVersion: 0),
+        iosParameters: const IOSParameters(bundleId: "com.example.social_mediam_match", minimumVersion: "0"),
         link: Uri.parse(url),
         uriPrefix: "https://socialmediammatch.page.link");
 

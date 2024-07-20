@@ -55,10 +55,10 @@ class LoginViewModel {
                                     resetPwdError,
                                     style: const TextStyle(color: Colors.red),
                                   ),
-                                  CustomButton(
+                                  TextBtn(
                                     title: PasswordForgot.sendButtonText,
                                     titleColor: normalTextColor,
-                                    backgroundColor: normalBgColor,
+                                    btnColor: normalBgColor,
                                     onPress: () => context.read<LoginProvider>().reSetPwd(emailController.text),
                                   )
                                 ],

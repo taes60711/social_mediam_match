@@ -14,10 +14,10 @@ class SignUpStepGuide extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: CustomButton(
+          child: TextBtn(
             title: StepGuide.skipButtonText,
             titleColor: normalTextColor,
-            backgroundColor: normalBgColor,
+            btnColor: normalBgColor,
             onPress: () => RouteOptions.popUntilToHome(),
           ),
         ),

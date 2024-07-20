@@ -81,10 +81,10 @@ Widget _versionText = Text(
 _button({required title, required titleColor, required backgroundColor, required onPressed}) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: CustomButton(
+    child: TextBtn(
       title: title,
       titleColor: titleColor,
-      backgroundColor: backgroundColor,
+      btnColor: backgroundColor,
       onPress: onPressed,
     ),
   );

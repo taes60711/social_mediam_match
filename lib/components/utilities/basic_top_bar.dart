@@ -47,7 +47,6 @@ class BaseTopBar extends StatelessWidget {
       child: Padding(
         padding: padding,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: Align(

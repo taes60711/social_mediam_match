@@ -30,10 +30,10 @@ class SKillChoiceSettingViewModel {
                 const Expanded(
                   child: Text('最多只能選擇五個技能'),
                 ),
-                CustomButton(
+                TextBtn(
                   title: '確認',
                   titleColor: normalTextColor,
-                  backgroundColor: normalBgColor,
+                  btnColor: normalBgColor,
                   onPress: () {
                     RouteOptions.pop();
                   },

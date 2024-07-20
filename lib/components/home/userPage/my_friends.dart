@@ -7,6 +7,7 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 
 import '../../../models/friend_model.dart';
 import '../../../models/user_model.dart';
+import '../../../pagemanager/setting/route_controller.dart';
 import '../../../provider/friend_provider.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -32,13 +33,13 @@ class MyFriends extends StatelessWidget {
                 child: Text(tr("confirm")),
                 onPressed: () {
                   friendFuture.deleteFriend(members, roomId);
-                  Navigator.of(context).pop();
+                  RouteOptions.pop();
                 },
               ),
               ElevatedButton(
                 child: Text(tr("cancel")),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  RouteOptions.pop();
                 },
               ),
             ],

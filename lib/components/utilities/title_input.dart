@@ -3,6 +3,8 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
+import '../../pagemanager/setting/route_controller.dart';
+
 Widget _titleText({required bool isInputRequired, required String title}) {
   Widget titleWidget = Padding(
     padding: const EdgeInsets.only(left: 5, bottom: 5),
@@ -157,11 +159,11 @@ Widget _topBar(
   return BaseTopBar(
     title: title,
     padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-    backFunc: () => Navigator.of(context).pop(),
+    backFunc: () => RouteOptions.pop(),
     rightWidget: GestureDetector(
       onTap: () {
         multiOnChange(textController.text);
-        Navigator.of(context).pop();
+        RouteOptions.pop();
       },
       child: Container(
         color: Colors.transparent,

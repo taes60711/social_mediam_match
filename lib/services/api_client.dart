@@ -136,10 +136,10 @@ class ApiClient {
                   Expanded(
                     child: Text(tr("serverErrorContent")),
                   ),
-                  CustomButton(
+                  TextBtn(
                     title: tr("errConfirm"),
                     titleColor: normalTextColor,
-                    backgroundColor: normalBgColor,
+                    btnColor: normalBgColor,
                     onPress: () {
                       onFailedFunc != null ? onFailedFunc() : RouteOptions.pop();
                       _isDialogShowing = false;

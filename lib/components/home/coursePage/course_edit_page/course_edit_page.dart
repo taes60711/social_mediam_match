@@ -66,11 +66,11 @@ class CourseEditPage extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 15),
                     child: Row(
                       children: [
-                        CustomButton(
+                        TextBtn(
                           title: "保存",
-                          width: 150,
+                          btnWidth: 150,
                           verticalMargin: 8,
-                          backgroundColor: normalBgColor,
+                          btnColor: normalBgColor,
                           onPress: () async {
                             int? id;
                             if (courseData != null) {

@@ -95,10 +95,10 @@ Widget _mainBody(BuildContext context) {
       ///更新ボタン
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: CustomButton(
+        child: TextBtn(
           title: ProfileString().updateButtonText,
           titleColor: normalTextColor,
-          backgroundColor: normalBgColor,
+          btnColor: normalBgColor,
           onPress: () {
             UserSettingViewModel(context: context).updateUserData();
           },
@@ -127,11 +127,11 @@ Widget avatarEdit(BuildContext context) {
   UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
   return FitWidget(
     height: ScreenSize.safeHeight * 0.05,
-    child: CustomButton(
-      width: 150,
+    child: TextBtn(
+      btnWidth: 150,
       title: ProfileString().imgPickerButtonText,
       titleColor: normalTextColor,
-      backgroundColor: googleColor,
+      btnColor: googleColor,
       onPress: () async {
         await userSettingViewProvider.imageChange();
       },

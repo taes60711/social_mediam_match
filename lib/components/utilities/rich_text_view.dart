@@ -9,6 +9,7 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../models/rich_text_format.dart';
+import '../../pagemanager/setting/route_controller.dart';
 
 class RichTextView extends StatefulWidget {
   final String content;
@@ -43,7 +44,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
             value = 1;
             photoViewController.scale = value;
           });
-          Navigator.of(context).pop();
+          RouteOptions.pop();
         }
 
         return Scaffold(

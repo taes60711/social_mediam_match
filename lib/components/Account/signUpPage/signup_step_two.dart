@@ -30,10 +30,10 @@ class SignUpStepTwo extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: CustomButton(
+          child: TextBtn(
             title: StepTwoPage.signUpButtonText,
             titleColor: normalTextColor,
-            backgroundColor: normalBgColor,
+            btnColor: normalBgColor,
             onPress: () async => await SignUpViewModel(context: context).signUpStart(),
           ),
         ),

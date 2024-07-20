@@ -43,16 +43,16 @@ class CourseDetail extends StatelessWidget {
 
                       return Visibility(
                         visible: !isAdded,
-                        child: CustomButton(
+                        child: TextBtn(
                           verticalMargin: 5,
-                          borderRadius: 10,
-                          width: 55,
+                          btnRadius: 10,
+                          btnWidth: 55,
                           title: "申請",
                           onPress: () {
                             CourseViewModel(courseContext: context).courseSignUp(courseId: openedCourse.id);
                           },
                           titleColor: normalTextColor,
-                          backgroundColor: googleButtonColor.withOpacity(0.8),
+                          btnColor: googleButtonColor.withOpacity(0.8),
                         ),
                       );
                     }),

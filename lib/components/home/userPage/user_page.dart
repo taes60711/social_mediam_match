@@ -78,11 +78,9 @@ Widget skillInfoWithPage(BuildContext context) {
               crossAxisCount: 4,
               children: UserPageRouthsettingButtonInfo.list
                   .map(
-                    (e) => CustomButton(
-                      title: e.title,
+                    (e) => ColIconBtn(
                       icon: e.icon,
-                      titleColor: normalBgColor2,
-                      backgroundColor: normalBgColor,
+                      title: e.title,
                       onPress: e.onPress,
                     ),
                   )

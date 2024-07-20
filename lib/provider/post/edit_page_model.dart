@@ -26,10 +26,10 @@ class EditPageModel {
                 Row(
                   children: [
                     Expanded(
-                      child: CustomButton(
+                      child: TextBtn(
                         title: '取消',
                         titleColor: normalTextColor,
-                        backgroundColor: hintTextColor,
+                        btnColor: hintTextColor,
                         onPress: () {
                           RouteOptions.pop();
                         },
@@ -37,10 +37,10 @@ class EditPageModel {
                     ),
                     const SizedBox(width: 20),
                     Expanded(
-                      child: CustomButton(
+                      child: TextBtn(
                         title: '確認',
                         titleColor: normalTextColor,
-                        backgroundColor: normalBgColor,
+                        btnColor: normalBgColor,
                         onPress: () async {
                           RouteOptions.pop();
                           RouteOptions.pop();
@@ -87,10 +87,10 @@ class EditPageModel {
                   ),
                 ),
                 const Expanded(child: SizedBox(height: 10)),
-                CustomButton(
+                TextBtn(
                   title: '確認',
                   titleColor: normalTextColor,
-                  backgroundColor: normalBgColor,
+                  btnColor: normalBgColor,
                   onPress: () async {
                     RouteOptions.pop();
                   },

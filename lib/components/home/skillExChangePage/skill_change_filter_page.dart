@@ -54,9 +54,9 @@ class SkillChangeFilterPage extends StatelessWidget {
                 },
               ),
             ),
-            CustomButton(
+            TextBtn(
                 title: tr("skillFilterSearch"),
-                backgroundColor: normalBgColor,
+                btnColor: normalBgColor,
                 onPress: () {
                   SkillChangeViewModel(context: context).filterSearchStart();
                 }),

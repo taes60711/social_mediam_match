@@ -136,10 +136,10 @@ class CourseViewModel {
                   child: Row(
                     children: [
                       Expanded(
-                        child: CustomButton(
+                        child: TextBtn(
                           title: '取消',
                           titleColor: normalTextColor,
-                          backgroundColor: hintTextColor,
+                          btnColor: hintTextColor,
                           onPress: () {
                             RouteOptions.pop();
                           },
@@ -147,10 +147,10 @@ class CourseViewModel {
                       ),
                       const SizedBox(width: 20),
                       Expanded(
-                        child: CustomButton(
+                        child: TextBtn(
                           title: '確認',
                           titleColor: normalTextColor,
-                          backgroundColor: normalBgColor,
+                          btnColor: normalBgColor,
                           onPress: () async {
                             LoginUser userData = courseContext.read<UserProvider>().userData;
                             bool isSignedUp = await CourseService().signUpCourse(userUID: userData.uid, courseId: courseId);
@@ -206,20 +206,20 @@ class CourseViewModel {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     children: [
-                      CustomButton(
+                      TextBtn(
                         title: '開啟課程',
                         titleColor: normalTextColor,
-                        backgroundColor: normalBgColor2,
+                        btnColor: normalBgColor2,
                         onPress: () {
                           RouteOptions.pop();
                           CourseViewModel(courseContext: courseContext).courseDetailInit(openedCourse: courseData);
                         },
                       ),
                       const SizedBox(height: 15),
-                      CustomButton(
+                      TextBtn(
                         title: '編輯課程',
                         titleColor: normalTextColor,
-                        backgroundColor: normalBgColor2,
+                        btnColor: normalBgColor2,
                         onPress: () {
                           RouteOptions.pop();
                           RouteOptions.pushTo(RoutePath.courseEditPage, arguments: {
@@ -229,10 +229,10 @@ class CourseViewModel {
                         },
                       ),
                       const SizedBox(height: 15),
-                      CustomButton(
+                      TextBtn(
                         title: '管理成員',
                         titleColor: normalTextColor,
-                        backgroundColor: normalBgColor2,
+                        btnColor: normalBgColor2,
                         onPress: () {
                           RouteOptions.pop();
                           opencourseManagerEndDrawer(context: courseContext, courseId: courseData.id);

@@ -49,10 +49,10 @@ class SignUpStepThird extends StatelessWidget {
 Widget sendBtn(BuildContext context) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    child: CustomButton(
+    child: TextBtn(
       title: StepThirdPage.sendButtonText,
       titleColor: normalTextColor,
-      backgroundColor: normalBgColor,
+      btnColor: normalBgColor,
       onPress: () async {
         await SignUpViewModel(context: context).updateUserData();
       },

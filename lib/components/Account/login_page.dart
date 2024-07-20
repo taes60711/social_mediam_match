@@ -95,13 +95,22 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 _button({required title, required titleColor, required backgroundColor, required onPressed, String? iconImg}) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: CustomButton(
-      title: title,
-      titleColor: titleColor,
-      iconImg: iconImg,
-      backgroundColor: backgroundColor,
-      onPress: onPressed,
-    ),
+    child: iconImg == null
+        ? TextBtn(
+            title: title,
+            onPress: () {
+              onPressed();
+            },
+          )
+        : RowImgBtn(
+            title: title,
+            titleColor: titleColor,
+            img: iconImg,
+            backgroundColor: backgroundColor,
+            onPress: () {
+              onPressed();
+            },
+          ),
   );
 }
 

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
-
-import '../../../pageManager/enum/route_path.dart';
 import '../../../provider/account/user_provider.dart';
 
 import '../../../provider/friend_provider.dart';
@@ -29,7 +27,7 @@ class PrivacySetting extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 child: IconButton(
                   onPressed: () {
-                    Navigator.of(context).popUntil(ModalRoute.withName(RoutePath.home.value));
+                    RouteOptions.popUntilToHome();
                   },
                   icon: const Icon(Icons.arrow_back_ios),
                 ),
