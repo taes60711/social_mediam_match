@@ -29,7 +29,6 @@ class EditorPage extends StatelessWidget {
         PostModel postData = postContext.read<BaseAPIListProvider<PostModel>>().choiceData ?? PostModel();
         titleInputController.text = postData.title;
         return Scaffold(
-          resizeToAvoidBottomInset: false,
           body: SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,11 +72,9 @@ class EditorPage extends StatelessWidget {
                 TitleInput(title: 'Title', textController: titleInputController),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: RichTextEditor(
-                      content: postData.mainMessage,
-                      controller: controller,
-                    ),
+                  child: RichTextEditor(
+                    content: postData.mainMessage,
+                    controller: controller,
                   ),
                 ),
               ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/title_input.dart';
 
@@ -15,218 +16,225 @@ class RichTextEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     final customToolBarList = [ToolBarStyle.color, ToolBarStyle.size, ToolBarStyle.image];
     double fontSize = 18;
-    return Column(
-      children: [
-        ToolBar.scroll(
-          toolBarColor: Colors.cyan.shade50,
-          controller: controller,
-          direction: Axis.horizontal,
-          toolBarConfig: customToolBarList,
-          customButtons: [
-            InkWell(
-              onTap: () async {
-                TextEditingController imageLinkController = TextEditingController();
+    return SizedBox(
+      width: ScreenSize.width,
+      height: ScreenSize.height,
+      child: Column(
+        children: [
+          ToolBar.scroll(
+            toolBarColor: Colors.cyan.shade50,
+            controller: controller,
+            direction: Axis.horizontal,
+            toolBarConfig: customToolBarList,
+            customButtons: [
+              InkWell(
+                onTap: () async {
+                  TextEditingController imageLinkController = TextEditingController();
 
-                Future<void> setLinkView() {
-                  return showDialog<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Image Link'),
-                        content: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5),
-                          width: ScreenSize.width,
-                          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                            TitleInput(title: 'Imgae URL', textController: imageLinkController),
-                          ]),
-                        ),
-                        actions: [
-                          ElevatedButton(
-                              child: Text('cancel'),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              }),
-                          ElevatedButton(
-                            onPressed: () async {
-                              String imgUrl = imageLinkController.text;
-                              String urlString = '<img src="$imgUrl">';
-
-                              await controller.insertText(urlString);
-                              Navigator.pop(context);
-                            },
-                            child: Text("send"),
+                  Future<void> setLinkView() {
+                    return showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Image Link'),
+                          content: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            width: ScreenSize.width,
+                            child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                              TitleInput(title: 'Imgae URL', textController: imageLinkController),
+                            ]),
                           ),
-                        ],
-                      );
-                    },
-                  );
-                }
+                          actions: [
+                            ElevatedButton(
+                                child: Text('cancel'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
+                            ElevatedButton(
+                              onPressed: () async {
+                                String imgUrl = imageLinkController.text;
+                                String urlString = '<img src="$imgUrl">';
 
-                await setLinkView();
-              },
-              child: const SizedBox(
-                width: 26,
-                height: 24,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      top: 1.7,
-                      child: Icon(
-                        FontAwesomeIcons.image,
-                        size: 19,
+                                await controller.insertText(urlString);
+                                Navigator.pop(context);
+                              },
+                              child: Text("send"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+
+                  await setLinkView();
+                },
+                child: const SizedBox(
+                  width: 26,
+                  height: 24,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: 1.7,
+                        child: Icon(
+                          FontAwesomeIcons.image,
+                          size: 19,
+                        ),
                       ),
-                    ),
-                    Positioned(
-                      right: -1.5,
-                      bottom: -6,
-                      child: Icon(
-                        Icons.link,
-                        size: 20,
-                      ),
-                    )
-                  ],
+                      Positioned(
+                        right: -1.5,
+                        bottom: -6,
+                        child: Icon(
+                          Icons.link,
+                          size: 20,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-            InkWell(
-              onTap: () async {
-                TextEditingController linkController = TextEditingController();
+              InkWell(
+                onTap: () async {
+                  TextEditingController linkController = TextEditingController();
 
-                Future<void> setLinkView() {
-                  return showDialog<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Link'),
-                        content: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5),
-                          width: ScreenSize.width,
-                          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                            TitleInput(title: 'Youtube URL', textController: linkController),
-                          ]),
-                        ),
-                        actions: [
-                          ElevatedButton(
-                              child: Text('cancel'),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              }),
-                          ElevatedButton(
-                            onPressed: () async {
-                              String ytId = RichTextFormat().getYtvideoID(linkController.text);
-                              String ytURL = 'https://www.youtube.com/embed/$ytId';
-                              String urlString =
-                                  '<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="$ytURL"></iframe><p><br></p>';
-
-                              await controller.insertText(urlString);
-                              Navigator.pop(context);
-                            },
-                            child: Text("send"),
+                  Future<void> setLinkView() {
+                    return showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Link'),
+                          content: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            width: ScreenSize.width,
+                            child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                              TitleInput(title: 'Youtube URL', textController: linkController),
+                            ]),
                           ),
-                        ],
-                      );
-                    },
-                  );
-                }
+                          actions: [
+                            ElevatedButton(
+                                child: Text('cancel'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
+                            ElevatedButton(
+                              onPressed: () async {
+                                String ytId = RichTextFormat().getYtvideoID(linkController.text);
+                                String ytURL = 'https://www.youtube.com/embed/$ytId';
+                                String urlString =
+                                    '<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="$ytURL"></iframe><p><br></p>';
 
-                await setLinkView();
-              },
-              child: const Icon(FontAwesomeIcons.film),
-            ),
-            InkWell(
-              onTap: () async {
-                TextEditingController linkController = TextEditingController();
-                TextEditingController linkTextController = TextEditingController();
-
-                Future<void> setLinkView() {
-                  return showDialog<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Link'),
-                        content: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5),
-                          width: ScreenSize.width,
-                          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                            TitleInput(title: 'Link Text', textController: linkTextController),
-                            TitleInput(title: 'URL', textController: linkController),
-                          ]),
-                        ),
-                        actions: [
-                          ElevatedButton(
-                              child: Text('cancel'),
-                              onPressed: () {
+                                await controller.insertText(urlString);
                                 Navigator.pop(context);
-                              }),
-                          ElevatedButton(
-                            onPressed: () async {
-                              String urlString =
-                                  '<p><a href=${linkController.text} rel="noopener noreferrer" target="_blank">${linkTextController.text}</a><br></p>';
-                              await controller.insertText(urlString);
-                              Navigator.pop(context);
-                            },
-                            child: Text("send"),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-
-                await setLinkView();
-              },
-              child: const Icon(Icons.link_sharp),
-            ),
-          ],
-        ),
-        FutureBuilder<String>(
-          future: RichTextFormat(htmlString: content).widgetToEditorHtml(content),
-          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (snapshot.hasData) {
-              return QuillHtmlEditor(
-                text: snapshot.data,
-                controller: controller,
-                minHeight: 1,
-                textStyle: TextStyle(fontSize: fontSize),
-                loadingBuilder: (context) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 0.4,
-                    ),
-                  );
-                },
-                onTextChanged: (value) {
-                  RegExp chineseRegex = RegExp(r'[\u4e00-\u9fa5]');
-                  RegExp japaneseRegex = RegExp(r'[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]');
-                  if (chineseRegex.hasMatch(value) || japaneseRegex.hasMatch(value)) {
-                    RegExp regExp = RegExp(r'<p><br><\/p>');
-                    RegExp sregExp = RegExp(r'<br><\/p>');
-                    if (!regExp.hasMatch(value) && sregExp.hasMatch(value)) {
-                      String replacedText = value.replaceAll("<br></p>", "</p>");
-                      controller.clear();
-                      controller.insertText(replacedText);
-                      controller.focus();
-                    }
+                              },
+                              child: Text("send"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   }
+
+                  await setLinkView();
                 },
-                onFocusChanged: (p0) {
-                  controller.focus();
+                child: const Icon(FontAwesomeIcons.film),
+              ),
+              InkWell(
+                onTap: () async {
+                  TextEditingController linkController = TextEditingController();
+                  TextEditingController linkTextController = TextEditingController();
+
+                  Future<void> setLinkView() {
+                    return showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Link'),
+                          content: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            width: ScreenSize.width,
+                            child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                              TitleInput(title: 'Link Text', textController: linkTextController),
+                              TitleInput(title: 'URL', textController: linkController),
+                            ]),
+                          ),
+                          actions: [
+                            ElevatedButton(
+                                child: Text('cancel'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
+                            ElevatedButton(
+                              onPressed: () async {
+                                String urlString =
+                                    '<p><a href=${linkController.text} rel="noopener noreferrer" target="_blank">${linkTextController.text}</a><br></p>';
+                                await controller.insertText(urlString);
+                                Navigator.pop(context);
+                              },
+                              child: Text("send"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+
+                  await setLinkView();
                 },
-              );
-            } else {
-              return const Center(
-                child: Text('No data available'),
-              );
-            }
-          },
-        ),
-      ],
+                child: const Icon(Icons.link_sharp),
+              ),
+            ],
+          ),
+          Expanded(
+            child: FutureBuilder<String>(
+              future: RichTextFormat(htmlString: content).widgetToEditorHtml(content),
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (snapshot.hasData) {
+                  return QuillHtmlEditor(
+                    text: snapshot.data,
+                    controller: controller,
+                    minHeight: ScreenSize.height / 2 - 100,
+                    hintText: "請輸入文字",
+                    hintTextStyle: const TextStyle(color: Colors.grey),
+                    textStyle: TextStyle(fontSize: fontSize),
+                    loadingBuilder: (context) {
+                      return SizedBox(
+                        height: ScreenSize.height / 2 - 100,
+                        child: const Loading(),
+                      );
+                    },
+                    onTextChanged: (value) {
+                      RegExp chineseRegex = RegExp(r'[\u4e00-\u9fa5]');
+                      RegExp japaneseRegex = RegExp(r'[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]');
+                      if (chineseRegex.hasMatch(value) || japaneseRegex.hasMatch(value)) {
+                        RegExp regExp = RegExp(r'<p><br><\/p>');
+                        RegExp sregExp = RegExp(r'<br><\/p>');
+                        if (!regExp.hasMatch(value) && sregExp.hasMatch(value)) {
+                          String replacedText = value.replaceAll("<br></p>", "</p>");
+                          controller.clear();
+                          controller.insertText(replacedText);
+                          controller.focus();
+                        }
+                      }
+                    },
+                    onFocusChanged: (p0) {
+                      controller.focus();
+                    },
+                  );
+                } else {
+                  return const Center(
+                    child: Text('No data available'),
+                  );
+                }
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
