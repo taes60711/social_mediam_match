@@ -38,10 +38,6 @@ class MyFriends extends StatelessWidget {
                   BaseTopBar(
                     leftWidget: Container(),
                     centerWidget: Text(tr("friend_delete_check")),
-                    // rightWidget: GestureDetector(
-                    //   onTap: () => RouteOptions.pop(),
-                    //   child: const Icon(Icons.close),
-                    // ),
                   ),
                   const Expanded(child: SizedBox(height: 10)),
                   Padding(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 import 'style/screen_size.dart';
 
@@ -33,8 +34,11 @@ class BaseTopBar extends StatelessWidget {
               width: 35,
               height: 35,
               color: Colors.transparent,
-              child: const Center(
-                child: Icon(Icons.arrow_back_ios),
+              child: Center(
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: normalBgColor2,
+                ),
               ),
             ),
           ),

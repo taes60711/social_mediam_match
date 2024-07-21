@@ -45,7 +45,12 @@ class SkillChangeFilterPage extends StatelessWidget {
                               color:
                                   filteredSkill.any((element) => element == e) ? normalBgColor : normalBgColor2.withOpacity(0.1),
                             ),
-                            child: Text(e),
+                            child: Text(
+                              e,
+                              style: TextStyle(
+                                color: filteredSkill.any((element) => element == e) ? Colors.white : normalBgColor2,
+                              ),
+                            ),
                           ),
                         );
                       }).toList(),
@@ -54,13 +59,13 @@ class SkillChangeFilterPage extends StatelessWidget {
                 },
               ),
             ),
+            const SizedBox(height: 10),
             TextBtn(
                 title: tr("skillFilterSearch"),
                 btnColor: normalBgColor,
                 onPress: () {
                   SkillChangeViewModel(context: context).filterSearchStart();
                 }),
-            const SizedBox(height: 10),
           ],
         ),
       ),
