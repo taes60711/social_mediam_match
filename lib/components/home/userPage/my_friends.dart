@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/user_detail_end_drawer.dart';
@@ -9,6 +10,7 @@ import '../../../models/friend_model.dart';
 import '../../../models/user_model.dart';
 import '../../../pagemanager/setting/route_controller.dart';
 import '../../../provider/friend_provider.dart';
+import '../../utilities/custom_button.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
@@ -26,23 +28,54 @@ class MyFriends extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(tr("friend_delete_title")),
-            content: Text(tr("friend_delete_check")),
-            actions: <Widget>[
-              ElevatedButton(
-                child: Text(tr("confirm")),
-                onPressed: () {
-                  friendFuture.deleteFriend(members, roomId);
-                  RouteOptions.pop();
-                },
+            contentPadding: EdgeInsets.zero,
+            content: SizedBox(
+              width: 150,
+              height: 150,
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  BaseTopBar(
+                    leftWidget: Container(),
+                    centerWidget: Text(tr("friend_delete_check")),
+                    // rightWidget: GestureDetector(
+                    //   onTap: () => RouteOptions.pop(),
+                    //   child: const Icon(Icons.close),
+                    // ),
+                  ),
+                  const Expanded(child: SizedBox(height: 10)),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextBtn(
+                            title: tr("cancel"),
+                            titleColor: normalTextColor,
+                            btnColor: hintTextColor,
+                            onPress: () {
+                              RouteOptions.pop();
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: TextBtn(
+                            title: tr("confirm"),
+                            titleColor: normalTextColor,
+                            btnColor: normalBgColor,
+                            onPress: () async {
+                              friendFuture.deleteFriend(members, roomId);
+                              RouteOptions.pop();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
-              ElevatedButton(
-                child: Text(tr("cancel")),
-                onPressed: () {
-                  RouteOptions.pop();
-                },
-              ),
-            ],
+            ),
           );
         },
       );
@@ -89,11 +122,23 @@ class MyFriends extends StatelessWidget {
                                   Expanded(
                                     child: Text(otherUserData.name ?? otherUserData.email),
                                   ),
-                                  IconButton(
-                                    onPressed: () {
+                                  GestureDetector(
+                                    onTap: () {
                                       deleteFriendCheck(roomId: listInfo.roomId, members: [listInfo.memberId]);
                                     },
-                                    icon: const Icon(Icons.close),
+                                    child: Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: normalBgColor2,
+                                      ),
+                                      child: const Icon(
+                                        FontAwesomeIcons.close,
+                                        color: Colors.white,
+                                        size: 12,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
