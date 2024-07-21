@@ -208,9 +208,10 @@ class RichTextEditor extends StatelessWidget {
                       );
                     },
                     onTextChanged: (value) {
-                      RegExp chineseRegex = RegExp(r'[\u4e00-\u9fa5]');
-                      RegExp japaneseRegex = RegExp(r'[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]');
-                      if (chineseRegex.hasMatch(value) || japaneseRegex.hasMatch(value)) {
+                      // RegExp chineseRegex = RegExp(r'[\u4e00-\u9fa5]');
+                      // RegExp japaneseRegex = RegExp(r'[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]');
+                      RegExp nonEnglishDigitRegex = RegExp(r'[^\x00-\x7F0-9]');
+                      if (nonEnglishDigitRegex.hasMatch(value)) {
                         RegExp regExp = RegExp(r'<p><br><\/p>');
                         RegExp sregExp = RegExp(r'<br><\/p>');
                         if (!regExp.hasMatch(value) && sregExp.hasMatch(value)) {
