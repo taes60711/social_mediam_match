@@ -9,6 +9,7 @@ enum LoadDataType {
 }
 
 enum LoadDataStatus {
+  initNoSearch,
   initial,
   loading,
   loadingFinish,
@@ -25,6 +26,11 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
   int page = 0;
   bool isTop = true;
   LoadDataStatus loadStatus = LoadDataStatus.loadingFinish;
+
+  void initNoSearch() {
+    loadStatus = LoadDataStatus.initNoSearch;
+    render();
+  }
 
   Future<void> reloadData({required Future<List<R>> Function() apiFunc}) async {
     loadStatus = LoadDataStatus.loading;

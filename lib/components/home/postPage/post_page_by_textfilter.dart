@@ -96,6 +96,7 @@ class PostPageByTextFilter extends StatelessWidget {
                     loadingBuilder: () {
                       return const PostLoading();
                     },
+                    noInitSearchBuilder: PostViewUtilities.noinitSearchWidget(),
                     noDataBuilder: PostViewUtilities.noPostData(),
                     itemChild: ((data, index) {
                       return Column(

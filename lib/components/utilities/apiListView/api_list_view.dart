@@ -12,6 +12,7 @@ class APIListView<R> extends StatelessWidget {
   final Widget Function(List<R> data, int index) itemChild;
   final Widget Function() loadingBuilder;
   final Widget? noDataBuilder;
+  final Widget? noInitSearchBuilder;
   final Future<List<R>> Function(int page, int size) apiFunc;
   final List<R> providerList;
   final int size;
@@ -23,6 +24,7 @@ class APIListView<R> extends StatelessWidget {
     required this.itemChild,
     required this.loadingBuilder,
     this.noDataBuilder,
+    this.noInitSearchBuilder,
     required this.apiFunc,
     required this.providerList,
     this.size = 5,
@@ -36,7 +38,11 @@ class APIListView<R> extends StatelessWidget {
 
     return StatefulWrapper(
       onInit: () async {
-        initLoadData(context, loadDataType: LoadDataType.initial);
+        if (noInitSearchBuilder == null) {
+          initLoadData(context, loadDataType: LoadDataType.initial);
+        } else {
+          context.read<BaseAPIListProvider<R>>().initNoSearch();
+        }
       },
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -83,65 +89,76 @@ class APIListView<R> extends StatelessWidget {
         ),
         body: Builder(builder: (context) {
           LoadDataStatus nowLoadingStatus = context.select((BaseAPIListProvider<R> value) => value.loadStatus);
-          return nowLoadingStatus == LoadDataStatus.initial
-              ? loadingBuilder()
-              : providerList.isEmpty
-                  ? noDataBuilder ?? Container()
-                  : listenListView(
-                      context,
-                      child: ListView.builder(
-                        itemCount: providerList.length,
-                        controller: scrollController,
-                        physics: scrollPhysics(context),
-                        itemBuilder: (context, index) {
-                          if (providerList.length == 1) {
-                            return Column(
-                              children: [
-                                ///再度読み込む時表示される
-                                reloadWidget(),
 
-                                this.itemChild(providerList, index),
+          Widget component = Container();
 
-                                ///すべでデータ読み込みたら表示される
-                                allDataLoadedWidget(),
-                              ],
-                            );
-                          } else if (index == 0) {
-                            return Column(
-                              children: [
-                                ///再度読み込む時表示される
-                                reloadWidget(),
+          if (nowLoadingStatus == LoadDataStatus.initial) {
+            component = loadingBuilder();
+          } else if (nowLoadingStatus == LoadDataStatus.initNoSearch) {
+            component = noInitSearchBuilder ?? Container();
+          } else {
+            if (providerList.isEmpty) {
+              component = noDataBuilder ?? Container();
+            } else {
+              component = listenListView(
+                context,
+                child: ListView.builder(
+                  itemCount: providerList.length,
+                  controller: scrollController,
+                  physics: scrollPhysics(context),
+                  itemBuilder: (context, index) {
+                    if (providerList.length == 1) {
+                      return Column(
+                        children: [
+                          ///再度読み込む時表示される
+                          reloadWidget(),
 
-                                this.itemChild(providerList, index),
-                              ],
-                            );
-                          } else if (index == providerList.length - 1 && size > providerList.length) {
-                            return Column(
-                              children: [
-                                this.itemChild(providerList, index),
+                          this.itemChild(providerList, index),
 
-                                ///すべでデータ読み込みたら表示される
-                                allDataLoadedWidget(),
-                              ],
-                            );
-                          } else if (index == providerList.length - 1) {
-                            return Column(
-                              children: [
-                                this.itemChild(providerList, index),
+                          ///すべでデータ読み込みたら表示される
+                          allDataLoadedWidget(),
+                        ],
+                      );
+                    } else if (index == 0) {
+                      return Column(
+                        children: [
+                          ///再度読み込む時表示される
+                          reloadWidget(),
 
-                                ///データ読み込んてる場合表示される
-                                loadingWidget(),
+                          this.itemChild(providerList, index),
+                        ],
+                      );
+                    } else if (index == providerList.length - 1 && size > providerList.length) {
+                      return Column(
+                        children: [
+                          this.itemChild(providerList, index),
 
-                                ///すべでデータ読み込みたら表示される
-                                allDataLoadedWidget(),
-                              ],
-                            );
-                          } else {
-                            return this.itemChild(providerList, index);
-                          }
-                        },
-                      ),
-                    );
+                          ///すべでデータ読み込みたら表示される
+                          allDataLoadedWidget(),
+                        ],
+                      );
+                    } else if (index == providerList.length - 1) {
+                      return Column(
+                        children: [
+                          this.itemChild(providerList, index),
+
+                          ///データ読み込んてる場合表示される
+                          loadingWidget(),
+
+                          ///すべでデータ読み込みたら表示される
+                          allDataLoadedWidget(),
+                        ],
+                      );
+                    } else {
+                      return this.itemChild(providerList, index);
+                    }
+                  },
+                ),
+              );
+            }
+          }
+
+          return component;
         }),
       ),
     );

@@ -99,7 +99,7 @@ class MyFriends extends StatelessWidget {
                           ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
+                          padding: const EdgeInsets.only(bottom: 5, left: 10, right: 10),
                           child: GestureDetector(
                             onTap: () {
                               openUserDetailEndDrawer(context: context, otherUserData: otherUserData);
