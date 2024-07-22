@@ -5,17 +5,21 @@ import '../../components/utilities/endDrawers/post_page_by_text_filter_end_drawe
 import '../../models/post_model.dart';
 
 class PostProvider extends ChangeNotifier {
-  bool isGood = false;
+  TextEditingController textFilterInput = TextEditingController();
+
+  List<PostBoard> allPostBoards = [];
+  void getAllPostBoard(List<PostBoard> postBoard) {
+    allPostBoards = [...allPostBoards, ...postBoard];
+    notifyListeners();
+  }
 
   List<PostModel> topPost = [];
-
   void getTopPost(List<PostModel> requestPostData) {
     topPost = [...topPost, ...requestPostData];
     notifyListeners();
   }
 
-  TextEditingController textFilterInput = TextEditingController();
-
+  bool isGood = false;
   void changeIsGoodStatus(bool changedGood) {
     isGood = changedGood;
     notifyListeners();

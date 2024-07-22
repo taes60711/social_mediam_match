@@ -7,6 +7,25 @@ import '../models/user_model.dart';
 class PostService extends ApiClient {
   PostService() : super(overrideIp: "$ip:$port/posts");
 
+  ///MARK: 全て掲示板種類取得する
+  Future<List<PostBoard>> getAllPostBoard() async {
+    List<PostBoard> requestAllPostBoard = [];
+
+    try {
+      String responseData = await apiGet('/getAllPostBoard');
+      print("responseData $responseData");
+      requestAllPostBoard = await handleResponse<PostBoard>(
+        responseData,
+        model: PostBoard.toMap,
+        isList: true,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return requestAllPostBoard;
+  }
+
   ///MARK: 人気文章取得する
   Future<List<PostModel>> getPostDataByViewer(int page, int size) async {
     List<PostModel> requestPostDataByUID = [];

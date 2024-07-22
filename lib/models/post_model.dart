@@ -3,6 +3,21 @@ import 'package:flutter/material.dart';
 
 import 'package:social_mediam_match/models/user_model.dart';
 
+class PostBoard {
+  int id;
+  int type;
+  String name;
+  PostBoard({required this.id, required this.type, required this.name});
+
+  factory PostBoard.toMap(dynamic json) {
+    return PostBoard(
+      id: json['id'],
+      type: json['type'],
+      name: json['name'],
+    );
+  }
+}
+
 class PostModel {
   int id;
   String createdBy;

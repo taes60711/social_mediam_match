@@ -24,7 +24,9 @@ class PostPageForum extends StatelessWidget {
   Widget build(BuildContext context) {
     return StatefulWrapper(
       onInit: () async {
-        await PostViewModel(postContext: context).getTopPost();
+        await PostViewModel(postContext: context).getTopPost().then((_) async {
+          await PostViewModel(postContext: context).getAllPostBoard();
+        });
       },
       child: Scaffold(
         body: Stack(
@@ -160,7 +162,7 @@ class PostPageForum extends StatelessWidget {
                               ],
                               child: const PostPageByNew(),
                             ),
-                            postBoradList(),
+                            postBoradList(context),
                           ],
                         ),
                       ),
@@ -179,14 +181,12 @@ class PostPageForum extends StatelessWidget {
     );
   }
 
-  Widget postBoradList() {
-    List<String> boradList = ["協槓", "技術", "網頁", "韌體", "AI"];
-
+  Widget postBoradList(BuildContext context) {
     return Column(
       children: [
         Expanded(
           child: ListView.builder(
-            itemCount: boradList.length,
+            itemCount: context.select((PostProvider value) => value.allPostBoards).length,
             itemBuilder: ((context, index) {
               return Padding(
                   padding: const EdgeInsets.only(top: 8),
@@ -208,7 +208,7 @@ class PostPageForum extends StatelessWidget {
                               color: const Color.fromARGB(255, 213, 226, 236),
                             ),
                           ),
-                          Text(boradList[index]),
+                          Text(context.read<PostProvider>().allPostBoards[index].name),
                         ],
                       ),
                     ),

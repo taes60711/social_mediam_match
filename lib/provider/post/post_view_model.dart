@@ -22,6 +22,11 @@ class PostViewModel {
   BuildContext postContext;
   PostViewModel({required this.postContext});
 
+  Future<void> getAllPostBoard() async {
+    List<PostBoard> requestBoardData = await PostService().getAllPostBoard();
+    postContext.read<PostProvider>().getAllPostBoard(requestBoardData);
+  }
+
   Future<void> getTopPost() async {
     List<PostModel> requestPostData = await PostService().getPostByType(0, 3, -1);
     postContext.read<PostProvider>().getTopPost(requestPostData);
