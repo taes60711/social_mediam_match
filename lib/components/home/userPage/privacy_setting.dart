@@ -35,9 +35,11 @@ class PrivacySetting extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   NotificationService().sendNotification(
-                      message: "消息",
-                      sendto:
-                          "c-K6UQ-LSlS44Ymc6H1cJh:APA91bH1SHXOOWIj3xW1KYWAOB4V5PTu9L0Yd0pqZ1qYtl99EhbmVsdY0ESgco7pwYYS0RLDCCXHHATGqmPXUPAHxAfeJngw7nuQ1ml92rx0ORueiZR8ofS8Yd1xDVmlJ6KGvkVyKfwJ");
+                    title: "title",
+                    message: "消息",
+                    sendto:
+                        "ehcRrRfgQp6EyWYXCHAYYU:APA91bHeteDmLx9QVu3yOqhhtlODyZTRVATAPJCQoDgCXh_l_LKKODmERLb750uIMdB4tJzR43bfYHotVFpVlcQIKcIM3hA3-txTnfrjU84amHOHzRIrN2SQZs0Mepf8ss-n_g9mKbG5",
+                  );
                 },
                 child: Text("送通知(還沒完善)"),
               ),

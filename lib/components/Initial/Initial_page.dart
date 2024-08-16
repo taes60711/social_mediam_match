@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/account/welcome_page.dart';
@@ -7,13 +7,12 @@ import 'package:social_mediam_match/pageManager/home.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
+
 import '../../models/user_model.dart';
 
 import '../../provider/account/user_provider.dart';
 import '../../provider/Initial/initial_provider.dart';
 import '../../provider/friend_provider.dart';
-import '../../services/dynamic_links.dart';
-import '../../services/notification_service.dart';
 import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
 
@@ -70,16 +69,17 @@ void _enterApp(BuildContext context) {
   print("firstEnterApp");
   int delayTime = 3;
   FriendProvider friendState = context.read<FriendProvider>();
+
   context.read<UserProvider>().isLoginCheck(friendState);
   Timer(Duration(seconds: delayTime), () {
     context.read<InitialProvider>().onChange();
 
-    if (Platform.isAndroid) {
-      //初始化 > dynamicLink 在上架前,先暫時只有安卓使用
-      DynamicLinks().initDynamicLink(context);
-      //初始化 > 通知系統 在上架前,先暫時只有安卓使用
-      NotificationService notificationService = NotificationService()..initNotification();
-      notificationService.notificationListen();
-    }
+    // if (Platform.isAndroid) {
+    //   //初始化 > dynamicLink 在上架前,先暫時只有安卓使用
+    //   DynamicLinks().initDynamicLink(context);
+    //   //初始化 > 通知系統 在上架前,先暫時只有安卓使用
+    //   NotificationService notificationService = NotificationService()..initNotification(context);
+    //   notificationService.notificationListen();
+    // }
   });
 }

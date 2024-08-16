@@ -10,8 +10,10 @@ import '../../components/account/signUpPage/signup_page.dart';
 
 import '../../components/home/coursePage/course_edit_page/course_edit_page.dart';
 import '../../components/home/postPage/editor_page.dart';
+import '../../components/home/userPage/guide.dart';
 import '../../components/home/userPage/myCourse/my_courses.dart';
 import '../../components/home/userPage/my_friends.dart';
+import '../../components/home/userPage/my_notification_page.dart';
 import '../../components/home/userPage/my_posts.dart';
 import '../../components/home/userPage/privacy_setting.dart';
 import '../../components/home/userPage/user_setting.dart';
@@ -105,4 +107,10 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
 
   /// "/myFriends"
   RoutePath.myFriends.value: (BuildContext context) => const MyFriends(),
+
+  /// "/MyNotificationPage"
+  RoutePath.myNotifictaionPage.value: (BuildContext context) => const MyNotificationPage(),
+
+  /// "/guide"
+  RoutePath.guide.value: (BuildContext context) => const Guide(),
 };

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../components/utilities/apiListView/base_api_list_provider.dart';
 import '../../components/utilities/endDrawers/skill_change_filter_end_drawer.dart';
+import '../../models/skill_model.dart';
 import '../../models/user_model.dart';
 import '../../services/skill_service.dart';
 import '../../services/user_service.dart';
@@ -21,14 +22,21 @@ class SkillChangeViewModel {
 
   Future<void> filterSearchStart() async {
     LoginUser userData = context.read<UserProvider>().userData;
-    List<String> filteredSkills = context.read<SkillChangeProvider>().filteredSkill;
+
+    List<RequestSkillListData> skillList = context.read<SkillChangeProvider>().skillList;
+    List<String> filteredSkillList = context.read<SkillChangeProvider>().filteredSkill;
+
+    List<String> filteredSkillIdsList = filteredSkillList.map((e) {
+      return (skillList.firstWhere((element) => element.name == e).id).toString();
+    }).toList();
+
     int loadSize = context.read<BaseAPIListProvider<LoginUser>>().size;
     await context.read<BaseAPIListProvider<LoginUser>>().reloadData(
           apiFunc: () async => await UserService().getAllUserData(
             0,
             loadSize,
             userUid: userData.uid,
-            filterSkill: filteredSkills,
+            filterSkill: filteredSkillIdsList,
           ),
         );
     int preLoadPage = context.read<BaseAPIListProvider<LoginUser>>().page;
@@ -37,7 +45,7 @@ class SkillChangeViewModel {
             preLoadPage,
             loadSize,
             userUid: userData.uid,
-            filterSkill: filteredSkills,
+            filterSkill: filteredSkillIdsList,
           ),
         );
 

@@ -11,6 +11,8 @@ enum RoutePath {
   myPosts("/myposts"),
   myCourses("/mycourses"),
   myFriends("/myFriends"),
+  myNotifictaionPage("/myNotificationPage"),
+  guide("/guide"),
   privacySettingPage("/privacySetting");
 
   final String value;

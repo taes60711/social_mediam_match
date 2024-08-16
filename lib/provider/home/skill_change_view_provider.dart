@@ -6,12 +6,10 @@ import '../../models/skill_model.dart';
 class SkillChangeProvider extends ChangeNotifier {
   List<String> filteredSkill = [];
   SkillChangeEndDrawerType endDrawerOpenInfo = SkillChangeEndDrawerType.close;
-  List<String> skillList = [];
+  List<RequestSkillListData> skillList = [];
 
   Future<void> getFilterList(List<RequestSkillListData> requestSkillListData) async {
-    for (var element in requestSkillListData) {
-      skillList.add(element.name);
-    }
+    skillList = requestSkillListData;
     notifyListeners();
   }
 

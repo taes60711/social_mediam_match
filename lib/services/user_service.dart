@@ -46,6 +46,7 @@ class UserService extends ApiClient {
     LoginUser userdata = LoginUser(uid: "-1");
     try {
       String responseData = await apiGet('/$loginedUserUID');
+
       print("Logined User Data :  $responseData");
 
       userdata = await handleResponse<LoginUser>(

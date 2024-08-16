@@ -22,7 +22,6 @@ class ApiClient {
     final uri = Uri.parse("http://$_ip$url").replace(queryParameters: paramters);
     print("Get API  Url : $_ip$url");
     Response response = await http.get(uri);
-
     try {
       if (response.statusCode != 200) {
         throw ArgumentError("${response.statusCode}");

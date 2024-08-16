@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
+import 'package:social_mediam_match/components/utilities/endDrawers/course_filter_end_drawer.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 import 'package:social_mediam_match/services/skill_service.dart';
 
@@ -21,6 +22,7 @@ import '../pagemanager/enum/route_path.dart';
 import '../pagemanager/setting/route_controller.dart';
 import 'account/user_provider.dart';
 import 'course_provider.dart';
+import 'home/skill_change_view_provider.dart';
 
 class CourseViewModel {
   BuildContext courseContext;
@@ -37,6 +39,25 @@ class CourseViewModel {
     List<RequestSkillListData> requestSkillList = await SkillService().requestSkillList();
     List<String> skillList = requestSkillList.map((e) => e.name).toList();
     courseContext.read<CourseProvider>().editPageInit(requestSkillList: skillList, courseData: courseData);
+  }
+
+  Future<void> courseFilterSearchStart() async {
+    List<RequestSkillListData> skillList = courseContext.read<SkillChangeProvider>().skillList;
+    List<String> filteredSkillList = courseContext.read<SkillChangeProvider>().filteredSkill;
+
+    List<String> filteredSkillIdsList = filteredSkillList.map((e) {
+      return (skillList.firstWhere((element) => element.name == e).id).toString();
+    }).toList();
+
+    await courseContext.read<BaseAPIListProvider<CourseModel>>().reloadData(
+          apiFunc: () async => await CourseService().getAllCourses(0, 5, skillId: filteredSkillIdsList),
+        );
+    int preLoadPage = courseContext.read<BaseAPIListProvider<CourseModel>>().page;
+    await courseContext.read<BaseAPIListProvider<CourseModel>>().preLoad(
+          apiFunc: () async => await CourseService().getAllCourses(preLoadPage, 5, skillId: filteredSkillIdsList),
+        );
+
+    closeCourseFilterEndDrawer(context: courseContext);
   }
 
   Future<void> courseCreateOrUpdate({int? courseId}) async {

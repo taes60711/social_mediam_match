@@ -2,8 +2,16 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
+import 'package:social_mediam_match/provider/friend_provider.dart';
+
+import '../components/utilities/endDrawers/chat_room_end_drawer.dart';
+import '../pagemanager/enum/bottom_bar_path.dart';
+import '../pagemanager/setting/bottom_bar_controller_provider.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -72,7 +80,7 @@ class NotificationService {
     }
   }
 
-  Future<void> initNotification() async {
+  Future<void> initNotification(BuildContext context) async {
     print("initNotification 通知初始化");
     AndroidInitializationSettings initializationSettingsAndroid = const AndroidInitializationSettings('flutter_logo');
     var initializationSettingsIOS = DarwinInitializationSettings(
@@ -88,7 +96,13 @@ class NotificationService {
     );
     await notificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {},
+      onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
+        // await Future.delayed(Duration(seconds: 2));
+        // context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+        // context.read<FriendProvider>().openRoom(13, context.read<UserProvider>().userData);
+        // openChatRoomEndDrawer(context: context);
+        // RouteOptions.pushTo(RoutePath.profilePage);
+      },
     );
   }
 

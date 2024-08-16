@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/models/skill_model.dart';
+import 'package:social_mediam_match/provider/corse_view_model.dart';
 
 import '../../../provider/home/skill_change_view_provider.dart';
+import '../../utilities/custom_button.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 
@@ -25,14 +28,14 @@ class CourseFilterPage extends StatelessWidget {
             Expanded(
               child: Builder(
                 builder: (context) {
-                  List<String> skillList = context.select((SkillChangeProvider value) => value.skillList);
+                  List<RequestSkillListData> skillList = context.select((SkillChangeProvider value) => value.skillList);
                   List<String> filteredSkill = context.watch<SkillChangeProvider>().filteredSkill;
                   return SingleChildScrollView(
                     child: Column(
                       children: skillList.map((e) {
                         return GestureDetector(
                           onTap: () {
-                            context.read<SkillChangeProvider>().onChangeSkillFilter(e);
+                            context.read<SkillChangeProvider>().onChangeSkillFilter(e.name);
                           },
                           child: Container(
                             width: ScreenSize.width,
@@ -40,10 +43,11 @@ class CourseFilterPage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
-                              color:
-                                  filteredSkill.any((element) => element == e) ? normalBgColor : normalBgColor2.withOpacity(0.1),
+                              color: filteredSkill.any((element) => element == e.name)
+                                  ? normalBgColor
+                                  : normalBgColor2.withOpacity(0.1),
                             ),
-                            child: Text(e),
+                            child: Text(e.name),
                           ),
                         );
                       }).toList(),
@@ -52,10 +56,13 @@ class CourseFilterPage extends StatelessWidget {
                 },
               ),
             ),
-            ElevatedButton(
-              onPressed: () async {},
-              child: Text(tr("skillFilterSearch")),
-            ),
+            const SizedBox(height: 10),
+            TextBtn(
+                title: tr("skillFilterSearch"),
+                btnColor: normalBgColor,
+                onPress: () {
+                  CourseViewModel(courseContext: context).courseFilterSearchStart();
+                }),
           ],
         ),
       ),

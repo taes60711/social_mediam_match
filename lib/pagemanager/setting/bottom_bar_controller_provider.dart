@@ -7,12 +7,17 @@ class BottomBarControllerProvider extends ChangeNotifier {
   void bottomBarPageChange(BottomBarPath bottomBarPath) {
     index = bottomBarPath.path;
     print("BottomBar changeToLabel : ${bottomBarPath.label}  indexChangeTo : $index");
-    notifyListeners();
+    render();
   }
 
   void bottomBarPageToHome() {
     index = BottomBarPath.home.path;
     print("BottomBar indexChangeTo Home : $index");
+    render();
+  }
+
+  Future<void> render() async {
+    await Future.delayed(Duration.zero);
     notifyListeners();
   }
 }

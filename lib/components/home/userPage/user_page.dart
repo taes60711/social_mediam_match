@@ -169,13 +169,13 @@ class UserPageRouthsettingButtonInfo {
         title: UserPageString().notificationBtn,
         icon: FontAwesomeIcons.solidBell,
         onPress: () {
-          print(UserPageString().guideBtn);
+          RouteOptions.pushTo(RoutePath.myNotifictaionPage);
         }),
     SettingButtonInfo(
         title: UserPageString().guideBtn,
         icon: Icons.question_answer,
         onPress: () {
-          print(UserPageString().guideBtn);
+          RouteOptions.pushTo(RoutePath.guide);
         }),
   ];
 }
