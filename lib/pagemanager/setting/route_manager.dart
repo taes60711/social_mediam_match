@@ -1,22 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/Initial/Initial_page.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
 import 'package:social_mediam_match/provider/post/post_comment_provider.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
-import '../../components/account/login_page.dart';
-import '../../components/account/signUpPage/signup_page.dart';
-
-import '../../components/home/coursePage/course_edit_page/course_edit_page.dart';
 import '../../components/home/postPage/editor_page.dart';
-import '../../components/home/userPage/guide.dart';
-import '../../components/home/userPage/myCourse/my_courses.dart';
-import '../../components/home/userPage/my_friends.dart';
-import '../../components/home/userPage/my_notification_page.dart';
-import '../../components/home/userPage/my_posts.dart';
-import '../../components/home/userPage/privacy_setting.dart';
-import '../../components/home/userPage/user_setting.dart';
 import '../../main.dart';
 import '../../models/post_model.dart';
 import '../../provider/Initial/initial_provider.dart';
@@ -49,7 +37,7 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
   /// "/"
   RoutePath.home.value: (BuildContext context) => ChangeNotifierProvider(
         create: (_) => InitialProvider(),
-        child: const Initialpage(),
+        child: RoutePath.home.pageWidget,
       ),
 
   /// "/signUp"
@@ -59,13 +47,13 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
           ChangeNotifierProvider(create: (_) => UserSettingViewProvider()),
           ChangeNotifierProvider(create: (_) => SkillMapProvider()),
         ],
-        child: const SignUpPage(),
+        child: RoutePath.signUpPage.pageWidget,
       ),
 
   /// "/login"
   RoutePath.loginPage.value: (BuildContext context) => ChangeNotifierProvider(
         create: (_) => LoginProvider(),
-        child: const LoginPage(),
+        child: RoutePath.loginPage.pageWidget,
       ),
 
   /// "/postEdit"
@@ -74,11 +62,11 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
   /// "/mycourses"
   RoutePath.courseEditPage.value: (BuildContext context) => ChangeNotifierProvider(
         create: (_) => CourseProvider(),
-        child: const CourseEditPage(),
+        child: RoutePath.courseEditPage.pageWidget,
       ),
 
   /// "/privacySetting"
-  RoutePath.privacySettingPage.value: (BuildContext context) => const PrivacySetting(),
+  RoutePath.privacySettingPage.value: (BuildContext context) => RoutePath.privacySettingPage.pageWidget,
 
   /// "/profile"
   RoutePath.profilePage.value: (BuildContext context) => MultiProvider(
@@ -86,7 +74,7 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
           ChangeNotifierProvider(create: (_) => UserSettingViewProvider()),
           ChangeNotifierProvider(create: (_) => SkillMapProvider()),
         ],
-        child: const UserSetting(),
+        child: RoutePath.profilePage.pageWidget,
       ),
 
   /// "/myposts"
@@ -96,21 +84,21 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
           ChangeNotifierProvider(create: (_) => PostProvider()),
           ChangeNotifierProvider(create: (_) => PostCommentProvider()),
         ],
-        child: const MyPosts(),
+        child: RoutePath.myPosts.pageWidget,
       ),
 
   /// "/mycourses"
   RoutePath.myCourses.value: (BuildContext context) => ChangeNotifierProvider(
         create: (_) => CourseProvider(),
-        child: const MyCourses(),
+        child: RoutePath.myCourses.pageWidget,
       ),
 
   /// "/myFriends"
-  RoutePath.myFriends.value: (BuildContext context) => const MyFriends(),
+  RoutePath.myFriends.value: (BuildContext context) => RoutePath.myFriends.pageWidget,
 
   /// "/MyNotificationPage"
-  RoutePath.myNotifictaionPage.value: (BuildContext context) => const MyNotificationPage(),
+  RoutePath.myNotifictaionPage.value: (BuildContext context) => RoutePath.myNotifictaionPage.pageWidget,
 
   /// "/guide"
-  RoutePath.guide.value: (BuildContext context) => const Guide(),
+  RoutePath.guide.value: (BuildContext context) => RoutePath.guide.pageWidget,
 };
