@@ -7,7 +7,7 @@ import '../skill_bar.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/custom_button.dart';
 import '../../utilities/style/style_config.dart';
-import '../../utilities/title_input.dart';
+import '../../utilities/label_input.dart';
 
 class SignUpStepThird extends StatelessWidget {
   const SignUpStepThird({super.key});
@@ -19,7 +19,7 @@ class SignUpStepThird extends StatelessWidget {
 
     return Column(
       children: [
-        TitleInput(
+        LabelInput(
           title: StepThirdPage.jobInputTitle,
           textController: userSettingViewProvider.jobInput,
         ),
@@ -27,7 +27,7 @@ class SignUpStepThird extends StatelessWidget {
           builder: (context) {
             print("signUpStepThird introductInput");
             String displayText = context.select((UserSettingViewProvider value) => value.introductionInput.text);
-            return MultiTitleInput(
+            return MultiLabelInput(
               title: StepThirdPage.introInputTitle,
               textController: userSettingViewProvider.introductionInput,
               displayText: displayText,

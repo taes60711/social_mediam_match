@@ -14,7 +14,7 @@ import '../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../../utilities/stateful_wrapper.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
-import '../../utilities/title_input.dart';
+import '../../utilities/label_input.dart';
 import '../../utilities/user_icon.dart';
 
 class UserSetting extends StatelessWidget {
@@ -55,13 +55,13 @@ Widget _mainBody(BuildContext context) {
       avatarEdit(context),
 
       ///name
-      TitleInput(
+      LabelInput(
         title: StepTwoPage.nameInputTitle,
         textController: userSettingViewProvider.nameInput,
       ),
 
       ///job
-      TitleInput(
+      LabelInput(
         title: StepThirdPage.jobInputTitle,
         textController: userSettingViewProvider.jobInput,
       ),
@@ -82,7 +82,7 @@ Widget _mainBody(BuildContext context) {
       Builder(
         builder: (context) {
           String displayText = context.select((UserSettingViewProvider value) => value.introductionInput.text);
-          return MultiTitleInput(
+          return MultiLabelInput(
             title: StepThirdPage.introInputTitle,
             textController: userSettingViewProvider.introductionInput,
             displayText: displayText,

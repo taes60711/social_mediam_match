@@ -56,7 +56,7 @@ Widget _textField(TextEditingController textController, {required bool isMulti})
         );
 }
 
-class MultiTitleInput extends StatelessWidget {
+class MultiLabelInput extends StatelessWidget {
   final TextEditingController textController;
   final String displayText;
   final Function(String) multiOnChange;
@@ -64,7 +64,7 @@ class MultiTitleInput extends StatelessWidget {
   final bool? isRequired;
   final EdgeInsetsGeometry padding;
 
-  const MultiTitleInput({
+  const MultiLabelInput({
     super.key,
     required this.title,
     required this.textController,
@@ -175,13 +175,13 @@ Widget _topBar(
   );
 }
 
-class TitleInput extends StatelessWidget {
+class LabelInput extends StatelessWidget {
   final String title;
   final double? inputHeight;
   final TextEditingController textController;
   final bool? isRequired;
   final EdgeInsetsGeometry padding;
-  const TitleInput({
+  const LabelInput({
     super.key,
     required this.title,
     this.inputHeight,

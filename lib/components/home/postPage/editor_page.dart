@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
-import 'package:social_mediam_match/components/utilities/title_input.dart';
+import 'package:social_mediam_match/components/utilities/label_input.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../pageManager/setting/route_controller.dart';
@@ -69,7 +69,7 @@ class EditorPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                TitleInput(title: 'Title', textController: titleInputController),
+                LabelInput(title: 'Title', textController: titleInputController),
                 const SizedBox(height: 10),
                 Expanded(
                   child: RichTextEditor(

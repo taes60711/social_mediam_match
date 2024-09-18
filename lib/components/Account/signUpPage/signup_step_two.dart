@@ -6,7 +6,7 @@ import '../../../provider/home/user_setting_view_provider.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/custom_button.dart';
 import '../../utilities/style/style_config.dart';
-import '../../utilities/title_input.dart';
+import '../../utilities/label_input.dart';
 
 class SignUpStepTwo extends StatelessWidget {
   const SignUpStepTwo({super.key});
@@ -19,12 +19,12 @@ class SignUpStepTwo extends StatelessWidget {
 
     return Column(
       children: [
-        TitleInput(
+        LabelInput(
           isRequired: true,
           title: StepTwoPage.pwdInputTitle,
           textController: signUpViewProvider.pwdController,
         ),
-        TitleInput(
+        LabelInput(
           title: StepTwoPage.nameInputTitle,
           textController: userSettingViewProvider.nameInput,
         ),

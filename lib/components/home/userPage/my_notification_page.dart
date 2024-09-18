@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 
 class MyNotificationPage extends StatelessWidget {
@@ -6,12 +7,12 @@ class MyNotificationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Column(
+    return const BackgroundWidget(
+      child: Column(
         children: [
           BaseTopBar(
             title: "通知",
-          ),
+          )
         ],
       ),
     );

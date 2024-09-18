@@ -9,7 +9,7 @@ import 'package:social_mediam_match/components/utilities/endDrawers/skill_settin
 import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-import 'package:social_mediam_match/components/utilities/title_input.dart';
+import 'package:social_mediam_match/components/utilities/label_input.dart';
 
 import 'package:social_mediam_match/provider/corse_view_model.dart';
 
@@ -118,7 +118,7 @@ class CourseEditPage extends StatelessWidget {
 Widget courseTitleEdit() {
   return Builder(builder: (context) {
     TextEditingController titleController = context.select((CourseProvider value) => value.titleController);
-    return TitleInput(
+    return LabelInput(
       title: "標題",
       textController: titleController,
       padding: EdgeInsets.zero,
@@ -130,7 +130,7 @@ Widget courseContentEdit() {
   return Builder(builder: (context) {
     TextEditingController contentController = context.select((CourseProvider value) => value.contentController);
     String contentText = context.select((CourseProvider value) => value.contentText);
-    return MultiTitleInput(
+    return MultiLabelInput(
       title: "課程大綱",
       textController: contentController,
       displayText: contentText,
@@ -144,7 +144,7 @@ Widget courseBeforeNeedEdit() {
   return Builder(builder: (context) {
     TextEditingController beforeNeedController = context.select((CourseProvider value) => value.beforeNeedController);
     String beforeNeedText = context.select((CourseProvider value) => value.beforeNeedText);
-    return MultiTitleInput(
+    return MultiLabelInput(
       title: "課程前需要",
       textController: beforeNeedController,
       displayText: beforeNeedText,

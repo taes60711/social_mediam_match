@@ -6,7 +6,7 @@ import '../../strings/account/sign_up_strings.dart';
 import '../../utilities/custom_button.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
-import '../../utilities/title_input.dart';
+import '../../utilities/label_input.dart';
 
 class SignUpStepOne extends StatelessWidget {
   const SignUpStepOne({super.key});
@@ -127,7 +127,7 @@ class SignUpStepOne extends StatelessWidget {
       children: [
         introductionWidget,
         privacy,
-        TitleInput(
+        LabelInput(
           title: StepOnePage.emailInputTitle,
           textController: signUpViewProvider.emailController,
         ),

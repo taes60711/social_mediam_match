@@ -6,7 +6,7 @@ import 'package:social_mediam_match/components/utilities/fit_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/utilities/title_input.dart';
+import 'package:social_mediam_match/components/utilities/label_input.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_view_model.dart';
@@ -43,9 +43,9 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                 child: Column(
                   children: [
                     //メールアドレスInput
-                    TitleInput(title: Login.emailInputTitle, textController: emailController),
+                    LabelInput(title: Login.emailInputTitle, textController: emailController),
                     //パスワードInput
-                    TitleInput(title: Login.pwdInputTitle, textController: pwdController),
+                    LabelInput(title: Login.pwdInputTitle, textController: pwdController),
                     //エラーメッセージ
                     errorMessage(),
                     //パスワード忘れるテキスト

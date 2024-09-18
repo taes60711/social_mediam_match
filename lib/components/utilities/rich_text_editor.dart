@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/components/utilities/title_input.dart';
+import 'package:social_mediam_match/components/utilities/label_input.dart';
 
 import '../../models/rich_text_format.dart';
 
@@ -41,7 +41,7 @@ class RichTextEditor extends StatelessWidget {
                             margin: const EdgeInsets.symmetric(horizontal: 5),
                             width: ScreenSize.width,
                             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                              TitleInput(title: 'Imgae URL', textController: imageLinkController),
+                              LabelInput(title: 'Imgae URL', textController: imageLinkController),
                             ]),
                           ),
                           actions: [
@@ -106,7 +106,7 @@ class RichTextEditor extends StatelessWidget {
                             margin: const EdgeInsets.symmetric(horizontal: 5),
                             width: ScreenSize.width,
                             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                              TitleInput(title: 'Youtube URL', textController: linkController),
+                              LabelInput(title: 'Youtube URL', textController: linkController),
                             ]),
                           ),
                           actions: [
@@ -152,8 +152,8 @@ class RichTextEditor extends StatelessWidget {
                             margin: const EdgeInsets.symmetric(horizontal: 5),
                             width: ScreenSize.width,
                             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                              TitleInput(title: 'Link Text', textController: linkTextController),
-                              TitleInput(title: 'URL', textController: linkController),
+                              LabelInput(title: 'Link Text', textController: linkTextController),
+                              LabelInput(title: 'URL', textController: linkController),
                             ]),
                           ),
                           actions: [

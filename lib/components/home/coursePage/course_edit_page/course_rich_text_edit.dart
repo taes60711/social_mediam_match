@@ -8,7 +8,7 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-import 'package:social_mediam_match/components/utilities/title_input.dart';
+import 'package:social_mediam_match/components/utilities/label_input.dart';
 import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
 import 'package:social_mediam_match/provider/course_provider.dart';
 
@@ -51,7 +51,7 @@ class CourseRichTextEdit extends StatelessWidget {
                   RouteOptions.pop();
                 }),
           ),
-          prStory != null ? Container() : TitleInput(title: "標題", textController: titleController),
+          prStory != null ? Container() : LabelInput(title: "標題", textController: titleController),
           Expanded(
             child: RichTextEditor(controller: controller, content: prStory ?? ""),
           ),

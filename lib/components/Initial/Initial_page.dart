@@ -12,7 +12,7 @@ import '../../models/user_model.dart';
 
 import '../../provider/account/user_provider.dart';
 import '../../provider/Initial/initial_provider.dart';
-import '../../provider/friend_provider.dart';
+
 import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
 
@@ -27,7 +27,7 @@ class Initialpage extends StatelessWidget {
 
     Widget component;
     if (isfirstEnterApp) {
-      component = firstEnterAppWidget(context);
+      component = splashScreen(context);
     } else {
       if (isLoginLoading) {
         component = const Scaffold(
@@ -47,7 +47,7 @@ class Initialpage extends StatelessWidget {
   }
 }
 
-Widget firstEnterAppWidget(BuildContext context) {
+Widget splashScreen(BuildContext context) {
   return StatefulWrapper(
     onInit: () => _enterApp(context),
     child: BackgroundWidget(
@@ -65,12 +65,13 @@ Widget firstEnterAppWidget(BuildContext context) {
   );
 }
 
-void _enterApp(BuildContext context) {
+Future<void> _enterApp(BuildContext context) async {
   print("firstEnterApp");
   int delayTime = 3;
-  FriendProvider friendState = context.read<FriendProvider>();
 
-  context.read<UserProvider>().isLoginCheck(friendState);
+  // ユーザの資料を取得、最後ログインのタイム更新、友達リスト（WS）繋がる
+  context.read<UserProvider>().isLoginCheck(context);
+
   Timer(Duration(seconds: delayTime), () {
     context.read<InitialProvider>().onChange();
 

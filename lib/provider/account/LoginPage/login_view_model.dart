@@ -8,7 +8,7 @@ import '../../../components/strings/account/login_strings.dart';
 import '../../../components/utilities/custom_button.dart';
 import '../../../components/utilities/style/screen_size.dart';
 import '../../../components/utilities/style/style_config.dart';
-import '../../../components/utilities/title_input.dart';
+import '../../../components/utilities/label_input.dart';
 import '../../../pageManager/setting/route_controller.dart';
 
 class LoginViewModel {
@@ -50,7 +50,7 @@ class LoginViewModel {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 50),
-                                  TitleInput(title: PasswordForgot.emailInputTitle, textController: emailController),
+                                  LabelInput(title: PasswordForgot.emailInputTitle, textController: emailController),
                                   Text(
                                     resetPwdError,
                                     style: const TextStyle(color: Colors.red),

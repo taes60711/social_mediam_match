@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../utilities/background_widget.dart';
 import '../../utilities/basic_top_bar.dart';
 
 class Guide extends StatelessWidget {
@@ -7,12 +8,12 @@ class Guide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Column(
+    return const BackgroundWidget(
+      child: Column(
         children: [
           BaseTopBar(
             title: "導覽",
-          ),
+          )
         ],
       ),
     );
