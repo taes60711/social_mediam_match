@@ -79,6 +79,66 @@ Widget mainBody(BuildContext context) {
           ),
         ),
       ),
+      Row(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              NotificationService().createNotification(
+                notification: NotificationModel(
+                  id: -1,
+                  userUid: 'tzLaMcP3V9XOAMOcD0FAY5Nf4tE2',
+                  otherUserUid: 'ACqYscxtd2VSdPlkv1G8OgSTKxd2',
+                  type: 0,
+                  title: '"12135"對文章"1"按讚',
+                  isRead: false,
+                  message: '',
+                  postId: 1,
+                  postTime: DateTime.now(),
+                  sendNotificationuserInfo: LoginUser(),
+                ),
+              );
+            },
+            child: Text("cre post noti"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              NotificationService().createNotification(
+                notification: NotificationModel(
+                  id: -1,
+                  userUid: 'tzLaMcP3V9XOAMOcD0FAY5Nf4tE2',
+                  otherUserUid: 'Fx0NZUwhLGNuDhaz1ZdyT2vyq3z1',
+                  type: 1,
+                  title: '"20240324@gmail.com"申請想要觀看課程"123456"',
+                  isRead: false,
+                  message: '',
+                  courseId: 19,
+                  postTime: DateTime.now(),
+                  sendNotificationuserInfo: LoginUser(),
+                ),
+              );
+            },
+            child: Text("cre course noti"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              NotificationService().createNotification(
+                notification: NotificationModel(
+                  id: -1,
+                  userUid: 'tzLaMcP3V9XOAMOcD0FAY5Nf4tE2',
+                  otherUserUid: 'kTmSC7QNzoc1pf2jWd4sFOAr6q02',
+                  type: 2,
+                  title: '"555"將你加為好友',
+                  isRead: false,
+                  message: '',
+                  postTime: DateTime.now(),
+                  sendNotificationuserInfo: LoginUser(),
+                ),
+              );
+            },
+            child: Text("cre friend noti"),
+          ),
+        ],
+      ),
       Expanded(
         child: Builder(
           builder: (context) {
@@ -115,7 +175,7 @@ Widget mainBody(BuildContext context) {
                           CourseModel openedCourse = await CourseService().getCourseBycourseId(notificationData.courseId ?? -1);
                           CourseViewModel(courseContext: context).courseDetailInit(openedCourse: openedCourse);
                         } else {
-                          addFriendCheck(context);
+                          openUserDetailEndDrawer(context: context, otherUserData: notificationData.sendNotificationuserInfo);
                         }
                         if (!notificationData.isRead) {
                           notificationData.isRead = true;

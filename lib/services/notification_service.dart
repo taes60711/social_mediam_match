@@ -46,6 +46,31 @@ class NotificationService extends ApiClient {
     return count;
   }
 
+  ///通知作成する
+  Future<bool> createNotification({required NotificationModel notification}) async {
+    Map<String, dynamic> createNotificationMap = {
+      "userUid": notification.userUid,
+      "otherUserUid": notification.otherUserUid,
+      "type": notification.type,
+      "title": notification.title,
+      "message": "",
+      "postId": notification.postId,
+    };
+
+    if (notification.postId != null) {
+      createNotificationMap['postId'] = notification.postId ?? -1;
+    }
+    if (notification.courseId != null) {
+      createNotificationMap['courseId'] = notification.courseId ?? -1;
+    }
+
+    String responseData = await apiPush("/createNotification", body: createNotificationMap);
+
+    print("createNotification $responseData");
+
+    return responseData != "null" ? true : false;
+  }
+
   ///通知読み込み
   Future<bool> updateReadNotificationCount({int? id, String? userUid}) async {
     String responseData = "null";
