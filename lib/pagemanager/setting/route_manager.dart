@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/models/notification_model.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
 import 'package:social_mediam_match/provider/post/post_comment_provider.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
@@ -97,7 +98,15 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
   RoutePath.myFriends.value: (BuildContext context) => RoutePath.myFriends.pageWidget,
 
   /// "/MyNotificationPage"
-  RoutePath.myNotifictaionPage.value: (BuildContext context) => RoutePath.myNotifictaionPage.pageWidget,
+  RoutePath.myNotifictaionPage.value: (BuildContext context) => MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => BaseAPIListProvider<NotificationModel>()),
+          ChangeNotifierProvider(create: (_) => CourseProvider()),
+          ChangeNotifierProvider(create: (_) => PostProvider()),
+          ChangeNotifierProvider(create: (_) => PostCommentProvider()),
+        ],
+        child: RoutePath.myNotifictaionPage.pageWidget,
+      ),
 
   /// "/guide"
   RoutePath.guide.value: (BuildContext context) => RoutePath.guide.pageWidget,

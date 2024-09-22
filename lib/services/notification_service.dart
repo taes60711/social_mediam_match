@@ -1,122 +1,78 @@
-import 'dart:convert';
-import 'dart:developer';
+import 'package:social_mediam_match/models/notification_model.dart';
+import 'package:social_mediam_match/services/api_client.dart';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
-import 'package:social_mediam_match/provider/account/user_provider.dart';
-import 'package:social_mediam_match/provider/friend_provider.dart';
+import '../global.dart';
 
-import '../components/utilities/endDrawers/chat_room_end_drawer.dart';
-import '../pagemanager/enum/bottom_bar_path.dart';
-import '../pagemanager/setting/bottom_bar_controller_provider.dart';
+class NotificationService extends ApiClient {
+  NotificationService() : super(overrideIp: "$ip:$port/notification");
 
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  NotificationService notificationService = NotificationService();
-  if (message.notification != null) {
-    notificationService.showNotification(
-      title: message.notification?.title,
-      body: message.notification?.body,
-    );
-    print("Handling a background message: ${message.messageId}");
-    inspect(message);
-  }
-}
+  ///ログインユーザの通知リストデータ取得する
+  Future<List<NotificationModel>> requestNotificationList(int page, int size, {required String userUId}) async {
+    List<NotificationModel> requestNotificationListData = [];
 
-class NotificationService {
-  final FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
-  String fcmUrl = 'https://fcm.googleapis.com/fcm/send';
-  String fcmKey =
-      "AAAA1oDv9EA:APA91bHr7jR2YPWA6jvt4V1NI3wIsLAV8OXy_fLDlgeiU_K9wkxijMbt3-6Ax6OB11ky-xDT0CScwuZVgV8a8S9BK0xEJBUlB7DL8NnkMI6r4QSX6jq-5cIpTMR0eW2eESmJqqurbOYE";
+    Map<String, dynamic> paramters = {
+      'page': '$page',
+      'size': '$size',
+      'userUid': userUId,
+    };
 
-  Future<void> sendNotification({String? title, String? message, required String sendto}) async {
-    final uri = Uri.parse(fcmUrl);
+    try {
+      String responseData = await apiGet('/getNotification', paramters: paramters);
 
-    Map<String, String> headers = {'content-type': 'application/json', 'Authorization': 'key=$fcmKey'};
-    String body = jsonEncode({
-      "notification": {"title": title ?? "Social Medaiam Match", "body": message ?? ""},
-      "priority": "high",
-      "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK"},
-      "to": sendto
-    });
-
-    await http.post(uri, headers: headers, body: body).then((_) {
-      print("sendNotification :${_.body}");
-    });
-  }
-
-  Future<void> notificationListen() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.denied) {
-      print('通知权限已拒绝');
-    } else if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print('Got a message whilst in the foreground:');
-        inspect(message);
-
-        if (message.notification != null) {
-          showNotification(
-            title: message.notification?.title,
-            body: message.notification?.body,
-          );
-        }
-      });
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-      print('通知权限已授权');
+      requestNotificationListData = await handleResponse<NotificationModel>(
+        responseData,
+        model: NotificationModel.toMap,
+        isList: true,
+      );
+    } catch (e) {
+      onRequestFailed();
     }
+
+    return requestNotificationListData;
   }
 
-  Future<void> initNotification(BuildContext context) async {
-    print("initNotification 通知初始化");
-    AndroidInitializationSettings initializationSettingsAndroid = const AndroidInitializationSettings('flutter_logo');
-    var initializationSettingsIOS = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestCriticalPermission: true,
-      onDidReceiveLocalNotification: (id, title, body, payload) async {},
-    );
+  ///読んでいない通知数量取得する
+  Future<String> requestNoReadNotificationAmount({required String userUId}) async {
+    String count = "0";
+    Map<String, dynamic> paramters = {
+      'userUid': userUId,
+    };
 
-    var initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
-    await notificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
-        // await Future.delayed(Duration(seconds: 2));
-        // context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
-        // context.read<FriendProvider>().openRoom(13, context.read<UserProvider>().userData);
-        // openChatRoomEndDrawer(context: context);
-        // RouteOptions.pushTo(RoutePath.profilePage);
-      },
-    );
+    try {
+      count = await apiGet('/notReadCount', paramters: paramters);
+    } catch (e) {
+      onRequestFailed();
+    }
+    return count;
   }
 
-  notificationDetails() {
-    return const NotificationDetails(
-      android: AndroidNotificationDetails(
-        "channel.id",
-        "channel.name",
-        importance: Importance.high,
-      ),
-    );
+  ///通知読み込み
+  Future<bool> updateReadNotificationCount({int? id, String? userUid}) async {
+    String responseData = "null";
+
+    if (id != null) {
+      responseData = await apiPush("/readNotification", body: {
+        "id": id,
+      });
+    } else {
+      responseData = await apiPush("/readAllNotification", body: {
+        "userUid": userUid,
+      });
+    }
+
+    print("updateReadNotificationCount $responseData");
+
+    return responseData != "null" ? true : false;
   }
 
-  Future showNotification({int id = 0, String? title, String? body}) async {
-    return notificationsPlugin.show(id, title, body, await notificationDetails());
+  ///通知削除する
+  Future<bool> deleteNotification({required int id}) async {
+    String responseData = await apiPush("/deleteNotification", body: {
+      "id": id,
+    });
+
+    print("deleteNotification $responseData");
+
+    return responseData != "null" ? true : false;
   }
 }

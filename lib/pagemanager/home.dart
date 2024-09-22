@@ -14,7 +14,8 @@ import '../models/user_model.dart';
 import '../provider/course_provider.dart';
 import '../provider/post/post_comment_provider.dart';
 import '../services/dynamic_links.dart';
-import '../services/notification_service.dart';
+import '../services/firebase_notification_service.dart';
+
 import 'enum/bottom_bar_path.dart';
 import 'setting/bottom_bar_controller_provider.dart';
 import 'setting/bottom_bar_manager.dart';
@@ -64,7 +65,7 @@ class _HomeState extends State<Home> {
           //初始化 > dynamicLink 在上架前,先暫時只有安卓使用
           DynamicLinks().initDynamicLink(context);
           //初始化 > 通知系統 在上架前,先暫時只有安卓使用
-          NotificationService notificationService = NotificationService()..initNotification(context);
+          FirebaseNotificationService notificationService = FirebaseNotificationService()..initNotification(context);
           notificationService.notificationListen();
         }
       },

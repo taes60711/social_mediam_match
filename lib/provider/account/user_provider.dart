@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import '../../services/firebase_service.dart';
+import '../../services/notification_service.dart';
 import '../../services/user_service.dart';
 import '../friend_provider.dart';
 
@@ -15,6 +16,9 @@ import '../friend_provider.dart';
 class UserProvider extends ChangeNotifier {
   ///ユーザでータ
   LoginUser userData = LoginUser();
+
+  /// 読んでいない通知数
+  String notReadNotificationCount = "0";
 
   ///isLoginCheckページローディング
   bool isLoading = false;
@@ -35,6 +39,9 @@ class UserProvider extends ChangeNotifier {
             await UserService().sqlUpdateUserLoginLastTime(userUID);
             // 友達リスト（WS）繋がる
             context.read<FriendProvider>().friendListConnect(userUID);
+
+            /// 読んでいない通知数取得する
+            notReadNotificationCount = await NotificationService().requestNoReadNotificationAmount(userUId: userData.uid);
             if (Platform.isAndroid) {
               // 取得使用者TOKEN > 通知系統在上架前,先暫時只給安卓使用
               final fcmToken = await FirebaseMessaging.instance.getToken();
@@ -70,5 +77,17 @@ class UserProvider extends ChangeNotifier {
       print(e);
     }
     return isSucess;
+  }
+
+  void updateNotificationCount({bool allRead = false}) {
+    if (allRead) {
+      notReadNotificationCount = "0";
+    } else {
+      int count = int.parse(notReadNotificationCount);
+      count--;
+      notReadNotificationCount = "$count";
+    }
+
+    notifyListeners();
   }
 }

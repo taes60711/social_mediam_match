@@ -150,6 +150,28 @@ class PostService extends ApiClient {
     return requestPostDataByUID;
   }
 
+  //// 文章IDで文章内容を取得する
+  Future<PostModel> getPostDataByPostId(int postId) async {
+    PostModel requestPostDataByUID = PostModel();
+
+    Map<String, dynamic> paramters = {
+      'id': '$postId',
+    };
+
+    try {
+      String responseData = await apiGet('/getPostsByPostId', paramters: paramters);
+
+      requestPostDataByUID = await handleResponse<PostModel>(
+        responseData,
+        model: PostModel.toMap,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return requestPostDataByUID;
+  }
+
   ///MARK: 文章View数更新
   Future<bool> updatePostViewCount(int postId) async {
     String responseData = await apiPush("/moveToPost/$postId", body: {});

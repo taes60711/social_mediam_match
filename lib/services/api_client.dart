@@ -112,6 +112,7 @@ class ApiClient {
     } catch (e) {
       print(e);
     }
+
     return result;
   }
 

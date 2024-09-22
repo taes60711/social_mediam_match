@@ -45,8 +45,14 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
     render();
   }
 
-  void editData({required R updatedData}) {
-    int wantUpdateDataIndex = listData.indexWhere((element) => element == choiceData);
+  void editData({int? dataIndex, required R updatedData}) {
+    int wantUpdateDataIndex = -1;
+    if (dataIndex != null) {
+      wantUpdateDataIndex = dataIndex;
+    } else {
+      wantUpdateDataIndex = listData.indexWhere((element) => element == choiceData);
+    }
+
     listData[wantUpdateDataIndex] = updatedData;
     render();
   }

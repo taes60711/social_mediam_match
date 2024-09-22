@@ -78,11 +78,47 @@ Widget skillInfoWithPage(BuildContext context) {
               crossAxisCount: 4,
               children: UserPageRouthsettingButtonInfo.list
                   .map(
-                    (e) => ColIconBtn(
-                      icon: e.icon,
-                      title: e.title,
-                      onPress: e.onPress,
-                    ),
+                    (e) => UserPageString().notificationBtn == e.title
+                        ? Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              ColIconBtn(
+                                icon: e.icon,
+                                title: e.title,
+                                onPress: e.onPress,
+                              ),
+
+                              ///通知数
+                              Visibility(
+                                visible: context.watch<UserProvider>().notReadNotificationCount != "0",
+                                child: Positioned(
+                                  right: 25,
+                                  top: 0,
+                                  child: Builder(builder: (context) {
+                                    return Container(
+                                      width: 16,
+                                      height: 16,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.red,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          context.watch<UserProvider>().notReadNotificationCount,
+                                          style: const TextStyle(color: Colors.white, fontSize: 12),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
+                            ],
+                          )
+                        : ColIconBtn(
+                            icon: e.icon,
+                            title: e.title,
+                            onPress: e.onPress,
+                          ),
                   )
                   .toList(),
             ),

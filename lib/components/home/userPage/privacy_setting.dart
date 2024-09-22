@@ -5,7 +5,8 @@ import '../../../provider/account/user_provider.dart';
 
 import '../../../provider/friend_provider.dart';
 import '../../../services/dynamic_links.dart';
-import '../../../services/notification_service.dart';
+
+import '../../../services/firebase_notification_service.dart';
 import '../../strings/userPage/user_page_string.dart';
 import '../../utilities/style/screen_size.dart';
 
@@ -34,7 +35,7 @@ class PrivacySetting extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  NotificationService().sendNotification(
+                  FirebaseNotificationService().sendNotification(
                     title: "title",
                     message: "消息",
                     sendto:

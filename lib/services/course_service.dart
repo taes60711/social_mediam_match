@@ -1,3 +1,5 @@
+import 'package:social_mediam_match/models/user_model.dart';
+
 import '../global.dart';
 import '../models/course_model.dart';
 import 'api_client.dart';
@@ -116,6 +118,28 @@ class CourseService extends ApiClient {
     }
 
     return requestCreatedCourseData;
+  }
+
+  /// コースIDでコース内容を取得する
+  Future<CourseModel> getCourseBycourseId(int courseId) async {
+    CourseModel requestAddedCourseData = CourseModel(courseCreateduserInfo: LoginUser());
+
+    Map<String, dynamic> paramters = {
+      'id': "$courseId",
+    };
+
+    try {
+      String responseData = await apiGet('/getCourseByCourseId', paramters: paramters);
+
+      requestAddedCourseData = await handleResponse<CourseModel>(
+        responseData,
+        model: CourseModel.toMap,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return requestAddedCourseData;
   }
 
   /// コース管理
