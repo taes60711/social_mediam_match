@@ -6,12 +6,15 @@ import 'package:social_mediam_match/provider/account/LoginPage/login_provider.da
 import 'package:social_mediam_match/provider/post/post_comment_provider.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
 import '../../components/home/postPage/editor_page.dart';
+
 import '../../main.dart';
 import '../../models/post_model.dart';
 import '../../provider/Initial/initial_provider.dart';
 import '../../provider/account/signUpPage/sign_up_view_provider.dart';
+
 import '../../provider/account/user_provider.dart';
 import '../../provider/course_provider.dart';
+
 import '../../provider/friend_provider.dart';
 import '../../provider/home/skill_map_provider.dart';
 import '../../provider/home/user_setting_view_provider.dart';
@@ -22,9 +25,9 @@ import 'bottom_bar_controller_provider.dart';
 /// main
 Widget mainWidget = MultiProvider(
   providers: [
+    ChangeNotifierProvider(create: (_) => BottomBarControllerProvider()),
     ChangeNotifierProvider(create: (_) => UserProvider()),
     ChangeNotifierProvider(create: (_) => FriendProvider()),
-    ChangeNotifierProvider(create: (_) => BottomBarControllerProvider()),
   ],
   child: EasyLocalization(
     supportedLocales: const [Locale('zh', 'TW'), Locale('en', 'US'), Locale('ja', 'JP')],

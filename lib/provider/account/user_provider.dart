@@ -41,10 +41,11 @@ class UserProvider extends ChangeNotifier {
             context.read<FriendProvider>().friendListConnect(userUID);
 
             /// 読んでいない通知数取得する
-            notReadNotificationCount = await NotificationService().requestNoReadNotificationAmount(userUId: userData.uid);
+            await getNotificationCount();
             if (Platform.isAndroid) {
               // 取得使用者TOKEN > 通知系統在上架前,先暫時只給安卓使用
               final fcmToken = await FirebaseMessaging.instance.getToken();
+              print("fcmToken $fcmToken");
               await UserService().sqlUpdateUserToken(userUID, fcmToken!);
             }
           }
@@ -79,6 +80,13 @@ class UserProvider extends ChangeNotifier {
     return isSucess;
   }
 
+  ///メソッド： 読んでいない通知数取得する
+  Future<void> getNotificationCount() async {
+    notReadNotificationCount = await NotificationService().requestNoReadNotificationAmount(userUId: userData.uid);
+    notifyListeners();
+  }
+
+  ///メソッド： 通知数更新する
   void updateNotificationCount({bool allRead = false}) {
     if (allRead) {
       notReadNotificationCount = "0";

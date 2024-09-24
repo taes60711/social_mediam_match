@@ -17,6 +17,7 @@ import '../../../pagemanager/setting/route_controller.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/corse_view_model.dart';
 import '../../../provider/post/post_view_model.dart';
+
 import '../../../services/notification_service.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
@@ -79,66 +80,6 @@ Widget mainBody(BuildContext context) {
           ),
         ),
       ),
-      Row(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              NotificationService().createNotification(
-                notification: NotificationModel(
-                  id: -1,
-                  userUid: 'tzLaMcP3V9XOAMOcD0FAY5Nf4tE2',
-                  otherUserUid: 'ACqYscxtd2VSdPlkv1G8OgSTKxd2',
-                  type: 0,
-                  title: '"12135"對文章"1"按讚',
-                  isRead: false,
-                  message: '',
-                  postId: 1,
-                  postTime: DateTime.now(),
-                  sendNotificationuserInfo: LoginUser(),
-                ),
-              );
-            },
-            child: Text("cre post noti"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              NotificationService().createNotification(
-                notification: NotificationModel(
-                  id: -1,
-                  userUid: 'tzLaMcP3V9XOAMOcD0FAY5Nf4tE2',
-                  otherUserUid: 'Fx0NZUwhLGNuDhaz1ZdyT2vyq3z1',
-                  type: 1,
-                  title: '"20240324@gmail.com"申請想要觀看課程"123456"',
-                  isRead: false,
-                  message: '',
-                  courseId: 19,
-                  postTime: DateTime.now(),
-                  sendNotificationuserInfo: LoginUser(),
-                ),
-              );
-            },
-            child: Text("cre course noti"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              NotificationService().createNotification(
-                notification: NotificationModel(
-                  id: -1,
-                  userUid: 'tzLaMcP3V9XOAMOcD0FAY5Nf4tE2',
-                  otherUserUid: 'kTmSC7QNzoc1pf2jWd4sFOAr6q02',
-                  type: 2,
-                  title: '"555"將你加為好友',
-                  isRead: false,
-                  message: '',
-                  postTime: DateTime.now(),
-                  sendNotificationuserInfo: LoginUser(),
-                ),
-              );
-            },
-            child: Text("cre friend noti"),
-          ),
-        ],
-      ),
       Expanded(
         child: Builder(
           builder: (context) {
@@ -174,7 +115,7 @@ Widget mainBody(BuildContext context) {
                         } else if (notificationData.type == 1) {
                           CourseModel openedCourse = await CourseService().getCourseBycourseId(notificationData.courseId ?? -1);
                           CourseViewModel(courseContext: context).courseDetailInit(openedCourse: openedCourse);
-                        } else {
+                        } else if (notificationData.type == 2) {
                           openUserDetailEndDrawer(context: context, otherUserData: notificationData.sendNotificationuserInfo);
                         }
                         if (!notificationData.isRead) {

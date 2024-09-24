@@ -8,6 +8,7 @@ import 'package:social_mediam_match/models/course_model.dart';
 import 'package:social_mediam_match/provider/corse_view_model.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 
+import '../../../global.dart';
 import '../../../pagemanager/enum/route_path.dart';
 import '../../../pagemanager/setting/route_controller.dart';
 import '../../../provider/home/skill_change_view_model.dart';
@@ -28,6 +29,7 @@ class CoursePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return StatefulWrapper(
       onInit: () async {
+        courseContext = context;
         await SkillChangeViewModel(context: context).init();
       },
       child: Stack(

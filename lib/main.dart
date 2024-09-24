@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';

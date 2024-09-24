@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'user_model.dart';
 
 class NotificationModel {
@@ -10,6 +12,7 @@ class NotificationModel {
   String message;
   int? postId;
   int? courseId;
+  int? roomId;
   DateTime postTime;
   LoginUser sendNotificationuserInfo;
 
@@ -23,6 +26,7 @@ class NotificationModel {
     required this.message,
     this.postId,
     this.courseId,
+    this.roomId,
     required this.postTime,
     required this.sendNotificationuserInfo,
   });
@@ -40,6 +44,35 @@ class NotificationModel {
       courseId: json['courseId'],
       postTime: DateTime.parse(json['postTime']),
       sendNotificationuserInfo: LoginUser.toModel(json['user']),
+    );
+  }
+
+  static String receviceData(NotificationModel data) {
+    Map<String, dynamic> returnData = {
+      "type": data.type,
+      "postId": data.postId,
+      "courseId": data.courseId,
+      "roomId": data.roomId,
+      "otherUser": data.otherUserUid,
+    };
+    return jsonEncode(returnData);
+  }
+
+  static NotificationModel receviceDatatoModel(String data) {
+    Map<String, dynamic> mapData = jsonDecode(data);
+    return NotificationModel(
+      id: -1,
+      userUid: "",
+      otherUserUid: mapData['otherUser'],
+      type: mapData["type"],
+      postId: mapData['postId'],
+      courseId: mapData['courseId'],
+      roomId: mapData['roomId'],
+      title: "",
+      isRead: false,
+      message: "",
+      postTime: DateTime.now(),
+      sendNotificationuserInfo: LoginUser(),
     );
   }
 }

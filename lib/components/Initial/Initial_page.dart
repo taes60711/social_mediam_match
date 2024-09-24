@@ -9,7 +9,6 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 
 import '../../models/user_model.dart';
-
 import '../../provider/account/user_provider.dart';
 import '../../provider/Initial/initial_provider.dart';
 
@@ -74,13 +73,5 @@ Future<void> _enterApp(BuildContext context) async {
 
   Timer(Duration(seconds: delayTime), () {
     context.read<InitialProvider>().onChange();
-
-    // if (Platform.isAndroid) {
-    //   //初始化 > dynamicLink 在上架前,先暫時只有安卓使用
-    //   DynamicLinks().initDynamicLink(context);
-    //   //初始化 > 通知系統 在上架前,先暫時只有安卓使用
-    //   NotificationService notificationService = NotificationService()..initNotification(context);
-    //   notificationService.notificationListen();
-    // }
   });
 }

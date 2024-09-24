@@ -5,6 +5,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
+import 'package:googleapis_auth/auth_io.dart' as auth;
+import 'package:social_mediam_match/models/notification_model.dart';
+import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -13,35 +16,18 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     notificationService.showNotification(
       title: message.notification?.title,
       body: message.notification?.body,
+      payload: message.data['notifiactionInfo'],
     );
     print("Handling a background message: ${message.messageId}");
+
     inspect(message);
   }
 }
 
 class FirebaseNotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
-  String fcmUrl = 'https://fcm.googleapis.com/fcm/send';
-  String fcmKey =
-      "AAAA1oDv9EA:APA91bHr7jR2YPWA6jvt4V1NI3wIsLAV8OXy_fLDlgeiU_K9wkxijMbt3-6Ax6OB11ky-xDT0CScwuZVgV8a8S9BK0xEJBUlB7DL8NnkMI6r4QSX6jq-5cIpTMR0eW2eESmJqqurbOYE";
 
-  Future<void> sendNotification({String? title, String? message, required String sendto}) async {
-    final uri = Uri.parse(fcmUrl);
-
-    Map<String, String> headers = {'content-type': 'application/json', 'Authorization': 'key=$fcmKey'};
-    String body = jsonEncode({
-      "notification": {"title": title ?? "Social Medaiam Match", "body": message ?? ""},
-      "priority": "high",
-      "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK"},
-      "to": sendto
-    });
-
-    await http.post(uri, headers: headers, body: body).then((_) {
-      print("sendNotification :${_.body}");
-    });
-  }
-
-  Future<void> notificationListen() async {
+  Future<void> notificationListen({required Function getNotReadNotificationCount}) async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
     NotificationSettings settings = await messaging.requestPermission(
@@ -65,7 +51,9 @@ class FirebaseNotificationService {
           showNotification(
             title: message.notification?.title,
             body: message.notification?.body,
+            payload: message.data['notifiactionInfo'],
           );
+          getNotReadNotificationCount();
         }
       });
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -73,7 +61,8 @@ class FirebaseNotificationService {
     }
   }
 
-  Future<void> initNotification(BuildContext context) async {
+  Future<void> initNotification(
+      BuildContext context, Function(int, int? postId, int? courseId, int? roomId, String? userUID) bottomBarPageGoto) async {
     print("initNotification 通知初始化");
     AndroidInitializationSettings initializationSettingsAndroid = const AndroidInitializationSettings('flutter_logo');
     var initializationSettingsIOS = DarwinInitializationSettings(
@@ -90,13 +79,97 @@ class FirebaseNotificationService {
     await notificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
-        // await Future.delayed(Duration(seconds: 2));
-        // context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
-        // context.read<FriendProvider>().openRoom(13, context.read<UserProvider>().userData);
-        // openChatRoomEndDrawer(context: context);
-        // RouteOptions.pushTo(RoutePath.profilePage);
+        NotificationModel receviceNotificaionData = NotificationModel.receviceDatatoModel(notificationResponse.payload ?? "");
+
+        RouteOptions.popUntilToHome();
+        await Future.delayed(Duration.zero);
+        if (receviceNotificaionData.type == 0) {
+          ///文章
+          bottomBarPageGoto(0, receviceNotificaionData.postId, null, null, null);
+        } else if (receviceNotificaionData.type == 1) {
+          ///コース
+          bottomBarPageGoto(1, null, receviceNotificaionData.courseId, null, null);
+        } else if (receviceNotificaionData.type == 2) {
+          ///友達追加
+          bottomBarPageGoto(2, null, null, null, null);
+        } else if (receviceNotificaionData.type == 3) {
+          ///チャットルーム
+          bottomBarPageGoto(3, null, null, 19, receviceNotificaionData.otherUserUid);
+        }
       },
     );
+  }
+
+  Future<void> sendNotification({
+    String title = "Social Medaiam Match",
+    String message = "",
+    required String sendto,
+    required NotificationModel notifiactionInfo,
+  }) async {
+    String fcmUrl = 'https://fcm.googleapis.com/v1/projects/socialmediammatch/messages:send';
+
+    print(notifiactionInfo.sendNotificationuserInfo.token);
+    String body = jsonEncode(
+      {
+        'message': {
+          "token": sendto,
+          "notification": {
+            "title": title,
+            "body": message,
+          },
+          "data": {
+            "notifiactionInfo": NotificationModel.receviceData(notifiactionInfo),
+          },
+        }
+      },
+    );
+
+    final uri = Uri.parse(fcmUrl);
+    final String serverToken = await getServerAccessToken();
+
+    Map<String, String> headers = {
+      'content-type': 'application/json',
+      'Authorization': 'Bearer $serverToken',
+    };
+
+    await http.post(uri, headers: headers, body: body).then((_) {
+      print("sendNotification :${_.body}");
+    });
+  }
+
+  static Future<String> getServerAccessToken() async {
+    final serviceAccountJson = {
+      "type": "service_account",
+      "project_id": "socialmediammatch",
+      "private_key_id": "01d06908bc4ff0368a136641a3cc8904176ad560",
+      "private_key":
+          "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4jQEB3mWyhmU6\n09xcA2llvtwatpue1uqkMElzJtTrCNDctxLD1SzSdpfObHA0CCspiuuTfONsNmYS\nzEXfuLeFCUx5CfmeWaKpMQIaTtCnKASzdQOiAClo87KgoIav8ABZZrYiaVgOS2Xu\n1f95of0fi2Y4y/5Blu2nz97+n4r01ZW/RLVbwOaYFZeAHg/0RDKJwbbR0jOdj+Ii\n+otKVTjdeG11hEW5eiIq6rlICyX0NUkaCKlKBCU7rMHK7yXG7WUYn6+5O7xavBBr\nvQh8txiAwJ6uB76cXV94ySVk6oNq71cEqaYkfYlc74hrUihY6lsrqRi6NAYKH2il\nTrcbIeXFAgMBAAECggEAAsTgLlOp7vh5QwgJbGVYtYAcSVeoFMVgwT9AOuFq8cPb\nbmmzdwtsdWlLdHtytjUmgKRm+HrikVhs8PyY/SGxDzvz0R/HMQsN7RVL1MfjSuly\nI0cu23AT2aaebYPlwXS2bKD6kUryA/TkU1BpWZKGpmyEXMx4GiqA57MEw4lH9SMg\nrsavDAJc5SuJJ0SWDOBNv4lC0XZjX2SWTH/oe0KliZQaLcAf0u/jm5l7S2EG3A4Y\nGzx5dEf28lm2Ol/Np0toK0u/2TaY5gejf5GYGtoV0algy0BOn25rsD/OlHi8qQJY\nlEclyuhvlOXfR0MvSbogyfCpomQzh6NsSTkJ8iXCwQKBgQD7KvEx9u0WK7fK2Ium\nwucFdcDwoah9GZfeDjGOGoujc3Pu4C2XmKXazI9BVhdMz+0FEF/gUH9DaE8/D4Ew\nJ5SkRX7Kit6OZue9UqdCUPhuAWQBS6+8qpJEid+uf5LAeSVDm2JgwXZ004YHxg2U\n/uUbZeDvGWXJboRPF8N/80eAKQKBgQC8GfVRDgcgNWjSsYhZMRkm3ybdbigbaRPd\nnX74iyIQlSdxbmHmFcvOW3hkzZhSASYIVYbvTuNTbMs5Ht7weho86QSnfZCGIYJa\nmAUGGR/brkIdewy3NWIoS+XHAfwARusoxSmS9BBTMQn/viPNmpAixTr/AVjuX9Oz\nKIjUF3D8PQKBgQCICXIpxbwTzgn16+N3pwjJhEXED0ratwnyU22zsdz/4oBgWTtY\naG0sXK8ajC6Cg/u0SnIjZHYJZG3HkfY+xrFTZ/CMczqnlkTd3e6JlKF5s3ce3IeK\ngDhItwRX1vD9HqB4Rai7Dw3BqO9nNnYUxRoCBOQXnIHs39b5n71bh8CqQQKBgELW\nWnPVrzSDpd6P1KoUpyJH0rCFrtymhreNegtorM8FoMFOfpzaC9QkbnArGb+xxsjZ\nUxv/hQkktEV0sbTzPhV8mvnExTDUAVSdhdN34/kUP0voaElFP76f0WLYUqnqiS6w\neChObuqQl0P3VRN+o06nlGH+IZJ6HGghtBTgy3XlAoGAG7Mu5ZcQP+x5imWUZacN\nUGTIrngHLJh80ahbR4/haui7eI9AQcFtoaqi8hK2GK3KEhZcqL7Tm1O/3y9F1cPr\nBw4DkGmN2UMpDtwSqJ7Je/q2kVDufbB+KfdS3UwEGd8uHAC/gqptU7S4wHtumn/Q\nU8vKfX6cKyWlC30GeO/e93A=\n-----END PRIVATE KEY-----\n",
+      "client_email": "firebase-adminsdk-bj7eu@socialmediammatch.iam.gserviceaccount.com",
+      "client_id": "106314873486609910684",
+      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      "token_uri": "https://oauth2.googleapis.com/token",
+      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+      "client_x509_cert_url":
+          "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-bj7eu%40socialmediammatch.iam.gserviceaccount.com",
+      "universe_domain": "googleapis.com"
+    };
+
+    List<String> scopes = [
+      "https://www.googleapis.com/auth/firebase.messaging",
+      "https://www.googleapis.com/auth/firebase.database",
+    ];
+
+    http.Client client = await auth.clientViaServiceAccount(
+      auth.ServiceAccountCredentials.fromJson(serviceAccountJson),
+      scopes,
+    );
+
+    // Get Access Token
+    auth.AccessCredentials credentials = await auth.obtainAccessCredentialsViaServiceAccount(
+        auth.ServiceAccountCredentials.fromJson(serviceAccountJson), scopes, client);
+    client.close();
+    print("log server access token: ${credentials.accessToken.data}");
+    return credentials.accessToken.data;
   }
 
   notificationDetails() {
@@ -109,7 +182,7 @@ class FirebaseNotificationService {
     );
   }
 
-  Future showNotification({int id = 0, String? title, String? body}) async {
-    return notificationsPlugin.show(id, title, body, await notificationDetails());
+  Future showNotification({int id = 0, String? title, String? body, String payload = "payload"}) async {
+    return notificationsPlugin.show(id, title, body, await notificationDetails(), payload: payload);
   }
 }
