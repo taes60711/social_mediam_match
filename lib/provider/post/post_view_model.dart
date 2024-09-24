@@ -1,8 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_comment_page.dart';
 import 'package:social_mediam_match/models/user_model.dart';
@@ -49,18 +47,19 @@ class PostViewModel {
   Future<void> createPost({required String title, required String msg, required int type}) async {
     LoginUser userData = postContext.read<UserProvider>().userData;
     String fomattedContent = await RichTextFormat(htmlString: msg).sendPostImgFormat();
-    DateTime dateUtc = DateTime.now().toUtc();
-    DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
-    String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
+
     await PostService().createPost(userData.uid, title, fomattedContent, type);
+
     PostModel createdData = PostModel(
       id: 0,
       createdBy: userData.uid,
       title: title,
       mainMessage: fomattedContent,
-      postTime: formattedTime,
+      postTime: PostModel.dateFormatted(DateTime.now().toUtc().toString()),
       type: type,
+      postUserInfo: userData,
     );
+
     postContext.read<BaseAPIListProvider<PostModel>>().createData(createdData: createdData);
   }
 

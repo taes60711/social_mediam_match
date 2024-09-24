@@ -41,6 +41,7 @@ class PostPageByType extends StatelessWidget {
               noDataBuilder: PostViewUtilities.noPostData(),
               customFloatbutton: GestureDetector(
                 onTap: () {
+                  /// 文章作成
                   context.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: PostModel());
                   RouteOptions.pushTo(
                     RoutePath.postEditPage,

@@ -10,13 +10,9 @@ import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/label_input.dart';
-
 import 'package:social_mediam_match/provider/corse_view_model.dart';
-
 import '../../../../models/course_model.dart';
-
 import '../../../../provider/course_provider.dart';
-
 import '../../../utilities/basic_top_bar.dart';
 import '../../../utilities/custom_expansion_title.dart';
 import '../../../utilities/endDrawers/course_edit_skill_choice_end_drawer.dart';
@@ -76,7 +72,7 @@ class CourseEditPage extends StatelessWidget {
                             if (courseData != null) {
                               id = courseData.id;
                             }
-                            CourseViewModel(courseContext: courseContext).courseCreateOrUpdate(courseId: id);
+                            CourseViewModel(courseContext: context).courseCreateOrUpdate(courseId: id);
                           },
                         ),
                         Builder(builder: (context) {
@@ -94,7 +90,9 @@ class CourseEditPage extends StatelessWidget {
                                     (states) => BorderSide(width: 0.8, color: normalBgColor),
                                   ),
                                   value: isPublic,
-                                  onChanged: (value) {},
+                                  onChanged: (value) {
+                                    context.read<CourseProvider>().isPublicOnChange();
+                                  },
                                 ),
                                 const Text("公開"),
                               ],
