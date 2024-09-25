@@ -72,7 +72,8 @@ class CourseEditPage extends StatelessWidget {
                             if (courseData != null) {
                               id = courseData.id;
                             }
-                            CourseViewModel(courseContext: context).courseCreateOrUpdate(courseId: id);
+                            CourseViewModel(courseContext: context)
+                                .courseCreateOrUpdate(courseId: id, viewListContext: courseContext);
                           },
                         ),
                         Builder(builder: (context) {

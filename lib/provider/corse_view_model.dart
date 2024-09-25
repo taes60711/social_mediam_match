@@ -60,7 +60,7 @@ class CourseViewModel {
     closeCourseFilterEndDrawer(context: courseContext);
   }
 
-  Future<void> courseCreateOrUpdate({int? courseId}) async {
+  Future<void> courseCreateOrUpdate({int? courseId, required BuildContext viewListContext}) async {
     await CourseService().createOrUpdateCourse(
       courseId: courseId,
       createdBy: courseContext.read<UserProvider>().userData.uid,
@@ -75,13 +75,24 @@ class CourseViewModel {
       isPublic: courseContext.read<CourseProvider>().isPublic,
     );
     RouteOptions.pop();
-    courseContext
-        .read<BaseAPIListProvider<CourseModel>>()
-        .reloadData(apiFunc: () async => await CourseService().getAllCourses(0, 5));
-    int preLoadPage = courseContext.read<BaseAPIListProvider<CourseModel>>().page;
-    await courseContext
-        .read<BaseAPIListProvider<CourseModel>>()
-        .preLoad(apiFunc: () async => await CourseService().getAllCourses(preLoadPage, 5));
+    if (courseId == null) {
+      viewListContext
+          .read<BaseAPIListProvider<CourseModel>>()
+          .reloadData(apiFunc: () async => await CourseService().getAllCourses(0, 5));
+      int preLoadPage = viewListContext.read<BaseAPIListProvider<CourseModel>>().page;
+      await viewListContext
+          .read<BaseAPIListProvider<CourseModel>>()
+          .preLoad(apiFunc: () async => await CourseService().getAllCourses(preLoadPage, 5));
+    } else {
+      viewListContext.read<BaseAPIListProvider<CourseModel>>().reloadData(
+            apiFunc: () async => await CourseService().getCreatedCourses(0, 5, viewListContext.read<UserProvider>().userData.uid),
+          );
+      int preLoadPage = viewListContext.read<BaseAPIListProvider<CourseModel>>().page;
+      await viewListContext.read<BaseAPIListProvider<CourseModel>>().preLoad(
+            apiFunc: () async =>
+                await CourseService().getCreatedCourses(preLoadPage, 5, viewListContext.read<UserProvider>().userData.uid),
+          );
+    }
   }
 
   void openRichEditPage({int? chapterIndex, String? prStory}) {
@@ -205,7 +216,7 @@ class CourseViewModel {
 
   void openCreatedCourseModal({required CourseModel courseData}) {
     showDialog<void>(
-      context: globalContext,
+      context: courseContext,
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.zero,
@@ -245,7 +256,7 @@ class CourseViewModel {
                           RouteOptions.pop();
                           RouteOptions.pushTo(RoutePath.courseEditPage, arguments: {
                             "courseData": courseData,
-                            'context': courseContext,
+                            "context": courseContext,
                           });
                         },
                       ),

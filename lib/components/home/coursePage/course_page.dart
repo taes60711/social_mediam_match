@@ -67,7 +67,8 @@ Widget _mainBuild(BuildContext context) {
             customFloatbutton: GestureDetector(
               onTap: () {
                 RouteOptions.pushTo(RoutePath.courseEditPage, arguments: {
-                  'context': context,
+                  "courseData": null,
+                  "context": context,
                 });
               },
               child: Container(
