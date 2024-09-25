@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/models/course_model.dart';
+import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/corse_view_model.dart';
 
+import '../../../provider/account/user_provider.dart';
 import '../../../provider/course_provider.dart';
 import '../../account/skill_bar.dart';
 import '../../utilities/custom_expansion_title.dart';
@@ -22,6 +24,7 @@ class CourseDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CourseModel openedCourse = context.read<CourseProvider>().choicedCourse;
+    LoginUser userData = context.watch<UserProvider>().userData;
 
     return BackgroundWidget(
       child: Padding(
@@ -36,13 +39,13 @@ class CourseDetail extends StatelessWidget {
                   children: [
                     Text(
                       openedCourse.title,
-                      style: TextStyle(fontSize: 19),
+                      style: const TextStyle(fontSize: 19),
                     ),
                     Builder(builder: (context) {
                       bool isAdded = context.select((CourseProvider value) => value.bIsAddedCourse);
 
                       return Visibility(
-                        visible: !isAdded,
+                        visible: !isAdded && openedCourse.courseCreateduserInfo.uid != userData.uid,
                         child: TextBtn(
                           verticalMargin: 5,
                           btnRadius: 10,
@@ -138,7 +141,9 @@ class CourseDetail extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              "${openedCourse.courseCreateduserInfo.name != "" ? openedCourse.courseCreateduserInfo.name ?? "" : openedCourse.courseCreateduserInfo.email}",
+                              openedCourse.courseCreateduserInfo.name != ""
+                                  ? openedCourse.courseCreateduserInfo.name ?? ""
+                                  : openedCourse.courseCreateduserInfo.email,
                               style: TextStyle(fontSize: 14),
                             ),
                           ],
@@ -154,6 +159,7 @@ class CourseDetail extends StatelessWidget {
                 const SizedBox(height: 20),
                 Builder(builder: (context) {
                   bool isAdded = context.select((CourseProvider value) => value.bIsAddedCourse);
+
                   return Column(
                     children: [
                       CustomExpansionTile(
@@ -166,11 +172,11 @@ class CourseDetail extends StatelessWidget {
                         ],
                       ),
                       Visibility(
-                        visible: isAdded,
+                        visible: openedCourse.isPublic,
                         child: Column(
                           children: openedCourse.chapterList.map((e) {
                             return ExpansionTile(
-                              title: Text("章節 ${e.chapter}"),
+                              title: Text(e.chapterName != "" ? e.chapterName : "章節 ${e.chapter}"),
                               children: [
                                 SizedBox(
                                   width: ScreenSize.width,

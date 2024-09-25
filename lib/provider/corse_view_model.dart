@@ -75,7 +75,7 @@ class CourseViewModel {
       isPublic: courseContext.read<CourseProvider>().isPublic,
     );
 
-    await Future.delayed(Duration.zero);
+    await Future.delayed(const Duration(seconds: 1));
     RouteOptions.pop();
     if (courseId == null) {
       await viewListContext

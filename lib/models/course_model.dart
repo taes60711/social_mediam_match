@@ -3,8 +3,9 @@ import 'package:social_mediam_match/models/user_model.dart';
 
 class CourseChapterInfo {
   int chapter;
+  String chapterName;
   List<String> content;
-  CourseChapterInfo({required this.chapter, required this.content});
+  CourseChapterInfo({required this.chapter, required this.chapterName, required this.content});
 
   factory CourseChapterInfo.toMap(dynamic json) {
     List<String> contents = (json['content'] as List<dynamic>).map((e) {
@@ -12,6 +13,7 @@ class CourseChapterInfo {
     }).toList();
     return CourseChapterInfo(
       chapter: json['chapter'],
+      chapterName: json['chapterName'] ?? "",
       content: contents,
     );
   }
@@ -19,6 +21,7 @@ class CourseChapterInfo {
   Map<String, dynamic> toJson() {
     return {
       'chapter': chapter,
+      'chapterName': chapterName,
       'content': content,
     };
   }

@@ -41,7 +41,7 @@ class CourseProvider extends ChangeNotifier {
   }
 
   void addChapter() {
-    chapters.add(CourseChapterInfo(chapter: chapters.length + 1, content: []));
+    chapters.add(CourseChapterInfo(chapter: chapters.length + 1, chapterName: "", content: []));
     print("addChapter");
     notifyListeners();
   }

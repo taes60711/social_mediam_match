@@ -34,8 +34,22 @@ class CourseEditPage extends StatelessWidget {
             SafeArea(
               child: Column(
                 children: [
-                  const BaseTopBar(
+                  BaseTopBar(
                     title: "編輯課程",
+                    rightWidget: TextBtn(
+                      title: "保存",
+                      btnWidth: 80,
+                      verticalMargin: 6,
+                      btnColor: normalBgColor,
+                      onPress: () async {
+                        int? id;
+                        if (courseData != null) {
+                          id = courseData.id;
+                        }
+                        CourseViewModel(courseContext: context)
+                            .courseCreateOrUpdate(courseId: id, viewListContext: courseContext);
+                      },
+                    ),
                   ),
                   Expanded(
                     child: SingleChildScrollView(
@@ -56,51 +70,6 @@ class CourseEditPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15),
-                    child: Row(
-                      children: [
-                        TextBtn(
-                          title: "保存",
-                          btnWidth: 150,
-                          verticalMargin: 8,
-                          btnColor: normalBgColor,
-                          onPress: () async {
-                            int? id;
-                            if (courseData != null) {
-                              id = courseData.id;
-                            }
-                            CourseViewModel(courseContext: context)
-                                .courseCreateOrUpdate(courseId: id, viewListContext: courseContext);
-                          },
-                        ),
-                        Builder(builder: (context) {
-                          bool isPublic = context.select((CourseProvider value) => value.isPublic);
-                          return GestureDetector(
-                            onTap: () {
-                              context.read<CourseProvider>().isPublicOnChange();
-                            },
-                            child: Row(
-                              children: [
-                                Checkbox(
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                  activeColor: normalBgColor,
-                                  side: MaterialStateBorderSide.resolveWith(
-                                    (states) => BorderSide(width: 0.8, color: normalBgColor),
-                                  ),
-                                  value: isPublic,
-                                  onChanged: (value) {
-                                    context.read<CourseProvider>().isPublicOnChange();
-                                  },
-                                ),
-                                const Text("公開"),
-                              ],
-                            ),
-                          );
-                        }),
-                      ],
                     ),
                   ),
                 ],
@@ -260,25 +229,54 @@ Widget courseChapterEdit() {
     List<CourseChapterInfo> chapters = context.watch<CourseProvider>().chapters;
     return Column(
       children: [
-        GestureDetector(
-          onTap: () {
-            context.read<CourseProvider>().addChapter();
-          },
-          child: Row(
-            children: [
-              const Text("章節"),
-              Container(
-                width: 30,
-                height: 30,
-                color: Colors.transparent,
-                child: Icon(
-                  FontAwesomeIcons.plus,
-                  color: normalBgColor2,
-                  size: 14,
-                ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GestureDetector(
+              onTap: () {
+                context.read<CourseProvider>().addChapter();
+              },
+              child: Row(
+                children: [
+                  const Text("章節"),
+                  Container(
+                    width: 30,
+                    height: 30,
+                    color: Colors.transparent,
+                    child: Icon(
+                      FontAwesomeIcons.plus,
+                      color: normalBgColor2,
+                      size: 14,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            Builder(builder: (context) {
+              bool isPublic = context.select((CourseProvider value) => value.isPublic);
+              return GestureDetector(
+                onTap: () {
+                  context.read<CourseProvider>().isPublicOnChange();
+                },
+                child: Row(
+                  children: [
+                    Checkbox(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                      activeColor: normalBgColor,
+                      side: MaterialStateBorderSide.resolveWith(
+                        (states) => BorderSide(width: 0.8, color: normalBgColor),
+                      ),
+                      value: isPublic,
+                      onChanged: (value) {
+                        context.read<CourseProvider>().isPublicOnChange();
+                      },
+                    ),
+                    const Text("公開"),
+                  ],
+                ),
+              );
+            }),
+          ],
         ),
         Column(
           children: chapters.asMap().entries.map((e) {
@@ -289,7 +287,7 @@ Widget courseChapterEdit() {
               title: Row(
                 children: [
                   Expanded(
-                    child: Text("章節 ${chapter.chapter}"),
+                    child: Text(chapter.chapterName != "" ? chapter.chapterName : "章節 ${chapter.chapter}"),
                   ),
                   GestureDetector(
                     onTap: () {
