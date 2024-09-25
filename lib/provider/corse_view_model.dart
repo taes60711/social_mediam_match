@@ -74,9 +74,11 @@ class CourseViewModel {
       type: "1",
       isPublic: courseContext.read<CourseProvider>().isPublic,
     );
+
+    await Future.delayed(Duration.zero);
     RouteOptions.pop();
     if (courseId == null) {
-      viewListContext
+      await viewListContext
           .read<BaseAPIListProvider<CourseModel>>()
           .reloadData(apiFunc: () async => await CourseService().getAllCourses(0, 5));
       int preLoadPage = viewListContext.read<BaseAPIListProvider<CourseModel>>().page;
@@ -84,7 +86,7 @@ class CourseViewModel {
           .read<BaseAPIListProvider<CourseModel>>()
           .preLoad(apiFunc: () async => await CourseService().getAllCourses(preLoadPage, 5));
     } else {
-      viewListContext.read<BaseAPIListProvider<CourseModel>>().reloadData(
+      await viewListContext.read<BaseAPIListProvider<CourseModel>>().reloadData(
             apiFunc: () async => await CourseService().getCreatedCourses(0, 5, viewListContext.read<UserProvider>().userData.uid),
           );
       int preLoadPage = viewListContext.read<BaseAPIListProvider<CourseModel>>().page;
