@@ -54,7 +54,8 @@ class EditorPage extends StatelessWidget {
                             postData.id == -1
                                 ? PostViewModel(postContext: postContext)
                                     .createPost(title: titleInputController.text, msg: content, type: postBoradType)
-                                : MyPostViewModel(myPostContext: postContext).updatePost(updateMsg: content);
+                                : MyPostViewModel(myPostContext: postContext)
+                                    .updatePost(title: titleInputController.text, updateMsg: content);
                             RouteOptions.pop();
                           }
                         },

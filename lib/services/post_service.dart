@@ -198,9 +198,10 @@ class PostService extends ApiClient {
   }
 
   /// 文章編集
-  Future<bool> updatePost({required int postId, required String mainMessage}) async {
+  Future<bool> updatePost({required int postId, required String title, required String mainMessage}) async {
     Map<String, dynamic> body = {
       "id": postId,
+      "title": title,
       "mainMessage": mainMessage,
     };
 

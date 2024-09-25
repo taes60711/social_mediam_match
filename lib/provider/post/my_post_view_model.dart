@@ -11,20 +11,27 @@ import '../../global.dart';
 import '../../models/post_model.dart';
 import '../../models/rich_text_format.dart';
 import '../../pageManager/enum/route_path.dart';
+import '../account/user_provider.dart';
 
 class MyPostViewModel {
   BuildContext myPostContext;
   MyPostViewModel({required this.myPostContext});
 
-  Future<void> updatePost({required String updateMsg}) async {
+  Future<void> updatePost({required String title, required String updateMsg}) async {
     PostModel updatedData = myPostContext.read<BaseAPIListProvider<PostModel>>().choiceData ?? PostModel();
     String fomattedContent = await RichTextFormat(htmlString: updateMsg).sendPostImgFormat();
     updatedData.mainMessage = fomattedContent;
-    await PostService().updatePost(postId: updatedData.id, mainMessage: updatedData.mainMessage).then(
-      (isSucess) {
+    await PostService().updatePost(postId: updatedData.id, title: title, mainMessage: updatedData.mainMessage).then(
+      (isSucess) async {
         if (isSucess) {
-          myPostContext.read<BaseAPIListProvider<PostModel>>().editData(updatedData: updatedData);
-          RouteOptions.pop();
+          myPostContext.read<BaseAPIListProvider<PostModel>>().reloadData(
+                apiFunc: () async => await PostService().getPostDataByUID(0, 5, myPostContext.read<UserProvider>().userData),
+              );
+          int preLoadPage = myPostContext.read<BaseAPIListProvider<PostModel>>().page;
+          await myPostContext.read<BaseAPIListProvider<PostModel>>().preLoad(
+                apiFunc: () async =>
+                    await PostService().getPostDataByUID(preLoadPage, 5, myPostContext.read<UserProvider>().userData),
+              );
         }
       },
     );
@@ -90,7 +97,7 @@ class MyPostViewModel {
 
   void showOptionBottomSheet({required PostModel choicedPost}) {
     showModalBottomSheet(
-        context: globalContext,
+        context: myPostContext,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (builder) {
