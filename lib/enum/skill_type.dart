@@ -7,7 +7,7 @@ enum SkillType {
   frontend("前端"),
   backend("後端"),
   iot("韌體"),
-  other("其他");
+  other("語言");
 
   final String value;
   const SkillType(this.value);

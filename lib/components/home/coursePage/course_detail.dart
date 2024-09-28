@@ -159,7 +159,7 @@ class CourseDetail extends StatelessWidget {
                 const SizedBox(height: 20),
                 Builder(builder: (context) {
                   bool isAdded = context.select((CourseProvider value) => value.bIsAddedCourse);
-
+                  List<CourseChapterInfo> chapterList = openedCourse.chapterList;
                   return Column(
                     children: [
                       CustomExpansionTile(
@@ -174,15 +174,17 @@ class CourseDetail extends StatelessWidget {
                       Visibility(
                         visible: openedCourse.isPublic,
                         child: Column(
-                          children: openedCourse.chapterList.map((e) {
+                          children: openedCourse.chapterList.asMap().entries.map((e) {
+                            int index = e.key;
+                            CourseChapterInfo chapterInfo = e.value;
                             return ExpansionTile(
-                              title: Text(e.chapterName != "" ? e.chapterName : "章節 ${e.chapter}"),
+                              title: Text(chapterInfo.chapterName),
                               children: [
                                 SizedBox(
                                   width: ScreenSize.width,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: e.content.map((e) {
+                                    children: chapterList[index].content.map((e) {
                                       String content = e;
                                       int startIndex = '{"text":"'.length;
                                       int endIndex = content.indexOf('","');

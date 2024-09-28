@@ -211,3 +211,75 @@ class LabelInput extends StatelessWidget {
     );
   }
 }
+
+class TextInput extends StatefulWidget {
+  final TextEditingController textController;
+  final Function(String)? onChanged;
+  const TextInput({
+    super.key,
+    required this.textController,
+    this.onChanged,
+  });
+
+  @override
+  State<TextInput> createState() => _TextInputState();
+}
+
+bool bIsEdit = false;
+FocusNode focusNode = FocusNode();
+
+class _TextInputState extends State<TextInput> {
+  @override
+  Widget build(BuildContext context) {
+    OutlineInputBorder outlineInputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+    );
+
+    InputDecoration inputDecoration = InputDecoration(
+      enabledBorder: InputBorder.none,
+      focusedBorder: outlineInputBorder,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 5),
+      border: const OutlineInputBorder(),
+    );
+
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              if (bIsEdit) {
+                focusNode.unfocus();
+                bIsEdit = false;
+              } else {
+                focusNode.requestFocus();
+                bIsEdit = true;
+              }
+            });
+          },
+          child: Icon(
+            bIsEdit ? Icons.check : Icons.edit,
+            color: normalBgColor,
+          ),
+        ),
+        const SizedBox(width: 5),
+        Expanded(
+          child: bIsEdit
+              ? TextField(
+                  focusNode: focusNode,
+                  autofocus: bIsEdit,
+                  decoration: inputDecoration,
+                  controller: widget.textController,
+                  onChanged: widget.onChanged,
+                )
+              : Text(
+                  widget.textController.text,
+                  style: const TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+        ),
+      ],
+    );
+  }
+}

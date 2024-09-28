@@ -21,6 +21,7 @@ class CourseProvider extends ChangeNotifier {
   List<String> skillList = [];
   List<String> choicedSkillList = [];
   List<CourseChapterInfo> chapters = [];
+
   void editPageInit({required List<String> requestSkillList, CourseModel? courseData}) {
     if (courseData != null) {
       //文章編集
@@ -32,7 +33,13 @@ class CourseProvider extends ChangeNotifier {
       isPublic = courseData.isPublic;
       needLevel = "${courseData.needLevel}";
       choicedSkillList = courseData.courseLearningSkills;
-      chapters = courseData.chapterList;
+      chapters = courseData.chapterList
+          .map((chap) => CourseChapterInfo(
+              chapter: chap.chapter,
+              chapterName: chap.chapterName,
+              chapterNameEditController: TextEditingController(text: chap.chapterName),
+              content: chap.content))
+          .toList();
       prStory = courseData.prStory;
     }
 
@@ -41,7 +48,13 @@ class CourseProvider extends ChangeNotifier {
   }
 
   void addChapter() {
-    chapters.add(CourseChapterInfo(chapter: chapters.length + 1, chapterName: "", content: []));
+    chapters.add(
+      CourseChapterInfo(
+          chapter: chapters.length + 1,
+          chapterName: "chapter${chapters.length + 1}",
+          chapterNameEditController: TextEditingController(text: "chapter${chapters.length + 1}"),
+          content: []),
+    );
     print("addChapter");
     notifyListeners();
   }
@@ -49,6 +62,12 @@ class CourseProvider extends ChangeNotifier {
   void deleteChapter(int index) {
     chapters.remove(chapters[index]);
     print("deleteChapter");
+    notifyListeners();
+  }
+
+  void onChangeChapterTitleName(int index, String name) {
+    chapters[index].chapterName = name;
+    print("onChangeChapterTitleName");
     notifyListeners();
   }
 

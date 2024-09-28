@@ -227,11 +227,13 @@ Widget courseDetailEdit() {
 Widget courseChapterEdit() {
   return Builder(builder: (context) {
     List<CourseChapterInfo> chapters = context.watch<CourseProvider>().chapters;
+
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            /// チャプター追加ボタン
             GestureDetector(
               onTap: () {
                 context.read<CourseProvider>().addChapter();
@@ -252,6 +254,8 @@ Widget courseChapterEdit() {
                 ],
               ),
             ),
+
+            ///公開チェックボックス
             Builder(builder: (context) {
               bool isPublic = context.select((CourseProvider value) => value.isPublic);
               return GestureDetector(
@@ -281,13 +285,18 @@ Widget courseChapterEdit() {
         Column(
           children: chapters.asMap().entries.map((e) {
             int index = e.key;
-            CourseChapterInfo chapter = e.value;
+            CourseChapterInfo chapterInfo = e.value;
             return ExpansionTile(
               initiallyExpanded: true,
               title: Row(
                 children: [
                   Expanded(
-                    child: Text(chapter.chapterName != "" ? chapter.chapterName : "章節 ${chapter.chapter}"),
+                    child: TextInput(
+                      textController: chapterInfo.chapterNameEditController!,
+                      onChanged: (str) {
+                        context.read<CourseProvider>().onChangeChapterTitleName(index, str);
+                      },
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -308,6 +317,8 @@ Widget courseChapterEdit() {
                     ),
                   ),
                   const SizedBox(width: 10),
+
+                  ///チャプター”タイトル”削除
                   GestureDetector(
                     onTap: () {
                       context.read<CourseProvider>().deleteChapter(index);
@@ -350,7 +361,9 @@ Widget courseChapterEdit() {
                           color: normalBgColor2,
                         ),
                       ),
+
                       Expanded(
+                        ///チャプター開ける
                         child: GestureDetector(
                           onTap: () {
                             CourseViewModel(courseContext: context).openCourseChapterContentPage(
@@ -365,6 +378,8 @@ Widget courseChapterEdit() {
                           ),
                         ),
                       ),
+
+                      ///チャプター削除
                       GestureDetector(
                         onTap: () {
                           context.read<CourseProvider>().deleteChapterContent(index, contentIndex);

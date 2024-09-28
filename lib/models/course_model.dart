@@ -1,11 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
 class CourseChapterInfo {
   int chapter;
   String chapterName;
+  TextEditingController? chapterNameEditController;
   List<String> content;
-  CourseChapterInfo({required this.chapter, required this.chapterName, required this.content});
+  CourseChapterInfo({required this.chapter, required this.chapterName, this.chapterNameEditController, required this.content});
 
   factory CourseChapterInfo.toMap(dynamic json) {
     List<String> contents = (json['content'] as List<dynamic>).map((e) {
