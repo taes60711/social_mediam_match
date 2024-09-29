@@ -32,7 +32,7 @@ class CourseRichTextEdit extends StatelessWidget {
       body: Column(
         children: [
           BaseTopBar(
-            title: prStory != null ? "詳細介紹" : "章節$index",
+            title: prStory != null ? "詳細介紹" : "",
             rightWidget: TextBtn(
                 btnWidth: 55,
                 verticalMargin: 2,
