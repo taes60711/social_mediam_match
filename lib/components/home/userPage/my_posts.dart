@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
@@ -29,12 +30,17 @@ class MyPosts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        mainBody(context),
-        userDetailEndDrawer(),
-        postDetailEndDrawer(),
-      ],
+    return StatefulWrapper(
+      onInit: () async {
+        await PostViewModel(postContext: context).getAllPostBoard();
+      },
+      child: Stack(
+        children: [
+          mainBody(context),
+          userDetailEndDrawer(),
+          postDetailEndDrawer(),
+        ],
+      ),
     );
   }
 }

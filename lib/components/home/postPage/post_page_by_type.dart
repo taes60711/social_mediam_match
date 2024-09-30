@@ -48,6 +48,8 @@ class PostPageByType extends StatelessWidget {
                     arguments: {
                       'postContext': context,
                       'postBoradType': selectedboardType,
+                      'allPostBoradTypeList': context.read<PostProvider>().allPostBoards,
+                      'editorType': "create",
                     },
                   );
                 },

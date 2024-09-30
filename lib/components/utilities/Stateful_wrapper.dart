@@ -21,7 +21,11 @@ class StatefulWrapper extends StatefulWidget {
 class StatefulWrapperState extends State<StatefulWrapper> {
   @override
   void initState() {
-    widget.onInit();
+    // 延遲狀態更新，確保在 build 結束後才執行
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onInit();
+    });
+
     super.initState();
   }
 

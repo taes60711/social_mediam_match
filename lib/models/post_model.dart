@@ -7,7 +7,7 @@ class PostBoard {
   int id;
   int type;
   String name;
-  PostBoard({required this.id, required this.type, required this.name});
+  PostBoard({this.id = 0, this.type = 0, this.name = "chat"});
 
   factory PostBoard.toMap(dynamic json) {
     return PostBoard(

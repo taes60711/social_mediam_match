@@ -38,4 +38,11 @@ class PostProvider extends ChangeNotifier {
     postPageBytextFilterEndDrawerOpenInfo = status;
     notifyListeners();
   }
+
+  PostBoard choicedPostType = PostBoard(id: 0, type: 0, name: "chat");
+
+  void postEditBoardTypeOnChange(PostBoard postBoard) {
+    choicedPostType = postBoard;
+    notifyListeners();
+  }
 }

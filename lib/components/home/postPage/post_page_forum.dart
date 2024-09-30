@@ -11,6 +11,8 @@ import 'package:social_mediam_match/provider/post/post_provider.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../models/post_model.dart';
 
+import '../../../pagemanager/enum/route_path.dart';
+import '../../../pagemanager/setting/route_controller.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
 import '../../utilities/endDrawers/post_board_end_drawer.dart';
 import '../../utilities/endDrawers/post_comment_end_drawer.dart';
@@ -171,6 +173,43 @@ class PostPageForum extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            Positioned(
+              bottom: 20,
+              right: 20,
+              child: GestureDetector(
+                onTap: () {
+                  /// 文章作成
+
+                  RouteOptions.pushTo(
+                    RoutePath.postEditPage,
+                    arguments: {
+                      'postContext': context,
+                      'allPostBoradTypeList': context.read<PostProvider>().allPostBoards,
+                      'editorType': "create",
+                    },
+                  );
+                },
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 1,
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.edit,
+                    size: 18,
+                    color: normalBgColor,
+                  ),
+                ),
+              ),
             ),
             postBoardEndDrawer(),
             postPageBytextFilterEndDrawer(),

@@ -5,7 +5,6 @@ import 'package:social_mediam_match/models/notification_model.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
 import 'package:social_mediam_match/provider/post/post_comment_provider.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
-import '../../components/home/postPage/editor_page.dart';
 
 import '../../main.dart';
 import '../../models/post_model.dart';
@@ -61,7 +60,10 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
       ),
 
   /// "/postEdit"
-  RoutePath.postEditPage.value: (BuildContext context) => const EditorPage(),
+  RoutePath.postEditPage.value: (BuildContext context) => ChangeNotifierProvider(
+        create: (_) => PostProvider(),
+        child: RoutePath.postEditPage.pageWidget,
+      ),
 
   /// "/mycourses"
   RoutePath.courseEditPage.value: (BuildContext context) => ChangeNotifierProvider(

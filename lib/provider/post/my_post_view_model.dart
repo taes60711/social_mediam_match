@@ -12,6 +12,7 @@ import '../../models/post_model.dart';
 import '../../models/rich_text_format.dart';
 import '../../pageManager/enum/route_path.dart';
 import '../account/user_provider.dart';
+import 'post_provider.dart';
 
 class MyPostViewModel {
   BuildContext myPostContext;
@@ -145,7 +146,12 @@ class MyPostViewModel {
                                     RouteOptions.pop();
                                     RouteOptions.pushTo(
                                       RoutePath.postEditPage,
-                                      arguments: {'postContext': myPostContext},
+                                      arguments: {
+                                        'postContext': myPostContext,
+                                        'postBoradType': myPostContext.read<BaseAPIListProvider<PostModel>>().choiceData!.type,
+                                        'allPostBoradTypeList': myPostContext.read<PostProvider>().allPostBoards,
+                                        'editorType': "update",
+                                      },
                                     );
                                   }),
                               _bottomSheetBtn(
