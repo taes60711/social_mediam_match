@@ -55,7 +55,8 @@ class PostPageByNew extends StatelessWidget {
                               ///アイコン
                               GestureDetector(
                                 onTap: () {
-                                  openUserDetailEndDrawer(context: context, otherUserData: data[index].postUserInfo);
+                                  openUserDetailEndDrawer(
+                                      context: context, otherUserData: data[index].postUserInfo);
                                 },
                                 child: UserIcon(
                                   iconSize: 35,
@@ -102,7 +103,10 @@ class PostPageByNew extends StatelessWidget {
                               ),
                             ),
 
-                            Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+                            Container(
+                                margin: const EdgeInsets.symmetric(vertical: 6),
+                                height: 0.2,
+                                color: normalBgColor2),
 
                             /// 文章プレビュー
                             RichTextView(
@@ -110,12 +114,18 @@ class PostPageByNew extends StatelessWidget {
                               isPreView: true,
                             ),
 
-                            Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+                            Container(
+                                margin: const EdgeInsets.symmetric(vertical: 6),
+                                height: 0.2,
+                                color: normalBgColor2),
 
                             ///文章bottomBar
                             bottomBar(context: context, data: data[index]),
 
-                            Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+                            Container(
+                                margin: const EdgeInsets.symmetric(vertical: 6),
+                                height: 0.2,
+                                color: normalBgColor2),
                           ],
                         ),
                       ),
