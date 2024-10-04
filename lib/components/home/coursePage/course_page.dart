@@ -5,12 +5,14 @@ import 'package:social_mediam_match/components/utilities/endDrawers/skill_settin
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/course_model.dart';
+import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/corse_view_model.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 
 import '../../../global.dart';
 import '../../../pagemanager/enum/route_path.dart';
 import '../../../pagemanager/setting/route_controller.dart';
+import '../../../provider/account/user_provider.dart';
 import '../../../provider/home/skill_change_view_model.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
@@ -61,7 +63,8 @@ Widget _mainBuild(BuildContext context) {
           padding: const EdgeInsets.only(top: 15, right: 15, left: 15),
           child: APIListView<CourseModel>(
             apiFunc: (int page, int size) {
-              return CourseService().getAllCourses(page, size);
+              LoginUser userData = context.read<UserProvider>().userData;
+              return CourseService().getAllCourses(userData.uid, page, size);
             },
             providerList: context.watch<BaseAPIListProvider<CourseModel>>().listData,
             customFloatbutton: GestureDetector(
@@ -95,7 +98,8 @@ Widget _mainBuild(BuildContext context) {
               print(data);
               return GestureDetector(
                 onTap: () {
-                  CourseViewModel(courseContext: context).courseDetailInit(openedCourse: data[index]);
+                  CourseViewModel(courseContext: context)
+                      .courseDetailInit(openedCourse: data[index]);
                 },
                 child: Container(
                   color: Colors.transparent,
@@ -104,7 +108,8 @@ Widget _mainBuild(BuildContext context) {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(color: googleColor, borderRadius: BorderRadius.circular(3)),
+                        decoration: BoxDecoration(
+                            color: googleColor, borderRadius: BorderRadius.circular(3)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -167,7 +172,8 @@ Widget _mainBuild(BuildContext context) {
                       ),
                       GestureDetector(
                         onTap: () {
-                          openUserDetailEndDrawer(context: context, otherUserData: data[index].courseCreateduserInfo);
+                          openUserDetailEndDrawer(
+                              context: context, otherUserData: data[index].courseCreateduserInfo);
                         },
                         child: Container(
                           color: Colors.transparent,

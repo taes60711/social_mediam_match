@@ -45,7 +45,8 @@ class CourseService extends ApiClient {
   }
 
   /// 全てコース
-  Future<List<CourseModel>> getAllCourses(int page, int size, {List<String>? skillId}) async {
+  Future<List<CourseModel>> getAllCourses(String userUID, int page, int size,
+      {List<String>? skillId}) async {
     List<CourseModel> requestAllCourseData = [];
 
     Map<String, dynamic> paramters = {
@@ -58,7 +59,7 @@ class CourseService extends ApiClient {
     }
 
     try {
-      String responseData = await apiGet('/getAllCourses', paramters: paramters);
+      String responseData = await apiGet('/getAllCourses/$userUID', paramters: paramters);
 
       requestAllCourseData = await handleResponse<CourseModel>(
         responseData,
@@ -121,7 +122,7 @@ class CourseService extends ApiClient {
   }
 
   /// コースIDでコース内容を取得する
-  Future<CourseModel> getCourseBycourseId(int courseId) async {
+  Future<CourseModel> getCourseBycourseId(String userUID, int courseId) async {
     CourseModel requestAddedCourseData = CourseModel(courseCreateduserInfo: LoginUser());
 
     Map<String, dynamic> paramters = {
@@ -129,7 +130,7 @@ class CourseService extends ApiClient {
     };
 
     try {
-      String responseData = await apiGet('/getCourseByCourseId', paramters: paramters);
+      String responseData = await apiGet('/getCourseByCourseId/$userUID', paramters: paramters);
 
       requestAddedCourseData = await handleResponse<CourseModel>(
         responseData,
@@ -143,7 +144,8 @@ class CourseService extends ApiClient {
   }
 
   /// コース管理
-  Future<List<AddedCourseMemberModel>> getCourseAddedMember(int page, int size, int courseId) async {
+  Future<List<AddedCourseMemberModel>> getCourseAddedMember(
+      int page, int size, int courseId) async {
     List<AddedCourseMemberModel> requestCourseAddedMemberData = [];
 
     Map<String, dynamic> paramters = {
@@ -164,26 +166,6 @@ class CourseService extends ApiClient {
     }
 
     return requestCourseAddedMemberData;
-  }
-
-  /// 参加するかどうか確認
-  Future<bool> isAddedCourse({required int courseId, required String userUID}) async {
-    bool isAdded = false;
-    Map<String, dynamic> paramters = {
-      'courseId': '$courseId',
-      'userId': userUID,
-    };
-    try {
-      String responseData = await apiGet('/getIsAddCourse', paramters: paramters);
-
-      if (responseData == "true") {
-        isAdded = true;
-      }
-    } catch (e) {
-      onRequestFailed();
-    }
-
-    return isAdded;
   }
 
   /// コースを申請

@@ -7,7 +7,11 @@ class CourseChapterInfo {
   String chapterName;
   TextEditingController? chapterNameEditController;
   List<String> content;
-  CourseChapterInfo({required this.chapter, required this.chapterName, this.chapterNameEditController, required this.content});
+  CourseChapterInfo(
+      {required this.chapter,
+      required this.chapterName,
+      this.chapterNameEditController,
+      required this.content});
 
   factory CourseChapterInfo.toMap(dynamic json) {
     List<String> contents = (json['content'] as List<dynamic>).map((e) {
@@ -42,6 +46,7 @@ class CourseModel {
   String postTime;
   int type;
   bool isPublic;
+  String signUpStatus;
   LoginUser courseCreateduserInfo;
 
   CourseModel({
@@ -57,6 +62,7 @@ class CourseModel {
     this.postTime = "yyyy-MM-dd HH:mm:ss",
     this.type = -1,
     this.isPublic = false,
+    this.signUpStatus = "",
     required this.courseCreateduserInfo,
   });
 
@@ -65,7 +71,8 @@ class CourseModel {
     DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
     String formattedTime = DateFormat("yyyy/MM/dd").format(dateTime.toLocal());
 
-    List<String> courseLearningSkillList = (json['courseLearningkillList'] as List<dynamic>).map((e) {
+    List<String> courseLearningSkillList =
+        (json['courseLearningkillList'] as List<dynamic>).map((e) {
       return e as String;
     }).toList();
 
@@ -86,6 +93,7 @@ class CourseModel {
       postTime: formattedTime,
       type: json['type'],
       isPublic: json['isPublic'],
+      signUpStatus: json['signUpStatus'],
       courseCreateduserInfo: LoginUser.toModel(json['user']),
     );
   }

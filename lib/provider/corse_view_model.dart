@@ -30,15 +30,14 @@ class CourseViewModel {
 
   Future<void> courseDetailInit({required CourseModel openedCourse}) async {
     openCourseDetailEndDrawer(context: courseContext, openedCourse: openedCourse);
-    LoginUser userData = courseContext.read<UserProvider>().userData;
-    bool isAdded = await CourseService().isAddedCourse(courseId: openedCourse.id, userUID: userData.uid);
-    courseContext.read<CourseProvider>().courseSignedUp(isAdded: isAdded);
   }
 
   Future<void> courseEditInit({CourseModel? courseData}) async {
     List<RequestSkillListData> requestSkillList = await SkillService().requestSkillList();
     List<String> skillList = requestSkillList.map((e) => e.name).toList();
-    courseContext.read<CourseProvider>().editPageInit(requestSkillList: skillList, courseData: courseData);
+    courseContext
+        .read<CourseProvider>()
+        .editPageInit(requestSkillList: skillList, courseData: courseData);
   }
 
   Future<void> courseFilterSearchStart() async {
@@ -48,13 +47,16 @@ class CourseViewModel {
     List<String> filteredSkillIdsList = filteredSkillList.map((e) {
       return (skillList.firstWhere((element) => element.name == e).id).toString();
     }).toList();
+    LoginUser userData = courseContext.read<UserProvider>().userData;
 
     await courseContext.read<BaseAPIListProvider<CourseModel>>().reloadData(
-          apiFunc: () async => await CourseService().getAllCourses(0, 5, skillId: filteredSkillIdsList),
+          apiFunc: () async => await CourseService()
+              .getAllCourses(userData.uid, 0, 5, skillId: filteredSkillIdsList),
         );
     int preLoadPage = courseContext.read<BaseAPIListProvider<CourseModel>>().page;
     await courseContext.read<BaseAPIListProvider<CourseModel>>().preLoad(
-          apiFunc: () async => await CourseService().getAllCourses(preLoadPage, 5, skillId: filteredSkillIdsList),
+          apiFunc: () async => await CourseService()
+              .getAllCourses(userData.uid, preLoadPage, 5, skillId: filteredSkillIdsList),
         );
 
     closeCourseFilterEndDrawer(context: courseContext);
@@ -78,21 +80,22 @@ class CourseViewModel {
     await Future.delayed(const Duration(seconds: 1));
     RouteOptions.pop();
     if (courseId == null) {
+      LoginUser userData = courseContext.watch<UserProvider>().userData;
       await viewListContext
           .read<BaseAPIListProvider<CourseModel>>()
-          .reloadData(apiFunc: () async => await CourseService().getAllCourses(0, 5));
+          .reloadData(apiFunc: () async => await CourseService().getAllCourses(userData.uid, 0, 5));
       int preLoadPage = viewListContext.read<BaseAPIListProvider<CourseModel>>().page;
-      await viewListContext
-          .read<BaseAPIListProvider<CourseModel>>()
-          .preLoad(apiFunc: () async => await CourseService().getAllCourses(preLoadPage, 5));
+      await viewListContext.read<BaseAPIListProvider<CourseModel>>().preLoad(
+          apiFunc: () async => await CourseService().getAllCourses(userData.uid, preLoadPage, 5));
     } else {
       await viewListContext.read<BaseAPIListProvider<CourseModel>>().reloadData(
-            apiFunc: () async => await CourseService().getCreatedCourses(0, 5, viewListContext.read<UserProvider>().userData.uid),
+            apiFunc: () async => await CourseService()
+                .getCreatedCourses(0, 5, viewListContext.read<UserProvider>().userData.uid),
           );
       int preLoadPage = viewListContext.read<BaseAPIListProvider<CourseModel>>().page;
       await viewListContext.read<BaseAPIListProvider<CourseModel>>().preLoad(
-            apiFunc: () async =>
-                await CourseService().getCreatedCourses(preLoadPage, 5, viewListContext.read<UserProvider>().userData.uid),
+            apiFunc: () async => await CourseService().getCreatedCourses(
+                preLoadPage, 5, viewListContext.read<UserProvider>().userData.uid),
           );
     }
   }
@@ -144,7 +147,7 @@ class CourseViewModel {
     );
   }
 
-  Future<void> courseSignUp({required int courseId}) async {
+  Future<void> courseSignUp({required CourseModel choicedCourse}) async {
     showDialog<void>(
       context: globalContext,
       builder: (BuildContext context) {
@@ -187,8 +190,20 @@ class CourseViewModel {
                           btnColor: normalBgColor,
                           onPress: () async {
                             LoginUser userData = courseContext.read<UserProvider>().userData;
-                            bool isSignedUp = await CourseService().signUpCourse(userUID: userData.uid, courseId: courseId);
-                            courseContext.read<CourseProvider>().courseSignedUp(isAdded: isSignedUp);
+                            CourseModel updateCourse = choicedCourse;
+                            updateCourse.signUpStatus = "signing";
+                            await CourseService()
+                                .signUpCourse(userUID: userData.uid, courseId: choicedCourse.id);
+                            courseContext
+                                .read<BaseAPIListProvider<CourseModel>>()
+                                .onChoiceData(choicedData: choicedCourse);
+
+                            courseContext
+                                .read<BaseAPIListProvider<CourseModel>>()
+                                .editData(updatedData: updateCourse);
+
+                            courseContext.read<CourseProvider>().onChangeDetailPage(updateCourse);
+                            RouteOptions.pop();
                           },
                         ),
                       ),
@@ -204,16 +219,24 @@ class CourseViewModel {
   }
 
   Future<void> updateCourseMemberStatus({required AddedCourseMemberModel updateData}) async {
-    await CourseService().updateAddedUserStatus(courseId: updateData.courseId, userUID: updateData.memberUid);
-    courseContext.read<BaseAPIListProvider<AddedCourseMemberModel>>().onChoiceData(choicedData: updateData);
+    await CourseService()
+        .updateAddedUserStatus(courseId: updateData.courseId, userUID: updateData.memberUid);
+    courseContext
+        .read<BaseAPIListProvider<AddedCourseMemberModel>>()
+        .onChoiceData(choicedData: updateData);
     AddedCourseMemberModel updatedData = updateData;
     updatedData.status = 1;
-    courseContext.read<BaseAPIListProvider<AddedCourseMemberModel>>().editData(updatedData: updatedData);
+    courseContext
+        .read<BaseAPIListProvider<AddedCourseMemberModel>>()
+        .editData(updatedData: updatedData);
   }
 
   Future<void> deleteCourseMember({required AddedCourseMemberModel deletedMember}) async {
-    await CourseService().deleteUserFromCourse(courseId: deletedMember.courseId, userUID: deletedMember.memberUid);
-    courseContext.read<BaseAPIListProvider<AddedCourseMemberModel>>().deleteData(choiceData: deletedMember);
+    await CourseService()
+        .deleteUserFromCourse(courseId: deletedMember.courseId, userUID: deletedMember.memberUid);
+    courseContext
+        .read<BaseAPIListProvider<AddedCourseMemberModel>>()
+        .deleteData(choiceData: deletedMember);
   }
 
   void openCreatedCourseModal({required CourseModel courseData}) {
@@ -246,7 +269,8 @@ class CourseViewModel {
                         btnColor: normalBgColor2,
                         onPress: () {
                           RouteOptions.pop();
-                          CourseViewModel(courseContext: courseContext).courseDetailInit(openedCourse: courseData);
+                          CourseViewModel(courseContext: courseContext)
+                              .courseDetailInit(openedCourse: courseData);
                         },
                       ),
                       const SizedBox(height: 15),
@@ -269,7 +293,8 @@ class CourseViewModel {
                         btnColor: normalBgColor2,
                         onPress: () {
                           RouteOptions.pop();
-                          opencourseManagerEndDrawer(context: courseContext, courseId: courseData.id);
+                          opencourseManagerEndDrawer(
+                              context: courseContext, courseId: courseData.id);
                         },
                       ),
                     ],

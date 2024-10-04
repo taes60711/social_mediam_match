@@ -121,19 +121,19 @@ class CourseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  CourseEditSkillChoiceEndDrawerType editSkillChoiceEndDrawerOpenInfo = CourseEditSkillChoiceEndDrawerType.close;
+  void onChangeDetailPage(CourseModel updatedCourseData) {
+    choicedCourse = updatedCourseData;
+    notifyListeners();
+  }
+
+  CourseEditSkillChoiceEndDrawerType editSkillChoiceEndDrawerOpenInfo =
+      CourseEditSkillChoiceEndDrawerType.close;
   void editSkillChoiceEndDrawerStatus(CourseEditSkillChoiceEndDrawerType status) {
     editSkillChoiceEndDrawerOpenInfo = status;
     notifyListeners();
   }
 
   // MARK: View
-  bool bIsAddedCourse = true;
-  void courseSignedUp({required bool isAdded}) async {
-    bIsAddedCourse = isAdded;
-    notifyListeners();
-  }
-
   CourseModel choicedCourse = CourseModel(courseCreateduserInfo: LoginUser());
   CourseDetailEndDrawerType endDrawerOpenInfo = CourseDetailEndDrawerType.close;
   void changeEndDrawerStatus(CourseDetailEndDrawerType status, CourseModel opendCourse) {

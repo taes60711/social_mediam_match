@@ -5,9 +5,6 @@ import 'package:provider/provider.dart';
 
 import '../../../global.dart';
 import '../../../models/post_model.dart';
-import '../../../pagemanager/enum/route_path.dart';
-import '../../../pagemanager/setting/route_controller.dart';
-import '../../../provider/post/post_provider.dart';
 import '../../../provider/post/post_view_model.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/Stateful_wrapper.dart';
@@ -59,7 +56,8 @@ class PostPageByViewer extends StatelessWidget {
                                 ///アイコン
                                 GestureDetector(
                                   onTap: () {
-                                    openUserDetailEndDrawer(context: context, otherUserData: data[index].postUserInfo);
+                                    openUserDetailEndDrawer(
+                                        context: context, otherUserData: data[index].postUserInfo);
                                   },
                                   child: UserIcon(
                                     iconSize: 35,
@@ -90,7 +88,8 @@ class PostPageByViewer extends StatelessWidget {
                       ///文章プレビュー
                       GestureDetector(
                         onTap: () {
-                          PostViewModel(postContext: context).postDetailInit(choicedPost: data[index]);
+                          PostViewModel(postContext: context)
+                              .postDetailInit(choicedPost: data[index]);
                         },
                         child: Container(
                           color: Colors.transparent,
@@ -106,7 +105,10 @@ class PostPageByViewer extends StatelessWidget {
                                 ),
                               ),
 
-                              Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+                              Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 6),
+                                  height: 0.2,
+                                  color: normalBgColor2),
 
                               /// 文章プレビュー
                               RichTextView(
@@ -114,12 +116,18 @@ class PostPageByViewer extends StatelessWidget {
                                 isPreView: true,
                               ),
 
-                              Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+                              Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 6),
+                                  height: 0.2,
+                                  color: normalBgColor2),
 
                               ///文章bottomBar
                               bottomBar(context: context, data: data[index]),
 
-                              Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+                              Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 6),
+                                  height: 0.2,
+                                  color: normalBgColor2),
                             ],
                           ),
                         ),
@@ -161,7 +169,8 @@ Widget bottomBar({required BuildContext context, required PostModel data}) {
             ///いいね数
             Row(
               children: [
-                const Icon(FontAwesomeIcons.heart, size: 14, color: Color.fromARGB(255, 248, 110, 110)),
+                const Icon(FontAwesomeIcons.heart,
+                    size: 14, color: Color.fromARGB(255, 248, 110, 110)),
                 const SizedBox(width: 5),
                 Text("${data.good}"),
               ],

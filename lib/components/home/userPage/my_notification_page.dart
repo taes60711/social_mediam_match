@@ -56,7 +56,8 @@ Widget mainBody(BuildContext context) {
         title: "通知",
         rightWidget: GestureDetector(
           onTap: () {
-            List<NotificationModel> notificationList = context.read<BaseAPIListProvider<NotificationModel>>().listData;
+            List<NotificationModel> notificationList =
+                context.read<BaseAPIListProvider<NotificationModel>>().listData;
             for (int index = 0; index < notificationList.length; index++) {
               notificationList[index].isRead = true;
               context.read<BaseAPIListProvider<NotificationModel>>().editData(
@@ -86,7 +87,8 @@ Widget mainBody(BuildContext context) {
             return APIListView<NotificationModel>(
               providerList: context.watch<BaseAPIListProvider<NotificationModel>>().listData,
               apiFunc: (int page, int size) {
-                return NotificationService().requestNotificationList(page, size, userUId: userData.uid);
+                return NotificationService()
+                    .requestNotificationList(page, size, userUId: userData.uid);
               },
               itemChild: (List<NotificationModel> data, int index) {
                 NotificationModel notificationData = data[index];
@@ -100,7 +102,9 @@ Widget mainBody(BuildContext context) {
                     context
                         .read<BaseAPIListProvider<NotificationModel>>()
                         .editData(dataIndex: index, updatedData: notificationData);
-                    context.read<BaseAPIListProvider<NotificationModel>>().deleteData(choiceData: notificationData);
+                    context
+                        .read<BaseAPIListProvider<NotificationModel>>()
+                        .deleteData(choiceData: notificationData);
                     NotificationService().deleteNotification(id: notificationData.id);
                   },
                   child: Container(
@@ -109,14 +113,21 @@ Widget mainBody(BuildContext context) {
                     child: GestureDetector(
                       onTap: () async {
                         if (notificationData.type == 0) {
-                          PostModel choicedPost = await PostService().getPostDataByPostId(notificationData.postId ?? -1);
+                          PostModel choicedPost = await PostService()
+                              .getPostDataByPostId(notificationData.postId ?? -1);
 
-                          PostViewModel(postContext: context).postDetailInit(choicedPost: choicedPost);
+                          PostViewModel(postContext: context)
+                              .postDetailInit(choicedPost: choicedPost);
                         } else if (notificationData.type == 1) {
-                          CourseModel openedCourse = await CourseService().getCourseBycourseId(notificationData.courseId ?? -1);
-                          CourseViewModel(courseContext: context).courseDetailInit(openedCourse: openedCourse);
+                          LoginUser userData = context.read<UserProvider>().userData;
+                          CourseModel openedCourse = await CourseService()
+                              .getCourseBycourseId(userData.uid, notificationData.courseId ?? -1);
+                          CourseViewModel(courseContext: context)
+                              .courseDetailInit(openedCourse: openedCourse);
                         } else if (notificationData.type == 2) {
-                          openUserDetailEndDrawer(context: context, otherUserData: notificationData.sendNotificationuserInfo);
+                          openUserDetailEndDrawer(
+                              context: context,
+                              otherUserData: notificationData.sendNotificationuserInfo);
                         }
                         if (!notificationData.isRead) {
                           notificationData.isRead = true;
@@ -124,7 +135,8 @@ Widget mainBody(BuildContext context) {
                               .read<BaseAPIListProvider<NotificationModel>>()
                               .editData(dataIndex: index, updatedData: notificationData);
                           context.read<UserProvider>().updateNotificationCount();
-                          NotificationService().updateReadNotificationCount(id: notificationData.id);
+                          NotificationService()
+                              .updateReadNotificationCount(id: notificationData.id);
                         }
                       },
                       child: Container(
@@ -155,7 +167,8 @@ Widget mainBody(BuildContext context) {
                             GestureDetector(
                               onTap: () {
                                 openUserDetailEndDrawer(
-                                    context: context, otherUserData: notificationData.sendNotificationuserInfo);
+                                    context: context,
+                                    otherUserData: notificationData.sendNotificationuserInfo);
                               },
                               child: UserIcon(
                                 iconSize: 35,

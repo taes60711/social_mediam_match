@@ -23,7 +23,7 @@ class CourseDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CourseModel openedCourse = context.read<CourseProvider>().choicedCourse;
+    CourseModel openedCourse = context.watch<CourseProvider>().choicedCourse;
     LoginUser userData = context.watch<UserProvider>().userData;
 
     return BackgroundWidget(
@@ -42,17 +42,18 @@ class CourseDetail extends StatelessWidget {
                       style: const TextStyle(fontSize: 19),
                     ),
                     Builder(builder: (context) {
-                      bool isAdded = context.select((CourseProvider value) => value.bIsAddedCourse);
-
                       return Visibility(
-                        visible: !isAdded && openedCourse.courseCreateduserInfo.uid != userData.uid,
+                        visible: openedCourse.signUpStatus == "none" &&
+                            !openedCourse.isPublic &&
+                            openedCourse.courseCreateduserInfo.uid != userData.uid,
                         child: TextBtn(
                           verticalMargin: 5,
                           btnRadius: 10,
                           btnWidth: 55,
                           title: "申請",
                           onPress: () {
-                            CourseViewModel(courseContext: context).courseSignUp(courseId: openedCourse.id);
+                            CourseViewModel(courseContext: context)
+                                .courseSignUp(choicedCourse: openedCourse);
                           },
                           titleColor: normalTextColor,
                           btnColor: googleButtonColor.withOpacity(0.8),
@@ -61,12 +62,20 @@ class CourseDetail extends StatelessWidget {
                     }),
                   ],
                 ),
-                Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
+                Container(
+                    margin: const EdgeInsets.all(5),
+                    width: ScreenSize.width,
+                    height: 0.3,
+                    color: hintTextColor),
                 Text(
                   "課程類別: ${openedCourse.type}",
                   style: TextStyle(fontSize: 12, color: hintTextColor),
                 ),
-                Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
+                Container(
+                    margin: const EdgeInsets.all(5),
+                    width: ScreenSize.width,
+                    height: 0.3,
+                    color: hintTextColor),
                 const Text(
                   "課程前需求:",
                   style: TextStyle(fontSize: 14),
@@ -80,7 +89,11 @@ class CourseDetail extends StatelessWidget {
                   ),
                   child: Text(openedCourse.beforeNeed),
                 ),
-                Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
+                Container(
+                    margin: const EdgeInsets.all(5),
+                    width: ScreenSize.width,
+                    height: 0.3,
+                    color: hintTextColor),
                 const Text(
                   "課程內容:",
                   style: TextStyle(fontSize: 14),
@@ -115,14 +128,20 @@ class CourseDetail extends StatelessWidget {
                     ),
                   ],
                 ),
-                Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
+                Container(
+                    margin: const EdgeInsets.all(5),
+                    width: ScreenSize.width,
+                    height: 0.3,
+                    color: hintTextColor),
                 GestureDetector(
                   onTap: () {
-                    openUserDetailEndDrawer(context: context, otherUserData: openedCourse.courseCreateduserInfo);
+                    openUserDetailEndDrawer(
+                        context: context, otherUserData: openedCourse.courseCreateduserInfo);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                    decoration: BoxDecoration(color: googleColor.withAlpha(150), borderRadius: BorderRadius.circular(3)),
+                    decoration: BoxDecoration(
+                        color: googleColor.withAlpha(150), borderRadius: BorderRadius.circular(3)),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -158,12 +177,12 @@ class CourseDetail extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Builder(builder: (context) {
-                  bool isAdded = context.select((CourseProvider value) => value.bIsAddedCourse);
                   List<CourseChapterInfo> chapterList = openedCourse.chapterList;
                   return Column(
                     children: [
                       CustomExpansionTile(
-                        initiallyExpanded: !isAdded,
+                        initiallyExpanded:
+                            openedCourse.signUpStatus == "added" || openedCourse.isPublic,
                         title: const Text("詳細介紹"),
                         collapsedTrailingWidget: const Icon(Icons.keyboard_arrow_up),
                         expandedTrailingWidget: const Icon(Icons.keyboard_arrow_down),
@@ -172,7 +191,7 @@ class CourseDetail extends StatelessWidget {
                         ],
                       ),
                       Visibility(
-                        visible: openedCourse.isPublic,
+                        visible: openedCourse.isPublic || openedCourse.signUpStatus == "added",
                         child: Column(
                           children: openedCourse.chapterList.asMap().entries.map((e) {
                             int index = e.key;
@@ -188,10 +207,12 @@ class CourseDetail extends StatelessWidget {
                                       String content = e;
                                       int startIndex = '{"text":"'.length;
                                       int endIndex = content.indexOf('","');
-                                      int startUrlIndex = content.indexOf('"url":"') + '"url":"'.length;
+                                      int startUrlIndex =
+                                          content.indexOf('"url":"') + '"url":"'.length;
                                       int endUrlIndex = content.indexOf('"}');
                                       String chapterText = content.substring(startIndex, endIndex);
-                                      String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
+                                      String chapterUrl =
+                                          content.substring(startUrlIndex, endUrlIndex);
 
                                       return Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 5),
@@ -207,12 +228,16 @@ class CourseDetail extends StatelessWidget {
                                             Expanded(
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  CourseViewModel(courseContext: context).openCourseChapterContentPage(
-                                                      chapterText: chapterText, chapterUrl: chapterUrl);
+                                                  CourseViewModel(courseContext: context)
+                                                      .openCourseChapterContentPage(
+                                                          chapterText: chapterText,
+                                                          chapterUrl: chapterUrl);
                                                 },
                                                 child: Text(
                                                   chapterText,
-                                                  style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
+                                                  style: TextStyle(
+                                                      color: googleColor,
+                                                      decoration: TextDecoration.underline),
                                                   overflow: TextOverflow.ellipsis,
                                                 ),
                                               ),

@@ -107,7 +107,8 @@ class _HomeState extends State<Home> {
   }
 
   ///取得した通知でページ遷移関数
-  Future<void> notificationOnChangePage(int pathIndex, int? postId, int? courseId, int? roomId, String? userUID) async {
+  Future<void> notificationOnChangePage(
+      int pathIndex, int? postId, int? courseId, int? roomId, String? userUID) async {
     BottomBarPath path = BottomBarPath.home;
     if (pathIndex == 0) {
       path = BottomBarPath.home;
@@ -127,8 +128,11 @@ class _HomeState extends State<Home> {
       PostModel choicedPost = await PostService().getPostDataByPostId(postId ?? -1);
       PostViewModel(postContext: postContext ?? context).postDetailInit(choicedPost: choicedPost);
     } else if (pathIndex == 1) {
-      CourseModel openedCourse = await CourseService().getCourseBycourseId(courseId ?? -1);
-      CourseViewModel(courseContext: courseContext ?? context).courseDetailInit(openedCourse: openedCourse);
+      LoginUser userData = context.read<UserProvider>().userData;
+      CourseModel openedCourse =
+          await CourseService().getCourseBycourseId(userData.uid, courseId ?? -1);
+      CourseViewModel(courseContext: courseContext ?? context)
+          .courseDetailInit(openedCourse: openedCourse);
     } else if (pathIndex == 3) {
       LoginUser sendMsgUser = await UserService().requestGetUserData(userUID ?? "-1");
       context.read<FriendProvider>().openRoom(roomId ?? -1, sendMsgUser);
