@@ -15,5 +15,6 @@ String channelRoomUrl = 'ws://$ip:$webSocketPort/$branch/chatroom';
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 BuildContext globalContext = navigatorKey.currentState!.context;
 
+///通知用
 BuildContext? postContext;
 BuildContext? courseContext;
