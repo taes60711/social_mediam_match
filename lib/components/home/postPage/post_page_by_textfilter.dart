@@ -4,7 +4,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
+import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
+import '../../../global.dart';
 import '../../../models/post_model.dart';
 import '../../../services/post_service.dart';
 import '../../../provider/post/post_provider.dart';
@@ -79,119 +81,127 @@ class PostPageByTextFilter extends StatelessWidget {
         )
       ],
     );
-    return Scaffold(
-      body: Column(
-        children: [
-          searchBar,
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Builder(
-                builder: (context) {
-                  return APIListView<PostModel>(
-                    providerList: context.watch<BaseAPIListProvider<PostModel>>().listData,
-                    apiFunc: (page, size) {
-                      return PostService().getPostByTextFilter(page, size, textFilterInput.text);
-                    },
-                    loadingBuilder: () {
-                      return const PostLoading();
-                    },
-                    noInitSearchBuilder: PostViewUtilities.noinitSearchWidget(),
-                    noDataBuilder: PostViewUtilities.noPostData(),
-                    itemChild: ((data, index) {
-                      return Column(
-                        children: [
-                          /// 文章TopBar
-                          Container(
-                            width: ScreenSize.width,
-                            padding: const EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(3),
-                              color: const Color.fromARGB(255, 236, 157, 120),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    ///アイコン
-                                    GestureDetector(
-                                      onTap: () {
-                                        openUserDetailEndDrawer(context: context, otherUserData: data[index].postUserInfo);
-                                      },
-                                      child: UserIcon(
-                                        iconSize: 35,
-                                        image: data[index].postUserInfo.image,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-
-                                    ///ユーザネーム
-                                    Text(
-                                      data[index].postUserInfo.name != ""
-                                          ? data[index].postUserInfo.name ?? ""
-                                          : data[index].postUserInfo.email,
-                                      style: TextStyle(fontSize: 12, color: normalTextColor),
-                                    ),
-                                  ],
-                                ),
-
-                                ///期日
-                                Text(
-                                  "${data[index].postTime}${tr("skExChpage_beforDays")}",
-                                  style: TextStyle(fontSize: 12, color: normalTextColor),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          ///文章プレビュー
-                          GestureDetector(
-                            onTap: () {
-                              openPostDetailEndDrawer(context: context, choicedPost: data[index]);
-                            },
-                            child: Container(
-                              color: Colors.transparent,
-                              child: Column(
+    return StatefulWrapper(
+      onInit: () {
+        globalPostContext = context;
+      },
+      child: Scaffold(
+        body: Column(
+          children: [
+            searchBar,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Builder(
+                  builder: (context) {
+                    return APIListView<PostModel>(
+                      providerList: context.watch<BaseAPIListProvider<PostModel>>().listData,
+                      apiFunc: (page, size) {
+                        return PostService().getPostByTextFilter(page, size, textFilterInput.text);
+                      },
+                      loadingBuilder: () {
+                        return const PostLoading();
+                      },
+                      noInitSearchBuilder: PostViewUtilities.noinitSearchWidget(),
+                      noDataBuilder: PostViewUtilities.noPostData(),
+                      itemChild: ((data, index) {
+                        return Column(
+                          children: [
+                            /// 文章TopBar
+                            Container(
+                              width: ScreenSize.width,
+                              padding: const EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3),
+                                color: const Color.fromARGB(255, 236, 157, 120),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ///Title
+                                  Row(
+                                    children: [
+                                      ///アイコン
+                                      GestureDetector(
+                                        onTap: () {
+                                          openUserDetailEndDrawer(context: context, otherUserData: data[index].postUserInfo);
+                                        },
+                                        child: UserIcon(
+                                          iconSize: 35,
+                                          image: data[index].postUserInfo.image,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+
+                                      ///ユーザネーム
+                                      Text(
+                                        data[index].postUserInfo.name != ""
+                                            ? data[index].postUserInfo.name ?? ""
+                                            : data[index].postUserInfo.email,
+                                        style: TextStyle(fontSize: 12, color: normalTextColor),
+                                      ),
+                                    ],
+                                  ),
+
+                                  ///期日
                                   Text(
-                                    data[index].title,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    "${data[index].postTime}${tr("skExChpage_beforDays")}",
+                                    style: TextStyle(fontSize: 12, color: normalTextColor),
                                   ),
-
-                                  Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
-
-                                  /// 文章プレビュー
-                                  RichTextView(
-                                    content: data[index].mainMessage,
-                                    isPreView: true,
-                                  ),
-
-                                  Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
-
-                                  ///文章bottomBar
-                                  bottomBar(context: context, data: data[index]),
-
-                                  Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
                                 ],
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    }),
-                  );
-                },
+
+                            ///文章プレビュー
+                            GestureDetector(
+                              onTap: () {
+                                openPostDetailEndDrawer(context: context, choicedPost: data[index]);
+                              },
+                              child: Container(
+                                color: Colors.transparent,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ///Title
+                                    Text(
+                                      data[index].title,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+
+                                    Container(
+                                        margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+
+                                    /// 文章プレビュー
+                                    RichTextView(
+                                      content: data[index].mainMessage,
+                                      isPreView: true,
+                                    ),
+
+                                    Container(
+                                        margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+
+                                    ///文章bottomBar
+                                    bottomBar(context: context, data: data[index]),
+
+                                    Container(
+                                        margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

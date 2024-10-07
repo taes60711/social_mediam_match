@@ -16,5 +16,5 @@ GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 BuildContext globalContext = navigatorKey.currentState!.context;
 
 ///通知用
-BuildContext? postContext;
+BuildContext? globalPostContext;
 BuildContext? courseContext;

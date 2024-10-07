@@ -8,7 +8,7 @@ class PostCommentProvider extends ChangeNotifier {
 
   TextEditingController postCommentInput = TextEditingController();
 
-  void afterPostCeate() {
+  void editInputClear() {
     postCommentInput.text = "";
     notifyListeners();
   }
@@ -19,6 +19,16 @@ class PostCommentProvider extends ChangeNotifier {
     } else {
       viewChoicedPost.good--;
     }
+    notifyListeners();
+  }
+
+  void updateCommentCount({required String updatetype}) {
+    if (updatetype == "create") {
+      viewChoicedPost.commentCount++;
+    } else if (updatetype == "delete") {
+      viewChoicedPost.commentCount--;
+    }
+
     notifyListeners();
   }
 

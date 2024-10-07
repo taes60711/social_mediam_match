@@ -18,8 +18,8 @@ class PostDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PostModel viewChoicedPost = context.read<PostCommentProvider>().viewChoicedPost;
-
+    PostModel viewChoicedPost = context.watch<PostCommentProvider>().viewChoicedPost;
+    print("postDetailPage");
     return Container(
       color: Colors.white,
       height: ScreenSize.height,

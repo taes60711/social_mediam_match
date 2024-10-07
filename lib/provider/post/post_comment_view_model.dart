@@ -34,12 +34,18 @@ class PostCommentViewModel {
     editerStatusOnChange(editorData);
   }
 
-  Future<void> commetMessageOnDelete(PostCommentTextEditorModel choiceData) async {
+  Future<void> commetMessageOnDelete(
+    PostCommentTextEditorModel choiceData, {
+    required PostModel choicedPost,
+  }) async {
     await PostService().deletePostComment(id: choiceData.uid);
     postCommentContext.read<BaseAPIListProvider<PostCommentTextEditorModel>>().deleteData(choiceData: choiceData);
+    globalPostContext?.read<PostCommentProvider>().updateCommentCount(updatetype: "delete");
+    globalPostContext?.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: choicedPost);
+    globalPostContext?.read<BaseAPIListProvider<PostModel>>().editData(updatedData: choicedPost);
   }
 
-  Future<void> deleteCommentPostCheck(PostCommentTextEditorModel choiceData) {
+  Future<void> deleteCommentPostCheck(PostCommentTextEditorModel choiceData, {required PostModel choicedPost}) {
     return showDialog<void>(
       context: globalContext,
       builder: (BuildContext context) {
@@ -75,7 +81,7 @@ class PostCommentViewModel {
                         titleColor: normalTextColor,
                         btnColor: normalBgColor,
                         onPress: () async {
-                          commetMessageOnDelete(choiceData);
+                          commetMessageOnDelete(choiceData, choicedPost: choicedPost);
                           RouteOptions.pop();
                         },
                       ),
@@ -90,15 +96,18 @@ class PostCommentViewModel {
     );
   }
 
-  Future<void> commetMessageOnCreate({required int postUID, required String message}) async {
+  Future<void> commetMessageOnCreate({required PostModel choicedPost, required String message}) async {
+    if (message == "") {
+      return;
+    }
     LoginUser loginUserData = postCommentContext.read<UserProvider>().userData;
-    int uid = await PostService().createPostComment(postUID: postUID, userUID: loginUserData.uid, message: message);
+    int uid = await PostService().createPostComment(postUID: choicedPost.id, userUID: loginUserData.uid, message: message);
     DateTime dateUtc = DateTime.now().toUtc();
     DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
     String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
     PostCommentTextEditorModel commentTextEditorModel = PostCommentTextEditorModel(
       uid: uid,
-      postId: postUID,
+      postId: choicedPost.id,
       userUid: loginUserData.uid,
       message: message,
       postTime: formattedTime,
@@ -107,6 +116,9 @@ class PostCommentViewModel {
       textEditingController: TextEditingController(),
     );
     postCommentContext.read<BaseAPIListProvider<PostCommentTextEditorModel>>().createData(createdData: commentTextEditorModel);
-    postCommentContext.read<PostCommentProvider>().afterPostCeate();
+    postCommentContext.read<PostCommentProvider>().editInputClear();
+    globalPostContext?.read<PostCommentProvider>().updateCommentCount(updatetype: "create");
+    globalPostContext?.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: choicedPost);
+    globalPostContext?.read<BaseAPIListProvider<PostModel>>().editData(updatedData: choicedPost);
   }
 }

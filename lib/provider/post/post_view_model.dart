@@ -40,6 +40,9 @@ class PostViewModel {
 
     if (choicedPost.createdBy != userData.uid) {
       await PostService().updatePostViewCount(choicedPost.id);
+      choicedPost.viewed++;
+      globalPostContext?.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: choicedPost);
+      globalPostContext?.read<BaseAPIListProvider<PostModel>>().editData(updatedData: choicedPost);
     }
   }
 
@@ -64,14 +67,15 @@ class PostViewModel {
 
   Future<void> updatePostGood({required bool isGood, required PostModel viewChoicedPost}) async {
     LoginUser userData = postContext.read<UserProvider>().userData;
+    globalPostContext?.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: viewChoicedPost);
     if (isGood) {
       await PostService().updatePostGood(viewChoicedPost.id);
-
       postContext.read<PostCommentProvider>().updateChoicedPostGoodCount(isPlus: false);
     } else {
       await PostService().updatePostGood(viewChoicedPost.id, userUID: userData.uid);
       postContext.read<PostCommentProvider>().updateChoicedPostGoodCount(isPlus: true);
     }
+    globalPostContext?.read<BaseAPIListProvider<PostModel>>().editData(updatedData: viewChoicedPost);
     postContext.read<PostProvider>().changeIsGoodStatus(!isGood);
   }
 

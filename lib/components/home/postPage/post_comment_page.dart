@@ -19,6 +19,7 @@ import '../../utilities/style/style_config.dart';
 
 class PostCommentPage extends StatelessWidget {
   final PostModel choicedPost;
+
   const PostCommentPage({super.key, required this.choicedPost});
 
   @override
@@ -62,12 +63,12 @@ class PostCommentPage extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     PostCommentViewModel(postCommentContext: context)
-                        .commetMessageOnCreate(postUID: choicedPost.id, message: postCommentInput.text);
+                        .commetMessageOnCreate(choicedPost: choicedPost, message: postCommentInput.text);
                   },
                   child: Container(
                     height: 30,
-                    margin: EdgeInsets.only(left: 5),
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    margin: const EdgeInsets.only(left: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
                     child: Center(
                       child: Icon(
@@ -155,7 +156,7 @@ class PostCommentPage extends StatelessWidget {
                                             contentPadding: EdgeInsets.only(top: -21),
                                             border: InputBorder.none,
                                           ),
-                                          style: TextStyle(fontSize: 14),
+                                          style: const TextStyle(fontSize: 14),
                                         ),
                                       ),
                                       GestureDetector(
@@ -194,7 +195,10 @@ class PostCommentPage extends StatelessWidget {
                                   const SizedBox(width: 10),
                                   GestureDetector(
                                     onTap: () {
-                                      PostCommentViewModel(postCommentContext: context).deleteCommentPostCheck(data[index]);
+                                      PostCommentViewModel(postCommentContext: context).deleteCommentPostCheck(
+                                        data[index],
+                                        choicedPost: choicedPost,
+                                      );
                                     },
                                     child: const Text(
                                       "刪除",
