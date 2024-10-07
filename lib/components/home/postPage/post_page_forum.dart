@@ -174,43 +174,6 @@ class PostPageForum extends StatelessWidget {
                 ),
               ],
             ),
-            Positioned(
-              bottom: 20,
-              right: 20,
-              child: GestureDetector(
-                onTap: () {
-                  /// 文章作成
-
-                  RouteOptions.pushTo(
-                    RoutePath.postEditPage,
-                    arguments: {
-                      'postContext': context,
-                      'allPostBoradTypeList': context.read<PostProvider>().allPostBoards,
-                      'editorType': "create",
-                    },
-                  );
-                },
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.edit,
-                    size: 18,
-                    color: normalBgColor,
-                  ),
-                ),
-              ),
-            ),
             postBoardEndDrawer(),
             postPageBytextFilterEndDrawer(),
             postDetailEndDrawer(),
@@ -222,40 +185,81 @@ class PostPageForum extends StatelessWidget {
   }
 
   Widget postBoradList(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: context.select((PostProvider value) => value.allPostBoards).length,
-            itemBuilder: ((context, index) {
-              return Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: GestureDetector(
-                    onTap: () {
-                      openPostBoardEndDrawer(context: context, boardType: index);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      color: const Color.fromARGB(255, 236, 157, 120),
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(right: 8.0),
-                            width: 35,
-                            height: 35,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(3),
-                              color: const Color.fromARGB(255, 213, 226, 236),
-                            ),
+        Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: context.select((PostProvider value) => value.allPostBoards).length,
+                itemBuilder: ((context, index) {
+                  return Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: GestureDetector(
+                        onTap: () {
+                          openPostBoardEndDrawer(context: context, boardType: index);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          color: const Color.fromARGB(255, 236, 157, 120),
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(right: 8.0),
+                                width: 35,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(3),
+                                  color: const Color.fromARGB(255, 213, 226, 236),
+                                ),
+                              ),
+                              Text(context.read<PostProvider>().allPostBoards[index].name),
+                            ],
                           ),
-                          Text(context.read<PostProvider>().allPostBoards[index].name),
-                        ],
-                      ),
-                    ),
-                  ));
-            }),
+                        ),
+                      ));
+                }),
+              ),
+            )
+          ],
+        ),
+        Positioned(
+          bottom: 30,
+          right: 30,
+          child: GestureDetector(
+            onTap: () {
+              /// 文章作成
+
+              RouteOptions.pushTo(
+                RoutePath.postEditPage,
+                arguments: {
+                  'postContext': context,
+                  'allPostBoradTypeList': context.read<PostProvider>().allPostBoards,
+                  'editorType': "create",
+                },
+              );
+            },
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.edit,
+                size: 18,
+                color: normalBgColor,
+              ),
+            ),
           ),
-        )
+        ),
       ],
     );
   }
