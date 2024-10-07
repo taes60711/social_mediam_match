@@ -6,8 +6,6 @@ import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 
 import '../../../global.dart';
 import '../../../models/post_model.dart';
-import '../../../pageManager/enum/route_path.dart';
-import '../../../pageManager/setting/route_controller.dart';
 import '../../../provider/post/post_view_model.dart';
 import '../../../services/post_service.dart';
 import '../../../provider/post/post_provider.dart';
@@ -45,40 +43,7 @@ class PostPageByType extends StatelessWidget {
                   return const PostLoading();
                 },
                 noDataBuilder: PostViewUtilities.noPostData(),
-                customFloatbutton: GestureDetector(
-                  onTap: () {
-                    /// 文章作成
-                    context.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: PostModel());
-                    RouteOptions.pushTo(
-                      RoutePath.postEditPage,
-                      arguments: {
-                        'postContext': context,
-                        'postBoradType': selectedboardType,
-                        'allPostBoradTypeList': context.read<PostProvider>().allPostBoards,
-                        'editorType': "create",
-                      },
-                    );
-                  },
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 1,
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.edit,
-                      size: 18,
-                      color: normalBgColor,
-                    ),
-                  ),
-                ),
+                customFloatbutton: PostViewUtilities.postCreateButton(context),
                 itemChild: ((data, index) {
                   return Column(
                     children: [
