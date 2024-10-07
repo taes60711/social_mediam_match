@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_provider.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
 import '../../../components/utilities/style/style_config.dart';
 import '../../../models/user_model.dart';
 import '../../../pageManager/setting/route_controller.dart';
@@ -56,48 +57,59 @@ class SignUpViewModel {
 
     loadingPopView();
 
-    // String signUpResult = await signUp(email, password);
-    await Future.delayed(const Duration(seconds: 1));
+    String signUpResult = await signUp(email, password);
+
     RouteOptions.pop();
-    signUpViewProvider.onChangeSignUpPage(2);
+
+    if (signUpResult == "signUp-Sucess") {
+      signUpViewProvider.onChangeSignUpPage(2);
+    }
   }
 
   ///firebaseServer、MysqlServer登録
   ///email：メールアドレス，password：パスワード
-  Future<void> signUp(String email, String password) async {
+  Future<String> signUp(String email, String password) async {
     String signUpResult = "";
+    UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
-    String firebaseSignUpResult = await FirebaseSerivce().firebaseSignUp(email, password);
-
-    if (firebaseSignUpResult.contains("sucess:")) {
-      String tempSignedUID = firebaseSignUpResult.substring(("sucess:").length);
-
-      ///Firebase登録したらSQLにユーザデータ作成する
-      await UserService().sqlSignUp(tempSignedUID, email, password).then((isMySqlSignUpSucess) async {
-        if (isMySqlSignUpSucess) {
-          ///FirebaseからUID取得する
-          signUpResult = firebaseSignUpResult;
-
-          ///登録結果画面を更新する（UID）
-          signUpViewProvider.signUpResultChange(signUpResult);
-
-          ///名前更新するよう（名前輸入あれば）
-          await updateUserData();
-
-          ///画面遷移
-          signUpViewProvider.onChangeSignUpPage(2);
-
-          return;
-        } else {
-          signUpResult = "mysql-error";
-        }
-      });
+    if (userSettingViewProvider.nameInput.text == "") {
+      signUpResult = "no-userName";
     } else {
-      signUpResult = firebaseSignUpResult;
+      context.read<UserProvider>().signUpStatusChange(true);
+
+      String firebaseSignUpResult = await FirebaseSerivce().firebaseSignUp(email, password);
+
+      if (firebaseSignUpResult.contains("sucess:")) {
+        String tempSignedUID = firebaseSignUpResult.substring(("sucess:").length);
+
+        ///Firebase登録したらSQLにユーザデータ作成する
+        await UserService().sqlSignUp(tempSignedUID, email, password).then((isMySqlSignUpSucess) async {
+          if (isMySqlSignUpSucess) {
+            ///登録結果画面を更新する（UID）
+            ///FirebaseからUID取得する
+            signUpViewProvider.signUpResultChange(firebaseSignUpResult);
+
+            ///名前更新するよう（名前輸入あれば）
+            await updateUserData();
+
+            signUpResult = "signUp-Sucess";
+          } else {
+            signUpResult = "mysql-error";
+          }
+        });
+
+        await FirebaseSerivce().firebaseSignOut().then((value) {
+          context.read<UserProvider>().signUpStatusChange(false);
+        });
+      } else {
+        signUpResult = firebaseSignUpResult;
+      }
     }
 
-    // ///登録結果画面を更新する（エラーメッセージ）
+    ///登録結果画面を更新する（エラーメッセージ）
     signUpViewProvider.signUpResultChange(signUpResult);
+
+    return signUpResult;
   }
 
   ///ユーザデータ更新する
@@ -125,7 +137,5 @@ class SignUpViewModel {
         }
       },
     );
-
-    // signUpViewProvider.onChangeSignUpPage(3);
   }
 }

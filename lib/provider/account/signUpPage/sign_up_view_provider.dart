@@ -14,12 +14,16 @@ class SignUpViewProvider extends ChangeNotifier {
   ///サインアップのエラーメッセージ
   String signError = SignUpError.noError;
 
+  ///サインアップのエラーメッセージ
+  String signStepTwoError = "";
+
   ///登録成功したらUIDもらってユーザ資料更新為に
   String signedUID = "";
 
   ///サインアップページ変更
   void onChangeSignUpPage(int toPageIndex) {
     pageIndex = toPageIndex;
+    signUpErrorReset();
     notifyListeners();
   }
 
@@ -37,11 +41,11 @@ class SignUpViewProvider extends ChangeNotifier {
 
   ///すべてステップ終わったらUIDもらう、
   ///またはエラーメッセージ画面に更新する
-  void signUpResultChange(String uid) async {
-    if (uid.contains("sucess:")) {
-      signedUID = uid.substring(("sucess:").length);
+  void signUpResultChange(String result) async {
+    if (result.contains("sucess:")) {
+      signedUID = result.substring(("sucess:").length);
     } else {
-      signError = uid;
+      signStepTwoError = result;
       notifyListeners();
     }
   }
@@ -49,6 +53,7 @@ class SignUpViewProvider extends ChangeNotifier {
   ///サインアップのエラーメッセージクリア
   void signUpErrorReset() {
     signError = SignUpError.noError;
+    signStepTwoError = "";
     notifyListeners();
   }
 }

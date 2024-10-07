@@ -23,15 +23,16 @@ class UserProvider extends ChangeNotifier {
   ///isLoginCheckページローディング
   bool isLoading = false;
 
+  bool isSignUp = false;
+
   ///メソッド：アプリ始めるスタート場合は，ユーザーログインがどうか確認する
   // ユーザの資料を取得、最後ログインのタイム更新、友達リスト（WS）繋がる
   void isLoginCheck(BuildContext context) async {
     if (userData.uid == "-1") {
       FirebaseSerivce().firebaseLoginCheck().listen((String userUID) async {
-        if (userUID != "noUID" && !isLoading) {
+        if (userUID != "noUID" && !isLoading && !isSignUp) {
           isLoading = true;
           notifyListeners();
-
           // ユーザの資料を取得する
           userData = await UserService().requestGetUserData(userUID);
           if (userData.uid != "-1") {
@@ -55,6 +56,11 @@ class UserProvider extends ChangeNotifier {
         }
       });
     }
+  }
+
+  void signUpStatusChange(bool nowSignUpStatus) {
+    isSignUp = nowSignUpStatus;
+    notifyListeners();
   }
 
   ///メソッド：ログアウト

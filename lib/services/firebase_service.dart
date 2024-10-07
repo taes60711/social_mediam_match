@@ -6,6 +6,7 @@ import '../../components/strings/message_strings/account_message.dart';
 
 class FirebaseSerivce {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool isSignup = false;
 
   ///メソッド：登録
   ///email：メールアドレス，password：パスワード

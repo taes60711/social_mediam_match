@@ -39,7 +39,7 @@ class WelcomePage extends StatelessWidget {
               children: [
                 //登録ボタン
                 _button(
-                    title: WelcomeStrings().firstButtonText,
+                    title: "註冊帳號", //WelcomeStrings().firstButtonText,
                     titleColor: normalTextColor,
                     backgroundColor: normalBgColor,
                     onPressed: () {

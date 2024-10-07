@@ -25,8 +25,15 @@ class SignUpStepTwo extends StatelessWidget {
           textController: signUpViewProvider.pwdController,
         ),
         LabelInput(
+          isRequired: true,
           title: StepTwoPage.nameInputTitle,
           textController: userSettingViewProvider.nameInput,
+        ),
+        Builder(
+          builder: (context) {
+            String signStepTwoError = context.select((SignUpViewProvider value) => value.signStepTwoError);
+            return Text(signStepTwoError, style: const TextStyle(color: Colors.red));
+          },
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
