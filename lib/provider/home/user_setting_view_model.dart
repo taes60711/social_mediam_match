@@ -16,7 +16,8 @@ class UserSettingViewModel {
 
   /// ユーザ元々データ
   Future<void> init() async {
-    LoginUser userData = context.watch<UserProvider>().userData;
+    LoginUser userData = context.read<UserProvider>().userData;
+
     SkillMapProvider skillProvider = context.read<SkillMapProvider>();
     UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
 
@@ -126,13 +127,14 @@ class UserSettingViewModel {
         "name : ${userSettingViewProvider.nameInput.text} job : ${userSettingViewProvider.jobInput.text} introduction : ${userSettingViewProvider.introductionInput.text}");
     print("haveSkillList : ${userSettingViewProvider.haveSkillList} wantSkillList : ${userSettingViewProvider.wantSkillList}");
     print("updateData $updateData");
+
     await UserService().sqlUpdateUserData(userData.uid, updateData).then(
       (isSucess) async {
         if (isSucess) {
+          context.read<UserProvider>().updateProfile(userData.uid, updateData);
           RouteOptions.pop();
         }
       },
     );
-    // RouteOptions.pop();
   }
 }

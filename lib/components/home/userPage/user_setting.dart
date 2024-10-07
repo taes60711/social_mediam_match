@@ -4,7 +4,6 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/fit_widget.dart';
 import 'package:social_mediam_match/provider/home/user_setting_view_model.dart';
 import 'package:social_mediam_match/provider/home/user_setting_view_provider.dart';
-
 import '../../account/skill_bar.dart';
 import '../../strings/account/sign_up_strings.dart';
 import '../../strings/userPage/user_page_string.dart';
@@ -29,7 +28,9 @@ class UserSetting extends StatelessWidget {
         BackgroundWidget(
           isSafeArea: true,
           child: StatefulWrapper(
-            onInit: () async => await UserSettingViewModel(context: context).init(),
+            onInit: () async {
+              await UserSettingViewModel(context: context).init();
+            },
             child: _mainBody(context),
           ),
         ),

@@ -72,18 +72,9 @@ class UserProvider extends ChangeNotifier {
   }
 
   ///メソッド：ユーザ資料更新する
-  Future<bool> updateProfile(String uid, UpdateUser updateData) async {
-    bool isSucess = false;
-    try {
-      isSucess = await UserService().sqlUpdateUserData(uid, updateData);
-      if (isSucess) {
-        userData = await UserService().requestGetUserData(uid);
-        notifyListeners();
-      }
-    } catch (e) {
-      print(e);
-    }
-    return isSucess;
+  Future<void> updateProfile(String uid, UpdateUser updateData) async {
+    userData = await UserService().requestGetUserData(uid);
+    notifyListeners();
   }
 
   ///メソッド： 読んでいない通知数取得する
