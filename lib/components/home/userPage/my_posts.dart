@@ -12,6 +12,7 @@ import 'package:social_mediam_match/provider/post/my_post_view_model.dart';
 
 import 'package:social_mediam_match/services/post_service.dart';
 
+import '../../../global.dart';
 import '../../../models/user_model.dart';
 
 import '../../../provider/account/user_provider.dart';
@@ -47,121 +48,129 @@ class MyPosts extends StatelessWidget {
 
 Widget mainBody(BuildContext context) {
   LoginUser userData = context.watch<UserProvider>().userData;
-  return Scaffold(
-    body: SafeArea(
-      child: Column(
-        children: [
-          BaseTopBar(
-            backFunc: () => RouteOptions.popUntilToHome(),
-            title: tr("mypost_title"),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Builder(
-                builder: (context) {
-                  return APIListView<PostModel>(
-                    providerList: context.watch<BaseAPIListProvider<PostModel>>().listData,
-                    apiFunc: (page, size) {
-                      return PostService().getPostDataByUID(page, size, userData);
-                    },
-                    itemChild: ((data, index) {
-                      return Column(
-                        children: [
-                          /// 文章TopBar
-                          Container(
-                            width: ScreenSize.width,
-                            padding: const EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(3),
-                              color: const Color.fromARGB(255, 236, 157, 120),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    ///アイコン
-                                    GestureDetector(
-                                      onTap: () {
-                                        openUserDetailEndDrawer(context: context, otherUserData: data[index].postUserInfo);
-                                      },
-                                      child: UserIcon(
-                                        iconSize: 35,
-                                        image: data[index].postUserInfo.image,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-
-                                    ///ユーザネーム
-                                    Text(
-                                      data[index].postUserInfo.name != ""
-                                          ? data[index].postUserInfo.name ?? ""
-                                          : data[index].postUserInfo.email,
-                                      style: TextStyle(fontSize: 12, color: normalTextColor),
-                                    ),
-                                  ],
-                                ),
-
-                                ///期日
-                                Text(
-                                  "${data[index].postTime}前",
-                                  style: TextStyle(fontSize: 12, color: normalTextColor),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          ///文章プレビュー
-                          GestureDetector(
-                            onTap: () {
-                              PostViewModel(postContext: context).postDetailInit(choicedPost: data[index]);
-                            },
-                            child: Container(
-                              color: Colors.transparent,
-                              child: Column(
+  return StatefulWrapper(
+    onInit: () {
+      globalPostContext = context;
+    },
+    child: Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            BaseTopBar(
+              backFunc: () => RouteOptions.popUntilToHome(),
+              title: tr("mypost_title"),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Builder(
+                  builder: (context) {
+                    return APIListView<PostModel>(
+                      providerList: context.watch<BaseAPIListProvider<PostModel>>().listData,
+                      apiFunc: (page, size) {
+                        return PostService().getPostDataByUID(page, size, userData);
+                      },
+                      itemChild: ((data, index) {
+                        return Column(
+                          children: [
+                            /// 文章TopBar
+                            Container(
+                              width: ScreenSize.width,
+                              padding: const EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3),
+                                color: const Color.fromARGB(255, 236, 157, 120),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ///Title
+                                  Row(
+                                    children: [
+                                      ///アイコン
+                                      GestureDetector(
+                                        onTap: () {
+                                          openUserDetailEndDrawer(context: context, otherUserData: data[index].postUserInfo);
+                                        },
+                                        child: UserIcon(
+                                          iconSize: 35,
+                                          image: data[index].postUserInfo.image,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+
+                                      ///ユーザネーム
+                                      Text(
+                                        data[index].postUserInfo.name != ""
+                                            ? data[index].postUserInfo.name ?? ""
+                                            : data[index].postUserInfo.email,
+                                        style: TextStyle(fontSize: 12, color: normalTextColor),
+                                      ),
+                                    ],
+                                  ),
+
+                                  ///期日
                                   Text(
-                                    data[index].title,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    "${data[index].postTime}前",
+                                    style: TextStyle(fontSize: 12, color: normalTextColor),
                                   ),
-
-                                  Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
-
-                                  /// 文章プレビュー
-                                  RichTextView(
-                                    content: data[index].mainMessage,
-                                    isPreView: true,
-                                  ),
-
-                                  Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
-
-                                  ///文章bottomBar
-                                  bottomBar(context: context, data: data[index]),
-
-                                  Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
                                 ],
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    }),
-                    loadingBuilder: () {
-                      return const PostLoading();
-                    },
-                  );
-                },
+
+                            ///文章プレビュー
+                            GestureDetector(
+                              onTap: () {
+                                PostViewModel(postContext: context).postDetailInit(choicedPost: data[index]);
+                              },
+                              child: Container(
+                                color: Colors.transparent,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ///Title
+                                    Text(
+                                      data[index].title,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+
+                                    Container(
+                                        margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+
+                                    /// 文章プレビュー
+                                    RichTextView(
+                                      content: data[index].mainMessage,
+                                      isPreView: true,
+                                    ),
+
+                                    Container(
+                                        margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+
+                                    ///文章bottomBar
+                                    bottomBar(context: context, data: data[index]),
+
+                                    Container(
+                                        margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+                      loadingBuilder: () {
+                        return const PostLoading();
+                      },
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );

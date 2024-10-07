@@ -22,7 +22,7 @@ class MyCourses extends StatelessWidget {
             Column(
               children: [
                 const BaseTopBar(
-                  title: "我的文章",
+                  title: "我的分享",
                 ),
                 Expanded(
                   child: DefaultTabController(
@@ -32,11 +32,11 @@ class MyCourses extends StatelessWidget {
                         tabs: const [
                           SizedBox(
                             height: 25,
-                            child: Tab(text: '已加入的課程'),
+                            child: Tab(text: '已加入的分享文章'),
                           ),
                           SizedBox(
                             height: 25,
-                            child: Tab(text: '創建的課程'),
+                            child: Tab(text: '已創建的分享文章'),
                           ),
                         ],
                         isScrollable: true,
