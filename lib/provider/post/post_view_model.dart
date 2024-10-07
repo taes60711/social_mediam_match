@@ -40,9 +40,11 @@ class PostViewModel {
 
     if (choicedPost.createdBy != userData.uid) {
       await PostService().updatePostViewCount(choicedPost.id);
-      choicedPost.viewed++;
-      globalPostContext?.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: choicedPost);
-      globalPostContext?.read<BaseAPIListProvider<PostModel>>().editData(updatedData: choicedPost);
+      if (choicedPost.type != -1) {
+        choicedPost.viewed++;
+        globalPostContext?.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: choicedPost);
+        globalPostContext?.read<BaseAPIListProvider<PostModel>>().editData(updatedData: choicedPost);
+      }
     }
   }
 
