@@ -286,8 +286,13 @@ Widget courseChapterEdit() {
           children: chapters.asMap().entries.map((e) {
             int index = e.key;
             CourseChapterInfo chapterInfo = e.value;
-            return ExpansionTile(
+
+            return CustomExpansionTile(
+              isNeedLoadingWidget: false,
               initiallyExpanded: true,
+              collapsedTrailingWidget: const Icon(Icons.keyboard_arrow_up),
+              expandedTrailingWidget: const Icon(Icons.keyboard_arrow_down),
+              onTapPos: ExpansionTilteOnTapPos.traling,
               title: Row(
                 children: [
                   Expanded(

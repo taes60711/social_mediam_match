@@ -52,8 +52,7 @@ class CourseDetail extends StatelessWidget {
                           btnWidth: 55,
                           title: "申請",
                           onPress: () {
-                            CourseViewModel(courseContext: context)
-                                .courseSignUp(choicedCourse: openedCourse);
+                            CourseViewModel(courseContext: context).courseSignUp(choicedCourse: openedCourse);
                           },
                           titleColor: normalTextColor,
                           btnColor: googleButtonColor.withOpacity(0.8),
@@ -62,20 +61,12 @@ class CourseDetail extends StatelessWidget {
                     }),
                   ],
                 ),
-                Container(
-                    margin: const EdgeInsets.all(5),
-                    width: ScreenSize.width,
-                    height: 0.3,
-                    color: hintTextColor),
+                Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
                 Text(
                   "課程類別: ${openedCourse.type}",
                   style: TextStyle(fontSize: 12, color: hintTextColor),
                 ),
-                Container(
-                    margin: const EdgeInsets.all(5),
-                    width: ScreenSize.width,
-                    height: 0.3,
-                    color: hintTextColor),
+                Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
                 const Text(
                   "課程前需求:",
                   style: TextStyle(fontSize: 14),
@@ -89,11 +80,7 @@ class CourseDetail extends StatelessWidget {
                   ),
                   child: Text(openedCourse.beforeNeed),
                 ),
-                Container(
-                    margin: const EdgeInsets.all(5),
-                    width: ScreenSize.width,
-                    height: 0.3,
-                    color: hintTextColor),
+                Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
                 const Text(
                   "課程內容:",
                   style: TextStyle(fontSize: 14),
@@ -128,20 +115,14 @@ class CourseDetail extends StatelessWidget {
                     ),
                   ],
                 ),
-                Container(
-                    margin: const EdgeInsets.all(5),
-                    width: ScreenSize.width,
-                    height: 0.3,
-                    color: hintTextColor),
+                Container(margin: const EdgeInsets.all(5), width: ScreenSize.width, height: 0.3, color: hintTextColor),
                 GestureDetector(
                   onTap: () {
-                    openUserDetailEndDrawer(
-                        context: context, otherUserData: openedCourse.courseCreateduserInfo);
+                    openUserDetailEndDrawer(context: context, otherUserData: openedCourse.courseCreateduserInfo);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                    decoration: BoxDecoration(
-                        color: googleColor.withAlpha(150), borderRadius: BorderRadius.circular(3)),
+                    decoration: BoxDecoration(color: googleColor.withAlpha(150), borderRadius: BorderRadius.circular(3)),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -181,8 +162,7 @@ class CourseDetail extends StatelessWidget {
                   return Column(
                     children: [
                       CustomExpansionTile(
-                        initiallyExpanded:
-                            openedCourse.signUpStatus == "added" || openedCourse.isPublic,
+                        initiallyExpanded: openedCourse.signUpStatus == "added" || openedCourse.isPublic,
                         title: const Text("詳細介紹"),
                         collapsedTrailingWidget: const Icon(Icons.keyboard_arrow_up),
                         expandedTrailingWidget: const Icon(Icons.keyboard_arrow_down),
@@ -207,12 +187,10 @@ class CourseDetail extends StatelessWidget {
                                       String content = e;
                                       int startIndex = '{"text":"'.length;
                                       int endIndex = content.indexOf('","');
-                                      int startUrlIndex =
-                                          content.indexOf('"url":"') + '"url":"'.length;
+                                      int startUrlIndex = content.indexOf('"url":"') + '"url":"'.length;
                                       int endUrlIndex = content.indexOf('"}');
                                       String chapterText = content.substring(startIndex, endIndex);
-                                      String chapterUrl =
-                                          content.substring(startUrlIndex, endUrlIndex);
+                                      String chapterUrl = content.substring(startUrlIndex, endUrlIndex);
 
                                       return Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 5),
@@ -228,16 +206,12 @@ class CourseDetail extends StatelessWidget {
                                             Expanded(
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  CourseViewModel(courseContext: context)
-                                                      .openCourseChapterContentPage(
-                                                          chapterText: chapterText,
-                                                          chapterUrl: chapterUrl);
+                                                  CourseViewModel(courseContext: context).openCourseChapterContentPage(
+                                                      chapterText: chapterText, chapterUrl: chapterUrl);
                                                 },
                                                 child: Text(
                                                   chapterText,
-                                                  style: TextStyle(
-                                                      color: googleColor,
-                                                      decoration: TextDecoration.underline),
+                                                  style: TextStyle(color: googleColor, decoration: TextDecoration.underline),
                                                   overflow: TextOverflow.ellipsis,
                                                 ),
                                               ),

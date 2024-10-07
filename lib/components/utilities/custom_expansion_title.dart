@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+
+enum ExpansionTilteOnTapPos {
+  all,
+  traling,
+}
 
 class CustomExpansionTile extends StatefulWidget {
   final Widget title;
@@ -7,6 +13,8 @@ class CustomExpansionTile extends StatefulWidget {
   final Widget? collapsedTrailingWidget;
   final List<Widget> children;
   final bool initiallyExpanded;
+  final bool isNeedLoadingWidget;
+  final ExpansionTilteOnTapPos onTapPos;
 
   const CustomExpansionTile({
     super.key,
@@ -15,6 +23,8 @@ class CustomExpansionTile extends StatefulWidget {
     this.collapsedTrailingWidget,
     required this.children,
     this.initiallyExpanded = false,
+    this.isNeedLoadingWidget = true,
+    this.onTapPos = ExpansionTilteOnTapPos.all,
   });
 
   @override
@@ -53,14 +63,18 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> with SingleTi
   Future<void> _handleTap() async {
     if (!_isExpanded) {
       setState(() {
-        _isLoading = true;
+        if (widget.isNeedLoadingWidget) {
+          _isLoading = true;
+        }
         _isExpanded = true;
       });
       _controller.forward().whenComplete(() async {
-        await Future.delayed(const Duration(milliseconds: 200));
-        setState(() {
-          _isLoading = false;
-        });
+        if (widget.isNeedLoadingWidget) {
+          await Future.delayed(const Duration(milliseconds: 200));
+          setState(() {
+            _isLoading = false;
+          });
+        }
       });
     } else {
       _controller.reverse().whenComplete(() {
@@ -75,14 +89,24 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> with SingleTi
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        ListTile(
-          title: Row(
-            children: [
-              Expanded(child: widget.title),
-              _isExpanded ? widget.expandedTrailingWidget ?? Container() : widget.collapsedTrailingWidget ?? Container(),
-            ],
+        GestureDetector(
+          onTap: widget.onTapPos == ExpansionTilteOnTapPos.all ? _handleTap : null,
+          child: SizedBox(
+            width: ScreenSize.width,
+            child: Row(
+              children: [
+                Expanded(child: widget.title),
+                widget.expandedTrailingWidget != null || widget.collapsedTrailingWidget != null
+                    ? const SizedBox(width: 10)
+                    : const SizedBox(),
+                GestureDetector(
+                  onTap: () => _handleTap(),
+                  child:
+                      _isExpanded ? widget.expandedTrailingWidget ?? Container() : widget.collapsedTrailingWidget ?? Container(),
+                ),
+              ],
+            ),
           ),
-          onTap: _handleTap,
         ),
         ClipRect(
           child: AnimatedBuilder(
@@ -106,6 +130,7 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> with SingleTi
             },
           ),
         ),
+        const SizedBox(height: 5),
       ],
     );
   }

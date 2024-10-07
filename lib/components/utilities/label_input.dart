@@ -225,10 +225,18 @@ class TextInput extends StatefulWidget {
   State<TextInput> createState() => _TextInputState();
 }
 
-bool bIsEdit = false;
-FocusNode focusNode = FocusNode();
-
 class _TextInputState extends State<TextInput> {
+  bool bIsEdit = false;
+  FocusNode focusNode = FocusNode();
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      focusNode.unfocus();
+      bIsEdit = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     OutlineInputBorder outlineInputBorder = OutlineInputBorder(
@@ -243,43 +251,39 @@ class _TextInputState extends State<TextInput> {
       border: const OutlineInputBorder(),
     );
 
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              if (bIsEdit) {
-                focusNode.unfocus();
-                bIsEdit = false;
-              } else {
-                focusNode.requestFocus();
-                bIsEdit = true;
-              }
-            });
-          },
-          child: Icon(
-            bIsEdit ? Icons.check : Icons.edit,
-            color: normalBgColor,
-          ),
-        ),
-        const SizedBox(width: 5),
-        Expanded(
-          child: bIsEdit
-              ? TextField(
+    return bIsEdit
+        ? Row(
+            children: [
+              Expanded(
+                child: TextField(
                   focusNode: focusNode,
                   autofocus: bIsEdit,
                   decoration: inputDecoration,
                   controller: widget.textController,
                   onChanged: widget.onChanged,
-                )
-              : Text(
-                  widget.textController.text,
-                  style: const TextStyle(
-                    color: Colors.black,
-                  ),
                 ),
-        ),
-      ],
-    );
+              ),
+              const SizedBox(width: 10),
+            ],
+          )
+        : GestureDetector(
+            onTap: () {
+              setState(() {
+                if (bIsEdit) {
+                  focusNode.unfocus();
+                  bIsEdit = false;
+                } else {
+                  focusNode.requestFocus();
+                  bIsEdit = true;
+                }
+              });
+            },
+            child: Text(
+              widget.textController.text,
+              style: const TextStyle(
+                color: Colors.black,
+              ),
+            ),
+          );
   }
 }
