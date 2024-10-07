@@ -9,6 +9,7 @@ import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 
 class PostViewUtilities {
+  ///データなレイアウト
   static Widget noPostData() {
     return SizedBox(
       width: ScreenSize.width,
@@ -37,11 +38,11 @@ class PostViewUtilities {
     );
   }
 
+  ///文章作るボタン
   static Widget postCreateButton(BuildContext pageContext) {
     return GestureDetector(
       onTap: () {
         /// 文章作成
-
         RouteOptions.pushTo(
           RoutePath.postEditPage,
           arguments: {
@@ -73,6 +74,7 @@ class PostViewUtilities {
     );
   }
 
+  ///何も検索しているレイアウト
   static Widget noinitSearchWidget() {
     return SizedBox(
       width: ScreenSize.width,

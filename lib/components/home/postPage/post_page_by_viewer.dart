@@ -37,6 +37,8 @@ class PostPageByViewer extends StatelessWidget {
                 apiFunc: (page, size) {
                   return PostService().getPostDataByViewer(page, size);
                 },
+
+                ///文章作るボタン
                 customFloatbutton: PostViewUtilities.postCreateButton(context),
                 itemChild: ((data, index) {
                   return Column(

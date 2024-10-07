@@ -55,7 +55,7 @@ class PostCommentPage extends StatelessWidget {
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.only(top: 5, left: 10),
                         border: OutlineInputBorder(),
-                        hintText: 'コメントを追加',
+                        hintText: '留言',
                       ),
                     ),
                   ),
@@ -218,8 +218,8 @@ class PostCommentPage extends StatelessWidget {
               loadingBuilder: () {
                 return Container();
               },
-              noDataBuilder: Center(
-                child: Text("コメントありません"),
+              noDataBuilder: const Center(
+                child: Text("目前沒有任何留言"),
               ),
             ),
           ),

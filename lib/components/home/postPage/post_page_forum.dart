@@ -34,6 +34,7 @@ class PostPageForum extends StatelessWidget {
           children: [
             Column(
               children: [
+                ///文章検索ページ開くボタン
                 GestureDetector(
                   onTap: () {
                     openPostPageBytextFilterEndDrawer(context: context);

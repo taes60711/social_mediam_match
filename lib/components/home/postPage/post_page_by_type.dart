@@ -43,6 +43,8 @@ class PostPageByType extends StatelessWidget {
                   return const PostLoading();
                 },
                 noDataBuilder: PostViewUtilities.noPostData(),
+
+                ///文章作るボタン
                 customFloatbutton: PostViewUtilities.postCreateButton(context),
                 itemChild: ((data, index) {
                   return Column(
