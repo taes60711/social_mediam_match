@@ -26,7 +26,8 @@ class UserDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return StatefulWrapper(
       onInit: () {
-        List<String> usersList = [context.watch<UserProvider>().userData.uid, otherUser.uid];
+        List<String> usersList = [context.read<UserProvider>().userData.uid, otherUser.uid];
+
         context.read<FriendProvider>().checkIsFriend(usersList);
       },
       child: Scaffold(
@@ -52,7 +53,7 @@ class UserDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Visibility(
-              visible: otherUser.uid != context.watch<UserProvider>().userData.uid,
+              visible: otherUser.uid != context.read<UserProvider>().userData.uid,
               child: Builder(
                 builder: (context) {
                   bool isFriend = context.select((FriendProvider value) => value.isFriend);
@@ -75,7 +76,7 @@ class UserDetailPage extends StatelessWidget {
                           btnWidth: 100,
                           verticalMargin: 8,
                           onPress: () {
-                            List<String> usersList = [context.watch<UserProvider>().userData.uid, otherUser.uid];
+                            List<String> usersList = [context.read<UserProvider>().userData.uid, otherUser.uid];
                             context.read<FriendProvider>().addFriend(usersList);
                           });
                 },

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/user_detail_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
 
 import '../../../models/friend_model.dart';
 import '../../../models/user_model.dart';
@@ -120,7 +121,10 @@ class MyFriends extends StatelessWidget {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      deleteFriendCheck(roomId: listInfo.roomId, members: [listInfo.memberId]);
+                                      deleteFriendCheck(
+                                        roomId: listInfo.roomId,
+                                        members: [context.read<UserProvider>().userData.uid],
+                                      );
                                     },
                                     child: Container(
                                       width: 30,
