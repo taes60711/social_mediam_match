@@ -76,8 +76,9 @@ class SignUpViewModel {
       signUpResult = "no-userName";
     } else {
       context.read<UserProvider>().signUpStatusChange(true);
-
       String firebaseSignUpResult = await FirebaseSerivce().firebaseSignUp(email, password);
+      await FirebaseSerivce().firebaseSignOut();
+      context.read<UserProvider>().signUpStatusChange(false);
 
       if (firebaseSignUpResult.contains("sucess:")) {
         String tempSignedUID = firebaseSignUpResult.substring(("sucess:").length);
@@ -96,10 +97,6 @@ class SignUpViewModel {
           } else {
             signUpResult = "mysql-error";
           }
-        });
-
-        await FirebaseSerivce().firebaseSignOut().then((value) {
-          context.read<UserProvider>().signUpStatusChange(false);
         });
       } else {
         signUpResult = firebaseSignUpResult;
