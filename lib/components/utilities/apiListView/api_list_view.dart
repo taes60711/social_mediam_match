@@ -48,42 +48,48 @@ class APIListView<R> extends StatelessWidget {
         backgroundColor: Colors.transparent,
         floatingActionButton: Builder(
           builder: (context) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Visibility(
-                  visible: customFloatbutton != null,
-                  child: customFloatbutton ?? Container(),
-                ),
-                const SizedBox(height: 10),
-                Visibility(
-                  visible: needToTopWidget && !context.select((BaseAPIListProvider<R> value) => value.isTop),
-                  child: GestureDetector(
-                    onTap: () {
-                      scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.ease);
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: normalBgColor2,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        FontAwesomeIcons.angleUp,
-                        size: 16,
-                        color: Colors.white,
+            bool isScrollUp = context.read<BaseAPIListProvider<R>>().isScrollUp;
+            return AnimatedSlide(
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
+              offset: isScrollUp ? const Offset(0, 1) : const Offset(0, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Visibility(
+                    visible: customFloatbutton != null,
+                    child: customFloatbutton ?? Container(),
+                  ),
+                  const SizedBox(height: 10),
+                  Visibility(
+                    visible: needToTopWidget && !context.read<BaseAPIListProvider<R>>().isTop,
+                    child: GestureDetector(
+                      onTap: () {
+                        scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+                      },
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          color: normalBgColor2,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          FontAwesomeIcons.angleUp,
+                          size: 16,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             );
           },
         ),
@@ -169,17 +175,35 @@ class APIListView<R> extends StatelessWidget {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollNotification) {
         LoadDataStatus nowLoadDataStatus = context.read<BaseAPIListProvider<R>>().loadStatus;
+
+        if (scrollNotification is ScrollStartNotification) {
+          context.read<BaseAPIListProvider<R>>().onScrollingPosChange(scrollNotification.metrics.pixels);
+        }
+
         if (scrollNotification is ScrollUpdateNotification) {
           final scrollPosition = scrollNotification.metrics.pixels;
           final max = scrollNotification.metrics.maxScrollExtent;
 
           /// スクロール箇所が最TOPチェック
           bool isTop = context.read<BaseAPIListProvider<R>>().isTop;
-          if (isTop && needToTopWidget) {
-            bool isPosNotInTop = scrollPosition >= 20;
+          bool isScrollUp = context.read<BaseAPIListProvider<R>>().isScrollUp;
+          bool isScrollingUp = scrollPosition < context.read<BaseAPIListProvider<R>>().startScrollPos;
+          if (needToTopWidget) {
+            if (isScrollingUp) {
+              if (!isScrollUp) {
+                context.read<BaseAPIListProvider<R>>().onScrollUpOnChange(true);
+              }
+            } else {
+              if (isScrollUp) {
+                context.read<BaseAPIListProvider<R>>().onScrollUpOnChange(false);
+              }
+              if (isTop) {
+                bool isPosNotInTop = scrollPosition >= 20;
 
-            if (isPosNotInTop) {
-              context.read<BaseAPIListProvider<R>>().onIsTopChange(false);
+                if (isPosNotInTop) {
+                  context.read<BaseAPIListProvider<R>>().onIsTopChange(false);
+                }
+              }
             }
           }
 

@@ -25,6 +25,8 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
   int size = 5;
   int page = 0;
   bool isTop = true;
+  double startScrollPos = 0.0;
+  bool isScrollUp = true;
   LoadDataStatus loadStatus = LoadDataStatus.loadingFinish;
 
   void initNoSearch() {
@@ -116,6 +118,16 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
 
   void onIsTopChange(bool isTopStatus) {
     isTop = isTopStatus;
+    render();
+  }
+
+  void onScrollingPosChange(double isScrollingUpStatus) {
+    startScrollPos = isScrollingUpStatus;
+    render();
+  }
+
+  void onScrollUpOnChange(bool isScrollUpStatus) {
+    isScrollUp = isScrollUpStatus;
     render();
   }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class InitialProvider extends ChangeNotifier {
   ///MARK: テスト用
-  bool needTestIpInputPage = true;
+  bool needTestIpInputPage = false;
 
   void toFirstEnterAppPage() {
     needTestIpInputPage = false;
