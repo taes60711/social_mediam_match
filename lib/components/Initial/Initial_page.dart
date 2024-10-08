@@ -12,6 +12,7 @@ import '../../models/user_model.dart';
 import '../../provider/account/user_provider.dart';
 import '../../provider/Initial/initial_provider.dart';
 
+import '../../test_Ip_input_page.dart';
 import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
 
@@ -25,7 +26,13 @@ class Initialpage extends StatelessWidget {
     bool isLoginLoading = context.select((UserProvider value) => value.isLoading);
 
     Widget component;
-    if (isfirstEnterApp) {
+
+    ///MARK: テスト用
+    bool needTestIpInputPage = context.select((InitialProvider value) => value.needTestIpInputPage);
+    if (needTestIpInputPage) {
+      ///MARK: テスト用
+      component = const TestIpInputPage();
+    } else if (isfirstEnterApp) {
       component = splashScreen(context);
     } else {
       if (isLoginLoading) {
