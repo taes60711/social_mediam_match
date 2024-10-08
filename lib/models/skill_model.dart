@@ -17,6 +17,10 @@ class RequestSkillListData {
 
   RequestSkillListData({required this.name, required this.id});
 
+  RequestSkillListData.copy(RequestSkillListData skillListData)
+      : id = skillListData.id,
+        name = skillListData.name;
+
   factory RequestSkillListData.toModel(Map<String, dynamic> json) {
     return RequestSkillListData(
       id: json["id"],

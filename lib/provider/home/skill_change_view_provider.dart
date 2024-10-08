@@ -8,7 +8,14 @@ class SkillChangeProvider extends ChangeNotifier {
   List<RequestSkillListData> filteredSkill = [];
   SkillChangeEndDrawerType endDrawerOpenInfo = SkillChangeEndDrawerType.close;
 
+  TextEditingController filterController = TextEditingController();
   final Map<SkillType, List<RequestSkillListData>> skillMap = {
+    SkillType.frontend: [],
+    SkillType.iot: [],
+    SkillType.backend: [],
+    SkillType.other: [],
+  };
+  Map<SkillType, List<RequestSkillListData>> filteredSkillMap = {
     SkillType.frontend: [],
     SkillType.iot: [],
     SkillType.backend: [],
@@ -32,6 +39,27 @@ class SkillChangeProvider extends ChangeNotifier {
         skillMap[SkillType.other]!.add(skillInfo);
       }
     }
+    filteredSkillMap = skillMap.map((key, value) {
+      return MapEntry(key, value.map((skill) => RequestSkillListData.copy(skill)).toList());
+    });
+
+    notifyListeners();
+  }
+
+  ///スキル名前でフィルター
+  void searchSkillByFilter(String value) {
+    filteredSkillMap = skillMap.map((key, value) {
+      return MapEntry(key, value.map((skill) => RequestSkillListData.copy(skill)).toList());
+    });
+
+    for (var skillType in SkillType.values) {
+      filteredSkillMap[skillType] = filteredSkillMap[skillType]!
+          .where(
+            (element) => element.name.toLowerCase().contains(value),
+          )
+          .toList();
+    }
+
     notifyListeners();
   }
 

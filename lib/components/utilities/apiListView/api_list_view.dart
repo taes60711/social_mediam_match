@@ -50,7 +50,7 @@ class APIListView<R> extends StatelessWidget {
           builder: (context) {
             bool isScrollUp = context.read<BaseAPIListProvider<R>>().isScrollUp;
             return AnimatedSlide(
-              duration: const Duration(milliseconds: 400),
+              duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
               offset: isScrollUp ? const Offset(0, 1) : const Offset(0, 0),
               child: Column(

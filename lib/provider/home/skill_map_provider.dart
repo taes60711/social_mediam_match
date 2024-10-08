@@ -85,8 +85,11 @@ class SkillMapProvider extends ChangeNotifier {
     });
 
     for (var skillType in SkillType.values) {
-      filteredSkillMap[skillType] =
-          filteredSkillMap[skillType]!.where((element) => element.skillHave.name.contains(value)).toList();
+      filteredSkillMap[skillType] = filteredSkillMap[skillType]!
+          .where(
+            (element) => element.skillHave.name.toLowerCase().contains(value),
+          )
+          .toList();
     }
 
     notifyListeners();

@@ -17,20 +17,21 @@ class CourseFilterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        margin: const EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: normalBgColor2.withOpacity(0.1),
-        ),
-        child: Column(
-          children: [
-            Expanded(
+      body: Column(
+        children: [
+          searchBar(context),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              margin: const EdgeInsets.symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: normalBgColor2.withOpacity(0.1),
+              ),
               child: Builder(
                 builder: (context) {
                   Map<SkillType, List<RequestSkillListData>> skillMap =
-                      context.select((SkillChangeProvider value) => value.skillMap);
+                      context.select((SkillChangeProvider value) => value.filteredSkillMap);
                   List<RequestSkillListData> filteredSkill = context.watch<SkillChangeProvider>().filteredSkill;
                   return SingleChildScrollView(
                     child: Column(
@@ -82,15 +83,45 @@ class CourseFilterPage extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(height: 10),
-            TextBtn(
-                title: tr("skillFilterSearch"),
-                btnColor: normalBgColor,
-                onPress: () {
-                  CourseViewModel(courseContext: context).courseFilterSearchStart();
-                }),
-          ],
+          ),
+          const SizedBox(height: 10),
+          TextBtn(
+              title: tr("skillFilterSearch"),
+              btnColor: normalBgColor,
+              onPress: () {
+                CourseViewModel(courseContext: context).courseFilterSearchStart();
+              }),
+        ],
+      ),
+    );
+  }
+
+  Widget searchBar(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      width: ScreenSize.width,
+      height: 36,
+      child: TextField(
+        cursorColor: normalBgColor2,
+        controller: context.read<SkillChangeProvider>().filterController,
+        decoration: InputDecoration(
+          hintText: tr("skillSearchHintText"),
+          hintStyle: const TextStyle(fontSize: 14),
+          prefixIcon: const Icon(Icons.search),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+          ),
+          contentPadding: const EdgeInsets.all(8),
+          border: const OutlineInputBorder(),
         ),
+        onChanged: (value) {
+          context.read<SkillChangeProvider>().searchSkillByFilter(value);
+        },
       ),
     );
   }

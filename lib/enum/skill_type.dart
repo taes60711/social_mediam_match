@@ -1,6 +1,25 @@
-List<String> frontType = ["javascript", "typescript", "css", "html", "vue", "React", "AndroidStudio", "Flutter", "objective-c"];
-List<String> iotType = ["arduino"];
-List<String> backendType = ["java", "python", "mysql"];
+List<String> frontType = [
+  "javascript",
+  "typescript",
+  "css",
+  "html",
+  "Vue.js",
+  "React",
+  "AndroidStudio",
+  "Flutter",
+  "objective-c",
+  "Angular"
+];
+List<String> iotType = [
+  "Arduino",
+  "C",
+  "C++",
+];
+List<String> backendType = [
+  "Java",
+  "Python",
+  "MySQL",
+];
 
 ///dataType
 enum SkillType {
