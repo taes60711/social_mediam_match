@@ -29,6 +29,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     pwdController.text = "toto60811";
 
     return BackgroundWidget(
+      resizeToAvoidBottomInset: true,
       child: Column(
         children: [
           // backButton,
