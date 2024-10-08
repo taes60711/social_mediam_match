@@ -7,6 +7,7 @@ import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 import 'package:social_mediam_match/provider/home/skill_change_view_provider.dart';
 import 'package:social_mediam_match/services/user_service.dart';
+import '../../../models/skill_model.dart';
 import '../../../provider/home/skill_change_view_model.dart';
 import '../../account/skill_bar.dart';
 import '../../utilities/endDrawers/skill_change_filter_end_drawer.dart';
@@ -59,11 +60,12 @@ Widget _mainBody(BuildContext context) {
           child: Builder(
             builder: (context) {
               LoginUser userData = context.watch<UserProvider>().userData;
-              List<String> filteredSkill = context.select((SkillChangeProvider value) => value.filteredSkill);
+              List<RequestSkillListData> filteredSkill = context.select((SkillChangeProvider value) => value.filteredSkill);
 
               return APIListView<LoginUser>(
                 apiFunc: (page, size) {
-                  return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filteredSkill);
+                  List<String> filteredSkillNameList = filteredSkill.map((e) => e.name).toList();
+                  return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filteredSkillNameList);
                 },
                 providerList: context.watch<BaseAPIListProvider<LoginUser>>().listData,
                 itemChild: (data, index) {

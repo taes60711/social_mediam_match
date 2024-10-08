@@ -23,11 +23,10 @@ class SkillChangeViewModel {
   Future<void> filterSearchStart() async {
     LoginUser userData = context.read<UserProvider>().userData;
 
-    List<RequestSkillListData> skillList = context.read<SkillChangeProvider>().skillList;
-    List<String> filteredSkillList = context.read<SkillChangeProvider>().filteredSkill;
+    List<RequestSkillListData> filteredSkillList = context.read<SkillChangeProvider>().filteredSkill;
 
     List<String> filteredSkillIdsList = filteredSkillList.map((e) {
-      return (skillList.firstWhere((element) => element.name == e).id).toString();
+      return e.id.toString();
     }).toList();
 
     int loadSize = context.read<BaseAPIListProvider<LoginUser>>().size;

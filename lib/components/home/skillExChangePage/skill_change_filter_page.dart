@@ -5,6 +5,7 @@ import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/models/skill_model.dart';
 import 'package:social_mediam_match/provider/home/skill_change_view_model.dart';
 
+import '../../../enum/skill_type.dart';
 import '../../../provider/home/skill_change_view_provider.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -28,34 +29,54 @@ class SkillChangeFilterPage extends StatelessWidget {
             Expanded(
               child: Builder(
                 builder: (context) {
-                  List<RequestSkillListData> skillList = context.select((SkillChangeProvider value) => value.skillList);
-                  List<String> filteredSkill = context.watch<SkillChangeProvider>().filteredSkill;
+                  Map<SkillType, List<RequestSkillListData>> skillMap =
+                      context.select((SkillChangeProvider value) => value.skillMap);
+                  List<RequestSkillListData> filteredSkill = context.watch<SkillChangeProvider>().filteredSkill;
                   return SingleChildScrollView(
                     child: Column(
-                      children: skillList.map((e) {
-                        return GestureDetector(
-                          onTap: () {
-                            context.read<SkillChangeProvider>().onChangeSkillFilter(e.name);
-                          },
-                          child: Container(
-                            width: ScreenSize.width,
-                            margin: const EdgeInsets.symmetric(vertical: 4),
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: filteredSkill.any((element) => element == e.name)
-                                  ? normalBgColor
-                                  : normalBgColor2.withOpacity(0.1),
-                            ),
-                            child: Text(
-                              e.name,
-                              style: TextStyle(
-                                color: filteredSkill.any((element) => element == e.name) ? Colors.white : normalBgColor2,
+                      children: SkillType.values.map(
+                        (skillType) {
+                          return Column(
+                            children: [
+                              /// スキル種類
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                                  margin: const EdgeInsets.symmetric(vertical: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: googleButtonColor.withOpacity(0.8),
+                                  ),
+                                  child: Text(skillType.value, style: const TextStyle(color: Colors.white)),
+                                ),
                               ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
+
+                              Column(
+                                children: skillMap[skillType]!.map((e) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      context.read<SkillChangeProvider>().onChangeSkillFilter(e);
+                                    },
+                                    child: Container(
+                                      width: ScreenSize.width,
+                                      margin: const EdgeInsets.symmetric(vertical: 4),
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: filteredSkill.any((element) => element.name == e.name)
+                                            ? normalBgColor
+                                            : normalBgColor2.withOpacity(0.1),
+                                      ),
+                                      child: Text(e.name),
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                            ],
+                          );
+                        },
+                      ).toList(),
                     ),
                   );
                 },
