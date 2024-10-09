@@ -1,12 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/models/skill_model.dart';
 import 'package:social_mediam_match/provider/corse_view_model.dart';
 
 import '../../../enum/skill_type.dart';
 import '../../../provider/home/skill_change_view_provider.dart';
 import '../../utilities/custom_button.dart';
+import '../../utilities/endDrawers/course_filter_end_drawer.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 
@@ -19,6 +21,18 @@ class CourseFilterPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Column(
         children: [
+          BaseTopBar(
+            backFunc: () {
+              closeCourseFilterEndDrawer(context: context);
+            },
+            rightWidget: TextBtn(
+                btnWidth: 78,
+                title: tr("skillFilterSearch"),
+                btnColor: normalBgColor,
+                onPress: () {
+                  CourseViewModel(courseContext: context).courseFilterSearchStart();
+                }),
+          ),
           searchBar(context),
           Expanded(
             child: Container(
@@ -85,12 +99,6 @@ class CourseFilterPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          TextBtn(
-              title: tr("skillFilterSearch"),
-              btnColor: normalBgColor,
-              onPress: () {
-                CourseViewModel(courseContext: context).courseFilterSearchStart();
-              }),
         ],
       ),
     );

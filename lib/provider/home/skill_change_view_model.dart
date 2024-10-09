@@ -24,7 +24,6 @@ class SkillChangeViewModel {
     LoginUser userData = context.read<UserProvider>().userData;
 
     List<RequestSkillListData> filteredSkillList = context.read<SkillChangeProvider>().filteredSkill;
-
     List<String> filteredSkillIdsList = filteredSkillList.map((e) {
       return e.id.toString();
     }).toList();

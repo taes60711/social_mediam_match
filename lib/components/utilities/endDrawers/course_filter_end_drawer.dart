@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../provider/course_provider.dart';
+import '../../../provider/home/skill_change_view_provider.dart';
 import '../../home/coursePage/course_filter.dart';
 import 'custom_end_drawer.dart';
 
@@ -14,6 +15,8 @@ enum CourseFilterEndDrawerType {
 
 ///MARK: void コースフィルターページ開くように
 void openCourseFilterEndDrawer({required BuildContext context}) {
+  print("context.read<SkillChangeProvider>() ${context.read<SkillChangeProvider>().filteredSkill}");
+
   context.read<CourseProvider>().changeFilterEndDrawerStatus(CourseFilterEndDrawerType.open);
 }
 
@@ -33,6 +36,7 @@ Widget courseFilterEndDrawer() {
 
       if (endDrawer == CourseFilterEndDrawerType.open) {
         endDrawerWidget = EndDrawer(
+          isNeedTopbar: false,
           onDismissed: () {
             closeCourseFilterEndDrawer(context: context);
           },

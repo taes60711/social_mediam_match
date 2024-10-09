@@ -6,10 +6,11 @@ import '../../models/skill_model.dart';
 
 class SkillChangeProvider extends ChangeNotifier {
   List<RequestSkillListData> filteredSkill = [];
+  List<RequestSkillListData> tempChoicedSkill = [];
   SkillChangeEndDrawerType endDrawerOpenInfo = SkillChangeEndDrawerType.close;
 
   TextEditingController filterController = TextEditingController();
-  final Map<SkillType, List<RequestSkillListData>> skillMap = {
+  Map<SkillType, List<RequestSkillListData>> skillMap = {
     SkillType.frontend: [],
     SkillType.iot: [],
     SkillType.backend: [],
@@ -59,6 +60,12 @@ class SkillChangeProvider extends ChangeNotifier {
           )
           .toList();
     }
+
+    notifyListeners();
+  }
+
+  void ss(List<RequestSkillListData> choicedSkill) {
+    filteredSkill = choicedSkill;
 
     notifyListeners();
   }

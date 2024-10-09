@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/home/skill_change_view_provider.dart';
@@ -33,7 +32,7 @@ Widget skillChangeEndDrawer() {
 
     if (postCommentEndDrawer == SkillChangeEndDrawerType.open) {
       endDrawerWidget = EndDrawer(
-        title: tr("skillFilterTitle"),
+        isNeedTopbar: false,
         onDismissed: () {
           closeSkillChangeEndDrawer(context: context);
         },

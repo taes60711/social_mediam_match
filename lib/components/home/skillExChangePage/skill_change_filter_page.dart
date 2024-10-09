@@ -7,6 +7,8 @@ import 'package:social_mediam_match/provider/home/skill_change_view_model.dart';
 
 import '../../../enum/skill_type.dart';
 import '../../../provider/home/skill_change_view_provider.dart';
+import '../../utilities/basic_top_bar.dart';
+import '../../utilities/endDrawers/skill_change_filter_end_drawer.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 
@@ -19,6 +21,18 @@ class SkillChangeFilterPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Column(
         children: [
+          BaseTopBar(
+            backFunc: () {
+              closeSkillChangeEndDrawer(context: context);
+            },
+            rightWidget: TextBtn(
+                btnWidth: 78,
+                title: tr("skillFilterSearch"),
+                btnColor: normalBgColor,
+                onPress: () {
+                  SkillChangeViewModel(context: context).filterSearchStart();
+                }),
+          ),
           searchBar(context),
           Expanded(
             child: Container(
@@ -85,12 +99,6 @@ class SkillChangeFilterPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          TextBtn(
-              title: tr("skillFilterSearch"),
-              btnColor: normalBgColor,
-              onPress: () {
-                SkillChangeViewModel(context: context).filterSearchStart();
-              }),
         ],
       ),
     );

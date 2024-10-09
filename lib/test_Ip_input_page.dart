@@ -22,20 +22,25 @@ class _TestIpInputPageState extends State<TestIpInputPage> {
   @override
   Widget build(BuildContext context) {
     TextEditingController ipInputController = TextEditingController();
+    TextEditingController wsIpInputController = TextEditingController();
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            LabelInput(isRequired: true, title: "IP", textController: ipInputController),
+            LabelInput(isRequired: true, title: "IP:Port", textController: ipInputController),
+            LabelInput(isRequired: true, title: "WsIP:Port", textController: wsIpInputController),
             ElevatedButton(
               onPressed: () {
                 ip = ipInputController.text;
+                wsIp = wsIpInputController.text;
                 setState(() {});
               },
-              child: const Text("change Ip"),
+              child: const Text("change IP:Port"),
             ),
-            const Text("now Ip:"),
+            const Text("now API IP:Port:"),
             Text(ip),
+            const Text("now WS IP:Port:"),
+            Text(wsIp),
             ElevatedButton(
               onPressed: () async {
                 await TestApiService().testAPI().then((isConnected) {
