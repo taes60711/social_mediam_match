@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../models/skill_model.dart';
 import '../../../provider/course_provider.dart';
 import '../../../provider/home/skill_change_view_provider.dart';
 import '../../home/coursePage/course_filter.dart';
@@ -15,8 +16,8 @@ enum CourseFilterEndDrawerType {
 
 ///MARK: void コースフィルターページ開くように
 void openCourseFilterEndDrawer({required BuildContext context}) {
-  print("context.read<SkillChangeProvider>() ${context.read<SkillChangeProvider>().filteredSkill}");
-
+  List<RequestSkillListData> tempChoicedSkillList = context.read<SkillChangeProvider>().tempChoicedSkill;
+  context.read<SkillChangeProvider>().filteredListInitOrRecord(tempChoicedSkillList, status: "init");
   context.read<CourseProvider>().changeFilterEndDrawerStatus(CourseFilterEndDrawerType.open);
 }
 

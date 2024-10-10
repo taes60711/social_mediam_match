@@ -64,8 +64,15 @@ class SkillChangeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void ss(List<RequestSkillListData> choicedSkill) {
-    filteredSkill = choicedSkill;
+  /// status : init , record
+  void filteredListInitOrRecord(List<RequestSkillListData> choicedSkill, {required String status}) {
+    if (status == "init") {
+      filteredSkill.clear();
+      filteredSkill.addAll(choicedSkill);
+    } else if (status == "record") {
+      tempChoicedSkill.clear();
+      tempChoicedSkill.addAll(choicedSkill);
+    }
 
     notifyListeners();
   }

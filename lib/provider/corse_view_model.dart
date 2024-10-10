@@ -40,7 +40,7 @@ class CourseViewModel {
 
   Future<void> courseFilterSearchStart() async {
     List<RequestSkillListData> filteredSkillList = courseContext.read<SkillChangeProvider>().filteredSkill;
-
+    courseContext.read<SkillChangeProvider>().filteredListInitOrRecord(filteredSkillList, status: "record");
     List<String> filteredSkillIdsList = filteredSkillList.map((e) {
       return e.id.toString();
     }).toList();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/home/skill_change_view_provider.dart';
+import '../../../models/skill_model.dart';
 import '../../home/skillExChangePage/skill_change_filter_page.dart';
 
 import 'custom_end_drawer.dart';
@@ -14,6 +15,8 @@ enum SkillChangeEndDrawerType {
 
 ///MARK: void スキル交換ページ開くように
 void openSkillChangeEndDrawer({required BuildContext context}) {
+  List<RequestSkillListData> tempChoicedSkillList = context.read<SkillChangeProvider>().tempChoicedSkill;
+  context.read<SkillChangeProvider>().filteredListInitOrRecord(tempChoicedSkillList, status: "init");
   context.read<SkillChangeProvider>().changeEndDrawerStatus(SkillChangeEndDrawerType.open);
 }
 
