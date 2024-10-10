@@ -50,4 +50,25 @@ class SkillChangeViewModel {
 
     closeSkillChangeEndDrawer(context: context);
   }
+
+  Future<void> searchByNamePart({required String namePart}) async {
+    LoginUser userData = context.read<UserProvider>().userData;
+
+    int loadSize = context.read<BaseAPIListProvider<LoginUser>>().size;
+    await context.read<BaseAPIListProvider<LoginUser>>().reloadData(
+          apiFunc: () async => await UserService().requestUserDataByNamePart(
+            0,
+            loadSize,
+            userName: namePart,
+          ),
+        );
+    int preLoadPage = context.read<BaseAPIListProvider<LoginUser>>().page;
+    await context.read<BaseAPIListProvider<LoginUser>>().preLoad(
+          apiFunc: () async => await UserService().requestUserDataByNamePart(
+            preLoadPage,
+            loadSize,
+            userName: userData.uid,
+          ),
+        );
+  }
 }

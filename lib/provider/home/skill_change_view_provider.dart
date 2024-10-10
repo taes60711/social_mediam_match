@@ -8,7 +8,7 @@ class SkillChangeProvider extends ChangeNotifier {
   List<RequestSkillListData> filteredSkill = [];
   List<RequestSkillListData> tempChoicedSkill = [];
   SkillChangeEndDrawerType endDrawerOpenInfo = SkillChangeEndDrawerType.close;
-
+  TextEditingController nameFilterController = TextEditingController();
   TextEditingController filterController = TextEditingController();
   Map<SkillType, List<RequestSkillListData>> skillMap = {
     SkillType.frontend: [],

@@ -39,6 +39,31 @@ class UserService extends ApiClient {
     return users;
   }
 
+  Future<List<LoginUser>> requestUserDataByNamePart(int page, int size, {required String userName}) async {
+    List<LoginUser> users = [];
+
+    try {
+      Map<String, dynamic> params = {
+        'page': '$page',
+        'size': '$size',
+        'userName': userName,
+      };
+
+      String responseData = await apiGet('/getDataByPartName', paramters: params);
+
+      print("requestUserDataByNamePart usersData: $responseData");
+
+      users = await handleResponse<LoginUser>(
+        responseData,
+        isList: true,
+        model: LoginUser.toModel,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+    return users;
+  }
+
   ///MARK: ユーザのデータ取得
   ///Param,
   ///loginedUserUID: FirebaseログインしたユーザUID
