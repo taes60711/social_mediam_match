@@ -6,7 +6,7 @@ import '../../components/account/login_page.dart';
 import '../../components/account/signUpPage/signup_page.dart';
 import '../../components/home/coursePage/course_edit_page/course_edit_page.dart';
 import '../../components/home/postPage/editor_page.dart';
-import '../../components/home/userPage/guide.dart';
+import '../../components/home/userPage/custom_service_page.dart';
 import '../../components/home/userPage/myCourse/my_courses.dart';
 import '../../components/home/userPage/my_friends.dart';
 import '../../components/home/userPage/my_notification_page.dart';
@@ -26,7 +26,7 @@ enum RoutePath {
   myCourses("/mycourses", MyCourses()),
   myFriends("/myFriends", MyFriends()),
   myNotifictaionPage("/myNotificationPage", MyNotificationPage()),
-  guide("/guide", Guide()),
+  customServicePage("/customServicePage", CustomServicePage()),
   privacySettingPage("/privacySetting", PrivacySetting());
 
   final String value;

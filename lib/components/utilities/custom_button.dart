@@ -101,6 +101,93 @@ class TextBtn extends StatelessWidget {
   }
 }
 
+class MainBtn extends StatefulWidget {
+  ///MARK:機能表示
+  // ボタン文字
+  final String? title;
+  // ボタン文字のスタイル
+  final TextStyle? titleStyle;
+  final Widget? child;
+  // ボタン機能関数
+  final Function onPress;
+
+  ///MARK:スタイル
+  // ボタン色
+  final Color? backgroundColor;
+  final bool isFullWidth;
+  final EdgeInsetsGeometry innerPadding;
+  final double borderRadius;
+  final double? width;
+  final double? height;
+
+  const MainBtn({
+    super.key,
+    this.title,
+    this.titleStyle,
+    this.child,
+    required this.onPress,
+    this.backgroundColor,
+    this.isFullWidth = false,
+    this.innerPadding = const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+    this.borderRadius = 8,
+    this.width,
+    this.height,
+  });
+
+  @override
+  State<MainBtn> createState() => _MainBtnState();
+}
+
+class _MainBtnState extends State<MainBtn> {
+  bool isPress = false;
+  @override
+  Widget build(BuildContext context) {
+    Color btnBackgroundColor = widget.backgroundColor ?? normalBgColor;
+    double? btnWidth;
+    if (widget.isFullWidth) {
+      btnWidth = ScreenSize.width;
+    } else {
+      if (widget.width != null) {
+        btnWidth = widget.width;
+      }
+    }
+
+    return GestureDetector(
+      onTap: () async {
+        await _buttonPressHandle();
+        widget.onPress();
+      },
+      child: Container(
+        padding: widget.innerPadding,
+        width: btnWidth,
+        height: widget.height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+          color: isPress ? btnBackgroundColor.withOpacity(0.8) : btnBackgroundColor,
+        ),
+        child: Column(
+          children: [
+            widget.child ??
+                Text(
+                  widget.title ?? "please use title or child ",
+                  style: widget.titleStyle ?? const TextStyle(color: Colors.white),
+                ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// ボタン押すエフェクト
+  _buttonPressHandle() async {
+    isPress = true;
+    setState(() {});
+    await Future.delayed(const Duration(milliseconds: 150));
+    isPress = false;
+    setState(() {});
+  }
+}
+
 class ColIconBtn extends StatelessWidget {
   final IconData icon;
   final Color? iconColor;

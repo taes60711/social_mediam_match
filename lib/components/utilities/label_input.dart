@@ -41,13 +41,15 @@ Widget _textField(TextEditingController textController, {required bool isMulti})
   );
 
   return isMulti
-      ? TextField(
-          minLines: 3,
-          maxLines: 6,
-          cursorColor: normalBgColor2,
-          controller: textController,
-          decoration: inputDecoration,
-          keyboardType: TextInputType.multiline,
+      ? Expanded(
+          child: TextField(
+            minLines: 3,
+            maxLines: 22,
+            cursorColor: normalBgColor2,
+            controller: textController,
+            decoration: inputDecoration,
+            keyboardType: TextInputType.multiline,
+          ),
         )
       : TextField(
           cursorColor: normalBgColor2,
@@ -63,6 +65,7 @@ class MultiLabelInput extends StatelessWidget {
   final String title;
   final bool? isRequired;
   final EdgeInsetsGeometry padding;
+  final int maxdisplayLine;
 
   const MultiLabelInput({
     super.key,
@@ -72,6 +75,7 @@ class MultiLabelInput extends StatelessWidget {
     required this.multiOnChange,
     this.isRequired,
     this.padding = const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+    this.maxdisplayLine = 3,
   });
 
   @override
@@ -113,7 +117,9 @@ class MultiLabelInput extends StatelessWidget {
                                   multiOnChange: multiOnChange,
                                 ),
                                 const SizedBox(height: 15),
-                                _textField(textController, isMulti: true),
+                                Expanded(
+                                  child: _textField(textController, isMulti: true),
+                                ),
                               ],
                             ),
                           ),
@@ -123,7 +129,7 @@ class MultiLabelInput extends StatelessWidget {
                   },
                 );
               },
-              child: _multiDisplayWidget(displayText: displayText),
+              child: _multiDisplayWidget(displayText: displayText, maxdisplayLine: maxdisplayLine),
             ),
           ],
         ),
@@ -132,7 +138,7 @@ class MultiLabelInput extends StatelessWidget {
   }
 }
 
-Widget _multiDisplayWidget({required String displayText}) {
+Widget _multiDisplayWidget({required String displayText, required int maxdisplayLine}) {
   return Container(
     width: ScreenSize.width,
     padding: const EdgeInsets.all(8),
@@ -145,7 +151,7 @@ Widget _multiDisplayWidget({required String displayText}) {
     ),
     child: Text(
       displayText,
-      maxLines: 6,
+      maxLines: maxdisplayLine,
       overflow: TextOverflow.ellipsis,
     ),
   );

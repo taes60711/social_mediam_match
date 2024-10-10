@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
+import '../../CustomBouncingScrollPhysics.dart';
 import 'style/style_config.dart';
 
 ScrollController singleScollController = ScrollController();
@@ -28,6 +29,7 @@ class BackgroundWidget extends StatelessWidget {
       body: isSafeArea
           ? SingleChildScrollView(
               controller: singleScollController,
+              physics: resizeToAvoidBottomInset ? const NoBouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
               child: SafeArea(
                 child: Container(
                   width: ScreenSize.width,
@@ -44,6 +46,7 @@ class BackgroundWidget extends StatelessWidget {
             )
           : SingleChildScrollView(
               controller: singleScollController,
+              physics: resizeToAvoidBottomInset ? const NoBouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
               child: Container(
                 width: ScreenSize.width,
                 height: ScreenSize.height,

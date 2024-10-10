@@ -208,10 +208,10 @@ class UserPageRouthsettingButtonInfo {
           RouteOptions.pushTo(RoutePath.myNotifictaionPage);
         }),
     SettingButtonInfo(
-        title: UserPageString().guideBtn,
+        title: UserPageString().customServiceBtn,
         icon: Icons.question_answer,
         onPress: () {
-          RouteOptions.pushTo(RoutePath.guide);
+          RouteOptions.pushTo(RoutePath.customServicePage);
         }),
   ];
 }

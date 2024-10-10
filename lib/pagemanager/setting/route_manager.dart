@@ -29,9 +29,7 @@ Widget mainWidget = MultiProvider(
     ChangeNotifierProvider(create: (_) => FriendProvider()),
   ],
   child: EasyLocalization(
-    supportedLocales: const [
-      Locale('zh', 'TW')
-    ], //const [Locale('zh', 'TW'), Locale('en', 'US'), Locale('ja', 'JP')],
+    supportedLocales: const [Locale('zh', 'TW')], //const [Locale('zh', 'TW'), Locale('en', 'US'), Locale('ja', 'JP')],
     fallbackLocale: const Locale('zh', 'TW'), //const Locale('en', 'US'),
     path: 'assets/langs',
     child: const MyApp(),
@@ -74,8 +72,7 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
       ),
 
   /// "/privacySetting"
-  RoutePath.privacySettingPage.value: (BuildContext context) =>
-      RoutePath.privacySettingPage.pageWidget,
+  RoutePath.privacySettingPage.value: (BuildContext context) => RoutePath.privacySettingPage.pageWidget,
 
   /// "/profile"
   RoutePath.profilePage.value: (BuildContext context) => MultiProvider(
@@ -116,6 +113,6 @@ Map<String, Widget Function(BuildContext)> routeManager = <String, WidgetBuilder
         child: RoutePath.myNotifictaionPage.pageWidget,
       ),
 
-  /// "/guide"
-  RoutePath.guide.value: (BuildContext context) => RoutePath.guide.pageWidget,
+  /// "/customServicePage"
+  RoutePath.customServicePage.value: (BuildContext context) => RoutePath.customServicePage.pageWidget,
 };

@@ -22,5 +22,5 @@ class UserPageString {
   String notificationBtn = tr("userpage_notification_btn");
   String settingBtn = tr("userpage_setting_btn");
   String friendManagernBtn = tr("userpage_friendmanger_btn");
-  String guideBtn = tr("userpage_guide_btn");
+  String customServiceBtn = tr("userpage_customService_btn");
 }
