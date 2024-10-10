@@ -128,7 +128,7 @@ class MainBtn extends StatefulWidget {
     required this.onPress,
     this.backgroundColor,
     this.isFullWidth = false,
-    this.innerPadding = const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+    this.innerPadding = const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
     this.borderRadius = 8,
     this.width,
     this.height,

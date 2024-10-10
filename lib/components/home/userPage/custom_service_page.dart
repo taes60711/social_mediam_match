@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/label_input.dart';
+import 'package:social_mediam_match/models/feed_back_model.dart';
 
+import '../../../global.dart';
+import '../../../pagemanager/setting/route_controller.dart';
+import '../../../services/feed_back_service.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/basic_top_bar.dart';
 
@@ -17,6 +21,7 @@ class _CustomServicePageState extends State<CustomServicePage> {
   TextEditingController titleInput = TextEditingController();
   TextEditingController conentInput = TextEditingController();
   String contentStr = "";
+  String errMessage = "";
   @override
   Widget build(BuildContext context) {
     return BackgroundWidget(
@@ -47,14 +52,81 @@ class _CustomServicePageState extends State<CustomServicePage> {
             },
           ),
           const SizedBox(height: 10),
+          Visibility(
+            visible: errMessage != "",
+            child: Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(left: 18),
+              child: Text(
+                errMessage,
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
+          ),
+          // const SizedBox(height: 10),
           MainBtn(
               title: "送出",
-              innerPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              onPress: () {
+              onPress: () async {
+                if (!inputVaildCheck()) {
+                  return;
+                }
                 print("send title ${titleInput.text} email ${emailInput.text} content ${conentInput.text}");
+                FeedBackModel feedBack = FeedBackModel(title: titleInput.text, email: emailInput.text, content: conentInput.text);
+                bool isSucess = await UserFeedBackService().createFeedBack(feedBack);
+                if (isSucess) {
+                  sendFeedBackSucess();
+                }
               })
         ],
       ),
+    );
+  }
+
+  bool inputVaildCheck() {
+    if (titleInput.text == "" || emailInput.text == "" || conentInput.text == "") {
+      errMessage = "請每個項目都必須輸入\n";
+      if (titleInput.text == "") {
+        errMessage += "△ 標題 沒有輸入\n";
+      }
+      if (emailInput.text == "") {
+        errMessage += "△ Email 沒有輸入\n";
+      }
+      if (conentInput.text == "") {
+        errMessage += "△ 回報內容 沒有輸入\n";
+      }
+      setState(() {});
+      return false;
+    }
+    return true;
+  }
+
+  void sendFeedBackSucess() {
+    showDialog<void>(
+      context: globalContext,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(15),
+            width: 180,
+            height: 150,
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                const Expanded(
+                  child: Text("感謝回應"),
+                ),
+                MainBtn(
+                    title: "確認",
+                    onPress: () {
+                      RouteOptions.popUntilToHome();
+                    }),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
