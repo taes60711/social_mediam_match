@@ -25,14 +25,13 @@ class MyPostViewModel {
     await PostService().updatePost(postId: updatedData.id, title: title, mainMessage: updatedData.mainMessage).then(
       (isSucess) async {
         if (isSucess) {
-          myPostContext.read<BaseAPIListProvider<PostModel>>().reloadData(
-                apiFunc: () async => await PostService().getPostDataByUID(0, 5, myPostContext.read<UserProvider>().userData),
-              );
-          int preLoadPage = myPostContext.read<BaseAPIListProvider<PostModel>>().page;
-          await myPostContext.read<BaseAPIListProvider<PostModel>>().preLoad(
-                apiFunc: () async =>
-                    await PostService().getPostDataByUID(preLoadPage, 5, myPostContext.read<UserProvider>().userData),
-              );
+          int loadSize = myPostContext.read<BaseAPIListProvider<PostModel>>().size;
+          await myPostContext.read<BaseAPIListProvider<PostModel>>().replaceApiFunc(
+            loadSize,
+            replaceApiFunc: (page, size) {
+              return PostService().getPostDataByUID(page, size, myPostContext.read<UserProvider>().userData);
+            },
+          );
         }
       },
     );

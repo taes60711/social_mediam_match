@@ -39,6 +39,7 @@ class APIListView<R> extends StatelessWidget {
     return StatefulWrapper(
       onInit: () async {
         if (noInitSearchBuilder == null) {
+          context.read<BaseAPIListProvider<R>>().initApiFunc(initApiFunc: apiFunc);
           initLoadData(context, loadDataType: LoadDataType.initial);
         } else {
           context.read<BaseAPIListProvider<R>>().initNoSearch();
@@ -277,15 +278,18 @@ class APIListView<R> extends StatelessWidget {
     await context
         .read<BaseAPIListProvider<R>>()
         .insertData(
-          apiFunc: () async => await apiFunc(page, size),
+          apiFunc: () async => await context.read<BaseAPIListProvider<R>>().apiFunc(page, size),
           size: size,
           loadDataType: loadDataType,
         )
         .then(
       (_) async {
         int preLoadPage = context.read<BaseAPIListProvider<R>>().page;
+
         print("initLoadData $preLoadPage");
-        await context.read<BaseAPIListProvider<R>>().preLoad(apiFunc: () async => await apiFunc(preLoadPage, size));
+        await context.read<BaseAPIListProvider<R>>().preLoad(
+              apiFunc: () async => await context.read<BaseAPIListProvider<R>>().apiFunc(preLoadPage, size),
+            );
       },
     );
   }

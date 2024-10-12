@@ -44,15 +44,15 @@ class CourseViewModel {
     List<String> filteredSkillIdsList = filteredSkillList.map((e) {
       return e.id.toString();
     }).toList();
-    LoginUser userData = courseContext.read<UserProvider>().userData;
 
-    await courseContext.read<BaseAPIListProvider<CourseModel>>().reloadData(
-          apiFunc: () async => await CourseService().getAllCourses(userData.uid, 0, 5, skillId: filteredSkillIdsList),
-        );
-    int preLoadPage = courseContext.read<BaseAPIListProvider<CourseModel>>().page;
-    await courseContext.read<BaseAPIListProvider<CourseModel>>().preLoad(
-          apiFunc: () async => await CourseService().getAllCourses(userData.uid, preLoadPage, 5, skillId: filteredSkillIdsList),
-        );
+    LoginUser userData = courseContext.read<UserProvider>().userData;
+    int loadSize = courseContext.read<BaseAPIListProvider<CourseModel>>().size;
+    await courseContext.read<BaseAPIListProvider<CourseModel>>().replaceApiFunc(
+      loadSize,
+      replaceApiFunc: (page, size) {
+        return CourseService().getAllCourses(userData.uid, page, size, skillId: filteredSkillIdsList);
+      },
+    );
 
     closeCourseFilterEndDrawer(context: courseContext);
   }
@@ -72,26 +72,25 @@ class CourseViewModel {
       isPublic: courseContext.read<CourseProvider>().isPublic,
     );
 
-    await Future.delayed(const Duration(seconds: 1));
     RouteOptions.pop();
+
+    LoginUser userData = viewListContext.read<UserProvider>().userData;
     if (courseId == null) {
-      LoginUser userData = courseContext.watch<UserProvider>().userData;
-      await viewListContext
-          .read<BaseAPIListProvider<CourseModel>>()
-          .reloadData(apiFunc: () async => await CourseService().getAllCourses(userData.uid, 0, 5));
-      int preLoadPage = viewListContext.read<BaseAPIListProvider<CourseModel>>().page;
-      await viewListContext
-          .read<BaseAPIListProvider<CourseModel>>()
-          .preLoad(apiFunc: () async => await CourseService().getAllCourses(userData.uid, preLoadPage, 5));
+      int loadSize = viewListContext.read<BaseAPIListProvider<CourseModel>>().size;
+      await viewListContext.read<BaseAPIListProvider<CourseModel>>().replaceApiFunc(
+        loadSize,
+        replaceApiFunc: (page, size) {
+          return CourseService().getAllCourses(userData.uid, page, size);
+        },
+      );
     } else {
-      await viewListContext.read<BaseAPIListProvider<CourseModel>>().reloadData(
-            apiFunc: () async => await CourseService().getCreatedCourses(0, 5, viewListContext.read<UserProvider>().userData.uid),
-          );
-      int preLoadPage = viewListContext.read<BaseAPIListProvider<CourseModel>>().page;
-      await viewListContext.read<BaseAPIListProvider<CourseModel>>().preLoad(
-            apiFunc: () async =>
-                await CourseService().getCreatedCourses(preLoadPage, 5, viewListContext.read<UserProvider>().userData.uid),
-          );
+      int loadSize = viewListContext.read<BaseAPIListProvider<CourseModel>>().size;
+      await viewListContext.read<BaseAPIListProvider<CourseModel>>().replaceApiFunc(
+        loadSize,
+        replaceApiFunc: (page, size) {
+          return CourseService().getCreatedCourses(page, size, userData.uid);
+        },
+      );
     }
   }
 

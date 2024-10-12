@@ -30,45 +30,28 @@ class SkillChangeViewModel {
     }).toList();
 
     int loadSize = context.read<BaseAPIListProvider<LoginUser>>().size;
-    await context.read<BaseAPIListProvider<LoginUser>>().reloadData(
-          apiFunc: () async => await UserService().getAllUserData(
-            0,
-            loadSize,
-            userUid: userData.uid,
-            filterSkill: filteredSkillIdsList,
-          ),
-        );
-    int preLoadPage = context.read<BaseAPIListProvider<LoginUser>>().page;
-    await context.read<BaseAPIListProvider<LoginUser>>().preLoad(
-          apiFunc: () async => await UserService().getAllUserData(
-            preLoadPage,
-            loadSize,
-            userUid: userData.uid,
-            filterSkill: filteredSkillIdsList,
-          ),
-        );
+    await context.read<BaseAPIListProvider<LoginUser>>().replaceApiFunc(
+      loadSize,
+      replaceApiFunc: (page, size) {
+        return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filteredSkillIdsList);
+      },
+    );
 
     closeSkillChangeEndDrawer(context: context);
   }
 
   Future<void> searchByNamePart({required String namePart}) async {
-    LoginUser userData = context.read<UserProvider>().userData;
-
     int loadSize = context.read<BaseAPIListProvider<LoginUser>>().size;
-    await context.read<BaseAPIListProvider<LoginUser>>().reloadData(
-          apiFunc: () async => await UserService().requestUserDataByNamePart(
-            0,
-            loadSize,
-            userName: namePart,
-          ),
+
+    await context.read<BaseAPIListProvider<LoginUser>>().replaceApiFunc(
+      loadSize,
+      replaceApiFunc: (page, size) {
+        return UserService().requestUserDataByNamePart(
+          page,
+          size,
+          userName: namePart,
         );
-    int preLoadPage = context.read<BaseAPIListProvider<LoginUser>>().page;
-    await context.read<BaseAPIListProvider<LoginUser>>().preLoad(
-          apiFunc: () async => await UserService().requestUserDataByNamePart(
-            preLoadPage,
-            loadSize,
-            userName: userData.uid,
-          ),
-        );
+      },
+    );
   }
 }

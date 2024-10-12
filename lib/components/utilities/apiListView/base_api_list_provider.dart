@@ -28,6 +28,19 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
   double startScrollPos = 0.0;
   bool isScrollUp = true;
   LoadDataStatus loadStatus = LoadDataStatus.loadingFinish;
+  late Future<List<R>> Function(int page, int size) apiFunc;
+
+  void initApiFunc({required Future<List<R>> Function(int page, int size) initApiFunc}) {
+    apiFunc = initApiFunc;
+    render();
+  }
+
+  Future<void> replaceApiFunc(int size, {required Future<List<R>> Function(int page, int size) replaceApiFunc}) async {
+    apiFunc = replaceApiFunc;
+    await reloadData(apiFunc: () => apiFunc(0, size));
+    await preLoad(apiFunc: () => apiFunc(1, size));
+    render();
+  }
 
   void initNoSearch() {
     loadStatus = LoadDataStatus.initNoSearch;
@@ -94,6 +107,7 @@ class BaseAPIListProvider<R> extends ChangeNotifier {
   }
 
   Future<void> preLoad({required Future<List<R>> Function() apiFunc}) async {
+    print("preloadPage $page");
     List<R> tempPreLoadData = await apiFunc();
     _preLoadData = tempPreLoadData;
     inspect(_preLoadData);

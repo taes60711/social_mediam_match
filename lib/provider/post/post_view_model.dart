@@ -83,13 +83,13 @@ class PostViewModel {
 
   Future<void> searchPostByTextFilter(String keyword) async {
     int loadSize = postContext.read<BaseAPIListProvider<PostModel>>().size;
-    await postContext.read<BaseAPIListProvider<PostModel>>().reloadData(
-          apiFunc: () async => await PostService().getPostByTextFilter(0, loadSize, keyword),
-        );
-    int preLoadPage = postContext.read<BaseAPIListProvider<PostModel>>().page;
-    await postContext.read<BaseAPIListProvider<PostModel>>().preLoad(
-          apiFunc: () async => await PostService().getPostByTextFilter(preLoadPage, loadSize, keyword),
-        );
+
+    await postContext.read<BaseAPIListProvider<PostModel>>().replaceApiFunc(
+      loadSize,
+      replaceApiFunc: (page, size) {
+        return PostService().getPostByTextFilter(page, size, keyword);
+      },
+    );
   }
 
   void showOptionBottomSheet({required PostModel choicedPost}) {
