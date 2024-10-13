@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
 import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../global.dart';
 import '../../../models/post_model.dart';
@@ -85,8 +86,8 @@ class PostPageByTextFilter extends StatelessWidget {
       onInit: () {
         globalPostContext = context;
       },
-      child: Scaffold(
-        body: Column(
+      child: BackgroundWidget(
+        child: Column(
           children: [
             searchBar,
             Expanded(

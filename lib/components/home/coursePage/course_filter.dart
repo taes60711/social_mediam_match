@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/models/skill_model.dart';
 import 'package:social_mediam_match/provider/corse_view_model.dart';
@@ -17,9 +18,8 @@ class CourseFilterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
+    return BackgroundWidget(
+      child: Column(
         children: [
           BaseTopBar(
             backFunc: () {

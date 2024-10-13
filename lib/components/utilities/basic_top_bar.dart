@@ -46,29 +46,35 @@ class BaseTopBar extends StatelessWidget {
       rightWidget
     ];
 
-    return SizedBox(
-      width: ScreenSize.width,
-      child: Padding(
-        padding: padding,
-        child: Row(
-          children: [
-            Expanded(
-              child: Align(
-                alignment: list[0],
-                child: widgetList[0],
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Container(
+        color: Colors.transparent,
+        width: ScreenSize.width,
+        child: Padding(
+          padding: padding,
+          child: Row(
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: list[0],
+                  child: widgetList[0],
+                ),
               ),
-            ),
-            Align(
-              alignment: list[1],
-              child: widgetList[1],
-            ),
-            Expanded(
-              child: Align(
-                alignment: list[2],
-                child: widgetList[2],
+              Align(
+                alignment: list[1],
+                child: widgetList[1],
               ),
-            ),
-          ],
+              Expanded(
+                child: Align(
+                  alignment: list[2],
+                  child: widgetList[2],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

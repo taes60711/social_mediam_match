@@ -199,265 +199,155 @@ class ChatRoom extends StatelessWidget {
           }
         });
       },
-      child: Scaffold(
-        body: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.only(bottom: 10),
-              width: ScreenSize.width,
-              color: normalBgColor2.withOpacity(0.1),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        print("Chat Room close");
-                        closecChatRoomEndDrawer(context: context);
-                      },
-                      child: Icon(Icons.arrow_back_ios_sharp, color: normalBgColor2),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: UserIcon(
-                        iconSize: 35,
-                        image: ohterUserData.image,
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Scaffold(
+          body: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.only(bottom: 10),
+                width: ScreenSize.width,
+                color: normalBgColor2.withOpacity(0.1),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          print("Chat Room close");
+                          closecChatRoomEndDrawer(context: context);
+                        },
+                        child: Icon(Icons.arrow_back_ios_sharp, color: normalBgColor2),
                       ),
-                    ),
-                    Text(
-                      ohterUserData.name ?? ohterUserData.email,
-                      style: TextStyle(color: normalBgColor2),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: UserIcon(
+                          iconSize: 35,
+                          image: ohterUserData.image,
+                        ),
+                      ),
+                      Text(
+                        ohterUserData.name ?? ohterUserData.email,
+                        style: TextStyle(color: normalBgColor2),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            dataAddLoading,
-            Expanded(
-              child: isLoading
-                  ? LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35)
-                  : Align(
-                      alignment: Alignment.topCenter,
-                      child: NotificationListener<ScrollNotification>(
-                        onNotification: (ScrollNotification scrollNotification) {
-                          if (scrollNotification is ScrollUpdateNotification) {
-                            final scrollPosition = scrollNotification.metrics.pixels;
-                            final max = scrollNotification.metrics.maxScrollExtent;
-                            if (scrollPosition >= max && !isDataAddLoding) {
-                              friendFuture.dataAddLoadingChange(true);
-                            }
-                          } else if (scrollNotification is ScrollEndNotification) {
-                            if (isDataAddLoding) {
-                              friendFuture.loadMessage(roomId, userData.uid, pageNumber);
-                            }
-                          }
-                          return false;
-                        },
-                        child: ListView.builder(
-                          reverse: true,
-                          shrinkWrap: true,
-                          physics: const ChatRoomCustomBouncingScrollPhysics(),
-                          controller: _scrollController,
-                          itemCount: ss.length,
-                          itemBuilder: (context, index) {
-                            Widget component;
-                            if (ss[index].runtimeType == String) {
-                              component = Center(
-                                child: Container(
-                                    margin: EdgeInsets.all(2),
-                                    padding: EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      color: Colors.black.withOpacity(0.1),
-                                    ),
-                                    child: Text(
-                                      ss[index],
-                                      style: TextStyle(fontSize: 10),
-                                    )),
-                              );
-                            } else if (ss[index].runtimeType == ChatRoomMsg) {
-                              ChatRoomMsg messageData = ss[index];
-                              List<String> splitStringAndUrls(String input) {
-                                final urlPattern = RegExp(r'https?://\S+');
-                                List<String> parts = [];
-                                int start = 0;
-
-                                for (final match in urlPattern.allMatches(input)) {
-                                  if (match.start > start) {
-                                    parts.add(input.substring(start, match.start));
-                                  }
-                                  parts.add(match.group(0)!);
-                                  start = match.end;
-                                }
-
-                                if (start < input.length) {
-                                  parts.add(input.substring(start));
-                                }
-
-                                return parts;
+              dataAddLoading,
+              Expanded(
+                child: isLoading
+                    ? LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35)
+                    : Align(
+                        alignment: Alignment.topCenter,
+                        child: NotificationListener<ScrollNotification>(
+                          onNotification: (ScrollNotification scrollNotification) {
+                            if (scrollNotification is ScrollUpdateNotification) {
+                              final scrollPosition = scrollNotification.metrics.pixels;
+                              final max = scrollNotification.metrics.maxScrollExtent;
+                              if (scrollPosition >= max && !isDataAddLoding) {
+                                friendFuture.dataAddLoadingChange(true);
                               }
-
-                              List<String> messageContents = splitStringAndUrls(messageData.message);
-
-                              String firstUrl = messageContents.firstWhere((element) {
-                                return element.contains('https');
-                              }, orElse: () => "-1");
-
-                              List<String> noContiainText = [
-                                'jpg',
-                                "gif",
-                                "png",
-                                "jpeg",
-                                "svg",
-                                "icon",
-                              ];
-
-                              bool urlPreview = firstUrl != "-1" &&
-                                  noContiainText.any((text) => !firstUrl.contains(text.toUpperCase())) &&
-                                  noContiainText.any((text) => !firstUrl.contains(text));
-
-                              String firstImageUrl = messageContents.firstWhere((element) {
-                                return element.contains('http://\$ip:\$port');
-                              }, orElse: () => "-1");
-                              if (ss[index].userId == userData.uid) {
-                                component = Padding(
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
-                                            style: TextStyle(fontSize: 10),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.all(4),
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  padding: EdgeInsets.all(5),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(5),
-                                                    color: Color.fromARGB(255, 200, 199, 202),
-                                                  ),
-                                                  child: Column(
-                                                    children: [
-                                                      ConstrainedBox(
-                                                        constraints: BoxConstraints(
-                                                          maxWidth: ScreenSize.width * 0.6,
-                                                        ),
-                                                        child: firstImageUrl != '-1'
-                                                            ? GestureDetector(
-                                                                onTap: () async {
-                                                                  print(firstImageUrl);
-                                                                  await imageView(RichTextFormat(htmlString: firstImageUrl)
-                                                                      .mappingIPAndPort(firstImageUrl));
-                                                                },
-                                                                child: Image.network(
-                                                                  RichTextFormat(htmlString: firstImageUrl)
-                                                                      .mappingIPAndPort(firstImageUrl),
-                                                                ),
-                                                              )
-                                                            : RichText(
-                                                                text: TextSpan(
-                                                                  children: messageContents.map((e) {
-                                                                    if (e.startsWith('https')) {
-                                                                      return TextSpan(
-                                                                          text: e,
-                                                                          style: TextStyle(
-                                                                              color: googleColor,
-                                                                              decoration: TextDecoration.underline),
-                                                                          recognizer: TapGestureRecognizer()
-                                                                            ..onTap = () {
-                                                                              final Uri _url = Uri.parse(e);
-                                                                              launchUrl(_url);
-                                                                            });
-                                                                    } else {
-                                                                      return TextSpan(
-                                                                          text: e, style: TextStyle(color: Colors.black));
-                                                                    }
-                                                                  }).toList(),
-                                                                ),
-                                                              ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                firstUrl != "-1" && !firstUrl.contains("JPG")
-                                                    ? Container(
-                                                        margin: EdgeInsets.only(top: 2),
-                                                        padding: EdgeInsets.all(5),
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(5),
-                                                          color: Color.fromARGB(255, 200, 199, 202),
-                                                        ),
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.only(top: 8),
-                                                          child: ConstrainedBox(
-                                                            constraints:
-                                                                BoxConstraints(maxWidth: ScreenSize.width * 0.6, maxHeight: 160),
-                                                            child: AnyLinkPreview(
-                                                              link: firstUrl,
-                                                              titleStyle: TextStyle(fontSize: 14),
-                                                              backgroundColor: Colors.transparent,
-                                                              boxShadow: [BoxShadow(color: Colors.transparent)],
-                                                              bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
-                                                              borderRadius: 0,
-                                                              bodyMaxLines: 2,
-                                                            ),
-                                                          ),
-                                                        ))
-                                                    : Container(),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                            } else if (scrollNotification is ScrollEndNotification) {
+                              if (isDataAddLoding) {
+                                friendFuture.loadMessage(roomId, userData.uid, pageNumber);
+                              }
+                            }
+                            return false;
+                          },
+                          child: ListView.builder(
+                            reverse: true,
+                            shrinkWrap: true,
+                            physics: const ChatRoomCustomBouncingScrollPhysics(),
+                            controller: _scrollController,
+                            itemCount: ss.length,
+                            itemBuilder: (context, index) {
+                              Widget component;
+                              if (ss[index].runtimeType == String) {
+                                component = Center(
+                                  child: Container(
+                                      margin: EdgeInsets.all(2),
+                                      padding: EdgeInsets.all(5),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(3),
+                                        color: Colors.black.withOpacity(0.1),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 3),
-                                        child: messageData.needAppearImg
-                                            ? UserIcon(
-                                                iconSize: 35,
-                                                image: userData.image,
-                                              )
-                                            : Container(width: 35),
-                                      ),
-                                    ],
-                                  ),
+                                      child: Text(
+                                        ss[index],
+                                        style: TextStyle(fontSize: 10),
+                                      )),
                                 );
-                              } else {
-                                component = Padding(
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 3),
-                                        child: messageData.needAppearImg
-                                            ? UserIcon(
-                                                iconSize: 35,
-                                                image: ohterUserData.image,
-                                              )
-                                            : Container(width: 35),
-                                      ),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 8),
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(5),
-                                                    color: const Color.fromARGB(255, 196, 175, 233),
-                                                  ),
-                                                  child: Padding(
-                                                    padding: EdgeInsets.all(4),
+                              } else if (ss[index].runtimeType == ChatRoomMsg) {
+                                ChatRoomMsg messageData = ss[index];
+                                List<String> splitStringAndUrls(String input) {
+                                  final urlPattern = RegExp(r'https?://\S+');
+                                  List<String> parts = [];
+                                  int start = 0;
+
+                                  for (final match in urlPattern.allMatches(input)) {
+                                    if (match.start > start) {
+                                      parts.add(input.substring(start, match.start));
+                                    }
+                                    parts.add(match.group(0)!);
+                                    start = match.end;
+                                  }
+
+                                  if (start < input.length) {
+                                    parts.add(input.substring(start));
+                                  }
+
+                                  return parts;
+                                }
+
+                                List<String> messageContents = splitStringAndUrls(messageData.message);
+
+                                String firstUrl = messageContents.firstWhere((element) {
+                                  return element.contains('https');
+                                }, orElse: () => "-1");
+
+                                List<String> noContiainText = [
+                                  'jpg',
+                                  "gif",
+                                  "png",
+                                  "jpeg",
+                                  "svg",
+                                  "icon",
+                                ];
+
+                                bool urlPreview = firstUrl != "-1" &&
+                                    noContiainText.any((text) => !firstUrl.contains(text.toUpperCase())) &&
+                                    noContiainText.any((text) => !firstUrl.contains(text));
+
+                                String firstImageUrl = messageContents.firstWhere((element) {
+                                  return element.contains('http://\$ip:\$port');
+                                }, orElse: () => "-1");
+                                if (ss[index].userId == userData.uid) {
+                                  component = Padding(
+                                    padding: const EdgeInsets.only(bottom: 5),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
+                                              style: TextStyle(fontSize: 10),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(4),
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    padding: EdgeInsets.all(5),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(5),
+                                                      color: Color.fromARGB(255, 200, 199, 202),
+                                                    ),
                                                     child: Column(
                                                       children: [
                                                         ConstrainedBox(
@@ -501,141 +391,258 @@ class ChatRoom extends StatelessWidget {
                                                       ],
                                                     ),
                                                   ),
-                                                ),
-                                                urlPreview
-                                                    ? Container(
-                                                        margin: EdgeInsets.only(top: 2),
-                                                        padding: EdgeInsets.all(5),
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(5),
-                                                          color: const Color.fromARGB(255, 196, 175, 233),
-                                                        ),
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.only(top: 8),
-                                                          child: ConstrainedBox(
-                                                            constraints:
-                                                                BoxConstraints(maxWidth: ScreenSize.width * 0.6, maxHeight: 160),
-                                                            child: AnyLinkPreview(
-                                                              link: firstUrl,
-                                                              titleStyle: TextStyle(fontSize: 14),
-                                                              backgroundColor: Colors.transparent,
-                                                              boxShadow: [BoxShadow(color: Colors.transparent)],
-                                                              bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
-                                                              borderRadius: 0,
-                                                              bodyMaxLines: 2,
-                                                            ),
+                                                  firstUrl != "-1" && !firstUrl.contains("JPG")
+                                                      ? Container(
+                                                          margin: EdgeInsets.only(top: 2),
+                                                          padding: EdgeInsets.all(5),
+                                                          decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(5),
+                                                            color: Color.fromARGB(255, 200, 199, 202),
                                                           ),
-                                                        ))
-                                                    : Container(),
-                                              ],
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(top: 8),
+                                                            child: ConstrainedBox(
+                                                              constraints: BoxConstraints(
+                                                                  maxWidth: ScreenSize.width * 0.6, maxHeight: 160),
+                                                              child: AnyLinkPreview(
+                                                                link: firstUrl,
+                                                                titleStyle: TextStyle(fontSize: 14),
+                                                                backgroundColor: Colors.transparent,
+                                                                boxShadow: [BoxShadow(color: Colors.transparent)],
+                                                                bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
+                                                                borderRadius: 0,
+                                                                bodyMaxLines: 2,
+                                                              ),
+                                                            ),
+                                                          ))
+                                                      : Container(),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
-                                            style: TextStyle(fontSize: 10),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 3),
+                                          child: messageData.needAppearImg
+                                              ? UserIcon(
+                                                  iconSize: 35,
+                                                  image: userData.image,
+                                                )
+                                              : Container(width: 35),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  component = Padding(
+                                    padding: const EdgeInsets.only(bottom: 5),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 3),
+                                          child: messageData.needAppearImg
+                                              ? UserIcon(
+                                                  iconSize: 35,
+                                                  image: ohterUserData.image,
+                                                )
+                                              : Container(width: 35),
+                                        ),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(right: 8),
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(5),
+                                                      color: const Color.fromARGB(255, 196, 175, 233),
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.all(4),
+                                                      child: Column(
+                                                        children: [
+                                                          ConstrainedBox(
+                                                            constraints: BoxConstraints(
+                                                              maxWidth: ScreenSize.width * 0.6,
+                                                            ),
+                                                            child: firstImageUrl != '-1'
+                                                                ? GestureDetector(
+                                                                    onTap: () async {
+                                                                      print(firstImageUrl);
+                                                                      await imageView(RichTextFormat(htmlString: firstImageUrl)
+                                                                          .mappingIPAndPort(firstImageUrl));
+                                                                    },
+                                                                    child: Image.network(
+                                                                      RichTextFormat(htmlString: firstImageUrl)
+                                                                          .mappingIPAndPort(firstImageUrl),
+                                                                    ),
+                                                                  )
+                                                                : RichText(
+                                                                    text: TextSpan(
+                                                                      children: messageContents.map((e) {
+                                                                        if (e.startsWith('https')) {
+                                                                          return TextSpan(
+                                                                              text: e,
+                                                                              style: TextStyle(
+                                                                                  color: googleColor,
+                                                                                  decoration: TextDecoration.underline),
+                                                                              recognizer: TapGestureRecognizer()
+                                                                                ..onTap = () {
+                                                                                  final Uri _url = Uri.parse(e);
+                                                                                  launchUrl(_url);
+                                                                                });
+                                                                        } else {
+                                                                          return TextSpan(
+                                                                              text: e, style: TextStyle(color: Colors.black));
+                                                                        }
+                                                                      }).toList(),
+                                                                    ),
+                                                                  ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  urlPreview
+                                                      ? Container(
+                                                          margin: EdgeInsets.only(top: 2),
+                                                          padding: EdgeInsets.all(5),
+                                                          decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(5),
+                                                            color: const Color.fromARGB(255, 196, 175, 233),
+                                                          ),
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(top: 8),
+                                                            child: ConstrainedBox(
+                                                              constraints: BoxConstraints(
+                                                                  maxWidth: ScreenSize.width * 0.6, maxHeight: 160),
+                                                              child: AnyLinkPreview(
+                                                                link: firstUrl,
+                                                                titleStyle: TextStyle(fontSize: 14),
+                                                                backgroundColor: Colors.transparent,
+                                                                boxShadow: [BoxShadow(color: Colors.transparent)],
+                                                                bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
+                                                                borderRadius: 0,
+                                                                bodyMaxLines: 2,
+                                                              ),
+                                                            ),
+                                                          ))
+                                                      : Container(),
+                                                ],
+                                              ),
+                                            ),
+                                            Text(
+                                              messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
+                                              style: TextStyle(fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              } else {
+                                component = Container();
                               }
-                            } else {
-                              component = Container();
-                            }
-                            return component;
-                          },
+                              return component;
+                            },
+                          ),
                         ),
                       ),
-                    ),
-            ),
-            Container(
-              width: ScreenSize.width,
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 30,
-                      child: TextField(
-                        controller: messageInput,
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.only(top: 5, left: 10),
-                          border: OutlineInputBorder(),
-                          hintText: 'Enter Message',
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      Future<String> imageChange() async {
-                        final ImagePicker picker = ImagePicker();
-                        final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-                        String result = "";
-
-                        if (image != null) {
-                          File _image = File(image.path);
-                          String base64String = base64Encode(_image.readAsBytesSync());
-                          result = base64String;
-                        }
-                        return result;
-                      }
-
-                      String imageString = await imageChange();
-                      if (imageString != "") {
-                        String uid = const Uuid().v1();
-                        if (await ImageService().imageIsExist(imageString) != "-1") {
-                          uid = await ImageService().imageIsExist(imageString);
-                        } else {
-                          await ImageService().saveImg(uid, imageString);
-                        }
-                        String sendImgString = "http://\$ip:\$port/images/$uid";
-                        print("sendImgString $sendImgString");
-
-                        friendFuture.sendMessage(roomId, userData.uid, sendImgString);
-                        _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
-                      } else {
-                        print("no Image");
-                      }
-                    },
-                    child: Container(
-                      height: 30,
-                      margin: EdgeInsets.only(left: 5),
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
-                      child: Center(
-                        child: Icon(
-                          FontAwesomeIcons.fileImage,
-                          size: 16,
-                          color: normalTextColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      friendFuture.sendMessage(roomId, userData.uid, messageInput.text);
-                      _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
-                    },
-                    child: Container(
-                      height: 30,
-                      margin: EdgeInsets.only(left: 5),
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
-                      child: Center(
-                        child: Icon(
-                          Icons.send,
-                          size: 16,
-                          color: normalTextColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
               ),
-            ),
-          ],
+
+              /// メッセージインプット
+              Container(
+                width: ScreenSize.width,
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 30,
+                        child: TextField(
+                          controller: messageInput,
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.only(top: 5, left: 10),
+                            border: OutlineInputBorder(),
+                            hintText: 'Enter Message',
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        Future<String> imageChange() async {
+                          final ImagePicker picker = ImagePicker();
+                          final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                          String result = "";
+
+                          if (image != null) {
+                            File _image = File(image.path);
+                            String base64String = base64Encode(_image.readAsBytesSync());
+                            result = base64String;
+                          }
+                          return result;
+                        }
+
+                        String imageString = await imageChange();
+                        if (imageString != "") {
+                          String uid = const Uuid().v1();
+                          if (await ImageService().imageIsExist(imageString) != "-1") {
+                            uid = await ImageService().imageIsExist(imageString);
+                          } else {
+                            await ImageService().saveImg(uid, imageString);
+                          }
+                          String sendImgString = "http://\$ip:\$port/images/$uid";
+                          print("sendImgString $sendImgString");
+
+                          friendFuture.sendMessage(roomId, userData.uid, sendImgString);
+                          _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+                        } else {
+                          print("no Image");
+                        }
+                      },
+                      child: Container(
+                        height: 30,
+                        margin: EdgeInsets.only(left: 5),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
+                        child: Center(
+                          child: Icon(
+                            FontAwesomeIcons.fileImage,
+                            size: 16,
+                            color: normalTextColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        friendFuture.sendMessage(roomId, userData.uid, messageInput.text);
+                        _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+                      },
+                      child: Container(
+                        height: 30,
+                        margin: EdgeInsets.only(left: 5),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
+                        child: Center(
+                          child: Icon(
+                            Icons.send,
+                            size: 16,
+                            color: normalTextColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

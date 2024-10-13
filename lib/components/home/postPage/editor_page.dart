@@ -32,6 +32,7 @@ class _EditorPageState extends State<EditorPage> {
     List<PostBoard> allPostBoradType =
         (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['allPostBoradTypeList'];
     String editorType = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['editorType'];
+
     return StatefulWrapper(
       onInit: () async {
         if (postBoradType != -1) {

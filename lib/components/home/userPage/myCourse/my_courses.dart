@@ -22,7 +22,7 @@ class MyCourses extends StatelessWidget {
             Column(
               children: [
                 const BaseTopBar(
-                  title: "我的分享",
+                  title: "技術分享",
                 ),
                 Expanded(
                   child: DefaultTabController(

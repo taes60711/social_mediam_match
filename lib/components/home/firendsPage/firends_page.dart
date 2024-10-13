@@ -19,99 +19,105 @@ class FirendsPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          Column(
-            children: [
-              searchBar(context),
-              Builder(builder: (context) {
-                TextEditingController friendListFilterInput =
-                    context.select((FriendProvider value) => value.friendListFilterInput);
-                List<FriendListModel> filteredList = context.watch<FriendProvider>().friendList.where((element) {
-                  bool filterRequest = true;
-                  if (friendListFilterInput.text != "") {
-                    filterRequest = element.userData.email.contains(friendListFilterInput.text);
-                    if (element.userData.name != null) {
-                      filterRequest = element.userData.name!.contains(friendListFilterInput.text);
+          GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: Column(
+              children: [
+                searchBar(context),
+                Builder(builder: (context) {
+                  TextEditingController friendListFilterInput =
+                      context.select((FriendProvider value) => value.friendListFilterInput);
+                  List<FriendListModel> filteredList = context.watch<FriendProvider>().friendList.where((element) {
+                    bool filterRequest = true;
+                    if (friendListFilterInput.text != "") {
+                      filterRequest = element.userData.email.contains(friendListFilterInput.text);
+                      if (element.userData.name != null) {
+                        filterRequest = element.userData.name!.contains(friendListFilterInput.text);
+                      }
                     }
-                  }
-                  return filterRequest;
-                }).toList();
-                return Expanded(
-                  child: filteredList.isEmpty
-                      ? noDataWidget()
-                      : ListView.builder(
-                          itemCount: filteredList.length,
-                          itemBuilder: (context, index) {
-                            FriendListModel listInfo = filteredList[index];
-                            LoginUser otherUserData = listInfo.userData;
-                            return Container(
-                              decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    context.read<FriendProvider>().openRoom(listInfo.roomId, listInfo.userData);
-                                    openChatRoomEndDrawer(context: context);
-                                  },
-                                  child: Container(
-                                    color: Colors.transparent,
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: UserIcon(
-                                            iconSize: 50,
-                                            image: otherUserData.image,
+                    return filterRequest;
+                  }).toList();
+                  return Expanded(
+                    child: filteredList.isEmpty
+                        ? noDataWidget()
+                        : ListView.builder(
+                            itemCount: filteredList.length,
+                            itemBuilder: (context, index) {
+                              FriendListModel listInfo = filteredList[index];
+                              LoginUser otherUserData = listInfo.userData;
+                              return Container(
+                                decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      FocusScope.of(context).requestFocus(FocusNode());
+                                      context.read<FriendProvider>().openRoom(listInfo.roomId, listInfo.userData);
+                                      openChatRoomEndDrawer(context: context);
+                                    },
+                                    child: Container(
+                                      color: Colors.transparent,
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: UserIcon(
+                                              iconSize: 50,
+                                              image: otherUserData.image,
+                                            ),
                                           ),
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(right: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        otherUserData.name ?? otherUserData.email,
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.only(right: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          otherUserData.name ?? otherUserData.email,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    listInfo.sentAt != null
-                                                        ? Text(
-                                                            "${listInfo.sentAt}",
-                                                            style: TextStyle(fontSize: 12, color: normalBgColor2),
-                                                          )
-                                                        : const Text(""),
-                                                  ],
+                                                      listInfo.sentAt != null
+                                                          ? Text(
+                                                              "${listInfo.sentAt}",
+                                                              style: TextStyle(fontSize: 12, color: normalBgColor2),
+                                                            )
+                                                          : const Text(""),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                              listInfo.lastMessage != null
-                                                  ? Text(
-                                                      listInfo.lastMessage!.contains("http://\$ip")
-                                                          ? "傳送了圖像"
-                                                          : "${listInfo.lastMessage}",
-                                                      style: const TextStyle(color: Colors.black54),
-                                                      maxLines: 2,
-                                                      overflow: TextOverflow.ellipsis,
-                                                    )
-                                                  : const Text(
-                                                      "沒有任何訊息",
-                                                      style: TextStyle(color: Colors.black54),
-                                                    ),
-                                            ],
+                                                listInfo.lastMessage != null
+                                                    ? Text(
+                                                        listInfo.lastMessage!.contains("http://\$ip")
+                                                            ? "傳送了圖像"
+                                                            : "${listInfo.lastMessage}",
+                                                        style: const TextStyle(color: Colors.black54),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow.ellipsis,
+                                                      )
+                                                    : const Text(
+                                                        "沒有任何訊息",
+                                                        style: TextStyle(color: Colors.black54),
+                                                      ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                );
-              }),
-            ],
+                              );
+                            },
+                          ),
+                  );
+                }),
+              ],
+            ),
           ),
           chatRoomEndDrawer(),
         ],

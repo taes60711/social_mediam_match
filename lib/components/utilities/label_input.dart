@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
@@ -110,13 +111,22 @@ class MultiLabelInput extends StatelessWidget {
                             child: Column(
                               children: [
                                 const SizedBox(height: 15),
-                                _topBar(
-                                  title: title,
-                                  context: context,
-                                  textController: textController,
-                                  multiOnChange: multiOnChange,
+                                GestureDetector(
+                                  onTap: () {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                  },
+                                  child: Column(
+                                    children: [
+                                      _topBar(
+                                        title: title,
+                                        context: context,
+                                        textController: textController,
+                                        multiOnChange: multiOnChange,
+                                      ),
+                                      const SizedBox(height: 15),
+                                    ],
+                                  ),
                                 ),
-                                const SizedBox(height: 15),
                                 Expanded(
                                   child: _textField(textController, isMulti: true),
                                 ),
@@ -166,17 +176,13 @@ Widget _topBar(
     title: title,
     padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
     backFunc: () => RouteOptions.pop(),
-    rightWidget: GestureDetector(
-      onTap: () {
+    rightWidget: MainBtn(
+      title: "保存",
+      backgroundColor: normalBgColor2,
+      onPress: () {
         multiOnChange(textController.text);
         RouteOptions.pop();
       },
-      child: Container(
-        color: Colors.transparent,
-        width: 35,
-        height: 35,
-        child: const Text("保存"),
-      ),
     ),
   );
 }

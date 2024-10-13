@@ -10,6 +10,7 @@ import '../../models/rich_text_format.dart';
 class RichTextEditor extends StatelessWidget {
   final String content;
   final QuillEditorController controller;
+
   const RichTextEditor({required this.controller, required this.content, super.key});
 
   @override
@@ -53,7 +54,7 @@ class RichTextEditor extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () async {
                                 String imgUrl = imageLinkController.text;
-                                String urlString = '<img src="$imgUrl">';
+                                String urlString = '<img src="$imgUrl" width="${ScreenSize.width * 0.9}">';
 
                                 await controller.insertText(urlString);
                                 Navigator.pop(context);
@@ -220,9 +221,7 @@ class RichTextEditor extends StatelessWidget {
                         }
                       }
                     },
-                    onFocusChanged: (p0) {
-                      controller.focus();
-                    },
+                    onFocusChanged: (p0) {},
                   );
                 } else {
                   return const Center(

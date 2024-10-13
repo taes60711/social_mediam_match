@@ -26,11 +26,31 @@ class BackgroundWidget extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      body: isSafeArea
-          ? SingleChildScrollView(
-              controller: singleScollController,
-              physics: resizeToAvoidBottomInset ? const NoBouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
-              child: SafeArea(
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: isSafeArea
+            ? SingleChildScrollView(
+                controller: singleScollController,
+                physics: resizeToAvoidBottomInset ? const NoBouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
+                child: SafeArea(
+                  child: Container(
+                    width: ScreenSize.width,
+                    height: ScreenSize.height,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(backGround),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: child,
+                  ),
+                ),
+              )
+            : SingleChildScrollView(
+                controller: singleScollController,
+                physics: resizeToAvoidBottomInset ? const NoBouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
                 child: Container(
                   width: ScreenSize.width,
                   height: ScreenSize.height,
@@ -43,22 +63,7 @@ class BackgroundWidget extends StatelessWidget {
                   child: child,
                 ),
               ),
-            )
-          : SingleChildScrollView(
-              controller: singleScollController,
-              physics: resizeToAvoidBottomInset ? const NoBouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
-              child: Container(
-                width: ScreenSize.width,
-                height: ScreenSize.height,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(backGround),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: child,
-              ),
-            ),
+      ),
     );
   }
 }

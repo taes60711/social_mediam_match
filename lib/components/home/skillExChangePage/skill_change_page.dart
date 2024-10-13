@@ -51,6 +51,7 @@ Widget _mainBody(BuildContext context) {
         leftWidget: Container(),
         rightWidget: GestureDetector(
           onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
             openSkillChangeEndDrawer(context: context);
           },
           child: const Icon(Icons.dehaze_rounded),
@@ -75,6 +76,8 @@ Widget _mainBody(BuildContext context) {
                 itemChild: (data, index) {
                   return GestureDetector(
                     onTap: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+
                       openUserDetailEndDrawer(context: context, otherUserData: data[index]);
                     },
                     child: Container(
