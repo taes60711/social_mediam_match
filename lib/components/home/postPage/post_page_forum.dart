@@ -30,6 +30,7 @@ class PostPageForum extends StatelessWidget {
         });
       },
       child: Scaffold(
+        backgroundColor: Color.fromARGB(255, 243, 246, 248),
         body: Stack(
           children: [
             Column(
@@ -40,9 +41,9 @@ class PostPageForum extends StatelessWidget {
                     openPostPageBytextFilterEndDrawer(context: context);
                   },
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                    margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
                     decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.3),
+                      color: Color.fromARGB(255, 255, 255, 255),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     width: ScreenSize.width,
@@ -73,40 +74,49 @@ class PostPageForum extends StatelessWidget {
                                 PostViewModel(postContext: context).postDetailInit(choicedPost: e);
                               },
                               child: Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 10),
+                                margin: const EdgeInsets.symmetric(horizontal: 8),
                                 width: ScreenSize.width,
-                                color: Colors.transparent,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.white,
+                                ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(e.title),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                                      child: Text(e.title),
+                                    ),
                                     Container(
                                       width: ScreenSize.width,
                                       height: 0.3,
                                       margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
                                       color: Colors.grey,
                                     ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            children: [
-                                              Text("作成者:", style: TextStyle(fontSize: 12, color: normalBgColor2)),
-                                              const SizedBox(width: 5),
-                                              UserIcon(
-                                                iconSize: 20,
-                                                image: e.postUserInfo.image,
-                                              ),
-                                              const SizedBox(width: 5),
-                                              Text(e.postUserInfo.name != "" ? e.postUserInfo.name ?? "" : e.postUserInfo.email,
-                                                  style: TextStyle(fontSize: 12, color: normalBgColor2)),
-                                            ],
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              children: [
+                                                Text("作成者:", style: TextStyle(fontSize: 12, color: normalBgColor2)),
+                                                const SizedBox(width: 5),
+                                                UserIcon(
+                                                  iconSize: 20,
+                                                  image: e.postUserInfo.image,
+                                                ),
+                                                const SizedBox(width: 5),
+                                                Text(e.postUserInfo.name != "" ? e.postUserInfo.name ?? "" : e.postUserInfo.email,
+                                                    style: TextStyle(fontSize: 12, color: normalBgColor2)),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        const Text("進入", style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                        const Icon(FontAwesomeIcons.rightToBracket, size: 12, color: Colors.grey)
-                                      ],
+                                          const Text("進入", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                                          const Icon(FontAwesomeIcons.rightToBracket, size: 12, color: Colors.grey)
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -125,6 +135,7 @@ class PostPageForum extends StatelessWidget {
                   child: DefaultTabController(
                     length: 3,
                     child: Scaffold(
+                      backgroundColor: Color.fromARGB(255, 243, 246, 248),
                       appBar: TabBar(
                         tabs: const [
                           SizedBox(

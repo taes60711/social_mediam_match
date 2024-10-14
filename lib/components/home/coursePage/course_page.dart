@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/account/skill_bar.dart';
-import 'package:social_mediam_match/components/utilities/endDrawers/skill_setting_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/models/course_model.dart';
@@ -34,13 +33,16 @@ class CoursePage extends StatelessWidget {
         courseContext = context;
         await SkillChangeViewModel(context: context).init();
       },
-      child: Stack(
-        children: [
-          _mainBuild(context),
-          courseDetailEndDrawer(),
-          userDetailEndDrawer(),
-          courseFilterEndDrawer(),
-        ],
+      child: Scaffold(
+        backgroundColor: Color.fromARGB(255, 236, 240, 247),
+        body: Stack(
+          children: [
+            _mainBuild(context),
+            courseDetailEndDrawer(),
+            userDetailEndDrawer(),
+            courseFilterEndDrawer(),
+          ],
+        ),
       ),
     );
   }
@@ -55,17 +57,19 @@ Widget _mainBuild(BuildContext context) {
           onTap: () {
             openCourseFilterEndDrawer(context: context);
           },
-          child: const Icon(Icons.dehaze_rounded),
+          child: const Icon(FontAwesomeIcons.sliders),
         ),
       ),
       Expanded(
         child: Padding(
-          padding: const EdgeInsets.only(top: 15, right: 15, left: 15),
+          padding: const EdgeInsets.only(top: 15),
           child: APIListView<CourseModel>(
+            size: 6,
             apiFunc: (int page, int size) {
               LoginUser userData = context.read<UserProvider>().userData;
               return CourseService().getAllCourses(userData.uid, page, size);
             },
+            listType: ListType.grid,
             providerList: context.watch<BaseAPIListProvider<CourseModel>>().listData,
             customFloatbutton: GestureDetector(
               onTap: () {
@@ -95,43 +99,57 @@ Widget _mainBuild(BuildContext context) {
               ),
             ),
             itemChild: (List<CourseModel> data, int index) {
-              print(data);
               return GestureDetector(
                 onTap: () {
-                  CourseViewModel(courseContext: context)
-                      .courseDetailInit(openedCourse: data[index]);
+                  CourseViewModel(courseContext: context).courseDetailInit(openedCourse: data[index]);
                 },
                 child: Container(
-                  color: Colors.transparent,
+                  height: 260,
+                  margin: EdgeInsets.only(bottom: 5),
+                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      /// title
                       Container(
                         padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: googleColor, borderRadius: BorderRadius.circular(3)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               data[index].title,
-                              style: const TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 16),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                             Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                skillBar(SkillEndDrawerType.close,
-                                    courseSkillData: data[index].courseLearningSkills,
-                                    backGroundColor: normalBgColor2.withAlpha(150),
-                                    fontSize: 10),
+                                Text(
+                                  "類別: 前端",
+                                  style: TextStyle(fontSize: 12, color: normalBgColor2),
+                                ),
                                 Text(
                                   "難度: ${data[index].needLevel}",
-                                  style: TextStyle(fontSize: 12, color: normalTextColor),
+                                  style: TextStyle(fontSize: 12, color: normalBgColor2),
                                 ),
                               ],
+                            ),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: data[index].courseLearningSkills.map((e) {
+                                  return Container(
+                                    decoration: BoxDecoration(color: normalBgColor2, borderRadius: BorderRadius.circular(5)),
+                                    margin: const EdgeInsets.only(right: 2),
+                                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                                    child: Text(
+                                      e,
+                                      style: const TextStyle(color: Colors.white, fontSize: 10),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
                             ),
                           ],
                         ),
@@ -141,25 +159,31 @@ Widget _mainBuild(BuildContext context) {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               "課程大綱: ",
-                              style: TextStyle(fontSize: 14),
+                              style: TextStyle(fontSize: 14, color: normalBgColor2),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: Text(
+                                data[index].content,
+                                style: TextStyle(fontSize: 13, color: hintTextColor),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                             Text(
-                              data[index].content,
-                              style: const TextStyle(fontSize: 13),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const Text(
                               "課程前需要: ",
-                              style: TextStyle(fontSize: 14),
+                              style: TextStyle(fontSize: 14, color: normalBgColor2),
                             ),
-                            Text(
-                              data[index].beforeNeed,
-                              style: TextStyle(color: hintTextColor, fontSize: 12),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                            SizedBox(
+                              height: 35,
+                              child: Text(
+                                data[index].beforeNeed,
+                                style: TextStyle(color: hintTextColor, fontSize: 12),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
@@ -170,10 +194,10 @@ Widget _mainBuild(BuildContext context) {
                         width: ScreenSize.width,
                         color: hintTextColor,
                       ),
+                      const Expanded(child: SizedBox(height: 1)),
                       GestureDetector(
                         onTap: () {
-                          openUserDetailEndDrawer(
-                              context: context, otherUserData: data[index].courseCreateduserInfo);
+                          openUserDetailEndDrawer(context: context, otherUserData: data[index].courseCreateduserInfo);
                         },
                         child: Container(
                           color: Colors.transparent,
@@ -194,11 +218,21 @@ Widget _mainBuild(BuildContext context) {
                                       image: data[index].courseCreateduserInfo.image,
                                     ),
                                   ),
-                                  Text(
-                                    data[index].courseCreateduserInfo.name != ""
-                                        ? data[index].courseCreateduserInfo.name ?? ""
-                                        : data[index].courseCreateduserInfo.email,
-                                    style: const TextStyle(fontSize: 12),
+                                  // Text(
+                                  //   data[index].courseCreateduserInfo.name != ""
+                                  //       ? data[index].courseCreateduserInfo.name ?? ""
+                                  //       : data[index].courseCreateduserInfo.email,
+                                  //   style: const TextStyle(fontSize: 12),
+                                  // ),
+                                  Container(
+                                    width: 30,
+                                    alignment: Alignment.centerLeft,
+                                    color: Colors.transparent,
+                                    child: const Icon(
+                                      FontAwesomeIcons.arrowUpRightFromSquare,
+                                      color: Colors.black87,
+                                      size: 14,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -209,12 +243,6 @@ Widget _mainBuild(BuildContext context) {
                             ],
                           ),
                         ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 5),
-                        height: 0.3,
-                        width: ScreenSize.width,
-                        color: hintTextColor,
                       ),
                     ],
                   ),

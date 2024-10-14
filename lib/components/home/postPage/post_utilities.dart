@@ -102,4 +102,17 @@ class PostViewUtilities {
       ),
     );
   }
+
+  Widget iconWithText({required IconData iconData, Color? iconColor, required String text, TextStyle? style}) {
+    return Row(
+      children: [
+        Icon(iconData, size: 14, color: iconColor),
+        const SizedBox(width: 5),
+        Text(
+          text,
+          style: style ?? const TextStyle(color: Colors.black87),
+        ),
+      ],
+    );
+  }
 }

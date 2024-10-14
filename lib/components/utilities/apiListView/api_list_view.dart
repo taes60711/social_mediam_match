@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../../CustomBouncingScrollPhysics.dart';
 import '../loading.dart';
 import '../stateful_wrapper.dart';
+
+enum ListType {
+  normal,
+  grid,
+}
 
 class APIListView<R> extends StatelessWidget {
   final Widget Function(List<R> data, int index) itemChild;
@@ -18,6 +24,7 @@ class APIListView<R> extends StatelessWidget {
   final int size;
   final bool needToTopWidget;
   final Widget? customFloatbutton;
+  final ListType listType;
 
   const APIListView({
     Key? key,
@@ -30,6 +37,7 @@ class APIListView<R> extends StatelessWidget {
     this.size = 5,
     this.needToTopWidget = true,
     this.customFloatbutton,
+    this.listType = ListType.normal,
   }) : super(key: key);
 
   @override
@@ -109,58 +117,93 @@ class APIListView<R> extends StatelessWidget {
             } else {
               component = listenListView(
                 context,
-                child: ListView.builder(
-                  itemCount: providerList.length,
-                  controller: scrollController,
-                  physics: scrollPhysics(context),
-                  itemBuilder: (context, index) {
-                    if (providerList.length == 1) {
-                      return Column(
-                        children: [
-                          ///再度読み込む時表示される
-                          reloadWidget(),
+                child: listType == ListType.normal
+                    ? ListView.builder(
+                        itemCount: providerList.length,
+                        controller: scrollController,
+                        physics: scrollPhysics(context),
+                        itemBuilder: (context, index) {
+                          if (providerList.length == 1) {
+                            return Column(
+                              children: [
+                                ///再度読み込む時表示される
+                                reloadWidget(),
 
-                          this.itemChild(providerList, index),
+                                this.itemChild(providerList, index),
 
-                          ///すべでデータ読み込みたら表示される
-                          allDataLoadedWidget(),
-                        ],
-                      );
-                    } else if (index == 0) {
-                      return Column(
-                        children: [
-                          ///再度読み込む時表示される
-                          reloadWidget(),
+                                ///すべでデータ読み込みたら表示される
+                                allDataLoadedWidget(),
+                              ],
+                            );
+                          } else if (index == 0) {
+                            return Column(
+                              children: [
+                                ///再度読み込む時表示される
+                                reloadWidget(),
 
-                          this.itemChild(providerList, index),
-                        ],
-                      );
-                    } else if (index == providerList.length - 1 && size > providerList.length) {
-                      return Column(
-                        children: [
-                          this.itemChild(providerList, index),
+                                this.itemChild(providerList, index),
+                              ],
+                            );
+                          } else if (index == providerList.length - 1 && size > providerList.length) {
+                            return Column(
+                              children: [
+                                this.itemChild(providerList, index),
 
-                          ///すべでデータ読み込みたら表示される
-                          allDataLoadedWidget(),
-                        ],
-                      );
-                    } else if (index == providerList.length - 1) {
-                      return Column(
-                        children: [
-                          this.itemChild(providerList, index),
+                                ///すべでデータ読み込みたら表示される
+                                allDataLoadedWidget(),
+                              ],
+                            );
+                          } else if (index == providerList.length - 1) {
+                            return Column(
+                              children: [
+                                this.itemChild(providerList, index),
 
-                          ///データ読み込んてる場合表示される
-                          loadingWidget(),
+                                ///データ読み込んてる場合表示される
+                                loadingWidget(),
 
-                          ///すべでデータ読み込みたら表示される
-                          allDataLoadedWidget(),
-                        ],
-                      );
-                    } else {
-                      return this.itemChild(providerList, index);
-                    }
-                  },
-                ),
+                                ///すべでデータ読み込みたら表示される
+                                allDataLoadedWidget(),
+                              ],
+                            );
+                          } else {
+                            return this.itemChild(providerList, index);
+                          }
+                        },
+                      )
+                    : SingleChildScrollView(
+                        physics: scrollPhysics(context),
+                        controller: scrollController,
+                        child: Column(
+                          children: [
+                            ///再度読み込む時表示される
+                            reloadWidget(),
+
+                            Wrap(
+                              children: providerList.asMap().entries.map(
+                                (e) {
+                                  int index = e.key;
+                                  double pad = 10;
+                                  EdgeInsetsGeometry padding = EdgeInsets.only(left: pad / 2, right: pad);
+                                  if (index % 2 == 0) {
+                                    padding = EdgeInsets.only(left: pad, right: pad / 2);
+                                  }
+                                  return Container(
+                                    padding: padding,
+                                    width: ScreenSize.width / 2,
+                                    child: this.itemChild(providerList, index),
+                                  );
+                                },
+                              ).toList(),
+                            ),
+
+                            ///データ読み込んてる場合表示される
+                            loadingWidget(),
+
+                            ///すべでデータ読み込みたら表示される
+                            allDataLoadedWidget(),
+                          ],
+                        ),
+                      ),
               );
             }
           }
@@ -175,6 +218,11 @@ class APIListView<R> extends StatelessWidget {
   Widget listenListView(BuildContext context, {required child}) {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollNotification) {
+        /// only listen depth list == 0
+        if (scrollNotification.depth != 0) {
+          return false;
+        }
+
         LoadDataStatus nowLoadDataStatus = context.read<BaseAPIListProvider<R>>().loadStatus;
 
         if (scrollNotification is ScrollStartNotification) {

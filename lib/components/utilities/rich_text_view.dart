@@ -134,7 +134,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    double fontSize = widget.fontSize ?? 18;
+    double fontSize = widget.fontSize ?? 16;
     late List<YoutubePlayerController> ytController = [];
     int index = 0;
 
@@ -226,7 +226,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
             } else {
               component = HtmlWidget(
                 resultString,
-                textStyle: TextStyle(fontSize: fontSize),
+                textStyle: TextStyle(fontSize: fontSize, color: Colors.grey),
               );
             }
             return component;
