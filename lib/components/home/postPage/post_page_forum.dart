@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_page_by_new.dart';
+import 'package:social_mediam_match/components/utilities/endDrawers/custom_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
@@ -183,6 +184,14 @@ class PostPageForum extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            Positioned(
+              child: ElevatedButton(
+                onPressed: () {
+                  BaseEndDrawer().turnOn(context);
+                },
+                child: Text("data"),
+              ),
             ),
             postBoardEndDrawer(),
             postPageBytextFilterEndDrawer(),

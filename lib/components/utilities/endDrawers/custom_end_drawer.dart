@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
 
 ///MARK: Base EndDrawer
 class EndDrawer extends StatefulWidget {
@@ -107,6 +108,46 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class BaseEndDrawer {
+  void turnOn(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const EndDrawerWidget(),
+      ),
+    );
+  }
+}
+
+class EndDrawerWidget extends StatefulWidget {
+  const EndDrawerWidget({super.key});
+
+  @override
+  State<EndDrawerWidget> createState() => _EndDrawerWidgetState();
+}
+
+class _EndDrawerWidgetState extends State<EndDrawerWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: ScreenSize.width,
+      height: ScreenSize.height,
+      color: Colors.white,
+      child: Column(
+        children: [
+          Container(
+            height: 100,
+          ),
+          ElevatedButton(
+              onPressed: () {
+                RouteOptions.pop();
+              },
+              child: Text("exit"))
+        ],
       ),
     );
   }
