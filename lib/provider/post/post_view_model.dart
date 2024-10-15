@@ -181,6 +181,17 @@ class PostViewModel {
           );
         });
   }
+
+  /// 掲示板の名前取得する
+  String getBoardName(List<PostBoard> allPostBoards, PostModel post) {
+    String result = "";
+    if (post.type != -1) {
+      result = allPostBoards.firstWhere((e) {
+        return e.type == post.type;
+      }).name;
+    }
+    return result;
+  }
 }
 
 Widget _bottomSheetBtn({required IconData icon, required String btnText, required bntFunc}) {

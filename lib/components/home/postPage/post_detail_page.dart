@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
 
 import '../../../models/post_model.dart';
+import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_comment_provider.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../utilities/endDrawers/user_detail_end_drawer.dart';
@@ -114,25 +115,59 @@ class PostDetailPage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  GestureDetector(
+                    onTap: () {
+                      PostViewModel(postContext: context).showPostCommentPageSheet(choicedPost: viewChoicedPost);
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "回覆 : ${viewChoicedPost.commentCount} 件",
+                          style: TextStyle(color: AppColors.normalblackColor),
+                        ),
+                        Row(
+                          children: [
+                            UserIcon(
+                              iconSize: 25,
+                              image: context.watch<UserProvider>().userData.image,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Container(
+                                height: 30,
+                                alignment: Alignment.centerLeft,
+                                decoration: BoxDecoration(color: AppColors.bgColor),
+                                child: const Padding(
+                                  padding: EdgeInsets.only(left: 5),
+                                  child: Text(
+                                    "留言",
+                                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: 30,
+                              margin: const EdgeInsets.only(left: 5),
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              decoration:
+                                  BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
+                              child: Center(
+                                child: Icon(
+                                  Icons.send,
+                                  size: 16,
+                                  color: normalTextColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 60),
                 ],
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            child: GestureDetector(
-              onTap: () {
-                PostViewModel(postContext: context).showPostCommentPageSheet(choicedPost: viewChoicedPost);
-              },
-              child: Container(
-                width: ScreenSize.width,
-                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
-                color: normalBgColor2,
-                child: Text(
-                  "${viewChoicedPost.commentCount}則回復",
-                  style: TextStyle(color: normalTextColor),
-                ),
               ),
             ),
           ),

@@ -1,8 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
-import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
@@ -47,16 +48,6 @@ class SkillChangePage extends StatelessWidget {
 Widget _mainBody(BuildContext context) {
   return Column(
     children: [
-      BaseTopBar(
-        leftWidget: Container(),
-        rightWidget: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-            openSkillChangeEndDrawer(context: context);
-          },
-          child: const Icon(Icons.dehaze_rounded),
-        ),
-      ),
       searchBar(context),
       const SizedBox(height: 10),
       Expanded(
@@ -157,28 +148,50 @@ Widget searchBar(BuildContext context) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     width: ScreenSize.width,
-    height: 36,
-    child: TextField(
-      cursorColor: normalBgColor2,
-      controller: context.read<SkillChangeProvider>().nameFilterController,
-      decoration: InputDecoration(
-        hintText: tr("skillSearchHintText"),
-        hintStyle: const TextStyle(fontSize: 14),
-        prefixIcon: const Icon(Icons.search),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-        ),
-        contentPadding: const EdgeInsets.all(8),
-        border: const OutlineInputBorder(),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(
+        color: Colors.grey,
+        width: 0.5,
       ),
-      onChanged: (value) {
-        SkillChangeViewModel(context: context).searchByNamePart(namePart: value);
-      },
+    ),
+    height: 36,
+    child: Row(
+      children: [
+        Expanded(
+          child: TextField(
+            cursorColor: normalBgColor2,
+            controller: context.read<SkillChangeProvider>().nameFilterController,
+            decoration: InputDecoration(
+              hintText: tr("skillSearchHintText"),
+              hintStyle: const TextStyle(fontSize: 14),
+              prefixIcon: const Icon(Icons.search),
+              focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+              contentPadding: const EdgeInsets.all(8),
+              border: const OutlineInputBorder(borderSide: BorderSide.none),
+            ),
+            onChanged: (value) {
+              SkillChangeViewModel(context: context).searchByNamePart(namePart: value);
+            },
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+            openSkillChangeEndDrawer(context: context);
+          },
+          child: Container(
+            width: 50,
+            height: 40,
+            color: Colors.transparent,
+            child: Icon(
+              FontAwesomeIcons.sliders,
+              size: 16,
+              color: normalBgColor2,
+            ),
+          ),
+        ),
+      ],
     ),
   );
 }

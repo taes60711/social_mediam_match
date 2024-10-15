@@ -34,7 +34,7 @@ class CoursePage extends StatelessWidget {
         await SkillChangeViewModel(context: context).init();
       },
       child: Scaffold(
-        backgroundColor: Color.fromARGB(255, 236, 240, 247),
+        backgroundColor: AppColors.bgColor,
         body: Stack(
           children: [
             _mainBuild(context),
@@ -116,11 +116,14 @@ Widget _mainBuild(BuildContext context) {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              data[index].title,
-                              style: TextStyle(fontSize: 16),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                            SizedBox(
+                              height: 50,
+                              child: Text(
+                                data[index].title,
+                                style: TextStyle(fontSize: 16),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -135,20 +138,23 @@ Widget _mainBuild(BuildContext context) {
                                 ),
                               ],
                             ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: data[index].courseLearningSkills.map((e) {
-                                  return Container(
-                                    decoration: BoxDecoration(color: normalBgColor2, borderRadius: BorderRadius.circular(5)),
-                                    margin: const EdgeInsets.only(right: 2),
-                                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                                    child: Text(
-                                      e,
-                                      style: const TextStyle(color: Colors.white, fontSize: 10),
-                                    ),
-                                  );
-                                }).toList(),
+                            SizedBox(
+                              height: 16,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: data[index].courseLearningSkills.map((e) {
+                                    return Container(
+                                      decoration: BoxDecoration(color: normalBgColor2, borderRadius: BorderRadius.circular(5)),
+                                      margin: const EdgeInsets.only(right: 2),
+                                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                                      child: Text(
+                                        e,
+                                        style: const TextStyle(color: Colors.white, fontSize: 10),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                             ),
                           ],
@@ -164,11 +170,11 @@ Widget _mainBuild(BuildContext context) {
                               style: TextStyle(fontSize: 14, color: normalBgColor2),
                             ),
                             SizedBox(
-                              height: 60,
+                              height: 45,
                               child: Text(
                                 data[index].content,
                                 style: TextStyle(fontSize: 13, color: hintTextColor),
-                                maxLines: 3,
+                                maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -177,11 +183,11 @@ Widget _mainBuild(BuildContext context) {
                               style: TextStyle(fontSize: 14, color: normalBgColor2),
                             ),
                             SizedBox(
-                              height: 35,
+                              height: 25,
                               child: Text(
                                 data[index].beforeNeed,
                                 style: TextStyle(color: hintTextColor, fontSize: 12),
-                                maxLines: 2,
+                                maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -218,12 +224,7 @@ Widget _mainBuild(BuildContext context) {
                                       image: data[index].courseCreateduserInfo.image,
                                     ),
                                   ),
-                                  // Text(
-                                  //   data[index].courseCreateduserInfo.name != ""
-                                  //       ? data[index].courseCreateduserInfo.name ?? ""
-                                  //       : data[index].courseCreateduserInfo.email,
-                                  //   style: const TextStyle(fontSize: 12),
-                                  // ),
+                                  SizedBox(width: 5),
                                   Container(
                                     width: 30,
                                     alignment: Alignment.centerLeft,
@@ -236,9 +237,24 @@ Widget _mainBuild(BuildContext context) {
                                   ),
                                 ],
                               ),
-                              Text(
-                                "最終更新日:${data[index].postTime}",
-                                style: TextStyle(fontSize: 11, color: hintTextColor),
+                              Row(
+                                children: [
+                                  Text(
+                                    "最終更新日:${data[index].postTime}",
+                                    style: TextStyle(fontSize: 11, color: hintTextColor),
+                                  ),
+                                  const Expanded(child: SizedBox(width: 1)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8, bottom: 5),
+                                    child: Icon(
+                                      data[index].isPublic || data[index].signUpStatus == "added"
+                                          ? FontAwesomeIcons.unlock
+                                          : FontAwesomeIcons.lock,
+                                      size: 12,
+                                      color: data[index].isPublic ? normalBgColor : Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../../global.dart';
 import '../../../models/post_model.dart';
+import '../../../provider/post/post_provider.dart';
 import '../../../provider/post/post_view_model.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/Stateful_wrapper.dart';
@@ -23,12 +24,13 @@ class PostPageByViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<PostBoard> allPostBoards = context.select((PostProvider value) => value.allPostBoards);
     return StatefulWrapper(
       onInit: () {
         globalPostContext = context;
       },
       child: Scaffold(
-        backgroundColor: Color.fromARGB(255, 236, 240, 247),
+        backgroundColor: AppColors.bgColor,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Builder(
@@ -92,33 +94,37 @@ class PostPageByViewer extends StatelessWidget {
                                   bottomBar(context: context, data: data[index]),
 
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 12, top: 5),
+                                    padding: const EdgeInsets.only(left: 15, top: 2),
                                     child: Row(
                                       children: [
                                         Expanded(
                                           child: Row(
                                             children: [
                                               Container(
-                                                width: 20,
-                                                height: 20,
+                                                width: 12,
+                                                height: 12,
                                                 color: Colors.black38,
                                               ),
-                                              SizedBox(width: 10),
-                                              Text("technology"),
+                                              SizedBox(width: 5),
+                                              Text(
+                                                PostViewModel(postContext: context).getBoardName(allPostBoards, data[index]),
+                                                style: TextStyle(fontSize: 12),
+                                              ),
                                             ],
                                           ),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.only(right: 8),
+                                          padding: const EdgeInsets.only(right: 12),
                                           child: PostViewUtilities().iconWithText(
                                             iconData: FontAwesomeIcons.eye,
                                             text: "${data[index].viewed}",
+                                            style: TextStyle(fontSize: 12),
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: 8),
+                                  SizedBox(height: 5),
                                 ],
                               ),
                             ),

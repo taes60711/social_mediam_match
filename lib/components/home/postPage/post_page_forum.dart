@@ -30,7 +30,7 @@ class PostPageForum extends StatelessWidget {
         });
       },
       child: Scaffold(
-        backgroundColor: Color.fromARGB(255, 243, 246, 248),
+        backgroundColor: AppColors.bgColor,
         body: Stack(
           children: [
             Column(
@@ -135,7 +135,7 @@ class PostPageForum extends StatelessWidget {
                   child: DefaultTabController(
                     length: 3,
                     child: Scaffold(
-                      backgroundColor: Color.fromARGB(255, 243, 246, 248),
+                      backgroundColor: AppColors.bgColor,
                       appBar: TabBar(
                         tabs: const [
                           SizedBox(
@@ -153,7 +153,7 @@ class PostPageForum extends StatelessWidget {
                         ],
                         isScrollable: true,
                         indicator: UnderlineTabIndicator(
-                          borderSide: BorderSide(width: 1.0, color: normalBgColor),
+                          borderSide: BorderSide(width: 1.0, color: AppColors.normalblackColor),
                           insets: const EdgeInsets.symmetric(horizontal: 10),
                         ),
                         labelPadding: const EdgeInsets.only(top: 5, left: 10, right: 10),
