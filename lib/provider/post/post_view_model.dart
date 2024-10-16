@@ -3,11 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_comment_page.dart';
-import 'package:social_mediam_match/components/utilities/endDrawers/custom_end_drawer.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/post/post_provider.dart';
-
-import '../../components/home/postPage/post_detail_page.dart';
 import '../../components/utilities/apiListView/base_api_list_provider.dart';
 import '../../components/utilities/basic_top_bar.dart';
 import '../../components/utilities/endDrawers/post_comment_end_drawer.dart';
@@ -35,7 +32,6 @@ class PostViewModel {
   }
 
   Future<void> postDetailInit({required PostModel choicedPost}) async {
-    // BaseEndDrawer().turnOn(context, child: const PostDetailPage());
     openPostDetailEndDrawer(context: context, choicedPost: choicedPost);
     LoginUser userData = context.read<UserProvider>().userData;
     bool isGood = await PostService().checkIsPostGood(postId: choicedPost.id, userUID: userData.uid);
