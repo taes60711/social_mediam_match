@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import '../../../global.dart';
 import '../../../models/post_model.dart';
-import '../../../provider/post/post_provider.dart';
 import '../../../provider/post/post_view_model.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/Stateful_wrapper.dart';
@@ -19,12 +18,26 @@ import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
 import 'post_utilities.dart';
 
-class PostPageByViewer extends StatelessWidget {
-  const PostPageByViewer({super.key});
+class PostPageByViewer extends StatefulWidget {
+  final PostViewModel postPageForumViewModel;
+  const PostPageByViewer({super.key, required this.postPageForumViewModel});
+
+  @override
+  State<PostPageByViewer> createState() => _PostPageByViewerState();
+}
+
+class _PostPageByViewerState extends State<PostPageByViewer> {
+  late PostViewModel postPageByViewerViewModel;
+
+  @override
+  void initState() {
+    postPageByViewerViewModel = PostViewModel(context: context);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<PostBoard> allPostBoards = context.select((PostProvider value) => value.allPostBoards);
     return StatefulWrapper(
       onInit: () {
         globalPostContext = context;
@@ -47,7 +60,7 @@ class PostPageByViewer extends StatelessWidget {
                   return GestureDetector(
                     onLongPress: () {
                       context.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: data[index]);
-                      PostViewModel(postContext: context).showOptionBottomSheet(choicedPost: data[index]);
+                      postPageByViewerViewModel.showOptionBottomSheet(choicedPost: data[index]);
                     },
                     child: Container(
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
@@ -57,7 +70,7 @@ class PostPageByViewer extends StatelessWidget {
                           ///文章プレビュー
                           GestureDetector(
                             onTap: () {
-                              PostViewModel(postContext: context).postDetailInit(choicedPost: data[index]);
+                              postPageByViewerViewModel.postDetailInit(choicedPost: data[index]);
                             },
                             child: Container(
                               color: Colors.transparent,
@@ -107,7 +120,7 @@ class PostPageByViewer extends StatelessWidget {
                                               ),
                                               SizedBox(width: 5),
                                               Text(
-                                                PostViewModel(postContext: context).getBoardName(allPostBoards, data[index]),
+                                                postPageByViewerViewModel.getBoardName(data[index]),
                                                 style: TextStyle(fontSize: 12),
                                               ),
                                             ],
@@ -187,7 +200,7 @@ Widget bottomBar({required BuildContext context, required PostModel data}) {
               GestureDetector(
                 onTap: () {
                   context.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: data);
-                  PostViewModel(postContext: context).showOptionBottomSheet(choicedPost: data);
+                  PostViewModel(context: context).showOptionBottomSheet(choicedPost: data);
                 },
                 child: Container(
                   width: 30,

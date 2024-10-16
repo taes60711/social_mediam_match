@@ -41,7 +41,7 @@ class PostPageByTextFilter extends StatelessWidget {
               controller: textFilterInput,
               textInputAction: TextInputAction.search,
               onSubmitted: (value) async {
-                await PostViewModel(postContext: context).searchPostByTextFilter(textFilterInput.text);
+                await PostViewModel(context: context).searchPostByTextFilter(textFilterInput.text);
               },
               decoration: InputDecoration(
                 hintText: "Search By title",

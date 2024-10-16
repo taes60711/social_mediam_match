@@ -82,8 +82,7 @@ class PostDetailPage extends StatelessWidget {
                           bool isGood = context.select((PostProvider value) => value.isGood);
                           return GestureDetector(
                             onTap: () {
-                              PostViewModel(postContext: context)
-                                  .updatePostGood(isGood: isGood, viewChoicedPost: viewChoicedPost);
+                              PostViewModel(context: context).updatePostGood(isGood: isGood, viewChoicedPost: viewChoicedPost);
                             },
                             child: Container(
                               padding: const EdgeInsets.all(8),
@@ -117,7 +116,7 @@ class PostDetailPage extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      PostViewModel(postContext: context).showPostCommentPageSheet(choicedPost: viewChoicedPost);
+                      PostViewModel(context: context).showPostCommentPageSheet(choicedPost: viewChoicedPost);
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

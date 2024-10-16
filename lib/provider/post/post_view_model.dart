@@ -3,9 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_comment_page.dart';
+import 'package:social_mediam_match/components/utilities/endDrawers/custom_end_drawer.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/post/post_provider.dart';
 
+import '../../components/home/postPage/post_detail_page.dart';
 import '../../components/utilities/apiListView/base_api_list_provider.dart';
 import '../../components/utilities/basic_top_bar.dart';
 import '../../components/utilities/endDrawers/post_comment_end_drawer.dart';
@@ -19,24 +21,25 @@ import '../account/user_provider.dart';
 import 'post_comment_provider.dart';
 
 class PostViewModel {
-  BuildContext postContext;
-  PostViewModel({required this.postContext});
+  BuildContext context;
+  PostViewModel({required this.context});
 
   Future<void> getAllPostBoard() async {
     List<PostBoard> requestBoardData = await PostService().getAllPostBoard();
-    postContext.read<PostProvider>().getAllPostBoard(requestBoardData);
+    context.read<PostProvider>().initAllPostBoard(requestBoardData);
   }
 
   Future<void> getTopPost() async {
     List<PostModel> requestPostData = await PostService().getPostByType(0, 3, -1);
-    postContext.read<PostProvider>().getTopPost(requestPostData);
+    context.read<PostProvider>().getTopPost(requestPostData);
   }
 
   Future<void> postDetailInit({required PostModel choicedPost}) async {
-    openPostDetailEndDrawer(context: postContext, choicedPost: choicedPost);
-    LoginUser userData = postContext.read<UserProvider>().userData;
+    // BaseEndDrawer().turnOn(context, child: const PostDetailPage());
+    openPostDetailEndDrawer(context: context, choicedPost: choicedPost);
+    LoginUser userData = context.read<UserProvider>().userData;
     bool isGood = await PostService().checkIsPostGood(postId: choicedPost.id, userUID: userData.uid);
-    postContext.read<PostProvider>().changeIsGoodStatus(isGood);
+    context.read<PostProvider>().changeIsGoodStatus(isGood);
 
     if (choicedPost.createdBy != userData.uid) {
       await PostService().updatePostViewCount(choicedPost.id);
@@ -49,7 +52,7 @@ class PostViewModel {
   }
 
   Future<void> createPost({required String title, required String msg, required int type}) async {
-    LoginUser userData = postContext.read<UserProvider>().userData;
+    LoginUser userData = context.read<UserProvider>().userData;
     String fomattedContent = await RichTextFormat(htmlString: msg).sendPostImgFormat();
 
     await PostService().createPost(userData.uid, title, fomattedContent, type);
@@ -64,27 +67,27 @@ class PostViewModel {
       postUserInfo: userData,
     );
 
-    postContext.read<BaseAPIListProvider<PostModel>>().createData(createdData: createdData);
+    context.read<BaseAPIListProvider<PostModel>>().createData(createdData: createdData);
   }
 
   Future<void> updatePostGood({required bool isGood, required PostModel viewChoicedPost}) async {
-    LoginUser userData = postContext.read<UserProvider>().userData;
+    LoginUser userData = context.read<UserProvider>().userData;
     globalPostContext?.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: viewChoicedPost);
     if (isGood) {
       await PostService().updatePostGood(viewChoicedPost.id);
-      postContext.read<PostCommentProvider>().updateChoicedPostGoodCount(isPlus: false);
+      context.read<PostCommentProvider>().updateChoicedPostGoodCount(isPlus: false);
     } else {
       await PostService().updatePostGood(viewChoicedPost.id, userUID: userData.uid);
-      postContext.read<PostCommentProvider>().updateChoicedPostGoodCount(isPlus: true);
+      context.read<PostCommentProvider>().updateChoicedPostGoodCount(isPlus: true);
     }
     globalPostContext?.read<BaseAPIListProvider<PostModel>>().editData(updatedData: viewChoicedPost);
-    postContext.read<PostProvider>().changeIsGoodStatus(!isGood);
+    context.read<PostProvider>().changeIsGoodStatus(!isGood);
   }
 
   Future<void> searchPostByTextFilter(String keyword) async {
-    int loadSize = postContext.read<BaseAPIListProvider<PostModel>>().size;
+    int loadSize = context.read<BaseAPIListProvider<PostModel>>().size;
 
-    await postContext.read<BaseAPIListProvider<PostModel>>().replaceApiFunc(
+    await context.read<BaseAPIListProvider<PostModel>>().replaceApiFunc(
       loadSize,
       replaceApiFunc: (page, size) {
         return PostService().getPostByTextFilter(page, size, keyword);
@@ -152,7 +155,7 @@ class PostViewModel {
 
   void showPostCommentPageSheet({required PostModel choicedPost}) {
     showModalBottomSheet(
-        context: postContext,
+        context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (builder) {
@@ -183,10 +186,10 @@ class PostViewModel {
   }
 
   /// 掲示板の名前取得する
-  String getBoardName(List<PostBoard> allPostBoards, PostModel post) {
+  String getBoardName(PostModel post) {
     String result = "";
     if (post.type != -1) {
-      result = allPostBoards.firstWhere((e) {
+      result = context.read<PostProvider>().allPostBoards.firstWhere((e) {
         return e.type == post.type;
       }).name;
     }

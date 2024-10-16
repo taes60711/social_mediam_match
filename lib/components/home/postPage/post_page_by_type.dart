@@ -97,7 +97,7 @@ class PostPageByType extends StatelessWidget {
                       ///文章プレビュー
                       GestureDetector(
                         onTap: () {
-                          PostViewModel(postContext: context).postDetailInit(choicedPost: data[index]);
+                          PostViewModel(context: context).postDetailInit(choicedPost: data[index]);
                         },
                         child: Container(
                           color: Colors.transparent,

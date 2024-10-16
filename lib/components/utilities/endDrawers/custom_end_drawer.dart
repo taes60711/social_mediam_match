@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
 
 ///MARK: Base EndDrawer
 class EndDrawer extends StatefulWidget {
@@ -27,6 +26,7 @@ class EndDrawer extends StatefulWidget {
 class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+
   bool loading = true;
 
   @override
@@ -113,41 +113,55 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
   }
 }
 
-class BaseEndDrawer {
-  void turnOn(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const EndDrawerWidget(),
-      ),
-    );
-  }
+class SlideTransitionExample extends StatefulWidget {
+  @override
+  _SlideTransitionExampleState createState() => _SlideTransitionExampleState();
 }
 
-class EndDrawerWidget extends StatefulWidget {
-  const EndDrawerWidget({super.key});
+class _SlideTransitionExampleState extends State<SlideTransitionExample> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
 
   @override
-  State<EndDrawerWidget> createState() => _EndDrawerWidgetState();
-}
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
 
-class _EndDrawerWidgetState extends State<EndDrawerWidget> {
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset(1.0, 0.0), // 初始位置：右側
+      end: Offset(0.0, 0.0), // 最終位置：正常位置
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    // 開始動畫
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: ScreenSize.width,
-      height: ScreenSize.height,
-      color: Colors.white,
-      child: Column(
-        children: [
-          Container(
-            height: 100,
+    return SlideTransition(
+      position: _offsetAnimation,
+      child: Container(
+        width: ScreenSize.width,
+        height: ScreenSize.height,
+        color: Colors.blue,
+        child: Center(
+          child: Text(
+            'Hello, Flutter!',
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          ElevatedButton(
-              onPressed: () {
-                RouteOptions.pop();
-              },
-              child: Text("exit"))
-        ],
+        ),
       ),
     );
   }

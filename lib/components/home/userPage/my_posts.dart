@@ -33,7 +33,7 @@ class MyPosts extends StatelessWidget {
   Widget build(BuildContext context) {
     return StatefulWrapper(
       onInit: () async {
-        await PostViewModel(postContext: context).getAllPostBoard();
+        await PostViewModel(context: context).getAllPostBoard();
       },
       child: Stack(
         children: [
@@ -121,7 +121,7 @@ Widget mainBody(BuildContext context) {
                             ///文章プレビュー
                             GestureDetector(
                               onTap: () {
-                                PostViewModel(postContext: context).postDetailInit(choicedPost: data[index]);
+                                PostViewModel(context: context).postDetailInit(choicedPost: data[index]);
                               },
                               child: Container(
                                 color: Colors.transparent,

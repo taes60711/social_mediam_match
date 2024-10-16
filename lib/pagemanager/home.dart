@@ -84,9 +84,7 @@ class _HomeState extends State<Home> {
         }
       },
       child: Scaffold(
-        body: SafeArea(
-          child: widgetOptions[context.watch<BottomBarControllerProvider>().index],
-        ),
+        body: widgetOptions[context.watch<BottomBarControllerProvider>().index],
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           items: bottomBarItems,
@@ -125,7 +123,7 @@ class _HomeState extends State<Home> {
 
     if (pathIndex == 0) {
       PostModel choicedPost = await PostService().getPostDataByPostId(postId ?? -1);
-      PostViewModel(postContext: globalPostContext ?? context).postDetailInit(choicedPost: choicedPost);
+      PostViewModel(context: globalPostContext ?? context).postDetailInit(choicedPost: choicedPost);
     } else if (pathIndex == 1) {
       LoginUser userData = context.read<UserProvider>().userData;
       CourseModel openedCourse = await CourseService().getCourseBycourseId(userData.uid, courseId ?? -1);

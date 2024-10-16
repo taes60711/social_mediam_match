@@ -129,7 +129,7 @@ class _EditorPageState extends State<EditorPage> {
                                 if (titleInputController.text == "" || content == "") {
                                   EditPageModel().createPostCheck(titleInputController.text, content);
                                 } else {
-                                  PostViewModel(postContext: postContext).createPost(
+                                  PostViewModel(context: postContext).createPost(
                                     title: titleInputController.text,
                                     msg: content,
                                     type: context.read<PostProvider>().choicedPostType.type,

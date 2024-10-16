@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/home/postPage/post_page_by_new.dart';
-import 'package:social_mediam_match/components/utilities/endDrawers/custom_end_drawer.dart';
-import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
@@ -19,186 +17,193 @@ import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import 'post_page_by_viewer.dart';
 import 'post_utilities.dart';
 
-class PostPageForum extends StatelessWidget {
+class PostPageForum extends StatefulWidget {
   const PostPageForum({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return StatefulWrapper(
-      onInit: () async {
-        await PostViewModel(postContext: context).getTopPost().then((_) async {
-          await PostViewModel(postContext: context).getAllPostBoard();
-        });
-      },
-      child: Scaffold(
-        backgroundColor: AppColors.bgColor,
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                ///文章検索ページ開くボタン
-                GestureDetector(
-                  onTap: () {
-                    openPostPageBytextFilterEndDrawer(context: context);
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    width: ScreenSize.width,
-                    height: 36,
-                    child: const Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Icon(Icons.search, color: Colors.grey),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 4),
-                          child: Text("Search By title", style: TextStyle(color: Colors.grey, fontSize: 14)),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Builder(builder: (context) {
-                  List<PostModel> topPosts = context.select((PostProvider value) => value.topPost);
+  State<PostPageForum> createState() => _PostPageForumState();
+}
 
-                  return topPosts.isEmpty
-                      ? Container()
-                      : CarouselSlider(
-                          items: topPosts.map((e) {
-                            return GestureDetector(
-                              onTap: () {
-                                PostViewModel(postContext: context).postDetailInit(choicedPost: e);
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 8),
-                                width: ScreenSize.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.white,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                                      child: Text(e.title),
-                                    ),
-                                    Container(
-                                      width: ScreenSize.width,
-                                      height: 0.3,
-                                      margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-                                      color: Colors.grey,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                Text("作成者:", style: TextStyle(fontSize: 12, color: normalBgColor2)),
-                                                const SizedBox(width: 5),
-                                                UserIcon(
-                                                  iconSize: 20,
-                                                  image: e.postUserInfo.image,
-                                                ),
-                                                const SizedBox(width: 5),
-                                                Text(e.postUserInfo.name != "" ? e.postUserInfo.name ?? "" : e.postUserInfo.email,
-                                                    style: TextStyle(fontSize: 12, color: normalBgColor2)),
-                                              ],
-                                            ),
-                                          ),
-                                          const Text("進入", style: TextStyle(fontSize: 12, color: Colors.grey)),
-                                          const Icon(FontAwesomeIcons.rightToBracket, size: 12, color: Colors.grey)
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          options: CarouselOptions(
-                            height: 55,
-                            aspectRatio: 16 / 9,
-                            viewportFraction: 1,
-                            autoPlay: true,
-                          ),
-                        );
-                }),
-                Expanded(
-                  child: DefaultTabController(
-                    length: 3,
-                    child: Scaffold(
-                      backgroundColor: AppColors.bgColor,
-                      appBar: TabBar(
-                        tabs: const [
-                          SizedBox(
-                            height: 25,
-                            child: Tab(text: '人氣'),
-                          ),
-                          SizedBox(
-                            height: 25,
-                            child: Tab(text: '最新'),
-                          ),
-                          SizedBox(
-                            height: 25,
-                            child: Tab(text: '看板'),
-                          ),
-                        ],
-                        isScrollable: true,
-                        indicator: UnderlineTabIndicator(
-                          borderSide: BorderSide(width: 1.0, color: AppColors.normalblackColor),
-                          insets: const EdgeInsets.symmetric(horizontal: 10),
-                        ),
-                        labelPadding: const EdgeInsets.only(top: 5, left: 10, right: 10),
-                        labelColor: normalBgColor2,
+class _PostPageForumState extends State<PostPageForum> {
+  late PostViewModel postPageForumViewModel;
+
+  @override
+  void initState() {
+    postPageForumViewModel = PostViewModel(context: context);
+    init();
+    super.initState();
+  }
+
+  Future<void> init() async {
+    await postPageForumViewModel.getTopPost().then((_) async {
+      await postPageForumViewModel.getAllPostBoard();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.bgColor,
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              ///文章検索ページ開くボタン
+              GestureDetector(
+                onTap: () {
+                  openPostPageBytextFilterEndDrawer(context: context);
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  width: ScreenSize.width,
+                  height: 36,
+                  child: const Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Icon(Icons.search, color: Colors.grey),
                       ),
-                      body: Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: TabBarView(
-                          children: [
-                            MultiProvider(
-                              providers: [
-                                ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostModel>()),
-                              ],
-                              child: const PostPageByViewer(),
+                      Padding(
+                        padding: EdgeInsets.only(top: 4),
+                        child: Text("Search By title", style: TextStyle(color: Colors.grey, fontSize: 14)),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Builder(builder: (context) {
+                List<PostModel> topPosts = context.select((PostProvider value) => value.topPost);
+
+                return topPosts.isEmpty
+                    ? Container()
+                    : CarouselSlider(
+                        items: topPosts.map((e) {
+                          return GestureDetector(
+                            onTap: () {
+                              postPageForumViewModel.postDetailInit(choicedPost: e);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 8),
+                              width: ScreenSize.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.white,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                                    child: Text(e.title),
+                                  ),
+                                  Container(
+                                    width: ScreenSize.width,
+                                    height: 0.3,
+                                    margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                                    color: Colors.grey,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              Text("作成者:", style: TextStyle(fontSize: 12, color: normalBgColor2)),
+                                              const SizedBox(width: 5),
+                                              UserIcon(
+                                                iconSize: 20,
+                                                image: e.postUserInfo.image,
+                                              ),
+                                              const SizedBox(width: 5),
+                                              Text(e.postUserInfo.name != "" ? e.postUserInfo.name ?? "" : e.postUserInfo.email,
+                                                  style: TextStyle(fontSize: 12, color: normalBgColor2)),
+                                            ],
+                                          ),
+                                        ),
+                                        const Text("進入", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                                        const Icon(FontAwesomeIcons.rightToBracket, size: 12, color: Colors.grey)
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            MultiProvider(
-                              providers: [
-                                ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostModel>()),
-                              ],
-                              child: const PostPageByNew(),
-                            ),
-                            postBoradList(context),
-                          ],
+                          );
+                        }).toList(),
+                        options: CarouselOptions(
+                          height: 55,
+                          aspectRatio: 16 / 9,
+                          viewportFraction: 1,
+                          autoPlay: true,
                         ),
+                      );
+              }),
+              Expanded(
+                child: DefaultTabController(
+                  length: 3,
+                  child: Scaffold(
+                    backgroundColor: AppColors.bgColor,
+                    appBar: TabBar(
+                      tabs: const [
+                        SizedBox(
+                          height: 25,
+                          child: Tab(text: '人氣'),
+                        ),
+                        SizedBox(
+                          height: 25,
+                          child: Tab(text: '最新'),
+                        ),
+                        SizedBox(
+                          height: 25,
+                          child: Tab(text: '看板'),
+                        ),
+                      ],
+                      isScrollable: true,
+                      indicator: UnderlineTabIndicator(
+                        borderSide: BorderSide(width: 1.0, color: AppColors.normalblackColor),
+                        insets: const EdgeInsets.symmetric(horizontal: 10),
+                      ),
+                      labelPadding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+                      labelColor: normalBgColor2,
+                    ),
+                    body: Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: TabBarView(
+                        children: [
+                          MultiProvider(
+                            providers: [
+                              ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostModel>()),
+                            ],
+                            child: PostPageByViewer(
+                              postPageForumViewModel: postPageForumViewModel,
+                            ),
+                          ),
+                          MultiProvider(
+                            providers: [
+                              ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostModel>()),
+                            ],
+                            child: const PostPageByNew(),
+                          ),
+                          postBoradList(context),
+                        ],
                       ),
                     ),
                   ),
                 ),
-              ],
-            ),
-            Positioned(
-              child: ElevatedButton(
-                onPressed: () {
-                  BaseEndDrawer().turnOn(context);
-                },
-                child: Text("data"),
               ),
-            ),
-            postBoardEndDrawer(),
-            postPageBytextFilterEndDrawer(),
-            postDetailEndDrawer(),
-            userDetailEndDrawer(),
-          ],
-        ),
+            ],
+          ),
+          postBoardEndDrawer(),
+          postPageBytextFilterEndDrawer(),
+          postDetailEndDrawer(),
+          userDetailEndDrawer(),
+        ],
       ),
     );
   }

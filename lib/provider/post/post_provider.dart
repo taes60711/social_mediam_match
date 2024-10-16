@@ -8,7 +8,7 @@ class PostProvider extends ChangeNotifier {
   TextEditingController textFilterInput = TextEditingController();
 
   List<PostBoard> allPostBoards = [];
-  void getAllPostBoard(List<PostBoard> postBoard) {
+  void initAllPostBoard(List<PostBoard> postBoard) {
     allPostBoards = [...allPostBoards, ...postBoard];
     notifyListeners();
   }
