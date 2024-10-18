@@ -19,3 +19,4 @@ BuildContext globalContext = navigatorKey.currentState!.context;
 ///通知用
 BuildContext? globalPostContext;
 BuildContext? courseContext;
+BuildContext? globalHomeContext;

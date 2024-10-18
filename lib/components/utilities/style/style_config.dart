@@ -18,7 +18,9 @@ Color googleButtonColor = const Color.fromARGB(255, 93, 161, 238);
 Color twitterButtonColor = const Color.fromARGB(255, 41, 41, 41);
 
 class AppColors {
+  static Color whiteColor = Colors.white;
   static Color bgColor = const Color.fromARGB(255, 236, 240, 247);
+  static Color deepblackColor = const Color.fromARGB(255, 25, 29, 32);
   static Color normalblackColor = const Color.fromRGBO(66, 82, 95, 1);
   static Color normalOrangeColor = const Color.fromARGB(255, 247, 147, 100);
 }
