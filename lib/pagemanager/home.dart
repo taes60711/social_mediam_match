@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/BottomSheets/base_bottom_sheet.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/custom_end_drawer.dart';
-
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../components/home/firendsPage/firends_page.dart';
 import '../components/home/userPage/user_page.dart';
 import '../global/global_view_model.dart';
@@ -27,7 +30,7 @@ class _HomeState extends ConsumerState<Home> {
   Widget build(BuildContext context) {
     List<Widget> mainPage = [
       const PostMainPage(),
-      Scaffold(
+      const Scaffold(
         backgroundColor: Color.fromARGB(255, 29, 28, 28),
       ),
       const Scaffold(
@@ -57,41 +60,238 @@ class PostMainPage extends ConsumerStatefulWidget {
   ConsumerState<PostMainPage> createState() => _PostMainPageState();
 }
 
+bool topPostExpansion = false;
+
 class _PostMainPageState extends ConsumerState<PostMainPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 29, 28, 28),
-      body: Column(
+    return CommonScaffold(
+      child: Stack(
         children: [
-          Row(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  GlobalViewModel().bottomBarHideStateChage(true);
-                },
-                child: Text("hide"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  GlobalViewModel().bottomBarHideStateChage(false);
-                },
-                child: Text("display"),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  BaseEndDrawer().show(context);
-                },
-                child: Text("endDrawer"),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  BaseBottomSheet().show(context);
-                },
-                child: Text("bottomSheet"),
-              ),
-            ],
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  height: topPostExpansion ? 95 : 40,
+                ),
+                Container(
+                  child: Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          GlobalViewModel().bottomBarHideStateChage(true);
+                        },
+                        child: Text("hide"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          GlobalViewModel().bottomBarHideStateChage(false);
+                        },
+                        child: Text("display"),
+                      ),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            BaseEndDrawer().show(context);
+                          },
+                          child: Text("drawer"),
+                        ),
+                      ),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            BaseBottomSheet().show(context);
+                          },
+                          child: Text("sheet"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "123",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        "123",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        "123",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: ScreenSize.width,
+                  margin: const EdgeInsets.only(bottom: 10),
+                  height: 80,
+                  color: const Color.fromARGB(255, 37, 37, 37),
+                ),
+                Container(
+                  width: ScreenSize.width,
+                  margin: EdgeInsets.only(bottom: 10),
+                  height: 80,
+                  color: Color.fromARGB(255, 37, 37, 37),
+                ),
+                Container(
+                  width: ScreenSize.width,
+                  margin: EdgeInsets.only(bottom: 10),
+                  height: 80,
+                  color: Color.fromARGB(255, 37, 37, 37),
+                ),
+                Container(
+                  width: ScreenSize.width,
+                  margin: EdgeInsets.only(bottom: 10),
+                  height: 150,
+                  color: Color.fromARGB(255, 37, 37, 37),
+                ),
+                Container(
+                  width: ScreenSize.width,
+                  margin: EdgeInsets.only(bottom: 10),
+                  height: 100,
+                  color: Color.fromARGB(255, 37, 37, 37),
+                ),
+                Container(
+                  width: ScreenSize.width,
+                  margin: EdgeInsets.only(bottom: 10),
+                  height: 100,
+                  color: Color.fromARGB(255, 37, 37, 37),
+                ),
+                Container(
+                  width: ScreenSize.width,
+                  margin: EdgeInsets.only(bottom: 10),
+                  height: 100,
+                  color: Color.fromARGB(255, 37, 37, 37),
+                ),
+                Container(
+                  width: ScreenSize.width,
+                  margin: EdgeInsets.only(bottom: 10),
+                  height: 100,
+                  color: Color.fromARGB(255, 37, 37, 37),
+                ),
+              ],
+            ),
           ),
+          AnimatedPositioned(
+            top: topPostExpansion ? 6 : 0,
+            left: topPostExpansion ? 10 : 0,
+            right: topPostExpansion ? 10 : 0,
+            duration: const Duration(milliseconds: 300),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              height: topPostExpansion ? 80 : 40,
+              decoration: topPostExpansion
+                  ? BoxDecoration(
+                      color: const Color.fromARGB(255, 54, 54, 54),
+                      borderRadius: BorderRadius.circular(10),
+                    )
+                  : const BoxDecoration(
+                      color: Color.fromARGB(255, 54, 54, 54),
+                    ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: topPostExpansion
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Hot!",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                Text(
+                                  "打造高效工作環境的五個關鍵策略asdasdasdasasdsa",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: AppColors.whiteColor),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.symmetric(vertical: 1),
+                                  width: ScreenSize.width,
+                                  height: .5,
+                                  color: Colors.grey,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "作成者:",
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    SizedBox(width: 5),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(15)),
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      "asdasdsa",
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                        : Row(
+                            children: [
+                              SizedBox(width: 10),
+                              Text(
+                                "Hot!",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                              SizedBox(width: 5),
+                              Container(
+                                width: 30,
+                                height: 30,
+                                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(15)),
+                              ),
+                              SizedBox(width: 5),
+                              Expanded(
+                                child: Text(
+                                  "打造高效工作環境的五個關鍵策略asdasdasdasasdsa",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: AppColors.whiteColor),
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      topPostExpansion = !topPostExpansion;
+                      setState(() {});
+                    },
+                    child: topPostExpansion
+                        ? const Icon(
+                            FontAwesomeIcons.angleUp,
+                            size: 15,
+                            color: Color.fromARGB(255, 95, 95, 95),
+                          )
+                        : const Icon(
+                            FontAwesomeIcons.angleDown,
+                            size: 15,
+                            color: Color.fromARGB(255, 95, 95, 95),
+                          ),
+                  ),
+                  const SizedBox(width: 10)
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );

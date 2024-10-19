@@ -7,12 +7,13 @@ class BaseBottomSheet {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withOpacity(.1),
       builder: (BuildContext context) {
         return Container(
           height: ScreenSize.height * .8,
           decoration: const BoxDecoration(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-            color: Color.fromARGB(255, 54, 54, 54),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+            color: Color.fromARGB(255, 42, 41, 41),
           ),
           child: Center(
             child: Column(
