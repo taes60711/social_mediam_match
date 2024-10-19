@@ -73,41 +73,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
               children: [
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 150),
-                  height: topPostExpansion ? 95 : 40,
-                ),
-                Container(
-                  child: Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          GlobalViewModel().bottomBarHideStateChage(true);
-                        },
-                        child: Text("hide"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          GlobalViewModel().bottomBarHideStateChage(false);
-                        },
-                        child: Text("display"),
-                      ),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            BaseEndDrawer().show(context);
-                          },
-                          child: Text("drawer"),
-                        ),
-                      ),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            BaseBottomSheet().show(context);
-                          },
-                          child: Text("sheet"),
-                        ),
-                      ),
-                    ],
-                  ),
+                  height: topPostExpansion ? 120 : 65,
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
@@ -148,6 +114,22 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                   height: 80,
                   color: Color.fromARGB(255, 37, 37, 37),
                 ),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        GlobalViewModel().bottomBarHideStateChage(true);
+                      },
+                      child: Text("hide"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        GlobalViewModel().bottomBarHideStateChage(false);
+                      },
+                      child: Text("display"),
+                    ),
+                  ],
+                ),
                 Container(
                   width: ScreenSize.width,
                   margin: EdgeInsets.only(bottom: 10),
@@ -183,113 +165,187 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
           ),
           AnimatedPositioned(
             top: topPostExpansion ? 6 : 0,
-            left: topPostExpansion ? 10 : 0,
-            right: topPostExpansion ? 10 : 0,
+            left: 0,
+            right: 0,
             duration: const Duration(milliseconds: 300),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              height: topPostExpansion ? 80 : 40,
-              decoration: topPostExpansion
-                  ? BoxDecoration(
-                      color: const Color.fromARGB(255, 54, 54, 54),
-                      borderRadius: BorderRadius.circular(10),
-                    )
-                  : const BoxDecoration(
-                      color: Color.fromARGB(255, 54, 54, 54),
-                    ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: topPostExpansion
-                        ? Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Hot!",
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                                Text(
-                                  "打造高效工作環境的五個關鍵策略asdasdasdasasdsa",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: AppColors.whiteColor),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.symmetric(vertical: 1),
-                                  width: ScreenSize.width,
-                                  height: .5,
-                                  color: Colors.grey,
-                                ),
-                                Row(
+            child: Column(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  decoration: topPostExpansion
+                      ? BoxDecoration(
+                          color: const Color.fromARGB(255, 54, 54, 54),
+                          borderRadius: BorderRadius.circular(10),
+                        )
+                      : const BoxDecoration(
+                          color: Color.fromARGB(255, 54, 54, 54),
+                        ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: topPostExpansion
+                            ? Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "作成者:",
-                                      style: TextStyle(color: Colors.grey),
+                                      "Hot!",
+                                      style: TextStyle(color: Colors.red),
                                     ),
-                                    SizedBox(width: 5),
+                                    Text(
+                                      "打造高效工作環境的五個關鍵策略asdasdasdasasdsa",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: AppColors.whiteColor),
+                                    ),
                                     Container(
+                                      margin: EdgeInsets.symmetric(vertical: 1),
+                                      width: ScreenSize.width,
+                                      height: .5,
+                                      color: Colors.grey,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "作成者:",
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                        SizedBox(width: 5),
+                                        GestureDetector(
+                                          onTap: () {
+                                            BaseBottomSheet().show(
+                                              context,
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                    'Modal BottomSheet',
+                                                    style: TextStyle(color: AppColors.whiteColor),
+                                                  ),
+                                                  ElevatedButton(
+                                                    child: const Text('Close BottomSheet'),
+                                                    onPressed: () => Navigator.pop(context),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            width: 30,
+                                            height: 30,
+                                            decoration:
+                                                BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(15)),
+                                          ),
+                                        ),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          "asdasdsa",
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Row(
+                                children: [
+                                  SizedBox(width: 10),
+                                  Text(
+                                    "Hot!",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  SizedBox(width: 5),
+                                  GestureDetector(
+                                    onTap: () {
+                                      BaseBottomSheet().show(
+                                        context,
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'Modal BottomSheet',
+                                              style: TextStyle(color: AppColors.whiteColor),
+                                            ),
+                                            ElevatedButton(
+                                              child: const Text('Close BottomSheet'),
+                                              onPressed: () => Navigator.pop(context),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
                                       width: 30,
                                       height: 30,
                                       decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(15)),
                                     ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      "asdasdsa",
-                                      style: TextStyle(color: Colors.grey),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Expanded(
+                                    child: Text(
+                                      "打造高效工作環境的五個關鍵策略asdasdasdasasdsa",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: AppColors.whiteColor),
                                     ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          )
-                        : Row(
-                            children: [
-                              SizedBox(width: 10),
-                              Text(
-                                "Hot!",
-                                style: TextStyle(color: Colors.red),
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: 5),
-                              Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(15)),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          topPostExpansion = !topPostExpansion;
+                          setState(() {});
+                        },
+                        child: topPostExpansion
+                            ? const Icon(
+                                FontAwesomeIcons.angleUp,
+                                size: 15,
+                                color: Color.fromARGB(255, 95, 95, 95),
+                              )
+                            : const Icon(
+                                FontAwesomeIcons.angleDown,
+                                size: 15,
+                                color: Color.fromARGB(255, 95, 95, 95),
                               ),
-                              SizedBox(width: 5),
-                              Expanded(
-                                child: Text(
-                                  "打造高效工作環境的五個關鍵策略asdasdasdasasdsa",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: AppColors.whiteColor),
-                                ),
-                              ),
-                            ],
-                          ),
+                      ),
+                      const SizedBox(width: 10)
+                    ],
                   ),
-                  GestureDetector(
+                ),
+                Visibility(
+                  visible: ref.watch(bottomNavationBarPosProvider) != -60,
+                  child: GestureDetector(
                     onTap: () {
-                      topPostExpansion = !topPostExpansion;
-                      setState(() {});
+                      BaseEndDrawer().show(context);
                     },
-                    child: topPostExpansion
-                        ? const Icon(
-                            FontAwesomeIcons.angleUp,
-                            size: 15,
-                            color: Color.fromARGB(255, 95, 95, 95),
-                          )
-                        : const Icon(
-                            FontAwesomeIcons.angleDown,
-                            size: 15,
-                            color: Color.fromARGB(255, 95, 95, 95),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 58, 57, 57),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      width: ScreenSize.width,
+                      height: 36,
+                      child: const Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Icon(Icons.search, color: Colors.grey),
                           ),
+                          Text(
+                            "搜尋",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 226, 226, 226),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  const SizedBox(width: 10)
-                ],
-              ),
+                ),
+              ],
             ),
           )
         ],
