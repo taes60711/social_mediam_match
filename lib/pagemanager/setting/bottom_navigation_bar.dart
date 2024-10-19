@@ -22,7 +22,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
           width: ScreenSize.width,
           height: 60,
           margin: const EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(color: Color.fromARGB(221, 58, 57, 57), borderRadius: BorderRadius.circular(15)),
+          decoration: BoxDecoration(color: Color.fromARGB(255, 54, 54, 54), borderRadius: BorderRadius.circular(15)),
           child: Row(
             children: BottomBarPath.values.map((e) {
               int pageIndex = e.path;
@@ -39,7 +39,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
                         ? Container(
                             margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                             decoration:
-                                BoxDecoration(color: Color.fromARGB(255, 104, 104, 104), borderRadius: BorderRadius.circular(10)),
+                                BoxDecoration(color: Color.fromARGB(255, 99, 98, 98), borderRadius: BorderRadius.circular(10)),
                             child: Icon(e.icon, color: AppColors.whiteColor),
                           )
                         : Icon(e.icon, color: Color.fromARGB(255, 136, 130, 130)),

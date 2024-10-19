@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/utilities/BottomSheets/base_bottom_sheet.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/custom_end_drawer.dart';
 
 import '../components/home/firendsPage/firends_page.dart';
@@ -25,14 +26,12 @@ class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
     List<Widget> mainPage = [
+      const PostMainPage(),
       Scaffold(
-        backgroundColor: Color.fromARGB(221, 36, 35, 35),
-      ),
-      Scaffold(
-        backgroundColor: Color.fromARGB(221, 36, 35, 35),
+        backgroundColor: Color.fromARGB(255, 29, 28, 28),
       ),
       const Scaffold(
-        backgroundColor: Color.fromARGB(221, 36, 35, 35),
+        backgroundColor: Color.fromARGB(255, 29, 28, 28),
       ),
       const FirendsPage(),
       const UserPage(),
@@ -41,8 +40,31 @@ class _HomeState extends ConsumerState<Home> {
     return Stack(
       children: [
         mainPage[ref.watch(bottomNavigationBarProvider)],
-        Center(
-          child: Row(
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 300),
+          bottom: ref.read(bottomNavationBarPosProvider.notifier).state,
+          child: const BottomBar(),
+        ),
+      ],
+    );
+  }
+}
+
+class PostMainPage extends ConsumerStatefulWidget {
+  const PostMainPage({super.key});
+
+  @override
+  ConsumerState<PostMainPage> createState() => _PostMainPageState();
+}
+
+class _PostMainPageState extends ConsumerState<PostMainPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 29, 28, 28),
+      body: Column(
+        children: [
+          Row(
             children: [
               ElevatedButton(
                 onPressed: () {
@@ -60,20 +82,22 @@ class _HomeState extends ConsumerState<Home> {
                 onPressed: () async {
                   BaseEndDrawer().show(context);
                 },
-                child: Text("test"),
+                child: Text("endDrawer"),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  BaseBottomSheet().show(context);
+                },
+                child: Text("bottomSheet"),
               ),
             ],
           ),
-        ),
-        AnimatedPositioned(
-          duration: const Duration(milliseconds: 300),
-          bottom: ref.read(bottomNavationBarPosProvider.notifier).state,
-          child: const BottomBar(),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
+
 // class Home extends StatefulWidget {
 //   const Home({super.key});
 

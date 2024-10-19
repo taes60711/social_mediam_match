@@ -198,7 +198,7 @@ class _EndDrawerWidgetState extends State<EndDrawerWidget> with SingleTickerProv
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: Colors.white,
+          color: Color.fromARGB(255, 31, 30, 30),
           child: Builder(builder: (context) {
             return Center(
               child: ElevatedButton(
