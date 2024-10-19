@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/custom_end_drawer.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
 
 import '../components/home/firendsPage/firends_page.dart';
 import '../components/home/userPage/user_page.dart';

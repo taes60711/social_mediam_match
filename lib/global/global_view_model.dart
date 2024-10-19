@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final bottomNavigationBarProvider = StateProvider<int>((ref) {
@@ -5,7 +7,7 @@ final bottomNavigationBarProvider = StateProvider<int>((ref) {
 });
 
 final bottomNavationBarPosProvider = StateProvider<double>((ref) {
-  return 7;
+  return Platform.isIOS ? 25 : 9;
 });
 
 class GlobalViewModel {
@@ -36,7 +38,7 @@ class GlobalViewModel {
     if (hide) {
       ref.read(bottomNavationBarPosProvider.notifier).update((state) => -60);
     } else {
-      ref.read(bottomNavationBarPosProvider.notifier).update((state) => 7);
+      ref.read(bottomNavationBarPosProvider.notifier).update((state) => Platform.isIOS ? 25 : 9);
     }
 
     render();

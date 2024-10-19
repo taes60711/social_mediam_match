@@ -199,14 +199,16 @@ class _EndDrawerWidgetState extends State<EndDrawerWidget> with SingleTickerProv
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           color: Colors.white,
-          child: Center(
-            child: ElevatedButton(
-              onPressed: () {
-                _controller.reverse().whenComplete(() => Navigator.pop(context));
-              },
-              child: Text("exit"),
-            ),
-          ),
+          child: Builder(builder: (context) {
+            return Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  _controller.reverse().whenComplete(() => Navigator.pop(context));
+                },
+                child: Text("exit"),
+              ),
+            );
+          }),
         ),
       ),
     );
