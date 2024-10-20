@@ -9,7 +9,6 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 
 import 'package:social_mediam_match/provider/account/user_provider.dart';
-import '../../../global/global_view_model.dart';
 import '../../../models/user_model.dart';
 
 import '../../../pageManager/enum/route_path.dart';
@@ -61,18 +60,6 @@ Widget skillInfoWithPage(BuildContext context) {
           skillBar(
             SkillEndDrawerType.wantSkill,
             userData: context.read<UserProvider>().userData,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              GlobalViewModel().bottomBarHideStateChage(true);
-            },
-            child: Text("hide"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              GlobalViewModel().bottomBarHideStateChage(false);
-            },
-            child: Text("display"),
           ),
           const SizedBox(height: 10),
           //設定ボタン　例：プロフィール、設定、ニュース...
