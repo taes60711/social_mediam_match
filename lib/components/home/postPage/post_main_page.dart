@@ -130,7 +130,32 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 10),
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  const SizedBox(width: 5),
+                                  UserIcon(
+                                    iconSize: 24,
+                                    image: data.postUserInfo.image,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    data.postUserInfo.name ?? "",
+                                    style: TextStyle(color: AppColors.whiteColor),
+                                  ),
+                                  Expanded(child: SizedBox(width: 1)),
+                                  Container(
+                                    width: 30,
+                                    alignment: Alignment.centerRight,
+                                    color: Colors.transparent,
+                                    child: Icon(
+                                      FontAwesomeIcons.ellipsis,
+                                      color: Color.fromARGB(221, 180, 179, 179),
+                                      size: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
                               Text(
                                 data.title,
                                 style: TextStyle(color: AppColors.whiteColor),
@@ -147,16 +172,34 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                                 ),
                               ),
                               SizedBox(height: 8),
-
-                              ///いいね数
                               Row(
                                 children: [
-                                  const SizedBox(width: 5),
-                                  UserIcon(
-                                    iconSize: 24,
-                                    image: data.postUserInfo.image,
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 12,
+                                        height: 12,
+                                        color: const Color.fromARGB(96, 175, 170, 170),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        "Techology",
+                                        style: TextStyle(fontSize: 12, color: AppColors.whiteColor),
+                                      ),
+                                    ],
                                   ),
+                                  const SizedBox(width: 5),
+
+                                  ///View数
+                                  PostViewUtilities().iconWithText(
+                                      iconData: FontAwesomeIcons.eye,
+                                      iconColor: Color.fromARGB(255, 110, 124, 129),
+                                      text: "${data.viewed}",
+                                      style: TextStyle(fontSize: 12, color: AppColors.whiteColor)),
+
                                   const SizedBox(width: 10),
+
+                                  ///いいね数
                                   PostViewUtilities().iconWithText(
                                       iconData: FontAwesomeIcons.heart,
                                       iconColor: const Color.fromARGB(255, 248, 110, 110),
@@ -172,7 +215,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                                       style: TextStyle(color: AppColors.whiteColor)),
                                   const SizedBox(width: 13),
 
-                                  ///設定ボタン
+                                  ///シャアボタン
                                   GestureDetector(
                                     onTap: () {},
                                     child: Container(

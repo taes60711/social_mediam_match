@@ -9,6 +9,7 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import '../../../CustomBouncingScrollPhysics.dart';
 import '../loading.dart';
 import '../stateful_wrapper.dart';
+import 'api_list_model.dart';
 
 enum ListType {
   normal,
@@ -403,33 +404,13 @@ class APIListView<R> extends StatelessWidget {
   }
 }
 
-class APIListController<R> {
-  APIListController();
-  List<R> listData = [];
-  late Future<List<R>> Function(int page, int size) apiFunc;
-  int page = 0;
-  int size = 5;
-}
-
-final listControllerProvider = StateNotifierProvider<APILIstControllerNotifier, APIListController>(
-  (ref) => APILIstControllerNotifier(APIListController()),
+final listControllerProvider = StateNotifierProvider<APIListModelNotifier, APIListModel>(
+  (ref) => APIListModelNotifier(APIListModel()),
 );
-
-class APILIstControllerNotifier extends StateNotifier<APIListController> {
-  APILIstControllerNotifier(APIListController state) : super(state);
-
-  Future<void> init(Future<List> Function(int page, int size) initApiFunc) async {
-    int page = state.page;
-    int size = state.size;
-    state.apiFunc = initApiFunc;
-    state.listData = await state.apiFunc(page, size);
-    state = state;
-  }
-}
 
 class APIListWidget<R> extends ConsumerStatefulWidget {
   final Future<List<R>> Function(int page, int size) apiFunc;
-  final StateNotifierProvider<APILIstControllerNotifier, APIListController<dynamic>> listControllerProvider;
+  final StateNotifierProvider<APIListModelNotifier, APIListModel<dynamic>> listControllerProvider;
   final Widget? upWidget;
   final Widget Function(R data, int index) itemChild;
   const APIListWidget({
