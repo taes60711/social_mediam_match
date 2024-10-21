@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../components/utilities/style/screen_size.dart';
+
 final bottomNavigationBarProvider = StateProvider<int>((ref) {
   return 0;
 });
@@ -29,14 +31,16 @@ class GlobalViewModel {
     return _instance!;
   }
 
+  ///BottomNavigiatonbarのページコントローラー
   void changeMainPage(int page) {
     ref.read(bottomNavigationBarProvider.notifier).update((state) => page);
     render();
   }
 
+  ///BottomNavigiatonbar隠れ/表示する
   void bottomBarHideStateChage(bool hide) {
     if (hide) {
-      ref.read(bottomNavationBarPosProvider.notifier).update((state) => -60);
+      ref.read(bottomNavationBarPosProvider.notifier).update((state) => ScreenSize.fitPxHeight(-60));
     } else {
       ref.read(bottomNavationBarPosProvider.notifier).update((state) => Platform.isIOS ? 25 : 9);
     }

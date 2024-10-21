@@ -67,7 +67,7 @@ class UserDetailPage extends StatelessWidget {
                           onPress: () {
                             toChatRoom!() ?? () {};
                             RouteOptions.popUntilToHome();
-                            context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
+                            // context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
                           })
                       : TextBtn(
                           title: tr("addFriend"),

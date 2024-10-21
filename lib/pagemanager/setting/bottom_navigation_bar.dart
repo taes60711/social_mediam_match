@@ -17,33 +17,69 @@ class _BottomBarState extends ConsumerState<BottomBar> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: ScreenSize.width,
+      height: ScreenSize.fitPxHeight(60),
       child: Center(
         child: Container(
           width: ScreenSize.width,
-          height: 60,
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(color: Color.fromARGB(255, 54, 54, 54), borderRadius: BorderRadius.circular(15)),
+          height: ScreenSize.fitPxHeight(60),
+          margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
+          decoration: BoxDecoration(
+            color: AppColors.greyColor54,
+            borderRadius: BorderRadius.circular(15),
+          ),
           child: Row(
             children: BottomBarPath.values.map((e) {
               int pageIndex = e.path;
+              double rightPadding = 0;
+
+              if (e == BottomBarPath.home) {
+                rightPadding = 3;
+              } else if (e == BottomBarPath.chatRoom) {
+                rightPadding = 5;
+              }
 
               return GestureDetector(
-                  onTap: () {
-                    GlobalViewModel().changeMainPage(pageIndex);
-                  },
-                  child: Container(
-                    height: 60,
-                    width: (ScreenSize.width - 40) / 5,
-                    color: Colors.transparent,
+                onTap: () {
+                  GlobalViewModel().changeMainPage(pageIndex);
+                },
+                child: Container(
+                  color: Colors.transparent,
+                  width: (ScreenSize.width - ScreenSize.fitPxHeight(40)) / 5,
+                  child: Center(
                     child: ref.watch(bottomNavigationBarProvider) == pageIndex
-                        ? Container(
-                            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                            decoration:
-                                BoxDecoration(color: Color.fromARGB(255, 99, 98, 98), borderRadius: BorderRadius.circular(10)),
-                            child: Icon(e.icon, color: AppColors.whiteColor),
+                        ?
+                        //　選択してる
+                        Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.greyColor98,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: ScreenSize.fitPxHeight(10),
+                              vertical: ScreenSize.fitPxHeight(10),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.only(right: rightPadding),
+                              child: Icon(
+                                e.icon,
+                                color: AppColors.whiteColor,
+                                size: ScreenSize.fitPxHeight(23),
+                              ),
+                            ),
                           )
-                        : Icon(e.icon, color: Color.fromARGB(255, 136, 130, 130)),
-                  ));
+                        :
+                        //　選択してない
+                        Padding(
+                            padding: EdgeInsets.only(right: rightPadding),
+                            child: Icon(
+                              e.icon,
+                              color: AppColors.greyColor130,
+                              size: ScreenSize.fitPxHeight(23),
+                            ),
+                          ),
+                  ),
+                ),
+              );
             }).toList(),
           ),
         ),

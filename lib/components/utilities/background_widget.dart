@@ -83,7 +83,7 @@ class _CommonScaffoldState extends ConsumerState<CommonScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 29, 28, 28),
+      backgroundColor: AppColors.bgColor,
       body: SafeArea(
         bottom: false,
         child: Column(

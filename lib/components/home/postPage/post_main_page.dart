@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../global/global_view_model.dart';
 import '../../utilities/BottomSheets/base_bottom_sheet.dart';
@@ -32,24 +31,15 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
               child: Column(
                 children: [
                   Container(height: 40),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          "123",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        Text(
-                          "123",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        Text(
-                          "123",
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        Text("123", style: TextStyle(color: AppColors.whiteColor)),
+                        Text("123", style: TextStyle(color: AppColors.whiteColor)),
+                        Text("123", style: TextStyle(color: AppColors.whiteColor)),
                       ],
                     ),
                   ),
@@ -61,7 +51,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                       children: [
                         Text(
                           "Hot!",
-                          style: TextStyle(color: Colors.red),
+                          style: TextStyle(color: AppColors.redColor),
                         ),
                         Text(
                           "打造高效工作環境的五個關鍵策略asdasdasdasasdsa",
@@ -73,31 +63,20 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                           margin: EdgeInsets.symmetric(vertical: 1),
                           width: ScreenSize.width,
                           height: .5,
-                          color: Colors.grey,
+                          color: AppColors.greyColor54,
                         ),
                         Row(
                           children: [
                             Text(
                               "作成者:",
-                              style: TextStyle(color: Colors.grey),
+                              style: TextStyle(color: AppColors.greyColor54),
                             ),
                             SizedBox(width: 5),
                             GestureDetector(
                               onTap: () {
                                 BaseBottomSheet().show(
                                   context,
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        'Modal BottomSheet',
-                                        style: TextStyle(color: AppColors.whiteColor),
-                                      ),
-                                      ElevatedButton(
-                                        child: const Text('Close BottomSheet'),
-                                        onPressed: () => Navigator.pop(context),
-                                      ),
-                                    ],
-                                  ),
+                                  child: userProfileView(),
                                 );
                               },
                               child: Container(
@@ -109,7 +88,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                             SizedBox(width: 5),
                             Text(
                               "asdasdsa",
-                              style: TextStyle(color: Colors.grey),
+                              style: TextStyle(color: AppColors.greyColor54),
                             ),
                           ],
                         ),
@@ -120,56 +99,56 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                     width: ScreenSize.width,
                     margin: const EdgeInsets.only(bottom: 10),
                     height: 80,
-                    color: const Color.fromARGB(255, 37, 37, 37),
+                    color: AppColors.black37,
                   ),
                   Container(
                     width: ScreenSize.width,
                     margin: EdgeInsets.only(bottom: 10),
                     height: 80,
-                    color: Color.fromARGB(255, 37, 37, 37),
+                    color: AppColors.black37,
                   ),
                   Container(
                     width: ScreenSize.width,
                     margin: EdgeInsets.only(bottom: 10),
                     height: 80,
-                    color: Color.fromARGB(255, 37, 37, 37),
+                    color: AppColors.black37,
                   ),
                   Container(
                     width: ScreenSize.width,
                     margin: EdgeInsets.only(bottom: 10),
                     height: 150,
-                    color: Color.fromARGB(255, 37, 37, 37),
+                    color: AppColors.black37,
                   ),
                   Container(
                     width: ScreenSize.width,
                     margin: EdgeInsets.only(bottom: 10),
                     height: 100,
-                    color: Color.fromARGB(255, 37, 37, 37),
+                    color: AppColors.black37,
                   ),
                   Container(
                     width: ScreenSize.width,
                     margin: EdgeInsets.only(bottom: 10),
                     height: 100,
-                    color: Color.fromARGB(255, 37, 37, 37),
+                    color: AppColors.black37,
                   ),
                   Container(
                     width: ScreenSize.width,
                     margin: EdgeInsets.only(bottom: 10),
                     height: 100,
-                    color: Color.fromARGB(255, 37, 37, 37),
+                    color: AppColors.black37,
                   ),
                   Container(
                     width: ScreenSize.width,
                     margin: EdgeInsets.only(bottom: 10),
                     height: 100,
-                    color: Color.fromARGB(255, 37, 37, 37),
+                    color: AppColors.black37,
                   ),
                 ],
               ),
             ),
           ),
           AnimatedPositioned(
-            top: ref.watch(bottomNavationBarPosProvider) != -60 ? 3 : -45,
+            top: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 3 : -45,
             left: 0,
             right: 0,
             duration: const Duration(milliseconds: 150),
@@ -180,21 +159,21 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 58, 57, 57),
+                  color: AppColors.greyColor57,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 width: ScreenSize.width,
                 height: 36,
-                child: const Row(
+                child: Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Icon(Icons.search, color: Colors.grey),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Icon(Icons.search, color: AppColors.greyColor54),
                     ),
                     Text(
                       "搜尋",
                       style: TextStyle(
-                        color: Color.fromARGB(255, 226, 226, 226),
+                        color: AppColors.whiteColor,
                         fontSize: 14,
                       ),
                     ),
@@ -249,19 +228,27 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
   Widget userProfileView() {
     return Column(
       children: [
-        SizedBox(height: 20),
+        SizedBox(height: ScreenSize.fitPxHeight(10)),
         Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(80)),
+          width: ScreenSize.fitPxHeight(80),
+          height: ScreenSize.fitPxHeight(80),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(
+              ScreenSize.fitPxHeight(80),
+            ),
+          ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: ScreenSize.fitPxHeight(10)),
         Container(
           width: ScreenSize.width,
-          margin: EdgeInsets.symmetric(horizontal: 20),
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
+          padding: EdgeInsets.symmetric(
+            horizontal: ScreenSize.fitPxHeight(10),
+            vertical: ScreenSize.fitPxHeight(10),
+          ),
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 29, 28, 28),
+            color: AppColors.bgColor,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
@@ -272,29 +259,32 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                 "userName",
                 style: TextStyle(
                   color: AppColors.whiteColor,
-                  fontSize: 22,
+                  fontSize: ScreenSize.fontSize18,
                 ),
               ),
-              const Text(
+              Text(
                 "userName@gmail.com",
                 style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 16,
+                  fontSize: ScreenSize.fontSize12,
                 ),
               ),
-              SizedBox(height: 25),
+              SizedBox(height: ScreenSize.fitPxHeight(15)),
               Center(
                 child: GestureDetector(
                   onTap: () {},
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ScreenSize.fitPxHeight(10),
+                      vertical: ScreenSize.fitPxHeight(5),
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      color: Color.fromARGB(255, 54, 54, 54),
+                      color: AppColors.greyColor54,
                     ),
                     child: Text(
                       "新增好友",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: AppColors.whiteColor),
                     ),
                   ),
                 ),
@@ -302,7 +292,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
             ],
           ),
         ),
-        SizedBox(height: 15),
+        SizedBox(height: ScreenSize.fitPxHeight(15)),
       ],
     );
   }
