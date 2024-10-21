@@ -219,7 +219,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
               component = Image.network(
                 resultString,
                 width: ScreenSize.width,
-                height: 150,
+                height: 120,
                 fit: BoxFit.cover,
                 gaplessPlayback: true,
               );

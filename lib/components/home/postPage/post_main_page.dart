@@ -1,12 +1,19 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
 
 import '../../../global/global_view_model.dart';
+import '../../../services/post_service.dart';
 import '../../utilities/BottomSheets/base_bottom_sheet.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/endDrawers/custom_end_drawer.dart';
+import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
+import '../../utilities/user_icon.dart';
+import 'post_utilities.dart';
 
 class PostMainPage extends ConsumerStatefulWidget {
   const PostMainPage({super.key});
@@ -27,133 +34,175 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
         children: [
           listenListView(
             context,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(height: 40),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text("123", style: TextStyle(color: AppColors.whiteColor)),
-                        Text("123", style: TextStyle(color: AppColors.whiteColor)),
-                        Text("123", style: TextStyle(color: AppColors.whiteColor)),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Container(
-                      width: ScreenSize.width,
-                      color: AppColors.black37,
-                      padding: EdgeInsets.symmetric(
-                        vertical: ScreenSize.fitPxHeight(8),
-                        horizontal: ScreenSize.fitPxHeight(15),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
+            child: Column(
+              children: [
+                Container(height: 40),
+                Expanded(
+                  child: APIListWidget(
+                      apiFunc: (page, size) {
+                        return PostService().getPostDataByViewer(page, size);
+                      },
+                      listControllerProvider: listControllerProvider,
+                      upWidget: Column(
                         children: [
-                          Text(
-                            "Hot!",
-                            style: TextStyle(color: AppColors.redColor),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text("123", style: TextStyle(color: AppColors.whiteColor)),
+                                Text("123", style: TextStyle(color: AppColors.whiteColor)),
+                                Text("123", style: TextStyle(color: AppColors.whiteColor)),
+                              ],
+                            ),
                           ),
-                          Text(
-                            "打造高效工作環境的五個關鍵策略asdasdasdasasdsa",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: AppColors.whiteColor),
-                          ),
-                          SizedBox(height: ScreenSize.fitPxHeight(10)),
-                          Container(
-                            width: ScreenSize.width,
-                            height: .5,
-                            color: AppColors.greyColor98.withOpacity(.7),
-                          ),
-                          SizedBox(height: ScreenSize.fitPxHeight(5)),
-                          Row(
-                            children: [
-                              Text(
-                                "作成者:",
-                                style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Container(
+                              width: ScreenSize.width,
+                              color: AppColors.black37,
+                              padding: EdgeInsets.symmetric(
+                                vertical: ScreenSize.fitPxHeight(8),
+                                horizontal: ScreenSize.fitPxHeight(15),
                               ),
-                              SizedBox(width: 5),
-                              GestureDetector(
-                                onTap: () {
-                                  BaseBottomSheet().show(
-                                    context,
-                                    child: userProfileView(),
-                                  );
-                                },
-                                child: Container(
-                                  width: 20,
-                                  height: 20,
-                                  decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(15)),
-                                ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Hot!",
+                                    style: TextStyle(color: AppColors.redColor),
+                                  ),
+                                  Text(
+                                    "打造高效工作環境的五個關鍵策略asdasdasdasasdsa",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: AppColors.whiteColor),
+                                  ),
+                                  SizedBox(height: ScreenSize.fitPxHeight(10)),
+                                  Container(
+                                    width: ScreenSize.width,
+                                    height: .5,
+                                    color: AppColors.greyColor98.withOpacity(.7),
+                                  ),
+                                  SizedBox(height: ScreenSize.fitPxHeight(5)),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "作成者:",
+                                        style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                                      ),
+                                      SizedBox(width: 5),
+                                      GestureDetector(
+                                        onTap: () {
+                                          BaseBottomSheet().show(
+                                            context,
+                                            child: userProfileView(),
+                                          );
+                                        },
+                                        child: Container(
+                                          width: 20,
+                                          height: 20,
+                                          decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(15)),
+                                        ),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        "asdasdsa",
+                                        style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: 5),
-                              Text(
-                                "asdasdsa",
-                                style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                              ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                  Container(
-                    width: ScreenSize.width,
-                    margin: const EdgeInsets.only(bottom: 10),
-                    height: 80,
-                    color: AppColors.black37,
-                  ),
-                  Container(
-                    width: ScreenSize.width,
-                    margin: EdgeInsets.only(bottom: 10),
-                    height: 80,
-                    color: AppColors.black37,
-                  ),
-                  Container(
-                    width: ScreenSize.width,
-                    margin: EdgeInsets.only(bottom: 10),
-                    height: 80,
-                    color: AppColors.black37,
-                  ),
-                  Container(
-                    width: ScreenSize.width,
-                    margin: EdgeInsets.only(bottom: 10),
-                    height: 150,
-                    color: AppColors.black37,
-                  ),
-                  Container(
-                    width: ScreenSize.width,
-                    margin: EdgeInsets.only(bottom: 10),
-                    height: 100,
-                    color: AppColors.black37,
-                  ),
-                  Container(
-                    width: ScreenSize.width,
-                    margin: EdgeInsets.only(bottom: 10),
-                    height: 100,
-                    color: AppColors.black37,
-                  ),
-                  Container(
-                    width: ScreenSize.width,
-                    margin: EdgeInsets.only(bottom: 10),
-                    height: 100,
-                    color: AppColors.black37,
-                  ),
-                  Container(
-                    width: ScreenSize.width,
-                    margin: EdgeInsets.only(bottom: 10),
-                    height: 100,
-                    color: AppColors.black37,
-                  ),
-                ],
-              ),
+                      itemChild: (data, index) {
+                        return Container(
+                          width: ScreenSize.width,
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          color: AppColors.black37,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 10),
+                              Text(
+                                data.title,
+                                style: TextStyle(color: AppColors.whiteColor),
+                              ),
+                              SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(13),
+                                  child: RichTextView(
+                                    content: data.mainMessage,
+                                    isPreView: true,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 8),
+
+                              ///いいね数
+                              Row(
+                                children: [
+                                  const SizedBox(width: 5),
+                                  UserIcon(
+                                    iconSize: 24,
+                                    image: data.postUserInfo.image,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  PostViewUtilities().iconWithText(
+                                      iconData: FontAwesomeIcons.heart,
+                                      iconColor: const Color.fromARGB(255, 248, 110, 110),
+                                      text: "${data.good}",
+                                      style: TextStyle(color: AppColors.whiteColor)),
+                                  const SizedBox(width: 8),
+
+                                  ///コメント数
+                                  PostViewUtilities().iconWithText(
+                                      iconData: FontAwesomeIcons.comment,
+                                      iconColor: Colors.blueAccent,
+                                      text: "${data.commentCount}",
+                                      style: TextStyle(color: AppColors.whiteColor)),
+                                  const SizedBox(width: 13),
+
+                                  ///設定ボタン
+                                  GestureDetector(
+                                    onTap: () {},
+                                    child: Container(
+                                      width: 30,
+                                      alignment: Alignment.centerLeft,
+                                      color: Colors.transparent,
+                                      child: const Icon(
+                                        FontAwesomeIcons.arrowUpRightFromSquare,
+                                        color: Color.fromARGB(221, 180, 179, 179),
+                                        size: 14,
+                                      ),
+                                    ),
+                                  ),
+
+                                  Expanded(child: SizedBox(width: 1)),
+
+                                  ///期日
+                                  Text(
+                                    "${data.postTime}${tr("skExChpage_beforDays")}",
+                                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5),
+                            ],
+                          ),
+                        );
+                      }),
+                ),
+              ],
             ),
           ),
           AnimatedPositioned(

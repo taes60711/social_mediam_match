@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
@@ -399,5 +400,84 @@ class APIListView<R> extends StatelessWidget {
         ),
       );
     });
+  }
+}
+
+class APIListController<R> {
+  APIListController();
+  List<R> listData = [];
+  late Future<List<R>> Function(int page, int size) apiFunc;
+  int page = 0;
+  int size = 5;
+}
+
+final listControllerProvider = StateNotifierProvider<APILIstControllerNotifier, APIListController>(
+  (ref) => APILIstControllerNotifier(APIListController()),
+);
+
+class APILIstControllerNotifier extends StateNotifier<APIListController> {
+  APILIstControllerNotifier(APIListController state) : super(state);
+
+  Future<void> init(Future<List> Function(int page, int size) initApiFunc) async {
+    int page = state.page;
+    int size = state.size;
+    state.apiFunc = initApiFunc;
+    state.listData = await state.apiFunc(page, size);
+    state = state;
+  }
+}
+
+class APIListWidget<R> extends ConsumerStatefulWidget {
+  final Future<List<R>> Function(int page, int size) apiFunc;
+  final StateNotifierProvider<APILIstControllerNotifier, APIListController<dynamic>> listControllerProvider;
+  final Widget? upWidget;
+  final Widget Function(R data, int index) itemChild;
+  const APIListWidget({
+    super.key,
+    required this.apiFunc,
+    required this.listControllerProvider,
+    this.upWidget,
+    required this.itemChild,
+  });
+
+  @override
+  ConsumerState<APIListWidget<R>> createState() => _APIListWidgetState<R>();
+}
+
+class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      init();
+    });
+
+    super.initState();
+  }
+
+  Future<void> init() async {
+    await ref.read(widget.listControllerProvider.notifier).init(widget.apiFunc);
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ref.watch(widget.listControllerProvider).listData.isNotEmpty
+        ? SingleChildScrollView(
+            child: Column(
+              children: [
+                widget.upWidget ?? Container(),
+                Column(
+                  children: ref.watch(widget.listControllerProvider).listData.asMap().entries.map((e) {
+                    int index = e.key;
+                    R data = e.value;
+                    return widget.itemChild(data, index);
+                  }).toList(),
+                ),
+              ],
+            ),
+          )
+        : const Center(
+            child: CircularProgressIndicator(),
+          );
   }
 }
