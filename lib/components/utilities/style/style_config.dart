@@ -27,10 +27,10 @@ class AppColors {
   ///bottomNavigationbarBg
   static Color greyColor54 = const Color.fromARGB(255, 54, 54, 54);
 
-  ///SearchBarBg/Hint
+  ///SearchBarBg
   static Color greyColor57 = const Color.fromARGB(255, 58, 57, 57);
 
-  ///bottomNavigationbarIconNotSelect
+  ///bottomNavigationbarIconNotSelect/Hint
   static Color greyColor98 = const Color.fromARGB(255, 99, 98, 98);
 
   ///bottomNavigationbarIconSelectBg

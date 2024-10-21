@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 ///MARK: Base EndDrawer
 class EndDrawer extends StatefulWidget {
@@ -198,7 +199,7 @@ class _EndDrawerWidgetState extends State<EndDrawerWidget> with SingleTickerProv
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: Color.fromARGB(255, 31, 30, 30),
+          color: AppColors.bgColor,
           child: Builder(builder: (context) {
             return Center(
               child: ElevatedButton(

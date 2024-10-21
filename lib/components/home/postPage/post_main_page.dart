@@ -69,7 +69,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                           children: [
                             Text(
                               "作成者:",
-                              style: TextStyle(color: AppColors.greyColor54),
+                              style: TextStyle(color: AppColors.greyColor130),
                             ),
                             SizedBox(width: 5),
                             GestureDetector(
@@ -88,7 +88,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                             SizedBox(width: 5),
                             Text(
                               "asdasdsa",
-                              style: TextStyle(color: AppColors.greyColor54),
+                              style: TextStyle(color: AppColors.greyColor130),
                             ),
                           ],
                         ),
