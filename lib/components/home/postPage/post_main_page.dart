@@ -51,7 +51,9 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
             context,
             child: Column(
               children: [
-                Container(height: 40),
+                Container(
+                  height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 85 : 40,
+                ),
                 Expanded(
                   child: APIListWidget(
                       apiFunc: (page, size) {
@@ -60,18 +62,6 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                       listControllerProvider: listControllerProvider,
                       upWidget: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text("123", style: TextStyle(color: AppColors.whiteColor)),
-                                Text("123", style: TextStyle(color: AppColors.whiteColor)),
-                                Text("123", style: TextStyle(color: AppColors.whiteColor)),
-                              ],
-                            ),
-                          ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             child: Container(
@@ -281,34 +271,50 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
             left: 0,
             right: 0,
             duration: const Duration(milliseconds: 150),
-            child: GestureDetector(
-              onTap: () {
-                BaseEndDrawer().show(context);
-              },
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
-                decoration: BoxDecoration(
-                  color: AppColors.greyColor57,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                width: ScreenSize.width,
-                height: 36,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Icon(Icons.search, color: AppColors.greyColor54),
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    BaseEndDrawer().show(context);
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: AppColors.greyColor57,
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    Text(
-                      "搜尋",
-                      style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: 14,
-                      ),
+                    width: ScreenSize.width,
+                    height: 36,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Icon(Icons.search, color: AppColors.greyColor54),
+                        ),
+                        Text(
+                          "搜尋",
+                          style: TextStyle(
+                            color: AppColors.whiteColor,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("123", style: TextStyle(color: AppColors.whiteColor)),
+                      Text("123", style: TextStyle(color: AppColors.whiteColor)),
+                      Text("123", style: TextStyle(color: AppColors.whiteColor)),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],
