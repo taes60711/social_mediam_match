@@ -44,55 +44,64 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Hot!",
-                          style: TextStyle(color: AppColors.redColor),
-                        ),
-                        Text(
-                          "打造高效工作環境的五個關鍵策略asdasdasdasasdsa",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: AppColors.whiteColor),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 1),
-                          width: ScreenSize.width,
-                          height: .5,
-                          color: AppColors.greyColor54,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "作成者:",
-                              style: TextStyle(color: AppColors.greyColor130),
-                            ),
-                            SizedBox(width: 5),
-                            GestureDetector(
-                              onTap: () {
-                                BaseBottomSheet().show(
-                                  context,
-                                  child: userProfileView(),
-                                );
-                              },
-                              child: Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(15)),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Container(
+                      width: ScreenSize.width,
+                      color: AppColors.black37,
+                      padding: EdgeInsets.symmetric(
+                        vertical: ScreenSize.fitPxHeight(8),
+                        horizontal: ScreenSize.fitPxHeight(15),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Hot!",
+                            style: TextStyle(color: AppColors.redColor),
+                          ),
+                          Text(
+                            "打造高效工作環境的五個關鍵策略asdasdasdasasdsa",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: AppColors.whiteColor),
+                          ),
+                          SizedBox(height: ScreenSize.fitPxHeight(10)),
+                          Container(
+                            width: ScreenSize.width,
+                            height: .5,
+                            color: AppColors.greyColor98.withOpacity(.7),
+                          ),
+                          SizedBox(height: ScreenSize.fitPxHeight(5)),
+                          Row(
+                            children: [
+                              Text(
+                                "作成者:",
+                                style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
                               ),
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              "asdasdsa",
-                              style: TextStyle(color: AppColors.greyColor130),
-                            ),
-                          ],
-                        ),
-                      ],
+                              SizedBox(width: 5),
+                              GestureDetector(
+                                onTap: () {
+                                  BaseBottomSheet().show(
+                                    context,
+                                    child: userProfileView(),
+                                  );
+                                },
+                                child: Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(15)),
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "asdasdsa",
+                                style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Container(

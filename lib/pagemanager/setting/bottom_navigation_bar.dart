@@ -25,17 +25,20 @@ class _BottomBarState extends ConsumerState<BottomBar> {
           margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
           decoration: BoxDecoration(
             color: AppColors.greyColor54,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(60),
           ),
           child: Row(
             children: BottomBarPath.values.map((e) {
               int pageIndex = e.path;
               double rightPadding = 0;
+              double leftPadding = 0;
 
               if (e == BottomBarPath.home) {
                 rightPadding = 3;
+                leftPadding = ScreenSize.fitPxHeight(3);
               } else if (e == BottomBarPath.chatRoom) {
                 rightPadding = 5;
+                leftPadding = ScreenSize.fitPxHeight(3);
               }
 
               return GestureDetector(
@@ -49,23 +52,25 @@ class _BottomBarState extends ConsumerState<BottomBar> {
                     child: ref.watch(bottomNavigationBarProvider) == pageIndex
                         ?
                         //　選択してる
-                        Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.greyColor98,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: ScreenSize.fitPxHeight(10),
-                              vertical: ScreenSize.fitPxHeight(10),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.only(right: rightPadding),
-                              child: Icon(
+                        Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
                                 e.icon,
                                 color: AppColors.whiteColor,
                                 size: ScreenSize.fitPxHeight(23),
                               ),
-                            ),
+                              SizedBox(
+                                height: ScreenSize.fitPxHeight(8),
+                              ),
+                              Container(
+                                width: 10,
+                                margin: EdgeInsets.only(left: leftPadding),
+                                height: 2,
+                                color: AppColors.whiteColor,
+                              ),
+                            ],
                           )
                         :
                         //　選択してない
