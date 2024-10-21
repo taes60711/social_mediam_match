@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../components/home/firendsPage/firends_page.dart';
 import '../components/home/postPage/post_main_page.dart';
 import '../components/home/userPage/user_page.dart';
+import '../components/utilities/style/theme_style.dart';
 import '../components/utilities/style/style_config.dart';
 import '../global/global_view_model.dart';
 import 'setting/bottom_navigation_bar.dart';
@@ -18,7 +19,9 @@ class Home extends ConsumerStatefulWidget {
 class _HomeState extends ConsumerState<Home> {
   @override
   void initState() {
-    GlobalViewModel.init(ref, () => setState(() {}));
+    ThemeStyle().init(ref);
+    GlobalViewModel().init(ref, () => setState(() {}));
+
     super.initState();
   }
 

@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/theme_style.dart';
 
 import '../../CustomBouncingScrollPhysics.dart';
+
 import 'style/style_config.dart';
 
 ScrollController singleScollController = ScrollController();
@@ -83,7 +85,7 @@ class _CommonScaffoldState extends ConsumerState<CommonScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgColor,
+      backgroundColor: ThemeStyle.bgColor,
       body: SafeArea(
         bottom: false,
         child: Column(

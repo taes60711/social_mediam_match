@@ -12,10 +12,16 @@ import '../../../services/firebase_notification_service.dart';
 import '../../strings/userPage/user_page_string.dart';
 
 import '../../utilities/style/screen_size.dart';
+import '../../utilities/style/theme_style.dart';
 
-class PrivacySetting extends StatelessWidget {
+class PrivacySetting extends StatefulWidget {
   const PrivacySetting({super.key});
 
+  @override
+  State<PrivacySetting> createState() => _PrivacySettingState();
+}
+
+class _PrivacySettingState extends State<PrivacySetting> {
   @override
   Widget build(BuildContext context) {
     UserProvider userFuture = context.read<UserProvider>();
@@ -154,6 +160,25 @@ class PrivacySetting extends StatelessWidget {
                 },
                 child: Text(signOutButton),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      ThemeStyle().onChangeTeme(AppThemeType.black);
+                      setState(() {});
+                    },
+                    child: Text("black"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      ThemeStyle().onChangeTeme(AppThemeType.white);
+                      setState(() {});
+                    },
+                    child: Text("white"),
+                  ),
+                ],
+              )
             ],
           ),
         ),

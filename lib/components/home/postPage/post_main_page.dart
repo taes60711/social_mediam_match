@@ -190,7 +190,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

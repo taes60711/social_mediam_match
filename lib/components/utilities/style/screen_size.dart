@@ -31,11 +31,8 @@ class ScreenSize {
     return size * (height / normalHeight);
   }
 
-  // 适配字体大小，支持14, 16, 18, 20, 22, 24
   static double _fitFontSize(double fontSize) {
-    // 以设计稿中的基准宽度 (375px) 为依据
     double normalWidth = 375;
-    // 根据当前屏幕宽度与设计稿宽度的比例来调整字体大小
     return fontSize * (width / normalWidth);
   }
 }

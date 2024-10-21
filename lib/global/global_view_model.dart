@@ -13,22 +13,20 @@ final bottomNavationBarPosProvider = StateProvider<double>((ref) {
 });
 
 class GlobalViewModel {
-  final WidgetRef ref;
-  final Function render;
-
   static GlobalViewModel? _instance;
 
-  GlobalViewModel._internal(this.ref, this.render);
-
-  static void init(WidgetRef ref, Function render) {
-    _instance ??= GlobalViewModel._internal(ref, render);
-  }
+  GlobalViewModel._();
 
   factory GlobalViewModel() {
-    if (_instance == null) {
-      throw Exception("GlobalViewModel has not been initialized. Call GlobalViewModel.init(ref, render) first.");
-    }
-    return _instance!;
+    return _instance ??= GlobalViewModel._();
+  }
+
+  late WidgetRef ref;
+  late Function render;
+
+  void init(WidgetRef ref, Function render) {
+    this.ref = ref;
+    this.render = render;
   }
 
   ///BottomNavigiatonbarのページコントローラー
@@ -44,7 +42,6 @@ class GlobalViewModel {
     } else {
       ref.read(bottomNavationBarPosProvider.notifier).update((state) => Platform.isIOS ? 25 : 9);
     }
-
     render();
   }
 }

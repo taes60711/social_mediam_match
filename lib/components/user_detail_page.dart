@@ -8,8 +8,6 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import '../models/user_model.dart';
 import '../pageManager/setting/route_controller.dart';
 
-import '../pageManager/enum/bottom_bar_path.dart';
-import '../pageManager/setting/bottom_bar_controller_provider.dart';
 import '../provider/account/user_provider.dart';
 import '../provider/friend_provider.dart';
 import 'account/skill_bar.dart';
