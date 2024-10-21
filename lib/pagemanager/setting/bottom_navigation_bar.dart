@@ -25,7 +25,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
           margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
           decoration: BoxDecoration(
             color: AppColors.greyColor54,
-            borderRadius: BorderRadius.circular(60),
+            borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
             children: BottomBarPath.values.map((e) {

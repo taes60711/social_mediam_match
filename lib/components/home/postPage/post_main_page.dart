@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
 
 import '../../../global/global_view_model.dart';
+import '../../../models/post_model.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/BottomSheets/base_bottom_sheet.dart';
 import '../../utilities/background_widget.dart';
@@ -26,7 +28,20 @@ bool topPostExpansion = false;
 double listScrollStartPos = 0;
 bool isScrollUp = false;
 
+List<PostModel> topPosts = [];
+
 class _PostMainPageState extends ConsumerState<PostMainPage> {
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
+
+  Future<void> init() async {
+    topPosts = await PostService().getPostByType(0, 3, -1);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
@@ -66,56 +81,69 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                                 vertical: ScreenSize.fitPxHeight(8),
                                 horizontal: ScreenSize.fitPxHeight(15),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Hot!",
-                                    style: TextStyle(color: AppColors.redColor),
-                                  ),
-                                  Text(
-                                    "打造高效工作環境的五個關鍵策略asdasdasdasasdsa",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: AppColors.whiteColor),
-                                  ),
-                                  SizedBox(height: ScreenSize.fitPxHeight(10)),
-                                  Container(
-                                    width: ScreenSize.width,
-                                    height: .5,
-                                    color: AppColors.greyColor98.withOpacity(.7),
-                                  ),
-                                  SizedBox(height: ScreenSize.fitPxHeight(5)),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "作成者:",
-                                        style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                                      ),
-                                      SizedBox(width: 5),
-                                      GestureDetector(
-                                        onTap: () {
-                                          BaseBottomSheet().show(
-                                            context,
-                                            child: userProfileView(),
-                                          );
-                                        },
-                                        child: Container(
-                                          width: 20,
-                                          height: 20,
-                                          decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(15)),
-                                        ),
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        "asdasdsa",
-                                        style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                              child: topPosts.isEmpty
+                                  ? Container()
+                                  : CarouselSlider(
+                                      items: topPosts.map((e) {
+                                        return Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Hot!",
+                                              style: TextStyle(color: AppColors.redColor, fontSize: 12),
+                                            ),
+                                            Text(
+                                              e.title,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(color: AppColors.whiteColor),
+                                            ),
+                                            SizedBox(height: ScreenSize.fitPxHeight(10)),
+                                            Container(
+                                              width: ScreenSize.width,
+                                              height: .5,
+                                              color: AppColors.greyColor98.withOpacity(.7),
+                                            ),
+                                            SizedBox(height: ScreenSize.fitPxHeight(5)),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "作成者:",
+                                                  style:
+                                                      TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                                                ),
+                                                SizedBox(width: 5),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    BaseBottomSheet().show(
+                                                      context,
+                                                      child: userProfileView(),
+                                                    );
+                                                  },
+                                                  child: UserIcon(
+                                                    iconSize: 20,
+                                                    image: e.postUserInfo.image,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 5),
+                                                Text(
+                                                  e.postUserInfo.name ?? "",
+                                                  style:
+                                                      TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        );
+                                      }).toList(),
+                                      options: CarouselOptions(
+                                          height: 78,
+                                          aspectRatio: 16 / 9,
+                                          viewportFraction: 1,
+                                          autoPlay: true,
+                                          autoPlayInterval: const Duration(seconds: 2)),
+                                    ),
                             ),
                           ),
                         ],
