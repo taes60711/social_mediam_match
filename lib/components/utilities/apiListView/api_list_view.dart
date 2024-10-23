@@ -430,7 +430,11 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
 
 class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   bool isScrollUp = false;
+  bool isTop = true;
   double scrollStartPos = 0;
+
+  ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     init();
@@ -452,18 +456,60 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     LoadDataStatus loadDataStatus = ref.read(widget.listControllerProvider).loadDataStatus;
 
     if (loadDataStatus == LoadDataStatus.loadingFinish) {
-      child = SingleChildScrollView(
-        child: Column(
-          children: [
-            widget.upWidget ?? Container(),
-            Column(
-              children: ref.watch(widget.listControllerProvider).listData.asMap().entries.map((e) {
-                int index = e.key;
-                R data = e.value;
-                return widget.itemChild(data, index);
-              }).toList(),
-            ),
-          ],
+      child = Scaffold(
+        backgroundColor: Colors.transparent,
+        floatingActionButton: Builder(
+          builder: (context) {
+            return AnimatedSlide(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              offset: isScrollUp ? const Offset(0, 1) : const Offset(0, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: AppColors.greyColor54,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        FontAwesomeIcons.angleUp,
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        body: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            children: [
+              widget.upWidget ?? Container(),
+              Column(
+                children: ref.watch(widget.listControllerProvider).listData.asMap().entries.map((e) {
+                  int index = e.key;
+                  R data = e.value;
+                  return widget.itemChild(data, index);
+                }).toList(),
+              ),
+            ],
+          ),
         ),
       );
     } else if (loadDataStatus == LoadDataStatus.initial) {
@@ -493,20 +539,34 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
           // final max = scrollNotification.metrics.maxScrollExtent;
 
           bool isScrollingUp = scrollPosition < scrollStartPos;
+
           if (!isScrollUp) {
             if (isScrollingUp) {
               GlobalViewModel().bottomBarHideStateChage(false);
               isScrollUp = true;
             }
           } else {
-            if (!isScrollingUp) {
-              GlobalViewModel().bottomBarHideStateChage(true);
-              isScrollUp = false;
+            if (isTop) {
+              bool isPosNotInTop = scrollPosition >= 20;
+              if (isPosNotInTop) {
+                isTop = false;
+              }
+            } else {
+              if (!isScrollingUp) {
+                GlobalViewModel().bottomBarHideStateChage(true);
+                isScrollUp = false;
+              }
             }
           }
         }
         if (scrollNotification is ScrollEndNotification) {
-          // final scrollPosition = scrollNotification.metrics.pixels;
+          final scrollPosition = scrollNotification.metrics.pixels;
+          if (!isTop) {
+            bool isPosNotInTop = scrollPosition <= 10;
+            if (isPosNotInTop) {
+              isTop = true;
+            }
+          }
         }
         return false;
       },
