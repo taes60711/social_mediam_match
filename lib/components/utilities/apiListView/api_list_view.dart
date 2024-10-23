@@ -7,9 +7,10 @@ import 'package:social_mediam_match/components/utilities/apiListView/base_api_li
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../../CustomBouncingScrollPhysics.dart';
+import '../../../global/global_view_model.dart';
 import '../loading.dart';
 import '../stateful_wrapper.dart';
-import 'api_list_model.dart';
+import 'api_list_controller.dart';
 
 enum ListType {
   normal,
@@ -404,13 +405,13 @@ class APIListView<R> extends StatelessWidget {
   }
 }
 
-final listControllerProvider = StateNotifierProvider<APIListModelNotifier, APIListModel>(
-  (ref) => APIListModelNotifier(APIListModel()),
+final listControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
+  (ref) => APIListControllerNotifier(APIListController()),
 );
 
 class APIListWidget<R> extends ConsumerStatefulWidget {
   final Future<List<R>> Function(int page, int size) apiFunc;
-  final StateNotifierProvider<APIListModelNotifier, APIListModel<dynamic>> listControllerProvider;
+  final StateNotifierProvider<APIListControllerNotifier, APIListController<dynamic>> listControllerProvider;
   final Widget? upWidget;
   final Widget Function(R data, int index) itemChild;
   const APIListWidget({
@@ -422,43 +423,94 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<APIListWidget<R>> createState() => _APIListWidgetState<R>();
+  ConsumerState<APIListWidget<R>> createState() {
+    return _APIListWidgetState<R>();
+  }
 }
 
 class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
+  bool isScrollUp = false;
+  double scrollStartPos = 0;
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      init();
-    });
-
+    init();
     super.initState();
   }
 
   Future<void> init() async {
-    await ref.read(widget.listControllerProvider.notifier).init(widget.apiFunc);
+    ref.read(widget.listControllerProvider.notifier).reLoad();
     setState(() {});
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(widget.listControllerProvider.notifier).init(widget.apiFunc);
+      setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return ref.watch(widget.listControllerProvider).listData.isNotEmpty
-        ? SingleChildScrollView(
-            child: Column(
-              children: [
-                widget.upWidget ?? Container(),
-                Column(
-                  children: ref.watch(widget.listControllerProvider).listData.asMap().entries.map((e) {
-                    int index = e.key;
-                    R data = e.value;
-                    return widget.itemChild(data, index);
-                  }).toList(),
-                ),
-              ],
+    Widget child = Container();
+    LoadDataStatus loadDataStatus = ref.read(widget.listControllerProvider).loadDataStatus;
+
+    if (loadDataStatus == LoadDataStatus.loadingFinish) {
+      child = SingleChildScrollView(
+        child: Column(
+          children: [
+            widget.upWidget ?? Container(),
+            Column(
+              children: ref.watch(widget.listControllerProvider).listData.asMap().entries.map((e) {
+                int index = e.key;
+                R data = e.value;
+                return widget.itemChild(data, index);
+              }).toList(),
             ),
-          )
-        : const Center(
-            child: CircularProgressIndicator(),
-          );
+          ],
+        ),
+      );
+    } else if (loadDataStatus == LoadDataStatus.initial) {
+      child = const Center(
+        child: Loading(),
+      );
+    }
+    return listenListView(context, child: child);
+  }
+
+  ///LisViewの状態をリスン
+  Widget listenListView(BuildContext context, {required child}) {
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollNotification) {
+        /// only listen depth list == 0
+        if (scrollNotification.depth != 0) {
+          return false;
+        }
+
+        if (scrollNotification is ScrollStartNotification) {
+          final scrollPosition = scrollNotification.metrics.pixels;
+          scrollStartPos = scrollPosition;
+        }
+
+        if (scrollNotification is ScrollUpdateNotification) {
+          final scrollPosition = scrollNotification.metrics.pixels;
+          // final max = scrollNotification.metrics.maxScrollExtent;
+
+          bool isScrollingUp = scrollPosition < scrollStartPos;
+          if (!isScrollUp) {
+            if (isScrollingUp) {
+              GlobalViewModel().bottomBarHideStateChage(false);
+              isScrollUp = true;
+            }
+          } else {
+            if (!isScrollingUp) {
+              GlobalViewModel().bottomBarHideStateChage(true);
+              isScrollUp = false;
+            }
+          }
+        }
+        if (scrollNotification is ScrollEndNotification) {
+          // final scrollPosition = scrollNotification.metrics.pixels;
+        }
+        return false;
+      },
+      child: child,
+    );
   }
 }

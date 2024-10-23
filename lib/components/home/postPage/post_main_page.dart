@@ -46,7 +46,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> tWidget = [
+    List<Widget> postsWidget = [
       PostByView(),
       PostByView(),
       CommonScaffold(
@@ -63,7 +63,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
         children: [
           PageView(
             controller: pageController,
-            children: tWidget,
+            children: postsWidget,
             onPageChanged: (value) {
               pageIndex = value;
               setState(() {});
@@ -76,35 +76,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
             duration: const Duration(milliseconds: 150),
             child: Column(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    BaseEndDrawer().show(context);
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: AppColors.greyColor57,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    width: ScreenSize.width,
-                    height: 36,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Icon(Icons.search, color: AppColors.greyColor54),
-                        ),
-                        Text(
-                          "搜尋",
-                          style: TextStyle(
-                            color: AppColors.whiteColor,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                _buildSearchBar(context),
                 Row(
                   children: [
                     GestureDetector(
@@ -204,7 +176,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                       ),
                     ),
                   ],
-                ),
+                )
               ],
             ),
           ),
@@ -212,6 +184,38 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
       ),
     );
   }
+}
+
+Widget _buildSearchBar(BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      BaseEndDrawer().show(context);
+    },
+    child: Container(
+      margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+      decoration: BoxDecoration(
+        color: AppColors.greyColor57,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      width: ScreenSize.width,
+      height: 36,
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Icon(Icons.search, color: AppColors.whiteColor),
+          ),
+          Text(
+            "搜尋",
+            style: TextStyle(
+              color: AppColors.whiteColor,
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class PostByView extends ConsumerStatefulWidget {
@@ -224,260 +228,226 @@ class PostByView extends ConsumerStatefulWidget {
 class _PostByViewState extends ConsumerState<PostByView> {
   @override
   Widget build(BuildContext context) {
-    return listenListView(
-      context,
-      child: Column(
-        children: [
-          Container(
-            height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 85 : 40,
-          ),
-          Expanded(
-            child: APIListWidget(
-                apiFunc: (page, size) {
-                  return PostService().getPostDataByViewer(page, size);
-                },
-                listControllerProvider: listControllerProvider,
-                upWidget: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Container(
-                        width: ScreenSize.width,
-                        color: AppColors.black37,
-                        padding: EdgeInsets.symmetric(
-                          vertical: ScreenSize.fitPxHeight(8),
-                          horizontal: ScreenSize.fitPxHeight(15),
-                        ),
-                        child: topPosts.isEmpty
-                            ? Container()
-                            : CarouselSlider(
-                                items: topPosts.map((e) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Hot!",
-                                        style: TextStyle(color: AppColors.redColor, fontSize: 12),
-                                      ),
-                                      Text(
-                                        e.title,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: AppColors.whiteColor),
-                                      ),
-                                      SizedBox(height: ScreenSize.fitPxHeight(10)),
-                                      Container(
-                                        width: ScreenSize.width,
-                                        height: .5,
-                                        color: AppColors.greyColor98.withOpacity(.7),
-                                      ),
-                                      SizedBox(height: ScreenSize.fitPxHeight(5)),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "作成者:",
-                                            style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                                          ),
-                                          SizedBox(width: 5),
-                                          GestureDetector(
-                                            onTap: () {
-                                              BaseBottomSheet().show(
-                                                context,
-                                                child: userProfileView(),
-                                              );
-                                            },
-                                            child: UserIcon(
-                                              iconSize: 20,
-                                              image: e.postUserInfo.image,
-                                            ),
-                                          ),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            e.postUserInfo.name ?? "",
-                                            style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  );
-                                }).toList(),
-                                options: CarouselOptions(
-                                    height: 78,
-                                    aspectRatio: 16 / 9,
-                                    viewportFraction: 1,
-                                    autoPlay: true,
-                                    autoPlayInterval: const Duration(seconds: 2)),
-                              ),
+    return Column(
+      children: [
+        Container(
+          height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 85 : 40,
+        ),
+        Expanded(
+          child: APIListWidget(
+              apiFunc: (page, size) {
+                return PostService().getPostDataByViewer(page, size);
+              },
+              listControllerProvider: listControllerProvider,
+              upWidget: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Container(
+                      width: ScreenSize.width,
+                      color: AppColors.black37,
+                      padding: EdgeInsets.symmetric(
+                        vertical: ScreenSize.fitPxHeight(8),
+                        horizontal: ScreenSize.fitPxHeight(15),
                       ),
-                    ),
-                  ],
-                ),
-                itemChild: (data, index) {
-                  return Container(
-                    width: ScreenSize.width,
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    margin: const EdgeInsets.only(bottom: 10),
-                    color: AppColors.black37,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 5),
-                        Row(
-                          children: [
-                            const SizedBox(width: 5),
-                            UserIcon(
-                              iconSize: 24,
-                              image: data.postUserInfo.image,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              data.postUserInfo.name ?? "",
-                              style: TextStyle(color: AppColors.whiteColor),
-                            ),
-                            Expanded(child: SizedBox(width: 1)),
-                            Container(
-                              width: 30,
-                              alignment: Alignment.centerRight,
-                              color: Colors.transparent,
-                              child: Icon(
-                                FontAwesomeIcons.ellipsis,
-                                color: Color.fromARGB(221, 180, 179, 179),
-                                size: 14,
+                      child: topPosts.isEmpty
+                          ? Container()
+                          : CarouselSlider(
+                              items: topPosts.map((e) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Hot!",
+                                      style: TextStyle(color: AppColors.redColor, fontSize: 12),
+                                    ),
+                                    Text(
+                                      e.title,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: AppColors.whiteColor),
+                                    ),
+                                    SizedBox(height: ScreenSize.fitPxHeight(10)),
+                                    Container(
+                                      width: ScreenSize.width,
+                                      height: .5,
+                                      color: AppColors.greyColor98.withOpacity(.7),
+                                    ),
+                                    SizedBox(height: ScreenSize.fitPxHeight(5)),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "作成者:",
+                                          style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                                        ),
+                                        SizedBox(width: 5),
+                                        GestureDetector(
+                                          onTap: () {
+                                            BaseBottomSheet().show(
+                                              context,
+                                              child: userProfileView(),
+                                            );
+                                          },
+                                          child: UserIcon(
+                                            iconSize: 20,
+                                            image: e.postUserInfo.image,
+                                          ),
+                                        ),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          e.postUserInfo.name ?? "",
+                                          style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              }).toList(),
+                              options: CarouselOptions(
+                                height: 78,
+                                aspectRatio: 16 / 9,
+                                viewportFraction: 1,
+                                autoPlay: true,
+                                autoPlayInterval: const Duration(seconds: 10),
                               ),
                             ),
-                          ],
+                    ),
+                  ),
+                ],
+              ),
+              itemChild: (data, index) {
+                return Container(
+                  width: ScreenSize.width,
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  margin: const EdgeInsets.only(bottom: 10),
+                  color: AppColors.black37,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5, right: 5),
+                        child: UserIcon(
+                          iconSize: 24,
+                          image: data.postUserInfo.image,
                         ),
-                        Text(
-                          data.title,
-                          style: TextStyle(color: AppColors.whiteColor),
-                        ),
-                        SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(13),
-                            child: RichTextView(
-                              content: data.mainMessage,
-                              isPreView: true,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Row(
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
-                                Container(
-                                  width: 12,
-                                  height: 12,
-                                  color: const Color.fromARGB(96, 175, 170, 170),
-                                ),
-                                SizedBox(width: 5),
                                 Text(
-                                  "Techology",
-                                  style: TextStyle(fontSize: 12, color: AppColors.whiteColor),
+                                  data.postUserInfo.name ?? "",
+                                  style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                                ),
+                                const Expanded(child: SizedBox(width: 1)),
+                                Container(
+                                  width: 30,
+                                  alignment: Alignment.centerRight,
+                                  color: Colors.transparent,
+                                  child: Icon(
+                                    FontAwesomeIcons.ellipsis,
+                                    color: AppColors.greyColor130,
+                                    size: 14,
+                                  ),
                                 ),
                               ],
                             ),
-                            const SizedBox(width: 5),
-
-                            ///View数
-                            PostViewUtilities().iconWithText(
-                                iconData: FontAwesomeIcons.eye,
-                                iconColor: Color.fromARGB(255, 110, 124, 129),
-                                text: "${data.viewed}",
-                                style: TextStyle(fontSize: 12, color: AppColors.whiteColor)),
-
-                            const SizedBox(width: 10),
-
-                            ///いいね数
-                            PostViewUtilities().iconWithText(
-                                iconData: FontAwesomeIcons.heart,
-                                iconColor: const Color.fromARGB(255, 248, 110, 110),
-                                text: "${data.good}",
-                                style: TextStyle(color: AppColors.whiteColor)),
-                            const SizedBox(width: 8),
-
-                            ///コメント数
-                            PostViewUtilities().iconWithText(
-                                iconData: FontAwesomeIcons.comment,
-                                iconColor: Colors.blueAccent,
-                                text: "${data.commentCount}",
-                                style: TextStyle(color: AppColors.whiteColor)),
-                            const SizedBox(width: 13),
-
-                            ///シャアボタン
-                            GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                width: 30,
-                                alignment: Alignment.centerLeft,
-                                color: Colors.transparent,
-                                child: const Icon(
-                                  FontAwesomeIcons.arrowUpRightFromSquare,
-                                  color: Color.fromARGB(221, 180, 179, 179),
-                                  size: 14,
+                            Text(
+                              data.title,
+                              style: TextStyle(color: AppColors.whiteColor),
+                            ),
+                            SizedBox(height: 5),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(13),
+                                child: RichTextView(
+                                  content: data.mainMessage,
+                                  isPreView: true,
                                 ),
                               ),
                             ),
+                            SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 12,
+                                      height: 12,
+                                      color: const Color.fromARGB(96, 175, 170, 170),
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      "Techology",
+                                      style: TextStyle(fontSize: 12, color: AppColors.whiteColor),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(width: 5),
 
-                            Expanded(child: SizedBox(width: 1)),
+                                ///View数
+                                PostViewUtilities().iconWithText(
+                                    iconData: FontAwesomeIcons.eye,
+                                    iconColor: Color.fromARGB(255, 110, 124, 129),
+                                    text: "${data.viewed}",
+                                    style: TextStyle(fontSize: 12, color: AppColors.whiteColor)),
 
-                            ///期日
-                            Text(
-                              "${data.postTime}${tr("skExChpage_beforDays")}",
-                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                const SizedBox(width: 10),
+
+                                ///いいね数
+                                PostViewUtilities().iconWithText(
+                                    iconData: FontAwesomeIcons.heart,
+                                    iconColor: const Color.fromARGB(255, 248, 110, 110),
+                                    text: "${data.good}",
+                                    style: TextStyle(color: AppColors.whiteColor)),
+                                const SizedBox(width: 8),
+
+                                ///コメント数
+                                PostViewUtilities().iconWithText(
+                                    iconData: FontAwesomeIcons.comment,
+                                    iconColor: Colors.blueAccent,
+                                    text: "${data.commentCount}",
+                                    style: TextStyle(color: AppColors.whiteColor)),
+                                const SizedBox(width: 13),
+
+                                ///シャアボタン
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Container(
+                                    width: 30,
+                                    alignment: Alignment.centerLeft,
+                                    color: Colors.transparent,
+                                    child: const Icon(
+                                      FontAwesomeIcons.arrowUpRightFromSquare,
+                                      color: Color.fromARGB(221, 180, 179, 179),
+                                      size: 14,
+                                    ),
+                                  ),
+                                ),
+
+                                Expanded(child: SizedBox(width: 1)),
+
+                                ///期日
+                                Text(
+                                  "${data.postTime}${tr("skExChpage_beforDays")}",
+                                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                ),
+                              ],
                             ),
+                            SizedBox(height: 5),
                           ],
                         ),
-                        SizedBox(height: 5),
-                      ],
-                    ),
-                  );
-                }),
-          ),
-        ],
-      ),
-    );
-  }
-
-  ///LisViewの状態をリスン
-  Widget listenListView(BuildContext context, {required child}) {
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scrollNotification) {
-        /// only listen depth list == 0
-        if (scrollNotification.depth != 0) {
-          return false;
-        }
-
-        if (scrollNotification is ScrollStartNotification) {
-          listScrollStartPos = scrollNotification.metrics.pixels;
-        }
-
-        if (scrollNotification is ScrollUpdateNotification) {
-          final scrollPosition = scrollNotification.metrics.pixels;
-          // final max = scrollNotification.metrics.maxScrollExtent;
-          bool isScrollingUp = scrollPosition < listScrollStartPos;
-          if (!isScrollUp) {
-            if (isScrollingUp) {
-              GlobalViewModel().bottomBarHideStateChage(false);
-              isScrollUp = true;
-            }
-          } else {
-            if (!isScrollingUp) {
-              GlobalViewModel().bottomBarHideStateChage(true);
-              isScrollUp = false;
-            }
-          }
-        }
-        if (scrollNotification is ScrollEndNotification) {
-          // final scrollPosition = scrollNotification.metrics.pixels;
-        }
-        return false;
-      },
-      child: child,
+                      ),
+                    ],
+                  ),
+                );
+              }),
+        ),
+      ],
     );
   }
 
