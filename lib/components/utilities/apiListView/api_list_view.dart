@@ -442,7 +442,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   }
 
   Future<void> init() async {
-    ref.read(widget.listControllerProvider.notifier).reLoad();
+    ref.read(widget.listControllerProvider.notifier).create();
     setState(() {});
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(widget.listControllerProvider.notifier).init(widget.apiFunc);
@@ -455,15 +455,20 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     Widget child = Container();
     LoadDataStatus loadDataStatus = ref.read(widget.listControllerProvider).loadDataStatus;
 
-    if (loadDataStatus == LoadDataStatus.loadingFinish) {
+    if (loadDataStatus != LoadDataStatus.initial) {
       child = Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
             SingleChildScrollView(
+              physics: scrollPhysics(context),
               controller: scrollController,
               child: Column(
                 children: [
+                  Visibility(
+                    visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantReload,
+                    child: const Loading(),
+                  ),
                   widget.upWidget ?? Container(),
                   Column(
                     children: ref.watch(widget.listControllerProvider).listData.asMap().entries.map((e) {
@@ -472,6 +477,10 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                       return widget.itemChild(data, index);
                     }).toList(),
                   ),
+                  Visibility(
+                    visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantinSert,
+                    child: const Loading(),
+                  ),
                 ],
               ),
             ),
@@ -479,7 +488,6 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
               builder: (context) {
                 return AnimatedPositioned(
                   duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
                   right: ScreenSize.fitPxWidth(15),
                   bottom: isScrollUp ? ScreenSize.fitPxHeight(-60) : ScreenSize.fitPxHeight(15),
                   child: Column(
@@ -487,14 +495,18 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+                          scrollController.animateTo(
+                            0,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.linear,
+                          );
                         },
                         child: Container(
                           width: ScreenSize.fitPxWidth(40),
                           height: ScreenSize.fitPxWidth(40),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
-                            color: AppColors.greyColor54,
+                            color: AppColors.greyColor98,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.2),
@@ -525,6 +537,15 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     return listenListView(context, child: child);
   }
 
+  /// スクロール制御方
+  ScrollPhysics? scrollPhysics(BuildContext context) {
+    if (ref.watch(widget.listControllerProvider).listData.length < ref.read(widget.listControllerProvider.notifier).size) {
+      return const AlwaysScrollableScrollPhysics();
+    } else {
+      return const NoBouncingScrollPhysics();
+    }
+  }
+
   ///LisViewの状態をリスン
   Widget listenListView(BuildContext context, {required child}) {
     return NotificationListener<ScrollNotification>(
@@ -541,7 +562,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
 
         if (scrollNotification is ScrollUpdateNotification) {
           final scrollPosition = scrollNotification.metrics.pixels;
-          // final max = scrollNotification.metrics.maxScrollExtent;
+          final max = scrollNotification.metrics.maxScrollExtent;
 
           bool isScrollingUp = scrollPosition < scrollStartPos;
 
@@ -550,11 +571,29 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
               GlobalViewModel().bottomBarHideStateChage(false);
               isScrollUp = true;
             }
+            if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.loadingFinish) {
+              if (scrollPosition >= max - ScreenSize.fitPxHeight(10) && max != 0) {
+                ref.read(listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantinSert);
+                ref.read(listControllerProvider.notifier).insertData().then((_) {
+                  if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.allDataLoaded) {
+                    setState(() {});
+                  }
+                });
+                setState(() {});
+              }
+            }
           } else {
             if (isTop) {
               bool isPosNotInTop = scrollPosition >= 20;
               if (isPosNotInTop) {
                 isTop = false;
+              }
+
+              if (scrollPosition <= 0) {
+                if (ref.read(listControllerProvider).loadDataStatus != LoadDataStatus.wantReload) {
+                  ref.read(listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantReload);
+                  setState(() {});
+                }
               }
             } else {
               if (!isScrollingUp) {
@@ -566,10 +605,23 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
         }
         if (scrollNotification is ScrollEndNotification) {
           final scrollPosition = scrollNotification.metrics.pixels;
+
           if (!isTop) {
-            bool isPosNotInTop = scrollPosition <= 10;
+            bool isPosNotInTop = scrollPosition <= ScreenSize.fitPxHeight(10);
             if (isPosNotInTop) {
               isTop = true;
+            }
+
+            // if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.wantinSert ||
+            //     ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.allDataLoaded) {
+            //   ref.read(listControllerProvider.notifier).insertData();
+            //   setState(() {});
+            // }
+          } else {
+            if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.wantReload) {
+              ref.read(listControllerProvider.notifier).reload().then(
+                    (value) => setState(() {}),
+                  );
             }
           }
         }

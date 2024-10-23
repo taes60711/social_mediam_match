@@ -10,7 +10,7 @@ import '../../../models/post_model.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/BottomSheets/base_bottom_sheet.dart';
 import '../../utilities/background_widget.dart';
-import '../../utilities/endDrawers/custom_end_drawer.dart';
+
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -76,7 +76,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
             duration: const Duration(milliseconds: 150),
             child: Column(
               children: [
-                _buildSearchBar(context),
+                _buildSearchBar(ref, () => setState(() {}), context),
                 Row(
                   children: [
                     GestureDetector(
@@ -186,10 +186,14 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
   }
 }
 
-Widget _buildSearchBar(BuildContext context) {
+Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
   return GestureDetector(
-    onTap: () {
-      BaseEndDrawer().show(context);
+    onTap: () async {
+      await ref.read(listControllerProvider.notifier).replaceApi((page, size) {
+        return PostService().getPostByTextFilter(page, size, "打");
+      });
+      render();
+      // BaseEndDrawer().show(context);
     },
     child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
@@ -305,7 +309,7 @@ class _PostByViewState extends ConsumerState<PostByView> {
                                 );
                               }).toList(),
                               options: CarouselOptions(
-                                height: 78,
+                                height: ScreenSize.fitPxHeight(74),
                                 aspectRatio: 16 / 9,
                                 viewportFraction: 1,
                                 autoPlay: true,
