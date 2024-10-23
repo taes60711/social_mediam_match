@@ -653,9 +653,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
           } else {
             ///ステータス：リロードに設定すると、実際的API呼び
             if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.wantReload) {
-              ref.read(listControllerProvider.notifier).reload().then(
-                    (value) => setState(() {}),
-                  );
+              ref.read(listControllerProvider.notifier).reload().then((value) => setState(() {}));
             }
           }
         }
