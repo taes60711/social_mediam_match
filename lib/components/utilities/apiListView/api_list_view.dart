@@ -433,8 +433,6 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   bool isTop = true;
   double scrollStartPos = 0;
 
-  ScrollController scrollController = ScrollController();
-
   @override
   void initState() {
     init();
@@ -458,75 +456,78 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     if (loadDataStatus != LoadDataStatus.initial) {
       child = Scaffold(
         backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              physics: scrollPhysics(context),
-              controller: scrollController,
-              child: Column(
-                children: [
-                  Visibility(
-                    visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantReload,
-                    child: const Loading(),
-                  ),
-                  widget.upWidget ?? Container(),
-                  Column(
-                    children: ref.watch(widget.listControllerProvider).listData.asMap().entries.map((e) {
-                      int index = e.key;
-                      R data = e.value;
-                      return widget.itemChild(data, index);
-                    }).toList(),
-                  ),
-                  Visibility(
-                    visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantinSert,
-                    child: const Loading(),
-                  ),
-                ],
+        body: SizedBox(
+          height: ScreenSize.height,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                physics: scrollPhysics(context),
+                controller: ref.watch(widget.listControllerProvider).scrollController,
+                child: Column(
+                  children: [
+                    Visibility(
+                      visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantReload,
+                      child: const Loading(),
+                    ),
+                    widget.upWidget ?? Container(),
+                    Column(
+                      children: ref.watch(widget.listControllerProvider).listData.asMap().entries.map((e) {
+                        int index = e.key;
+                        R data = e.value;
+                        return widget.itemChild(data, index);
+                      }).toList(),
+                    ),
+                    Visibility(
+                      visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantinSert,
+                      child: const Loading(),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Builder(
-              builder: (context) {
-                return AnimatedPositioned(
-                  duration: const Duration(milliseconds: 300),
-                  right: ScreenSize.fitPxWidth(15),
-                  bottom: isScrollUp ? ScreenSize.fitPxHeight(-60) : ScreenSize.fitPxHeight(15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          scrollController.animateTo(
-                            0,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.linear,
-                          );
-                        },
-                        child: Container(
-                          width: ScreenSize.fitPxWidth(40),
-                          height: ScreenSize.fitPxWidth(40),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: AppColors.greyColor98,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                spreadRadius: 1,
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            FontAwesomeIcons.angleUp,
-                            size: 16,
-                            color: Colors.white,
+              Builder(
+                builder: (context) {
+                  return AnimatedPositioned(
+                    duration: const Duration(milliseconds: 300),
+                    right: ScreenSize.fitPxWidth(15),
+                    bottom: isScrollUp ? ScreenSize.fitPxHeight(-60) : ScreenSize.fitPxHeight(15),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            ref.watch(widget.listControllerProvider).scrollController.animateTo(
+                                  0,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.linear,
+                                );
+                          },
+                          child: Container(
+                            width: ScreenSize.fitPxWidth(40),
+                            height: ScreenSize.fitPxWidth(40),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: AppColors.greyColor98,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 1,
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              FontAwesomeIcons.angleUp,
+                              size: 16,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       );
     } else if (loadDataStatus == LoadDataStatus.initial) {

@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
 
 class APIListController<R> {
   APIListController();
+
+  ScrollController scrollController = ScrollController();
   List<R> listData = [];
   late Future<List<R>> Function(int page, int size) apiFunc;
   LoadDataStatus loadDataStatus = LoadDataStatus.initial;
@@ -38,6 +41,7 @@ class APIListControllerNotifier extends StateNotifier<APIListController> {
     page++;
     await _preLoad();
     state.loadDataStatus = LoadDataStatus.loadingFinish;
+    state.scrollController.jumpTo(0);
   }
 
   Future<void> init(Future<List> Function(int page, int size) initApiFunc) async {
