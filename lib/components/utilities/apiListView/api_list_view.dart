@@ -440,9 +440,11 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   }
 
   Future<void> init() async {
+    ///init前に
     ref.read(widget.listControllerProvider.notifier).create();
     setState(() {});
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      ///実際的init
       await ref.read(widget.listControllerProvider.notifier).init(widget.apiFunc);
       setState(() {});
     });
@@ -454,36 +456,49 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     LoadDataStatus loadDataStatus = ref.read(widget.listControllerProvider).loadDataStatus;
 
     if (loadDataStatus != LoadDataStatus.initial) {
+      ///データロード終わり場合
       child = Scaffold(
         backgroundColor: Colors.transparent,
         body: SizedBox(
+          ///データ不足場合は高さ画面合うよう
           height: ScreenSize.height,
           child: Stack(
             children: [
-              SingleChildScrollView(
-                physics: scrollPhysics(context),
-                controller: ref.watch(widget.listControllerProvider).scrollController,
-                child: Column(
-                  children: [
-                    Visibility(
-                      visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantReload,
-                      child: const Loading(),
-                    ),
-                    widget.upWidget ?? Container(),
-                    Column(
-                      children: ref.watch(widget.listControllerProvider).listData.asMap().entries.map((e) {
-                        int index = e.key;
-                        R data = e.value;
-                        return widget.itemChild(data, index);
-                      }).toList(),
-                    ),
-                    Visibility(
-                      visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantinSert,
-                      child: const Loading(),
-                    ),
-                  ],
+              SizedBox(
+                ///データ不足場合は高さ画面合うよう
+                height: ScreenSize.height,
+                child: SingleChildScrollView(
+                  physics: scrollPhysics(context),
+                  controller: ref.watch(widget.listControllerProvider).scrollController,
+                  child: Column(
+                    children: [
+                      ///データリロード
+                      Visibility(
+                        visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantReload,
+                        child: const Loading(),
+                      ),
+                      widget.upWidget ?? Container(),
+
+                      ///項目リスト
+                      Column(
+                        children: ref.watch(widget.listControllerProvider).listData.asMap().entries.map((e) {
+                          int index = e.key;
+                          R data = e.value;
+                          return widget.itemChild(data, index);
+                        }).toList(),
+                      ),
+
+                      ///データインサート
+                      Visibility(
+                        visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantinSert,
+                        child: const Loading(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
+
+              ///　FloatButton
               Builder(
                 builder: (context) {
                   return AnimatedPositioned(
@@ -493,6 +508,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        ///トップに移動ボタン
                         GestureDetector(
                           onTap: () {
                             ref.watch(widget.listControllerProvider).scrollController.animateTo(
@@ -531,6 +547,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
         ),
       );
     } else if (loadDataStatus == LoadDataStatus.initial) {
+      ///ページに初めで遷移場合
       child = const Center(
         child: Loading(),
       );
@@ -541,8 +558,10 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   /// スクロール制御方
   ScrollPhysics? scrollPhysics(BuildContext context) {
     if (ref.watch(widget.listControllerProvider).listData.length < ref.read(widget.listControllerProvider.notifier).size) {
+      ///データ不足場合
       return const AlwaysScrollableScrollPhysics();
     } else {
+      ///普通場合
       return const NoBouncingScrollPhysics();
     }
   }
@@ -569,35 +588,50 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
 
           if (!isScrollUp) {
             if (isScrollingUp) {
+              /// bottomBar表示される
               GlobalViewModel().bottomBarHideStateChage(false);
               isScrollUp = true;
             }
             if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.loadingFinish) {
               if (scrollPosition >= max - ScreenSize.fitPxHeight(10) && max != 0) {
                 ref.read(listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantinSert);
+
+                ///プリロードデータインサート
                 ref.read(listControllerProvider.notifier).insertData().then((_) {
+                  ///プリロードデータない
                   if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.allDataLoaded) {
                     setState(() {});
                   }
                 });
-                setState(() {});
+
+                ///プリロードデータある
+                if (ref.read(listControllerProvider).loadDataStatus != LoadDataStatus.allDataLoaded) {
+                  setState(() {});
+                }
               }
             }
           } else {
+            ///TOPでいる
             if (isTop) {
               bool isPosNotInTop = scrollPosition >= 20;
               if (isPosNotInTop) {
+                ///TOPでないって設定する
                 isTop = false;
               }
 
+              ///TOPでるし、アップに移動する（リロードしたい場合）
               if (scrollPosition <= 0) {
+                ///ステータス：リロードに設定する
                 if (ref.read(listControllerProvider).loadDataStatus != LoadDataStatus.wantReload) {
                   ref.read(listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantReload);
                   setState(() {});
                 }
               }
+
+              ///TOPでない
             } else {
               if (!isScrollingUp) {
+                /// bottomBar隠れる
                 GlobalViewModel().bottomBarHideStateChage(true);
                 isScrollUp = false;
               }
@@ -607,18 +641,17 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
         if (scrollNotification is ScrollEndNotification) {
           final scrollPosition = scrollNotification.metrics.pixels;
 
+          ///TOPでない
           if (!isTop) {
             bool isPosNotInTop = scrollPosition <= ScreenSize.fitPxHeight(10);
             if (isPosNotInTop) {
+              ///TOPでるって設定する
               isTop = true;
             }
 
-            // if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.wantinSert ||
-            //     ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.allDataLoaded) {
-            //   ref.read(listControllerProvider.notifier).insertData();
-            //   setState(() {});
-            // }
+            ///TOPでいる
           } else {
+            ///ステータス：リロードに設定すると、実際的API呼び
             if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.wantReload) {
               ref.read(listControllerProvider.notifier).reload().then(
                     (value) => setState(() {}),
