@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
-
 import '../../../global/global_view_model.dart';
 
 import '../../../services/post_service.dart';

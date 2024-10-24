@@ -500,10 +500,8 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
               Builder(
                 builder: (context) {
                   double flatButtonPos = ScreenSize.fitPxHeight(-60);
-                  if (!isTop) {
-                    if (!isScrollUp) {
-                      flatButtonPos = ScreenSize.fitPxHeight(15);
-                    }
+                  if (ref.watch(bottomNavationBarPosProvider) == ScreenSize.fitPxHeight(-60)) {
+                    flatButtonPos = ScreenSize.fitPxHeight(15);
                   }
 
                   return AnimatedPositioned(
