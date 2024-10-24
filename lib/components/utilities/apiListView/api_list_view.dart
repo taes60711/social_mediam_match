@@ -477,7 +477,9 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                         visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantReload,
                         child: const Loading(),
                       ),
-                      widget.upWidget ?? Container(),
+                      Builder(builder: (context) {
+                        return widget.upWidget ?? Container();
+                      }),
 
                       ///項目リスト
                       Column(
@@ -501,10 +503,17 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
               ///　FloatButton
               Builder(
                 builder: (context) {
+                  double flatButtonPos = ScreenSize.fitPxHeight(-60);
+                  if (!isTop) {
+                    if (!isScrollUp) {
+                      flatButtonPos = ScreenSize.fitPxHeight(15);
+                    }
+                  }
+
                   return AnimatedPositioned(
                     duration: const Duration(milliseconds: 300),
                     right: ScreenSize.fitPxWidth(15),
-                    bottom: isScrollUp ? ScreenSize.fitPxHeight(-60) : ScreenSize.fitPxHeight(15),
+                    bottom: flatButtonPos,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -559,7 +568,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   ScrollPhysics? scrollPhysics(BuildContext context) {
     if (ref.watch(widget.listControllerProvider).listData.length < ref.read(widget.listControllerProvider.notifier).size) {
       ///データ不足場合
-      return const AlwaysScrollableScrollPhysics();
+      return const CustomScrollPhysicsWithDamping();
     } else {
       ///普通場合
       return const NoBouncingScrollPhysics();
@@ -570,6 +579,8 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   Widget listenListView(BuildContext context, {required child}) {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollNotification) {
+        // print(scrollNotification.runtimeType);
+
         /// only listen depth list == 0
         if (scrollNotification.depth != 0) {
           return false;
@@ -638,6 +649,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
             }
           }
         }
+
         if (scrollNotification is ScrollEndNotification) {
           final scrollPosition = scrollNotification.metrics.pixels;
 
@@ -657,6 +669,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
             }
           }
         }
+
         return false;
       },
       child: child,
