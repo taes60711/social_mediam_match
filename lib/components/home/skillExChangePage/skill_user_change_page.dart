@@ -8,6 +8,7 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import '../../../services/user_service.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
+import '../../utilities/endDrawers/custom_end_drawer.dart';
 import '../../utilities/style/style_config.dart';
 
 class SkillUserChangePage extends ConsumerStatefulWidget {
@@ -40,6 +41,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
           return UserService().getAllUserData(page, size, userUid: "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2", filterSkill: []);
         },
         listControllerProvider: userExChangelistControllerProvider,
+        upWidget: _buildSearchBar(ref, () => setState(() {}), context),
         itemChild: (data, index) {
           return Container(
             width: ScreenSize.width,
@@ -51,13 +53,14 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
             margin: EdgeInsets.only(
               left: ScreenSize.fitPxHeight(10),
               right: ScreenSize.fitPxHeight(10),
-              bottom: ScreenSize.fitPxHeight(10),
+              top: ScreenSize.fitPxHeight(10),
             ),
             padding: EdgeInsets.symmetric(
               vertical: ScreenSize.fitPxHeight(8),
               horizontal: ScreenSize.fitPxHeight(15),
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
@@ -77,95 +80,164 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
                           data.job ?? "",
                           style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
                         ),
-                        Container(
-                          padding: EdgeInsets.all(4),
-                          margin: EdgeInsets.only(top: 5, bottom: 5),
-                          decoration: BoxDecoration(
-                            color: AppColors.greyColor98,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Icon(
-                            FontAwesomeIcons.angleDoubleLeft,
-                            color: AppColors.whiteColor,
-                            size: ScreenSize.fitPxWidth(8),
-                          ),
-                        ),
-                        Row(
-                          children: data.mainSkills!.isEmpty
-                              ? [
-                                  Container(
-                                    margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                                    padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.blue,
-                                    ),
-                                    child: Text(
-                                      "暫無",
-                                      style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                                    ),
-                                  )
-                                ]
-                              : data.mainSkills!.map((e) {
-                                  return Container(
-                                    margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                                    padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.blue,
-                                    ),
-                                    child: Text(
-                                      e.name,
-                                      style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                                    ),
-                                  );
-                                }).toList(),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(4),
-                          margin: EdgeInsets.only(top: 5, bottom: 5),
-                          decoration: BoxDecoration(
-                            color: AppColors.greyColor98,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Icon(
-                            FontAwesomeIcons.angleDoubleRight,
-                            color: AppColors.whiteColor,
-                            size: ScreenSize.fitPxWidth(8),
-                          ),
-                        ),
-                        Row(
-                          children: data.wantSkills!.isEmpty
-                              ? [
-                                  Container(
-                                    margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                                    padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.blue,
-                                    ),
-                                    child: Text(
-                                      "暫無",
-                                      style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                                    ),
-                                  )
-                                ]
-                              : data.wantSkills!.map((e) {
-                                  return Container(
-                                    margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                                    padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.blue,
-                                    ),
-                                    child: Text(
-                                      e.name,
-                                      style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                                    ),
-                                  );
-                                }).toList(),
-                        )
                       ],
+                    ),
+                  ],
+                ),
+
+                SizedBox(
+                  height: ScreenSize.fitPxHeight(5),
+                ),
+
+                ///得意なスキル
+                Row(
+                  children: [
+                    ///タイトル
+                    Container(
+                      padding: EdgeInsets.all(ScreenSize.fitPxWidth(6)),
+                      margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 59, 116, 223),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Icon(
+                        FontAwesomeIcons.angleDoubleLeft,
+                        color: AppColors.whiteColor,
+                        size: ScreenSize.fitPxWidth(8),
+                      ),
+                    ),
+
+                    ///スキル
+                    Padding(
+                      padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(4)),
+                      child: Row(
+                        children: data.mainSkills!.isEmpty
+                            ? [
+                                Container(
+                                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: AppColors.greyColor98,
+                                  ),
+                                  child: Text(
+                                    "暫無",
+                                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
+                                  ),
+                                )
+                              ]
+                            : data.mainSkills!.map((e) {
+                                return Container(
+                                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: AppColors.greyColor98,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: ScreenSize.fitPxWidth(15),
+                                        height: ScreenSize.fitPxWidth(15),
+                                        margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.black37,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "${e.level}",
+                                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize10),
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        e.name,
+                                        style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: ScreenSize.fitPxHeight(3)),
+
+                ///弱いスキル
+                ///
+                Row(
+                  children: [
+                    ///タイトル
+                    Container(
+                      padding: EdgeInsets.all(ScreenSize.fitPxWidth(6)),
+                      margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 240, 123, 77),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Icon(
+                        FontAwesomeIcons.angleDoubleRight,
+                        color: AppColors.whiteColor,
+                        size: ScreenSize.fitPxWidth(8),
+                      ),
+                    ),
+
+                    ///スキル
+                    Padding(
+                      padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(4)),
+                      child: Row(
+                        children: data.mainSkills!.isEmpty
+                            ? [
+                                Container(
+                                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: AppColors.greyColor98,
+                                  ),
+                                  child: Text(
+                                    "暫無",
+                                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
+                                  ),
+                                )
+                              ]
+                            : data.wantSkills!.map((e) {
+                                return Container(
+                                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: AppColors.greyColor98,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: ScreenSize.fitPxWidth(15),
+                                        height: ScreenSize.fitPxWidth(15),
+                                        margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.black37,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "${e.level}",
+                                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize10),
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        e.name,
+                                        style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                      ),
                     ),
                   ],
                 ),
@@ -173,6 +245,38 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        BaseEndDrawer().show(context);
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+        decoration: BoxDecoration(
+          color: AppColors.greyColor57,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        width: ScreenSize.width,
+        height: 36,
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Icon(Icons.search, color: AppColors.whiteColor),
+            ),
+            Text(
+              "搜尋",
+              style: TextStyle(
+                color: AppColors.whiteColor,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
