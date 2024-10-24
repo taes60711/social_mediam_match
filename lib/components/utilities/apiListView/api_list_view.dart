@@ -1,13 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../../CustomBouncingScrollPhysics.dart';
+import '../../../global/global_view_model.dart';
 import '../loading.dart';
 import '../stateful_wrapper.dart';
+import 'api_list_controller.dart';
 
 enum ListType {
   normal,
@@ -399,5 +402,277 @@ class APIListView<R> extends StatelessWidget {
         ),
       );
     });
+  }
+}
+
+final listControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
+  (ref) => APIListControllerNotifier(APIListController()),
+);
+
+class APIListWidget<R> extends ConsumerStatefulWidget {
+  final Future<List<R>> Function(int page, int size) apiFunc;
+  final StateNotifierProvider<APIListControllerNotifier, APIListController<dynamic>> listControllerProvider;
+  final Widget? upWidget;
+  final Widget Function(R data, int index) itemChild;
+  const APIListWidget({
+    super.key,
+    required this.apiFunc,
+    required this.listControllerProvider,
+    this.upWidget,
+    required this.itemChild,
+  });
+
+  @override
+  ConsumerState<APIListWidget<R>> createState() {
+    return _APIListWidgetState<R>();
+  }
+}
+
+class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
+  bool isScrollUp = true;
+  bool isTop = true;
+  double scrollStartPos = 0;
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
+
+  Future<void> init() async {
+    ///init前に
+    ref.read(widget.listControllerProvider.notifier).create();
+    setState(() {});
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      ///実際的init
+      await ref.read(widget.listControllerProvider.notifier).init(widget.apiFunc);
+      setState(() {});
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget child = Container();
+    LoadDataStatus loadDataStatus = ref.read(widget.listControllerProvider).loadDataStatus;
+
+    if (loadDataStatus != LoadDataStatus.initial) {
+      ///データロード終わり場合
+      child = Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SizedBox(
+          ///データ不足場合は高さ画面合うよう
+          height: ScreenSize.height,
+          child: Stack(
+            children: [
+              SizedBox(
+                ///データ不足場合は高さ画面合うよう
+                height: ScreenSize.height,
+                child: SingleChildScrollView(
+                  physics: scrollPhysics(context),
+                  controller: ref.watch(widget.listControllerProvider).scrollController,
+                  child: Column(
+                    children: [
+                      ///データリロード
+                      Visibility(
+                        visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantReload,
+                        child: const Loading(),
+                      ),
+                      Builder(builder: (context) {
+                        return widget.upWidget ?? Container();
+                      }),
+
+                      ///項目リスト
+                      Column(
+                        children: ref.watch(widget.listControllerProvider).listData.asMap().entries.map((e) {
+                          int index = e.key;
+                          R data = e.value;
+                          return widget.itemChild(data, index);
+                        }).toList(),
+                      ),
+
+                      ///データインサート
+                      Visibility(
+                        visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantinSert,
+                        child: const Loading(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              ///　FloatButton
+              Builder(
+                builder: (context) {
+                  double flatButtonPos = ScreenSize.fitPxHeight(-60);
+                  if (!isTop) {
+                    if (!isScrollUp) {
+                      flatButtonPos = ScreenSize.fitPxHeight(15);
+                    }
+                  }
+
+                  return AnimatedPositioned(
+                    duration: const Duration(milliseconds: 300),
+                    right: ScreenSize.fitPxWidth(15),
+                    bottom: flatButtonPos,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ///トップに移動ボタン
+                        GestureDetector(
+                          onTap: () {
+                            ref.watch(widget.listControllerProvider).scrollController.animateTo(
+                                  0,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.linear,
+                                );
+                          },
+                          child: Container(
+                            width: ScreenSize.fitPxWidth(40),
+                            height: ScreenSize.fitPxWidth(40),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: AppColors.greyColor98,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 1,
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              FontAwesomeIcons.angleUp,
+                              size: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    } else if (loadDataStatus == LoadDataStatus.initial) {
+      ///ページに初めで遷移場合
+      child = const Center(
+        child: Loading(),
+      );
+    }
+    return listenListView(context, child: child);
+  }
+
+  /// スクロール制御方
+  ScrollPhysics? scrollPhysics(BuildContext context) {
+    if (ref.watch(widget.listControllerProvider).listData.length < ref.read(widget.listControllerProvider.notifier).size) {
+      ///データ不足場合
+      return const AlwaysScrollableScrollPhysics();
+    } else {
+      ///普通場合
+      return const NoBouncingScrollPhysics();
+    }
+  }
+
+  ///LisViewの状態をリスン
+  Widget listenListView(BuildContext context, {required child}) {
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollNotification) {
+        // print(scrollNotification.runtimeType);
+
+        /// only listen depth list == 0
+        if (scrollNotification.depth != 0) {
+          return false;
+        }
+
+        if (scrollNotification is ScrollStartNotification) {
+          final scrollPosition = scrollNotification.metrics.pixels;
+          scrollStartPos = scrollPosition;
+        }
+
+        if (scrollNotification is ScrollUpdateNotification) {
+          final scrollPosition = scrollNotification.metrics.pixels;
+          final max = scrollNotification.metrics.maxScrollExtent;
+
+          bool isScrollingUp = scrollPosition < scrollStartPos;
+
+          if (!isScrollUp) {
+            if (isScrollingUp) {
+              /// bottomBar表示される
+              GlobalViewModel().bottomBarHideStateChage(false);
+              isScrollUp = true;
+            }
+            if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.loadingFinish) {
+              if (scrollPosition >= max - ScreenSize.fitPxHeight(10) && max != 0) {
+                ref.read(listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantinSert);
+
+                ///プリロードデータインサート
+                ref.read(listControllerProvider.notifier).insertData().then((_) {
+                  ///プリロードデータない
+                  if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.allDataLoaded) {
+                    setState(() {});
+                  }
+                });
+
+                ///プリロードデータある
+                if (ref.read(listControllerProvider).loadDataStatus != LoadDataStatus.allDataLoaded) {
+                  setState(() {});
+                }
+              }
+            }
+          } else {
+            ///TOPでいる
+            if (isTop) {
+              bool isPosNotInTop = scrollPosition >= 20;
+              if (isPosNotInTop) {
+                ///TOPでないって設定する
+                isTop = false;
+              }
+
+              ///TOPでるし、アップに移動する（リロードしたい場合）
+              if (scrollPosition <= 0) {
+                ///ステータス：リロードに設定する
+                if (ref.read(listControllerProvider).loadDataStatus != LoadDataStatus.wantReload) {
+                  ref.read(listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantReload);
+                  setState(() {});
+                }
+              }
+
+              ///TOPでない
+            } else {
+              if (!isScrollingUp) {
+                /// bottomBar隠れる
+                GlobalViewModel().bottomBarHideStateChage(true);
+                isScrollUp = false;
+              }
+            }
+          }
+        }
+
+        if (scrollNotification is ScrollEndNotification) {
+          final scrollPosition = scrollNotification.metrics.pixels;
+
+          ///TOPでない
+          if (!isTop) {
+            bool isPosNotInTop = scrollPosition <= ScreenSize.fitPxHeight(10);
+            if (isPosNotInTop) {
+              ///TOPでるって設定する
+              isTop = true;
+            }
+
+            ///TOPでいる
+          } else {
+            ///ステータス：リロードに設定すると、実際的API呼び
+            if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.wantReload) {
+              ref.read(listControllerProvider.notifier).reload().then((value) => setState(() {}));
+            }
+          }
+        }
+
+        return false;
+      },
+      child: child,
+    );
   }
 }

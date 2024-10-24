@@ -6,6 +6,7 @@ enum LoadDataType {
   initial,
   insert,
   reload,
+  finish,
 }
 
 enum LoadDataStatus {

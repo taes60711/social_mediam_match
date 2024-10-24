@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 ///MARK: Base EndDrawer
 class EndDrawer extends StatefulWidget {
@@ -113,32 +114,53 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
   }
 }
 
-class SlideTransitionExample extends StatefulWidget {
-  @override
-  _SlideTransitionExampleState createState() => _SlideTransitionExampleState();
+class BaseEndDrawer {
+  void show(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
+          return const Scaffold(
+            backgroundColor: Colors.transparent,
+            body: EndDrawerWidget(),
+          );
+        },
+        opaque: false,
+      ),
+    );
+  }
 }
 
-class _SlideTransitionExampleState extends State<SlideTransitionExample> with SingleTickerProviderStateMixin {
+class EndDrawerWidget extends StatefulWidget {
+  const EndDrawerWidget({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _EndDrawerWidgetState createState() => _EndDrawerWidgetState();
+}
+
+class _EndDrawerWidgetState extends State<EndDrawerWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
+  double _dragStartX = 0.0;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 300),
       vsync: this,
     );
 
     _offsetAnimation = Tween<Offset>(
-      begin: Offset(1.0, 0.0), // 初始位置：右側
-      end: Offset(0.0, 0.0), // 最終位置：正常位置
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+      begin: const Offset(1.0, 0.0),
+      end: const Offset(0.0, 0.0),
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
 
-    // 開始動畫
     _controller.forward();
   }
 
@@ -148,19 +170,46 @@ class _SlideTransitionExampleState extends State<SlideTransitionExample> with Si
     super.dispose();
   }
 
+  void _onHorizontalDragStart(DragStartDetails details) {
+    _dragStartX = details.globalPosition.dx;
+  }
+
+  void _onHorizontalDragUpdate(DragUpdateDetails details) {
+    double dragDelta = details.globalPosition.dx - _dragStartX;
+    double dragFraction = dragDelta / MediaQuery.of(context).size.width;
+    _controller.value = 1 - dragFraction;
+  }
+
+  void _onHorizontalDragEnd(DragEndDetails details) {
+    if (_controller.value < 0.85) {
+      _controller.reverse().whenComplete(() => Navigator.pop(context));
+    } else {
+      _controller.forward();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _offsetAnimation,
-      child: Container(
-        width: ScreenSize.width,
-        height: ScreenSize.height,
-        color: Colors.blue,
-        child: Center(
-          child: Text(
-            'Hello, Flutter!',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
+    return GestureDetector(
+      onHorizontalDragStart: _onHorizontalDragStart,
+      onHorizontalDragUpdate: _onHorizontalDragUpdate,
+      onHorizontalDragEnd: _onHorizontalDragEnd,
+      child: SlideTransition(
+        position: _offsetAnimation,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          color: AppColors.bgColor,
+          child: Builder(builder: (context) {
+            return Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  _controller.reverse().whenComplete(() => Navigator.pop(context));
+                },
+                child: Text("exit"),
+              ),
+            );
+          }),
         ),
       ),
     );

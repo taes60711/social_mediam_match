@@ -61,7 +61,6 @@ Widget skillInfoWithPage(BuildContext context) {
             SkillEndDrawerType.wantSkill,
             userData: context.read<UserProvider>().userData,
           ),
-
           const SizedBox(height: 10),
           //設定ボタン　例：プロフィール、設定、ニュース...
           Container(
