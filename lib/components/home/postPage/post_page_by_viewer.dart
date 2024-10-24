@@ -323,7 +323,7 @@ class _PostByViewState extends ConsumerState<PostByView> {
                                             image: e.postUserInfo.image,
                                           ),
                                         ),
-                                        SizedBox(width: 5),
+                                        const SizedBox(width: 5),
                                         Text(
                                           e.postUserInfo.name ?? "",
                                           style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
