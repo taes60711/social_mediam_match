@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 
 class SkillUserChangePage extends ConsumerStatefulWidget {
   const SkillUserChangePage({super.key});
@@ -11,6 +12,6 @@ class SkillUserChangePage extends ConsumerStatefulWidget {
 class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return CommonScaffold(child: Container());
   }
 }

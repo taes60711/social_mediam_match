@@ -405,10 +405,6 @@ class APIListView<R> extends StatelessWidget {
   }
 }
 
-final listControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
-  (ref) => APIListControllerNotifier(APIListController()),
-);
-
 class APIListWidget<R> extends ConsumerStatefulWidget {
   final Future<List<R>> Function(int page, int size) apiFunc;
   final StateNotifierProvider<APIListControllerNotifier, APIListController<dynamic>> listControllerProvider;
@@ -603,20 +599,20 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
               GlobalViewModel().bottomBarHideStateChage(false);
               isScrollUp = true;
             }
-            if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.loadingFinish) {
+            if (ref.read(widget.listControllerProvider).loadDataStatus == LoadDataStatus.loadingFinish) {
               if (scrollPosition >= max - ScreenSize.fitPxHeight(10) && max != 0) {
-                ref.read(listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantinSert);
+                ref.read(widget.listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantinSert);
 
                 ///プリロードデータインサート
-                ref.read(listControllerProvider.notifier).insertData().then((_) {
+                ref.read(widget.listControllerProvider.notifier).insertData().then((_) {
                   ///プリロードデータない
-                  if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.allDataLoaded) {
+                  if (ref.read(widget.listControllerProvider).loadDataStatus == LoadDataStatus.allDataLoaded) {
                     setState(() {});
                   }
                 });
 
                 ///プリロードデータある
-                if (ref.read(listControllerProvider).loadDataStatus != LoadDataStatus.allDataLoaded) {
+                if (ref.read(widget.listControllerProvider).loadDataStatus != LoadDataStatus.allDataLoaded) {
                   setState(() {});
                 }
               }
@@ -633,8 +629,8 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
               ///TOPでるし、アップに移動する（リロードしたい場合）
               if (scrollPosition <= 0) {
                 ///ステータス：リロードに設定する
-                if (ref.read(listControllerProvider).loadDataStatus != LoadDataStatus.wantReload) {
-                  ref.read(listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantReload);
+                if (ref.read(widget.listControllerProvider).loadDataStatus != LoadDataStatus.wantReload) {
+                  ref.read(widget.listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantReload);
                   setState(() {});
                 }
               }
@@ -664,8 +660,8 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
             ///TOPでいる
           } else {
             ///ステータス：リロードに設定すると、実際的API呼び
-            if (ref.read(listControllerProvider).loadDataStatus == LoadDataStatus.wantReload) {
-              ref.read(listControllerProvider.notifier).reload().then((value) => setState(() {}));
+            if (ref.read(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantReload) {
+              ref.read(widget.listControllerProvider.notifier).reload().then((value) => setState(() {}));
             }
           }
         }

@@ -4,6 +4,7 @@ import 'package:social_mediam_match/components/utilities/background_widget.dart'
 
 import '../components/home/firendsPage/firends_page.dart';
 import '../components/home/postPage/post_main_page.dart';
+import '../components/home/skillExChangePage/skill_user_change_page.dart';
 import '../components/home/userPage/user_page.dart';
 import '../components/utilities/style/theme_style.dart';
 import '../global/global_view_model.dart';
@@ -29,7 +30,7 @@ class _HomeState extends ConsumerState<Home> {
   Widget build(BuildContext context) {
     List<Widget> mainPage = [
       const PostMainPage(),
-      CommonScaffold(child: Container()),
+      const SkillUserChangePage(),
       CommonScaffold(child: Container()),
       const FirendsPage(),
       const UserPage(),

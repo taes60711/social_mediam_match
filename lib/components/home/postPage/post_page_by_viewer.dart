@@ -13,6 +13,7 @@ import '../../../provider/post/post_view_model.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/BottomSheets/base_bottom_sheet.dart';
 import '../../utilities/Stateful_wrapper.dart';
+import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/apiListView/base_api_list_provider.dart';
 import '../../utilities/endDrawers/user_detail_end_drawer.dart';
@@ -232,6 +233,10 @@ Widget bottomBar({required BuildContext context, required PostModel data}) {
     ),
   );
 }
+
+final listControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
+  (ref) => APIListControllerNotifier(APIListController()),
+);
 
 // new
 class PostByView extends ConsumerStatefulWidget {
