@@ -3,24 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 export 'package:flutter/physics.dart' show ScrollSpringSimulation, Simulation, Tolerance;
 
-class CustomScrollPhysicsWithDamping extends AlwaysScrollableScrollPhysics {
-  const CustomScrollPhysicsWithDamping({ScrollPhysics? parent}) : super(parent: parent);
-
-  @override
-  CustomScrollPhysicsWithDamping applyTo(ScrollPhysics? ancestor) {
-    return CustomScrollPhysicsWithDamping(parent: buildParent(ancestor));
-  }
-
-  @override
-  double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
-    if (offset > 0) {
-      return super.applyPhysicsToUserOffset(position, offset);
-    }
-
-    return 0;
-  }
-}
-
 class CustomBouncingScrollPhysics extends ScrollPhysics {
   const CustomBouncingScrollPhysics({
     this.decelerationRate = ScrollDecelerationRate.normal,

@@ -568,7 +568,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   ScrollPhysics? scrollPhysics(BuildContext context) {
     if (ref.watch(widget.listControllerProvider).listData.length < ref.read(widget.listControllerProvider.notifier).size) {
       ///データ不足場合
-      return const CustomScrollPhysicsWithDamping();
+      return const AlwaysScrollableScrollPhysics();
     } else {
       ///普通場合
       return const NoBouncingScrollPhysics();
