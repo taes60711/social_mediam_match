@@ -63,6 +63,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
         children: [
           PageView(
             controller: pageController,
+            physics: const NeverScrollableScrollPhysics(),
             children: postsWidget,
             onPageChanged: (value) {
               pageIndex = value;
