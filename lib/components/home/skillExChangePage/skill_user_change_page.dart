@@ -7,6 +7,7 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 
 import '../../../services/user_service.dart';
 import '../../strings/skillExChangePage/skill_change_page_string.dart';
+import '../../utilities/BottomSheets/base_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/endDrawers/custom_end_drawer.dart';
@@ -44,219 +45,299 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
         listControllerProvider: userExChangelistControllerProvider,
         upWidget: _buildSearchBar(ref, () => setState(() {}), context),
         itemChild: (data, index) {
-          return Container(
-            width: ScreenSize.width,
-            decoration: BoxDecoration(
-                color: AppColors.black37,
-                borderRadius: BorderRadius.circular(
-                  ScreenSize.fitPxWidth(15),
-                )),
-            margin: EdgeInsets.only(
-              left: ScreenSize.fitPxHeight(10),
-              right: ScreenSize.fitPxHeight(10),
-              top: ScreenSize.fitPxHeight(10),
-            ),
-            padding: EdgeInsets.symmetric(
-              vertical: ScreenSize.fitPxHeight(8),
-              horizontal: ScreenSize.fitPxHeight(15),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    UserIcon(
-                      iconSize: ScreenSize.fitPxWidth(50),
-                      image: data.image,
-                    ),
-                    SizedBox(width: ScreenSize.fitPxWidth(10)),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                data.name ?? "",
-                                style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
-                              ),
-                              SizedBox(width: ScreenSize.fitPxWidth(5)),
-                              Text(
-                                data.job ?? "",
-                                style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            data.introduction ?? "",
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                          ),
-                        ],
+          return GestureDetector(
+            onTap: () {
+              BaseBottomSheet().show(
+                context,
+                child: userProfileView(),
+              );
+            },
+            child: Container(
+              width: ScreenSize.width,
+              decoration: BoxDecoration(
+                  color: AppColors.black37,
+                  borderRadius: BorderRadius.circular(
+                    ScreenSize.fitPxWidth(15),
+                  )),
+              margin: EdgeInsets.only(
+                left: ScreenSize.fitPxHeight(10),
+                right: ScreenSize.fitPxHeight(10),
+                top: ScreenSize.fitPxHeight(10),
+              ),
+              padding: EdgeInsets.symmetric(
+                vertical: ScreenSize.fitPxHeight(8),
+                horizontal: ScreenSize.fitPxHeight(15),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      UserIcon(
+                        iconSize: ScreenSize.fitPxWidth(50),
+                        image: data.image,
                       ),
-                    ),
-                    Text(
-                      "${data.lastLogin}${SkillChangePageString.skExChpagebeforDays}",
-                      style: TextStyle(color: hintTextColor, fontSize: 12),
-                    ),
-                  ],
-                ),
-
-                SizedBox(
-                  height: ScreenSize.fitPxHeight(5),
-                ),
-
-                ///得意なスキル
-                Row(
-                  children: [
-                    ///タイトル
-                    Container(
-                      padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
-                      margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 138, 138, 138),
-                        borderRadius: BorderRadius.circular(15),
+                      SizedBox(width: ScreenSize.fitPxWidth(10)),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  data.name ?? "",
+                                  style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                                ),
+                                SizedBox(width: ScreenSize.fitPxWidth(5)),
+                                Text(
+                                  data.job ?? "",
+                                  style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              data.introduction ?? "",
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                            ),
+                          ],
+                        ),
                       ),
-                      child: Icon(
-                        FontAwesomeIcons.angleDoubleLeft,
-                        color: AppColors.whiteColor,
-                        size: ScreenSize.fitPxWidth(8),
+                      Text(
+                        "${data.lastLogin}${SkillChangePageString.skExChpagebeforDays}",
+                        style: TextStyle(color: hintTextColor, fontSize: 12),
                       ),
-                    ),
+                    ],
+                  ),
 
-                    ///スキル
-                    Row(
-                      children: data.mainSkills!.isEmpty
-                          ? [
-                              Container(
-                                margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                                padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: AppColors.greyColor98,
-                                ),
-                                child: Text(
-                                  "暫無",
-                                  style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                                ),
-                              )
-                            ]
-                          : data.mainSkills!.map((e) {
-                              return Container(
-                                margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                                padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: AppColors.greyColor98,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: ScreenSize.fitPxWidth(15),
-                                      height: ScreenSize.fitPxWidth(15),
-                                      margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.black37,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          "${e.level}",
-                                          style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize10),
+                  SizedBox(
+                    height: ScreenSize.fitPxHeight(5),
+                  ),
+
+                  ///得意なスキル
+                  Row(
+                    children: [
+                      ///タイトル
+                      Container(
+                        padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
+                        margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 138, 138, 138),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Icon(
+                          FontAwesomeIcons.angleDoubleLeft,
+                          color: AppColors.whiteColor,
+                          size: ScreenSize.fitPxWidth(8),
+                        ),
+                      ),
+
+                      ///スキル
+                      Row(
+                        children: data.mainSkills!.isEmpty
+                            ? [
+                                Container(
+                                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: AppColors.greyColor98,
+                                  ),
+                                  child: Text(
+                                    "暫無",
+                                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
+                                  ),
+                                )
+                              ]
+                            : data.mainSkills!.map((e) {
+                                return Container(
+                                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: AppColors.greyColor98,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: ScreenSize.fitPxWidth(15),
+                                        height: ScreenSize.fitPxWidth(15),
+                                        margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.black37,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "${e.level}",
+                                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize10),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Text(
-                                      e.name,
-                                      style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: ScreenSize.fitPxHeight(3)),
-
-                ///弱いスキル
-                Row(
-                  children: [
-                    ///タイトル
-                    Container(
-                      padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
-                      margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 240, 123, 77),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Icon(
-                        FontAwesomeIcons.angleDoubleRight,
-                        color: AppColors.whiteColor,
-                        size: ScreenSize.fitPxWidth(8),
-                      ),
-                    ),
-
-                    ///スキル
-                    Row(
-                      children: data.mainSkills!.isEmpty
-                          ? [
-                              Container(
-                                margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                                padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: AppColors.greyColor98,
-                                ),
-                                child: Text(
-                                  "暫無",
-                                  style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                                ),
-                              )
-                            ]
-                          : data.wantSkills!.map((e) {
-                              return Container(
-                                margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                                padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: AppColors.greyColor98,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: ScreenSize.fitPxWidth(15),
-                                      height: ScreenSize.fitPxWidth(15),
-                                      margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.black37,
-                                        borderRadius: BorderRadius.circular(10),
+                                      Text(
+                                        e.name,
+                                        style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
                                       ),
-                                      child: Center(
-                                        child: Text(
-                                          "${e.level}",
-                                          style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize10),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: ScreenSize.fitPxHeight(3)),
+
+                  ///弱いスキル
+                  Row(
+                    children: [
+                      ///タイトル
+                      Container(
+                        padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
+                        margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 240, 123, 77),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Icon(
+                          FontAwesomeIcons.angleDoubleRight,
+                          color: AppColors.whiteColor,
+                          size: ScreenSize.fitPxWidth(8),
+                        ),
+                      ),
+
+                      ///スキル
+                      Row(
+                        children: data.mainSkills!.isEmpty
+                            ? [
+                                Container(
+                                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: AppColors.greyColor98,
+                                  ),
+                                  child: Text(
+                                    "暫無",
+                                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
+                                  ),
+                                )
+                              ]
+                            : data.wantSkills!.map((e) {
+                                return Container(
+                                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: AppColors.greyColor98,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: ScreenSize.fitPxWidth(15),
+                                        height: ScreenSize.fitPxWidth(15),
+                                        margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.black37,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "${e.level}",
+                                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize10),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Text(
-                                      e.name,
-                                      style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                    ),
-                  ],
-                ),
-              ],
+                                      Text(
+                                        e.name,
+                                        style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget userProfileView() {
+    return Column(
+      children: [
+        SizedBox(height: ScreenSize.fitPxHeight(10)),
+        Container(
+          width: ScreenSize.fitPxHeight(80),
+          height: ScreenSize.fitPxHeight(80),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(
+              ScreenSize.fitPxHeight(80),
+            ),
+          ),
+        ),
+        SizedBox(height: ScreenSize.fitPxHeight(10)),
+        Container(
+          width: ScreenSize.width,
+          margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
+          padding: EdgeInsets.symmetric(
+            horizontal: ScreenSize.fitPxHeight(10),
+            vertical: ScreenSize.fitPxHeight(10),
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.bgColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "userName",
+                style: TextStyle(
+                  color: AppColors.whiteColor,
+                  fontSize: ScreenSize.fontSize18,
+                ),
+              ),
+              Text(
+                "userName@gmail.com",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: ScreenSize.fontSize12,
+                ),
+              ),
+              SizedBox(height: ScreenSize.fitPxHeight(15)),
+              Center(
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ScreenSize.fitPxHeight(10),
+                      vertical: ScreenSize.fitPxHeight(5),
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: AppColors.greyColor54,
+                    ),
+                    child: Text(
+                      "新增好友",
+                      style: TextStyle(color: AppColors.whiteColor),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: ScreenSize.fitPxHeight(15)),
+      ],
     );
   }
 

@@ -41,7 +41,6 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
         children: [
           PageView(
             controller: pageController,
-            physics: const NeverScrollableScrollPhysics(),
             children: postsWidget,
             onPageChanged: (value) {
               pageIndex = value;
@@ -172,7 +171,6 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
         return PostService().getPostByTextFilter(page, size, "打");
       });
       render();
-      // BaseEndDrawer().show(context);
     },
     child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
