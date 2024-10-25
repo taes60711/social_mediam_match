@@ -409,12 +409,14 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
   final Future<List<R>> Function(int page, int size) apiFunc;
   final StateNotifierProvider<APIListControllerNotifier, APIListController<dynamic>> listControllerProvider;
   final Widget? upWidget;
+  final Widget? loadingWidget;
   final Widget Function(R data, int index) itemChild;
   const APIListWidget({
     super.key,
     required this.apiFunc,
     required this.listControllerProvider,
     this.upWidget,
+    this.loadingWidget,
     required this.itemChild,
   });
 
@@ -551,9 +553,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
       );
     } else if (loadDataStatus == LoadDataStatus.initial) {
       ///ページに初めで遷移場合
-      child = const Center(
-        child: Loading(),
-      );
+      child = widget.loadingWidget ?? const Center(child: Loading());
     }
     return listenListView(context, child: child);
   }

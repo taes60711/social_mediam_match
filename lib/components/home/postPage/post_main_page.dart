@@ -40,6 +40,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
       child: Stack(
         children: [
           PageView(
+            physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             controller: pageController,
             children: postsWidget,
             onPageChanged: (value) {

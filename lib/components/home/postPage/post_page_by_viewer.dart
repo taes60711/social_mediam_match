@@ -9,8 +9,10 @@ import '../../../global.dart';
 import '../../../global/global_view_model.dart';
 import '../../../models/post_model.dart';
 
+import '../../../models/user_model.dart';
 import '../../../provider/post/post_view_model.dart';
 import '../../../services/post_service.dart';
+import '../../strings/skillExChangePage/skill_change_page_string.dart';
 import '../../utilities/BottomSheets/base_bottom_sheet.dart';
 import '../../utilities/Stateful_wrapper.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
@@ -273,6 +275,7 @@ class _PostByViewState extends ConsumerState<PostByView> {
                 return PostService().getPostDataByViewer(page, size);
               },
               listControllerProvider: listControllerProvider,
+              loadingWidget: const PostLoading(),
               upWidget: Column(
                 children: [
                   Padding(
@@ -320,7 +323,7 @@ class _PostByViewState extends ConsumerState<PostByView> {
                                           onTap: () {
                                             BaseBottomSheet().show(
                                               context,
-                                              child: userProfileView(),
+                                              child: userProfileView(userData: e.postUserInfo),
                                             );
                                           },
                                           child: UserIcon(
@@ -359,11 +362,19 @@ class _PostByViewState extends ConsumerState<PostByView> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, right: 5),
-                        child: UserIcon(
-                          iconSize: 24,
-                          image: data.postUserInfo.image,
+                      GestureDetector(
+                        onTap: () {
+                          BaseBottomSheet().show(
+                            context,
+                            child: userProfileView(userData: data.postUserInfo),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5, right: 5),
+                          child: UserIcon(
+                            iconSize: 24,
+                            image: data.postUserInfo.image,
+                          ),
                         ),
                       ),
                       Expanded(
@@ -485,18 +496,85 @@ class _PostByViewState extends ConsumerState<PostByView> {
     );
   }
 
-  Widget userProfileView() {
+  Widget userProfileView({required LoginUser userData}) {
     return Column(
       children: [
         SizedBox(height: ScreenSize.fitPxHeight(10)),
+        UserIcon(
+          image: userData.image,
+          iconSize: ScreenSize.fitPxHeight(80),
+        ),
+        SizedBox(height: ScreenSize.fitPxHeight(10)),
         Container(
-          width: ScreenSize.fitPxHeight(80),
-          height: ScreenSize.fitPxHeight(80),
+          width: ScreenSize.width,
+          margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
+          padding: EdgeInsets.symmetric(
+            horizontal: ScreenSize.fitPxHeight(10),
+            vertical: ScreenSize.fitPxHeight(10),
+          ),
           decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.circular(
-              ScreenSize.fitPxHeight(80),
-            ),
+            color: AppColors.bgColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      userData.name ?? "",
+                      style: TextStyle(
+                        color: AppColors.whiteColor,
+                        fontSize: ScreenSize.fontSize18,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "${userData.lastLogin}${SkillChangePageString.skExChpagebeforDays}",
+                    style: TextStyle(
+                      color: AppColors.greyColor130,
+                      fontSize: ScreenSize.fontSize12,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                userData.email,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: ScreenSize.fontSize12,
+                ),
+              ),
+              Text(
+                userData.introduction ?? "",
+                style: TextStyle(
+                  color: AppColors.whiteColor,
+                  fontSize: ScreenSize.fontSize12,
+                ),
+              ),
+              SizedBox(height: ScreenSize.fitPxHeight(15)),
+              Center(
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ScreenSize.fitPxHeight(15),
+                      vertical: ScreenSize.fitPxHeight(5),
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: AppColors.greyColor54,
+                    ),
+                    child: Text(
+                      "新增好友",
+                      style: TextStyle(color: AppColors.whiteColor),
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
         ),
         SizedBox(height: ScreenSize.fitPxHeight(10)),
@@ -516,39 +594,47 @@ class _PostByViewState extends ConsumerState<PostByView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "userName",
+                "職業",
                 style: TextStyle(
                   color: AppColors.whiteColor,
-                  fontSize: ScreenSize.fontSize18,
+                  fontSize: ScreenSize.fontSize14,
                 ),
               ),
               Text(
-                "userName@gmail.com",
+                userData.job ?? "",
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: AppColors.whiteColor,
                   fontSize: ScreenSize.fontSize12,
                 ),
               ),
-              SizedBox(height: ScreenSize.fitPxHeight(15)),
-              Center(
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: ScreenSize.fitPxHeight(10),
-                      vertical: ScreenSize.fitPxHeight(5),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: AppColors.greyColor54,
-                    ),
-                    child: Text(
-                      "新增好友",
-                      style: TextStyle(color: AppColors.whiteColor),
+              Row(
+                children: [
+                  Text(
+                    "信箱認證",
+                    style: TextStyle(
+                      color: AppColors.whiteColor,
+                      fontSize: ScreenSize.fontSize14,
                     ),
                   ),
-                ),
-              )
+                  SizedBox(width: ScreenSize.fitPxWidth(10)),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          ScreenSize.fitPxWidth(5),
+                        ),
+                        color: userData.isEmailVerified ? Color.fromARGB(255, 68, 197, 72) : AppColors.greyColor98),
+                    child: Text(
+                      userData.isEmailVerified ? "已認證" : "未認證",
+                      style: TextStyle(
+                        color: AppColors.whiteColor,
+                        fontSize: ScreenSize.fontSize14,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: ScreenSize.fitPxHeight(5)),
             ],
           ),
         ),

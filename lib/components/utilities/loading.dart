@@ -22,153 +22,50 @@ class PostLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       body: ListView.builder(
         itemCount: 5,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Container(
-              padding: const EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3),
-                color: const Color.fromARGB(255, 214, 214, 214),
-              ),
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
-                highlightColor: Colors.grey[100]!,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Container(
-                        width: 35,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(35 / 2),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 80,
-                            height: 13,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Container(
-                            width: 100,
-                            height: 13,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 40,
-                      height: 13,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+          return Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: ScreenSize.fitPxWidth(10),
+              vertical: ScreenSize.fitPxWidth(10),
             ),
-            subtitle: Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                height: 200,
-                child: Column(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(5)),
+                  child: loadingGreyContainer(
+                    width: ScreenSize.fitPxWidth(24),
+                    height: ScreenSize.fitPxWidth(24),
+                    borderRadius: ScreenSize.fitPxWidth(25),
+                  ),
+                ),
+                SizedBox(width: ScreenSize.fitPxWidth(5)),
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 50,
-                            height: 13,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Container(
-                            width: ScreenSize.width,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(3),
-                            ),
-                          ),
-                        ],
-                      ),
+                    loadingGreyContainer(
+                      width: ScreenSize.fitPxWidth(100),
+                      height: ScreenSize.fitPxWidth(15),
+                      borderRadius: ScreenSize.fitPxWidth(10),
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                width: 40,
-                                height: 13,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                width: 40,
-                                height: 13,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                width: 40,
-                                height: 13,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: Container(
-                            width: 25,
-                            height: 11,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
+                    SizedBox(height: ScreenSize.fitPxWidth(5)),
+                    loadingGreyContainer(
+                      width: ScreenSize.fitPxWidth(200),
+                      height: ScreenSize.fitPxWidth(15),
+                      borderRadius: ScreenSize.fitPxWidth(10),
+                    ),
+                    SizedBox(height: ScreenSize.fitPxWidth(5)),
+                    loadingGreyContainer(
+                      width: ScreenSize.fitPxWidth(320),
+                      height: ScreenSize.fitPxWidth(120),
+                      borderRadius: ScreenSize.fitPxWidth(10),
+                    ),
                   ],
-                ),
-              ),
+                )
+              ],
             ),
           );
         },
@@ -274,13 +171,13 @@ class SkillChangeLoading extends StatelessWidget {
 
 Widget loadingGreyContainer({required double width, required double height, double? borderRadius}) {
   return Shimmer.fromColors(
-    baseColor: Colors.grey[300]!,
-    highlightColor: Colors.grey[100]!,
+    baseColor: AppColors.greyColor98,
+    highlightColor: AppColors.greyColor98.withOpacity(.7),
     child: Container(
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.grey,
+        color: AppColors.greyColor98,
         borderRadius: BorderRadius.circular(borderRadius ?? 8),
       ),
     ),
