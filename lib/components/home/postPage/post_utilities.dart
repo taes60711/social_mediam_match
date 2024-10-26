@@ -13,23 +13,26 @@ class PostViewUtilities {
   static Widget noPostData() {
     return SizedBox(
       width: ScreenSize.width,
-      height: ScreenSize.safeHeight,
+      height: ScreenSize.height,
       child: AspectRatio(
         aspectRatio: 16.0 / 9.0,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              FontAwesomeIcons.commentSlash,
-              size: 50,
-              color: hintTextColor,
+            Padding(
+              padding: EdgeInsets.only(right: ScreenSize.fitPxHeight(8)),
+              child: Icon(
+                FontAwesomeIcons.commentSlash,
+                size: 50,
+                color: AppColors.whiteColor,
+              ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: ScreenSize.fitPxHeight(10)),
             Text(
               "沒有文章",
               style: TextStyle(
-                fontSize: 20,
-                color: normalBgColor2,
+                fontSize: ScreenSize.fontSize20,
+                color: AppColors.greyColor130,
               ),
             )
           ],
@@ -115,6 +118,4 @@ class PostViewUtilities {
       ],
     );
   }
-
-  
 }

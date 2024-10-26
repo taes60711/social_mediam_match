@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +20,6 @@ import '../../utilities/apiListView/base_api_list_provider.dart';
 import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../utilities/loading.dart';
 import '../../utilities/rich_text_view.dart';
-
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
@@ -41,7 +39,6 @@ class _PostPageByViewerState extends State<PostPageByViewer> {
   @override
   void initState() {
     postPageByViewerViewModel = PostViewModel(context: context);
-
     super.initState();
   }
 
@@ -248,26 +245,16 @@ class PostByView extends ConsumerStatefulWidget {
   ConsumerState<PostByView> createState() => _PostByViewState();
 }
 
-List<PostModel> topPosts = [];
-
 class _PostByViewState extends ConsumerState<PostByView> {
-  @override
-  void initState() {
-    init();
-    super.initState();
-  }
-
-  Future<void> init() async {
-    topPosts = await PostService().getPostByType(0, 3, -1);
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 85 : 40,
+        AnimatedContainer(
+          height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60)
+              ? ScreenSize.fitPxHeight(105)
+              : ScreenSize.fitPxHeight(70),
+          duration: const Duration(milliseconds: 150),
         ),
         Expanded(
           child: APIListWidget(
@@ -276,83 +263,6 @@ class _PostByViewState extends ConsumerState<PostByView> {
               },
               listControllerProvider: listControllerProvider,
               loadingWidget: const PostLoading(),
-              upWidget: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Container(
-                      width: ScreenSize.width,
-                      color: AppColors.black37,
-                      padding: EdgeInsets.symmetric(
-                        vertical: ScreenSize.fitPxHeight(8),
-                        horizontal: ScreenSize.fitPxHeight(15),
-                      ),
-                      child: topPosts.isEmpty
-                          ? Container()
-                          : CarouselSlider(
-                              items: topPosts.map((e) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Hot!",
-                                      style: TextStyle(color: AppColors.redColor, fontSize: 12),
-                                    ),
-                                    Text(
-                                      e.title,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: AppColors.whiteColor),
-                                    ),
-                                    SizedBox(height: ScreenSize.fitPxHeight(10)),
-                                    Container(
-                                      width: ScreenSize.width,
-                                      height: .5,
-                                      color: AppColors.greyColor98.withOpacity(.7),
-                                    ),
-                                    SizedBox(height: ScreenSize.fitPxHeight(5)),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "作成者:",
-                                          style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                                        ),
-                                        SizedBox(width: 5),
-                                        GestureDetector(
-                                          onTap: () {
-                                            BaseBottomSheet().show(
-                                              context,
-                                              child: userProfileView(userData: e.postUserInfo),
-                                            );
-                                          },
-                                          child: UserIcon(
-                                            iconSize: 20,
-                                            image: e.postUserInfo.image,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 5),
-                                        Text(
-                                          e.postUserInfo.name ?? "",
-                                          style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              }).toList(),
-                              options: CarouselOptions(
-                                height: ScreenSize.fitPxHeight(74),
-                                aspectRatio: 16 / 9,
-                                viewportFraction: 1,
-                                autoPlay: true,
-                                autoPlayInterval: const Duration(seconds: 10),
-                              ),
-                            ),
-                    ),
-                  ),
-                ],
-              ),
               itemChild: (data, index) {
                 return Container(
                   width: ScreenSize.width,

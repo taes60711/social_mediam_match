@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/home/postPage/post_page_by_new.dart';
+
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
@@ -188,7 +188,7 @@ class _PostPageForumState extends State<PostPageForum> {
                             providers: [
                               ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostModel>()),
                             ],
-                            child: const PostPageByNew(),
+                            child: Container(),
                           ),
                           postBoradList(context),
                         ],

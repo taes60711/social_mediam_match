@@ -1,14 +1,14 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../global/global_view_model.dart';
-
+import '../../../models/post_model.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/background_widget.dart';
-
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
-
+import '../../utilities/user_icon.dart';
+import 'post_page_by_new.dart';
 import 'post_page_by_viewer.dart';
 
 class PostMainPage extends ConsumerStatefulWidget {
@@ -20,13 +20,26 @@ class PostMainPage extends ConsumerStatefulWidget {
 
 PageController pageController = PageController();
 int pageIndex = 0;
+List<PostModel> topPosts = [];
 
 class _PostMainPageState extends ConsumerState<PostMainPage> {
   @override
+  void initState() {
+    init();
+    super.initState();
+  }
+
+  Future<void> init() async {
+    pageIndex = 0;
+    topPosts = await PostService().getPostByType(0, 3, -1);
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     List<Widget> postsWidget = [
-      PostByView(),
-      PostByView(),
+      const PostByView(),
+      const PostByNew(),
       CommonScaffold(
         child: Center(
             child: Container(
@@ -48,10 +61,12 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
             },
           ),
           AnimatedPositioned(
-            top: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 3 : -45,
+            top: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60)
+                ? ScreenSize.fitPxHeight(38)
+                : ScreenSize.fitPxHeight(0),
             left: 0,
             right: 0,
-            duration: const Duration(milliseconds: 150),
+            duration: const Duration(milliseconds: 200),
             child: Column(
               children: [
                 _buildSearchBar(ref, () => setState(() {}), context),
@@ -67,7 +82,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                       },
                       child: Container(
                         width: ScreenSize.width / 3,
-                        height: 40,
+                        height: ScreenSize.fitPxHeight(30),
                         alignment: Alignment.center,
                         color: Colors.transparent,
                         child: Column(
@@ -99,7 +114,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                       },
                       child: Container(
                         width: ScreenSize.width / 3,
-                        height: 40,
+                        height: ScreenSize.fitPxHeight(30),
                         alignment: Alignment.center,
                         color: Colors.transparent,
                         child: Column(
@@ -131,7 +146,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                       },
                       child: Container(
                         width: ScreenSize.width / 3,
-                        height: 40,
+                        height: ScreenSize.fitPxHeight(30),
                         alignment: Alignment.center,
                         color: Colors.transparent,
                         child: Column(
@@ -158,6 +173,52 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
               ],
             ),
           ),
+          Column(
+            children: [
+              Container(
+                width: ScreenSize.width,
+                color: AppColors.black37,
+                padding: EdgeInsets.symmetric(
+                  vertical: ScreenSize.fitPxHeight(8),
+                  horizontal: ScreenSize.fitPxHeight(15),
+                ),
+                child: topPosts.isEmpty
+                    ? Container()
+                    : CarouselSlider(
+                        items: topPosts.map((e) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Hot!",
+                                style: TextStyle(color: AppColors.redColor, fontSize: 12),
+                              ),
+                              SizedBox(width: ScreenSize.fitPxWidth(5)),
+                              UserIcon(
+                                iconSize: 20,
+                                image: e.postUserInfo.image,
+                              ),
+                              SizedBox(width: ScreenSize.fitPxWidth(8)),
+                              Text(
+                                e.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: AppColors.whiteColor),
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                        options: CarouselOptions(
+                          height: ScreenSize.fitPxHeight(20),
+                          aspectRatio: 16 / 9,
+                          viewportFraction: 1,
+                          autoPlay: true,
+                          autoPlayInterval: const Duration(seconds: 10),
+                        ),
+                      ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -173,13 +234,15 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
       render();
     },
     child: Container(
-      margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+      margin: const EdgeInsets.symmetric(
+        horizontal: 3,
+      ),
       decoration: BoxDecoration(
         color: AppColors.greyColor57,
         borderRadius: BorderRadius.circular(5),
       ),
       width: ScreenSize.width,
-      height: 36,
+      height: ScreenSize.fitPxHeight(35),
       child: Row(
         children: [
           Padding(

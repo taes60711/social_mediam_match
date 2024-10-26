@@ -410,6 +410,7 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
   final StateNotifierProvider<APIListControllerNotifier, APIListController<dynamic>> listControllerProvider;
   final Widget? upWidget;
   final Widget? loadingWidget;
+  final Widget? noDataWidget;
   final Widget Function(R data, int index) itemChild;
   const APIListWidget({
     super.key,
@@ -417,6 +418,7 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
     required this.listControllerProvider,
     this.upWidget,
     this.loadingWidget,
+    this.noDataWidget,
     required this.itemChild,
   });
 
@@ -454,6 +456,18 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     LoadDataStatus loadDataStatus = ref.read(widget.listControllerProvider).loadDataStatus;
 
     if (loadDataStatus != LoadDataStatus.initial) {
+      if (ref.read(widget.listControllerProvider).listData.isEmpty) {
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: widget.noDataWidget ??
+              Center(
+                child: Container(
+                  child: Text("NoData"),
+                ),
+              ),
+        );
+      }
+
       ///データロード終わり場合
       child = Scaffold(
         backgroundColor: Colors.transparent,
