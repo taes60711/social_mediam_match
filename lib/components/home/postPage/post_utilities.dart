@@ -41,6 +41,15 @@ class PostViewUtilities {
     );
   }
 
+  Widget topPadding(double bottomBarPos, bool haveTopPost) {
+    return AnimatedContainer(
+      height: bottomBarPos != ScreenSize.fitPxHeight(-60)
+          ? ScreenSize.fitPxHeight(haveTopPost ? 115 : 70)
+          : ScreenSize.fitPxHeight(70),
+      duration: const Duration(milliseconds: 150),
+    );
+  }
+
   ///文章作るボタン
   static Widget postCreateButton(BuildContext pageContext) {
     return GestureDetector(

@@ -23,6 +23,7 @@ import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
+import 'post_main_page.dart';
 import 'post_utilities.dart';
 
 class PostPageByViewer extends StatefulWidget {
@@ -250,11 +251,9 @@ class _PostByViewState extends ConsumerState<PostByView> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        AnimatedContainer(
-          height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60)
-              ? ScreenSize.fitPxHeight(105)
-              : ScreenSize.fitPxHeight(70),
-          duration: const Duration(milliseconds: 150),
+        PostViewUtilities().topPadding(
+          ref.watch(bottomNavationBarPosProvider),
+          ref.watch(topPostProvider).isNotEmpty,
         ),
         Expanded(
           child: APIListWidget(

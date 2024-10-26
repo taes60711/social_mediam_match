@@ -11,6 +11,10 @@ import '../../utilities/user_icon.dart';
 import 'post_page_by_new.dart';
 import 'post_page_by_viewer.dart';
 
+final topPostProvider = StateProvider<List<PostModel>>((ref) {
+  return [];
+});
+
 class PostMainPage extends ConsumerStatefulWidget {
   const PostMainPage({super.key});
 
@@ -20,7 +24,6 @@ class PostMainPage extends ConsumerStatefulWidget {
 
 PageController pageController = PageController();
 int pageIndex = 0;
-List<PostModel> topPosts = [];
 
 class _PostMainPageState extends ConsumerState<PostMainPage> {
   @override
@@ -31,7 +34,8 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
 
   Future<void> init() async {
     pageIndex = 0;
-    topPosts = await PostService().getPostByType(0, 3, -1);
+    List<PostModel> topPosts = await PostService().getPostByType(0, 3, -1);
+    ref.read(topPostProvider.notifier).update((state) => topPosts);
     setState(() {});
   }
 
@@ -60,9 +64,11 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
               setState(() {});
             },
           ),
+
+          /// 検索バー＆ tabバー
           AnimatedPositioned(
             top: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60)
-                ? ScreenSize.fitPxHeight(38)
+                ? ScreenSize.fitPxHeight(ref.watch(topPostProvider).isNotEmpty ? 45 : 0)
                 : ScreenSize.fitPxHeight(0),
             left: 0,
             right: 0,
@@ -173,52 +179,50 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
               ],
             ),
           ),
-          Column(
-            children: [
-              Container(
-                width: ScreenSize.width,
-                color: AppColors.black37,
-                padding: EdgeInsets.symmetric(
-                  vertical: ScreenSize.fitPxHeight(8),
-                  horizontal: ScreenSize.fitPxHeight(15),
+
+          /// top　文章
+          ref.read(topPostProvider).isEmpty
+              ? Container()
+              : Container(
+                  width: ScreenSize.width,
+                  color: AppColors.black37,
+                  padding: EdgeInsets.symmetric(
+                    vertical: ScreenSize.fitPxHeight(8),
+                    horizontal: ScreenSize.fitPxHeight(15),
+                  ),
+                  child: CarouselSlider(
+                    items: ref.read(topPostProvider).map((e) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Hot!",
+                            style: TextStyle(color: AppColors.redColor, fontSize: 12),
+                          ),
+                          SizedBox(width: ScreenSize.fitPxWidth(5)),
+                          UserIcon(
+                            iconSize: 20,
+                            image: e.postUserInfo.image,
+                          ),
+                          SizedBox(width: ScreenSize.fitPxWidth(8)),
+                          Text(
+                            e.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: AppColors.whiteColor),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                    options: CarouselOptions(
+                      height: ScreenSize.fitPxHeight(20),
+                      aspectRatio: 16 / 9,
+                      viewportFraction: 1,
+                      autoPlay: true,
+                      autoPlayInterval: const Duration(seconds: 10),
+                    ),
+                  ),
                 ),
-                child: topPosts.isEmpty
-                    ? Container()
-                    : CarouselSlider(
-                        items: topPosts.map((e) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Hot!",
-                                style: TextStyle(color: AppColors.redColor, fontSize: 12),
-                              ),
-                              SizedBox(width: ScreenSize.fitPxWidth(5)),
-                              UserIcon(
-                                iconSize: 20,
-                                image: e.postUserInfo.image,
-                              ),
-                              SizedBox(width: ScreenSize.fitPxWidth(8)),
-                              Text(
-                                e.title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: AppColors.whiteColor),
-                              ),
-                            ],
-                          );
-                        }).toList(),
-                        options: CarouselOptions(
-                          height: ScreenSize.fitPxHeight(20),
-                          aspectRatio: 16 / 9,
-                          viewportFraction: 1,
-                          autoPlay: true,
-                          autoPlayInterval: const Duration(seconds: 10),
-                        ),
-                      ),
-              ),
-            ],
-          ),
         ],
       ),
     );
