@@ -1,9 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
 import '../../../global/global_view_model.dart';
 import '../../../models/post_model.dart';
 import '../../../services/post_service.dart';
+import '../../utilities/BottomSheets/base_bottom_sheet.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -200,9 +202,17 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                             style: TextStyle(color: AppColors.redColor, fontSize: 12),
                           ),
                           SizedBox(width: ScreenSize.fitPxWidth(5)),
-                          UserIcon(
-                            iconSize: 20,
-                            image: e.postUserInfo.image,
+                          GestureDetector(
+                            onTap: () {
+                              BaseBottomSheet().show(
+                                context,
+                                child: PostViewUtilities().userProfileView(userData: e.postUserInfo),
+                              );
+                            },
+                            child: UserIcon(
+                              iconSize: 20,
+                              image: e.postUserInfo.image,
+                            ),
                           ),
                           SizedBox(width: ScreenSize.fitPxWidth(8)),
                           Text(

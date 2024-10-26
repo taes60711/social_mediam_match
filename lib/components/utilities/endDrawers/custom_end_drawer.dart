@@ -115,13 +115,13 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
 }
 
 class BaseEndDrawer {
-  void show(BuildContext context) {
+  void show(BuildContext context, {required Widget child}) {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
-          return const Scaffold(
+          return Scaffold(
             backgroundColor: Colors.transparent,
-            body: EndDrawerWidget(),
+            body: EndDrawerWidget(child: child),
           );
         },
         opaque: false,
@@ -131,7 +131,8 @@ class BaseEndDrawer {
 }
 
 class EndDrawerWidget extends StatefulWidget {
-  const EndDrawerWidget({super.key});
+  final Widget child;
+  const EndDrawerWidget({super.key, required this.child});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -182,10 +183,15 @@ class _EndDrawerWidgetState extends State<EndDrawerWidget> with SingleTickerProv
 
   void _onHorizontalDragEnd(DragEndDetails details) {
     if (_controller.value < 0.85) {
-      _controller.reverse().whenComplete(() => Navigator.pop(context));
+      _closeEndDrawer();
     } else {
       _controller.forward();
     }
+  }
+
+  void _closeEndDrawer() {
+    _controller.reverse();
+    Navigator.pop(context);
   }
 
   @override
@@ -201,12 +207,17 @@ class _EndDrawerWidgetState extends State<EndDrawerWidget> with SingleTickerProv
           height: MediaQuery.of(context).size.height,
           color: AppColors.bgColor,
           child: Builder(builder: (context) {
-            return Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  _controller.reverse().whenComplete(() => Navigator.pop(context));
-                },
-                child: Text("exit"),
+            return SafeArea(
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      _closeEndDrawer();
+                    },
+                    child: Text("exit"),
+                  ),
+                  Expanded(child: widget.child),
+                ],
               ),
             );
           }),

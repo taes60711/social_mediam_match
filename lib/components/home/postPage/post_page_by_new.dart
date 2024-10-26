@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
 import '../../../global/global_view_model.dart';
-import '../../../models/user_model.dart';
+
 import '../../../provider/post/post_view_model.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/BottomSheets/base_bottom_sheet.dart';
@@ -67,7 +67,7 @@ class _PostByViewState extends ConsumerState<PostByNew> {
                         onTap: () {
                           BaseBottomSheet().show(
                             context,
-                            child: userProfileView(userData: data.postUserInfo),
+                            child: PostViewUtilities().userProfileView(userData: data.postUserInfo),
                           );
                         },
                         child: Padding(
@@ -197,153 +197,6 @@ class _PostByViewState extends ConsumerState<PostByNew> {
                 );
               }),
         ),
-      ],
-    );
-  }
-
-  Widget userProfileView({required LoginUser userData}) {
-    return Column(
-      children: [
-        SizedBox(height: ScreenSize.fitPxHeight(10)),
-        UserIcon(
-          image: userData.image,
-          iconSize: ScreenSize.fitPxHeight(80),
-        ),
-        SizedBox(height: ScreenSize.fitPxHeight(10)),
-        Container(
-          width: ScreenSize.width,
-          margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
-          padding: EdgeInsets.symmetric(
-            horizontal: ScreenSize.fitPxHeight(10),
-            vertical: ScreenSize.fitPxHeight(10),
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.bgColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      userData.name ?? "",
-                      style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: ScreenSize.fontSize18,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    "${userData.lastLogin}${tr("skExChpage_beforDays")}",
-                    style: TextStyle(
-                      color: AppColors.greyColor130,
-                      fontSize: ScreenSize.fontSize12,
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                userData.email,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: ScreenSize.fontSize12,
-                ),
-              ),
-              Text(
-                userData.introduction ?? "",
-                style: TextStyle(
-                  color: AppColors.whiteColor,
-                  fontSize: ScreenSize.fontSize12,
-                ),
-              ),
-              SizedBox(height: ScreenSize.fitPxHeight(15)),
-              Center(
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: ScreenSize.fitPxHeight(15),
-                      vertical: ScreenSize.fitPxHeight(5),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: AppColors.greyColor54,
-                    ),
-                    child: Text(
-                      "新增好友",
-                      style: TextStyle(color: AppColors.whiteColor),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        SizedBox(height: ScreenSize.fitPxHeight(10)),
-        Container(
-          width: ScreenSize.width,
-          margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
-          padding: EdgeInsets.symmetric(
-            horizontal: ScreenSize.fitPxHeight(10),
-            vertical: ScreenSize.fitPxHeight(10),
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.bgColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "職業",
-                style: TextStyle(
-                  color: AppColors.whiteColor,
-                  fontSize: ScreenSize.fontSize14,
-                ),
-              ),
-              Text(
-                userData.job ?? "",
-                style: TextStyle(
-                  color: AppColors.whiteColor,
-                  fontSize: ScreenSize.fontSize12,
-                ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    "信箱認證",
-                    style: TextStyle(
-                      color: AppColors.whiteColor,
-                      fontSize: ScreenSize.fontSize14,
-                    ),
-                  ),
-                  SizedBox(width: ScreenSize.fitPxWidth(10)),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          ScreenSize.fitPxWidth(5),
-                        ),
-                        color: userData.isEmailVerified ? Color.fromARGB(255, 68, 197, 72) : AppColors.greyColor98),
-                    child: Text(
-                      userData.isEmailVerified ? "已認證" : "未認證",
-                      style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: ScreenSize.fontSize14,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: ScreenSize.fitPxHeight(5)),
-            ],
-          ),
-        ),
-        SizedBox(height: ScreenSize.fitPxHeight(15)),
       ],
     );
   }

@@ -485,7 +485,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
   Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        BaseEndDrawer().show(context);
+        BaseEndDrawer().show(context, child: Container());
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
