@@ -34,7 +34,11 @@ class _PostByViewState extends ConsumerState<PostByNew> {
 
   @override
   void initState() {
-    postPageByNewViewModel = PostViewModel(context: context);
+    postPageByNewViewModel = PostViewModel(
+        ref: ref,
+        render: () {
+          setState(() {});
+        });
     super.initState();
   }
 

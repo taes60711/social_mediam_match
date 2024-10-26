@@ -20,7 +20,7 @@ class FriendProvider extends ChangeNotifier {
 
   TextEditingController messageInput = TextEditingController();
   int roomId = -1;
-  LoginUser ohterUserData = LoginUser();
+  ProfileData ohterUserData = ProfileData();
   List<ChatRoomMsg> chatRoomMesaage = [];
   bool isLoading = true;
 
@@ -173,7 +173,7 @@ class FriendProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> openRoom(int roomId, LoginUser roomMember) async {
+  Future<void> openRoom(int roomId, ProfileData roomMember) async {
     this.roomId = roomId;
     ohterUserData = roomMember;
     isLoading = true;
@@ -185,7 +185,7 @@ class FriendProvider extends ChangeNotifier {
   }
 
   UserDetailEndDrawerType endDrawerOpenInfo = UserDetailEndDrawerType.close;
-  void changeEndDrawerStatus(UserDetailEndDrawerType status, LoginUser otherUser) {
+  void changeEndDrawerStatus(UserDetailEndDrawerType status, ProfileData otherUser) {
     ohterUserData = otherUser;
     endDrawerOpenInfo = status;
     notifyListeners();

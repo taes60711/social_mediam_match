@@ -34,8 +34,8 @@ class ChatRoom extends StatelessWidget {
   final _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    LoginUser userData = context.watch<UserProvider>().userData;
-    LoginUser ohterUserData = context.watch<FriendProvider>().ohterUserData;
+    ProfileData userData = context.watch<UserProvider>().userData;
+    ProfileData ohterUserData = context.watch<FriendProvider>().ohterUserData;
     FriendProvider friendFuture = context.read<FriendProvider>();
     bool isLoading = context.select((FriendProvider value) => value.isLoading);
     List<ChatRoomMsg> messageData = context.watch<FriendProvider>().chatRoomMesaage;

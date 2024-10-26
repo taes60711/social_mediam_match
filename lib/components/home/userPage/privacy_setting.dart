@@ -57,7 +57,7 @@ class _PrivacySettingState extends State<PrivacySetting> {
                           message: '',
                           postId: 1,
                           postTime: DateTime.now(),
-                          sendNotificationuserInfo: LoginUser(),
+                          sendNotificationuserInfo: ProfileData(),
                         );
 
                         FirebaseNotificationService().sendNotification(
@@ -83,7 +83,7 @@ class _PrivacySettingState extends State<PrivacySetting> {
                           message: '',
                           courseId: 19,
                           postTime: DateTime.now(),
-                          sendNotificationuserInfo: LoginUser(),
+                          sendNotificationuserInfo: ProfileData(),
                         );
                         FirebaseNotificationService().sendNotification(
                             message: '"20240324@gmail.com"申請想要觀看課程"123456"',
@@ -107,7 +107,7 @@ class _PrivacySettingState extends State<PrivacySetting> {
                           isRead: false,
                           message: '',
                           postTime: DateTime.now(),
-                          sendNotificationuserInfo: LoginUser(),
+                          sendNotificationuserInfo: ProfileData(),
                         );
                         FirebaseNotificationService().sendNotification(
                             message: '"555"將你加為好友',
@@ -132,7 +132,7 @@ class _PrivacySettingState extends State<PrivacySetting> {
                           isRead: false,
                           message: '',
                           postTime: DateTime.now(),
-                          sendNotificationuserInfo: LoginUser(),
+                          sendNotificationuserInfo: ProfileData(),
                         );
                         FirebaseNotificationService().sendNotification(
                             title: "kTmSC7QNzoc1pf2jWd4sFOAr6q02",

@@ -129,7 +129,7 @@ Widget skillInfoWithPage(BuildContext context) {
 }
 
 Widget userInfo(BuildContext context) {
-  LoginUser userData = context.watch<UserProvider>().userData;
+  ProfileData userData = context.watch<UserProvider>().userData;
   return SizedBox(
     height: ScreenSize.safeHeight * 0.3,
     child: FittedBox(

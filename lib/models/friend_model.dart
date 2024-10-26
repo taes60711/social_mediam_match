@@ -54,7 +54,7 @@ class FriendListModel {
   String? lastMessage;
   String? sentAt;
   int roomType;
-  LoginUser userData;
+  ProfileData userData;
 
   FriendListModel({
     required this.roomId,
@@ -66,7 +66,7 @@ class FriendListModel {
     required this.userData,
   });
 
-  factory FriendListModel.toModel(dynamic json, {LoginUser? userData}) {
+  factory FriendListModel.toModel(dynamic json, {ProfileData? userData}) {
     return FriendListModel(
       roomId: json['roomId'],
       memberId: json['memberId'],
@@ -74,7 +74,7 @@ class FriendListModel {
       lastMessage: json['lastMessage'],
       sentAt: json['sentAt'],
       roomType: json['roomType'],
-      userData: userData ?? LoginUser.toModel(json['user']),
+      userData: userData ?? ProfileData.toModel(json['user']),
     );
   }
 }

@@ -21,7 +21,7 @@ class SkillChangeViewModel {
   }
 
   Future<void> filterSearchStart() async {
-    LoginUser userData = context.read<UserProvider>().userData;
+    ProfileData userData = context.read<UserProvider>().userData;
 
     List<RequestSkillListData> filteredSkillList = context.read<SkillChangeProvider>().filteredSkill;
     context.read<SkillChangeProvider>().filteredListInitOrRecord(filteredSkillList, status: "record");
@@ -29,8 +29,8 @@ class SkillChangeViewModel {
       return e.id.toString();
     }).toList();
 
-    int loadSize = context.read<BaseAPIListProvider<LoginUser>>().size;
-    await context.read<BaseAPIListProvider<LoginUser>>().replaceApiFunc(
+    int loadSize = context.read<BaseAPIListProvider<ProfileData>>().size;
+    await context.read<BaseAPIListProvider<ProfileData>>().replaceApiFunc(
       loadSize,
       replaceApiFunc: (page, size) {
         return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filteredSkillIdsList);
@@ -41,9 +41,9 @@ class SkillChangeViewModel {
   }
 
   Future<void> searchByNamePart({required String namePart}) async {
-    int loadSize = context.read<BaseAPIListProvider<LoginUser>>().size;
+    int loadSize = context.read<BaseAPIListProvider<ProfileData>>().size;
 
-    await context.read<BaseAPIListProvider<LoginUser>>().replaceApiFunc(
+    await context.read<BaseAPIListProvider<ProfileData>>().replaceApiFunc(
       loadSize,
       replaceApiFunc: (page, size) {
         return UserService().requestUserDataByNamePart(

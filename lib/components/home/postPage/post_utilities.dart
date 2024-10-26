@@ -53,7 +53,7 @@ class PostViewUtilities {
     );
   }
 
-  Widget userProfileView({required LoginUser userData}) {
+  Widget userProfileView({required ProfileData userData}) {
     return Column(
       children: [
         SizedBox(height: ScreenSize.fitPxHeight(10)),
@@ -204,15 +204,15 @@ class PostViewUtilities {
   static Widget postCreateButton(BuildContext pageContext) {
     return GestureDetector(
       onTap: () {
-        /// 文章作成
-        RouteOptions.pushTo(
-          RoutePath.postEditPage,
-          arguments: {
-            'postContext': pageContext,
-            'allPostBoradTypeList': pageContext.read<PostProvider>().allPostBoards,
-            'editorType': "create",
-          },
-        );
+        // /// 文章作成
+        // RouteOptions.pushTo(
+        //   RoutePath.postEditPage,
+        //   arguments: {
+        //     'postContext': pageContext,
+        //     'allPostBoradTypeList': pageContext.read<PostProvider>().allPostBoards,
+        //     'editorType': "create",
+        //   },
+        // );
       },
       child: Container(
         width: 40,

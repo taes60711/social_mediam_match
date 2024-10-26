@@ -16,7 +16,7 @@ class UserSettingViewModel {
 
   /// ユーザ元々データ
   Future<void> init() async {
-    LoginUser userData = context.read<UserProvider>().userData;
+    ProfileData userData = context.read<UserProvider>().userData;
 
     SkillMapProvider skillProvider = context.read<SkillMapProvider>();
     UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
@@ -28,7 +28,7 @@ class UserSettingViewModel {
   /// 編集あるかどうかチェック
   void checkIsEdit() {
     UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
-    LoginUser userData = context.read<UserProvider>().userData;
+    ProfileData userData = context.read<UserProvider>().userData;
     bool isChange = false;
 
     if (userData.image != userSettingViewProvider.base64Img) {
@@ -112,7 +112,7 @@ class UserSettingViewModel {
   /// ユーザデータ更新する
   Future<void> updateUserData() async {
     UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
-    LoginUser userData = context.read<UserProvider>().userData;
+    ProfileData userData = context.read<UserProvider>().userData;
 
     UpdateUser updateData = UpdateUser.update(
       uid: userData.uid,

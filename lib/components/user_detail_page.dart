@@ -16,7 +16,7 @@ import 'utilities/endDrawers/skill_setting_end_drawer.dart';
 import 'utilities/user_icon.dart';
 
 class UserDetailPage extends StatelessWidget {
-  final LoginUser otherUser;
+  final ProfileData otherUser;
   final Function? toChatRoom;
   const UserDetailPage({super.key, required this.otherUser, this.toChatRoom});
 

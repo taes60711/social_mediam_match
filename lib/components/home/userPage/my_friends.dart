@@ -91,7 +91,7 @@ class MyFriends extends StatelessWidget {
                     itemCount: friendList.length,
                     itemBuilder: (_, index) {
                       FriendListModel listInfo = friendList[index];
-                      LoginUser otherUserData = listInfo.userData;
+                      ProfileData otherUserData = listInfo.userData;
                       return Container(
                         width: ScreenSize.width,
                         decoration: BoxDecoration(

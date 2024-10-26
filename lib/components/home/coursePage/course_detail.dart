@@ -24,7 +24,7 @@ class CourseDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CourseModel openedCourse = context.watch<CourseProvider>().choicedCourse;
-    LoginUser userData = context.watch<UserProvider>().userData;
+    ProfileData userData = context.watch<UserProvider>().userData;
 
     return BackgroundWidget(
       child: Padding(

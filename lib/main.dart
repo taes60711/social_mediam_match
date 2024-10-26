@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 import 'package:social_mediam_match/firebase_options.dart';
@@ -20,7 +21,16 @@ void main() async {
     ],
   );
 
-  runApp(mainWidget);
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('zh', 'TW')], //const [Locale('zh', 'TW'), Locale('en', 'US'), Locale('ja', 'JP')],
+      fallbackLocale: const Locale('zh', 'TW'), //const Locale('en', 'US'),
+      path: 'assets/langs',
+      child: const ProviderScope(
+        child: MyApp(),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

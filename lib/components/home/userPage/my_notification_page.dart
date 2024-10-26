@@ -39,7 +39,7 @@ class MyNotificationPage extends StatelessWidget {
         children: [
           mainBody(context),
           courseDetailEndDrawer(),
-          postDetailEndDrawer(),
+          // postDetailEndDrawer(),
           userDetailEndDrawer(),
         ],
       ),
@@ -48,7 +48,7 @@ class MyNotificationPage extends StatelessWidget {
 }
 
 Widget mainBody(BuildContext context) {
-  LoginUser userData = context.watch<UserProvider>().userData;
+  ProfileData userData = context.watch<UserProvider>().userData;
 
   return Column(
     children: [
@@ -111,9 +111,9 @@ Widget mainBody(BuildContext context) {
                         if (notificationData.type == 0) {
                           PostModel choicedPost = await PostService().getPostDataByPostId(notificationData.postId ?? -1);
 
-                          PostViewModel(context: context).postDetailInit(choicedPost: choicedPost);
+                          // PostViewModel(context: context).postDetailInit(choicedPost: choicedPost);
                         } else if (notificationData.type == 1) {
-                          LoginUser userData = context.read<UserProvider>().userData;
+                          ProfileData userData = context.read<UserProvider>().userData;
                           CourseModel openedCourse =
                               await CourseService().getCourseBycourseId(userData.uid, notificationData.courseId ?? -1);
                           CourseViewModel(courseContext: context).courseDetailInit(openedCourse: openedCourse);

@@ -55,15 +55,15 @@ Widget _mainBody(BuildContext context) {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Builder(
             builder: (context) {
-              LoginUser userData = context.watch<UserProvider>().userData;
+              ProfileData userData = context.watch<UserProvider>().userData;
               List<RequestSkillListData> filteredSkill = context.select((SkillChangeProvider value) => value.filteredSkill);
 
-              return APIListView<LoginUser>(
+              return APIListView<ProfileData>(
                 apiFunc: (page, size) {
                   List<String> filteredSkillNameList = filteredSkill.map((e) => e.name).toList();
                   return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filteredSkillNameList);
                 },
-                providerList: context.watch<BaseAPIListProvider<LoginUser>>().listData,
+                providerList: context.watch<BaseAPIListProvider<ProfileData>>().listData,
                 itemChild: (data, index) {
                   return GestureDetector(
                     onTap: () {

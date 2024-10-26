@@ -71,7 +71,7 @@ Widget _mainBuild(BuildContext context) {
           child: APIListView<CourseModel>(
             size: 6,
             apiFunc: (int page, int size) {
-              LoginUser userData = context.read<UserProvider>().userData;
+              ProfileData userData = context.read<UserProvider>().userData;
               return CourseService().getAllCourses(userData.uid, page, size);
             },
             listType: ListType.grid,

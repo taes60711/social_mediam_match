@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_page.dart';
-
-import '../components/home/firendsPage/firends_page.dart';
 import '../components/home/postPage/post_main_page.dart';
 import '../components/home/skillExChangePage/skill_user_change_page.dart';
-import '../components/home/userPage/user_page.dart';
 import '../components/utilities/style/theme_style.dart';
 import '../global/global_view_model.dart';
 import 'setting/bottom_navigation_bar.dart';
@@ -32,8 +29,8 @@ class _HomeState extends ConsumerState<Home> {
       const PostMainPage(),
       const SkillUserChangePage(),
       const CourseMainPage(),
-      const FirendsPage(),
-      const UserPage(),
+      Container(),
+      Container(),
     ];
 
     return Stack(
@@ -87,7 +84,7 @@ class _HomeState extends ConsumerState<Home> {
 //       MultiProvider(
 //         providers: [
 //           ChangeNotifierProvider(create: (_) => SkillChangeProvider()),
-//           ChangeNotifierProvider(create: (_) => BaseAPIListProvider<LoginUser>()),
+//           ChangeNotifierProvider(create: (_) => BaseAPIListProvider<ProfileData>()),
 //         ],
 //         child: const SkillChangePage(),
 //       ),
@@ -144,11 +141,11 @@ class _HomeState extends ConsumerState<Home> {
 //       PostModel choicedPost = await PostService().getPostDataByPostId(postId ?? -1);
 //       PostViewModel(context: globalPostContext ?? context).postDetailInit(choicedPost: choicedPost);
 //     } else if (pathIndex == 1) {
-//       LoginUser userData = context.read<UserProvider>().userData;
+//       ProfileData userData = context.read<UserProvider>().userData;
 //       CourseModel openedCourse = await CourseService().getCourseBycourseId(userData.uid, courseId ?? -1);
 //       CourseViewModel(courseContext: courseContext ?? context).courseDetailInit(openedCourse: openedCourse);
 //     } else if (pathIndex == 3) {
-//       LoginUser sendMsgUser = await UserService().requestGetUserData(userUID ?? "-1");
+//       ProfileData sendMsgUser = await UserService().requestGetUserData(userUID ?? "-1");
 //       context.read<FriendProvider>().openRoom(roomId ?? -1, sendMsgUser);
 //       openChatRoomEndDrawer(context: context);
 //     }

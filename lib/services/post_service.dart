@@ -124,7 +124,7 @@ class PostService extends ApiClient {
   }
 
   /// My投稿取得する
-  Future<List<PostModel>> getPostDataByUID(int page, int size, LoginUser userData) async {
+  Future<List<PostModel>> getPostDataByUID(int page, int size, ProfileData userData) async {
     List<PostModel> requestPostDataByUID = [];
 
     Map<String, dynamic> paramters = {

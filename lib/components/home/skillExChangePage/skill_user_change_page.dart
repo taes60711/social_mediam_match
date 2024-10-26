@@ -49,7 +49,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
                 height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 40 : 0,
               ),
               Expanded(
-                child: APIListWidget<LoginUser>(
+                child: APIListWidget<ProfileData>(
                   apiFunc: (page, size) {
                     return UserService().getAllUserData(page, size, userUid: "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2", filterSkill: []);
                   },
@@ -204,7 +204,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
     );
   }
 
-  Widget userProfileView({required LoginUser userData}) {
+  Widget userProfileView({required ProfileData userData}) {
     return Column(
       children: [
         SizedBox(height: ScreenSize.fitPxHeight(10)),

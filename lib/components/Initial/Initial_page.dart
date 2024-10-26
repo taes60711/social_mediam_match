@@ -1,18 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/account/welcome_page.dart';
 import 'package:social_mediam_match/pageManager/home.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
-import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
-
-import '../../models/user_model.dart';
 import '../../provider/account/user_provider.dart';
 import '../../provider/Initial/initial_provider.dart';
-
 import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
 
@@ -21,34 +14,34 @@ class Initialpage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isfirstEnterApp = context.select((InitialProvider value) => value.isfirstEnterApp);
-    LoginUser userData = context.watch<UserProvider>().userData;
-    bool isLoginLoading = context.select((UserProvider value) => value.isLoading);
+    // bool isfirstEnterApp = context.select((InitialProvider value) => value.isfirstEnterApp);
+    // ProfileData userData = context.watch<UserProvider>().userData;
+    // bool isLoginLoading = context.select((UserProvider value) => value.isLoading);
 
-    Widget component;
+    // Widget component;
 
-    ///MARK: テスト用
+    // ///MARK: テスト用
 
-    if (isfirstEnterApp) {
-      component = splashScreen(context);
-    } else {
-      if (isLoginLoading) {
-        component = const Scaffold(
-          backgroundColor: Colors.white,
-          body: Loading(),
-        );
-      } else {
-        if (userData.uid != "-1") {
-          component = const ProviderScope(
-            child: Home(),
-          );
-        } else {
-          component = const WelcomePage();
-        }
-      }
-    }
+    // if (isfirstEnterApp) {
+    //   component = splashScreen(context);
+    // } else {
+    //   if (isLoginLoading) {
+    //     component = const Scaffold(
+    //       backgroundColor: Colors.white,
+    //       body: Loading(),
+    //     );
+    //   } else {
+    //     if (userData.uid != "-1") {
+    //       component = const ProviderScope(
+    //         child: Home(),
+    //       );
+    //     } else {
+    //       component = const WelcomePage();
+    //     }
+    //   }
+    // }
 
-    return component;
+    return Home();
   }
 }
 

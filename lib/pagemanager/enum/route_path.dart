@@ -20,9 +20,9 @@ enum RoutePath {
   signUpPage("/signUp", SignUpPage()),
 
   profilePage("/profile", UserSetting()),
-  postEditPage("/postEdit", EditorPage()),
+  // postEditPage("/postEdit", EditorPage()),
   courseEditPage("/courseEdit", CourseEditPage()),
-  myPosts("/myposts", MyPosts()),
+  // myPosts("/myposts", MyPosts()),
   myCourses("/mycourses", MyCourses()),
   myFriends("/myFriends", MyFriends()),
   myNotifictaionPage("/myNotificationPage", MyNotificationPage()),

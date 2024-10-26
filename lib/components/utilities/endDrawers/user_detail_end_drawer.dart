@@ -14,13 +14,13 @@ enum UserDetailEndDrawerType {
 ///Before use need ParentWidget Create FriendProvider
 
 ///MARK: void ユーザ詳細ページ開くように
-void openUserDetailEndDrawer({required BuildContext context, required LoginUser otherUserData}) {
+void openUserDetailEndDrawer({required BuildContext context, required ProfileData otherUserData}) {
   context.read<FriendProvider>().changeEndDrawerStatus(UserDetailEndDrawerType.open, otherUserData);
 }
 
 ///MARK: void ユーザ詳細ページ開くように
 void closeUserDetailEndDrawer({required BuildContext context}) {
-  context.read<FriendProvider>().changeEndDrawerStatus(UserDetailEndDrawerType.close, LoginUser());
+  context.read<FriendProvider>().changeEndDrawerStatus(UserDetailEndDrawerType.close, ProfileData());
 }
 
 ///MARK: Widget ユーザ詳細ページ用EndDrawer

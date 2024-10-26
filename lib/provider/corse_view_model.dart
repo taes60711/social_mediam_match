@@ -45,7 +45,7 @@ class CourseViewModel {
       return e.id.toString();
     }).toList();
 
-    LoginUser userData = courseContext.read<UserProvider>().userData;
+    ProfileData userData = courseContext.read<UserProvider>().userData;
     int loadSize = courseContext.read<BaseAPIListProvider<CourseModel>>().size;
     await courseContext.read<BaseAPIListProvider<CourseModel>>().replaceApiFunc(
       loadSize,
@@ -74,7 +74,7 @@ class CourseViewModel {
 
     RouteOptions.pop();
 
-    LoginUser userData = viewListContext.read<UserProvider>().userData;
+    ProfileData userData = viewListContext.read<UserProvider>().userData;
     if (courseId == null) {
       int loadSize = viewListContext.read<BaseAPIListProvider<CourseModel>>().size;
       await viewListContext.read<BaseAPIListProvider<CourseModel>>().replaceApiFunc(
@@ -183,7 +183,7 @@ class CourseViewModel {
                           titleColor: normalTextColor,
                           btnColor: normalBgColor,
                           onPress: () async {
-                            LoginUser userData = courseContext.read<UserProvider>().userData;
+                            ProfileData userData = courseContext.read<UserProvider>().userData;
                             CourseModel updateCourse = choicedCourse;
                             updateCourse.signUpStatus = "signing";
                             await CourseService().signUpCourse(userUID: userData.uid, courseId: choicedCourse.id);

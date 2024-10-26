@@ -20,7 +20,7 @@ class AddedCoursesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LoginUser userData = context.watch<UserProvider>().userData;
+    ProfileData userData = context.watch<UserProvider>().userData;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: APIListView<CourseModel>(

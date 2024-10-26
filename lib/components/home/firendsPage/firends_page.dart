@@ -46,7 +46,7 @@ class FirendsPage extends StatelessWidget {
                             itemCount: filteredList.length,
                             itemBuilder: (context, index) {
                               FriendListModel listInfo = filteredList[index];
-                              LoginUser otherUserData = listInfo.userData;
+                              ProfileData otherUserData = listInfo.userData;
                               return Container(
                                 decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.1, color: normalBgColor2))),
                                 child: Padding(

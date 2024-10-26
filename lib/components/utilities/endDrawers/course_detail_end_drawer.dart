@@ -24,7 +24,7 @@ void openCourseDetailEndDrawer({required BuildContext context, required CourseMo
 void closeCourseDetailEndDrawer({required BuildContext context}) {
   context
       .read<CourseProvider>()
-      .changeEndDrawerStatus(CourseDetailEndDrawerType.close, CourseModel(courseCreateduserInfo: LoginUser()));
+      .changeEndDrawerStatus(CourseDetailEndDrawerType.close, CourseModel(courseCreateduserInfo: ProfileData()));
 }
 
 ///MARK: Widget コース詳細ページ用EndDrawer

@@ -15,7 +15,7 @@ import '../friend_provider.dart';
 ///ユーザ資料について（登録の関数がSignUpViewModel、SignUpViewProivderにいる）
 class UserProvider extends ChangeNotifier {
   ///ユーザでータ
-  LoginUser userData = LoginUser();
+  ProfileData userData = ProfileData();
 
   /// 読んでいない通知数
   String notReadNotificationCount = "0";
@@ -67,7 +67,7 @@ class UserProvider extends ChangeNotifier {
   Future<void> signOut(FriendProvider chatListChannel) async {
     await FirebaseSerivce().firebaseSignOut();
     chatListChannel.closefriendList();
-    userData = LoginUser();
+    userData = ProfileData();
     notifyListeners();
   }
 

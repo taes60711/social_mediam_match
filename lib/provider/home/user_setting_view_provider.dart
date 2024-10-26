@@ -22,7 +22,7 @@ class UserSettingViewProvider extends ChangeNotifier {
   List<RequestUserSkillData> wantSkillList = [];
 
   ///編集ページにユーザのデータ画面に入る
-  void getUserSettingData(LoginUser userData) {
+  void getUserSettingData(ProfileData userData) {
     nameInput.text = userData.name ?? "";
     jobInput.text = userData.job ?? "";
     base64Img = userData.image ?? "";

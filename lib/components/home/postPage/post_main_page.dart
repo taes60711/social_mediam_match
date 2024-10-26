@@ -17,6 +17,10 @@ final topPostProvider = StateProvider<List<PostModel>>((ref) {
   return [];
 });
 
+final choicedPostProvider = StateProvider<PostModel>((ref) {
+  return PostModel();
+});
+
 class PostMainPage extends ConsumerStatefulWidget {
   const PostMainPage({super.key});
 
@@ -206,7 +210,9 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                             onTap: () {
                               BaseBottomSheet().show(
                                 context,
-                                child: PostViewUtilities().userProfileView(userData: e.postUserInfo),
+                                child: PostViewUtilities().userProfileView(
+                                  userData: e.postUserInfo,
+                                ),
                               );
                             },
                             child: UserIcon(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
@@ -143,12 +144,13 @@ class _EndDrawerWidgetState extends State<EndDrawerWidget> with SingleTickerProv
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
   double _dragStartX = 0.0;
+  bool isInit = false;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 150),
       vsync: this,
     );
 
@@ -162,7 +164,10 @@ class _EndDrawerWidgetState extends State<EndDrawerWidget> with SingleTickerProv
       ),
     );
 
-    _controller.forward();
+    _controller.forward().whenComplete(() {
+      isInit = true;
+      setState(() {});
+    });
   }
 
   @override
@@ -207,19 +212,34 @@ class _EndDrawerWidgetState extends State<EndDrawerWidget> with SingleTickerProv
           height: MediaQuery.of(context).size.height,
           color: AppColors.bgColor,
           child: Builder(builder: (context) {
-            return SafeArea(
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      _closeEndDrawer();
-                    },
-                    child: Text("exit"),
-                  ),
-                  Expanded(child: widget.child),
-                ],
-              ),
-            );
+            return !isInit
+                ? const SafeArea(
+                    child: Center(
+                      child: Loading(),
+                    ),
+                  )
+                : SafeArea(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: ScreenSize.fitPxWidth(40),
+                          height: ScreenSize.fitPxWidth(40),
+                          child: GestureDetector(
+                            onTap: () {
+                              _closeEndDrawer();
+                            },
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              color: AppColors.whiteColor,
+                              size: ScreenSize.fitPxWidth(15),
+                            ),
+                          ),
+                        ),
+                        Expanded(child: widget.child),
+                      ],
+                    ),
+                  );
           }),
         ),
       ),

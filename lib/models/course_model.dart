@@ -7,11 +7,7 @@ class CourseChapterInfo {
   String chapterName;
   TextEditingController? chapterNameEditController;
   List<String> content;
-  CourseChapterInfo(
-      {required this.chapter,
-      required this.chapterName,
-      this.chapterNameEditController,
-      required this.content});
+  CourseChapterInfo({required this.chapter, required this.chapterName, this.chapterNameEditController, required this.content});
 
   factory CourseChapterInfo.toMap(dynamic json) {
     List<String> contents = (json['content'] as List<dynamic>).map((e) {
@@ -47,7 +43,7 @@ class CourseModel {
   int type;
   bool isPublic;
   String signUpStatus;
-  LoginUser courseCreateduserInfo;
+  ProfileData courseCreateduserInfo;
 
   CourseModel({
     this.id = -1,
@@ -71,8 +67,7 @@ class CourseModel {
     DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
     String formattedTime = DateFormat("yyyy/MM/dd").format(dateTime.toLocal());
 
-    List<String> courseLearningSkillList =
-        (json['courseLearningkillList'] as List<dynamic>).map((e) {
+    List<String> courseLearningSkillList = (json['courseLearningkillList'] as List<dynamic>).map((e) {
       return e as String;
     }).toList();
 
@@ -94,7 +89,7 @@ class CourseModel {
       type: json['type'],
       isPublic: json['isPublic'],
       signUpStatus: json['signUpStatus'],
-      courseCreateduserInfo: LoginUser.toModel(json['user']),
+      courseCreateduserInfo: ProfileData.toModel(json['user']),
     );
   }
 }
@@ -102,7 +97,7 @@ class CourseModel {
 class AddedCourseMemberModel {
   int courseId;
   String memberUid;
-  LoginUser userData;
+  ProfileData userData;
   int status;
 
   AddedCourseMemberModel({
@@ -116,7 +111,7 @@ class AddedCourseMemberModel {
     return AddedCourseMemberModel(
       courseId: json['courseId'],
       memberUid: json['memberUid'],
-      userData: LoginUser.toModel(json['userDTO']),
+      userData: ProfileData.toModel(json['userDTO']),
       status: json['status'],
     );
   }
