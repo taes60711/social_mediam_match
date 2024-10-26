@@ -276,83 +276,83 @@ class _PostByViewState extends ConsumerState<PostByView> {
               },
               listControllerProvider: listControllerProvider,
               loadingWidget: const PostLoading(),
-              // upWidget: Column(
-              //   children: [
-              //     Padding(
-              //       padding: const EdgeInsets.symmetric(vertical: 10),
-              //       child: Container(
-              //         width: ScreenSize.width,
-              //         color: AppColors.black37,
-              //         padding: EdgeInsets.symmetric(
-              //           vertical: ScreenSize.fitPxHeight(8),
-              //           horizontal: ScreenSize.fitPxHeight(15),
-              //         ),
-              //         child: topPosts.isEmpty
-              //             ? Container()
-              //             : CarouselSlider(
-              //                 items: topPosts.map((e) {
-              //                   return Column(
-              //                     crossAxisAlignment: CrossAxisAlignment.start,
-              //                     mainAxisAlignment: MainAxisAlignment.center,
-              //                     children: [
-              //                       Text(
-              //                         "Hot!",
-              //                         style: TextStyle(color: AppColors.redColor, fontSize: 12),
-              //                       ),
-              //                       Text(
-              //                         e.title,
-              //                         maxLines: 1,
-              //                         overflow: TextOverflow.ellipsis,
-              //                         style: TextStyle(color: AppColors.whiteColor),
-              //                       ),
-              //                       SizedBox(height: ScreenSize.fitPxHeight(10)),
-              //                       Container(
-              //                         width: ScreenSize.width,
-              //                         height: .5,
-              //                         color: AppColors.greyColor98.withOpacity(.7),
-              //                       ),
-              //                       SizedBox(height: ScreenSize.fitPxHeight(5)),
-              //                       Row(
-              //                         children: [
-              //                           Text(
-              //                             "作成者:",
-              //                             style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-              //                           ),
-              //                           SizedBox(width: 5),
-              //                           GestureDetector(
-              //                             onTap: () {
-              //                               BaseBottomSheet().show(
-              //                                 context,
-              //                                 child: userProfileView(userData: e.postUserInfo),
-              //                               );
-              //                             },
-              //                             child: UserIcon(
-              //                               iconSize: 20,
-              //                               image: e.postUserInfo.image,
-              //                             ),
-              //                           ),
-              //                           const SizedBox(width: 5),
-              //                           Text(
-              //                             e.postUserInfo.name ?? "",
-              //                             style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-              //                           ),
-              //                         ],
-              //                       ),
-              //                     ],
-              //                   );
-              //                 }).toList(),
-              //                 options: CarouselOptions(
-              //                   height: ScreenSize.fitPxHeight(74),
-              //                   aspectRatio: 16 / 9,
-              //                   viewportFraction: 1,
-              //                   autoPlay: true,
-              //                   autoPlayInterval: const Duration(seconds: 10),
-              //                 ),
-              //               ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
+              upWidget: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Container(
+                      width: ScreenSize.width,
+                      color: AppColors.black37,
+                      padding: EdgeInsets.symmetric(
+                        vertical: ScreenSize.fitPxHeight(8),
+                        horizontal: ScreenSize.fitPxHeight(15),
+                      ),
+                      child: topPosts.isEmpty
+                          ? Container()
+                          : CarouselSlider(
+                              items: topPosts.map((e) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Hot!",
+                                      style: TextStyle(color: AppColors.redColor, fontSize: 12),
+                                    ),
+                                    Text(
+                                      e.title,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: AppColors.whiteColor),
+                                    ),
+                                    SizedBox(height: ScreenSize.fitPxHeight(10)),
+                                    Container(
+                                      width: ScreenSize.width,
+                                      height: .5,
+                                      color: AppColors.greyColor98.withOpacity(.7),
+                                    ),
+                                    SizedBox(height: ScreenSize.fitPxHeight(5)),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "作成者:",
+                                          style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                                        ),
+                                        SizedBox(width: 5),
+                                        GestureDetector(
+                                          onTap: () {
+                                            BaseBottomSheet().show(
+                                              context,
+                                              child: userProfileView(userData: e.postUserInfo),
+                                            );
+                                          },
+                                          child: UserIcon(
+                                            iconSize: 20,
+                                            image: e.postUserInfo.image,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          e.postUserInfo.name ?? "",
+                                          style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              }).toList(),
+                              options: CarouselOptions(
+                                height: ScreenSize.fitPxHeight(74),
+                                aspectRatio: 16 / 9,
+                                viewportFraction: 1,
+                                autoPlay: true,
+                                autoPlayInterval: const Duration(seconds: 10),
+                              ),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
               itemChild: (data, index) {
                 return Container(
                   width: ScreenSize.width,
@@ -395,14 +395,18 @@ class _PostByViewState extends ConsumerState<PostByView> {
                                   child: Icon(
                                     FontAwesomeIcons.ellipsis,
                                     color: AppColors.greyColor130,
-                                    size: 14,
+                                    size: ScreenSize.fontSize16,
                                   ),
                                 ),
                               ],
                             ),
                             Text(
                               data.title,
-                              style: TextStyle(color: AppColors.whiteColor),
+                              style: TextStyle(
+                                color: AppColors.whiteColor,
+                                fontSize: ScreenSize.fontSize16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             SizedBox(height: 5),
                             Padding(
@@ -428,7 +432,7 @@ class _PostByViewState extends ConsumerState<PostByView> {
                                     SizedBox(width: 5),
                                     Text(
                                       "Techology",
-                                      style: TextStyle(fontSize: 12, color: AppColors.whiteColor),
+                                      style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor),
                                     ),
                                   ],
                                 ),
@@ -439,7 +443,7 @@ class _PostByViewState extends ConsumerState<PostByView> {
                                     iconData: FontAwesomeIcons.eye,
                                     iconColor: Color.fromARGB(255, 110, 124, 129),
                                     text: "${data.viewed}",
-                                    style: TextStyle(fontSize: 12, color: AppColors.whiteColor)),
+                                    style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
 
                                 const SizedBox(width: 10),
 
@@ -448,7 +452,7 @@ class _PostByViewState extends ConsumerState<PostByView> {
                                     iconData: FontAwesomeIcons.heart,
                                     iconColor: const Color.fromARGB(255, 248, 110, 110),
                                     text: "${data.good}",
-                                    style: TextStyle(color: AppColors.whiteColor)),
+                                    style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
                                 const SizedBox(width: 8),
 
                                 ///コメント数
@@ -456,7 +460,7 @@ class _PostByViewState extends ConsumerState<PostByView> {
                                     iconData: FontAwesomeIcons.comment,
                                     iconColor: Colors.blueAccent,
                                     text: "${data.commentCount}",
-                                    style: TextStyle(color: AppColors.whiteColor)),
+                                    style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
                                 const SizedBox(width: 13),
 
                                 ///シャアボタン
@@ -479,7 +483,7 @@ class _PostByViewState extends ConsumerState<PostByView> {
                                 ///期日
                                 Text(
                                   "${data.postTime}${tr("skExChpage_beforDays")}",
-                                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                  style: TextStyle(fontSize: ScreenSize.fontSize12, color: Colors.grey),
                                 ),
                               ],
                             ),

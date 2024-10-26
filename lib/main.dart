@@ -39,6 +39,9 @@ class MyApp extends StatelessWidget {
       ),
       theme: ThemeData(
         fontFamily: 'GenJyu',
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(fontWeight: FontWeight.w500),
+        ),
         useMaterial3: false,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         pageTransitionsTheme: const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{

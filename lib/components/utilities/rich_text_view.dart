@@ -134,7 +134,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    double fontSize = widget.fontSize ?? 16;
+    double fontSize = widget.fontSize ?? ScreenSize.fontSize14;
     late List<YoutubePlayerController> ytController = [];
     int index = 0;
 

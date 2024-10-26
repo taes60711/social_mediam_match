@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_page.dart';
 
 import '../components/home/firendsPage/firends_page.dart';
 import '../components/home/postPage/post_main_page.dart';
@@ -31,7 +31,7 @@ class _HomeState extends ConsumerState<Home> {
     List<Widget> mainPage = [
       const PostMainPage(),
       const SkillUserChangePage(),
-      CommonScaffold(child: Container()),
+      const CourseMainPage(),
       const FirendsPage(),
       const UserPage(),
     ];

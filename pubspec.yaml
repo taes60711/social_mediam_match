@@ -93,7 +93,20 @@ flutter:
   fonts:
     - family: GenJyu
       fonts:
+        - asset: assets/fonts/GenJyuuGothic-ExtraLight.ttf
+          weight: 300
+        - asset: assets/fonts/GenJyuuGothic-Light.ttf
+          weight: 400
+        - asset: assets/fonts/GenJyuuGothic-Monospace-Normal.ttf
+          weight: 500
+        - asset: assets/fonts/GenJyuuGothic-Monospace-Regular.ttf
+          weight: 600
         - asset: assets/fonts/GenJyuuGothic-Medium.ttf
+          weight: 700
+        - asset: assets/fonts/GenJyuuGothic-Heavy.ttf
+          weight: 800
+        - asset: assets/fonts/GenJyuuGothic-Bold.ttf
+          weight: 900
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
