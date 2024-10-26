@@ -180,7 +180,7 @@ class UserPageRouthsettingButtonInfo {
         title: UserPageString().postBtn,
         icon: FontAwesomeIcons.solidNewspaper,
         onPress: () {
-          RouteOptions.pushTo(RoutePath.myPosts);
+          // RouteOptions.pushTo(RoutePath.myPosts);
         }),
     SettingButtonInfo(
         title: UserPageString().courseBtn,
