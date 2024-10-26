@@ -29,7 +29,12 @@ final userExChangelistControllerProvider = StateNotifierProvider<APIListControll
 class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
   @override
   void initState() {
+    init();
     super.initState();
+  }
+
+  Future<void> init() async {
+    ref.read(userExChangelistControllerProvider.notifier).size = 6;
   }
 
   @override

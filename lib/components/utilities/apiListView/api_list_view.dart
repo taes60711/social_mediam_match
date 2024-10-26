@@ -573,8 +573,6 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   Widget listenListView(BuildContext context, {required child}) {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollNotification) {
-        // print(scrollNotification.runtimeType);
-
         /// only listen depth list == 0
         if (scrollNotification.depth != 0) {
           return false;
@@ -582,6 +580,9 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
 
         if (scrollNotification is ScrollStartNotification) {
           final scrollPosition = scrollNotification.metrics.pixels;
+
+          ///最初スクロールところ取得
+
           scrollStartPos = scrollPosition;
         }
 
@@ -589,56 +590,66 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
           final scrollPosition = scrollNotification.metrics.pixels;
           final max = scrollNotification.metrics.maxScrollExtent;
 
-          bool isScrollingUp = scrollPosition < scrollStartPos;
-
-          if (!isScrollUp) {
-            if (isScrollingUp) {
-              /// bottomBar表示される
+          if (max != 0) {
+            ///最上部場合bottomBar表示される
+            if (scrollPosition == 0) {
               GlobalViewModel().bottomBarHideStateChage(false);
               isScrollUp = true;
+              return false;
             }
-            if (ref.read(widget.listControllerProvider).loadDataStatus == LoadDataStatus.loadingFinish) {
-              if (scrollPosition >= max - ScreenSize.fitPxHeight(10) && max != 0) {
-                ref.read(widget.listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantinSert);
 
-                ///プリロードデータインサート
-                ref.read(widget.listControllerProvider.notifier).insertData().then((_) {
-                  ///プリロードデータない
-                  if (ref.read(widget.listControllerProvider).loadDataStatus == LoadDataStatus.allDataLoaded) {
+            bool isScrollingUp = scrollPosition < scrollStartPos;
+
+            if (!isScrollUp) {
+              if (isScrollingUp) {
+                ///スクロール上に移動したら、bottomBar表示される
+                GlobalViewModel().bottomBarHideStateChage(false);
+                isScrollUp = true;
+              }
+              if (ref.read(widget.listControllerProvider).loadDataStatus == LoadDataStatus.loadingFinish) {
+                ///画面最下部場合、プリデータロード
+                if (scrollPosition >= max - ScreenSize.fitPxHeight(10)) {
+                  ref.read(widget.listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantinSert);
+
+                  ///プリロードデータインサート
+                  ref.read(widget.listControllerProvider.notifier).insertData().then((_) {
+                    ///プリロードデータない
+                    if (ref.read(widget.listControllerProvider).loadDataStatus == LoadDataStatus.allDataLoaded) {
+                      setState(() {});
+                    }
+                  });
+
+                  ///プリロードデータある
+                  if (ref.read(widget.listControllerProvider).loadDataStatus != LoadDataStatus.allDataLoaded) {
                     setState(() {});
                   }
-                });
-
-                ///プリロードデータある
-                if (ref.read(widget.listControllerProvider).loadDataStatus != LoadDataStatus.allDataLoaded) {
-                  setState(() {});
                 }
               }
-            }
-          } else {
-            ///TOPでいる
-            if (isTop) {
-              bool isPosNotInTop = scrollPosition >= 20;
-              if (isPosNotInTop) {
-                ///TOPでないって設定する
-                isTop = false;
-              }
-
-              ///TOPでるし、アップに移動する（リロードしたい場合）
-              if (scrollPosition <= 0) {
-                ///ステータス：リロードに設定する
-                if (ref.read(widget.listControllerProvider).loadDataStatus != LoadDataStatus.wantReload) {
-                  ref.read(widget.listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantReload);
-                  setState(() {});
-                }
-              }
-
-              ///TOPでない
             } else {
-              if (!isScrollingUp) {
-                /// bottomBar隠れる
-                GlobalViewModel().bottomBarHideStateChage(true);
-                isScrollUp = false;
+              ///TOPでいる
+              if (isTop) {
+                bool isPosNotInTop = scrollPosition >= 20;
+                if (isPosNotInTop) {
+                  ///TOPでないって設定する
+                  isTop = false;
+                }
+
+                ///画面の最上部し、アップに移動する（リロードしたい場合）
+                if (scrollPosition <= -ScreenSize.fitPxHeight(20)) {
+                  ///ステータス：リロードに設定する
+                  if (ref.read(widget.listControllerProvider).loadDataStatus != LoadDataStatus.wantReload) {
+                    ref.read(widget.listControllerProvider.notifier).onLoadStatusChange(LoadDataStatus.wantReload);
+                    setState(() {});
+                  }
+                }
+
+                ///TOPでない
+              } else {
+                if (!isScrollingUp) {
+                  /// bottomBar隠れる
+                  GlobalViewModel().bottomBarHideStateChage(true);
+                  isScrollUp = false;
+                }
               }
             }
           }
