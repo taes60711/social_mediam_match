@@ -261,6 +261,7 @@ class _PostByViewState extends ConsumerState<PostByView> {
                 return PostService().getPostDataByViewer(page, size);
               },
               listControllerProvider: listControllerProvider,
+              noDataWidget: PostViewUtilities.noPostData(),
               loadingWidget: const PostLoading(),
               itemChild: (data, index) {
                 return GestureDetector(
