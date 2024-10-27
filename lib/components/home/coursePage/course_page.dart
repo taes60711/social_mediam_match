@@ -22,7 +22,7 @@ import '../../utilities/background_widget.dart';
 import '../../utilities/basic_top_bar.dart';
 import '../../utilities/endDrawers/course_detail_end_drawer.dart';
 import '../../utilities/endDrawers/course_filter_end_drawer.dart';
-import '../../utilities/endDrawers/custom_end_drawer.dart';
+import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/endDrawers/user_detail_end_drawer.dart';
 import '../../utilities/loading.dart';
 import '../../utilities/style/screen_size.dart';
@@ -487,9 +487,7 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
 
 Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
   return GestureDetector(
-    onTap: () async {
-      BaseEndDrawer().show(context, child: Container());
-    },
+    onTap: () async {},
     child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
       decoration: BoxDecoration(

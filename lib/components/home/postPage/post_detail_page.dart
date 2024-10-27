@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:social_mediam_match/components/home/postPage/post_main_page.dart';
-
-import '../../../models/post_model.dart';
-
-import '../../utilities/rich_text_view.dart';
+import '../../utilities/endDrawers/base_end_drawer.dart';
 
 // class PostDetailPage extends StatelessWidget {
 //   const PostDetailPage({super.key});
@@ -169,26 +164,48 @@ import '../../utilities/rich_text_view.dart';
 //   }
 // }
 
-class PostDetailPage extends ConsumerStatefulWidget {
-  const PostDetailPage({super.key});
+class PostDetailPage extends BaseEndDrawer {
+  int i = 0;
 
   @override
-  ConsumerState<PostDetailPage> createState() => _PostDetailState();
-}
-
-PostModel choicedPost = PostModel();
-
-class _PostDetailState extends ConsumerState<PostDetailPage> {
-  @override
-  void initState() {
-    choicedPost = ref.read(choicedPostProvider);
-    super.initState();
+  Future<void> initState(WidgetRef ref) async {
+    ref.read(ss.notifier).update((state) => 2580);
+    render();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: RichTextView(content: choicedPost.mainMessage),
+  Widget build(ref) {
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            closePage();
+          },
+          child: Text("exit"),
+        ),
+        Text(
+          "${i}",
+          style: TextStyle(color: Colors.white),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            i++;
+            render();
+          },
+          child: Text("sad"),
+        ),
+        Text(
+          "${ref.read(ss)}",
+          style: TextStyle(color: Colors.white),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            ref.read(ss.notifier).update((state) => 200);
+            render();
+          },
+          child: Text("sad"),
+        ),
+      ],
     );
   }
 }

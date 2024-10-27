@@ -6,7 +6,7 @@ import '../../../models/user_model.dart';
 import '../../../provider/course_provider.dart';
 import '../../home/coursePage/course_detail.dart';
 import '../loading.dart';
-import 'custom_end_drawer.dart';
+import 'base_end_drawer.dart';
 
 enum CourseDetailEndDrawerType {
   open,

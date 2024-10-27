@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:social_mediam_match/components/utilities/endDrawers/custom_end_drawer.dart';
-
 import '../../../global/global_view_model.dart';
 
 import '../../../services/post_service.dart';
@@ -56,10 +54,8 @@ class _PostByViewState extends ConsumerState<PostByView> {
                 return GestureDetector(
                   onTap: () {
                     ref.read(choicedPostProvider.notifier).update((state) => data);
-                    BaseEndDrawer().show(
-                      context,
-                      child: const PostDetailPage(),
-                    );
+
+                    PostDetailPage().show(context);
                   },
                   child: Container(
                     width: ScreenSize.width,

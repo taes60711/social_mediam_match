@@ -5,7 +5,7 @@ import '../../../models/skill_model.dart';
 import '../../../provider/course_provider.dart';
 import '../../../provider/home/skill_change_view_provider.dart';
 import '../../home/coursePage/course_filter.dart';
-import 'custom_end_drawer.dart';
+import 'base_end_drawer.dart';
 
 enum CourseFilterEndDrawerType {
   open,

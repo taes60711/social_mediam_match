@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
 
 ///MARK: Base EndDrawer
 class EndDrawer extends StatefulWidget {
@@ -115,36 +117,71 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
   }
 }
 
-class BaseEndDrawer {
-  void show(BuildContext context, {required Widget child}) {
+final ss = StateProvider<int>((ref) {
+  return 0;
+});
+
+abstract class BaseEndDrawer {
+  late AnimationController controller;
+
+  late Function render;
+
+  bool _isInit = true;
+  Future<void> initState(WidgetRef ref) async {}
+
+  /// MARK:  mainBody
+  Widget build(WidgetRef ref);
+
+  void show(BuildContext context) {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
           return Scaffold(
             backgroundColor: Colors.transparent,
-            body: EndDrawerWidget(child: child),
+            body: EndDrawerWidget(
+              callBackAnimationController: (AnimationController animationController) => controller = animationController,
+              child: Consumer(
+                builder: ((context, ref, _) {
+                  return StatefulBuilder(
+                    builder: ((context, setState) {
+                      if (_isInit) {
+                        render = () => setState(() {});
+                        Future.delayed(Duration.zero).then((value) => initState(ref).then((value) => _isInit = false));
+                      }
+                      return build(ref);
+                    }),
+                  );
+                }),
+              ),
+            ),
           );
         },
         opaque: false,
       ),
     );
   }
+
+  void closePage() {
+    controller.reverse();
+    RouteOptions.pop();
+  }
 }
 
-class EndDrawerWidget extends StatefulWidget {
+class EndDrawerWidget extends ConsumerStatefulWidget {
   final Widget child;
-  const EndDrawerWidget({super.key, required this.child});
+  final Function(AnimationController controller) callBackAnimationController;
+
+  const EndDrawerWidget({super.key, required this.child, required this.callBackAnimationController});
 
   @override
   // ignore: library_private_types_in_public_api
   _EndDrawerWidgetState createState() => _EndDrawerWidgetState();
 }
 
-class _EndDrawerWidgetState extends State<EndDrawerWidget> with SingleTickerProviderStateMixin {
+class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
   double _dragStartX = 0.0;
-  bool isInit = false;
 
   @override
   void initState() {
@@ -165,8 +202,7 @@ class _EndDrawerWidgetState extends State<EndDrawerWidget> with SingleTickerProv
     );
 
     _controller.forward().whenComplete(() {
-      isInit = true;
-      setState(() {});
+      widget.callBackAnimationController(_controller);
     });
   }
 
@@ -212,34 +248,9 @@ class _EndDrawerWidgetState extends State<EndDrawerWidget> with SingleTickerProv
           height: MediaQuery.of(context).size.height,
           color: AppColors.bgColor,
           child: Builder(builder: (context) {
-            return !isInit
-                ? const SafeArea(
-                    child: Center(
-                      child: Loading(),
-                    ),
-                  )
-                : SafeArea(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: ScreenSize.fitPxWidth(40),
-                          height: ScreenSize.fitPxWidth(40),
-                          child: GestureDetector(
-                            onTap: () {
-                              _closeEndDrawer();
-                            },
-                            child: Icon(
-                              Icons.arrow_back_ios,
-                              color: AppColors.whiteColor,
-                              size: ScreenSize.fitPxWidth(15),
-                            ),
-                          ),
-                        ),
-                        Expanded(child: widget.child),
-                      ],
-                    ),
-                  );
+            return SafeArea(
+              child: widget.child,
+            );
           }),
         ),
       ),

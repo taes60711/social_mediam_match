@@ -4,7 +4,7 @@ import 'package:social_mediam_match/provider/home/skill_change_view_provider.dar
 import '../../../models/skill_model.dart';
 import '../../home/skillExChangePage/skill_change_filter_page.dart';
 
-import 'custom_end_drawer.dart';
+import 'base_end_drawer.dart';
 
 enum SkillChangeEndDrawerType {
   open,

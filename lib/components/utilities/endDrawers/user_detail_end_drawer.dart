@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/friend_provider.dart';
 import '../../user_detail_page.dart';
-import 'custom_end_drawer.dart';
+import 'base_end_drawer.dart';
 
 enum UserDetailEndDrawerType {
   open,

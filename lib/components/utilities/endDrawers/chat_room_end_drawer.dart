@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/provider/friend_provider.dart';
 
 import '../../home/firendsPage/chat_room.dart';
-import 'custom_end_drawer.dart';
+import 'base_end_drawer.dart';
 
 enum ChatRoomEndDrawerType {
   open,

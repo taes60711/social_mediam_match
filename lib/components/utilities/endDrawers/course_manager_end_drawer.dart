@@ -5,7 +5,7 @@ import '../../../models/course_model.dart';
 import '../../../provider/course_provider.dart';
 import '../../home/userPage/myCourse/courses_member_manager.dart';
 import '../apiListView/base_api_list_provider.dart';
-import 'custom_end_drawer.dart';
+import 'base_end_drawer.dart';
 
 enum CourseManagerEndDrawerType {
   open,
