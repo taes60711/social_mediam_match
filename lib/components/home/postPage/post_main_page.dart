@@ -1,11 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
 import '../../../global/global_view_model.dart';
 import '../../../models/post_model.dart';
 import '../../../services/post_service.dart';
-import '../../utilities/BottomSheets/base_bottom_sheet.dart';
 import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/style/screen_size.dart';

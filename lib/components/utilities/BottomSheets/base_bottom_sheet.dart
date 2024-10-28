@@ -138,7 +138,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
   }
 
   void _onVerticalDragEnd(DragEndDetails details) {
-    if (_controller.value < 0.8) {
+    if (_controller.value < 0.85) {
       _closeEndDrawer();
     } else {
       _controller.forward();
