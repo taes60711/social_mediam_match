@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
-import 'package:social_mediam_match/components/utilities/BottomSheets/base_overlay_bottom_sheet.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -10,6 +9,7 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import '../../../models/post_model.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/user_icon.dart';
+import 'post_comment_page.dart';
 import 'post_main_page.dart';
 
 class PostDetailPage extends BaseEndDrawer {
@@ -107,7 +107,7 @@ class PostDetailPage extends BaseEndDrawer {
         ///コメント
         GestureDetector(
           onTap: () {
-            ss().show(context);
+            PostCommentPage().show(context);
           },
           child: Container(
             decoration: BoxDecoration(
@@ -173,32 +173,6 @@ class PostDetailPage extends BaseEndDrawer {
             ),
           ),
         ),
-      ],
-    );
-  }
-}
-
-class ss extends BaseOverlayBottomSheet {
-  List<int> w = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-  @override
-  Widget build(ref) {
-    return Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: w
-                  .map((e) => Container(
-                        width: ScreenSize.width,
-                        height: 100,
-                        color: Colors.blueAccent,
-                        child: Text("${e}"),
-                      ))
-                  .toList(),
-            ),
-          ),
-        )
       ],
     );
   }

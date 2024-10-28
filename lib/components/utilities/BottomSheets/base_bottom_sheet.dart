@@ -28,7 +28,9 @@ abstract class BaseBottomSheet {
                 builder: (context, setState) {
                   if (!_isInit) {
                     render = () => setState(() {});
-                    _isInit = true;
+                    Future.delayed(Duration.zero).then((value) {
+                      initState(ref).then((value) => _isInit = true);
+                    });
                   }
 
                   return GestureDetector(

@@ -15,7 +15,11 @@ abstract class BaseOverlayBottomSheet {
 
   Widget build(WidgetRef ref);
 
-  void show(BuildContext context, {double height = 0.7}) {
+  Widget downWidgetBuild(WidgetRef ref) {
+    return Container();
+  }
+
+  void show(BuildContext context, {double height = 0.6}) {
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         bottom: 0,
@@ -27,7 +31,10 @@ abstract class BaseOverlayBottomSheet {
               builder: (context, setState) {
                 if (!_isInit) {
                   render = () => setState(() {});
-                  _isInit = true;
+
+                  Future.delayed(Duration.zero).then((value) {
+                    initState(ref).then((value) => _isInit = true);
+                  });
                 }
                 return BottomSheetWidget(
                   widgetHeight: ScreenSize.height * height,
@@ -35,6 +42,7 @@ abstract class BaseOverlayBottomSheet {
                   callBackAnimationController: (AnimationController animationController) {
                     controller = animationController;
                   },
+                  downWidget: downWidgetBuild(ref),
                   child: build(ref),
                 );
               },
@@ -58,12 +66,14 @@ class BottomSheetWidget extends StatefulWidget {
   final Function closeFunc;
   final Function(AnimationController controller) callBackAnimationController;
   final Widget child;
+  final Widget? downWidget;
   const BottomSheetWidget({
     super.key,
     required this.widgetHeight,
     required this.closeFunc,
     required this.callBackAnimationController,
     required this.child,
+    this.downWidget,
   });
 
   @override
@@ -74,7 +84,10 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
   double _dragStartY = 0;
+  double lastDragStartY = 0;
   double contianerHeight = 0;
+
+  int _isDraggingDownStatus = 0; // 0:不要影響  1 :下滑  2:上滑
 
   @override
   void initState() {
@@ -107,36 +120,44 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
   }
 
   void _onVerticalDragStart(DragStartDetails details) {
-    if (_dragStartY == 0) {
-      _dragStartY = details.globalPosition.dy;
-    }
+    _dragStartY = details.globalPosition.dy;
   }
 
   void _onVerticalDragUpdate(DragUpdateDetails details) {
     double dragDelta = details.globalPosition.dy - _dragStartY;
+    _isDraggingDownStatus = 0;
+
+    /// 滑動距離大於3
+    if ((dragDelta - lastDragStartY).abs() > 2) {
+      if (dragDelta > 0) {
+        /// 下滑
+        _isDraggingDownStatus = 1;
+      } else if (dragDelta < 0) {
+        /// 上滑
+        _isDraggingDownStatus = 2;
+      }
+    }
+
     _dragStartY = details.globalPosition.dy;
 
-    double minHeight = ScreenSize.fitPxHeight(100);
-    double maxHeight = widget.widgetHeight;
     double wantMoveHeight = contianerHeight - dragDelta;
 
-    if (wantMoveHeight >= minHeight && wantMoveHeight <= maxHeight) {
+    if (wantMoveHeight >= ScreenSize.fitPxHeight(100) && wantMoveHeight <= widget.widgetHeight) {
       contianerHeight = wantMoveHeight;
+      setState(() {});
     }
-    setState(() {});
   }
 
   void _onVerticalDragEnd(DragEndDetails details) {
-    bool isDraggingDown = details.velocity.pixelsPerSecond.dy >= 0;
-
-    if (isDraggingDown) {
+    if (_isDraggingDownStatus == 1) {
       if (contianerHeight >= ScreenSize.fitPxHeight(200)) {
         contianerHeight = ScreenSize.fitPxHeight(200);
-      } else if (contianerHeight < ScreenSize.fitPxHeight(200)) {
-        widget.closeFunc();
       }
-    } else {
+    } else if (_isDraggingDownStatus == 2) {
       contianerHeight = widget.widgetHeight;
+    }
+    if (contianerHeight < ScreenSize.fitPxHeight(200)) {
+      widget.closeFunc();
     }
   }
 
@@ -170,15 +191,8 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  SizedBox(
-                    height: ScreenSize.fitPxHeight(20),
-                  ),
                   Expanded(child: widget.child),
-                  Container(
-                    width: ScreenSize.width,
-                    height: ScreenSize.fitPxHeight(50),
-                    color: Colors.indigoAccent,
-                  ),
+                  widget.downWidget ?? Container(),
                 ],
               ),
             ),
