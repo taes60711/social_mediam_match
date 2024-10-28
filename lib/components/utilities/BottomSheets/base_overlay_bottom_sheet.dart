@@ -15,7 +15,7 @@ abstract class BaseOverlayBottomSheet {
 
   Widget build(WidgetRef ref);
 
-  void show(BuildContext context, {double height = 0.8}) {
+  void show(BuildContext context, {double height = 0.7}) {
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         bottom: 0,
@@ -130,9 +130,9 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
     bool isDraggingDown = details.velocity.pixelsPerSecond.dy >= 0;
 
     if (isDraggingDown) {
-      if (contianerHeight >= ScreenSize.fitPxHeight(150)) {
-        contianerHeight = ScreenSize.fitPxHeight(150);
-      } else if (contianerHeight < ScreenSize.fitPxHeight(150)) {
+      if (contianerHeight >= ScreenSize.fitPxHeight(200)) {
+        contianerHeight = ScreenSize.fitPxHeight(200);
+      } else if (contianerHeight < ScreenSize.fitPxHeight(200)) {
         widget.closeFunc();
       }
     } else {
@@ -173,7 +173,12 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
                   SizedBox(
                     height: ScreenSize.fitPxHeight(20),
                   ),
-                  Expanded(child: widget.child)
+                  Expanded(child: widget.child),
+                  Container(
+                    width: ScreenSize.width,
+                    height: ScreenSize.fitPxHeight(50),
+                    color: Colors.indigoAccent,
+                  ),
                 ],
               ),
             ),
