@@ -31,18 +31,25 @@ class BaseTopBar extends StatelessWidget {
               backFunc != null ? backFunc!() : RouteOptions.pop();
             },
             child: Container(
-              width: 35,
-              height: 35,
+              width: ScreenSize.fitPxWidth(40),
+              height: ScreenSize.fitPxWidth(40),
               color: Colors.transparent,
               child: Center(
                 child: Icon(
                   Icons.arrow_back_ios,
-                  color: normalBgColor2,
+                  size: ScreenSize.fontSize14,
+                  color: AppColors.whiteColor,
                 ),
               ),
             ),
           ),
-      centerWidget ?? Text(title),
+      centerWidget ??
+          Text(
+            title,
+            style: TextStyle(
+              color: AppColors.whiteColor,
+            ),
+          ),
       rightWidget
     ];
 

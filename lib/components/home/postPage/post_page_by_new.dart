@@ -8,6 +8,7 @@ import '../../../global/global_view_model.dart';
 import '../../../provider/post/post_view_model.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/BottomSheets/base_bottom_sheet.dart';
+import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/loading.dart';
@@ -69,10 +70,7 @@ class _PostByViewState extends ConsumerState<PostByNew> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          BaseBottomSheet().show(
-                            context,
-                            child: PostViewUtilities().userProfileView(userData: data.postUserInfo),
-                          );
+                          UserProfileBottomSheet(userData: data.postUserInfo).show(context);
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(top: 5, right: 5),

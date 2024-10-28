@@ -6,6 +6,7 @@ import '../../../global/global_view_model.dart';
 import '../../../models/post_model.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/BottomSheets/base_bottom_sheet.dart';
+import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -208,12 +209,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                           SizedBox(width: ScreenSize.fitPxWidth(5)),
                           GestureDetector(
                             onTap: () {
-                              BaseBottomSheet().show(
-                                context,
-                                child: PostViewUtilities().userProfileView(
-                                  userData: e.postUserInfo,
-                                ),
-                              );
+                              UserProfileBottomSheet(userData: e.postUserInfo).show(context);
                             },
                             child: UserIcon(
                               iconSize: 20,

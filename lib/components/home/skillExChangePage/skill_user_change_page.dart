@@ -10,10 +10,9 @@ import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../../services/user_service.dart';
 import '../../strings/skillExChangePage/skill_change_page_string.dart';
-import '../../utilities/BottomSheets/base_bottom_sheet.dart';
+import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
-import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/style/style_config.dart';
 
 class SkillUserChangePage extends ConsumerStatefulWidget {
@@ -54,14 +53,10 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
                     return UserService().getAllUserData(page, size, userUid: "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2", filterSkill: []);
                   },
                   listControllerProvider: userExChangelistControllerProvider,
-                  // upWidget: _buildSearchBar(ref, () => setState(() {}), context),
                   itemChild: (data, index) {
                     return GestureDetector(
                       onTap: () {
-                        BaseBottomSheet().show(
-                          context,
-                          child: userProfileView(userData: data),
-                        );
+                        UserProfileAllInfoBottomSheet(userData: data).show(context);
                       },
                       child: Container(
                         width: ScreenSize.width,

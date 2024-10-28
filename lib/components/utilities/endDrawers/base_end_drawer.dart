@@ -4,7 +4,6 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
 
 ///MARK: Base EndDrawer
 class EndDrawer extends StatefulWidget {
@@ -117,36 +116,49 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
   }
 }
 
-final ss = StateProvider<int>((ref) {
-  return 0;
-});
-
 abstract class BaseEndDrawer {
   late AnimationController controller;
-
+  late Function closePage;
   late Function render;
+  late BuildContext context;
+  bool _isInit = false;
 
-  bool _isInit = true;
+  bool needWaitOpenPage() {
+    return false;
+  }
+
+  // initState前に
+  void create() {}
+  // （レンダリング、APIとか必要場合）
   Future<void> initState(WidgetRef ref) async {}
 
   /// MARK:  mainBody
   Widget build(WidgetRef ref);
 
-  void show(BuildContext context) {
-    Navigator.of(context).push(
+  void show(BuildContext buildContext) {
+    context = buildContext;
+    Navigator.of(buildContext).push(
       PageRouteBuilder(
         pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
           return Scaffold(
             backgroundColor: Colors.transparent,
             body: EndDrawerWidget(
               callBackAnimationController: (AnimationController animationController) => controller = animationController,
+              needWaitPageOpen: needWaitOpenPage(),
+              callBackClosePage: (Function callBackClosePage) {
+                closePage = callBackClosePage;
+              },
               child: Consumer(
                 builder: ((context, ref, _) {
                   return StatefulBuilder(
-                    builder: ((context, setState) {
-                      if (_isInit) {
+                    builder: ((_, setState) {
+                      if (!_isInit) {
                         render = () => setState(() {});
-                        Future.delayed(Duration.zero).then((value) => initState(ref).then((value) => _isInit = false));
+
+                        Future.delayed(Duration.zero).then((value) {
+                          create();
+                          initState(ref).then((value) => _isInit = true);
+                        });
                       }
                       return build(ref);
                     }),
@@ -160,18 +172,20 @@ abstract class BaseEndDrawer {
       ),
     );
   }
-
-  void closePage() {
-    controller.reverse();
-    RouteOptions.pop();
-  }
 }
 
 class EndDrawerWidget extends ConsumerStatefulWidget {
   final Widget child;
+  final bool needWaitPageOpen;
   final Function(AnimationController controller) callBackAnimationController;
-
-  const EndDrawerWidget({super.key, required this.child, required this.callBackAnimationController});
+  final Function(Function closepage) callBackClosePage;
+  const EndDrawerWidget({
+    super.key,
+    required this.child,
+    required this.callBackAnimationController,
+    required this.callBackClosePage,
+    this.needWaitPageOpen = false,
+  });
 
   @override
   // ignore: library_private_types_in_public_api
@@ -182,10 +196,16 @@ class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTi
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
   double _dragStartX = 0.0;
+  bool isInit = true;
+  bool isDispose = false;
 
   @override
   void initState() {
     super.initState();
+    if (widget.needWaitPageOpen) {
+      isInit = false;
+    }
+
     _controller = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
@@ -203,6 +223,9 @@ class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTi
 
     _controller.forward().whenComplete(() {
       widget.callBackAnimationController(_controller);
+      widget.callBackClosePage(() => _closeEndDrawer());
+      isInit = true;
+      setState(() {});
     });
   }
 
@@ -231,12 +254,25 @@ class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTi
   }
 
   void _closeEndDrawer() {
+    isDispose = true;
+    setState(() {});
     _controller.reverse();
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget component = Container();
+
+    if (isDispose) {
+      component = Container();
+    } else if (!isInit) {
+      component = const Center(
+        child: Loading(),
+      );
+    } else {
+      component = widget.child;
+    }
     return GestureDetector(
       onHorizontalDragStart: _onHorizontalDragStart,
       onHorizontalDragUpdate: _onHorizontalDragUpdate,
@@ -247,11 +283,9 @@ class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTi
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           color: AppColors.bgColor,
-          child: Builder(builder: (context) {
-            return SafeArea(
-              child: widget.child,
-            );
-          }),
+          child: SafeArea(
+            child: component,
+          ),
         ),
       ),
     );

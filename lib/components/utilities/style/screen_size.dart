@@ -2,6 +2,18 @@
 import 'package:flutter/material.dart';
 
 class ScreenSize {
+  // 画面の幅に基づいて自動調整
+  static double fitPxWidth(double size) {
+    double normalWidth = 375;
+    return size * (width / normalWidth);
+  }
+
+  // 画面の高さに基づいて自動調整
+  static double fitPxHeight(double size) {
+    double normalHeight = 750;
+    return size * (height / normalHeight);
+  }
+
   static final Size _screenSize = WidgetsBinding.instance.window.physicalSize;
   static final double _pixelRatio = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
   static final double topPadding = WidgetsBinding.instance.platformDispatcher.implicitView!.padding.top;
@@ -19,18 +31,6 @@ class ScreenSize {
   static double fontSize20 = _fitFontSize(20);
   static double fontSize22 = _fitFontSize(22);
   static double fontSize24 = _fitFontSize(24);
-
-  // 画面の幅に基づいて自動調整
-  static double fitPxWidth(double size) {
-    double normalWidth = 375;
-    return size * (width / normalWidth);
-  }
-
-  // 画面の高さに基づいて自動調整
-  static double fitPxHeight(double size) {
-    double normalHeight = 750;
-    return size * (height / normalHeight);
-  }
 
   static double _fitFontSize(double fontSize) {
     double normalWidth = 375;
