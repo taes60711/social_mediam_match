@@ -15,8 +15,7 @@ abstract class BaseOverlayBottomSheet {
 
   Widget build(WidgetRef ref);
 
-  void show(BuildContext context, {double height = 0.3}) {
-    double sHeight = ScreenSize.height * height;
+  void show(BuildContext context, {double height = 0.8}) {
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         bottom: 0,
@@ -30,48 +29,13 @@ abstract class BaseOverlayBottomSheet {
                   render = () => setState(() {});
                   _isInit = true;
                 }
-
-                return AnimatedContainer(
-                  height: sHeight,
-                  duration: const Duration(milliseconds: 150),
-                  child: Scaffold(
-                    backgroundColor: Colors.transparent,
-                    body: BottomSheetWidget(
-                      widgetHeight: sHeight,
-                      closeFunc: () => closePage(),
-                      callBackAnimationController: (AnimationController animationController) {
-                        controller = animationController;
-                      },
-                      child: Column(
-                        children: [
-                          Container(
-                            alignment: Alignment.centerRight,
-                            margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(5)),
-                            child: GestureDetector(
-                              onTap: () {
-                                if (sHeight == ScreenSize.height * height) {
-                                  sHeight = ScreenSize.safeHeight;
-                                } else {
-                                  sHeight = ScreenSize.height * height;
-                                }
-                                render();
-                              },
-                              child: Container(
-                                width: ScreenSize.fitPxWidth(40),
-                                color: Colors.transparent,
-                                child: Icon(
-                                  sHeight == ScreenSize.height * height ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                                  size: ScreenSize.fitPxWidth(30),
-                                  color: AppColors.greyColor130,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(child: build(ref)),
-                        ],
-                      ),
-                    ),
-                  ),
+                return BottomSheetWidget(
+                  widgetHeight: ScreenSize.height * height,
+                  closeFunc: () => closePage(),
+                  callBackAnimationController: (AnimationController animationController) {
+                    controller = animationController;
+                  },
+                  child: build(ref),
                 );
               },
             );
@@ -110,12 +74,12 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
   double _dragStartY = 0;
-  double _currentDragOffset = 0;
+  double contianerHeight = 0;
 
   @override
   void initState() {
     super.initState();
-
+    contianerHeight = widget.widgetHeight;
     _controller = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
@@ -148,58 +112,53 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
     }
   }
 
-  // void _onVerticalDragUpdate(DragUpdateDetails details) {
-  //   double dragDelta = details.globalPosition.dy - _dragStartY;
-  //   _currentDragOffset += dragDelta;
-  //   double dragFraction = _currentDragOffset / widget.widgetHeight;
-  //   _controller.value = (1 - dragFraction).clamp(0.2, 1.0);
-  //   _dragStartY = details.globalPosition.dy;
-  // }
-
   void _onVerticalDragUpdate(DragUpdateDetails details) {
-    setState(() {
-      _currentDragOffset += details.delta.dy;
-      double dragFraction = _currentDragOffset / widget.widgetHeight;
-      _controller.value = (1 - dragFraction).clamp(0.0, 1.0);
-    });
-  }
-
-  void _onVerticalDragEnd(DragEndDetails details) {
-    if (_controller.value < 0.85) {
-      widget.closeFunc();
-    } else {
-      _controller.forward();
-    }
-    _currentDragOffset = 0;
+    double dragDelta = details.globalPosition.dy - _dragStartY;
+    _dragStartY = details.globalPosition.dy;
+    contianerHeight = contianerHeight - dragDelta;
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onVerticalDragStart: _onVerticalDragStart,
-      onVerticalDragUpdate: _onVerticalDragUpdate,
-      onVerticalDragEnd: _onVerticalDragEnd,
-      child: SlideTransition(
-        position: _offsetAnimation,
-        child: Container(
-          width: ScreenSize.width,
-          decoration: BoxDecoration(
-            color: AppColors.black37,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
-          ),
-          child: Column(
-            children: [
-              Container(
-                width: ScreenSize.width * 0.1,
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.greyColor98,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
+      height: contianerHeight,
+      color: Colors.blue,
+      child: Material(
+        color: Colors.transparent,
+        child: GestureDetector(
+          onVerticalDragStart: _onVerticalDragStart,
+          onVerticalDragUpdate: _onVerticalDragUpdate,
+          child: SlideTransition(
+            position: _offsetAnimation,
+            child: Container(
+              width: ScreenSize.width,
+              decoration: BoxDecoration(
+                color: AppColors.black37,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
               ),
-              Expanded(child: widget.child)
-            ],
+              child: Column(
+                children: [
+                  Container(
+                    width: ScreenSize.width * 0.1,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.greyColor98,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      widget.closeFunc();
+                    },
+                    child: Text("1234"),
+                  ),
+                  Expanded(child: widget.child)
+                ],
+              ),
+            ),
           ),
         ),
       ),
