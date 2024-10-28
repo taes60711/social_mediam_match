@@ -115,8 +115,29 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
   void _onVerticalDragUpdate(DragUpdateDetails details) {
     double dragDelta = details.globalPosition.dy - _dragStartY;
     _dragStartY = details.globalPosition.dy;
-    contianerHeight = contianerHeight - dragDelta;
+
+    double minHeight = ScreenSize.fitPxHeight(100);
+    double maxHeight = widget.widgetHeight;
+    double wantMoveHeight = contianerHeight - dragDelta;
+
+    if (wantMoveHeight >= minHeight && wantMoveHeight <= maxHeight) {
+      contianerHeight = wantMoveHeight;
+    }
     setState(() {});
+  }
+
+  void _onVerticalDragEnd(DragEndDetails details) {
+    bool isDraggingDown = details.velocity.pixelsPerSecond.dy >= 0;
+
+    if (isDraggingDown) {
+      if (contianerHeight >= ScreenSize.fitPxHeight(150)) {
+        contianerHeight = ScreenSize.fitPxHeight(150);
+      } else if (contianerHeight < ScreenSize.fitPxHeight(150)) {
+        widget.closeFunc();
+      }
+    } else {
+      contianerHeight = widget.widgetHeight;
+    }
   }
 
   @override
@@ -124,12 +145,12 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       height: contianerHeight,
-      color: Colors.blue,
       child: Material(
         color: Colors.transparent,
         child: GestureDetector(
           onVerticalDragStart: _onVerticalDragStart,
           onVerticalDragUpdate: _onVerticalDragUpdate,
+          onVerticalDragEnd: _onVerticalDragEnd,
           child: SlideTransition(
             position: _offsetAnimation,
             child: Container(
@@ -149,11 +170,8 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      widget.closeFunc();
-                    },
-                    child: Text("1234"),
+                  SizedBox(
+                    height: ScreenSize.fitPxHeight(20),
                   ),
                   Expanded(child: widget.child)
                 ],
