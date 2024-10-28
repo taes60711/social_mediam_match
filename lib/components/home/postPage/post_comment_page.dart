@@ -14,11 +14,6 @@ final postCommentListControllerProvider = StateNotifierProvider<APIListControlle
 
 class PostCommentPage extends BaseOverlayBottomSheet {
   @override
-  Future<void> initState(WidgetRef ref) async {
-    ref.read(postCommentListControllerProvider.notifier).size = 7;
-  }
-
-  @override
   Widget build(ref) {
     return Column(
       children: [
@@ -28,6 +23,7 @@ class PostCommentPage extends BaseOverlayBottomSheet {
         ),
         Expanded(
           child: APIListWidget(
+              size: 7,
               apiFunc: (page, size) {
                 return PostService().getPostCommentData(page, size, 30);
               },

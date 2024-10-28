@@ -406,17 +406,17 @@ class APIListView<R> extends StatelessWidget {
 }
 
 class APIListWidget<R> extends ConsumerStatefulWidget {
+  final int size;
   final Future<List<R>> Function(int page, int size) apiFunc;
   final StateNotifierProvider<APIListControllerNotifier, APIListController<dynamic>> listControllerProvider;
-  final Widget? upWidget;
   final Widget? loadingWidget;
   final Widget? noDataWidget;
   final Widget Function(R data, int index) itemChild;
   const APIListWidget({
     super.key,
+    this.size = 5,
     required this.apiFunc,
     required this.listControllerProvider,
-    this.upWidget,
     this.loadingWidget,
     this.noDataWidget,
     required this.itemChild,
@@ -441,7 +441,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
 
   Future<void> init() async {
     ///init前に
-    ref.read(widget.listControllerProvider.notifier).create();
+    ref.read(widget.listControllerProvider.notifier).create(widget.size);
     setState(() {});
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ///実際的init
@@ -489,9 +489,6 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                         visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantReload,
                         child: const Loading(),
                       ),
-                      Builder(builder: (context) {
-                        return widget.upWidget ?? Container();
-                      }),
 
                       ///項目リスト
                       Column(

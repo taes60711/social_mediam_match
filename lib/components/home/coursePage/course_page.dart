@@ -283,7 +283,7 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
           Column(
             children: [
               Container(
-                height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 40 : 0,
+                height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 50 : 0,
               ),
               Expanded(
                 child: APIListWidget(

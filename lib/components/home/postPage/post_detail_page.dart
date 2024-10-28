@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
@@ -13,9 +12,6 @@ import 'post_comment_page.dart';
 import 'post_main_page.dart';
 
 class PostDetailPage extends BaseEndDrawer {
-  @override
-  Future<void> initState(WidgetRef ref) async {}
-
   @override
   bool needWaitOpenPage() {
     return true;

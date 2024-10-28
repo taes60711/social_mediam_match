@@ -15,10 +15,11 @@ class APIListControllerNotifier extends StateNotifier<APIListController> {
   APIListControllerNotifier(APIListController state) : super(state);
   List preLoadData = [];
   int page = 0;
-  int size = 5;
+  int size = 0;
 
-  void create() {
+  void create(int initSize) {
     page = 0;
+    size = initSize;
     state.loadDataStatus = LoadDataStatus.initial;
   }
 
@@ -35,7 +36,7 @@ class APIListControllerNotifier extends StateNotifier<APIListController> {
   }
 
   Future<void> replaceApi(Future<List> Function(int page, int size) replaceApiFunc) async {
-    create();
+    create(size);
     state.apiFunc = replaceApiFunc;
     state.listData = await state.apiFunc(page, size);
     page++;
