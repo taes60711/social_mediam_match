@@ -38,7 +38,7 @@ class MyNotificationPage extends StatelessWidget {
       child: Stack(
         children: [
           mainBody(context),
-          courseDetailEndDrawer(),
+          // courseDetailEndDrawer(),
           // postDetailEndDrawer(),
           userDetailEndDrawer(),
         ],
@@ -116,7 +116,7 @@ Widget mainBody(BuildContext context) {
                           ProfileData userData = context.read<UserProvider>().userData;
                           CourseModel openedCourse =
                               await CourseService().getCourseBycourseId(userData.uid, notificationData.courseId ?? -1);
-                          CourseViewModel(courseContext: context).courseDetailInit(openedCourse: openedCourse);
+                          // CourseViewModel(courseContext: context).courseDetailInit(openedCourse: openedCourse);
                         } else if (notificationData.type == 2) {
                           openUserDetailEndDrawer(context: context, otherUserData: notificationData.sendNotificationuserInfo);
                         }

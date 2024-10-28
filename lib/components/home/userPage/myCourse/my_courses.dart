@@ -71,7 +71,7 @@ class MyCourses extends StatelessWidget {
                 ),
               ],
             ),
-            courseDetailEndDrawer(),
+            // courseDetailEndDrawer(),
             courseManagerEndDrawer(),
             userDetailEndDrawer(),
           ],

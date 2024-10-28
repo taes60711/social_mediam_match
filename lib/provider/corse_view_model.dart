@@ -28,9 +28,9 @@ class CourseViewModel {
   BuildContext courseContext;
   CourseViewModel({required this.courseContext});
 
-  Future<void> courseDetailInit({required CourseModel openedCourse}) async {
-    openCourseDetailEndDrawer(context: courseContext, openedCourse: openedCourse);
-  }
+  // Future<void> courseDetailInit({required CourseModel openedCourse}) async {
+  //   openCourseDetailEndDrawer(context: courseContext, openedCourse: openedCourse);
+  // }
 
   Future<void> courseEditInit({CourseModel? courseData}) async {
     List<RequestSkillListData> requestSkillList = await SkillService().requestSkillList();
@@ -250,7 +250,7 @@ class CourseViewModel {
                         btnColor: normalBgColor2,
                         onPress: () {
                           RouteOptions.pop();
-                          CourseViewModel(courseContext: courseContext).courseDetailInit(openedCourse: courseData);
+                          // CourseViewModel(courseContext: courseContext).courseDetailInit(openedCourse: courseData);
                         },
                       ),
                       const SizedBox(height: 15),

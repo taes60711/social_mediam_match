@@ -31,7 +31,7 @@ class AddedCoursesPage extends StatelessWidget {
         itemChild: ((data, index) {
           return GestureDetector(
             onTap: () {
-              CourseViewModel(courseContext: context).courseDetailInit(openedCourse: data[index]);
+              // CourseViewModel(courseContext: context).courseDetailInit(openedCourse: data[index]);
             },
             child: Container(
               color: Colors.transparent,

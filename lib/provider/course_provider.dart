@@ -134,12 +134,12 @@ class CourseProvider extends ChangeNotifier {
 
   // MARK: View
   CourseModel choicedCourse = CourseModel(courseCreateduserInfo: ProfileData());
-  CourseDetailEndDrawerType endDrawerOpenInfo = CourseDetailEndDrawerType.close;
-  void changeEndDrawerStatus(CourseDetailEndDrawerType status, CourseModel opendCourse) {
-    endDrawerOpenInfo = status;
-    choicedCourse = opendCourse;
-    notifyListeners();
-  }
+  // CourseDetailEndDrawerType endDrawerOpenInfo = CourseDetailEndDrawerType.close;
+  // void changeEndDrawerStatus(CourseDetailEndDrawerType status, CourseModel opendCourse) {
+  //   endDrawerOpenInfo = status;
+  //   choicedCourse = opendCourse;
+  //   notifyListeners();
+  // }
 
   CourseFilterEndDrawerType filterEndDrawerOpenInfo = CourseFilterEndDrawerType.close;
   void changeFilterEndDrawerStatus(CourseFilterEndDrawerType status) {

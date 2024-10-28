@@ -185,24 +185,6 @@ class ss extends BaseOverlayBottomSheet {
   Widget build(ref) {
     return Column(
       children: [
-        Container(
-          alignment: Alignment.centerRight,
-          margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(5)),
-          child: GestureDetector(
-            onTap: () {
-              closePage();
-            },
-            child: Container(
-              width: ScreenSize.fitPxWidth(40),
-              color: Colors.transparent,
-              child: Icon(
-                Icons.close,
-                size: ScreenSize.fitPxWidth(30),
-                color: AppColors.greyColor130,
-              ),
-            ),
-          ),
-        ),
         Expanded(
           child: SingleChildScrollView(
             child: Column(
