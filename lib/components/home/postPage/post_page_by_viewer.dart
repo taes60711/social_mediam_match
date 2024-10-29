@@ -69,9 +69,9 @@ class _PostByViewState extends ConsumerState<PostByView> {
                             UserProfileBottomSheet(userData: data.postUserInfo).show(context);
                           },
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 5, right: 5),
+                            padding: EdgeInsets.only(top: ScreenSize.fitPxHeight(2), right: ScreenSize.fitPxWidth(5)),
                             child: UserIcon(
-                              iconSize: 24,
+                              iconSize: 30,
                               image: data.postUserInfo.image,
                             ),
                           ),
@@ -85,6 +85,13 @@ class _PostByViewState extends ConsumerState<PostByView> {
                                   Text(
                                     data.postUserInfo.name ?? "",
                                     style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                                  ),
+                                  SizedBox(width: ScreenSize.fitPxWidth(4)),
+
+                                  ///期日
+                                  Text(
+                                    "${data.postTime}${tr("skExChpage_beforDays")}",
+                                    style: TextStyle(fontSize: ScreenSize.fontSize10, color: AppColors.greyColor130),
                                   ),
                                   const Expanded(child: SizedBox(width: 1)),
                                   Container(
@@ -175,14 +182,6 @@ class _PostByViewState extends ConsumerState<PostByView> {
                                         size: 14,
                                       ),
                                     ),
-                                  ),
-
-                                  Expanded(child: SizedBox(width: 1)),
-
-                                  ///期日
-                                  Text(
-                                    "${data.postTime}${tr("skExChpage_beforDays")}",
-                                    style: TextStyle(fontSize: ScreenSize.fontSize12, color: Colors.grey),
                                   ),
                                 ],
                               ),

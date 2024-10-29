@@ -242,6 +242,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 
 import '../../../models/course_model.dart';
@@ -254,6 +255,11 @@ import '../../utilities/user_icon.dart';
 import 'course_page.dart';
 
 class CourseDetailPage extends BaseEndDrawer {
+  @override
+  bool needWaitOpenPage() {
+    return true;
+  }
+
   @override
   Widget build(WidgetRef ref) {
     CourseModel choiceData = ref.read(choicedCourseProvider);
@@ -283,6 +289,14 @@ class CourseDetailPage extends BaseEndDrawer {
                       Text(
                         "類別 ${choiceData.type}",
                         style: TextStyle(fontSize: ScreenSize.fontSize12, color: hintTextColor),
+                      ),
+                      Expanded(
+                          child: SizedBox(
+                        width: 1,
+                      )),
+                      MainBtn(
+                        title: "申請",
+                        onPress: () {},
                       ),
                     ],
                   ),
@@ -420,6 +434,46 @@ class CourseDetailPage extends BaseEndDrawer {
                       RichTextView(content: choiceData.prStory),
                     ],
                   ),
+
+                  Column(
+                    children: choiceData.chapterList.asMap().entries.map((e) {
+                      int index = e.key;
+                      CourseChapterInfo chapterInfo = e.value;
+                      return CustomExpansionTile(
+                        initiallyExpanded: true,
+                        title: Text(
+                          chapterInfo.chapterName == "" ? "chapter${index + 1}" : chapterInfo.chapterName,
+                          style: TextStyle(color: AppColors.whiteColor),
+                        ),
+                        collapsedTrailingWidget: Icon(
+                          Icons.keyboard_arrow_up,
+                          color: AppColors.whiteColor,
+                        ),
+                        expandedTrailingWidget: Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.whiteColor,
+                        ),
+                        children: <Widget>[
+                          SizedBox(
+                            width: ScreenSize.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: choiceData.chapterList[index].content.map((e) {
+                                String content = e;
+
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 5),
+                                  child: RichTextView(content: content),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+
+                  SizedBox(height: ScreenSize.fitPxHeight(20))
                 ],
               ),
             ),

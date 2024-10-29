@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../models/rich_text_format.dart';
@@ -152,7 +153,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
         //全文章
         ? HtmlWidget(
             RichTextFormat(htmlString: widget.content).editedTextToWidgetHtml(),
-            textStyle: TextStyle(fontSize: fontSize),
+            textStyle: TextStyle(fontSize: fontSize, color: AppColors.whiteColor),
             onTapUrl: (url) {
               tapedURL(url);
               return false;
@@ -161,7 +162,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
               if (element.localName == 'p') {
                 return HtmlWidget(
                   element.innerHtml,
-                  textStyle: TextStyle(fontSize: fontSize),
+                  textStyle: TextStyle(fontSize: fontSize, color: AppColors.whiteColor),
                   onTapUrl: (url) {
                     tapedURL(url);
                     return false;
