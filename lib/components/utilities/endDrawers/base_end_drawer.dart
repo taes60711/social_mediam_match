@@ -177,6 +177,7 @@ abstract class BaseEndDrawer {
 class EndDrawerWidget extends ConsumerStatefulWidget {
   final Widget child;
   final bool needWaitPageOpen;
+
   final Function(AnimationController controller) callBackAnimationController;
   final Function(Function closepage) callBackClosePage;
   const EndDrawerWidget({

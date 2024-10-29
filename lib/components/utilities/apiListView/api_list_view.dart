@@ -407,6 +407,7 @@ class APIListView<R> extends StatelessWidget {
 
 class APIListWidget<R> extends ConsumerStatefulWidget {
   final int size;
+  final bool isNeedToTopBtn;
   final Future<List<R>> Function(int page, int size) apiFunc;
   final StateNotifierProvider<APIListControllerNotifier, APIListController<dynamic>> listControllerProvider;
   final Widget? loadingWidget;
@@ -415,6 +416,7 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
   const APIListWidget({
     super.key,
     this.size = 5,
+    this.isNeedToTopBtn = true,
     required this.apiFunc,
     required this.listControllerProvider,
     this.loadingWidget,
@@ -461,8 +463,9 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
           backgroundColor: Colors.transparent,
           body: widget.noDataWidget ??
               Center(
-                child: Container(
-                  child: Text("NoData"),
+                child: Text(
+                  "NoData",
+                  style: TextStyle(color: AppColors.whiteColor),
                 ),
               ),
         );
@@ -517,45 +520,47 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                     flatButtonPos = ScreenSize.fitPxHeight(15);
                   }
 
-                  return AnimatedPositioned(
-                    duration: const Duration(milliseconds: 300),
-                    right: ScreenSize.fitPxWidth(15),
-                    bottom: flatButtonPos,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ///トップに移動ボタン
-                        GestureDetector(
-                          onTap: () {
-                            ref.watch(widget.listControllerProvider).scrollController.animateTo(
-                                  0,
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.linear,
-                                );
-                          },
-                          child: Container(
-                            width: ScreenSize.fitPxWidth(40),
-                            height: ScreenSize.fitPxWidth(40),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              color: AppColors.greyColor98,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  spreadRadius: 1,
+                  return !widget.isNeedToTopBtn
+                      ? Container()
+                      : AnimatedPositioned(
+                          duration: const Duration(milliseconds: 300),
+                          right: ScreenSize.fitPxWidth(15),
+                          bottom: flatButtonPos,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ///トップに移動ボタン
+                              GestureDetector(
+                                onTap: () {
+                                  ref.watch(widget.listControllerProvider).scrollController.animateTo(
+                                        0,
+                                        duration: const Duration(milliseconds: 300),
+                                        curve: Curves.linear,
+                                      );
+                                },
+                                child: Container(
+                                  width: ScreenSize.fitPxWidth(40),
+                                  height: ScreenSize.fitPxWidth(40),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    color: AppColors.greyColor98,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        spreadRadius: 1,
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Icon(
+                                    FontAwesomeIcons.angleUp,
+                                    size: 16,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ],
-                            ),
-                            child: const Icon(
-                              FontAwesomeIcons.angleUp,
-                              size: 16,
-                              color: Colors.white,
-                            ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  );
+                        );
                 },
               ),
             ],
@@ -593,7 +598,6 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
           final scrollPosition = scrollNotification.metrics.pixels;
 
           ///最初スクロールところ取得
-
           scrollStartPos = scrollPosition;
         }
 
@@ -604,7 +608,9 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
           if (max != 0) {
             ///最上部場合bottomBar表示される
             if (scrollPosition == 0) {
-              GlobalViewModel().bottomBarHideStateChage(false);
+              if (widget.isNeedToTopBtn) {
+                GlobalViewModel().bottomBarHideStateChage(false);
+              }
               isScrollUp = true;
               return false;
             }
@@ -614,7 +620,10 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
             if (!isScrollUp) {
               if (isScrollingUp) {
                 ///スクロール上に移動したら、bottomBar表示される
-                GlobalViewModel().bottomBarHideStateChage(false);
+                if (widget.isNeedToTopBtn) {
+                  GlobalViewModel().bottomBarHideStateChage(false);
+                }
+
                 isScrollUp = true;
               }
               if (ref.read(widget.listControllerProvider).loadDataStatus == LoadDataStatus.loadingFinish) {
@@ -658,7 +667,9 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
               } else {
                 if (!isScrollingUp) {
                   /// bottomBar隠れる
-                  GlobalViewModel().bottomBarHideStateChage(true);
+                  if (widget.isNeedToTopBtn) {
+                    GlobalViewModel().bottomBarHideStateChage(true);
+                  }
                   isScrollUp = false;
                 }
               }

@@ -9,6 +9,7 @@ import '../../utilities/background_widget.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
+import 'post_detail_page.dart';
 import 'post_page_by_new.dart';
 import 'post_page_by_viewer.dart';
 
@@ -197,31 +198,37 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                   ),
                   child: CarouselSlider(
                     items: ref.read(topPostProvider).map((e) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Hot!",
-                            style: TextStyle(color: AppColors.redColor, fontSize: 12),
-                          ),
-                          SizedBox(width: ScreenSize.fitPxWidth(5)),
-                          GestureDetector(
-                            onTap: () {
-                              UserProfileBottomSheet(userData: e.postUserInfo).show(context);
-                            },
-                            child: UserIcon(
-                              iconSize: 20,
-                              image: e.postUserInfo.image,
+                      return GestureDetector(
+                        onTap: () {
+                          ref.read(choicedPostProvider.notifier).update((state) => e);
+                          PostDetailPage().show(context);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Hot!",
+                              style: TextStyle(color: AppColors.redColor, fontSize: 12),
                             ),
-                          ),
-                          SizedBox(width: ScreenSize.fitPxWidth(8)),
-                          Text(
-                            e.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: AppColors.whiteColor),
-                          ),
-                        ],
+                            SizedBox(width: ScreenSize.fitPxWidth(5)),
+                            GestureDetector(
+                              onTap: () {
+                                UserProfileBottomSheet(userData: e.postUserInfo).show(context);
+                              },
+                              child: UserIcon(
+                                iconSize: 20,
+                                image: e.postUserInfo.image,
+                              ),
+                            ),
+                            SizedBox(width: ScreenSize.fitPxWidth(8)),
+                            Text(
+                              e.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: AppColors.whiteColor),
+                            ),
+                          ],
+                        ),
                       );
                     }).toList(),
                     options: CarouselOptions(

@@ -5,6 +5,8 @@ import 'package:social_mediam_match/components/home/coursePage/course_detail.dar
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 import '../../../global/global_view_model.dart';
+import '../../../models/course_model.dart';
+import '../../../models/user_model.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/background_widget.dart';
@@ -14,6 +16,10 @@ import '../../utilities/user_icon.dart';
 final courserMainPageListPorver = StateNotifierProvider<APIListControllerNotifier, APIListController>(
   (ref) => APIListControllerNotifier(APIListController()),
 );
+
+final choicedCourseProvider = StateProvider<CourseModel>((ref) {
+  return CourseModel(courseCreateduserInfo: ProfileData());
+});
 
 class CourseMainPage extends ConsumerStatefulWidget {
   const CourseMainPage({super.key});
@@ -42,6 +48,7 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
                     itemChild: (data, index) {
                       return GestureDetector(
                         onTap: () {
+                          ref.read(choicedCourseProvider.notifier).update((state) => data);
                           CourseDetailPage().show(context);
                         },
                         child: Container(

@@ -7,6 +7,7 @@ import '../../../services/post_service.dart';
 import '../../utilities/BottomSheets/base_overlay_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
+import 'post_main_page.dart';
 
 final postCommentListControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
   (ref) => APIListControllerNotifier(APIListController()),
@@ -24,12 +25,17 @@ class PostCommentPage extends BaseOverlayBottomSheet {
         Expanded(
           child: APIListWidget(
               size: 7,
+              isNeedToTopBtn: false,
               apiFunc: (page, size) {
-                return PostService().getPostCommentData(page, size, 30);
+                int choicedPostProviderId = ref.read(choicedPostProvider).id;
+                return PostService().getPostCommentData(page, size, choicedPostProviderId);
               },
               listControllerProvider: postCommentListControllerProvider,
-              noDataWidget: const Center(
-                child: Text("目前沒有任何留言"),
+              noDataWidget: Center(
+                child: Text(
+                  "目前沒有任何留言",
+                  style: TextStyle(color: AppColors.whiteColor),
+                ),
               ),
               itemChild: (data, index) {
                 return Padding(
