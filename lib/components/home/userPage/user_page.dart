@@ -270,7 +270,7 @@ Widget infoBtn({IconData? icon, String text = ""}) {
       children: [
         icon == null
             ? Container(
-                width: ScreenSize.fitPxWidth(24),
+                width: ScreenSize.fitPxWidth(22),
               )
             : Icon(
                 icon,
@@ -282,7 +282,7 @@ Widget infoBtn({IconData? icon, String text = ""}) {
           text,
           style: TextStyle(
             color: AppColors.whiteColor.withOpacity(.8),
-            fontSize: ScreenSize.fontSize14,
+            fontSize: ScreenSize.fontSize12,
           ),
         ),
       ],
@@ -312,7 +312,7 @@ Widget skillBar({required List<RequestUserSkillData> skills}) {
               ]
             : skills.map((e) {
                 return Container(
-                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(5)),
                   padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
