@@ -91,7 +91,7 @@ class _UserPageState extends ConsumerState<UserPage> {
               ],
             ),
           ),
-          SizedBox(height: ScreenSize.fitPxHeight(10)),
+          SizedBox(height: ScreenSize.fitPxHeight(15)),
           Container(
             width: ScreenSize.width,
             margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
@@ -131,7 +131,7 @@ class _UserPageState extends ConsumerState<UserPage> {
               ],
             ),
           ),
-          SizedBox(height: ScreenSize.fitPxHeight(10)),
+          SizedBox(height: ScreenSize.fitPxHeight(15)),
           Container(
             width: ScreenSize.width,
             margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
@@ -235,10 +235,59 @@ class _UserPageState extends ConsumerState<UserPage> {
               ],
             ),
           ),
+          SizedBox(height: ScreenSize.fitPxHeight(30)),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10)),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    infoBtn(icon: FontAwesomeIcons.solidNewspaper, text: "文章"),
+                    infoBtn(icon: FontAwesomeIcons.school, text: "技術分享"),
+                    infoBtn(icon: FontAwesomeIcons.gear, text: "設定"),
+                  ],
+                ),
+                SizedBox(height: ScreenSize.fitPxHeight(25)),
+                Row(
+                  children: [
+                    infoBtn(icon: FontAwesomeIcons.solidBell, text: "通知"),
+                    infoBtn(icon: Icons.question_answer, text: "問題回報"),
+                    infoBtn(),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
+}
+
+Widget infoBtn({IconData? icon, String text = ""}) {
+  return Expanded(
+    child: Column(
+      children: [
+        icon == null
+            ? Container(
+                width: ScreenSize.fitPxWidth(24),
+              )
+            : Icon(
+                icon,
+                color: AppColors.whiteColor,
+                size: ScreenSize.fitPxWidth(24),
+              ),
+        SizedBox(height: ScreenSize.fitPxWidth(10)),
+        Text(
+          text,
+          style: TextStyle(
+            color: AppColors.whiteColor.withOpacity(.8),
+            fontSize: ScreenSize.fontSize14,
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 Widget skillBar({required List<RequestUserSkillData> skills}) {
