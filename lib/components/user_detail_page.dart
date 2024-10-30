@@ -6,7 +6,6 @@ import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 import '../models/user_model.dart';
-import '../pageManager/setting/route_controller.dart';
 
 import '../provider/account/user_provider.dart';
 import '../provider/friend_provider.dart';
@@ -64,7 +63,7 @@ class UserDetailPage extends StatelessWidget {
                           verticalMargin: 8,
                           onPress: () {
                             toChatRoom!() ?? () {};
-                            RouteOptions.popUntilToHome();
+                            // RouteOptions.popUntilToHome();
                             // context.read<BottomBarControllerProvider>().bottomBarPageChange(BottomBarPath.chatRoom);
                           })
                       : TextBtn(

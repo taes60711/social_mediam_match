@@ -6,11 +6,9 @@ import 'package:social_mediam_match/components/utilities/background_widget.dart'
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/fit_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
 
 import '../../global.dart';
 
-import '../../pagemanager/enum/route_path.dart';
 import '../utilities/style/screen_size.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -42,18 +40,14 @@ class WelcomePage extends StatelessWidget {
                     title: "註冊帳號", //WelcomeStrings().firstButtonText,
                     titleColor: normalTextColor,
                     backgroundColor: normalBgColor,
-                    onPressed: () {
-                      RouteOptions.pushTo(RoutePath.signUpPage);
-                    }),
+                    onPressed: () {}),
                 const SizedBox(height: 10),
                 //”ログインページ遷移”ボタン
                 _button(
                     title: WelcomeStrings().loginButtonText,
                     titleColor: normalBgColor2,
                     backgroundColor: disAbleColor,
-                    onPressed: () {
-                      RouteOptions.pushTo(RoutePath.loginPage);
-                    }),
+                    onPressed: () {}),
                 const SizedBox(height: 30),
                 //バージョンテキスト
                 _versionText,

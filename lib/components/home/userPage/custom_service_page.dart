@@ -117,11 +117,7 @@ class _CustomServicePageState extends State<CustomServicePage> {
                 const Expanded(
                   child: Text("感謝回應"),
                 ),
-                MainBtn(
-                    title: "確認",
-                    onPress: () {
-                      RouteOptions.popUntilToHome();
-                    }),
+                MainBtn(title: "確認", onPress: () {}),
               ],
             ),
           ),

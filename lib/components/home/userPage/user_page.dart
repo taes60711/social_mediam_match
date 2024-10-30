@@ -1,216 +1,300 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/account/skill_bar.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
-import 'package:social_mediam_match/components/utilities/custom_button.dart';
-import 'package:social_mediam_match/components/utilities/fit_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
-
 import 'package:social_mediam_match/provider/account/user_provider.dart';
+import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 
-import '../../../pageManager/enum/route_path.dart';
-import '../../../pageManager/setting/route_controller.dart';
-import '../../strings/account/sign_up_strings.dart';
-import '../../strings/userPage/user_page_string.dart';
-import '../../utilities/endDrawers/skill_setting_end_drawer.dart';
 import '../../utilities/style/screen_size.dart';
 
-class UserPage extends StatelessWidget {
+class UserPage extends ConsumerStatefulWidget {
   const UserPage({super.key});
 
   @override
+  ConsumerState<UserPage> createState() => _UserPageState();
+}
+
+class _UserPageState extends ConsumerState<UserPage> {
+  @override
   Widget build(BuildContext context) {
-    return BackgroundWidget(
-      child: _mainBody(context),
-    );
-  }
-}
+    ProfileData userData = ref.watch(loginUserData);
 
-Widget _mainBody(BuildContext context) {
-  return Column(
-    children: [
-      SizedBox(height: ScreenSize.safeHeight * 0.05),
-      userInfo(context),
-      skillInfoWithPage(context),
-    ],
-  );
-}
-
-Widget skillInfoWithPage(BuildContext context) {
-  return FitWidget(
-    height: ScreenSize.safeHeight * 0.6,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+    return CommonScaffold(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 30),
-          //持っているスキル
-          Text(StepThirdPage.haveSkillText),
-          skillBar(
-            SkillEndDrawerType.haveSkill,
-            userData: context.read<UserProvider>().userData,
+          SizedBox(height: ScreenSize.fitPxHeight(25)),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(25)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  height: ScreenSize.fitPxHeight(83),
+                  width: ScreenSize.fitPxHeight(83),
+                  color: Colors.transparent,
+                  child: Stack(
+                    children: [
+                      UserIcon(
+                        image: userData.image,
+                        iconSize: ScreenSize.fitPxHeight(80),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          padding: EdgeInsets.all(ScreenSize.fitPxHeight(5)),
+                          decoration: BoxDecoration(
+                            color: AppColors.greyColor98,
+                            borderRadius: BorderRadius.circular(
+                              ScreenSize.fitPxHeight(30),
+                            ),
+                          ),
+                          child: Icon(
+                            FontAwesomeIcons.pen,
+                            color: AppColors.whiteColor,
+                            size: ScreenSize.fontSize12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "信箱",
+                      style: TextStyle(
+                        color: AppColors.whiteColor,
+                        fontSize: ScreenSize.fontSize14,
+                      ),
+                    ),
+                    SizedBox(width: ScreenSize.fitPxWidth(5)),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
+                          color: userData.isEmailVerified ? Color.fromARGB(255, 68, 197, 72) : AppColors.greyColor98),
+                      child: Text(
+                        userData.isEmailVerified ? "已認證" : "未認證",
+                        style: TextStyle(
+                          color: AppColors.whiteColor,
+                          fontSize: ScreenSize.fontSize12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-
-          //勉強したいスキル
-          Text(StepThirdPage.wantSkillText),
-          skillBar(
-            SkillEndDrawerType.wantSkill,
-            userData: context.read<UserProvider>().userData,
-          ),
-          const SizedBox(height: 10),
-          //設定ボタン　例：プロフィール、設定、ニュース...
+          SizedBox(height: ScreenSize.fitPxHeight(10)),
           Container(
             width: ScreenSize.width,
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
+            padding: EdgeInsets.symmetric(
+              horizontal: ScreenSize.fitPxHeight(10),
+              vertical: ScreenSize.fitPxHeight(10),
+            ),
             decoration: BoxDecoration(
-              border: Border.all(width: 0.1, color: normalBgColor2),
+              color: AppColors.black37,
               borderRadius: BorderRadius.circular(10),
-              color: hintTextColor.withAlpha(25),
-            ),
-            child: GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 4,
-              children: UserPageRouthsettingButtonInfo.list
-                  .map(
-                    (e) => UserPageString().notificationBtn == e.title
-                        ? Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              ColIconBtn(
-                                icon: e.icon,
-                                title: e.title,
-                                onPress: e.onPress,
-                              ),
-
-                              ///通知数
-                              Visibility(
-                                visible: context.watch<UserProvider>().notReadNotificationCount != "0",
-                                child: Positioned(
-                                  right: 25,
-                                  top: 0,
-                                  child: Builder(builder: (context) {
-                                    return Container(
-                                      width: 16,
-                                      height: 16,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.red,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          context.watch<UserProvider>().notReadNotificationCount,
-                                          style: const TextStyle(color: Colors.white, fontSize: 12),
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            ],
-                          )
-                        : ColIconBtn(
-                            icon: e.icon,
-                            title: e.title,
-                            onPress: e.onPress,
-                          ),
-                  )
-                  .toList(),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-Widget userInfo(BuildContext context) {
-  ProfileData userData = context.watch<UserProvider>().userData;
-  return SizedBox(
-    height: ScreenSize.safeHeight * 0.3,
-    child: FittedBox(
-      child: Column(
-        children: [
-          UserIcon(iconSize: 100, image: userData.image),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Text("Hello, ${userData.name ?? userData.email}"),
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            width: 200,
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: hintTextColor.withAlpha(25),
             ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("${UserPageString().infoStatus} : ${userData.status}"),
-                Text("${UserPageString().infoJob} : ${userData.job}"),
+                Text(
+                  userData.name ?? "",
+                  style: TextStyle(
+                    color: AppColors.whiteColor,
+                    fontSize: ScreenSize.fontSize18,
+                  ),
+                ),
+                Text(
+                  userData.email,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: ScreenSize.fontSize12,
+                  ),
+                ),
+                Text(
+                  userData.introduction ?? "",
+                  style: TextStyle(
+                    color: AppColors.whiteColor,
+                    fontSize: ScreenSize.fontSize12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: ScreenSize.fitPxHeight(10)),
+          Container(
+            width: ScreenSize.width,
+            margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
+            padding: EdgeInsets.symmetric(
+              horizontal: ScreenSize.fitPxHeight(10),
+              vertical: ScreenSize.fitPxHeight(10),
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.black37,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      FontAwesomeIcons.briefcase,
+                      color: AppColors.whiteColor,
+                      size: ScreenSize.fontSize14,
+                    ),
+                    SizedBox(width: ScreenSize.fitPxWidth(5)),
+                    Text(
+                      "職業",
+                      style: TextStyle(
+                        color: AppColors.whiteColor,
+                        fontSize: ScreenSize.fontSize14,
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  userData.job ?? "",
+                  style: TextStyle(
+                    color: AppColors.whiteColor,
+                    fontSize: ScreenSize.fontSize12,
+                  ),
+                ),
+                SizedBox(height: ScreenSize.fitPxHeight(5)),
+                Row(
+                  children: [
+                    ///タイトル
+                    Container(
+                      padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
+                      margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 138, 138, 138),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Icon(
+                        FontAwesomeIcons.reply,
+                        color: AppColors.whiteColor,
+                        size: ScreenSize.fitPxWidth(8),
+                      ),
+                    ),
+                    Text(
+                      "能教的技能",
+                      style: TextStyle(
+                        color: AppColors.whiteColor,
+                        fontSize: ScreenSize.fontSize14,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: ScreenSize.fitPxHeight(5)),
+
+                ///得意なスキル
+                skillBar(skills: userData.mainSkills!),
+                SizedBox(height: ScreenSize.fitPxHeight(5)),
+
+                Row(
+                  children: [
+                    ///タイトル
+                    Container(
+                      padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
+                      margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 240, 123, 77),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Icon(
+                        FontAwesomeIcons.share,
+                        color: AppColors.whiteColor,
+                        size: ScreenSize.fitPxWidth(8),
+                      ),
+                    ),
+                    Text(
+                      "想學的技能",
+                      style: TextStyle(
+                        color: AppColors.whiteColor,
+                        fontSize: ScreenSize.fontSize14,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: ScreenSize.fitPxHeight(5)),
+
+                ///弱いスキル
+                skillBar(skills: userData.wantSkills!),
               ],
             ),
           ),
         ],
       ),
-    ),
+    );
+  }
+}
+
+Widget skillBar({required List<RequestUserSkillData> skills}) {
+  return Row(
+    children: [
+      ///スキル
+      Row(
+        children: skills.isEmpty
+            ? [
+                Container(
+                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: AppColors.greyColor98,
+                  ),
+                  child: Text(
+                    "暫無",
+                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
+                  ),
+                )
+              ]
+            : skills.map((e) {
+                return Container(
+                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: AppColors.greyColor98,
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: ScreenSize.fitPxWidth(15),
+                        height: ScreenSize.fitPxWidth(15),
+                        margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                        decoration: BoxDecoration(
+                          color: AppColors.black37,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "${e.level}",
+                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize10),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        e.name,
+                        style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+      ),
+    ],
   );
-}
-
-class SettingButtonInfo {
-  String title;
-  IconData icon;
-  VoidCallback onPress;
-  SettingButtonInfo({required this.title, required this.icon, required this.onPress});
-}
-
-class UserPageRouthsettingButtonInfo {
-  static List<SettingButtonInfo> list = [
-    SettingButtonInfo(
-      title: UserPageString().profileBtn,
-      icon: FontAwesomeIcons.solidAddressCard,
-      onPress: () => RouteOptions.pushTo(RoutePath.profilePage),
-    ),
-    SettingButtonInfo(
-        title: UserPageString().postBtn,
-        icon: FontAwesomeIcons.solidNewspaper,
-        onPress: () {
-          // RouteOptions.pushTo(RoutePath.myPosts);
-        }),
-    SettingButtonInfo(
-        title: UserPageString().courseBtn,
-        icon: FontAwesomeIcons.school,
-        onPress: () {
-          RouteOptions.pushTo(RoutePath.myCourses);
-        }),
-    SettingButtonInfo(
-        title: UserPageString().settingBtn,
-        icon: FontAwesomeIcons.gear,
-        onPress: () {
-          RouteOptions.pushTo(RoutePath.privacySettingPage);
-        }),
-    SettingButtonInfo(
-        title: UserPageString().friendManagernBtn,
-        icon: FontAwesomeIcons.userLarge,
-        onPress: () {
-          RouteOptions.pushTo(RoutePath.myFriends);
-        }),
-    SettingButtonInfo(
-        title: UserPageString().notificationBtn,
-        icon: FontAwesomeIcons.solidBell,
-        onPress: () {
-          RouteOptions.pushTo(RoutePath.myNotifictaionPage);
-        }),
-    SettingButtonInfo(
-        title: UserPageString().customServiceBtn,
-        icon: Icons.question_answer,
-        onPress: () {
-          RouteOptions.pushTo(RoutePath.customServicePage);
-        }),
-  ];
 }

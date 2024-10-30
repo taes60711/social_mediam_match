@@ -4,8 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
-
-import '../../../global/global_view_model.dart';
+import '../../../global/home_global_view_model.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../../services/user_service.dart';

@@ -37,7 +37,7 @@ class _PrivacySettingState extends State<PrivacySetting> {
                 alignment: Alignment.topLeft,
                 child: IconButton(
                   onPressed: () {
-                    RouteOptions.popUntilToHome();
+                    // RouteOptions.popUntilToHome();
                   },
                   icon: const Icon(Icons.arrow_back_ios),
                 ),
@@ -156,7 +156,7 @@ class _PrivacySettingState extends State<PrivacySetting> {
               ElevatedButton(
                 onPressed: () async {
                   await userFuture.signOut(friendProvider);
-                  RouteOptions.popUntilToHome();
+                  // RouteOptions.popUntilToHome();
                 },
                 child: Text(signOutButton),
               ),

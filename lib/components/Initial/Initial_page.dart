@@ -1,16 +1,36 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/pageManager/home.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
-import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
+
 import '../../provider/account/user_provider.dart';
 import '../../provider/Initial/initial_provider.dart';
 import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
+import '../utilities/style/theme_style.dart';
 
-class Initialpage extends StatelessWidget {
+class Initialpage extends ConsumerStatefulWidget {
   const Initialpage({super.key});
+
+  @override
+  ConsumerState<Initialpage> createState() => _InitialpageState();
+}
+
+class _InitialpageState extends ConsumerState<Initialpage> {
+  bool isFirst = false;
+
+  @override
+  void initState() {
+    ThemeStyle().init(ref);
+
+    Future.delayed(const Duration(seconds: 3)).then((_) {
+      isFirst = true;
+      setState(() {});
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,22 +61,24 @@ class Initialpage extends StatelessWidget {
     //   }
     // }
 
-    return Home();
+    Widget component = splashScreen(context);
+    if (isFirst) {
+      component = const Home();
+    }
+
+    return component;
   }
 }
 
 Widget splashScreen(BuildContext context) {
-  return StatefulWrapper(
-    onInit: () => _enterApp(context),
-    child: BackgroundWidget(
-      isSafeArea: false,
-      child: Center(
-        child: SizedBox(
-          width: ScreenSize.width,
-          child: AspectRatio(
-            aspectRatio: 16.0 / 9.0,
-            child: Image.asset(logoImg),
-          ),
+  return BackgroundWidget(
+    isSafeArea: false,
+    child: Center(
+      child: SizedBox(
+        width: ScreenSize.width,
+        child: AspectRatio(
+          aspectRatio: 16.0 / 9.0,
+          child: Image.asset(logoImg),
         ),
       ),
     ),

@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
-import 'pageManager/setting/route_manager.dart';
+import 'components/Initial/Initial_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,7 +59,9 @@ class MyApp extends StatelessWidget {
           TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
         }),
       ),
-      routes: routeManager,
+      routes: <String, WidgetBuilder>{
+        "/": (BuildContext context) => const Initialpage(),
+      },
     );
   }
 }

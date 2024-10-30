@@ -18,7 +18,7 @@ import '../global.dart';
 import '../models/course_model.dart';
 import '../models/skill_model.dart';
 import '../models/user_model.dart';
-import '../pagemanager/enum/route_path.dart';
+
 import '../pagemanager/setting/route_controller.dart';
 import 'account/user_provider.dart';
 import 'course_provider.dart';
@@ -220,70 +220,70 @@ class CourseViewModel {
     courseContext.read<BaseAPIListProvider<AddedCourseMemberModel>>().deleteData(choiceData: deletedMember);
   }
 
-  void openCreatedCourseModal({required CourseModel courseData}) {
-    showDialog<void>(
-      context: courseContext,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          content: SizedBox(
-            width: 150,
-            height: 230,
-            child: Column(
-              children: [
-                BaseTopBar(
-                  leftWidget: Container(),
-                  title: "請選擇",
-                  rightWidget: GestureDetector(
-                    onTap: () => RouteOptions.pop(),
-                    child: const Icon(Icons.close),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      TextBtn(
-                        title: '開啟課程',
-                        titleColor: normalTextColor,
-                        btnColor: normalBgColor2,
-                        onPress: () {
-                          RouteOptions.pop();
-                          // CourseViewModel(courseContext: courseContext).courseDetailInit(openedCourse: courseData);
-                        },
-                      ),
-                      const SizedBox(height: 15),
-                      TextBtn(
-                        title: '編輯課程',
-                        titleColor: normalTextColor,
-                        btnColor: normalBgColor2,
-                        onPress: () {
-                          RouteOptions.pop();
-                          RouteOptions.pushTo(RoutePath.courseEditPage, arguments: {
-                            "courseData": courseData,
-                            "context": courseContext,
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 15),
-                      TextBtn(
-                        title: '管理成員',
-                        titleColor: normalTextColor,
-                        btnColor: normalBgColor2,
-                        onPress: () {
-                          RouteOptions.pop();
-                          opencourseManagerEndDrawer(context: courseContext, courseId: courseData.id);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // void openCreatedCourseModal({required CourseModel courseData}) {
+  //   showDialog<void>(
+  //     context: courseContext,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         contentPadding: EdgeInsets.zero,
+  //         content: SizedBox(
+  //           width: 150,
+  //           height: 230,
+  //           child: Column(
+  //             children: [
+  //               BaseTopBar(
+  //                 leftWidget: Container(),
+  //                 title: "請選擇",
+  //                 rightWidget: GestureDetector(
+  //                   onTap: () => RouteOptions.pop(),
+  //                   child: const Icon(Icons.close),
+  //                 ),
+  //               ),
+  //               const SizedBox(height: 10),
+  //               Padding(
+  //                 padding: const EdgeInsets.symmetric(horizontal: 20),
+  //                 child: Column(
+  //                   children: [
+  //                     TextBtn(
+  //                       title: '開啟課程',
+  //                       titleColor: normalTextColor,
+  //                       btnColor: normalBgColor2,
+  //                       onPress: () {
+  //                         RouteOptions.pop();
+  //                         // CourseViewModel(courseContext: courseContext).courseDetailInit(openedCourse: courseData);
+  //                       },
+  //                     ),
+  //                     const SizedBox(height: 15),
+  //                     TextBtn(
+  //                       title: '編輯課程',
+  //                       titleColor: normalTextColor,
+  //                       btnColor: normalBgColor2,
+  //                       onPress: () {
+  //                         RouteOptions.pop();
+  //                         RouteOptions.pushTo(RoutePath.courseEditPage, arguments: {
+  //                           "courseData": courseData,
+  //                           "context": courseContext,
+  //                         });
+  //                       },
+  //                     ),
+  //                     const SizedBox(height: 15),
+  //                     TextBtn(
+  //                       title: '管理成員',
+  //                       titleColor: normalTextColor,
+  //                       btnColor: normalBgColor2,
+  //                       onPress: () {
+  //                         RouteOptions.pop();
+  //                         opencourseManagerEndDrawer(context: courseContext, courseId: courseData.id);
+  //                       },
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

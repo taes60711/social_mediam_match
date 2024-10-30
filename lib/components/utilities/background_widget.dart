@@ -88,11 +88,15 @@ class _CommonScaffoldState extends ConsumerState<CommonScaffold> {
       backgroundColor: ThemeStyle.bgColor,
       body: SafeArea(
         bottom: false,
-        child: Column(
-          children: [
-            Expanded(child: widget.child),
-            SizedBox(height: Platform.isIOS ? 30 : 12),
-          ],
+        child: SizedBox(
+          width: ScreenSize.width,
+          height: ScreenSize.height,
+          child: Column(
+            children: [
+              Expanded(child: widget.child),
+              SizedBox(height: Platform.isIOS ? 30 : 12),
+            ],
+          ),
         ),
       ),
     );

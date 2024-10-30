@@ -110,6 +110,6 @@ class LoginViewModel {
     loadingPopView();
     bool isLoginSucess = await loginViewContext.read<LoginProvider>().signIn(inputedEmail, intputedPwd);
     RouteOptions.pop();
-    isLoginSucess ? RouteOptions.popUntilToHome() : () {};
+    // isLoginSucess ? RouteOptions.popUntilToHome() : () {};
   }
 }

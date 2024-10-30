@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
       child: Column(
         children: [
           // backButton,
-          BaseTopBar(backFunc: () => RouteOptions.popUntilToHome()),
+          // BaseTopBar(backFunc: () => RouteOptions.popUntilToHome()),
           //ロゴ
           logo,
           Column(

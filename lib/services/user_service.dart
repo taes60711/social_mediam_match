@@ -80,7 +80,7 @@ class UserService extends ApiClient {
         model: ProfileData.toModel,
       );
     } catch (e) {
-      onRequestFailed(onFailedFunc: () => RouteOptions.popUntilToHome());
+      // onRequestFailed(onFailedFunc: () => RouteOptions.popUntilToHome());
     }
 
     return userdata;

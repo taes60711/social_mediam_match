@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
+import '../../../models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/BottomSheets/base_overlay_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
@@ -87,6 +89,7 @@ class PostCommentPage extends BaseOverlayBottomSheet {
 
   @override
   Widget downWidgetBuild(WidgetRef ref) {
+    ProfileData userData = ref.watch(loginUserData);
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -105,13 +108,9 @@ class PostCommentPage extends BaseOverlayBottomSheet {
             ),
             Row(
               children: [
-                Container(
-                  width: ScreenSize.fitPxHeight(25),
-                  height: ScreenSize.fitPxHeight(25),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.blue,
-                  ),
+                UserIcon(
+                  iconSize: ScreenSize.fitPxHeight(25),
+                  image: userData.image,
                 ),
                 SizedBox(width: ScreenSize.fitPxHeight(5)),
                 Expanded(

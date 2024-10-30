@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_detail.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/services/course_service.dart';
-import '../../../global/global_view_model.dart';
+import '../../../global/home_global_view_model.dart';
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
 import '../../utilities/apiListView/api_list_controller.dart';

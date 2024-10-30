@@ -2,9 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../../global/global_view_model.dart';
-
+import '../../../global/home_global_view_model.dart';
 import '../../../services/post_service.dart';
 
 import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';

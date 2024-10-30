@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../components/utilities/style/screen_size.dart';
+import '../global.dart';
 
 final bottomNavigationBarProvider = StateProvider<int>((ref) {
   return 0;
@@ -12,19 +14,19 @@ final bottomNavationBarPosProvider = StateProvider<double>((ref) {
   return Platform.isIOS ? 25 : 9;
 });
 
-class GlobalViewModel {
-  static GlobalViewModel? _instance;
+class HomeGlobalViewModel {
+  static HomeGlobalViewModel? _instance;
 
-  GlobalViewModel._();
+  HomeGlobalViewModel._();
 
-  factory GlobalViewModel() {
-    return _instance ??= GlobalViewModel._();
+  factory HomeGlobalViewModel() {
+    return _instance ??= HomeGlobalViewModel._();
   }
 
   late WidgetRef ref;
   late Function render;
 
-  void init(WidgetRef ref, Function render) {
+  void init({required WidgetRef ref, required Function render}) {
     this.ref = ref;
     this.render = render;
   }
@@ -43,5 +45,9 @@ class GlobalViewModel {
       ref.read(bottomNavationBarPosProvider.notifier).update((state) => Platform.isIOS ? 25 : 9);
     }
     render();
+  }
+
+  static void pop() {
+    Navigator.of(globalContext).pop();
   }
 }

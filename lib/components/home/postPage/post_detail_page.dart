@@ -6,6 +6,8 @@ import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../../models/post_model.dart';
+import '../../../models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/user_icon.dart';
 import 'post_comment_page.dart';
@@ -101,74 +103,73 @@ class PostDetailPage extends BaseEndDrawer {
         ),
 
         ///コメント
-        GestureDetector(
-          onTap: () {
-            PostCommentPage().show(context);
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: AppColors.greyColor54,
+        Builder(builder: (context) {
+          ProfileData userData = ref.watch(loginUserData);
+          return GestureDetector(
+            onTap: () {
+              PostCommentPage().show(context);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: AppColors.greyColor54,
+                  ),
                 ),
               ),
-            ),
-            height: ScreenSize.fitPxHeight(45),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(12)),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: ScreenSize.fitPxHeight(5),
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: ScreenSize.fitPxHeight(25),
-                        height: ScreenSize.fitPxHeight(25),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.blue,
+              height: ScreenSize.fitPxHeight(45),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(12)),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: ScreenSize.fitPxHeight(5),
+                    ),
+                    Row(
+                      children: [
+                        UserIcon(
+                          iconSize: ScreenSize.fitPxHeight(25),
+                          image: userData.image,
                         ),
-                      ),
-                      SizedBox(width: ScreenSize.fitPxHeight(5)),
-                      Expanded(
-                        child: Container(
-                          height: ScreenSize.fitPxHeight(30),
-                          alignment: Alignment.centerLeft,
-                          decoration: BoxDecoration(
-                            color: AppColors.greyColor57,
-                            borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(5)),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
-                            child: Text(
-                              "留言",
-                              style: TextStyle(color: AppColors.greyColor130, fontSize: 14),
+                        SizedBox(width: ScreenSize.fitPxHeight(5)),
+                        Expanded(
+                          child: Container(
+                            height: ScreenSize.fitPxHeight(30),
+                            alignment: Alignment.centerLeft,
+                            decoration: BoxDecoration(
+                              color: AppColors.greyColor57,
+                              borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(5)),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
+                              child: Text(
+                                "留言",
+                                style: TextStyle(color: AppColors.greyColor130, fontSize: 14),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(width: ScreenSize.fitPxWidth(12)),
+                        SizedBox(width: ScreenSize.fitPxWidth(12)),
 
-                      ///分享按鈕
-                      GestureDetector(
-                        onTap: () {},
-                        child: PostViewUtilities().iconWithText(
-                          iconData: FontAwesomeIcons.arrowUpRightFromSquare,
-                          iconColor: Color.fromARGB(221, 180, 179, 179),
-                          text: "分享",
-                          style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor),
+                        ///分享按鈕
+                        GestureDetector(
+                          onTap: () {},
+                          child: PostViewUtilities().iconWithText(
+                            iconData: FontAwesomeIcons.arrowUpRightFromSquare,
+                            iconColor: Color.fromARGB(221, 180, 179, 179),
+                            text: "分享",
+                            style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: ScreenSize.fitPxWidth(12)),
-                    ],
-                  )
-                ],
+                        SizedBox(width: ScreenSize.fitPxWidth(12)),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        }),
       ],
     );
   }

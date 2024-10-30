@@ -1,7 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../global/global_view_model.dart';
+
+import '../../../global/home_global_view_model.dart';
 import '../../../models/post_model.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';

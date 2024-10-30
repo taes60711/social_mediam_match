@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'style_config.dart';
 
 // App 主題樣式
@@ -25,7 +24,7 @@ class ThemeStyle {
     _getStyles();
   }
 
-  // 更改主題
+  // 更改主題(呼叫)
   Future<void> onChangeTeme(AppThemeType newTheme) async {
     print("ThemeStyle OnChangeTheme ${newTheme.strName}");
 

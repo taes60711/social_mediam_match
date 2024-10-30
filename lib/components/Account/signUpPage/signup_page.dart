@@ -50,7 +50,7 @@ Widget _mainBuild() {
         const SignUpStepOne(),
         const SignUpStepTwo(),
         const SignUpStepThird(),
-        const SignUpStepGuide(),
+        // const SignUpStepGuide(),
       ];
 
       List<String> signUpStepTitle = [

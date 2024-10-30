@@ -92,7 +92,7 @@ class UserSettingViewModel {
                           titleColor: normalTextColor,
                           btnColor: normalBgColor,
                           onPress: () {
-                            RouteOptions.popUntilToHome();
+                            // RouteOptions.popUntilToHome();
                           },
                         ),
                       ),

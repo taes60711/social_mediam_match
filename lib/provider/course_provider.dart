@@ -147,11 +147,11 @@ class CourseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  CourseManagerEndDrawerType courseManagerEndDrawerOpenInfo = CourseManagerEndDrawerType.close;
-  int choicedCourseId = -1;
-  void courseManagerEndDrawerStatus(CourseManagerEndDrawerType status, int changedCourseId) {
-    courseManagerEndDrawerOpenInfo = status;
-    choicedCourseId = changedCourseId;
-    notifyListeners();
-  }
+  // CourseManagerEndDrawerType courseManagerEndDrawerOpenInfo = CourseManagerEndDrawerType.close;
+  // int choicedCourseId = -1;
+  // void courseManagerEndDrawerStatus(CourseManagerEndDrawerType status, int changedCourseId) {
+  //   courseManagerEndDrawerOpenInfo = status;
+  //   choicedCourseId = changedCourseId;
+  //   notifyListeners();
+  // }
 }
