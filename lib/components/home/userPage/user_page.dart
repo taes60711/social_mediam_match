@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/home/userPage/my_posts.dart';
+import 'package:social_mediam_match/components/home/userPage/user_profile_edit_page.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
@@ -9,6 +11,10 @@ import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 
 import '../../utilities/style/screen_size.dart';
+import 'custom_service_page.dart';
+import 'myCourse/my_courses.dart';
+import 'my_notification_page.dart';
+import 'privacy_setting.dart';
 
 class UserPage extends ConsumerStatefulWidget {
   const UserPage({super.key});
@@ -32,35 +38,40 @@ class _UserPageState extends ConsumerState<UserPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Container(
-                  height: ScreenSize.fitPxHeight(83),
-                  width: ScreenSize.fitPxHeight(83),
-                  color: Colors.transparent,
-                  child: Stack(
-                    children: [
-                      UserIcon(
-                        image: userData.image,
-                        iconSize: ScreenSize.fitPxHeight(80),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          padding: EdgeInsets.all(ScreenSize.fitPxHeight(5)),
-                          decoration: BoxDecoration(
-                            color: AppColors.greyColor98,
-                            borderRadius: BorderRadius.circular(
-                              ScreenSize.fitPxHeight(30),
+                GestureDetector(
+                  onTap: () {
+                    UserProfileEditPage().show(context);
+                  },
+                  child: Container(
+                    height: ScreenSize.fitPxHeight(83),
+                    width: ScreenSize.fitPxHeight(83),
+                    color: Colors.transparent,
+                    child: Stack(
+                      children: [
+                        UserIcon(
+                          image: userData.image,
+                          iconSize: ScreenSize.fitPxHeight(80),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            padding: EdgeInsets.all(ScreenSize.fitPxHeight(5)),
+                            decoration: BoxDecoration(
+                              color: AppColors.greyColor98,
+                              borderRadius: BorderRadius.circular(
+                                ScreenSize.fitPxHeight(30),
+                              ),
+                            ),
+                            child: Icon(
+                              FontAwesomeIcons.pen,
+                              color: AppColors.whiteColor,
+                              size: ScreenSize.fontSize12,
                             ),
                           ),
-                          child: Icon(
-                            FontAwesomeIcons.pen,
-                            color: AppColors.whiteColor,
-                            size: ScreenSize.fontSize12,
-                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 Row(
@@ -242,16 +253,36 @@ class _UserPageState extends ConsumerState<UserPage> {
               children: [
                 Row(
                   children: [
-                    infoBtn(icon: FontAwesomeIcons.solidNewspaper, text: "文章"),
-                    infoBtn(icon: FontAwesomeIcons.school, text: "技術分享"),
-                    infoBtn(icon: FontAwesomeIcons.gear, text: "設定"),
+                    infoBtn(
+                      icon: FontAwesomeIcons.solidNewspaper,
+                      text: "文章",
+                      onPress: () => MyPostPage().show(context),
+                    ),
+                    infoBtn(
+                      icon: FontAwesomeIcons.school,
+                      text: "技術分享",
+                      onPress: () => MyCoursePage().show(context),
+                    ),
+                    infoBtn(
+                      icon: FontAwesomeIcons.gear,
+                      text: "設定",
+                      onPress: () => PrivacySettingPage().show(context),
+                    ),
                   ],
                 ),
                 SizedBox(height: ScreenSize.fitPxHeight(25)),
                 Row(
                   children: [
-                    infoBtn(icon: FontAwesomeIcons.solidBell, text: "通知"),
-                    infoBtn(icon: Icons.question_answer, text: "問題回報"),
+                    infoBtn(
+                      icon: FontAwesomeIcons.solidBell,
+                      text: "通知",
+                      onPress: () => MyNotificationPage().show(context),
+                    ),
+                    infoBtn(
+                      icon: Icons.question_answer,
+                      text: "問題回報",
+                      onPress: () => CustomServicePage().show(context),
+                    ),
                     infoBtn(),
                   ],
                 ),
@@ -264,28 +295,35 @@ class _UserPageState extends ConsumerState<UserPage> {
   }
 }
 
-Widget infoBtn({IconData? icon, String text = ""}) {
+Widget infoBtn({IconData? icon, String text = "", Function? onPress}) {
   return Expanded(
-    child: Column(
-      children: [
-        icon == null
-            ? Container(
-                width: ScreenSize.fitPxWidth(22),
-              )
-            : Icon(
-                icon,
-                color: AppColors.whiteColor,
-                size: ScreenSize.fitPxWidth(24),
-              ),
-        SizedBox(height: ScreenSize.fitPxWidth(10)),
-        Text(
-          text,
-          style: TextStyle(
-            color: AppColors.whiteColor.withOpacity(.8),
-            fontSize: ScreenSize.fontSize12,
+    child: GestureDetector(
+      onTap: () {
+        if (onPress != null) {
+          onPress();
+        }
+      },
+      child: Column(
+        children: [
+          icon == null
+              ? Container(
+                  width: ScreenSize.fitPxWidth(22),
+                )
+              : Icon(
+                  icon,
+                  color: AppColors.whiteColor,
+                  size: ScreenSize.fitPxWidth(24),
+                ),
+          SizedBox(height: ScreenSize.fitPxWidth(10)),
+          Text(
+            text,
+            style: TextStyle(
+              color: AppColors.whiteColor.withOpacity(.8),
+              fontSize: ScreenSize.fontSize12,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

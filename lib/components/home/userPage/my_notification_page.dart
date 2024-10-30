@@ -272,3 +272,16 @@
 //       return FontAwesomeIcons.a;
 //   }
 // }
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
+
+class MyNotificationPage extends BaseEndDrawer {
+  @override
+  Widget build(
+    WidgetRef ref,
+  ) {
+    return Container();
+  }
+}

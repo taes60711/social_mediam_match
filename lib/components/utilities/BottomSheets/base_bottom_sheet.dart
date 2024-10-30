@@ -11,6 +11,14 @@ abstract class BaseBottomSheet {
   bool _isInit = false;
   late BuildContext context;
 
+  double buildHeight() {
+    return 0.8;
+  }
+
+  bool buildneedbarrerierClose() {
+    return true;
+  }
+
   // （レンダリング、APIとか必要場合）
   Future<void> initState(WidgetRef ref) async {}
 
@@ -35,9 +43,11 @@ abstract class BaseBottomSheet {
 
                   return GestureDetector(
                     onTap: () {
-                      closePage();
-                      barrerierColor = Colors.transparent;
-                      render();
+                      if (buildneedbarrerierClose()) {
+                        closePage();
+                        barrerierColor = Colors.transparent;
+                        render();
+                      }
                     },
                     child: Container(
                       height: ScreenSize.height,
@@ -48,9 +58,9 @@ abstract class BaseBottomSheet {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             SizedBox(
-                              height: ScreenSize.height * height,
+                              height: ScreenSize.height * buildHeight(),
                               child: BottomSheetWidget(
-                                widgetHeight: ScreenSize.height * height,
+                                widgetHeight: ScreenSize.height * buildHeight(),
                                 callBackAnimationController: (AnimationController animationController) {
                                   controller = animationController;
                                 },
