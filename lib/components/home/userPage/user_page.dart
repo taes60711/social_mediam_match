@@ -13,7 +13,7 @@ import '../../../models/user_model.dart';
 import '../../utilities/style/screen_size.dart';
 import 'custom_service_page.dart';
 import 'myCourse/my_courses.dart';
-import 'my_notification_page.dart';
+
 import 'privacy_setting.dart';
 
 class UserPage extends ConsumerStatefulWidget {
@@ -29,255 +29,258 @@ class _UserPageState extends ConsumerState<UserPage> {
     ProfileData userData = ref.watch(loginUserData);
 
     return CommonScaffold(
-      child: Column(
-        children: [
-          SizedBox(height: ScreenSize.fitPxHeight(15)),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(25)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    UserProfileEditPage().show(context);
-                  },
-                  child: Container(
-                    height: ScreenSize.fitPxHeight(83),
-                    width: ScreenSize.fitPxHeight(83),
-                    color: Colors.transparent,
-                    child: Stack(
-                      children: [
-                        UserIcon(
-                          image: userData.image,
-                          iconSize: ScreenSize.fitPxHeight(80),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            padding: EdgeInsets.all(ScreenSize.fitPxHeight(5)),
-                            decoration: BoxDecoration(
-                              color: AppColors.greyColor98,
-                              borderRadius: BorderRadius.circular(
-                                ScreenSize.fitPxHeight(30),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: ScreenSize.fitPxHeight(15)),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(25)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      UserProfileEditPage().show(context);
+                    },
+                    child: Container(
+                      height: ScreenSize.fitPxHeight(83),
+                      width: ScreenSize.fitPxHeight(83),
+                      color: Colors.transparent,
+                      child: Stack(
+                        children: [
+                          UserIcon(
+                            image: userData.image,
+                            iconSize: ScreenSize.fitPxHeight(80),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              padding: EdgeInsets.all(ScreenSize.fitPxHeight(5)),
+                              decoration: BoxDecoration(
+                                color: AppColors.greyColor98,
+                                borderRadius: BorderRadius.circular(
+                                  ScreenSize.fitPxHeight(30),
+                                ),
+                              ),
+                              child: Icon(
+                                FontAwesomeIcons.pen,
+                                color: AppColors.whiteColor,
+                                size: ScreenSize.fontSize12,
                               ),
                             ),
-                            child: Icon(
-                              FontAwesomeIcons.pen,
-                              color: AppColors.whiteColor,
-                              size: ScreenSize.fontSize12,
-                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: ScreenSize.fitPxHeight(15)),
-          Container(
-            width: ScreenSize.width,
-            margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
-            padding: EdgeInsets.symmetric(
-              horizontal: ScreenSize.fitPxHeight(10),
-              vertical: ScreenSize.fitPxHeight(10),
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.black37,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  userData.name ?? "",
-                  style: TextStyle(
-                    color: AppColors.whiteColor,
-                    fontSize: ScreenSize.fontSize18,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      userData.email,
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: ScreenSize.fontSize12,
+                        ],
                       ),
                     ),
-                    SizedBox(width: ScreenSize.fitPxWidth(5)),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
-                          color: userData.isEmailVerified ? Color.fromARGB(255, 68, 197, 72) : AppColors.greyColor98),
-                      child: Text(
-                        userData.isEmailVerified ? "已認證" : "未認證",
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: ScreenSize.fitPxHeight(15)),
+            Container(
+              width: ScreenSize.width,
+              margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
+              padding: EdgeInsets.symmetric(
+                horizontal: ScreenSize.fitPxHeight(10),
+                vertical: ScreenSize.fitPxHeight(10),
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.black37,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    userData.name ?? "",
+                    style: TextStyle(
+                      color: AppColors.whiteColor,
+                      fontSize: ScreenSize.fontSize18,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        userData.email,
                         style: TextStyle(
-                          color: AppColors.whiteColor,
+                          color: Colors.grey,
                           fontSize: ScreenSize.fontSize12,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Text(
-                  userData.introduction ?? "",
-                  style: TextStyle(
-                    color: AppColors.whiteColor,
-                    fontSize: ScreenSize.fontSize12,
+                      SizedBox(width: ScreenSize.fitPxWidth(5)),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
+                            color: userData.isEmailVerified ? Color.fromARGB(255, 68, 197, 72) : AppColors.greyColor98),
+                        child: Text(
+                          userData.isEmailVerified ? "已認證" : "未認證",
+                          style: TextStyle(
+                            color: AppColors.whiteColor,
+                            fontSize: ScreenSize.fontSize12,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: ScreenSize.fitPxHeight(10)),
-          Container(
-            width: ScreenSize.width,
-            margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
-            padding: EdgeInsets.symmetric(
-              horizontal: ScreenSize.fitPxHeight(10),
-              vertical: ScreenSize.fitPxHeight(15),
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.black37,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.briefcase,
+                  Text(
+                    userData.introduction ?? "",
+                    style: TextStyle(
                       color: AppColors.whiteColor,
-                      size: ScreenSize.fontSize14,
+                      fontSize: ScreenSize.fontSize12,
                     ),
-                    SizedBox(width: ScreenSize.fitPxWidth(5)),
-                    Text(
-                      "職業",
-                      style: TextStyle(
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: ScreenSize.fitPxHeight(10)),
+            Container(
+              width: ScreenSize.width,
+              margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
+              padding: EdgeInsets.symmetric(
+                horizontal: ScreenSize.fitPxHeight(10),
+                vertical: ScreenSize.fitPxHeight(15),
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.black37,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        FontAwesomeIcons.briefcase,
                         color: AppColors.whiteColor,
-                        fontSize: ScreenSize.fontSize14,
+                        size: ScreenSize.fontSize14,
                       ),
+                      SizedBox(width: ScreenSize.fitPxWidth(5)),
+                      Text(
+                        "職業",
+                        style: TextStyle(
+                          color: AppColors.whiteColor,
+                          fontSize: ScreenSize.fontSize14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    userData.job ?? "",
+                    style: TextStyle(
+                      color: AppColors.whiteColor,
+                      fontSize: ScreenSize.fontSize12,
                     ),
-                  ],
-                ),
-                Text(
-                  userData.job ?? "",
+                  ),
+                  SizedBox(height: ScreenSize.fitPxHeight(5)),
+                  Row(
+                    children: [
+                      ///タイトル
+                      Container(
+                        padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
+                        margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 138, 138, 138),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Icon(
+                          FontAwesomeIcons.reply,
+                          color: AppColors.whiteColor,
+                          size: ScreenSize.fitPxWidth(8),
+                        ),
+                      ),
+                      Text(
+                        "能教的技能",
+                        style: TextStyle(
+                          color: AppColors.whiteColor,
+                          fontSize: ScreenSize.fontSize14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: ScreenSize.fitPxHeight(8)),
+
+                  ///得意なスキル
+                  skillBar(skills: userData.mainSkills!),
+                  SizedBox(height: ScreenSize.fitPxHeight(10)),
+
+                  Row(
+                    children: [
+                      ///タイトル
+                      Container(
+                        padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
+                        margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 240, 123, 77),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Icon(
+                          FontAwesomeIcons.share,
+                          color: AppColors.whiteColor,
+                          size: ScreenSize.fitPxWidth(8),
+                        ),
+                      ),
+                      Text(
+                        "想學的技能",
+                        style: TextStyle(
+                          color: AppColors.whiteColor,
+                          fontSize: ScreenSize.fontSize14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: ScreenSize.fitPxHeight(5)),
+
+                  ///弱いスキル
+                  skillBar(skills: userData.wantSkills!),
+                ],
+              ),
+            ),
+            SizedBox(height: ScreenSize.fitPxHeight(5)),
+            Padding(
+              padding: EdgeInsets.only(left: ScreenSize.fitPxHeight(15)),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "更多功能",
                   style: TextStyle(
                     color: AppColors.whiteColor,
-                    fontSize: ScreenSize.fontSize12,
+                    fontWeight: FontWeight.w600,
                   ),
-                ),
-                SizedBox(height: ScreenSize.fitPxHeight(5)),
-                Row(
-                  children: [
-                    ///タイトル
-                    Container(
-                      padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
-                      margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 138, 138, 138),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Icon(
-                        FontAwesomeIcons.reply,
-                        color: AppColors.whiteColor,
-                        size: ScreenSize.fitPxWidth(8),
-                      ),
-                    ),
-                    Text(
-                      "能教的技能",
-                      style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: ScreenSize.fontSize14,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: ScreenSize.fitPxHeight(8)),
-
-                ///得意なスキル
-                skillBar(skills: userData.mainSkills!),
-                SizedBox(height: ScreenSize.fitPxHeight(10)),
-
-                Row(
-                  children: [
-                    ///タイトル
-                    Container(
-                      padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
-                      margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 240, 123, 77),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Icon(
-                        FontAwesomeIcons.share,
-                        color: AppColors.whiteColor,
-                        size: ScreenSize.fitPxWidth(8),
-                      ),
-                    ),
-                    Text(
-                      "想學的技能",
-                      style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: ScreenSize.fontSize14,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: ScreenSize.fitPxHeight(5)),
-
-                ///弱いスキル
-                skillBar(skills: userData.wantSkills!),
-              ],
-            ),
-          ),
-          SizedBox(height: ScreenSize.fitPxHeight(5)),
-          Padding(
-            padding: EdgeInsets.only(left: ScreenSize.fitPxHeight(15)),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "更多功能",
-                style: TextStyle(
-                  color: AppColors.whiteColor,
-                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-          ),
-          SizedBox(height: ScreenSize.fitPxHeight(5)),
-          infoBtn(
-            icon: FontAwesomeIcons.solidNewspaper,
-            text: "我的文章",
-            onPress: () => MyPostPage().show(context),
-          ),
-          SizedBox(height: ScreenSize.fitPxHeight(10)),
-          infoBtn(
-            icon: FontAwesomeIcons.school,
-            text: "技術分享",
-            onPress: () => MyCoursePage().show(context),
-          ),
-          SizedBox(height: ScreenSize.fitPxHeight(10)),
-          infoBtn(
-            icon: FontAwesomeIcons.gear,
-            text: "一般",
-            onPress: () => PrivacySettingPage().show(context),
-          ),
-          SizedBox(height: ScreenSize.fitPxHeight(10)),
-          infoBtn(
-            icon: Icons.question_answer,
-            text: "問題回報",
-            onPress: () => CustomServicePage().show(context),
-          ),
-        ],
+            SizedBox(height: ScreenSize.fitPxHeight(5)),
+            infoBtn(
+              icon: FontAwesomeIcons.solidNewspaper,
+              text: "我的文章",
+              onPress: () => MyPostPage().show(context),
+            ),
+            SizedBox(height: ScreenSize.fitPxHeight(10)),
+            infoBtn(
+              icon: FontAwesomeIcons.school,
+              text: "技術分享",
+              onPress: () => MyCoursePage().show(context),
+            ),
+            SizedBox(height: ScreenSize.fitPxHeight(10)),
+            infoBtn(
+              icon: FontAwesomeIcons.gear,
+              text: "一般",
+              onPress: () => PrivacySettingPage().show(context),
+            ),
+            SizedBox(height: ScreenSize.fitPxHeight(10)),
+            infoBtn(
+              icon: Icons.question_answer,
+              text: "問題回報",
+              onPress: () => CustomServicePage().show(context),
+            ),
+            SizedBox(height: ScreenSize.fitPxHeight(65))
+          ],
+        ),
       ),
     );
   }

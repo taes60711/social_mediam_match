@@ -10,6 +10,7 @@ import '../../../models/user_model.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/background_widget.dart';
+import '../../utilities/loading.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/user_icon.dart';
 
@@ -45,6 +46,7 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
                       return CourseService().getAllCourses("tzLaMcP3V9XOAMOcD0FAY5Nf4tE2", page, size);
                     },
                     listControllerProvider: courserMainPageListPorver,
+                    loadingWidget: const CourseLoading(),
                     itemChild: (data, index) {
                       return GestureDetector(
                         onTap: () {

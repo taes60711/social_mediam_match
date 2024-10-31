@@ -123,6 +123,84 @@ class DetailPageLoading extends StatelessWidget {
   }
 }
 
+class CourseLoading extends StatelessWidget {
+  const CourseLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: ListView.builder(
+        itemCount: 5,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: ScreenSize.fitPxWidth(10),
+              vertical: ScreenSize.fitPxWidth(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    loadingGreyContainer(
+                      width: ScreenSize.fitPxWidth(24),
+                      height: ScreenSize.fitPxWidth(24),
+                      borderRadius: ScreenSize.fitPxWidth(25),
+                    ),
+                    SizedBox(width: ScreenSize.fitPxWidth(5)),
+                    loadingGreyContainer(
+                      width: ScreenSize.fitPxWidth(100),
+                      height: ScreenSize.fitPxWidth(15),
+                      borderRadius: ScreenSize.fitPxWidth(10),
+                    ),
+                  ],
+                ),
+                SizedBox(height: ScreenSize.fitPxWidth(5)),
+                loadingGreyContainer(
+                  width: ScreenSize.fitPxWidth(200),
+                  height: ScreenSize.fitPxWidth(15),
+                  borderRadius: ScreenSize.fitPxWidth(10),
+                ),
+                SizedBox(height: ScreenSize.fitPxWidth(5)),
+                loadingGreyContainer(
+                  width: ScreenSize.fitPxWidth(320),
+                  height: ScreenSize.fitPxWidth(15),
+                  borderRadius: ScreenSize.fitPxWidth(10),
+                ),
+                SizedBox(height: ScreenSize.fitPxWidth(5)),
+                loadingGreyContainer(
+                  width: ScreenSize.fitPxWidth(60),
+                  height: ScreenSize.fitPxWidth(15),
+                  borderRadius: ScreenSize.fitPxWidth(10),
+                ),
+                SizedBox(height: ScreenSize.fitPxWidth(5)),
+                loadingGreyContainer(
+                  width: ScreenSize.fitPxWidth(120),
+                  height: ScreenSize.fitPxWidth(15),
+                  borderRadius: ScreenSize.fitPxWidth(10),
+                ),
+                SizedBox(height: ScreenSize.fitPxWidth(5)),
+                loadingGreyContainer(
+                  width: ScreenSize.fitPxWidth(60),
+                  height: ScreenSize.fitPxWidth(15),
+                  borderRadius: ScreenSize.fitPxWidth(10),
+                ),
+                SizedBox(height: ScreenSize.fitPxWidth(5)),
+                loadingGreyContainer(
+                  width: ScreenSize.fitPxWidth(120),
+                  height: ScreenSize.fitPxWidth(15),
+                  borderRadius: ScreenSize.fitPxWidth(10),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
 class SkillChangeLoading extends StatelessWidget {
   const SkillChangeLoading({super.key});
 
@@ -134,32 +212,43 @@ class SkillChangeLoading extends StatelessWidget {
         return ListTile(
           title: Container(
             padding: const EdgeInsets.only(bottom: 8),
-            child: Row(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                loadingGreyContainer(width: 65, height: 100, borderRadius: 2),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      loadingGreyContainer(width: 60, height: 13),
-                      const SizedBox(height: 5),
-                      loadingGreyContainer(width: 30, height: 10),
-                      const SizedBox(height: 5),
-                      loadingGreyContainer(width: ScreenSize.width, height: 26),
-                      const SizedBox(height: 5),
-                      loadingGreyContainer(width: 70, height: 12),
-                      const SizedBox(height: 5),
-                      loadingGreyContainer(width: 150, height: 13),
-                      const SizedBox(height: 5),
-                      loadingGreyContainer(width: 70, height: 12),
-                      const SizedBox(height: 5),
-                      loadingGreyContainer(width: 150, height: 13),
-                    ],
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    loadingGreyContainer(
+                      width: ScreenSize.fitPxWidth(65),
+                      height: ScreenSize.fitPxWidth(65),
+                      borderRadius: ScreenSize.fitPxWidth(10),
+                    ),
+                    SizedBox(width: ScreenSize.fitPxWidth(5)),
+                    loadingGreyContainer(
+                      width: ScreenSize.fitPxWidth(90),
+                      height: ScreenSize.fitPxWidth(15),
+                      borderRadius: ScreenSize.fitPxWidth(15),
+                    ),
+                    const Expanded(child: SizedBox(width: 1)),
+                    loadingGreyContainer(
+                      width: ScreenSize.fitPxWidth(40),
+                      height: ScreenSize.fitPxWidth(15),
+                      borderRadius: ScreenSize.fitPxWidth(12),
+                    ),
+                  ],
                 ),
-                loadingGreyContainer(width: 40, height: 12),
+                SizedBox(height: ScreenSize.fitPxWidth(5)),
+                loadingGreyContainer(
+                  width: ScreenSize.fitPxWidth(130),
+                  height: ScreenSize.fitPxWidth(15),
+                  borderRadius: ScreenSize.fitPxWidth(15),
+                ),
+                SizedBox(height: ScreenSize.fitPxWidth(5)),
+                loadingGreyContainer(
+                  width: ScreenSize.fitPxWidth(150),
+                  height: ScreenSize.fitPxWidth(15),
+                  borderRadius: ScreenSize.fitPxWidth(15),
+                ),
               ],
             ),
           ),
