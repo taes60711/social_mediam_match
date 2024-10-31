@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/pageManager/home.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 
+import '../../global/chat_ws_model.dart';
+import '../../models/user_model.dart';
 import '../../provider/account/user_provider.dart';
 import '../../provider/Initial/initial_provider.dart';
 import '../utilities/style/screen_size.dart';
@@ -25,6 +27,10 @@ class _InitialpageState extends ConsumerState<Initialpage> {
   void initState() {
     ThemeStyle().init(ref);
 
+    Future.delayed(Duration.zero).then((value) {
+      ProfileData userData = ref.watch(loginUserData);
+      ChatWSModel().init(userData.uid);
+    });
     Future.delayed(const Duration(seconds: 3)).then((_) {
       isFirst = true;
       setState(() {});

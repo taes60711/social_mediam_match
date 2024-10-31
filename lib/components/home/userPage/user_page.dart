@@ -31,7 +31,7 @@ class _UserPageState extends ConsumerState<UserPage> {
     return CommonScaffold(
       child: Column(
         children: [
-          SizedBox(height: ScreenSize.fitPxHeight(25)),
+          SizedBox(height: ScreenSize.fitPxHeight(15)),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(25)),
             child: Row(
@@ -74,31 +74,6 @@ class _UserPageState extends ConsumerState<UserPage> {
                     ),
                   ),
                 ),
-                Row(
-                  children: [
-                    Text(
-                      "信箱",
-                      style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: ScreenSize.fontSize14,
-                      ),
-                    ),
-                    SizedBox(width: ScreenSize.fitPxWidth(5)),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
-                          color: userData.isEmailVerified ? Color.fromARGB(255, 68, 197, 72) : AppColors.greyColor98),
-                      child: Text(
-                        userData.isEmailVerified ? "已認證" : "未認證",
-                        style: TextStyle(
-                          color: AppColors.whiteColor,
-                          fontSize: ScreenSize.fontSize12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
@@ -125,12 +100,30 @@ class _UserPageState extends ConsumerState<UserPage> {
                     fontSize: ScreenSize.fontSize18,
                   ),
                 ),
-                Text(
-                  userData.email,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: ScreenSize.fontSize12,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      userData.email,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: ScreenSize.fontSize12,
+                      ),
+                    ),
+                    SizedBox(width: ScreenSize.fitPxWidth(5)),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
+                          color: userData.isEmailVerified ? Color.fromARGB(255, 68, 197, 72) : AppColors.greyColor98),
+                      child: Text(
+                        userData.isEmailVerified ? "已認證" : "未認證",
+                        style: TextStyle(
+                          color: AppColors.whiteColor,
+                          fontSize: ScreenSize.fontSize12,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Text(
                   userData.introduction ?? "",
@@ -142,13 +135,13 @@ class _UserPageState extends ConsumerState<UserPage> {
               ],
             ),
           ),
-          SizedBox(height: ScreenSize.fitPxHeight(15)),
+          SizedBox(height: ScreenSize.fitPxHeight(10)),
           Container(
             width: ScreenSize.width,
             margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
             padding: EdgeInsets.symmetric(
               horizontal: ScreenSize.fitPxHeight(10),
-              vertical: ScreenSize.fitPxHeight(10),
+              vertical: ScreenSize.fitPxHeight(15),
             ),
             decoration: BoxDecoration(
               color: AppColors.black37,
@@ -208,20 +201,20 @@ class _UserPageState extends ConsumerState<UserPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: ScreenSize.fitPxHeight(5)),
+                SizedBox(height: ScreenSize.fitPxHeight(8)),
 
                 ///得意なスキル
                 skillBar(skills: userData.mainSkills!),
-                SizedBox(height: ScreenSize.fitPxHeight(5)),
+                SizedBox(height: ScreenSize.fitPxHeight(10)),
 
                 Row(
                   children: [
                     ///タイトル
                     Container(
                       padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
-                      margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
+                      margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 240, 123, 77),
+                        color: const Color.fromARGB(255, 240, 123, 77),
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Icon(
@@ -246,48 +239,43 @@ class _UserPageState extends ConsumerState<UserPage> {
               ],
             ),
           ),
-          SizedBox(height: ScreenSize.fitPxHeight(30)),
+          SizedBox(height: ScreenSize.fitPxHeight(5)),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10)),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    infoBtn(
-                      icon: FontAwesomeIcons.solidNewspaper,
-                      text: "文章",
-                      onPress: () => MyPostPage().show(context),
-                    ),
-                    infoBtn(
-                      icon: FontAwesomeIcons.school,
-                      text: "技術分享",
-                      onPress: () => MyCoursePage().show(context),
-                    ),
-                    infoBtn(
-                      icon: FontAwesomeIcons.gear,
-                      text: "設定",
-                      onPress: () => PrivacySettingPage().show(context),
-                    ),
-                  ],
+            padding: EdgeInsets.only(left: ScreenSize.fitPxHeight(15)),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "更多功能",
+                style: TextStyle(
+                  color: AppColors.whiteColor,
+                  fontWeight: FontWeight.w600,
                 ),
-                SizedBox(height: ScreenSize.fitPxHeight(25)),
-                Row(
-                  children: [
-                    infoBtn(
-                      icon: FontAwesomeIcons.solidBell,
-                      text: "通知",
-                      onPress: () => MyNotificationPage().show(context),
-                    ),
-                    infoBtn(
-                      icon: Icons.question_answer,
-                      text: "問題回報",
-                      onPress: () => CustomServicePage().show(context),
-                    ),
-                    infoBtn(),
-                  ],
-                ),
-              ],
+              ),
             ),
+          ),
+          SizedBox(height: ScreenSize.fitPxHeight(5)),
+          infoBtn(
+            icon: FontAwesomeIcons.solidNewspaper,
+            text: "我的文章",
+            onPress: () => MyPostPage().show(context),
+          ),
+          SizedBox(height: ScreenSize.fitPxHeight(10)),
+          infoBtn(
+            icon: FontAwesomeIcons.school,
+            text: "技術分享",
+            onPress: () => MyCoursePage().show(context),
+          ),
+          SizedBox(height: ScreenSize.fitPxHeight(10)),
+          infoBtn(
+            icon: FontAwesomeIcons.gear,
+            text: "一般",
+            onPress: () => PrivacySettingPage().show(context),
+          ),
+          SizedBox(height: ScreenSize.fitPxHeight(10)),
+          infoBtn(
+            icon: Icons.question_answer,
+            text: "問題回報",
+            onPress: () => CustomServicePage().show(context),
           ),
         ],
       ),
@@ -296,29 +284,34 @@ class _UserPageState extends ConsumerState<UserPage> {
 }
 
 Widget infoBtn({IconData? icon, String text = "", Function? onPress}) {
-  return Expanded(
-    child: GestureDetector(
-      onTap: () {
-        if (onPress != null) {
-          onPress();
-        }
-      },
-      child: Column(
+  return GestureDetector(
+    onTap: () {
+      if (onPress != null) {
+        onPress();
+      }
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        color: AppColors.greyColor98,
+        borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(10)),
+      ),
+      margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ScreenSize.fitPxWidth(15),
+        vertical: ScreenSize.fitPxWidth(5),
+      ),
+      child: Row(
         children: [
-          icon == null
-              ? Container(
-                  width: ScreenSize.fitPxWidth(22),
-                )
-              : Icon(
-                  icon,
-                  color: AppColors.whiteColor,
-                  size: ScreenSize.fitPxWidth(24),
-                ),
-          SizedBox(height: ScreenSize.fitPxWidth(10)),
+          Icon(
+            icon,
+            color: AppColors.whiteColor,
+            size: ScreenSize.fitPxWidth(24),
+          ),
+          SizedBox(width: ScreenSize.fitPxWidth(10)),
           Text(
             text,
             style: TextStyle(
-              color: AppColors.whiteColor.withOpacity(.8),
+              color: AppColors.whiteColor,
               fontSize: ScreenSize.fontSize12,
             ),
           ),

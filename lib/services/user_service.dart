@@ -7,11 +7,37 @@ import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/services/api_client.dart';
 
 import '../models/user_model.dart';
-import '../pageManager/setting/route_controller.dart';
 
 ///ユーザAPIサービス
 class UserService extends ApiClient {
   UserService() : super(overrideIp: "$ip:$port/user");
+
+  Future<List<ProfileData>> getADUserData(
+    int size, {
+    required String userUid,
+  }) async {
+    List<ProfileData> users = [];
+
+    try {
+      Map<String, dynamic> params = {
+        'size': '$size',
+        'userUid': userUid,
+      };
+
+      String responseData = await apiGet('/getADUserData', paramters: params);
+
+      print("getADUserData usersData: $responseData");
+
+      users = await handleResponse<ProfileData>(
+        responseData,
+        isList: true,
+        model: ProfileData.toModel,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+    return users;
+  }
 
   Future<List<ProfileData>> getAllUserData(int page, int size,
       {required String userUid, required List<String> filterSkill}) async {
