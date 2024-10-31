@@ -54,23 +54,26 @@ abstract class BaseBottomSheet {
                       color: barrerierColor,
                       child: Scaffold(
                         backgroundColor: Colors.transparent,
-                        body: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            SizedBox(
-                              height: ScreenSize.height * buildHeight(),
-                              child: BottomSheetWidget(
-                                widgetHeight: ScreenSize.height * buildHeight(),
-                                callBackAnimationController: (AnimationController animationController) {
-                                  controller = animationController;
-                                },
-                                callBackClosePage: (Function callBackClosePage) {
-                                  closePage = callBackClosePage;
-                                },
-                                child: build(ref),
+                        body: GestureDetector(
+                          onTap: () {},
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              SizedBox(
+                                height: ScreenSize.height * buildHeight(),
+                                child: BottomSheetWidget(
+                                  widgetHeight: ScreenSize.height * buildHeight(),
+                                  callBackAnimationController: (AnimationController animationController) {
+                                    controller = animationController;
+                                  },
+                                  callBackClosePage: (Function callBackClosePage) {
+                                    closePage = callBackClosePage;
+                                  },
+                                  child: build(ref),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
