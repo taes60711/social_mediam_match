@@ -43,12 +43,7 @@ class BackgroundWidget extends StatelessWidget {
                   child: Container(
                     width: ScreenSize.width,
                     height: ScreenSize.height,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(backGround),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    decoration: BoxDecoration(),
                     child: child,
                   ),
                 ),
@@ -59,12 +54,7 @@ class BackgroundWidget extends StatelessWidget {
                 child: Container(
                   width: ScreenSize.width,
                   height: ScreenSize.height,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(backGround),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  decoration: BoxDecoration(),
                   child: child,
                 ),
               ),

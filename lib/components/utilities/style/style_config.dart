@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 String logoImg = 'assets/Logo.png';
-String backGround = 'assets/bg.png';
 String googleIcon = 'assets/google_w_Logo.png';
 String twitterIcon = 'assets/twitter_w_Logo.png';
 

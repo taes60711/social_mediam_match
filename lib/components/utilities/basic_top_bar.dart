@@ -46,6 +46,8 @@ class BaseTopBar extends StatelessWidget {
       centerWidget ??
           Text(
             title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: AppColors.whiteColor,
             ),
@@ -70,9 +72,12 @@ class BaseTopBar extends StatelessWidget {
                   child: widgetList[0],
                 ),
               ),
-              Align(
-                alignment: list[1],
-                child: widgetList[1],
+              SizedBox(
+                width: ScreenSize.fitPxWidth(260),
+                child: Align(
+                  alignment: list[1],
+                  child: widgetList[1],
+                ),
               ),
               Expanded(
                 child: Align(

@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/pageManager/home.dart';
-import 'package:social_mediam_match/components/utilities/background_widget.dart';
-
 import '../../global/chat_ws_model.dart';
 import '../../models/user_model.dart';
 import '../../provider/account/user_provider.dart';
@@ -77,9 +75,9 @@ class _InitialpageState extends ConsumerState<Initialpage> {
 }
 
 Widget splashScreen(BuildContext context) {
-  return BackgroundWidget(
-    isSafeArea: false,
-    child: Center(
+  return Scaffold(
+    backgroundColor: AppColors.whiteColor,
+    body: Center(
       child: SizedBox(
         width: ScreenSize.width,
         child: AspectRatio(
