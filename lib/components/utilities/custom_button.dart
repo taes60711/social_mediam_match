@@ -128,7 +128,7 @@ class MainBtn extends StatefulWidget {
     required this.onPress,
     this.backgroundColor,
     this.isFullWidth = false,
-    this.innerPadding = const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+    this.innerPadding = const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
     this.borderRadius = 8,
     this.width,
     this.height,
@@ -142,7 +142,7 @@ class _MainBtnState extends State<MainBtn> {
   bool isPress = false;
   @override
   Widget build(BuildContext context) {
-    Color btnBackgroundColor = widget.backgroundColor ?? normalBgColor;
+    Color btnBackgroundColor = widget.backgroundColor ?? AppColors.greyColor57;
     double? btnWidth;
     if (widget.isFullWidth) {
       btnWidth = ScreenSize.width;
