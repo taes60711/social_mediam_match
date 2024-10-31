@@ -204,31 +204,34 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                           ref.read(choicedPostProvider.notifier).update((state) => e);
                           PostDetailPage().show(context);
                         },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Hot!",
-                              style: TextStyle(color: AppColors.redColor, fontSize: 12),
-                            ),
-                            SizedBox(width: ScreenSize.fitPxWidth(5)),
-                            GestureDetector(
-                              onTap: () {
-                                UserProfileBottomSheet(userData: e.postUserInfo).show(context);
-                              },
-                              child: UserIcon(
-                                iconSize: 20,
-                                image: e.postUserInfo.image,
+                        child: Container(
+                          color: Colors.transparent,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Hot!",
+                                style: TextStyle(color: AppColors.redColor, fontSize: 12),
                               ),
-                            ),
-                            SizedBox(width: ScreenSize.fitPxWidth(8)),
-                            Text(
-                              e.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: AppColors.whiteColor),
-                            ),
-                          ],
+                              SizedBox(width: ScreenSize.fitPxWidth(5)),
+                              GestureDetector(
+                                onTap: () {
+                                  UserProfileBottomSheet(userData: e.postUserInfo).show(context);
+                                },
+                                child: UserIcon(
+                                  iconSize: 20,
+                                  image: e.postUserInfo.image,
+                                ),
+                              ),
+                              SizedBox(width: ScreenSize.fitPxWidth(8)),
+                              Text(
+                                e.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: AppColors.whiteColor),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     }).toList(),

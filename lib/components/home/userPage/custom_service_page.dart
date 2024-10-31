@@ -129,13 +129,32 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
+import 'package:social_mediam_match/components/utilities/BottomSheets/base_bottom_sheet.dart';
 
-class CustomServicePage extends BaseEndDrawer {
+class CustomServicePage extends BaseBottomSheet {
+  @override
+  double buildHeight() {
+    return 0.9;
+  }
+
+  @override
+  bool buildneedbarrerierClose() {
+    return false;
+  }
+
   @override
   Widget build(
     WidgetRef ref,
   ) {
-    return Container();
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            closePage();
+          },
+          child: Text("X"),
+        ),
+      ],
+    );
   }
 }
