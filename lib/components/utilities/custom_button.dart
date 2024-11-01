@@ -164,7 +164,7 @@ class _MainBtnState extends State<MainBtn> {
       },
       child: Container(
         padding: widget.title != null
-            ? EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10), vertical: ScreenSize.fitPxHeight(5))
+            ? EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10), vertical: ScreenSize.fitPxHeight(4))
             : padding,
         width: btnWidth,
         height: widget.height,
