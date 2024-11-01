@@ -211,7 +211,7 @@ class SkillChangeLoading extends StatelessWidget {
       itemBuilder: (context, index) {
         return ListTile(
           title: Container(
-            padding: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.only(top: 8, bottom: 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

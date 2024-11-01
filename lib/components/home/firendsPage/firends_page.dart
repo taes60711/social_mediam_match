@@ -220,26 +220,31 @@ class _FriendPageState extends ConsumerState<FriendPage> {
   }
 
   Widget noDataWidget() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Icon(
-            FontAwesomeIcons.usersSlash,
-            color: normalBgColor2,
-            size: 50,
+    return SizedBox(
+      width: ScreenSize.width,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 25, bottom: 10),
+            child: Icon(
+              FontAwesomeIcons.usersSlash,
+              color: AppColors.greyColor98,
+              size: 50,
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 15, bottom: 15),
-          child: Text(
-            "目前沒有好友",
-            style: TextStyle(color: normalBgColor2),
+          Padding(
+            padding: const EdgeInsets.only(right: 15, bottom: 15),
+            child: Text(
+              "目前還沒有任何訊息",
+              style: TextStyle(
+                color: AppColors.greyColor98,
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

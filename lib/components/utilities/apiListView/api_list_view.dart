@@ -6,6 +6,7 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../../CustomBouncingScrollPhysics.dart';
 import '../../../global/home_global_view_model.dart';
+import '../custom_button.dart';
 import '../loading.dart';
 import 'api_list_controller.dart';
 
@@ -16,6 +17,7 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
   final StateNotifierProvider<APIListControllerNotifier, APIListController<dynamic>> listControllerProvider;
   final Widget? loadingWidget;
   final Widget? noDataWidget;
+  final Widget? customFloatBtn;
   final Widget Function(R data, int index) itemChild;
   const APIListWidget({
     super.key,
@@ -25,6 +27,7 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
     required this.listControllerProvider,
     this.loadingWidget,
     this.noDataWidget,
+    this.customFloatBtn,
     required this.itemChild,
   });
 
@@ -120,6 +123,10 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
               Builder(
                 builder: (context) {
                   double flatButtonPos = ScreenSize.fitPxHeight(-60);
+
+                  if (widget.customFloatBtn != null) {
+                    flatButtonPos = ScreenSize.fitPxHeight(-100);
+                  }
                   if (ref.watch(bottomNavationBarPosProvider) == ScreenSize.fitPxHeight(-60)) {
                     flatButtonPos = ScreenSize.fitPxHeight(15);
                   }
@@ -133,33 +140,28 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
+                              /// カスタム FloatBtn
+                              widget.customFloatBtn ?? Container(),
+
+                              SizedBox(height: ScreenSize.fitPxHeight(10)),
+
                               ///トップに移動ボタン
-                              GestureDetector(
-                                onTap: () {
+                              MainBtn(
+                                width: ScreenSize.fitPxWidth(40),
+                                height: ScreenSize.fitPxWidth(40),
+                                backgroundColor: AppColors.greyColor98,
+                                borderRadius: 25,
+                                onPress: () {
                                   ref.watch(widget.listControllerProvider).scrollController.animateTo(
                                         0,
                                         duration: const Duration(milliseconds: 300),
                                         curve: Curves.linear,
                                       );
                                 },
-                                child: Container(
-                                  width: ScreenSize.fitPxWidth(40),
-                                  height: ScreenSize.fitPxWidth(40),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    color: AppColors.greyColor98,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.2),
-                                        spreadRadius: 1,
-                                      ),
-                                    ],
-                                  ),
-                                  child: const Icon(
-                                    FontAwesomeIcons.angleUp,
-                                    size: 16,
-                                    color: Colors.white,
-                                  ),
+                                child: Icon(
+                                  FontAwesomeIcons.angleUp,
+                                  size: 16,
+                                  color: AppColors.whiteColor,
                                 ),
                               ),
                             ],

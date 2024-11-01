@@ -128,7 +128,7 @@ class MainBtn extends StatefulWidget {
     required this.onPress,
     this.backgroundColor,
     this.isFullWidth = false,
-    this.innerPadding = const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+    this.innerPadding = EdgeInsets.zero,
     this.borderRadius = 8,
     this.width,
     this.height,
@@ -140,8 +140,13 @@ class MainBtn extends StatefulWidget {
 
 class _MainBtnState extends State<MainBtn> {
   bool isPress = false;
+
   @override
   Widget build(BuildContext context) {
+    EdgeInsetsGeometry padding = widget.innerPadding;
+    if (widget.title != null && widget.innerPadding == EdgeInsets.zero) {
+      padding = EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10), vertical: ScreenSize.fitPxHeight(5));
+    }
     Color btnBackgroundColor = widget.backgroundColor ?? AppColors.greyColor57;
     double? btnWidth;
     if (widget.isFullWidth) {
@@ -158,7 +163,9 @@ class _MainBtnState extends State<MainBtn> {
         widget.onPress();
       },
       child: Container(
-        padding: widget.innerPadding,
+        padding: widget.title != null
+            ? EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10), vertical: ScreenSize.fitPxHeight(5))
+            : padding,
         width: btnWidth,
         height: widget.height,
         decoration: BoxDecoration(
@@ -166,6 +173,8 @@ class _MainBtnState extends State<MainBtn> {
           color: isPress ? btnBackgroundColor.withOpacity(0.8) : btnBackgroundColor,
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             widget.child ??
                 Text(

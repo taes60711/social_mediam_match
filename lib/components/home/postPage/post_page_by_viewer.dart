@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import '../../../global/home_global_view_model.dart';
 import '../../../services/post_service.dart';
 
@@ -46,6 +47,18 @@ class _PostByViewState extends ConsumerState<PostByView> {
               },
               listControllerProvider: listControllerProvider,
               noDataWidget: PostViewUtilities.noPostData(),
+              customFloatBtn: MainBtn(
+                width: ScreenSize.fitPxWidth(40),
+                height: ScreenSize.fitPxWidth(40),
+                backgroundColor: AppColors.whiteColor,
+                borderRadius: 25,
+                onPress: () {},
+                child: Icon(
+                  FontAwesomeIcons.pen,
+                  size: 16,
+                  color: AppColors.orangeColor,
+                ),
+              ),
               loadingWidget: const PostLoading(),
               itemChild: (data, index) {
                 return GestureDetector(
