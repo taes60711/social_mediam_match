@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../global/home_global_view_model.dart';
 import '../../../models/post_model.dart';
+import '../../../provider/post/post_provider.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/background_widget.dart';

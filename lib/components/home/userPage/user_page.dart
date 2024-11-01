@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/userPage/my_posts.dart';
 import 'package:social_mediam_match/components/home/userPage/user_profile_edit_page.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
@@ -287,8 +288,8 @@ class _UserPageState extends ConsumerState<UserPage> {
 }
 
 Widget infoBtn({IconData? icon, String text = "", Function? onPress}) {
-  return GestureDetector(
-    onTap: () {
+  return MainBtn(
+    onPress: () {
       if (onPress != null) {
         onPress();
       }

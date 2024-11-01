@@ -4,12 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import '../../../global/home_global_view_model.dart';
+import '../../../provider/post/post_provider.dart';
 import '../../../services/post_service.dart';
-
 import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
-import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
-
 import '../../utilities/loading.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
@@ -18,10 +16,6 @@ import '../../utilities/user_icon.dart';
 import 'post_detail_page.dart';
 import 'post_main_page.dart';
 import 'post_utilities.dart';
-
-final listControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
-  (ref) => APIListControllerNotifier(APIListController()),
-);
 
 // new
 class PostByView extends ConsumerStatefulWidget {
@@ -48,21 +42,25 @@ class _PostByViewState extends ConsumerState<PostByView> {
               listControllerProvider: listControllerProvider,
               noDataWidget: PostViewUtilities.noPostData(),
               customFloatBtn: MainBtn(
-                width: ScreenSize.fitPxWidth(40),
-                height: ScreenSize.fitPxWidth(40),
-                backgroundColor: AppColors.whiteColor,
-                borderRadius: 25,
                 onPress: () {},
-                child: Icon(
-                  FontAwesomeIcons.pen,
-                  size: 16,
-                  color: AppColors.orangeColor,
+                child: Container(
+                  width: ScreenSize.fitPxWidth(40),
+                  height: ScreenSize.fitPxWidth(40),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: AppColors.whiteColor,
+                  ),
+                  child: Icon(
+                    FontAwesomeIcons.pen,
+                    size: 16,
+                    color: AppColors.orangeColor,
+                  ),
                 ),
               ),
               loadingWidget: const PostLoading(),
               itemChild: (data, index) {
-                return GestureDetector(
-                  onTap: () {
+                return MainBtn(
+                  onPress: () {
                     ref.read(choicedPostProvider.notifier).update((state) => data);
 
                     PostDetailPage().show(context);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_detail.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 import '../../../global/home_global_view_model.dart';
@@ -48,8 +49,8 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
                     listControllerProvider: courserMainPageListPorver,
                     loadingWidget: const CourseLoading(),
                     itemChild: (data, index) {
-                      return GestureDetector(
-                        onTap: () {
+                      return MainBtn(
+                        onPress: () {
                           ref.read(choicedCourseProvider.notifier).update((state) => data);
                           CourseDetailPage().show(context);
                         },

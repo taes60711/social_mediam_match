@@ -7,9 +7,9 @@ import '../../global/chat_ws_model.dart';
 import '../../models/user_model.dart';
 import '../../provider/account/user_provider.dart';
 import '../../provider/Initial/initial_provider.dart';
-import '../utilities/style/screen_size.dart';
-import '../utilities/style/style_config.dart';
+
 import '../utilities/style/theme_style.dart';
+import 'splash_screen.dart';
 
 class Initialpage extends ConsumerStatefulWidget {
   const Initialpage({super.key});
@@ -38,33 +38,6 @@ class _InitialpageState extends ConsumerState<Initialpage> {
 
   @override
   Widget build(BuildContext context) {
-    // bool isfirstEnterApp = context.select((InitialProvider value) => value.isfirstEnterApp);
-    // ProfileData userData = context.watch<UserProvider>().userData;
-    // bool isLoginLoading = context.select((UserProvider value) => value.isLoading);
-
-    // Widget component;
-
-    // ///MARK: テスト用
-
-    // if (isfirstEnterApp) {
-    //   component = splashScreen(context);
-    // } else {
-    //   if (isLoginLoading) {
-    //     component = const Scaffold(
-    //       backgroundColor: Colors.white,
-    //       body: Loading(),
-    //     );
-    //   } else {
-    //     if (userData.uid != "-1") {
-    //       component = const ProviderScope(
-    //         child: Home(),
-    //       );
-    //     } else {
-    //       component = const WelcomePage();
-    //     }
-    //   }
-    // }
-
     Widget component = splashScreen(context);
     if (isFirst) {
       component = const Home();
@@ -72,21 +45,6 @@ class _InitialpageState extends ConsumerState<Initialpage> {
 
     return component;
   }
-}
-
-Widget splashScreen(BuildContext context) {
-  return Scaffold(
-    backgroundColor: AppColors.whiteColor,
-    body: Center(
-      child: SizedBox(
-        width: ScreenSize.width,
-        child: AspectRatio(
-          aspectRatio: 16.0 / 9.0,
-          child: Image.asset(logoImg),
-        ),
-      ),
-    ),
-  );
 }
 
 Future<void> _enterApp(BuildContext context) async {

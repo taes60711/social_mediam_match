@@ -147,10 +147,6 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
 
                               ///トップに移動ボタン
                               MainBtn(
-                                width: ScreenSize.fitPxWidth(40),
-                                height: ScreenSize.fitPxWidth(40),
-                                backgroundColor: AppColors.greyColor98,
-                                borderRadius: 25,
                                 onPress: () {
                                   ref.watch(widget.listControllerProvider).scrollController.animateTo(
                                         0,
@@ -158,10 +154,18 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                                         curve: Curves.linear,
                                       );
                                 },
-                                child: Icon(
-                                  FontAwesomeIcons.angleUp,
-                                  size: 16,
-                                  color: AppColors.whiteColor,
+                                child: Container(
+                                  width: ScreenSize.fitPxWidth(40),
+                                  height: ScreenSize.fitPxWidth(40),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    color: AppColors.greyColor98,
+                                  ),
+                                  child: Icon(
+                                    FontAwesomeIcons.angleUp,
+                                    size: 16,
+                                    color: AppColors.whiteColor,
+                                  ),
                                 ),
                               ),
                             ],

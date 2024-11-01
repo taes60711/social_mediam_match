@@ -147,7 +147,12 @@ class _MainBtnState extends State<MainBtn> {
     if (widget.title != null && widget.innerPadding == EdgeInsets.zero) {
       padding = EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10), vertical: ScreenSize.fitPxHeight(5));
     }
-    Color btnBackgroundColor = widget.backgroundColor ?? AppColors.greyColor57;
+
+    Color btnBackgroundColor = Colors.transparent;
+    if (widget.title != null) {
+      btnBackgroundColor = widget.backgroundColor ?? AppColors.greyColor57;
+    }
+
     double? btnWidth;
     if (widget.isFullWidth) {
       btnWidth = ScreenSize.width;
@@ -170,18 +175,21 @@ class _MainBtnState extends State<MainBtn> {
         height: widget.height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.borderRadius),
-          color: isPress ? btnBackgroundColor.withOpacity(0.8) : btnBackgroundColor,
+          color: btnBackgroundColor,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            widget.child ??
-                Text(
-                  widget.title ?? "please use title or child ",
-                  style: widget.titleStyle ?? const TextStyle(color: Colors.white),
-                ),
-          ],
+        child: Opacity(
+          opacity: isPress ? 0.8 : 1,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              widget.child ??
+                  Text(
+                    widget.title ?? "please use title or child ",
+                    style: widget.titleStyle ?? const TextStyle(color: Colors.white),
+                  ),
+            ],
+          ),
         ),
       ),
     );
