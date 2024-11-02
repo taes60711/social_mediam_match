@@ -112,8 +112,8 @@ class PostViewUtilities {
               ),
               SizedBox(height: ScreenSize.fitPxHeight(15)),
               Center(
-                child: GestureDetector(
-                  onTap: () {},
+                child: MainBtn(
+                  onPress: () {},
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: ScreenSize.fitPxHeight(15),

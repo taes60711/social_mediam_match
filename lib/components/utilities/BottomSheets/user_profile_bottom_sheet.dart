@@ -7,6 +7,7 @@ import 'package:social_mediam_match/components/utilities/BottomSheets/base_botto
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../strings/skillExChangePage/skill_change_page_string.dart';
+import '../custom_button.dart';
 import '../style/screen_size.dart';
 import '../style/style_config.dart';
 import '../user_icon.dart';
@@ -78,8 +79,8 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                 ),
                 SizedBox(height: ScreenSize.fitPxHeight(15)),
                 Center(
-                  child: GestureDetector(
-                    onTap: () {},
+                  child: MainBtn(
+                    onPress: () {},
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: ScreenSize.fitPxHeight(15),
@@ -365,8 +366,8 @@ class UserProfileBottomSheet extends BaseBottomSheet {
                 ),
                 SizedBox(height: ScreenSize.fitPxHeight(15)),
                 Center(
-                  child: GestureDetector(
-                    onTap: () {},
+                  child: MainBtn(
+                    onPress: () {},
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: ScreenSize.fitPxHeight(15),

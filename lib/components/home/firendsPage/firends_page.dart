@@ -14,6 +14,7 @@ import '../../../models/friend_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../services/friend_service.dart';
 import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
+import '../../utilities/custom_button.dart';
 import 'search_user_page.dart';
 
 final frinedListProvider = StateProvider<List<FriendListModel>>((ref) => []);
@@ -80,26 +81,29 @@ class _FriendPageState extends ConsumerState<FriendPage> {
             Row(
               children: [
                 SizedBox(width: ScreenSize.fitPxWidth(10)),
-                GestureDetector(
-                  onTap: () {
+                MainBtn(
+                  onPress: () {
                     SearchUserPage().show(context);
                   },
-                  child: Column(
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.plus,
-                        color: AppColors.greyColor98,
-                        size: ScreenSize.fontSize14,
-                      ),
-                      SizedBox(height: ScreenSize.fitPxHeight(5)),
-                      Text(
-                        "新增好友",
-                        style: TextStyle(
-                          fontSize: ScreenSize.fontSize12,
-                          color: AppColors.greyColor130,
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Column(
+                      children: [
+                        Icon(
+                          FontAwesomeIcons.plus,
+                          color: AppColors.greyColor98,
+                          size: ScreenSize.fontSize14,
                         ),
-                      )
-                    ],
+                        SizedBox(height: ScreenSize.fitPxHeight(5)),
+                        Text(
+                          "新增好友",
+                          style: TextStyle(
+                            fontSize: ScreenSize.fontSize12,
+                            color: AppColors.greyColor130,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(width: ScreenSize.fitPxWidth(15)),

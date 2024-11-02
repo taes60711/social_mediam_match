@@ -30,12 +30,7 @@ final userExChangelistControllerProvider = StateNotifierProvider<APIListControll
 class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
   @override
   void initState() {
-    init();
     super.initState();
-  }
-
-  Future<void> init() async {
-    ref.read(userExChangelistControllerProvider.notifier).size = 6;
   }
 
   @override
@@ -51,6 +46,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
               SizedBox(height: ScreenSize.fitPxHeight(20)),
               Expanded(
                 child: APIListWidget<ProfileData>(
+                  size: 6,
                   apiFunc: (page, size) {
                     return UserService().getAllUserData(page, size, userUid: "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2", filterSkill: []);
                   },
@@ -262,8 +258,8 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
               ),
               SizedBox(height: ScreenSize.fitPxHeight(15)),
               Center(
-                child: GestureDetector(
-                  onTap: () {},
+                child: MainBtn(
+                  onPress: () {},
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: ScreenSize.fitPxHeight(15),
