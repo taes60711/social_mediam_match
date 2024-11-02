@@ -7,8 +7,6 @@ import 'package:social_mediam_match/components/utilities/style/theme_style.dart'
 
 import '../../CustomBouncingScrollPhysics.dart';
 
-import 'style/style_config.dart';
-
 ScrollController singleScollController = ScrollController();
 
 class BackgroundWidget extends StatelessWidget {
