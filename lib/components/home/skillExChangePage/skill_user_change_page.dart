@@ -48,6 +48,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
               Container(
                 height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 40 : 0,
               ),
+              SizedBox(height: ScreenSize.fitPxHeight(20)),
               Expanded(
                 child: APIListWidget<ProfileData>(
                   apiFunc: (page, size) {
