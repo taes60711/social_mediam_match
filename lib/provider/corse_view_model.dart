@@ -10,8 +10,6 @@ import 'package:social_mediam_match/services/skill_service.dart';
 
 import '../components/home/coursePage/course_edit_page/course_rich_text_edit.dart';
 import '../components/utilities/apiListView/base_api_list_provider.dart';
-import '../components/utilities/endDrawers/course_detail_end_drawer.dart';
-import '../components/utilities/endDrawers/course_manager_end_drawer.dart';
 import '../components/utilities/rich_text_view.dart';
 import '../components/utilities/style/style_config.dart';
 import '../global.dart';

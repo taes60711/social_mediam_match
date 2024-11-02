@@ -72,7 +72,21 @@ class _FriendPageState extends ConsumerState<FriendPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: ScreenSize.fitPxHeight(10)),
-            _buildSearchBar(ref, () => setState(() {}), context),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildSearchBar(ref, () => setState(() {}), context),
+                ),
+                SizedBox(width: ScreenSize.fitPxHeight(10)),
+                MainBtn(
+                  onPress: () {},
+                  child: Icon(
+                    Icons.settings,
+                    color: AppColors.greyColor130,
+                  ),
+                ),
+              ],
+            ),
             SizedBox(height: ScreenSize.fitPxHeight(15)),
             Text(
               "推薦",

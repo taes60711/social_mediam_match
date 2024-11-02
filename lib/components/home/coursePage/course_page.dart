@@ -37,6 +37,7 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
       child: Stack(
         children: [
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 50 : 0,

@@ -6,6 +6,7 @@ import '../../models/post_model.dart';
 final myPostlistControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
   (ref) => APIListControllerNotifier(APIListController()),
 );
+
 final listControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
   (ref) => APIListControllerNotifier(APIListController()),
 );
@@ -16,6 +17,14 @@ final newlistControllerProvider = StateNotifierProvider<APIListControllerNotifie
 
 final topPostProvider = StateProvider<List<PostModel>>((ref) {
   return [];
+});
+
+final allPostBoardListData = StateProvider<List<PostBoard>>((ref) {
+  return [];
+});
+
+final choicedPostBoardProvider = StateProvider<PostBoard>((ref) {
+  return PostBoard();
 });
 
 final choicedPostProvider = StateProvider<PostModel>((ref) {

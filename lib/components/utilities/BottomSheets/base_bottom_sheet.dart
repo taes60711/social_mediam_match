@@ -24,7 +24,7 @@ abstract class BaseBottomSheet {
 
   Widget build(WidgetRef ref);
 
-  void show(BuildContext buildContext, {double height = 0.8}) {
+  void show(BuildContext buildContext) {
     context = buildContext;
     Color barrerierColor = Colors.black.withOpacity(.3);
     Navigator.of(buildContext).push(

@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/home/postPage/post_type_board/post_type_board.dart';
 
 import '../../../global/home_global_view_model.dart';
 import '../../../models/post_model.dart';
@@ -36,6 +37,9 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
     pageIndex = 0;
     List<PostModel> topPosts = await PostService().getPostByType(0, 3, -1);
     ref.read(topPostProvider.notifier).update((state) => topPosts);
+
+    List<PostBoard> allPostBoard = await PostService().getAllPostBoard();
+    ref.read(allPostBoardListData.notifier).update((state) => allPostBoard);
     setState(() {});
   }
 
@@ -44,14 +48,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
     List<Widget> postsWidget = [
       const PostByView(),
       const PostByNew(),
-      CommonScaffold(
-        child: Center(
-            child: Container(
-          width: 50,
-          height: 50,
-          color: const Color.fromARGB(255, 136, 139, 141),
-        )),
-      ),
+      const PostTypeBoard(),
     ];
     return CommonScaffold(
       child: Stack(

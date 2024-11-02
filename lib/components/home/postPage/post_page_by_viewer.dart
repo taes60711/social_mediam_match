@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
+import 'package:social_mediam_match/models/post_model.dart';
 import '../../../global/home_global_view_model.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../../services/post_service.dart';
@@ -43,6 +44,13 @@ class _PostByViewState extends ConsumerState<PostByView> {
               customFloatBtn: PostViewUtilities.postCreateButton(context),
               loadingWidget: const PostLoading(),
               itemChild: (data, index) {
+                String typeName = ref
+                    .read(allPostBoardListData)
+                    .firstWhere(
+                      (e) => e.id == data.type,
+                      orElse: () => PostBoard(name: '', id: 0),
+                    )
+                    .name;
                 return MainBtn(
                   onPress: () {
                     ref.read(choicedPostProvider.notifier).update((state) => data);
@@ -129,7 +137,7 @@ class _PostByViewState extends ConsumerState<PostByView> {
                                       ),
                                       SizedBox(width: 5),
                                       Text(
-                                        "Techology",
+                                        typeName,
                                         style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor),
                                       ),
                                     ],

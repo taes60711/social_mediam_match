@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/utilities/BottomSheets/base_bottom_sheet.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
@@ -7,7 +8,6 @@ import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../../services/post_service.dart';
-import '../../utilities/BottomSheets/base_overlay_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 
@@ -15,7 +15,12 @@ final postCommentListControllerProvider = StateNotifierProvider<APIListControlle
   (ref) => APIListControllerNotifier(APIListController()),
 );
 
-class PostCommentPage extends BaseOverlayBottomSheet {
+class PostCommentPage extends BaseBottomSheet {
+  @override
+  double buildHeight() {
+    return 0.5;
+  }
+
   @override
   Widget build(ref) {
     return Column(
@@ -82,12 +87,12 @@ class PostCommentPage extends BaseOverlayBottomSheet {
                   ),
                 );
               }),
-        )
+        ),
+        downWidgetBuild(ref),
       ],
     );
   }
 
-  @override
   Widget downWidgetBuild(WidgetRef ref) {
     ProfileData userData = ref.watch(loginUserData);
     return Container(
