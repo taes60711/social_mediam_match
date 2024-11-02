@@ -8,10 +8,10 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
+import '../../../provider/post/post_provider.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/user_icon.dart';
 import 'post_comment_page.dart';
-import 'post_main_page.dart';
 
 class PostDetailPage extends BaseEndDrawer {
   @override

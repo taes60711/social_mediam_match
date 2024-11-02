@@ -17,7 +17,6 @@ import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
 import 'post_detail_page.dart';
-import 'post_main_page.dart';
 
 // new
 class PostByNew extends ConsumerStatefulWidget {

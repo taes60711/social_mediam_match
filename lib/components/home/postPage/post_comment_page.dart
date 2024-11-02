@@ -5,11 +5,11 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
+import '../../../provider/post/post_provider.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/BottomSheets/base_overlay_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
-import 'post_main_page.dart';
 
 final postCommentListControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
   (ref) => APIListControllerNotifier(APIListController()),

@@ -15,14 +15,6 @@ import 'post_detail_page.dart';
 import 'post_page_by_new.dart';
 import 'post_page_by_viewer.dart';
 
-final topPostProvider = StateProvider<List<PostModel>>((ref) {
-  return [];
-});
-
-final choicedPostProvider = StateProvider<PostModel>((ref) {
-  return PostModel();
-});
-
 class PostMainPage extends ConsumerStatefulWidget {
   const PostMainPage({super.key});
 
