@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../background_widget.dart';
+import '../style/style_config.dart';
 
 abstract class BaseFadeScalePage {
+  late Function closePage;
+  late AnimationController controller;
+
   /// MARK:  mainBody
   Widget build(WidgetRef ref);
 
@@ -14,6 +16,12 @@ abstract class BaseFadeScalePage {
       PageRouteBuilder(
         pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
           return FadeScale(
+            callBackAnimationController: (AnimationController animationController) {
+              controller = animationController;
+            },
+            callBackClosePage: (Function callBackClosePage) {
+              closePage = callBackClosePage;
+            },
             child: Scaffold(
               backgroundColor: Colors.transparent,
               body: Consumer(
@@ -35,9 +43,14 @@ abstract class BaseFadeScalePage {
 }
 
 class FadeScale extends StatefulWidget {
+  final Function(Function closepage) callBackClosePage;
+
+  final Function(AnimationController controller) callBackAnimationController;
   final Widget child;
   const FadeScale({
     super.key,
+    required this.callBackAnimationController,
+    required this.callBackClosePage,
     required this.child,
   });
 
@@ -65,7 +78,10 @@ class _FadeScaleState extends State<FadeScale> with SingleTickerProviderStateMix
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     );
 
-    _controller.forward();
+    _controller.forward().whenComplete(() {
+      widget.callBackAnimationController(_controller);
+      widget.callBackClosePage(() => _exitPage());
+    });
   }
 
   @override
@@ -84,14 +100,12 @@ class _FadeScaleState extends State<FadeScale> with SingleTickerProviderStateMix
       opacity: _fadeAnimation,
       child: ScaleTransition(
         scale: _scaleAnimation,
-        child: SafeArea(
-          child: CommonScaffold(
-            child: Center(
-              child: ElevatedButton(
-                onPressed: _exitPage,
-                child: Text("exit"),
-              ),
-            ),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          color: AppColors.bgColor,
+          child: SafeArea(
+            child: widget.child,
           ),
         ),
       ),

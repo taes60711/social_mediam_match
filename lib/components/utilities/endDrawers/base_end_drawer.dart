@@ -196,6 +196,7 @@ class EndDrawerWidget extends ConsumerStatefulWidget {
 class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
+  late final Animation<double> _fadeAnimation;
   double _dragStartX = 0.0;
   bool isInit = true;
   bool isDispose = false;
@@ -220,6 +221,9 @@ class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTi
         parent: _controller,
         curve: Curves.easeInOut,
       ),
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     );
 
     _controller.forward().whenComplete(() {
@@ -278,14 +282,17 @@ class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTi
       onHorizontalDragStart: _onHorizontalDragStart,
       onHorizontalDragUpdate: _onHorizontalDragUpdate,
       onHorizontalDragEnd: _onHorizontalDragEnd,
-      child: SlideTransition(
-        position: _offsetAnimation,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          color: AppColors.bgColor,
-          child: SafeArea(
-            child: component,
+      child: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SlideTransition(
+          position: _offsetAnimation,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: AppColors.bgColor,
+            child: SafeArea(
+              child: component,
+            ),
           ),
         ),
       ),

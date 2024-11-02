@@ -16,7 +16,7 @@ class BaseTopBar extends StatelessWidget {
     this.backFunc,
     this.title = "",
     this.centerWidget,
-    this.rightWidget = const SizedBox(),
+    this.rightWidget,
     this.padding = const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
   });
 
@@ -52,7 +52,7 @@ class BaseTopBar extends StatelessWidget {
               color: AppColors.whiteColor,
             ),
           ),
-      rightWidget
+      rightWidget ?? Container(),
     ];
 
     return GestureDetector(
@@ -66,11 +66,9 @@ class BaseTopBar extends StatelessWidget {
           padding: padding,
           child: Row(
             children: [
-              Expanded(
-                child: Align(
-                  alignment: list[0],
-                  child: widgetList[0],
-                ),
+              Align(
+                alignment: list[0],
+                child: widgetList[0],
               ),
               SizedBox(
                 width: ScreenSize.fitPxWidth(260),
@@ -79,12 +77,14 @@ class BaseTopBar extends StatelessWidget {
                   child: widgetList[1],
                 ),
               ),
-              Expanded(
-                child: Align(
-                  alignment: list[2],
-                  child: widgetList[2],
-                ),
-              ),
+              rightWidget != null
+                  ? Expanded(
+                      child: Align(
+                        alignment: list[2],
+                        child: widgetList[2],
+                      ),
+                    )
+                  : Container(),
             ],
           ),
         ),

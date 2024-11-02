@@ -4,6 +4,7 @@ import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/label_input.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 import '../../models/rich_text_format.dart';
 
@@ -22,8 +23,59 @@ class RichTextEditor extends StatelessWidget {
       height: ScreenSize.height,
       child: Column(
         children: [
+          Expanded(
+            child: FutureBuilder<String>(
+              future: RichTextFormat(htmlString: content).widgetToEditorHtml(content),
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (snapshot.hasData) {
+                  return QuillHtmlEditor(
+                    backgroundColor: AppColors.bgColor,
+                    text: snapshot.data,
+                    controller: controller,
+                    minHeight: ScreenSize.height / 2 - 100,
+                    hintText: "請輸入文字",
+                    hintTextStyle: const TextStyle(color: Colors.grey),
+                    textStyle: TextStyle(fontSize: fontSize, color: AppColors.whiteColor),
+                    loadingBuilder: (context) {
+                      return Container(
+                        color: AppColors.bgColor,
+                        height: ScreenSize.height / 2 - 100,
+                        child: const Loading(),
+                      );
+                    },
+                    onTextChanged: (value) {
+                      RegExp nonEnglishDigitRegex = RegExp(r'[^\x00-\x7F0-9]');
+                      if (nonEnglishDigitRegex.hasMatch(value)) {
+                        RegExp regExp = RegExp(r'<p><br><\/p>');
+                        RegExp sregExp = RegExp(r'<br><\/p>');
+                        if (!regExp.hasMatch(value) && sregExp.hasMatch(value)) {
+                          String replacedText = value.replaceAll("<br></p>", "</p>");
+                          controller.clear();
+                          controller.insertText(replacedText);
+                          controller.focus();
+                        }
+                      }
+                    },
+                    onFocusChanged: (p0) {},
+                  );
+                } else {
+                  return const Center(
+                    child: Text('No data available'),
+                  );
+                }
+              },
+            ),
+          ),
+
+          /// ToolBar
           ToolBar.scroll(
-            toolBarColor: Colors.cyan.shade50,
+            toolBarColor: AppColors.greyColor98,
             controller: controller,
             direction: Axis.horizontal,
             toolBarConfig: customToolBarList,
@@ -183,53 +235,6 @@ class RichTextEditor extends StatelessWidget {
                 child: const Icon(Icons.link_sharp),
               ),
             ],
-          ),
-          Expanded(
-            child: FutureBuilder<String>(
-              future: RichTextFormat(htmlString: content).widgetToEditorHtml(content),
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (snapshot.hasData) {
-                  return QuillHtmlEditor(
-                    text: snapshot.data,
-                    controller: controller,
-                    minHeight: ScreenSize.height / 2 - 100,
-                    hintText: "請輸入文字",
-                    hintTextStyle: const TextStyle(color: Colors.grey),
-                    textStyle: TextStyle(fontSize: fontSize),
-                    loadingBuilder: (context) {
-                      return SizedBox(
-                        height: ScreenSize.height / 2 - 100,
-                        child: const Loading(),
-                      );
-                    },
-                    onTextChanged: (value) {
-                      RegExp nonEnglishDigitRegex = RegExp(r'[^\x00-\x7F0-9]');
-                      if (nonEnglishDigitRegex.hasMatch(value)) {
-                        RegExp regExp = RegExp(r'<p><br><\/p>');
-                        RegExp sregExp = RegExp(r'<br><\/p>');
-                        if (!regExp.hasMatch(value) && sregExp.hasMatch(value)) {
-                          String replacedText = value.replaceAll("<br></p>", "</p>");
-                          controller.clear();
-                          controller.insertText(replacedText);
-                          controller.focus();
-                        }
-                      }
-                    },
-                    onFocusChanged: (p0) {},
-                  );
-                } else {
-                  return const Center(
-                    child: Text('No data available'),
-                  );
-                }
-              },
-            ),
           ),
         ],
       ),
