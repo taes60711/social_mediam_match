@@ -15,6 +15,7 @@ import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
 import 'post_detail_page.dart';
+import 'post_manager_bottom_sheet.dart';
 import 'post_utilities.dart';
 
 // new
@@ -94,14 +95,19 @@ class _PostByViewState extends ConsumerState<PostByView> {
                                     style: TextStyle(fontSize: ScreenSize.fontSize10, color: AppColors.greyColor130),
                                   ),
                                   const Expanded(child: SizedBox(width: 1)),
-                                  Container(
-                                    width: 30,
-                                    alignment: Alignment.centerRight,
-                                    color: Colors.transparent,
-                                    child: Icon(
-                                      FontAwesomeIcons.ellipsis,
-                                      color: AppColors.greyColor130,
-                                      size: ScreenSize.fontSize16,
+                                  GestureDetector(
+                                    onTap: () {
+                                      PostManagerBtmSheet().show(context);
+                                    },
+                                    child: Container(
+                                      width: 30,
+                                      alignment: Alignment.centerRight,
+                                      color: Colors.transparent,
+                                      child: Icon(
+                                        FontAwesomeIcons.ellipsis,
+                                        color: AppColors.greyColor130,
+                                        size: ScreenSize.fontSize16,
+                                      ),
                                     ),
                                   ),
                                 ],
