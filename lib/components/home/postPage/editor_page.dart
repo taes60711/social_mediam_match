@@ -229,5 +229,13 @@
 //   }
 // }
 
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../utilities/FadeScalePage/base_fade_scale_page.dart';
 
-
+class PostEditorPage extends BaseFadeScalePage {
+  @override
+  Widget build(WidgetRef ref) {
+    return Container();
+  }
+}

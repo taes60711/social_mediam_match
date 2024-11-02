@@ -41,28 +41,12 @@ class _PostByViewState extends ConsumerState<PostByView> {
               },
               listControllerProvider: listControllerProvider,
               noDataWidget: PostViewUtilities.noPostData(),
-              customFloatBtn: MainBtn(
-                onPress: () {},
-                child: Container(
-                  width: ScreenSize.fitPxWidth(40),
-                  height: ScreenSize.fitPxWidth(40),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color: AppColors.whiteColor,
-                  ),
-                  child: Icon(
-                    FontAwesomeIcons.pen,
-                    size: 16,
-                    color: AppColors.orangeColor,
-                  ),
-                ),
-              ),
+              customFloatBtn: PostViewUtilities.postCreateButton(context),
               loadingWidget: const PostLoading(),
               itemChild: (data, index) {
                 return MainBtn(
                   onPress: () {
                     ref.read(choicedPostProvider.notifier).update((state) => data);
-
                     PostDetailPage().show(context);
                   },
                   child: Container(

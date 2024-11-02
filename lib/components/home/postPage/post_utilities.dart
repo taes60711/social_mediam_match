@@ -1,10 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
+
 import '../../../models/user_model.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
+import 'editor_page.dart';
 
 class PostViewUtilities {
   ///データなレイアウト
@@ -196,36 +200,22 @@ class PostViewUtilities {
   }
 
   ///文章作るボタン
-  static Widget postCreateButton(BuildContext pageContext) {
-    return GestureDetector(
-      onTap: () {
-        // /// 文章作成
-        // RouteOptions.pushTo(
-        //   RoutePath.postEditPage,
-        //   arguments: {
-        //     'postContext': pageContext,
-        //     'allPostBoradTypeList': pageContext.read<PostProvider>().allPostBoards,
-        //     'editorType': "create",
-        //   },
-        // );
+  static Widget postCreateButton(BuildContext context) {
+    return MainBtn(
+      onPress: () {
+        PostEditorPage().show(context);
       },
       child: Container(
-        width: 40,
-        height: 40,
+        width: ScreenSize.fitPxWidth(40),
+        height: ScreenSize.fitPxWidth(40),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 1,
-            ),
-          ],
+          color: AppColors.whiteColor,
         ),
         child: Icon(
-          Icons.edit,
-          size: 18,
-          color: normalBgColor,
+          FontAwesomeIcons.pen,
+          size: 16,
+          color: AppColors.orangeColor,
         ),
       ),
     );
