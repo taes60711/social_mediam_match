@@ -161,8 +161,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
+import '../../../models/friend_model.dart';
 import '../../utilities/basic_top_bar.dart';
+import '../../utilities/style/screen_size.dart';
+import '../../utilities/style/style_config.dart';
+import '../../utilities/user_icon.dart';
 
 class MyFriendPage extends BaseEndDrawer {
   @override
@@ -174,6 +179,48 @@ class MyFriendPage extends BaseEndDrawer {
           backFunc: () {
             closePage();
           },
+        ),
+        Expanded(
+          child: ref.watch(frinedListProvider).isEmpty
+              ? Container()
+              : ListView.builder(
+                  itemCount: ref.watch(frinedListProvider).length,
+                  itemBuilder: (context, index) {
+                    FriendListModel data = ref.watch(frinedListProvider)[index];
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: ScreenSize.fitPxWidth(10),
+                      ),
+                      child: Dismissible(
+                        key: const Key(""),
+                        direction: DismissDirection.endToStart,
+                        child: Row(
+                          children: [
+                            UserIcon(iconSize: ScreenSize.fitPxWidth(40), image: data.userData.image),
+                            SizedBox(width: ScreenSize.fitPxWidth(10)),
+                            Text(
+                              data.userData.name ?? "",
+                              style: TextStyle(
+                                fontSize: ScreenSize.fontSize14,
+                                color: AppColors.whiteColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                data.userData.name ?? "",
+                                style: TextStyle(
+                                  fontSize: ScreenSize.fontSize14,
+                                  color: AppColors.whiteColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
         ),
       ],
     );
