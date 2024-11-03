@@ -15,9 +15,7 @@ class UserProfileEditPage extends BaseBottomSheet {
   }
 
   @override
-  Widget build(
-    WidgetRef ref,
-  ) {
+  Widget build(WidgetRef ref) {
     return Container();
   }
 }

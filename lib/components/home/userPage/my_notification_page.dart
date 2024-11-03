@@ -277,8 +277,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
+import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/user_icon.dart';
 
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
@@ -295,6 +297,12 @@ class MyNotificationPage extends BaseEndDrawer {
     ProfileData userData = ref.watch(loginUserData);
     return Column(
       children: [
+        BaseTopBar(
+          backFunc: () {
+            closePage();
+          },
+          title: "通知",
+        ),
         Expanded(
           child: APIListWidget(
               apiFunc: (page, size) {
@@ -302,26 +310,62 @@ class MyNotificationPage extends BaseEndDrawer {
               },
               listControllerProvider: notificationListControllerProvider,
               itemChild: (data, index) {
-                return Row(
-                  children: [
-                    Icon(
-                      numberTypeIcon(data.type),
-                      size: ScreenSize.fontSize20,
-                      color: Colors.white,
-                    ),
-                    Column(
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10)),
+                  child: SizedBox(
+                    width: ScreenSize.width,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          data.title,
-                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        Padding(
+                          padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(3)),
+                          child: Icon(
+                            numberTypeIcon(data.type),
+                            size: ScreenSize.fontSize20,
+                            color: Colors.white,
+                          ),
                         ),
-                        Text(
-                          "${data.postTime}",
-                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        SizedBox(width: ScreenSize.fitPxWidth(10)),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  UserIcon(
+                                    iconSize: ScreenSize.fitPxWidth(30),
+                                    image: data.sendNotificationuserInfo.image,
+                                  ),
+                                  SizedBox(width: ScreenSize.fitPxWidth(5)),
+                                  Expanded(
+                                    child: Text(
+                                      data.title,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: ScreenSize.fitPxWidth(5)),
+                              Text(
+                                "${data.postTime}",
+                                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
                         ),
+                        Visibility(
+                          visible: !data.isRead,
+                          child: const Text(
+                            "未讀",
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
+                        )
                       ],
                     ),
-                  ],
+                  ),
                 );
               }),
         ),

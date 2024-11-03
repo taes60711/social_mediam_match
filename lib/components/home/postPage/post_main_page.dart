@@ -65,6 +65,13 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
               onPageChanged: (value) {
                 pageIndex = value;
                 setState(() {});
+
+                /// BottomNavigiatonbar隠れたら表示される
+                if (ref.watch(bottomNavationBarPosProvider) == ScreenSize.fitPxHeight(-60)) {
+                  Future.delayed(const Duration(milliseconds: 200)).then(
+                    (value) => HomeGlobalViewModel().bottomBarHideStateChage(false),
+                  );
+                }
               },
             ),
 
@@ -156,7 +163,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
 
 Widget _buildTabBtn(BuildContext context, {required String tabText, required int index}) {
   return GestureDetector(
-    onTap: () {
+    onTap: () async {
       FocusScope.of(context).requestFocus(FocusNode());
       pageController.jumpToPage(index);
     },
@@ -189,51 +196,52 @@ Widget _buildTabBtn(BuildContext context, {required String tabText, required int
 Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
   TextEditingController searchController = TextEditingController();
 
-  return MainBtn(
-    onPress: () async {
-      // if (searchController.text == "") {
-      //   return;
-      // }
-      FocusScope.of(context).requestFocus(FocusNode());
-      PostPageByTextFilter(searchText: searchController.text).show(context);
-    },
-    child: Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: ScreenSize.fitPxWidth(10),
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.greyColor57,
-        borderRadius: BorderRadius.circular(5),
-      ),
-      width: ScreenSize.width,
-      height: ScreenSize.fitPxHeight(35),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Icon(Icons.search, color: AppColors.whiteColor),
-          ),
-          Expanded(
-            child: TextField(
-              controller: searchController,
-              cursorColor: AppColors.whiteColor,
-              style: TextStyle(
-                color: AppColors.whiteColor,
+  return Container(
+    margin: EdgeInsets.symmetric(
+      horizontal: ScreenSize.fitPxWidth(10),
+    ),
+    decoration: BoxDecoration(
+      color: AppColors.greyColor57,
+      borderRadius: BorderRadius.circular(5),
+    ),
+    width: ScreenSize.width,
+    height: ScreenSize.fitPxHeight(35),
+    child: Row(
+      children: [
+        SizedBox(width: ScreenSize.fitPxHeight(13)),
+        Expanded(
+          child: TextField(
+            controller: searchController,
+            cursorColor: AppColors.whiteColor,
+            style: TextStyle(
+              color: AppColors.whiteColor,
+              fontSize: ScreenSize.fontSize14,
+            ),
+            decoration: InputDecoration(
+              hintText: '搜尋',
+              border: InputBorder.none,
+              isCollapsed: true,
+              hintStyle: TextStyle(
+                color: AppColors.greyColor130,
                 fontSize: ScreenSize.fontSize14,
-              ),
-              decoration: InputDecoration(
-                hintText: '搜尋',
-                border: InputBorder.none,
-                isCollapsed: true,
-                hintStyle: TextStyle(
-                  color: AppColors.greyColor130,
-                  fontSize: ScreenSize.fontSize14,
-                ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+        MainBtn(
+          onPress: () {
+            if (searchController.text == "") {
+              return;
+            }
+            FocusScope.of(context).requestFocus(FocusNode());
+            PostPageByTextFilter(searchText: searchController.text).show(context);
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Icon(Icons.search, color: AppColors.whiteColor),
+          ),
+        ),
+      ],
     ),
   );
 }

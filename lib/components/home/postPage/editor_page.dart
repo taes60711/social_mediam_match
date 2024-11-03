@@ -11,6 +11,11 @@ import '../../utilities/style/style_config.dart';
 class PostEditorPage extends BaseFadeScalePage {
   QuillEditorController quillEditorController = QuillEditorController();
   @override
+  bool needWaitOpenPage() {
+    return true;
+  }
+
+  @override
   Widget build(WidgetRef ref) {
     return Column(
       children: [

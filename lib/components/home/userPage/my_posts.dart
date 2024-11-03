@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade_scale_page.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
-import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
@@ -19,7 +19,12 @@ import '../../utilities/user_icon.dart';
 import '../postPage/post_detail_page.dart';
 import '../postPage/post_utilities.dart';
 
-class MyPostPage extends BaseEndDrawer {
+class MyPostPage extends BaseFadeScalePage {
+  @override
+  bool needWaitOpenPage() {
+    return true;
+  }
+
   @override
   Widget build(WidgetRef ref) {
     ProfileData userData = ref.watch(loginUserData);

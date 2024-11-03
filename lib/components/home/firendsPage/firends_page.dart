@@ -15,6 +15,7 @@ import '../../../provider/account/user_provider.dart';
 import '../../../services/friend_service.dart';
 import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/custom_button.dart';
+import 'my_friends.dart';
 import 'search_user_page.dart';
 
 final frinedListProvider = StateProvider<List<FriendListModel>>((ref) => []);
@@ -79,7 +80,9 @@ class _FriendPageState extends ConsumerState<FriendPage> {
                 ),
                 SizedBox(width: ScreenSize.fitPxHeight(10)),
                 MainBtn(
-                  onPress: () {},
+                  onPress: () {
+                    MyFriendPage().show(context);
+                  },
                   child: Icon(
                     Icons.settings,
                     color: AppColors.greyColor130,

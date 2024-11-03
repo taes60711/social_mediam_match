@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../loading.dart';
 import '../style/style_config.dart';
 
 abstract class BaseFadeScalePage {
   late Function closePage;
   late AnimationController controller;
+  late Function render;
+
+  late BuildContext context;
+  bool _isInit = false;
+
+  bool needWaitOpenPage() {
+    return false;
+  }
+
+  // initState前に
+  void create() {}
+  // （レンダリング、APIとか必要場合）
+  Future<void> initState(WidgetRef ref) async {}
 
   /// MARK:  mainBody
   Widget build(WidgetRef ref);
 
-  late BuildContext context;
   void show(BuildContext buildContext) {
     context = buildContext;
     Navigator.of(buildContext).push(
@@ -19,6 +32,7 @@ abstract class BaseFadeScalePage {
             callBackAnimationController: (AnimationController animationController) {
               controller = animationController;
             },
+            needWaitPageOpen: needWaitOpenPage(),
             callBackClosePage: (Function callBackClosePage) {
               closePage = callBackClosePage;
             },
@@ -28,6 +42,14 @@ abstract class BaseFadeScalePage {
                 builder: ((context, ref, _) {
                   return StatefulBuilder(
                     builder: ((_, setState) {
+                      if (!_isInit) {
+                        render = () => setState(() {});
+
+                        Future.delayed(Duration.zero).then((value) {
+                          create();
+                          initState(ref).then((value) => _isInit = true);
+                        });
+                      }
                       return build(ref);
                     }),
                   );
@@ -44,6 +66,7 @@ abstract class BaseFadeScalePage {
 
 class FadeScale extends StatefulWidget {
   final Function(Function closepage) callBackClosePage;
+  final bool needWaitPageOpen;
 
   final Function(AnimationController controller) callBackAnimationController;
   final Widget child;
@@ -52,6 +75,7 @@ class FadeScale extends StatefulWidget {
     required this.callBackAnimationController,
     required this.callBackClosePage,
     required this.child,
+    this.needWaitPageOpen = false,
   });
 
   @override
@@ -63,11 +87,13 @@ class _FadeScaleState extends State<FadeScale> with SingleTickerProviderStateMix
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
   late final Animation<double> _fadeAnimation;
-
+  bool isInit = true;
   @override
   void initState() {
     super.initState();
-
+    if (widget.needWaitPageOpen) {
+      isInit = false;
+    }
     _controller = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
@@ -81,6 +107,8 @@ class _FadeScaleState extends State<FadeScale> with SingleTickerProviderStateMix
     _controller.forward().whenComplete(() {
       widget.callBackAnimationController(_controller);
       widget.callBackClosePage(() => _exitPage());
+      isInit = true;
+      setState(() {});
     });
   }
 
@@ -96,6 +124,14 @@ class _FadeScaleState extends State<FadeScale> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    Widget component = Container();
+    if (!isInit) {
+      component = const Center(
+        child: Loading(),
+      );
+    } else {
+      component = widget.child;
+    }
     return FadeTransition(
       opacity: _fadeAnimation,
       child: ScaleTransition(
@@ -105,7 +141,7 @@ class _FadeScaleState extends State<FadeScale> with SingleTickerProviderStateMix
           height: MediaQuery.of(context).size.height,
           color: AppColors.bgColor,
           child: SafeArea(
-            child: widget.child,
+            child: component,
           ),
         ),
       ),
