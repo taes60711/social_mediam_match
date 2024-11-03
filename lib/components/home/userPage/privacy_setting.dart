@@ -189,13 +189,93 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/home/userPage/my_notification_page.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+
+import '../../utilities/style/style_config.dart';
 
 class PrivacySettingPage extends BaseEndDrawer {
   @override
-  Widget build(
-    WidgetRef ref,
-  ) {
-    return Container();
+  Widget build(WidgetRef ref) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: () {
+            closePage();
+          },
+          child: Container(
+            width: ScreenSize.fitPxWidth(40),
+            height: ScreenSize.fitPxWidth(40),
+            color: Colors.transparent,
+            child: Center(
+              child: Icon(
+                Icons.arrow_back_ios,
+                size: ScreenSize.fontSize14,
+                color: AppColors.whiteColor,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: ScreenSize.fitPxHeight(15)),
+        MainBtn(
+          onPress: () {
+            MyNotificationPage().show(context);
+          },
+          child: _buildButtonContainer(iconData: Icons.notifications, text: "通知"),
+        ),
+        MainBtn(
+          onPress: () {},
+          child: _buildButtonContainer(
+            iconData: FontAwesomeIcons.rightFromBracket,
+            text: "登出",
+            needEnterIcon: false,
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildButtonContainer({required IconData iconData, required String text, bool needEnterIcon = true}) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
+      decoration: BoxDecoration(
+        color: AppColors.greyColor57,
+        border: Border(
+          bottom: BorderSide(color: AppColors.greyColor98, width: 0.6),
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fontSize24),
+        child: Row(
+          children: [
+            Icon(
+              iconData,
+              color: AppColors.whiteColor,
+            ),
+            SizedBox(width: ScreenSize.fitPxWidth(10)),
+            Text(
+              text,
+              style: TextStyle(
+                color: AppColors.whiteColor,
+                fontSize: ScreenSize.fontSize16,
+              ),
+            ),
+            const Expanded(child: SizedBox(width: 1)),
+            Visibility(
+              visible: needEnterIcon,
+              child: Icon(
+                FontAwesomeIcons.chevronRight,
+                size: ScreenSize.fontSize14,
+                color: AppColors.whiteColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

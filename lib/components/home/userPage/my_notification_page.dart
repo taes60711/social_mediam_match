@@ -275,13 +275,75 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+
+import '../../../models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
+import '../../../services/notification_service.dart';
+import '../../utilities/apiListView/api_list_controller.dart';
+
+final notificationListControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
+  (ref) => APIListControllerNotifier(APIListController()),
+);
 
 class MyNotificationPage extends BaseEndDrawer {
   @override
-  Widget build(
-    WidgetRef ref,
-  ) {
-    return Container();
+  Widget build(WidgetRef ref) {
+    ProfileData userData = ref.watch(loginUserData);
+    return Column(
+      children: [
+        Expanded(
+          child: APIListWidget(
+              apiFunc: (page, size) {
+                return NotificationService().requestNotificationList(page, size, userUId: userData.uid);
+              },
+              listControllerProvider: notificationListControllerProvider,
+              itemChild: (data, index) {
+                return Row(
+                  children: [
+                    Icon(
+                      numberTypeIcon(data.type),
+                      size: ScreenSize.fontSize20,
+                      color: Colors.white,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          data.title,
+                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                        Text(
+                          "${data.postTime}",
+                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              }),
+        ),
+      ],
+    );
+  }
+
+  IconData numberTypeIcon(int num) {
+    switch (num) {
+      /// 文章
+      case 0:
+        return FontAwesomeIcons.fileSignature;
+
+      ///コース
+      case 1:
+        return FontAwesomeIcons.bookOpenReader;
+
+      ///フレンド
+      case 2:
+        return FontAwesomeIcons.solidUser;
+      default:
+        return FontAwesomeIcons.a;
+    }
   }
 }
