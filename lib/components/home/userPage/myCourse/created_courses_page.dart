@@ -121,6 +121,7 @@ import '../../../../provider/account/user_provider.dart';
 import '../../../../services/course_service.dart';
 import '../../../utilities/apiListView/api_list_controller.dart';
 import '../../../utilities/apiListView/api_list_view.dart';
+import '../../coursePage/course_utilites.dart';
 
 final createdCourserListPorver = StateNotifierProvider<APIListControllerNotifier, APIListController>(
   (ref) => APIListControllerNotifier(APIListController()),
@@ -144,7 +145,7 @@ class _CreatedCourseState extends ConsumerState<CreatedCoursePage> {
         listControllerProvider: createdCourserListPorver,
         loadingWidget: const CourseLoading(),
         itemChild: (data, index) {
-          return Container();
+          return CourseUtilites().courseItemContent(context, ref, data: data);
         });
   }
 }
