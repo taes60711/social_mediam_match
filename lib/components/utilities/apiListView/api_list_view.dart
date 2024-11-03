@@ -13,6 +13,7 @@ import 'api_list_controller.dart';
 class APIListWidget<R> extends ConsumerStatefulWidget {
   final int size;
   final bool isNeedToTopBtn;
+  final bool haveBottomBar;
   final Future<List<R>> Function(int page, int size) apiFunc;
   final StateNotifierProvider<APIListControllerNotifier, APIListController<dynamic>> listControllerProvider;
   final Widget? loadingWidget;
@@ -23,6 +24,7 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
     super.key,
     this.size = 5,
     this.isNeedToTopBtn = true,
+    this.haveBottomBar = false,
     required this.apiFunc,
     required this.listControllerProvider,
     this.loadingWidget,
@@ -127,8 +129,14 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                   if (widget.customFloatBtn != null) {
                     flatButtonPos = ScreenSize.fitPxHeight(-100);
                   }
-                  if (ref.watch(bottomNavationBarPosProvider) == ScreenSize.fitPxHeight(-60)) {
-                    flatButtonPos = ScreenSize.fitPxHeight(15);
+                  if (!widget.haveBottomBar) {
+                    if (!isTop) {
+                      flatButtonPos = ScreenSize.fitPxHeight(15);
+                    }
+                  } else {
+                    if (ref.watch(bottomNavationBarPosProvider) == ScreenSize.fitPxHeight(-60)) {
+                      flatButtonPos = ScreenSize.fitPxHeight(15);
+                    }
                   }
 
                   return !widget.isNeedToTopBtn
@@ -230,7 +238,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
             if (!isScrollUp) {
               if (isScrollingUp) {
                 ///スクロール上に移動したら、bottomBar表示される
-                if (widget.isNeedToTopBtn) {
+                if (widget.isNeedToTopBtn && widget.haveBottomBar) {
                   HomeGlobalViewModel().bottomBarHideStateChage(false);
                 }
 
@@ -262,6 +270,9 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                 if (isPosNotInTop) {
                   ///TOPでないって設定する
                   isTop = false;
+                  if (!widget.haveBottomBar) {
+                    setState(() {});
+                  }
                 }
 
                 ///画面の最上部し、アップに移動する（リロードしたい場合）
@@ -277,7 +288,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
               } else {
                 if (!isScrollingUp) {
                   /// bottomBar隠れる
-                  if (widget.isNeedToTopBtn) {
+                  if (widget.isNeedToTopBtn && widget.haveBottomBar) {
                     HomeGlobalViewModel().bottomBarHideStateChage(true);
                   }
                   isScrollUp = false;
@@ -296,6 +307,9 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
             if (isPosNotInTop) {
               ///TOPでるって設定する
               isTop = true;
+              if (!widget.haveBottomBar) {
+                setState(() {});
+              }
             }
 
             ///TOPでいる

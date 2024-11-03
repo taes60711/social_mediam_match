@@ -42,7 +42,7 @@ class _HomeState extends ConsumerState<Home> {
       children: [
         mainPage[ref.watch(bottomNavigationBarProvider)],
         AnimatedPositioned(
-          duration: const Duration(milliseconds: 150),
+          duration: const Duration(milliseconds: 300),
           bottom: ref.read(bottomNavationBarPosProvider.notifier).state,
           child: const BottomBar(),
         ),

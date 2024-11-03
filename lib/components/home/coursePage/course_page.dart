@@ -48,6 +48,7 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
                       return CourseService().getAllCourses(userData.uid, page, size);
                     },
                     listControllerProvider: courserMainPageListPorver,
+                    haveBottomBar: true,
                     loadingWidget: const CourseLoading(),
                     itemChild: (data, index) {
                       return CourseUtilites().courseItemContent(context, ref, data: data);

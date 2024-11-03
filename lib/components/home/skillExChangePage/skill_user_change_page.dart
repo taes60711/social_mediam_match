@@ -49,8 +49,9 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
                   apiFunc: (page, size) {
                     return UserService().getAllUserData(page, size, userUid: "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2", filterSkill: []);
                   },
+                  haveBottomBar: true,
                   listControllerProvider: userExChangelistControllerProvider,
-                  loadingWidget: SkillChangeLoading(),
+                  loadingWidget: const SkillChangeLoading(),
                   itemChild: (data, index) {
                     return MainBtn(
                       onPress: () {

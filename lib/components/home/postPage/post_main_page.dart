@@ -82,7 +82,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                   : ScreenSize.fitPxHeight(0),
               left: 0,
               right: 0,
-              duration: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 300),
               child: Column(
                 children: [
                   _buildSearchBar(ref, () => setState(() {}), context),
