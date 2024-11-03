@@ -165,7 +165,15 @@ Widget _buildTabBtn(BuildContext context, {required String tabText, required int
   return GestureDetector(
     onTap: () async {
       FocusScope.of(context).requestFocus(FocusNode());
-      pageController.jumpToPage(index);
+      if ((pageIndex - index).abs() == 1) {
+        pageController.animateToPage(
+          index,
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeIn,
+        );
+      } else {
+        pageController.jumpToPage(index);
+      }
     },
     child: Container(
       width: ScreenSize.width / 3,

@@ -60,7 +60,7 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
             top: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 3 : -45,
             left: 0,
             right: 0,
-            duration: const Duration(milliseconds: 100),
+            duration: const Duration(milliseconds: 300),
             child: _buildSearchBar(ref, () => setState(() {}), context),
           ),
         ],
