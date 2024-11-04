@@ -14,12 +14,15 @@ class SkillModel {
 class RequestSkillListData {
   String name;
   int id;
+  // 画面用
+  bool isChoiced;
 
-  RequestSkillListData({required this.name, required this.id});
+  RequestSkillListData({required this.name, required this.id, this.isChoiced = false});
 
   RequestSkillListData.copy(RequestSkillListData skillListData)
       : id = skillListData.id,
-        name = skillListData.name;
+        name = skillListData.name,
+        isChoiced = false;
 
   factory RequestSkillListData.toModel(Map<String, dynamic> json) {
     return RequestSkillListData(

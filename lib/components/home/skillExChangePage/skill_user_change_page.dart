@@ -504,7 +504,9 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
             const Expanded(child: SizedBox(width: 1)),
             GestureDetector(
               onTap: () {
-                SkillChangeFilterPage().show(context);
+                SkillChangeFilterPage(viewRender: () {
+                  setState(() {});
+                }).show(context);
               },
               child: Container(
                 width: 50,

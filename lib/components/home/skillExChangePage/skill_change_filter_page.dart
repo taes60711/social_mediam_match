@@ -9,16 +9,15 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 
 import '../../../enum/skill_type.dart';
 import '../../../models/skill_model.dart';
+import '../../../models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
+import '../../../services/user_service.dart';
+import 'skill_user_change_page.dart';
 
 class SkillChangeFilterPage extends BaseEndDrawer {
+  final Function viewRender;
+  SkillChangeFilterPage({required this.viewRender});
   Map<SkillType, List<RequestSkillListData>> mapedSkillList = {
-    SkillType.frontend: [],
-    SkillType.iot: [],
-    SkillType.backend: [],
-    SkillType.other: [],
-  };
-
-  Map<SkillType, List<RequestSkillListData>> filteredSkillMap = {
     SkillType.frontend: [],
     SkillType.iot: [],
     SkillType.backend: [],
@@ -29,6 +28,7 @@ class SkillChangeFilterPage extends BaseEndDrawer {
   Future<void> initState(WidgetRef ref) async {
     List<RequestSkillListData> allSkillList = ref.read(allSkillListData);
     getFilterList(allSkillList);
+
     render();
   }
 
@@ -36,15 +36,26 @@ class SkillChangeFilterPage extends BaseEndDrawer {
   Widget build(WidgetRef ref) {
     return Column(
       children: [
-        BaseTopBar(backFunc: () => closePage()),
+        BaseTopBar(
+          backFunc: () => closePage(),
+          rightWidget: MainBtn(
+              title: "篩選",
+              onPress: () async {
+                ProfileData userData = ref.watch(loginUserData);
+                await ref.read(userExChangelistControllerProvider.notifier).replaceApi((page, size) {
+                  return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: ["css"]);
+                });
+                viewRender();
+              }),
+        ),
         Expanded(
           child: SingleChildScrollView(
             child: SizedBox(
               width: ScreenSize.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: mapedSkillList.keys.map((e) {
-                  String typeName = e.value;
+                children: mapedSkillList.keys.map((type) {
+                  String typeName = type.value;
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,34 +74,56 @@ class SkillChangeFilterPage extends BaseEndDrawer {
                         ),
                       ),
                       Column(
-                        children: mapedSkillList[e]!
-                            .map(
-                              (e) => MainBtn(
-                                onPress: () {
-                                  print(e.name);
+                        children: mapedSkillList[type]!.asMap().entries.map((e) {
+                          int index = e.key;
+                          RequestSkillListData data = e.value;
+                          bool isChoiced = mapedSkillList[type]![index].isChoiced;
+
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  if (data.isChoiced) {
+                                    mapedSkillList[type]![index].isChoiced = false;
+
+                                    render();
+                                  } else {
+                                    mapedSkillList[type]![index].isChoiced = true;
+                                    render();
+                                  }
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
                                     vertical: ScreenSize.fitPxHeight(10),
                                     horizontal: ScreenSize.fitPxHeight(20),
                                   ),
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(color: AppColors.greyColor98, width: 0.6),
-                                    ),
-                                  ),
+                                  color: isChoiced ? AppColors.black37 : null,
                                   width: ScreenSize.width,
-                                  child: Text(
-                                    e.name,
-                                    style: TextStyle(
-                                      color: AppColors.greyColor130,
-                                      fontWeight: FontWeight.w400,
-                                    ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          data.name,
+                                          style: TextStyle(
+                                            color: isChoiced ? AppColors.whiteColor : AppColors.greyColor130,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                      isChoiced
+                                          ? Icon(
+                                              Icons.check,
+                                              color: AppColors.whiteColor,
+                                            )
+                                          : Container()
+                                    ],
                                   ),
                                 ),
                               ),
-                            )
-                            .toList(),
+                              Container(height: 0.6, color: AppColors.greyColor98),
+                            ],
+                          );
+                        }).toList(),
                       ),
                       SizedBox(
                         height: ScreenSize.fitPxHeight(10),
@@ -123,8 +156,5 @@ class SkillChangeFilterPage extends BaseEndDrawer {
         mapedSkillList[SkillType.other]!.add(skillInfo);
       }
     }
-    filteredSkillMap = mapedSkillList.map((key, value) {
-      return MapEntry(key, value.map((skill) => RequestSkillListData.copy(skill)).toList());
-    });
   }
 }

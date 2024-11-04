@@ -81,12 +81,17 @@ class BaseTopBar extends StatelessWidget {
                   child: widgetList[1],
                 ),
               ),
-              Expanded(
-                child: Align(
-                  alignment: list[2],
-                  child: widgetList[2],
-                ),
-              ),
+              rightWidget != null
+                  ? Align(
+                      alignment: list[2],
+                      child: widgetList[2],
+                    )
+                  : Expanded(
+                      child: Align(
+                        alignment: list[2],
+                        child: widgetList[2],
+                      ),
+                    ),
             ],
           ),
         ),

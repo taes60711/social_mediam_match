@@ -36,13 +36,19 @@ class APIListControllerNotifier extends StateNotifier<APIListController> {
   }
 
   Future<void> replaceApi(Future<List> Function(int page, int size) replaceApiFunc) async {
+    bool needJumpToTop = false;
+    if (state.listData.isNotEmpty) {
+      needJumpToTop = true;
+    }
     create(size);
     state.apiFunc = replaceApiFunc;
     state.listData = await state.apiFunc(page, size);
     page++;
     await _preLoad();
     state.loadDataStatus = LoadDataStatus.loadingFinish;
-    state.scrollController.jumpTo(0);
+    if (needJumpToTop) {
+      state.scrollController.jumpTo(0);
+    }
   }
 
   Future<void> init(Future<List> Function(int page, int size) initApiFunc) async {

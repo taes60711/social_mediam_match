@@ -67,7 +67,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     LoadDataStatus loadDataStatus = ref.read(widget.listControllerProvider).loadDataStatus;
 
     if (loadDataStatus != LoadDataStatus.initial) {
-      if (ref.read(widget.listControllerProvider).listData.isEmpty) {
+      if (ref.watch(widget.listControllerProvider).listData.isEmpty) {
         return Scaffold(
           backgroundColor: Colors.transparent,
           body: widget.noDataWidget ??
