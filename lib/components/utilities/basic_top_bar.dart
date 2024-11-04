@@ -66,25 +66,27 @@ class BaseTopBar extends StatelessWidget {
           padding: padding,
           child: Row(
             children: [
-              Align(
-                alignment: list[0],
-                child: widgetList[0],
+              Expanded(
+                child: Align(
+                  alignment: list[0],
+                  child: widgetList[0],
+                ),
               ),
-              SizedBox(
-                width: ScreenSize.fitPxWidth(260),
+              Container(
+                constraints: BoxConstraints(
+                  maxWidth: ScreenSize.fitPxWidth(260),
+                ),
                 child: Align(
                   alignment: list[1],
                   child: widgetList[1],
                 ),
               ),
-              rightWidget != null
-                  ? Expanded(
-                      child: Align(
-                        alignment: list[2],
-                        child: widgetList[2],
-                      ),
-                    )
-                  : Container(),
+              Expanded(
+                child: Align(
+                  alignment: list[2],
+                  child: widgetList[2],
+                ),
+              ),
             ],
           ),
         ),
