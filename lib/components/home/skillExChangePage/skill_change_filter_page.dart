@@ -14,6 +14,10 @@ import '../../../provider/account/user_provider.dart';
 import '../../../services/user_service.dart';
 import 'skill_user_change_page.dart';
 
+final filteredSkillList = StateProvider<List<RequestSkillListData>>((ref) {
+  return [];
+});
+
 class SkillChangeFilterPage extends BaseEndDrawer {
   final Function viewRender;
   SkillChangeFilterPage({required this.viewRender});
@@ -43,7 +47,7 @@ class SkillChangeFilterPage extends BaseEndDrawer {
               onPress: () async {
                 ProfileData userData = ref.watch(loginUserData);
                 await ref.read(userExChangelistControllerProvider.notifier).replaceApi((page, size) {
-                  return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: ["css"]);
+                  return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: ["4"]);
                 });
                 viewRender();
               }),
