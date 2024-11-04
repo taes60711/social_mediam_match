@@ -36,6 +36,7 @@ class MyCoursePage extends BaseFadeScalePage {
             _buildTabBtn(context, tabText: "我的", index: 1),
           ],
         ),
+        SizedBox(height: ScreenSize.fitPxHeight(5)),
         Expanded(
           child: PageView(
             controller: pageController,

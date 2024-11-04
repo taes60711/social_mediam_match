@@ -37,7 +37,7 @@ class SkillChangeViewModel {
       },
     );
 
-    closeSkillChangeEndDrawer(context: context);
+    // closeSkillChangeEndDrawer(context: context);
   }
 
   Future<void> searchByNamePart({required String namePart}) async {

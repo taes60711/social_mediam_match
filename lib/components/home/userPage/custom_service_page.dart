@@ -143,9 +143,7 @@ class CustomServicePage extends BaseBottomSheet {
   }
 
   @override
-  Widget build(
-    WidgetRef ref,
-  ) {
+  Widget build(WidgetRef ref) {
     return Column(
       children: [
         ElevatedButton(

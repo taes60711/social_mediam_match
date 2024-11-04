@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
-import 'package:social_mediam_match/components/utilities/endDrawers/course_filter_end_drawer.dart';
+
 import 'package:social_mediam_match/services/course_service.dart';
 import 'package:social_mediam_match/services/skill_service.dart';
 
@@ -52,7 +52,7 @@ class CourseViewModel {
       },
     );
 
-    closeCourseFilterEndDrawer(context: courseContext);
+    // closeCourseFilterEndDrawer(context: courseContext);
   }
 
   Future<void> courseCreateOrUpdate({int? courseId, required BuildContext viewListContext}) async {

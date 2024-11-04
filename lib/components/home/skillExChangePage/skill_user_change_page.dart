@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/home/skillExChangePage/skill_change_filter_page.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -8,6 +9,7 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import '../../../global/home_global_view_model.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
 import '../../../services/user_service.dart';
 import '../../strings/skillExChangePage/skill_change_page_string.dart';
 import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
@@ -35,6 +37,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
 
   @override
   Widget build(BuildContext context) {
+    ProfileData userData = ref.watch(loginUserData);
     return CommonScaffold(
       child: Stack(
         children: [
@@ -47,7 +50,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
                 child: APIListWidget<ProfileData>(
                   size: 6,
                   apiFunc: (page, size) {
-                    return UserService().getAllUserData(page, size, userUid: "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2", filterSkill: []);
+                    return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: []);
                   },
                   haveBottomBar: true,
                   listControllerProvider: userExChangelistControllerProvider,
@@ -126,9 +129,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
                               ],
                             ),
 
-                            SizedBox(
-                              height: ScreenSize.fitPxHeight(5),
-                            ),
+                            SizedBox(height: ScreenSize.fitPxHeight(5)),
 
                             ///得意なスキル
                             Row(
@@ -502,7 +503,9 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
             ),
             const Expanded(child: SizedBox(width: 1)),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                SkillChangeFilterPage().show(context);
+              },
               child: Container(
                 width: 50,
                 height: 40,

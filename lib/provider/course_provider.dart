@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 
 import '../components/utilities/endDrawers/course_edit_skill_choice_end_drawer.dart';
-import '../components/utilities/endDrawers/course_filter_end_drawer.dart';
-
 import '../models/user_model.dart';
 
 class CourseProvider extends ChangeNotifier {
@@ -141,11 +139,11 @@ class CourseProvider extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  CourseFilterEndDrawerType filterEndDrawerOpenInfo = CourseFilterEndDrawerType.close;
-  void changeFilterEndDrawerStatus(CourseFilterEndDrawerType status) {
-    filterEndDrawerOpenInfo = status;
-    notifyListeners();
-  }
+  // CourseFilterEndDrawerType filterEndDrawerOpenInfo = CourseFilterEndDrawerType.close;
+  // void changeFilterEndDrawerStatus(CourseFilterEndDrawerType status) {
+  //   filterEndDrawerOpenInfo = status;
+  //   notifyListeners();
+  // }
 
   // CourseManagerEndDrawerType courseManagerEndDrawerOpenInfo = CourseManagerEndDrawerType.close;
   // int choicedCourseId = -1;
