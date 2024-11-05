@@ -73,6 +73,7 @@ class _CommonScaffoldState extends ConsumerState<CommonScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: ThemeStyle.bgColor,
       body: SafeArea(
         bottom: false,
