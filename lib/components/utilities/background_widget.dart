@@ -73,7 +73,7 @@ class _CommonScaffoldState extends ConsumerState<CommonScaffold> {
       resizeToAvoidBottomInset: false,
       backgroundColor: ThemeStyle.bgColor,
       body: GestureDetector(
-        behavior: HitTestBehavior.deferToChild,
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
         },

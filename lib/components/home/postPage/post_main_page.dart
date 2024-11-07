@@ -105,8 +105,8 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                   ),
                   child: CarouselSlider(
                     items: ref.read(topPostProvider).map((e) {
-                      return GestureDetector(
-                        onTap: () {
+                      return MainBtn(
+                        onPress: () {
                           ref.read(choicedPostProvider.notifier).update((state) => e);
                           PostDetailPage().show(context);
                         },
@@ -120,8 +120,9 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                                 style: TextStyle(color: AppColors.redColor, fontSize: 12),
                               ),
                               SizedBox(width: ScreenSize.fitPxWidth(5)),
-                              GestureDetector(
-                                onTap: () {
+                              MainBtn(
+                                needOnPressEffect: false,
+                                onPress: () {
                                   UserProfileBottomSheet(userData: e.postUserInfo).show(context);
                                 },
                                 child: UserIcon(
@@ -157,9 +158,8 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
 }
 
 Widget _buildTabBtn(BuildContext context, {required String tabText, required int index}) {
-  return GestureDetector(
-    onTap: () async {
-      // FocusScope.of(context).requestFocus(FocusNode());
+  return MainBtn(
+    onPress: () async {
       if ((pageIndex - index).abs() == 1) {
         pageController.animateToPage(
           index,

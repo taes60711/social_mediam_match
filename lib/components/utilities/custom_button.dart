@@ -114,6 +114,7 @@ class MainBtn extends StatefulWidget {
   ///MARK:スタイル
   // ボタン色
   final Color? backgroundColor;
+  final bool needOnPressEffect;
   final bool isFullWidth;
   final EdgeInsetsGeometry innerPadding;
   final double borderRadius;
@@ -127,6 +128,7 @@ class MainBtn extends StatefulWidget {
     this.child,
     required this.onPress,
     this.backgroundColor,
+    this.needOnPressEffect = true,
     this.isFullWidth = false,
     this.innerPadding = EdgeInsets.zero,
     this.borderRadius = 8,
@@ -162,6 +164,15 @@ class _MainBtnState extends State<MainBtn> {
       }
     }
 
+    double opacityNum = 1;
+    if (widget.needOnPressEffect) {
+      if (isPress) {
+        opacityNum = 0.8;
+      } else {
+        opacityNum = 1;
+      }
+    }
+
     return GestureDetector(
       onTap: () async {
         await _buttonPressHandle();
@@ -178,7 +189,7 @@ class _MainBtnState extends State<MainBtn> {
           color: btnBackgroundColor,
         ),
         child: Opacity(
-          opacity: isPress ? 0.8 : 1,
+          opacity: opacityNum,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
