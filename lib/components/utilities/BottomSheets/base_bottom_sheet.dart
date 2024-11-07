@@ -21,6 +21,8 @@ abstract class BaseBottomSheet {
 
   // （レンダリング、APIとか必要場合）
   Future<void> initState(WidgetRef ref) async {}
+  // （close）
+  Future<void> dispose(WidgetRef ref) async {}
 
   Widget build(WidgetRef ref);
 
@@ -29,6 +31,8 @@ abstract class BaseBottomSheet {
     Color barrerierColor = Colors.black.withOpacity(.3);
     Navigator.of(buildContext).push(
       PageRouteBuilder(
+        reverseTransitionDuration: Duration.zero,
+        transitionDuration: Duration.zero,
         pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
           return Consumer(
             builder: (context, ref, _) {
@@ -69,6 +73,9 @@ abstract class BaseBottomSheet {
                                   callBackClosePage: (Function callBackClosePage) {
                                     closePage = callBackClosePage;
                                   },
+                                  closeDispose: () {
+                                    dispose(ref);
+                                  },
                                   child: build(ref),
                                 ),
                               ),
@@ -91,7 +98,7 @@ abstract class BaseBottomSheet {
 
 class BottomSheetWidget extends StatefulWidget {
   final double widgetHeight;
-
+  final Function closeDispose;
   final Function(AnimationController controller) callBackAnimationController;
   final Function(Function closepage) callBackClosePage;
   final Widget child;
@@ -102,6 +109,7 @@ class BottomSheetWidget extends StatefulWidget {
     required this.callBackAnimationController,
     required this.callBackClosePage,
     required this.child,
+    required this.closeDispose,
   });
 
   @override
@@ -163,6 +171,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
   }
 
   void _closeEndDrawer() {
+    widget.closeDispose();
     _controller.reverse();
     Navigator.pop(context);
   }

@@ -28,13 +28,19 @@ class SkillChangeFilterPage extends BaseEndDrawer {
     SkillType.other: [],
   };
 
+  List<RequestSkillListData> s = [];
+
   @override
   Future<void> initState(WidgetRef ref) async {
+    s = ref.read(filteredSkillList).map((e) => RequestSkillListData.copy(e)).toList();
+
     List<RequestSkillListData> allSkillList = ref.read(allSkillListData);
     getFilterList(allSkillList);
-
     render();
   }
+
+  @override
+  Future<void> dispose(WidgetRef ref) async {}
 
   @override
   Widget build(WidgetRef ref) {
@@ -45,6 +51,7 @@ class SkillChangeFilterPage extends BaseEndDrawer {
           rightWidget: MainBtn(
               title: "篩選",
               onPress: () async {
+                ref.read(filteredSkillList.notifier).update((state) => s);
                 ProfileData userData = ref.watch(loginUserData);
                 await ref.read(userExChangelistControllerProvider.notifier).replaceApi((page, size) {
                   return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: ["4"]);
@@ -81,20 +88,21 @@ class SkillChangeFilterPage extends BaseEndDrawer {
                         children: mapedSkillList[type]!.asMap().entries.map((e) {
                           int index = e.key;
                           RequestSkillListData data = e.value;
-                          bool isChoiced = mapedSkillList[type]![index].isChoiced;
+
+                          bool isChoiced = s.indexWhere((element) => element.id == data.id) != -1;
 
                           return Column(
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  if (data.isChoiced) {
-                                    mapedSkillList[type]![index].isChoiced = false;
-
-                                    render();
+                                  print("isChoiced ${s.indexWhere((element) => element.id == data.id) != -1}");
+                                  if (s.indexWhere((element) => element.id == data.id) != -1) {
+                                    s.removeAt(s.indexWhere((element) => element.id == data.id));
                                   } else {
-                                    mapedSkillList[type]![index].isChoiced = true;
-                                    render();
+                                    s.add(data);
                                   }
+
+                                  render();
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(

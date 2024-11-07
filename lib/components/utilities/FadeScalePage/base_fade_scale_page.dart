@@ -7,7 +7,7 @@ abstract class BaseFadeScalePage {
   late Function closePage;
   late AnimationController controller;
   late Function render;
-
+  late WidgetRef ref;
   late BuildContext context;
   bool _isInit = false;
 
@@ -20,6 +20,9 @@ abstract class BaseFadeScalePage {
   // （レンダリング、APIとか必要場合）
   Future<void> initState(WidgetRef ref) async {}
 
+  // （close）
+  Future<void> dispose(WidgetRef ref) async {}
+
   /// MARK:  mainBody
   Widget build(WidgetRef ref);
 
@@ -27,6 +30,8 @@ abstract class BaseFadeScalePage {
     context = buildContext;
     Navigator.of(buildContext).push(
       PageRouteBuilder(
+        reverseTransitionDuration: Duration.zero,
+        transitionDuration: Duration.zero,
         pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
           return FadeScale(
             callBackAnimationController: (AnimationController animationController) {
@@ -36,15 +41,18 @@ abstract class BaseFadeScalePage {
             callBackClosePage: (Function callBackClosePage) {
               closePage = callBackClosePage;
             },
+            closeDispose: () {
+              dispose(ref);
+            },
             child: Scaffold(
               backgroundColor: Colors.transparent,
               body: Consumer(
-                builder: ((context, ref, _) {
+                builder: ((context, consumerRef, _) {
                   return StatefulBuilder(
                     builder: ((_, setState) {
                       if (!_isInit) {
                         render = () => setState(() {});
-
+                        ref = consumerRef;
                         Future.delayed(Duration.zero).then((value) {
                           create();
                           initState(ref).then((value) => _isInit = true);
@@ -67,7 +75,7 @@ abstract class BaseFadeScalePage {
 class FadeScale extends StatefulWidget {
   final Function(Function closepage) callBackClosePage;
   final bool needWaitPageOpen;
-
+  final Function closeDispose;
   final Function(AnimationController controller) callBackAnimationController;
   final Widget child;
   const FadeScale({
@@ -76,6 +84,7 @@ class FadeScale extends StatefulWidget {
     required this.callBackClosePage,
     required this.child,
     this.needWaitPageOpen = false,
+    required this.closeDispose,
   });
 
   @override
@@ -87,6 +96,7 @@ class _FadeScaleState extends State<FadeScale> with SingleTickerProviderStateMix
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
   late final Animation<double> _fadeAnimation;
+
   bool isInit = true;
   @override
   void initState() {
@@ -119,6 +129,7 @@ class _FadeScaleState extends State<FadeScale> with SingleTickerProviderStateMix
   }
 
   void _exitPage() async {
+    widget.closeDispose();
     _controller.reverse().then((_) => Navigator.of(context).pop());
   }
 

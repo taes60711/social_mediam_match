@@ -120,6 +120,7 @@ abstract class BaseEndDrawer {
   late AnimationController controller;
   late Function closePage;
   late Function render;
+  late WidgetRef ref;
   late BuildContext context;
   bool _isInit = false;
 
@@ -131,6 +132,8 @@ abstract class BaseEndDrawer {
   void create() {}
   // （レンダリング、APIとか必要場合）
   Future<void> initState(WidgetRef ref) async {}
+  // （close）
+  Future<void> dispose(WidgetRef ref) async {}
 
   /// MARK:  mainBody
   Widget build(WidgetRef ref);
@@ -139,6 +142,8 @@ abstract class BaseEndDrawer {
     context = buildContext;
     Navigator.of(buildContext).push(
       PageRouteBuilder(
+        reverseTransitionDuration: Duration.zero,
+        transitionDuration: Duration.zero,
         pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
           return Scaffold(
             backgroundColor: Colors.transparent,
@@ -146,15 +151,20 @@ abstract class BaseEndDrawer {
               callBackAnimationController: (AnimationController animationController) => controller = animationController,
               needWaitPageOpen: needWaitOpenPage(),
               callBackClosePage: (Function callBackClosePage) {
-                closePage = callBackClosePage;
+                closePage = () {
+                  callBackClosePage();
+                };
+              },
+              closeDispose: () {
+                dispose(ref);
               },
               child: Consumer(
-                builder: ((context, ref, _) {
+                builder: ((context, consumerRef, _) {
                   return StatefulBuilder(
                     builder: ((_, setState) {
                       if (!_isInit) {
                         render = () => setState(() {});
-
+                        ref = consumerRef;
                         Future.delayed(Duration.zero).then((value) {
                           create();
                           initState(ref).then((value) => _isInit = true);
@@ -177,6 +187,7 @@ abstract class BaseEndDrawer {
 class EndDrawerWidget extends ConsumerStatefulWidget {
   final Widget child;
   final bool needWaitPageOpen;
+  final Function closeDispose;
 
   final Function(AnimationController controller) callBackAnimationController;
   final Function(Function closepage) callBackClosePage;
@@ -186,6 +197,7 @@ class EndDrawerWidget extends ConsumerStatefulWidget {
     required this.callBackAnimationController,
     required this.callBackClosePage,
     this.needWaitPageOpen = false,
+    required this.closeDispose,
   });
 
   @override
@@ -260,6 +272,7 @@ class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTi
 
   void _closeEndDrawer() {
     isDispose = true;
+    widget.closeDispose();
     setState(() {});
     _controller.reverse();
     Navigator.pop(context);
