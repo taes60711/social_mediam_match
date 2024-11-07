@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -303,7 +304,7 @@ class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTi
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             color: AppColors.bgColor,
-            child: SafeArea(
+            child: CommonScaffold(
               child: component,
             ),
           ),

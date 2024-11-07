@@ -58,9 +58,15 @@ class BackgroundWidget extends StatelessWidget {
   }
 }
 
+enum PageType {
+  main,
+  other,
+}
+
 class CommonScaffold extends ConsumerStatefulWidget {
   final Widget child;
-  const CommonScaffold({super.key, required this.child});
+  final PageType type;
+  const CommonScaffold({super.key, required this.child, this.type = PageType.other});
 
   @override
   ConsumerState<CommonScaffold> createState() => _CommonScaffoldState();
@@ -78,7 +84,7 @@ class _CommonScaffoldState extends ConsumerState<CommonScaffold> {
           FocusScope.of(context).requestFocus(FocusNode());
         },
         child: SafeArea(
-          bottom: true,
+          bottom: widget.type == PageType.main ? true : false,
           child: SizedBox(
             width: ScreenSize.width,
             height: ScreenSize.height,

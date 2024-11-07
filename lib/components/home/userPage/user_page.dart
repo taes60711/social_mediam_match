@@ -30,6 +30,7 @@ class _UserPageState extends ConsumerState<UserPage> {
     ProfileData userData = ref.watch(loginUserData);
 
     return CommonScaffold(
+      type: PageType.main,
       child: SingleChildScrollView(
         child: Column(
           children: [

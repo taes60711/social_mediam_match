@@ -34,6 +34,7 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
   Widget build(BuildContext context) {
     ProfileData userData = ref.watch(loginUserData);
     return CommonScaffold(
+      type: PageType.main,
       child: Stack(
         children: [
           Column(

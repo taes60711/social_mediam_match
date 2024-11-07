@@ -53,6 +53,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
       const PostTypeBoard(),
     ];
     return CommonScaffold(
+      type: PageType.main,
       child: Stack(
         children: [
           PageView(

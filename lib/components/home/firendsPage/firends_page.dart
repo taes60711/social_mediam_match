@@ -65,6 +65,7 @@ class _FriendPageState extends ConsumerState<FriendPage> {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
+      type: PageType.main,
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: ScreenSize.fitPxWidth(20),
