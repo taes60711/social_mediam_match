@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/home/postPage/post_page_by_textfilter.dart';
 import 'package:social_mediam_match/components/home/postPage/post_type_board/post_type_board.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
+import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 import '../../../global/home_global_view_model.dart';
 import '../../../models/post_model.dart';
 import '../../../provider/post/post_provider.dart';
@@ -51,111 +52,105 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
       const PostByNew(),
       const PostTypeBoard(),
     ];
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: CommonScaffold(
-        child: Stack(
-          children: [
-            PageView(
-              controller: pageController,
-              children: postsWidget,
-              onPageChanged: (value) {
-                pageIndex = value;
-                setState(() {});
+    return CommonScaffold(
+      child: Stack(
+        children: [
+          PageView(
+            controller: pageController,
+            children: postsWidget,
+            onPageChanged: (value) {
+              pageIndex = value;
+              setState(() {});
 
-                /// BottomNavigiatonbar隠れたら表示される
-                if (ref.watch(bottomNavationBarPosProvider) == ScreenSize.fitPxHeight(-60)) {
-                  Future.delayed(const Duration(milliseconds: 200)).then(
-                    (value) => HomeGlobalViewModel().bottomBarHideStateChage(false),
-                  );
-                }
-              },
+              /// BottomNavigiatonbar隠れたら表示される
+              if (ref.watch(bottomNavationBarPosProvider) == ScreenSize.fitPxHeight(-60)) {
+                Future.delayed(const Duration(milliseconds: 200)).then(
+                  (value) => HomeGlobalViewModel().bottomBarHideStateChage(false),
+                );
+              }
+            },
+          ),
+
+          /// 検索バー＆ tabバー
+          AnimatedPositioned(
+            top: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60)
+                ? ScreenSize.fitPxHeight(ref.watch(topPostProvider).isNotEmpty ? 45 : 0)
+                : ScreenSize.fitPxHeight(0),
+            left: 0,
+            right: 0,
+            duration: const Duration(milliseconds: 300),
+            child: Column(
+              children: [
+                _buildSearchBar(ref, () => setState(() {}), context),
+                Row(
+                  children: [
+                    _buildTabBtn(context, tabText: "人氣", index: 0),
+                    _buildTabBtn(context, tabText: "最新", index: 1),
+                    _buildTabBtn(context, tabText: "看板", index: 2),
+                  ],
+                )
+              ],
             ),
+          ),
 
-            /// 検索バー＆ tabバー
-            AnimatedPositioned(
-              top: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60)
-                  ? ScreenSize.fitPxHeight(ref.watch(topPostProvider).isNotEmpty ? 45 : 0)
-                  : ScreenSize.fitPxHeight(0),
-              left: 0,
-              right: 0,
-              duration: const Duration(milliseconds: 300),
-              child: Column(
-                children: [
-                  _buildSearchBar(ref, () => setState(() {}), context),
-                  Row(
-                    children: [
-                      _buildTabBtn(context, tabText: "人氣", index: 0),
-                      _buildTabBtn(context, tabText: "最新", index: 1),
-                      _buildTabBtn(context, tabText: "看板", index: 2),
-                    ],
-                  )
-                ],
-              ),
-            ),
-
-            /// top　文章
-            ref.read(topPostProvider).isEmpty
-                ? Container()
-                : Container(
-                    width: ScreenSize.width,
-                    color: AppColors.black37,
-                    padding: EdgeInsets.symmetric(
-                      vertical: ScreenSize.fitPxHeight(8),
-                      horizontal: ScreenSize.fitPxHeight(15),
-                    ),
-                    child: CarouselSlider(
-                      items: ref.read(topPostProvider).map((e) {
-                        return GestureDetector(
-                          onTap: () {
-                            ref.read(choicedPostProvider.notifier).update((state) => e);
-                            PostDetailPage().show(context);
-                          },
-                          child: Container(
-                            color: Colors.transparent,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Hot!",
-                                  style: TextStyle(color: AppColors.redColor, fontSize: 12),
+          /// top　文章
+          ref.read(topPostProvider).isEmpty
+              ? Container()
+              : Container(
+                  width: ScreenSize.width,
+                  color: AppColors.black37,
+                  padding: EdgeInsets.symmetric(
+                    vertical: ScreenSize.fitPxHeight(8),
+                    horizontal: ScreenSize.fitPxHeight(15),
+                  ),
+                  child: CarouselSlider(
+                    items: ref.read(topPostProvider).map((e) {
+                      return GestureDetector(
+                        onTap: () {
+                          ref.read(choicedPostProvider.notifier).update((state) => e);
+                          PostDetailPage().show(context);
+                        },
+                        child: Container(
+                          color: Colors.transparent,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Hot!",
+                                style: TextStyle(color: AppColors.redColor, fontSize: 12),
+                              ),
+                              SizedBox(width: ScreenSize.fitPxWidth(5)),
+                              GestureDetector(
+                                onTap: () {
+                                  UserProfileBottomSheet(userData: e.postUserInfo).show(context);
+                                },
+                                child: UserIcon(
+                                  iconSize: 20,
+                                  image: e.postUserInfo.image,
                                 ),
-                                SizedBox(width: ScreenSize.fitPxWidth(5)),
-                                GestureDetector(
-                                  onTap: () {
-                                    UserProfileBottomSheet(userData: e.postUserInfo).show(context);
-                                  },
-                                  child: UserIcon(
-                                    iconSize: 20,
-                                    image: e.postUserInfo.image,
-                                  ),
-                                ),
-                                SizedBox(width: ScreenSize.fitPxWidth(8)),
-                                Text(
-                                  e.title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: AppColors.whiteColor),
-                                ),
-                              ],
-                            ),
+                              ),
+                              SizedBox(width: ScreenSize.fitPxWidth(8)),
+                              Text(
+                                e.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: AppColors.whiteColor),
+                              ),
+                            ],
                           ),
-                        );
-                      }).toList(),
-                      options: CarouselOptions(
-                        height: ScreenSize.fitPxHeight(20),
-                        aspectRatio: 16 / 9,
-                        viewportFraction: 1,
-                        autoPlay: true,
-                        autoPlayInterval: const Duration(seconds: 10),
-                      ),
+                        ),
+                      );
+                    }).toList(),
+                    options: CarouselOptions(
+                      height: ScreenSize.fitPxHeight(20),
+                      aspectRatio: 16 / 9,
+                      viewportFraction: 1,
+                      autoPlay: true,
+                      autoPlayInterval: const Duration(seconds: 10),
                     ),
                   ),
-          ],
-        ),
+                ),
+        ],
       ),
     );
   }
@@ -164,7 +159,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
 Widget _buildTabBtn(BuildContext context, {required String tabText, required int index}) {
   return GestureDetector(
     onTap: () async {
-      FocusScope.of(context).requestFocus(FocusNode());
+      // FocusScope.of(context).requestFocus(FocusNode());
       if ((pageIndex - index).abs() == 1) {
         pageController.animateToPage(
           index,
@@ -218,22 +213,9 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
       children: [
         SizedBox(width: ScreenSize.fitPxHeight(13)),
         Expanded(
-          child: TextField(
+          child: BaseInputField(
             controller: searchController,
-            cursorColor: AppColors.whiteColor,
-            style: TextStyle(
-              color: AppColors.whiteColor,
-              fontSize: ScreenSize.fontSize14,
-            ),
-            decoration: InputDecoration(
-              hintText: '搜尋',
-              border: InputBorder.none,
-              isCollapsed: true,
-              hintStyle: TextStyle(
-                color: AppColors.greyColor130,
-                fontSize: ScreenSize.fontSize14,
-              ),
-            ),
+            hintText: "搜尋",
           ),
         ),
         MainBtn(

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -27,7 +25,6 @@ class BackgroundWidget extends StatelessWidget {
       singleScollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.bounceIn);
     }
     return Scaffold(
-      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       body: GestureDetector(
         onTap: () {
@@ -75,16 +72,22 @@ class _CommonScaffoldState extends ConsumerState<CommonScaffold> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: ThemeStyle.bgColor,
-      body: SafeArea(
-        bottom: false,
-        child: SizedBox(
-          width: ScreenSize.width,
-          height: ScreenSize.height,
-          child: Column(
-            children: [
-              Expanded(child: widget.child),
-              SizedBox(height: Platform.isIOS ? 30 : 12),
-            ],
+      body: GestureDetector(
+        behavior: HitTestBehavior.deferToChild,
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: SafeArea(
+          bottom: true,
+          child: SizedBox(
+            width: ScreenSize.width,
+            height: ScreenSize.height,
+            child: Column(
+              children: [
+                Expanded(child: widget.child),
+                // SizedBox(height: Platform.isIOS ? 0 : 12),
+              ],
+            ),
           ),
         ),
       ),

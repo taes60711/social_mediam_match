@@ -28,11 +28,11 @@ class SkillChangeFilterPage extends BaseEndDrawer {
     SkillType.other: [],
   };
 
-  List<RequestSkillListData> s = [];
+  List<RequestSkillListData> tempFilteredSkillList = [];
 
   @override
   Future<void> initState(WidgetRef ref) async {
-    s = ref.read(filteredSkillList).map((e) => RequestSkillListData.copy(e)).toList();
+    tempFilteredSkillList = ref.read(filteredSkillList).map((e) => RequestSkillListData.copy(e)).toList();
 
     List<RequestSkillListData> allSkillList = ref.read(allSkillListData);
     getFilterList(allSkillList);
@@ -51,11 +51,15 @@ class SkillChangeFilterPage extends BaseEndDrawer {
           rightWidget: MainBtn(
               title: "篩選",
               onPress: () async {
-                ref.read(filteredSkillList.notifier).update((state) => s);
+                List<String> filteredSkillIdList = tempFilteredSkillList.map((e) => e.id.toString()).toList();
                 ProfileData userData = ref.watch(loginUserData);
                 await ref.read(userExChangelistControllerProvider.notifier).replaceApi((page, size) {
-                  return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: ["4"]);
+                  return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filteredSkillIdList);
                 });
+
+                ref.read(filteredSkillList.notifier).update((state) => tempFilteredSkillList);
+
+                closePage();
                 viewRender();
               }),
         ),
@@ -85,21 +89,20 @@ class SkillChangeFilterPage extends BaseEndDrawer {
                         ),
                       ),
                       Column(
-                        children: mapedSkillList[type]!.asMap().entries.map((e) {
-                          int index = e.key;
-                          RequestSkillListData data = e.value;
+                        children: mapedSkillList[type]!.map((e) {
+                          RequestSkillListData data = e;
 
-                          bool isChoiced = s.indexWhere((element) => element.id == data.id) != -1;
+                          bool isChoiced = tempFilteredSkillList.indexWhere((element) => element.id == data.id) != -1;
 
                           return Column(
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  print("isChoiced ${s.indexWhere((element) => element.id == data.id) != -1}");
-                                  if (s.indexWhere((element) => element.id == data.id) != -1) {
-                                    s.removeAt(s.indexWhere((element) => element.id == data.id));
+                                  if (isChoiced) {
+                                    int index = tempFilteredSkillList.indexWhere((element) => element.id == data.id);
+                                    tempFilteredSkillList.removeAt(index);
                                   } else {
-                                    s.add(data);
+                                    tempFilteredSkillList.add(data);
                                   }
 
                                   render();

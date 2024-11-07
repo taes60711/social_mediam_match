@@ -197,6 +197,7 @@ class _MainBtnState extends State<MainBtn> {
 
   /// ボタン押すエフェクト
   _buttonPressHandle() async {
+    FocusScope.of(context).requestFocus(FocusNode());
     isPress = true;
     setState(() {});
     await Future.delayed(const Duration(milliseconds: 150));
