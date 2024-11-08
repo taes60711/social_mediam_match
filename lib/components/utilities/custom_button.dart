@@ -116,7 +116,8 @@ class MainBtn extends StatefulWidget {
   final Color? backgroundColor;
   final bool needOnPressEffect;
   final bool isFullWidth;
-  final EdgeInsetsGeometry innerPadding;
+  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry margin;
   final double borderRadius;
   final double? width;
   final double? height;
@@ -130,7 +131,8 @@ class MainBtn extends StatefulWidget {
     this.backgroundColor,
     this.needOnPressEffect = true,
     this.isFullWidth = false,
-    this.innerPadding = EdgeInsets.zero,
+    this.padding = EdgeInsets.zero,
+    this.margin = EdgeInsets.zero,
     this.borderRadius = 8,
     this.width,
     this.height,
@@ -145,8 +147,8 @@ class _MainBtnState extends State<MainBtn> {
 
   @override
   Widget build(BuildContext context) {
-    EdgeInsetsGeometry padding = widget.innerPadding;
-    if (widget.title != null && widget.innerPadding == EdgeInsets.zero) {
+    EdgeInsetsGeometry padding = widget.padding;
+    if (widget.title != null && widget.padding == EdgeInsets.zero) {
       padding = EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10), vertical: ScreenSize.fitPxHeight(5));
     }
 
@@ -179,9 +181,8 @@ class _MainBtnState extends State<MainBtn> {
         widget.onPress();
       },
       child: Container(
-        padding: widget.title != null
-            ? EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10), vertical: ScreenSize.fitPxHeight(4))
-            : padding,
+        padding: padding,
+        margin: widget.margin,
         width: btnWidth,
         height: widget.height,
         decoration: BoxDecoration(
@@ -193,6 +194,7 @@ class _MainBtnState extends State<MainBtn> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               widget.child ??
                   Text(
