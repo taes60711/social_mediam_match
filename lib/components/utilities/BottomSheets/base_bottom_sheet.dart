@@ -31,7 +31,7 @@ abstract class BaseBottomSheet {
     Color barrerierColor = Colors.black.withOpacity(.3);
     Navigator.of(buildContext).push(
       PageRouteBuilder(
-        reverseTransitionDuration: Duration.zero,
+        reverseTransitionDuration: const Duration(milliseconds: 150),
         transitionDuration: Duration.zero,
         pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
           return Consumer(

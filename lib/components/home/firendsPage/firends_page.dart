@@ -15,6 +15,7 @@ import '../../../provider/account/user_provider.dart';
 import '../../../services/friend_service.dart';
 import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/custom_button.dart';
+import '../../utilities/inputField/base_input.dart';
 import 'my_friends.dart';
 import 'search_user_page.dart';
 
@@ -228,11 +229,10 @@ class _FriendPageState extends ConsumerState<FriendPage> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Icon(Icons.search, color: AppColors.whiteColor),
             ),
-            Text(
-              "搜尋",
-              style: TextStyle(
-                color: AppColors.whiteColor,
-                fontSize: 14,
+            Expanded(
+              child: BaseInputField(
+                hintText: "搜尋",
+                controller: TextEditingController(),
               ),
             ),
           ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import '../loading.dart';
 import '../style/style_config.dart';
 
@@ -151,7 +152,7 @@ class _FadeScaleState extends State<FadeScale> with SingleTickerProviderStateMix
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           color: AppColors.bgColor,
-          child: SafeArea(
+          child: CommonScaffold(
             child: component,
           ),
         ),

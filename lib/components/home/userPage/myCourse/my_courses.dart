@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
 import '../../../utilities/basic_top_bar.dart';
+import '../../../utilities/custom_button.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/style_config.dart';
 import 'added_courses_page.dart';
@@ -26,9 +27,16 @@ class MyCoursePage extends BaseFadeScalePage {
       children: [
         BaseTopBar(
           title: "技術分享",
-          backFunc: () {
-            closePage();
-          },
+          leftWidget: Container(),
+          rightWidget: MainBtn(
+            onPress: () {
+              closePage();
+            },
+            child: Icon(
+              Icons.close,
+              color: AppColors.whiteColor,
+            ),
+          ),
         ),
         Row(
           children: [
