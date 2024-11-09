@@ -93,6 +93,23 @@ class PostModel {
     String formattedTime = durationTime;
     return formattedTime;
   }
+
+  PostModel copyWith({
+    PostModel? data,
+  }) {
+    return PostModel(
+      id: data?.id ?? id,
+      createdBy: data?.createdBy ?? createdBy,
+      title: data?.title ?? title,
+      mainMessage: data?.mainMessage ?? mainMessage,
+      postTime: data?.postTime ?? postTime,
+      viewed: data?.viewed ?? viewed,
+      good: data?.good ?? good,
+      type: data?.type ?? type,
+      commentCount: data?.commentCount ?? commentCount,
+      postUserInfo: data?.postUserInfo ?? postUserInfo,
+    );
+  }
 }
 
 class CreatePostModel {

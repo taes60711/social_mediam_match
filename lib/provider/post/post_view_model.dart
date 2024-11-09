@@ -227,10 +227,25 @@
 //   );
 // }
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/models/post_model.dart';
+
+import '../../components/home/postPage/post_detail_page.dart';
+import 'post_provider.dart';
 
 class PostViewModel {
   final WidgetRef ref;
   final Function render;
-  const PostViewModel({required this.ref, required this.render});
+  final BuildContext context;
+  PostViewModel({required this.ref, required this.context, required this.render});
+
+  List<Function> renderList = [];
+
+  void postDetailPageInit(PostViewModel viewModel, PostModel data, int dataIndex) {
+    ref.read(choicedPostProvider.notifier).update((state) => data);
+    PostDetailPage(viewModel: viewModel, dataIndex: dataIndex).show(context);
+  }
+
+  void lookingPostGoodOnChange() {}
 }

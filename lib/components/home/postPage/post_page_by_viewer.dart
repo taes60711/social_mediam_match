@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../global/home_global_view_model.dart';
 import '../../../provider/post/post_provider.dart';
+import '../../../provider/post/post_view_model.dart';
 import '../../../services/post_service.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/loading.dart';
 import 'post_utilities.dart';
+
+final st = StateProvider<List<int>>((ref) {
+  return [1, 2];
+});
 
 class PostByView extends ConsumerStatefulWidget {
   const PostByView({super.key});
@@ -15,6 +20,13 @@ class PostByView extends ConsumerStatefulWidget {
 }
 
 class _PostByViewState extends ConsumerState<PostByView> {
+  late PostViewModel viewModel;
+  @override
+  void initState() {
+    viewModel = PostViewModel(ref: ref, context: context, render: () => setState(() {}));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,18 +36,22 @@ class _PostByViewState extends ConsumerState<PostByView> {
           ref.watch(topPostProvider).isNotEmpty,
         ),
         Expanded(
-          child: APIListWidget(
-              apiFunc: (page, size) {
-                return PostService().getPostDataByViewer(page, size);
-              },
-              listControllerProvider: listControllerProvider,
-              haveBottomBar: true,
-              noDataWidget: PostViewUtilities.noPostData(),
-              customFloatBtn: PostViewUtilities.postCreateButton(context),
-              loadingWidget: const PostLoading(),
-              itemChild: (data, index) {
-                return PostViewUtilities().postItemContent(ref, context, data: data);
-              }),
+          child: Stack(
+            children: [
+              APIListWidget(
+                  apiFunc: (page, size) {
+                    return PostService().getPostDataByViewer(page, size);
+                  },
+                  listControllerProvider: listControllerProvider,
+                  haveBottomBar: true,
+                  noDataWidget: PostViewUtilities.noPostData(),
+                  customFloatBtn: PostViewUtilities.postCreateButton(context),
+                  loadingWidget: const PostLoading(),
+                  itemChild: (data, index) {
+                    return PostViewUtilities().postItemContent(viewModel, data: data, dataIndex: index);
+                  }),
+            ],
+          ),
         ),
       ],
     );

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
+import 'package:social_mediam_match/provider/post/post_view_model.dart';
 
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
@@ -14,7 +15,7 @@ import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
 import 'editor_page.dart';
-import 'post_detail_page.dart';
+
 import 'post_manager_bottom_sheet.dart';
 
 class PostViewUtilities {
@@ -59,7 +60,10 @@ class PostViewUtilities {
     );
   }
 
-  Widget postItemContent(WidgetRef ref, BuildContext context, {required PostModel data}) {
+  Widget postItemContent(PostViewModel viewModel, {required PostModel data, required int dataIndex}) {
+    WidgetRef ref = viewModel.ref;
+    BuildContext context = viewModel.context;
+
     String typeName = ref
         .read(allPostBoardListData)
         .firstWhere(
@@ -69,8 +73,7 @@ class PostViewUtilities {
         .name;
     return MainBtn(
       onPress: () {
-        ref.read(choicedPostProvider.notifier).update((state) => data);
-        PostDetailPage().show(context);
+        viewModel.postDetailPageInit(viewModel, data, dataIndex);
       },
       child: Container(
         width: ScreenSize.width,

@@ -7,8 +7,8 @@ final myPostlistControllerProvider = StateNotifierProvider<APIListControllerNoti
   (ref) => APIListControllerNotifier(APIListController()),
 );
 
-final listControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
-  (ref) => APIListControllerNotifier(APIListController()),
+final listControllerProvider = StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>(
+  (ref) => APIListControllerNotifier(APIListController<PostModel>()),
 );
 
 final newlistControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(

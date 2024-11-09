@@ -5,10 +5,12 @@ import 'package:social_mediam_match/components/home/postPage/post_page_by_textfi
 import 'package:social_mediam_match/components/home/postPage/post_type_board/post_type_board.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
+
 import '../../../global/home_global_view_model.dart';
-import '../../../models/post_model.dart';
+
 import '../../../provider/post/post_provider.dart';
-import '../../../services/post_service.dart';
+
+import '../../../provider/post/post_view_model.dart';
 import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/style/screen_size.dart';
@@ -29,20 +31,13 @@ PageController pageController = PageController();
 int pageIndex = 0;
 
 class _PostMainPageState extends ConsumerState<PostMainPage> {
+  late PostViewModel viewModel;
+
   @override
   void initState() {
-    init();
-    super.initState();
-  }
-
-  Future<void> init() async {
     pageIndex = 0;
-    List<PostModel> topPosts = await PostService().getPostByType(0, 3, -1);
-    ref.read(topPostProvider.notifier).update((state) => topPosts);
-
-    List<PostBoard> allPostBoard = await PostService().getAllPostBoard();
-    ref.read(allPostBoardListData.notifier).update((state) => allPostBoard);
-    setState(() {});
+    viewModel = PostViewModel(ref: ref, context: context, render: () => setState(() {}));
+    super.initState();
   }
 
   @override
@@ -109,7 +104,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                       return MainBtn(
                         onPress: () {
                           ref.read(choicedPostProvider.notifier).update((state) => e);
-                          PostDetailPage().show(context);
+                          PostDetailPage(viewModel: viewModel, dataIndex: pageIndex).show(context);
                         },
                         child: Container(
                           color: Colors.transparent,
@@ -118,7 +113,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                             children: [
                               Text(
                                 "Hot!",
-                                style: TextStyle(color: AppColors.redColor, fontSize: 12),
+                                style: TextStyle(color: AppColors.redColor, fontSize: ScreenSize.fontSize12),
                               ),
                               SizedBox(width: ScreenSize.fitPxWidth(5)),
                               MainBtn(
@@ -215,8 +210,16 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
         SizedBox(width: ScreenSize.fitPxHeight(13)),
         Expanded(
           child: BaseInputField(
+            textInputAction: TextInputAction.search,
             controller: searchController,
             hintText: "搜尋",
+            onFieldSubmitted: (value) {
+              if (searchController.text == "") {
+                return;
+              }
+
+              PostPageByTextFilter(searchText: searchController.text).show(context);
+            },
           ),
         ),
         MainBtn(

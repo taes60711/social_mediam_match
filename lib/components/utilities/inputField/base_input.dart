@@ -15,16 +15,24 @@ enum InputType {
 class BaseInputField extends StatefulWidget {
   final TextEditingController controller;
   final String? hintText;
+
   final InputType type;
-  final Function(bool value)? onFocusChanged;
   final bool isHidePwd;
+  final TextInputAction? textInputAction;
+  final Function(String value)? onFieldSubmitted;
+
+  final bool autoFocus;
+  final Function(bool value)? onFocusChanged;
   const BaseInputField({
     super.key,
     this.hintText,
     this.type = InputType.normal,
     required this.controller,
     this.onFocusChanged,
+    this.textInputAction,
+    this.onFieldSubmitted,
     this.isHidePwd = false,
+    this.autoFocus = false,
   });
 
   @override
@@ -32,6 +40,23 @@ class BaseInputField extends StatefulWidget {
 }
 
 class _BaseInputFieldState extends State<BaseInputField> {
+  late FocusNode _focusNode;
+  @override
+  void initState() {
+    _focusNode = FocusNode();
+    if (widget.autoFocus) {
+      _focusNode.requestFocus();
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Focus(
@@ -41,8 +66,13 @@ class _BaseInputFieldState extends State<BaseInputField> {
         }
       },
       child: TextFormField(
+        focusNode: _focusNode,
         obscureText: widget.type == InputType.pwd && widget.isHidePwd,
         cursorColor: AppColors.whiteColor,
+        textInputAction: widget.textInputAction,
+        onFieldSubmitted: (value) {
+          widget.onFieldSubmitted!(value);
+        },
         decoration: InputDecoration(
           hintText: widget.hintText ?? "",
           hintStyle: TextStyle(

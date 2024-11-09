@@ -61,12 +61,20 @@ class BackgroundWidget extends StatelessWidget {
 enum PageType {
   main,
   other,
+  window,
+}
+
+class SafeAreaViewModel {
+  final bool top;
+  final bool bottom;
+  SafeAreaViewModel({this.top = false, this.bottom = false});
 }
 
 class CommonScaffold extends ConsumerStatefulWidget {
   final Widget child;
   final PageType type;
-  const CommonScaffold({super.key, required this.child, this.type = PageType.other});
+  final Color? bgColor;
+  const CommonScaffold({super.key, required this.child, this.type = PageType.other, this.bgColor});
 
   @override
   ConsumerState<CommonScaffold> createState() => _CommonScaffoldState();
@@ -77,26 +85,37 @@ class _CommonScaffoldState extends ConsumerState<CommonScaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: ThemeStyle.bgColor,
+      backgroundColor: widget.bgColor ?? ThemeStyle.bgColor,
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
         },
         child: SafeArea(
-          bottom: widget.type == PageType.main ? true : false,
+          top: getSafeArea().top,
+          bottom: getSafeArea().bottom,
           child: SizedBox(
             width: ScreenSize.width,
             height: ScreenSize.height,
             child: Column(
               children: [
                 Expanded(child: widget.child),
-                // SizedBox(height: Platform.isIOS ? 0 : 12),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  SafeAreaViewModel getSafeArea() {
+    switch (widget.type) {
+      case PageType.main:
+        return SafeAreaViewModel(bottom: true, top: true);
+      case PageType.other:
+        return SafeAreaViewModel(bottom: false, top: true);
+      case PageType.window:
+        return SafeAreaViewModel(bottom: false, top: false);
+    }
   }
 }

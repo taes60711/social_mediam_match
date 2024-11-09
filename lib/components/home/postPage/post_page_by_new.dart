@@ -17,15 +17,10 @@ class PostByNew extends ConsumerStatefulWidget {
 }
 
 class _PostByViewState extends ConsumerState<PostByNew> {
-  late PostViewModel postPageByNewViewModel;
-
+  late PostViewModel viewModel;
   @override
   void initState() {
-    postPageByNewViewModel = PostViewModel(
-        ref: ref,
-        render: () {
-          setState(() {});
-        });
+    viewModel = PostViewModel(ref: ref, context: context, render: () => setState(() {}));
     super.initState();
   }
 
@@ -48,7 +43,7 @@ class _PostByViewState extends ConsumerState<PostByNew> {
               noDataWidget: PostViewUtilities.noPostData(),
               customFloatBtn: PostViewUtilities.postCreateButton(context),
               itemChild: (data, index) {
-                return PostViewUtilities().postItemContent(ref, context, data: data);
+                return PostViewUtilities().postItemContent(viewModel, data: data, dataIndex: index);
               }),
         ),
       ],

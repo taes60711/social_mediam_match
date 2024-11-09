@@ -9,11 +9,16 @@ import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
+import '../../../provider/post/post_view_model.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/user_icon.dart';
 import 'post_comment_page.dart';
 
 class PostDetailPage extends BaseEndDrawer {
+  final PostViewModel viewModel;
+  final int dataIndex;
+
+  PostDetailPage({required this.viewModel, required this.dataIndex});
   @override
   bool needWaitOpenPage() {
     return true;
@@ -21,17 +26,16 @@ class PostDetailPage extends BaseEndDrawer {
 
   @override
   Widget build(ref) {
-    PostModel choiceData = ref.read(choicedPostProvider);
+    PostModel choiceData = ref.watch(choicedPostProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         BaseTopBar(
-          backFunc: () {
-            closePage();
-          },
+          backFunc: () => closePage(),
           title: choiceData.title,
         ),
+
         Expanded(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
@@ -86,11 +90,18 @@ class PostDetailPage extends BaseEndDrawer {
                         SizedBox(width: ScreenSize.fitPxWidth(12)),
 
                         ///いいね数
-                        PostViewUtilities().iconWithText(
-                            iconData: FontAwesomeIcons.heart,
-                            iconColor: AppColors.greyColor130,
-                            text: "${choiceData.good}",
-                            style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                        GestureDetector(
+                          onTap: () {
+                            choiceData.good++;
+                            ref.read(listControllerProvider.notifier).editData(dataIndex, choiceData);
+                            render();
+                          },
+                          child: PostViewUtilities().iconWithText(
+                              iconData: FontAwesomeIcons.heart,
+                              iconColor: AppColors.greyColor130,
+                              text: "${choiceData.good}",
+                              style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                        ),
                         SizedBox(width: ScreenSize.fitPxWidth(12)),
                       ],
                     ),
@@ -107,7 +118,7 @@ class PostDetailPage extends BaseEndDrawer {
           ProfileData userData = ref.watch(loginUserData);
           return GestureDetector(
             onTap: () {
-              PostCommentPage().show(context);
+              PostCommentPage(viewModel: viewModel).show(context);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -117,21 +128,19 @@ class PostDetailPage extends BaseEndDrawer {
                   ),
                 ),
               ),
-              height: ScreenSize.fitPxHeight(45),
+              height: ScreenSize.fitPxHeight(65),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(12)),
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: ScreenSize.fitPxHeight(5),
-                    ),
+                    SizedBox(height: ScreenSize.fitPxHeight(10)),
                     Row(
                       children: [
                         UserIcon(
                           iconSize: ScreenSize.fitPxHeight(25),
                           image: userData.image,
                         ),
-                        SizedBox(width: ScreenSize.fitPxHeight(5)),
+                        SizedBox(width: ScreenSize.fitPxHeight(10)),
                         Expanded(
                           child: Container(
                             height: ScreenSize.fitPxHeight(30),

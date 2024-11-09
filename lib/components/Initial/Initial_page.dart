@@ -6,11 +6,14 @@ import 'package:social_mediam_match/pageManager/home.dart';
 import 'package:social_mediam_match/services/skill_service.dart';
 import '../../global/chat_ws_model.dart';
 
+import '../../models/post_model.dart';
 import '../../models/skill_model.dart';
 import '../../models/user_model.dart';
 import '../../provider/account/user_provider.dart';
 import '../../provider/Initial/initial_provider.dart';
 
+import '../../provider/post/post_provider.dart';
+import '../../services/post_service.dart';
 import '../utilities/style/theme_style.dart';
 import 'splash_screen.dart';
 
@@ -25,30 +28,51 @@ class Initialpage extends ConsumerStatefulWidget {
 
 class _InitialpageState extends ConsumerState<Initialpage> {
   bool isFirst = false;
+  bool initFinish = false;
 
   @override
   void initState() {
+    splashStart();
+    allFuncinit();
+
+    super.initState();
+  }
+
+  Future<void> splashStart() async {
+    await Future.delayed(const Duration(seconds: 3));
+    isFirst = true;
+    setState(() {});
+  }
+
+  Future<void> allFuncinit() async {
+    await Future.delayed(Duration.zero);
     ThemeStyle().init(ref);
 
-    Future.delayed(Duration.zero).then((value) async {
-      ProfileData userData = ref.watch(loginUserData);
-      ChatWSModel().init(userData.uid);
+    /// ユーザデータ取得
+    ProfileData userData = ref.watch(loginUserData);
 
-      /// request All Skill
-      List<RequestSkillListData> requestListData = await SkillService().requestSkillList();
-      ref.read(allSkillListData.notifier).update((state) => requestListData);
-    });
-    Future.delayed(const Duration(seconds: 3)).then((_) {
-      isFirst = true;
-      setState(() {});
-    });
-    super.initState();
+    /// 聊天室WS初始化
+    ChatWSModel().init(userData.uid);
+
+    /// request All Skill
+    List<RequestSkillListData> requestListData = await SkillService().requestSkillList();
+    ref.read(allSkillListData.notifier).update((state) => requestListData);
+
+    /// request TopPost
+    List<PostModel> topPosts = await PostService().getPostByType(0, 3, -1);
+    ref.read(topPostProvider.notifier).update((state) => topPosts);
+
+    /// request All PostBoard
+    List<PostBoard> allPostBoard = await PostService().getAllPostBoard();
+    ref.read(allPostBoardListData.notifier).update((state) => allPostBoard);
+    initFinish = true;
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     Widget component = splashScreen(context);
-    if (isFirst) {
+    if (isFirst && initFinish) {
       component = const Home();
     }
 

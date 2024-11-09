@@ -48,50 +48,13 @@ class SkillChangeFilterPage extends BaseEndDrawer {
           children: [
             BaseTopBar(
               backFunc: () => closePage(),
-              rightWidget: MainBtn(
-                  title: "篩選",
-                  onPress: () async {
-                    List<String> filteredSkillIdList = tempFilteredSkillList.map((e) => e.id.toString()).toList();
-                    ProfileData userData = ref.watch(loginUserData);
-                    await ref.read(userExChangelistControllerProvider.notifier).replaceApi((page, size) {
-                      return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filteredSkillIdList);
-                    });
-
-                    ref.read(filteredSkillList.notifier).update((state) => tempFilteredSkillList);
-
-                    closePage();
-                    viewRender();
-                  }),
+              rightWidget: filterSearch(),
             ),
             SizedBox(height: ScreenSize.fitPxWidth(8)),
             Container(
               width: ScreenSize.width,
               margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(16)),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: mapedSkillList.keys
-                      .map(
-                        (e) => Padding(
-                          padding: EdgeInsets.only(right: ScreenSize.fitPxWidth(10)),
-                          child: MainBtn(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: ScreenSize.fitPxWidth(20),
-                              vertical: ScreenSize.fitPxWidth(6),
-                            ),
-                            backgroundColor: isChoicedSkillType == e ? AppColors.orangeColor : null,
-                            title: e.value,
-                            onPress: () {
-                              isChoicedSkillType = e;
-                              render();
-                            },
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
+              child: skillTypeItems(),
             ),
             SizedBox(height: ScreenSize.fitPxWidth(16)),
             Expanded(
@@ -158,29 +121,79 @@ class SkillChangeFilterPage extends BaseEndDrawer {
         Positioned(
           bottom: 0,
           child: Container(
-              width: ScreenSize.width,
-              height: bottomBtnHeight,
-              color: AppColors.black37,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: ScreenSize.fitPxHeight(15)),
-                      child: MainBtn(
-                        padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
-                        margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(40)),
-                        onPress: () {
-                          tempFilteredSkillList.clear();
-                          render();
-                        },
-                        title: "清空",
-                      ),
-                    ),
+            width: ScreenSize.width,
+            height: bottomBtnHeight,
+            color: AppColors.black37,
+            child: filterClearBtn(),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget filterSearch() {
+    return MainBtn(
+        title: "搜尋",
+        onPress: () async {
+          List<String> filteredSkillIdList = tempFilteredSkillList.map((e) => e.id.toString()).toList();
+          ProfileData userData = ref.watch(loginUserData);
+          await ref.read(userExChangelistControllerProvider.notifier).replaceApi((page, size) {
+            return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filteredSkillIdList);
+          });
+
+          ref.read(filteredSkillList.notifier).update((state) => tempFilteredSkillList);
+
+          closePage();
+          viewRender();
+        });
+  }
+
+  Widget skillTypeItems() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: mapedSkillList.keys
+            .map(
+              (e) => Padding(
+                padding: EdgeInsets.only(right: ScreenSize.fitPxWidth(10)),
+                child: MainBtn(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ScreenSize.fitPxWidth(20),
+                    vertical: ScreenSize.fitPxWidth(6),
                   ),
-                ],
-              )),
+                  backgroundColor: isChoicedSkillType == e ? AppColors.orangeColor : null,
+                  title: e.value,
+                  onPress: () {
+                    isChoicedSkillType = e;
+                    render();
+                  },
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+
+  Widget filterClearBtn() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(top: ScreenSize.fitPxHeight(15)),
+            child: MainBtn(
+              padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
+              margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(40)),
+              onPress: () {
+                tempFilteredSkillList.clear();
+                render();
+              },
+              title: "清空",
+            ),
+          ),
         ),
       ],
     );

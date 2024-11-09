@@ -9,11 +9,21 @@ class APIListController<R> {
   List<R> listData = [];
   late Future<List<R>> Function(int page, int size) apiFunc;
   LoadDataStatus loadDataStatus = LoadDataStatus.initial;
+  APIListController<R> copyWith({
+    List<R>? listData,
+    LoadDataStatus? loadDataStatus,
+    Future<List<R>> Function(int page, int size)? apiFunc,
+  }) {
+    return APIListController<R>()
+      ..listData = listData ?? this.listData
+      ..loadDataStatus = loadDataStatus ?? this.loadDataStatus
+      ..apiFunc = apiFunc ?? this.apiFunc;
+  }
 }
 
-class APIListControllerNotifier extends StateNotifier<APIListController> {
-  APIListControllerNotifier(APIListController state) : super(state);
-  List preLoadData = [];
+class APIListControllerNotifier<R> extends StateNotifier<APIListController<R>> {
+  APIListControllerNotifier(APIListController<R> state) : super(state);
+  List<R> preLoadData = [];
   int page = 0;
   int size = 0;
 
@@ -35,7 +45,7 @@ class APIListControllerNotifier extends StateNotifier<APIListController> {
     state.loadDataStatus = LoadDataStatus.loadingFinish;
   }
 
-  Future<void> replaceApi(Future<List> Function(int page, int size) replaceApiFunc) async {
+  Future<void> replaceApi(Future<List<R>> Function(int page, int size) replaceApiFunc) async {
     bool needJumpToTop = false;
     if (state.listData.isNotEmpty) {
       needJumpToTop = true;
@@ -51,7 +61,7 @@ class APIListControllerNotifier extends StateNotifier<APIListController> {
     }
   }
 
-  Future<void> init(Future<List> Function(int page, int size) initApiFunc) async {
+  Future<void> init(Future<List<R>> Function(int page, int size) initApiFunc) async {
     state.apiFunc = initApiFunc;
     state.listData = await state.apiFunc(page, size);
     page++;
@@ -73,5 +83,12 @@ class APIListControllerNotifier extends StateNotifier<APIListController> {
       state.loadDataStatus = LoadDataStatus.loadingFinish;
       page++;
     }
+  }
+
+  void editData(int index, R editedData) {
+    List<R> nowStateList = state.listData;
+    nowStateList[index] = editedData;
+
+    state = state.copyWith(listData: nowStateList);
   }
 }

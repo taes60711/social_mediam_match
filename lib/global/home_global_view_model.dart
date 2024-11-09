@@ -31,12 +31,6 @@ class HomeGlobalViewModel {
     this.render = render;
   }
 
-  bool keyboardIsFocus = false;
-
-  void keyboardFocusOnChange(bool focus) {
-    keyboardIsFocus = focus;
-  }
-
   ///BottomNavigiatonbarのページコントローラー
   void changeMainPage(int page) {
     ref.read(bottomNavigationBarProvider.notifier).update((state) => page);

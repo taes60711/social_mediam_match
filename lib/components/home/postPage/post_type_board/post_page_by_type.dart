@@ -5,6 +5,7 @@ import 'package:social_mediam_match/components/utilities/endDrawers/base_end_dra
 import 'package:social_mediam_match/models/post_model.dart';
 
 import '../../../../provider/post/post_provider.dart';
+import '../../../../provider/post/post_view_model.dart';
 import '../../../../services/post_service.dart';
 
 import '../../../utilities/apiListView/api_list_view.dart';
@@ -16,6 +17,13 @@ import '../../../utilities/style/style_config.dart';
 import '../post_utilities.dart';
 
 class PostPageByType extends BaseEndDrawer {
+  late PostViewModel viewModel;
+
+  @override
+  Future<void> initState(WidgetRef ref) async {
+    viewModel = PostViewModel(ref: ref, context: context, render: () => render());
+  }
+
   @override
   Widget build(WidgetRef ref) {
     PostBoard boardData = ref.read(choicedPostBoardProvider);
@@ -62,7 +70,7 @@ class PostPageByType extends BaseEndDrawer {
               noDataWidget: PostViewUtilities.noPostData(),
               customFloatBtn: PostViewUtilities.postCreateButton(context),
               itemChild: (data, index) {
-                return PostViewUtilities().postItemContent(ref, context, data: data);
+                return PostViewUtilities().postItemContent(viewModel, data: data, dataIndex: index);
               }),
         ),
       ],
