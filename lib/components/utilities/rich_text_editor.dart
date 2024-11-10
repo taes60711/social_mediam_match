@@ -75,10 +75,11 @@ class RichTextEditor extends StatelessWidget {
 
           /// ToolBar
           ToolBar.scroll(
-            toolBarColor: AppColors.greyColor98,
+            toolBarColor: Colors.transparent,
             controller: controller,
             direction: Axis.horizontal,
             toolBarConfig: customToolBarList,
+            iconColor: AppColors.greyColor130,
             customButtons: [
               InkWell(
                 onTap: () async {
@@ -121,7 +122,7 @@ class RichTextEditor extends StatelessWidget {
 
                   await setLinkView();
                 },
-                child: const SizedBox(
+                child: SizedBox(
                   width: 26,
                   height: 24,
                   child: Stack(
@@ -131,6 +132,7 @@ class RichTextEditor extends StatelessWidget {
                         child: Icon(
                           FontAwesomeIcons.image,
                           size: 19,
+                          color: AppColors.greyColor130,
                         ),
                       ),
                       Positioned(
@@ -139,6 +141,7 @@ class RichTextEditor extends StatelessWidget {
                         child: Icon(
                           Icons.link,
                           size: 20,
+                          color: AppColors.greyColor130,
                         ),
                       )
                     ],
@@ -188,7 +191,10 @@ class RichTextEditor extends StatelessWidget {
 
                   await setLinkView();
                 },
-                child: const Icon(FontAwesomeIcons.film),
+                child: Icon(
+                  FontAwesomeIcons.film,
+                  color: AppColors.greyColor130,
+                ),
               ),
               InkWell(
                 onTap: () async {
@@ -232,7 +238,10 @@ class RichTextEditor extends StatelessWidget {
 
                   await setLinkView();
                 },
-                child: const Icon(Icons.link_sharp),
+                child: Icon(
+                  Icons.link_sharp,
+                  color: AppColors.greyColor130,
+                ),
               ),
             ],
           ),

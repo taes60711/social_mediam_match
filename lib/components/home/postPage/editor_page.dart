@@ -7,15 +7,23 @@ import 'package:social_mediam_match/components/utilities/background_widget.dart'
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
+import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
 import 'package:social_mediam_match/provider/post/post_provider.dart';
 import '../../../models/post_model.dart';
+import '../../../models/rich_text_format.dart';
+import '../../../models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
 import '../../utilities/BottomSheets/base_bottom_sheet.dart';
 import '../../utilities/FadeScalePage/base_fade_scale_page.dart';
 import '../../utilities/rich_text_editor.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
+import 'post_type_board/post_page_by_type.dart';
 
 class PostEditorPage extends BaseFadeScalePage {
+  PostBoard? postBoard;
+  PostEditorPage({this.postBoard});
+
   QuillEditorController quillEditorController = QuillEditorController();
   TextEditingController titleController = TextEditingController();
 
@@ -51,11 +59,34 @@ class PostEditorPage extends BaseFadeScalePage {
             ),
             rightWidget: MainBtn(
               onPress: () async {
+                ProfileData userData = ref.watch(loginUserData);
                 String postTitle = titleController.text;
-                String postBoard = ref.read(postCreateChoiceBoard).name;
+                int postType = ref.read(postCreateChoiceBoard).type;
 
                 String postContent = await quillEditorController.getText();
-                print("Title $postTitle Board: $postBoard   Message : $postContent");
+                String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
+                print("Title $postTitle Board: $postType   Message : $fomattedContent");
+
+                PostModel post = PostModel(
+                  id: 29,
+                  createdBy: userData.uid,
+                  title: postTitle,
+                  type: postType,
+                  mainMessage: fomattedContent,
+                  commentCount: 0,
+                  postTime: "2024-03-24T13:44:30.000+00:00",
+                  postUserInfo: userData,
+                );
+
+                RouteOptions.pop();
+                if (postBoard == null) {
+                  ref.read(choicedPostBoardProvider.notifier).update((state) => ref.read(postCreateChoiceBoard));
+                  PostPageByType().show(context);
+                } else {
+                  ref.read(typelistControllerProvider).scrollController.jumpTo(0);
+                  ref.read(typelistControllerProvider.notifier).addDataTofirst(post);
+                  render();
+                }
               },
               title: "投稿",
             ),
@@ -73,7 +104,7 @@ class PostEditorPage extends BaseFadeScalePage {
                     controller: titleController,
                   ),
                   SizedBox(height: ScreenSize.fitPxHeight(10)),
-                  const PostBoardChoicedLabel(),
+                  PostBoardChoicedLabel(postBoard: postBoard),
                   SizedBox(height: ScreenSize.fitPxHeight(15)),
                   Expanded(
                     child: RichTextEditor(
@@ -92,7 +123,9 @@ class PostEditorPage extends BaseFadeScalePage {
 }
 
 class PostBoardChoicedLabel extends ConsumerStatefulWidget {
-  const PostBoardChoicedLabel({super.key});
+  final PostBoard? postBoard;
+
+  const PostBoardChoicedLabel({super.key, this.postBoard});
 
   @override
   ConsumerState<PostBoardChoicedLabel> createState() => _PostBoardChoicedLabelState();
@@ -108,31 +141,46 @@ class _PostBoardChoicedLabelState extends ConsumerState<PostBoardChoicedLabel> {
           style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
         ),
         SizedBox(width: ScreenSize.fitPxWidth(10)),
-        MainBtn(
-          onPress: () {
-            PostBoardChoiceBottomSheet().show(context);
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(5), vertical: ScreenSize.fitPxHeight(2)),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColors.greyColor98),
-            child: Row(
-              children: [
-                Text(
-                  ref.watch(postCreateChoiceBoard).name,
-                  style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
-                ),
-                SizedBox(width: ScreenSize.fitPxWidth(5)),
-                Icon(
-                  FontAwesomeIcons.caretDown,
-                  size: ScreenSize.fontSize16,
-                  color: AppColors.whiteColor,
-                )
-              ],
-            ),
-          ),
-        ),
+        widget.postBoard != null
+            ? Text(
+                widget.postBoard!.name,
+                style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize18),
+              )
+            : MainBtn(
+                onPress: () {
+                  PostBoardChoiceBottomSheet().show(context);
+                },
+                child: boardContaienr(
+                  Row(
+                    children: [
+                      Text(
+                        ref.watch(postCreateChoiceBoard).name,
+                        style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+                      ),
+                      SizedBox(width: ScreenSize.fitPxWidth(5)),
+                      Icon(
+                        FontAwesomeIcons.caretDown,
+                        size: ScreenSize.fontSize16,
+                        color: AppColors.whiteColor,
+                      )
+                    ],
+                  ),
+                )),
       ],
     );
+  }
+
+  Widget boardContaienr(Widget child) {
+    return Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: ScreenSize.fitPxHeight(5),
+          vertical: ScreenSize.fitPxHeight(1),
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: AppColors.greyColor98,
+        ),
+        child: child);
   }
 }
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:social_mediam_match/components/utilities/endDrawers/skill_change_filter_end_drawer.dart';
-
 import '../../enum/skill_type.dart';
 import '../../models/skill_model.dart';
 

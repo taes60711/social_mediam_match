@@ -368,10 +368,10 @@ class PostViewUtilities {
   }
 
   ///文章作るボタン
-  static Widget postCreateButton(BuildContext context) {
+  static Widget postCreateButton(BuildContext context, {PostBoard? postBoard}) {
     return MainBtn(
       onPress: () {
-        PostEditorPage().show(context);
+        PostEditorPage(postBoard: postBoard).show(context);
       },
       child: Container(
         width: ScreenSize.fitPxWidth(40),

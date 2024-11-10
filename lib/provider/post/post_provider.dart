@@ -15,6 +15,10 @@ final newlistControllerProvider = StateNotifierProvider<APIListControllerNotifie
   (ref) => APIListControllerNotifier(APIListController()),
 );
 
+final typelistControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
+  (ref) => APIListControllerNotifier(APIListController()),
+);
+
 final textFilterControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
   (ref) => APIListControllerNotifier(APIListController()),
 );
