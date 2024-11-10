@@ -11,7 +11,7 @@ import '../../../global/home_global_view_model.dart';
 import '../../../provider/post/post_provider.dart';
 
 import '../../../provider/post/post_view_model.dart';
-import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
+import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';

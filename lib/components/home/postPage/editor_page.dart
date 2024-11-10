@@ -1,8 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
+import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
+import 'package:social_mediam_match/provider/post/post_provider.dart';
+import '../../../models/post_model.dart';
+import '../../utilities/BottomSheets/base_bottom_sheet.dart';
 import '../../utilities/FadeScalePage/base_fade_scale_page.dart';
 import '../../utilities/rich_text_editor.dart';
 import '../../utilities/style/screen_size.dart';
@@ -10,6 +17,8 @@ import '../../utilities/style/style_config.dart';
 
 class PostEditorPage extends BaseFadeScalePage {
   QuillEditorController quillEditorController = QuillEditorController();
+  TextEditingController titleController = TextEditingController();
+
   @override
   bool needWaitOpenPage() {
     return true;
@@ -17,53 +26,157 @@ class PostEditorPage extends BaseFadeScalePage {
 
   @override
   Widget build(WidgetRef ref) {
-    return Column(
-      children: [
-        BaseTopBar(
-          leftWidget: GestureDetector(
-            onTap: () {
-              closePage();
-            },
-            child: Container(
-              width: ScreenSize.fitPxWidth(40),
-              height: ScreenSize.fitPxWidth(40),
-              color: Colors.transparent,
-              child: Center(
-                child: Icon(
-                  Icons.close,
-                  size: ScreenSize.fontSize18,
-                  color: AppColors.whiteColor,
+    return CommonScaffold(
+      type: PageType.main,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BaseTopBar(
+            leftWidget: GestureDetector(
+              onTap: () {
+                closePage();
+              },
+              child: Container(
+                width: ScreenSize.fitPxWidth(40),
+                height: ScreenSize.fitPxWidth(40),
+                color: Colors.transparent,
+                child: Center(
+                  child: Icon(
+                    Icons.close,
+                    size: ScreenSize.fontSize18,
+                    color: AppColors.whiteColor,
+                  ),
                 ),
               ),
             ),
+            rightWidget: MainBtn(
+              onPress: () async {
+                String postTitle = titleController.text;
+                String postBoard = ref.read(postCreateChoiceBoard).name;
+
+                String postContent = await quillEditorController.getText();
+                print("Title $postTitle Board: $postBoard   Message : $postContent");
+              },
+              title: "投稿",
+            ),
           ),
-          rightWidget: MainBtn(
-            onPress: () {},
-            title: "投稿",
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BaseInputField(
+                    hintText: "標題",
+                    hintStyle: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize24),
+                    inputStyle: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize24),
+                    controller: titleController,
+                  ),
+                  SizedBox(height: ScreenSize.fitPxHeight(10)),
+                  const PostBoardChoicedLabel(),
+                  SizedBox(height: ScreenSize.fitPxHeight(15)),
+                  Expanded(
+                    child: RichTextEditor(
+                      content: "",
+                      controller: quillEditorController,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class PostBoardChoicedLabel extends ConsumerStatefulWidget {
+  const PostBoardChoicedLabel({super.key});
+
+  @override
+  ConsumerState<PostBoardChoicedLabel> createState() => _PostBoardChoicedLabelState();
+}
+
+class _PostBoardChoicedLabelState extends ConsumerState<PostBoardChoicedLabel> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          "看板",
+          style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
         ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        SizedBox(width: ScreenSize.fitPxWidth(10)),
+        MainBtn(
+          onPress: () {
+            PostBoardChoiceBottomSheet().show(context);
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(5), vertical: ScreenSize.fitPxHeight(2)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColors.greyColor98),
+            child: Row(
               children: [
                 Text(
-                  "標題",
-                  style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize24),
+                  ref.watch(postCreateChoiceBoard).name,
+                  style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
                 ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: RichTextEditor(
-                    content: "",
-                    controller: quillEditorController,
-                  ),
-                ),
+                SizedBox(width: ScreenSize.fitPxWidth(5)),
+                Icon(
+                  FontAwesomeIcons.caretDown,
+                  size: ScreenSize.fontSize16,
+                  color: AppColors.whiteColor,
+                )
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class PostBoardChoiceBottomSheet extends BaseBottomSheet {
+  FixedExtentScrollController scrollController = FixedExtentScrollController();
+  List<PostBoard> item = [];
+  @override
+  double buildHeight() {
+    return 0.3;
+  }
+
+  @override
+  Future<void> initState(WidgetRef ref) async {
+    item = ref.read(allPostBoardListData.notifier).state;
+
+    int choicedItemsIndex = item.indexWhere((element) => element.id == ref.read(postCreateChoiceBoard.notifier).state.id);
+
+    if (choicedItemsIndex != -1) {
+      scrollController.jumpToItem(choicedItemsIndex);
+    }
+
+    render();
+  }
+
+  @override
+  Widget build(WidgetRef ref) {
+    return CupertinoPicker(
+      scrollController: scrollController,
+      itemExtent: 50,
+      onSelectedItemChanged: (int index) {
+        print(item[index]);
+        ref.read(postCreateChoiceBoard.notifier).update((state) => item[index]);
+        render();
+      },
+      children: item
+          .map(
+            (e) => Center(
+              child: Text(
+                e.name,
+                style: TextStyle(color: AppColors.whiteColor),
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 }

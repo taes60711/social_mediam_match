@@ -13,7 +13,7 @@ import '../../../global/chat_ws_model.dart';
 import '../../../models/friend_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../services/friend_service.dart';
-import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
+import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/custom_button.dart';
 import '../../utilities/inputField/base_input.dart';
 import 'my_friends.dart';

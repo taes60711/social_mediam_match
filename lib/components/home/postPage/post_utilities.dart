@@ -9,7 +9,7 @@ import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/post/post_provider.dart';
-import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
+import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -384,35 +384,6 @@ class PostViewUtilities {
           FontAwesomeIcons.pen,
           size: 16,
           color: AppColors.orangeColor,
-        ),
-      ),
-    );
-  }
-
-  ///何も検索しているレイアウト
-  static Widget noinitSearchWidget() {
-    return SizedBox(
-      width: ScreenSize.width,
-      height: ScreenSize.safeHeight,
-      child: AspectRatio(
-        aspectRatio: 16.0 / 9.0,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              FontAwesomeIcons.search,
-              size: 50,
-              color: hintTextColor,
-            ),
-            const SizedBox(height: 20),
-            Text(
-              "請輸入關鍵字搜尋",
-              style: TextStyle(
-                fontSize: 20,
-                color: normalBgColor2,
-              ),
-            )
-          ],
         ),
       ),
     );

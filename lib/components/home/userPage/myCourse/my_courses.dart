@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
+import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
+
 import '../../../utilities/basic_top_bar.dart';
-import '../../../utilities/custom_button.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/style_config.dart';
 import 'added_courses_page.dart';
 import 'created_courses_page.dart';
 
-class MyCoursePage extends BaseFadeScalePage {
+class MyCoursePage extends BaseEndDrawer {
   int pageIndex = 0;
   PageController pageController = PageController();
   List<Widget> coursePage = [
@@ -17,37 +17,37 @@ class MyCoursePage extends BaseFadeScalePage {
   ];
 
   @override
-  bool needWaitOpenPage() {
-    return true;
-  }
-
-  @override
   Widget build(WidgetRef ref) {
     return Column(
       children: [
         BaseTopBar(
           title: "技術分享",
-          leftWidget: Container(),
-          rightWidget: MainBtn(
-            onPress: () {
-              closePage();
-            },
-            child: Icon(
-              Icons.close,
-              color: AppColors.whiteColor,
-            ),
-          ),
+          backFunc: () {
+            closePage();
+          },
         ),
-        Row(
-          children: [
-            _buildTabBtn(context, tabText: "已加入", index: 0),
-            _buildTabBtn(context, tabText: "我的", index: 1),
-          ],
+        Container(
+          margin: EdgeInsets.only(
+            left: ScreenSize.fitPxHeight(30),
+            right: ScreenSize.fitPxHeight(30),
+            bottom: ScreenSize.fitPxHeight(5),
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: AppColors.greyColor98,
+          ),
+          child: Row(
+            children: [
+              Expanded(child: _buildTabBtn(context, tabText: "已加入", index: 0)),
+              Expanded(child: _buildTabBtn(context, tabText: "我的", index: 1)),
+            ],
+          ),
         ),
         SizedBox(height: ScreenSize.fitPxHeight(5)),
         Expanded(
           child: PageView(
             controller: pageController,
+            physics: const NeverScrollableScrollPhysics(),
             onPageChanged: (value) {
               pageIndex = value;
               render();
@@ -69,26 +69,17 @@ class MyCoursePage extends BaseFadeScalePage {
         );
       },
       child: Container(
-        width: ScreenSize.width / 2,
         height: ScreenSize.fitPxHeight(30),
         alignment: Alignment.center,
-        color: Colors.transparent,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              tabText,
-              style: TextStyle(color: AppColors.whiteColor),
-            ),
-            Visibility(
-              visible: pageIndex == index,
-              child: Container(
-                width: 15,
-                height: 1.5,
-                color: Colors.white,
-              ),
-            ),
-          ],
+        decoration: pageIndex == index
+            ? BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: AppColors.orangeColor,
+              )
+            : const BoxDecoration(color: Colors.transparent),
+        child: Text(
+          tabText,
+          style: TextStyle(color: AppColors.whiteColor),
         ),
       ),
     );

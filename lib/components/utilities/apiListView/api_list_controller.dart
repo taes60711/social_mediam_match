@@ -92,9 +92,16 @@ class APIListControllerNotifier<R> extends StateNotifier<APIListController<R>> {
     state = state.copyWith(listData: nowStateList);
   }
 
-  void addData(R editedData) {
+  void addDataToLast(R editedData) {
     List<R> nowStateList = state.listData;
     nowStateList = [...nowStateList, editedData];
+
+    state = state.copyWith(listData: nowStateList);
+  }
+
+  void removeData(int index) {
+    List<R> nowStateList = state.listData;
+    nowStateList.removeAt(index);
 
     state = state.copyWith(listData: nowStateList);
   }

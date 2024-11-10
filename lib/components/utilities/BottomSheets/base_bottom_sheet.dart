@@ -19,6 +19,8 @@ abstract class BaseBottomSheet {
     return true;
   }
 
+  // initState前に
+  void create() {}
   // （レンダリング、APIとか必要場合）
   Future<void> initState(WidgetRef ref) async {}
   // （close）
@@ -41,6 +43,7 @@ abstract class BaseBottomSheet {
                   if (!_isInit) {
                     render = () => setState(() {});
                     Future.delayed(Duration.zero).then((value) {
+                      create();
                       initState(ref).then((value) => _isInit = true);
                     });
                   }
@@ -141,9 +144,11 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
       ),
     );
 
-    _controller.forward().whenComplete(() {
-      widget.callBackAnimationController(_controller);
-      widget.callBackClosePage(() => _closeEndDrawer());
+    Future.delayed(Duration.zero).then((_) {
+      _controller.forward().whenComplete(() {
+        widget.callBackAnimationController(_controller);
+        widget.callBackClosePage(() => _closeEndDrawer());
+      });
     });
   }
 

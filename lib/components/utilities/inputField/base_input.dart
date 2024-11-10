@@ -15,7 +15,8 @@ enum InputType {
 class BaseInputField extends StatefulWidget {
   final TextEditingController controller;
   final String? hintText;
-
+  final TextStyle? hintStyle;
+  final TextStyle? inputStyle;
   final InputType type;
   final bool isHidePwd;
   final TextInputAction? textInputAction;
@@ -28,6 +29,8 @@ class BaseInputField extends StatefulWidget {
   const BaseInputField({
     super.key,
     this.hintText,
+    this.hintStyle,
+    this.inputStyle,
     this.type = InputType.normal,
     required this.controller,
     this.onFocusChanged,
@@ -75,22 +78,26 @@ class _BaseInputFieldState extends State<BaseInputField> {
         textInputAction: widget.textInputAction,
         readOnly: widget.readOnly,
         onFieldSubmitted: (value) {
-          widget.onFieldSubmitted!(value);
+          if (widget.onFieldSubmitted != null) {
+            widget.onFieldSubmitted!(value);
+          }
         },
         decoration: InputDecoration(
           hintText: widget.hintText ?? "",
-          hintStyle: TextStyle(
-            color: AppColors.greyColor130,
-            fontSize: ScreenSize.fontSize14,
-          ),
+          hintStyle: widget.hintStyle ??
+              TextStyle(
+                color: AppColors.greyColor130,
+                fontSize: ScreenSize.fontSize14,
+              ),
           contentPadding: EdgeInsets.zero,
           border: InputBorder.none,
           isDense: true,
         ),
-        style: TextStyle(
-          color: AppColors.whiteColor,
-          fontSize: ScreenSize.fontSize14,
-        ),
+        style: widget.inputStyle ??
+            TextStyle(
+              color: AppColors.whiteColor,
+              fontSize: ScreenSize.fontSize14,
+            ),
         controller: widget.controller,
       ),
     );

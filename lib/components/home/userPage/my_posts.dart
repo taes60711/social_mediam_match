@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade_scale_page.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
-import 'package:social_mediam_match/components/utilities/custom_button.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
@@ -17,7 +15,7 @@ import '../../utilities/loading.dart';
 
 import '../postPage/post_utilities.dart';
 
-class MyPostPage extends BaseFadeScalePage {
+class MyPostPage extends BaseEndDrawer {
   late PostViewModel viewModel;
 
   @override
@@ -37,16 +35,9 @@ class MyPostPage extends BaseFadeScalePage {
       children: [
         BaseTopBar(
           title: "我的文章",
-          leftWidget: Container(),
-          rightWidget: MainBtn(
-            onPress: () {
-              closePage();
-            },
-            child: Icon(
-              Icons.close,
-              color: AppColors.whiteColor,
-            ),
-          ),
+          backFunc: () {
+            closePage();
+          },
         ),
         Expanded(
           child: APIListWidget(

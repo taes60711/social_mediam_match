@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:social_mediam_match/components/utilities/BottomSheets/base_bottom_sheet.dart';
+import 'package:social_mediam_match/components/utilities/bottomSheets/base_bottom_sheet.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 class UserProfileEditPage extends BaseBottomSheet {

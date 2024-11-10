@@ -108,8 +108,10 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
       ),
     );
 
-    _controller.forward().whenComplete(() {
-      widget.callBackAnimationController(_controller);
+    Future.delayed(Duration.zero).then((_) {
+      _controller.forward().whenComplete(() {
+        widget.callBackAnimationController(_controller);
+      });
     });
   }
 

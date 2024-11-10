@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/components/utilities/BottomSheets/base_bottom_sheet.dart';
+import 'package:social_mediam_match/components/utilities/bottomSheets/base_bottom_sheet.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 
@@ -16,6 +16,7 @@ import '../../../provider/post/post_provider.dart';
 import '../../../services/post_service.dart';
 
 import '../../utilities/apiListView/api_list_view.dart';
+import '../../utilities/dialog/confirm_dialog.dart';
 
 class PostCommentPage extends BaseBottomSheet {
   PostViewModel viewModel;
@@ -102,8 +103,16 @@ class PostCommentPage extends BaseBottomSheet {
                                 ///ユーザ名前
                                 GestureDetector(
                                   onTap: () {
-                                    data.isEditor = !data.isEditor;
-                                    isEditStart = true;
+                                    if (!data.isEditor) {
+                                      data.isEditor = !data.isEditor;
+                                      isEditStart = true;
+                                    } else {
+                                      data.isEditor = !data.isEditor;
+                                      if (data.message != data.textEditingController.text) {
+                                        data.message = data.textEditingController.text;
+                                      }
+                                    }
+
                                     render();
                                   },
                                   child: Text(
@@ -115,9 +124,19 @@ class PostCommentPage extends BaseBottomSheet {
                                 SizedBox(width: ScreenSize.fitPxWidth(5)),
 
                                 ///コメント時間
-                                Text(
-                                  "刪除",
-                                  style: TextStyle(color: AppColors.greyColor98, fontSize: ScreenSize.fontSize12),
+                                GestureDetector(
+                                  onTap: () {
+                                    ConfirmDilaog(
+                                        title: "提示",
+                                        content: "確定要刪除該回覆？",
+                                        conirmFunc: () {
+                                          ref.read(postCommentListControllerProvider.notifier).removeData(index);
+                                        }).show(context);
+                                  },
+                                  child: Text(
+                                    "刪除",
+                                    style: TextStyle(color: AppColors.greyColor98, fontSize: ScreenSize.fontSize12),
+                                  ),
                                 ),
                               ],
                             ),
@@ -130,9 +149,7 @@ class PostCommentPage extends BaseBottomSheet {
           ),
 
           ///コメント欄
-          commentCntainerBuild(
-            ref,
-          ),
+          commentCntainerBuild(ref),
         ],
       ),
     );
@@ -178,6 +195,7 @@ class PostCommentPage extends BaseBottomSheet {
 
   Widget commentCntainerBuild(WidgetRef ref) {
     ProfileData userData = ref.watch(loginUserData);
+    TextEditingController commentController = TextEditingController();
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -186,7 +204,7 @@ class PostCommentPage extends BaseBottomSheet {
           ),
         ),
       ),
-      height: ScreenSize.fitPxHeight(65),
+      height: ScreenSize.fitPxHeight(70),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(12)),
         child: Column(
@@ -203,56 +221,44 @@ class PostCommentPage extends BaseBottomSheet {
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: ScreenSize.fitPxHeight(10),
-                      vertical: ScreenSize.fitPxHeight(5),
+                      horizontal: ScreenSize.fitPxHeight(8),
+                      vertical: ScreenSize.fitPxHeight(6),
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.greyColor57,
-                      borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(5)),
+                      borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(13)),
                     ),
                     child: Row(
                       children: [
                         Expanded(
                           child: BaseInputField(
                             hintText: "留言",
-                            controller: TextEditingController(),
+                            controller: commentController,
                             autoFocus: true,
+                            onFieldSubmitted: (value) {
+                              createComment(ref, commentController.text);
+                            },
                           ),
                         ),
                         MainBtn(
-                            onPress: () {
-                              ProfileData userData = ref.watch(loginUserData);
-                              PostCommentTextEditorModel sdsat = PostCommentTextEditorModel(
-                                uid: 63,
-                                postId: 30,
-                                userUid: "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2",
-                                message: "qwewqwe",
-                                postTime: "2024-06-30T09:14:38.000+00:00",
-                                commentUserInfo: userData,
-                                isEditor: false,
-                                textEditingController: TextEditingController(),
-                              );
-
-                              ref.read(postCommentListControllerProvider.notifier).addDataTofirst(sdsat);
-
-                              PostModel c = ref.read(listControllerProvider).listData[0];
-                              c.commentCount++;
-
-                              ref.read(choicedPostProvider.notifier).state = PostModel().copyWith(data: c);
-                              ref.read(listControllerProvider.notifier).editData(0, c);
-                              print("object");
-                              render();
-                            },
-                            child: Container(
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8), vertical: ScreenSize.fitPxWidth(2)),
-                              decoration: BoxDecoration(
-                                  color: AppColors.orangeColor, borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(10))),
-                              child: Icon(
-                                Icons.chair,
-                                color: AppColors.whiteColor,
+                          onPress: () {
+                            createComment(ref, commentController.text);
+                          },
+                          child: Container(
+                            padding:
+                                EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8), vertical: ScreenSize.fitPxWidth(3)),
+                            decoration: BoxDecoration(
+                              color: AppColors.orangeColor,
+                              borderRadius: BorderRadius.circular(
+                                ScreenSize.fitPxWidth(10),
                               ),
-                            )),
+                            ),
+                            child: Icon(
+                              Icons.eco_sharp,
+                              color: AppColors.whiteColor,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -264,5 +270,30 @@ class PostCommentPage extends BaseBottomSheet {
         ),
       ),
     );
+  }
+
+  void createComment(WidgetRef ref, String message) {
+    ProfileData userData = ref.watch(loginUserData);
+
+    PostCommentTextEditorModel sdsat = PostCommentTextEditorModel(
+      uid: 63,
+      postId: ref.read(choicedPostProvider.notifier).state.id,
+      userUid: userData.uid,
+      message: message,
+      postTime: "2024-06-30T09:14:38.000+00:00",
+      commentUserInfo: userData,
+      isEditor: false,
+      textEditingController: TextEditingController(text: message),
+    );
+
+    ref.read(postCommentListControllerProvider.notifier).addDataTofirst(sdsat);
+
+    PostModel c = ref.read(listControllerProvider).listData[0];
+    c.commentCount++;
+
+    ref.read(choicedPostProvider.notifier).state = PostModel().copyWith(data: c);
+    ref.read(listControllerProvider.notifier).editData(0, c);
+
+    render();
   }
 }

@@ -239,11 +239,13 @@ class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTi
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     );
 
-    _controller.forward().whenComplete(() {
-      widget.callBackAnimationController(_controller);
-      widget.callBackClosePage(() => _closeEndDrawer());
-      isInit = true;
-      setState(() {});
+    Future.delayed(Duration.zero).then((value) {
+      _controller.forward().whenComplete(() {
+        widget.callBackAnimationController(_controller);
+        widget.callBackClosePage(() => _closeEndDrawer());
+        isInit = true;
+        setState(() {});
+      });
     });
   }
 

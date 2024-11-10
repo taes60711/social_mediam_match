@@ -12,7 +12,7 @@ import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../services/user_service.dart';
 import '../../strings/skillExChangePage/skill_change_page_string.dart';
-import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
+import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/loading.dart';

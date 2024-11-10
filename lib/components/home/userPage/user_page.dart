@@ -117,7 +117,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                         padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
-                            color: userData.isEmailVerified ? Color.fromARGB(255, 68, 197, 72) : AppColors.greyColor98),
+                            color: userData.isEmailVerified ? const Color.fromARGB(255, 68, 197, 72) : AppColors.greyColor98),
                         child: Text(
                           userData.isEmailVerified ? "已認證" : "未認證",
                           style: TextStyle(

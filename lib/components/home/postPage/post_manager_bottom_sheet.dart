@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../utilities/BottomSheets/base_bottom_sheet.dart';
+import '../../utilities/bottomSheets/base_bottom_sheet.dart';
 
 class PostManagerBtmSheet extends BaseBottomSheet {
   @override
