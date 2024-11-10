@@ -34,3 +34,8 @@ final choicedPostBoardProvider = StateProvider<PostBoard>((ref) {
 final choicedPostProvider = StateProvider<PostModel>((ref) {
   return PostModel();
 });
+
+final postCommentListControllerProvider =
+    StateNotifierProvider<APIListControllerNotifier<PostCommentTextEditorModel>, APIListController<PostCommentTextEditorModel>>(
+  (ref) => APIListControllerNotifier(APIListController<PostCommentTextEditorModel>()),
+);

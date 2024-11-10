@@ -23,6 +23,8 @@ class BaseInputField extends StatefulWidget {
 
   final bool autoFocus;
   final Function(bool value)? onFocusChanged;
+
+  final bool readOnly;
   const BaseInputField({
     super.key,
     this.hintText,
@@ -33,6 +35,7 @@ class BaseInputField extends StatefulWidget {
     this.onFieldSubmitted,
     this.isHidePwd = false,
     this.autoFocus = false,
+    this.readOnly = false,
   });
 
   @override
@@ -70,6 +73,7 @@ class _BaseInputFieldState extends State<BaseInputField> {
         obscureText: widget.type == InputType.pwd && widget.isHidePwd,
         cursorColor: AppColors.whiteColor,
         textInputAction: widget.textInputAction,
+        readOnly: widget.readOnly,
         onFieldSubmitted: (value) {
           widget.onFieldSubmitted!(value);
         },
