@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
@@ -9,16 +10,16 @@ import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
-import '../../../provider/post/post_view_model.dart';
+import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/user_icon.dart';
 import 'post_comment_page.dart';
 
 class PostDetailPage extends BaseEndDrawer {
-  final PostViewModel viewModel;
+  final StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController;
   final int dataIndex;
 
-  PostDetailPage({required this.viewModel, required this.dataIndex});
+  PostDetailPage({required this.dataIndex, this.postListController});
   @override
   bool needWaitOpenPage() {
     return true;
@@ -31,6 +32,7 @@ class PostDetailPage extends BaseEndDrawer {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        ///タイトルバー
         BaseTopBar(
           backFunc: () => closePage(),
           title: choiceData.title,
@@ -92,9 +94,11 @@ class PostDetailPage extends BaseEndDrawer {
                         ///いいね数
                         GestureDetector(
                           onTap: () {
-                            choiceData.good++;
-                            ref.read(listControllerProvider.notifier).editData(dataIndex, choiceData);
-                            render();
+                            if (postListController != null) {
+                              choiceData.good++;
+                              ref.read(postListController!.notifier).editData(dataIndex, choiceData);
+                              render();
+                            }
                           },
                           child: PostViewUtilities().iconWithText(
                               iconData: FontAwesomeIcons.heart,
@@ -118,7 +122,8 @@ class PostDetailPage extends BaseEndDrawer {
           ProfileData userData = ref.watch(loginUserData);
           return GestureDetector(
             onTap: () {
-              PostCommentPage(viewModel: viewModel).show(context);
+              ///コメントページに遷移する
+              PostCommentPage(dataIndex: dataIndex, postListController: postListController).show(context);
             },
             child: Container(
               decoration: BoxDecoration(

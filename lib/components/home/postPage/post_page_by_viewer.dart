@@ -8,10 +8,6 @@ import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/loading.dart';
 import 'post_utilities.dart';
 
-final st = StateProvider<List<int>>((ref) {
-  return [1, 2];
-});
-
 class PostByView extends ConsumerStatefulWidget {
   const PostByView({super.key});
 
@@ -48,7 +44,7 @@ class _PostByViewState extends ConsumerState<PostByView> {
                   customFloatBtn: PostViewUtilities.postCreateButton(context),
                   loadingWidget: const PostLoading(),
                   itemChild: (data, index) {
-                    return PostViewUtilities().postItemContent(viewModel, data: data, dataIndex: index);
+                    return PostViewUtilities().postItemContent(viewModel, listControllerProvider, data: data, dataIndex: index);
                   }),
             ],
           ),

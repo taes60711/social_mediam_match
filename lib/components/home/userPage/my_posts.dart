@@ -49,7 +49,7 @@ class MyPostPage extends BaseEndDrawer {
               noDataWidget: PostViewUtilities.noPostData(),
               loadingWidget: const PostLoading(),
               itemChild: (data, index) {
-                return PostViewUtilities().postItemContent(viewModel, data: data, dataIndex: index);
+                return PostViewUtilities().postItemContent(viewModel, myPostlistControllerProvider, data: data, dataIndex: index);
               }),
         ),
       ],

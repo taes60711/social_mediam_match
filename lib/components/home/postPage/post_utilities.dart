@@ -9,6 +9,7 @@ import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/post/post_provider.dart';
+import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
@@ -60,7 +61,12 @@ class PostViewUtilities {
     );
   }
 
-  Widget postItemContent(PostViewModel viewModel, {required PostModel data, required int dataIndex}) {
+  Widget postItemContent(
+    PostViewModel viewModel,
+    StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>> postListController, {
+    required PostModel data,
+    required int dataIndex,
+  }) {
     WidgetRef ref = viewModel.ref;
     BuildContext context = viewModel.context;
 
@@ -73,7 +79,8 @@ class PostViewUtilities {
         .name;
     return MainBtn(
       onPress: () {
-        viewModel.postDetailPageInit(viewModel, data, dataIndex);
+        ///詳細ページに遷移
+        viewModel.postDetailPageInit(postListController, data, dataIndex);
       },
       child: Container(
         width: ScreenSize.width,
@@ -85,6 +92,7 @@ class PostViewUtilities {
           children: [
             GestureDetector(
               onTap: () {
+                ///ユーザー詳細ページに遷移
                 UserProfileBottomSheet(userData: data.postUserInfo).show(context);
               },
               child: Padding(
@@ -101,6 +109,7 @@ class PostViewUtilities {
                 children: [
                   Row(
                     children: [
+                      ///名前
                       Text(
                         data.postUserInfo.name ?? "",
                         style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
@@ -115,6 +124,7 @@ class PostViewUtilities {
                       const Expanded(child: SizedBox(width: 1)),
                       GestureDetector(
                         onTap: () {
+                          ///右上のアイコンのボタン
                           PostManagerBtmSheet().show(context);
                         },
                         child: Container(
@@ -139,6 +149,8 @@ class PostViewUtilities {
                     ),
                   ),
                   SizedBox(height: 5),
+
+                  ///文章ビュー
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 0),
                     child: ClipRRect(

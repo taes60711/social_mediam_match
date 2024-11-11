@@ -232,6 +232,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 
 import '../../components/home/postPage/post_detail_page.dart';
+import '../../components/utilities/apiListView/api_list_controller.dart';
 import 'post_provider.dart';
 
 class PostViewModel {
@@ -242,9 +243,13 @@ class PostViewModel {
 
   List<Function> renderList = [];
 
-  void postDetailPageInit(PostViewModel viewModel, PostModel data, int dataIndex) {
+  void postDetailPageInit(
+    StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>> postListController,
+    PostModel data,
+    int dataIndex,
+  ) {
     ref.read(choicedPostProvider.notifier).update((state) => data);
-    PostDetailPage(viewModel: viewModel, dataIndex: dataIndex).show(context);
+    PostDetailPage(dataIndex: dataIndex, postListController: postListController).show(context);
   }
 
   void lookingPostGoodOnChange() {}

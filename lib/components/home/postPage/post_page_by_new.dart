@@ -43,7 +43,7 @@ class _PostByViewState extends ConsumerState<PostByNew> {
               noDataWidget: PostViewUtilities.noPostData(),
               customFloatBtn: PostViewUtilities.postCreateButton(context),
               itemChild: (data, index) {
-                return PostViewUtilities().postItemContent(viewModel, data: data, dataIndex: index);
+                return PostViewUtilities().postItemContent(viewModel, newlistControllerProvider, data: data, dataIndex: index);
               }),
         ),
       ],

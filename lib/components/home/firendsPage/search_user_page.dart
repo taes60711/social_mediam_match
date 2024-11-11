@@ -38,11 +38,7 @@ class SearchUserPage extends BaseBottomSheet {
             Expanded(
               child: APIListWidget(
                   apiFunc: (page, size) {
-                    return UserService().requestUserDataByNamePart(
-                      page,
-                      size,
-                      userName: "",
-                    );
+                    return UserService().requestUserDataByNamePart(page, size, userName: "");
                   },
                   listControllerProvider: searchedUserControllerProvider,
                   initWidget: Scaffold(

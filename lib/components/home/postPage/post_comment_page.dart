@@ -8,20 +8,22 @@ import 'package:social_mediam_match/components/utilities/inputField/base_input.d
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
-import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../../services/post_service.dart';
 
+import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/dialog/confirm_dialog.dart';
 
 class PostCommentPage extends BaseBottomSheet {
-  PostViewModel viewModel;
+  final StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController;
+  final int dataIndex;
+
+  PostCommentPage({required this.dataIndex, this.postListController});
   bool isEditStart = false;
-  PostCommentPage({required this.viewModel});
   @override
   double buildHeight() {
     return 0.5;
@@ -34,6 +36,7 @@ class PostCommentPage extends BaseBottomSheet {
       bgColor: Colors.transparent,
       child: Column(
         children: [
+          ///タイトル
           Text(
             "回覆",
             style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
@@ -100,7 +103,7 @@ class PostCommentPage extends BaseBottomSheet {
                             SizedBox(height: ScreenSize.fitPxWidth(5)),
                             Row(
                               children: [
-                                ///ユーザ名前
+                                ///コメント編集ボタン
                                 GestureDetector(
                                   onTap: () {
                                     if (!data.isEditor) {
@@ -123,9 +126,10 @@ class PostCommentPage extends BaseBottomSheet {
 
                                 SizedBox(width: ScreenSize.fitPxWidth(5)),
 
-                                ///コメント時間
+                                ///コメント削除ボタン
                                 GestureDetector(
                                   onTap: () {
+                                    ///削除確認
                                     ConfirmDilaog(
                                         title: "提示",
                                         content: "確定要刪除該回覆？",
@@ -158,6 +162,8 @@ class PostCommentPage extends BaseBottomSheet {
   ///コメント：メッセージ/テキストフィールド
   Widget commentEditBuild(WidgetRef ref, PostCommentTextEditorModel data) {
     return data.isEditor
+
+        ///テキストフィールド
         ? Container(
             padding: EdgeInsets.symmetric(
               horizontal: ScreenSize.fitPxWidth(8),
@@ -187,12 +193,15 @@ class PostCommentPage extends BaseBottomSheet {
               },
             ),
           )
+
+        ///メッセージ
         : Text(
             data.message,
             style: TextStyle(color: AppColors.whiteColor),
           );
   }
 
+  ///コメント欄
   Widget commentCntainerBuild(WidgetRef ref) {
     ProfileData userData = ref.watch(loginUserData);
     TextEditingController commentController = TextEditingController();
@@ -218,6 +227,8 @@ class PostCommentPage extends BaseBottomSheet {
                   image: userData.image,
                 ),
                 SizedBox(width: ScreenSize.fitPxHeight(10)),
+
+                /// コメント欄
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.symmetric(
@@ -286,13 +297,19 @@ class PostCommentPage extends BaseBottomSheet {
       textEditingController: TextEditingController(text: message),
     );
 
+    ///コメントListにコメント追加する
     ref.read(postCommentListControllerProvider.notifier).addDataTofirst(sdsat);
 
-    PostModel c = ref.read(listControllerProvider).listData[0];
-    c.commentCount++;
+    if (postListController != null) {
+      PostModel c = ref.read(postListController!).listData[dataIndex];
+      c.commentCount++;
 
-    ref.read(choicedPostProvider.notifier).state = PostModel().copyWith(data: c);
-    ref.read(listControllerProvider.notifier).editData(0, c);
+      /// 詳細ページのコメント”数”更新する
+      ref.read(choicedPostProvider.notifier).state = PostModel().copyWith(data: c);
+
+      /// Listページのコメント”数”更新する
+      ref.read(postListController!.notifier).editData(dataIndex, c);
+    }
 
     render();
   }

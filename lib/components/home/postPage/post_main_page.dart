@@ -104,7 +104,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                       return MainBtn(
                         onPress: () {
                           ref.read(choicedPostProvider.notifier).update((state) => e);
-                          PostDetailPage(viewModel: viewModel, dataIndex: pageIndex).show(context);
+                          PostDetailPage(dataIndex: pageIndex).show(context);
                         },
                         child: Container(
                           color: Colors.transparent,
