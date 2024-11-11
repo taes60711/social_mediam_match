@@ -63,27 +63,54 @@ abstract class BaseBottomSheet {
                         backgroundColor: Colors.transparent,
                         body: GestureDetector(
                           onTap: () {},
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              SizedBox(
-                                height: ScreenSize.height * buildHeight(),
-                                child: BottomSheetWidget(
-                                  widgetHeight: ScreenSize.height * buildHeight(),
-                                  callBackAnimationController: (AnimationController animationController) {
-                                    controller = animationController;
-                                  },
-                                  callBackClosePage: (Function callBackClosePage) {
-                                    closePage = callBackClosePage;
-                                  },
-                                  closeDispose: () {
-                                    dispose(ref);
-                                  },
-                                  child: build(ref),
+                          child: buildHeight() > 0.6
+                              ? Column(
+                                  children: [
+                                    Container(height: ScreenSize.height - (ScreenSize.height * buildHeight())),
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        child: SizedBox(
+                                          height: ScreenSize.height * buildHeight(),
+                                          child: BottomSheetWidget(
+                                            widgetHeight: ScreenSize.height * buildHeight(),
+                                            callBackAnimationController: (AnimationController animationController) {
+                                              controller = animationController;
+                                            },
+                                            callBackClosePage: (Function callBackClosePage) {
+                                              closePage = callBackClosePage;
+                                            },
+                                            closeDispose: () {
+                                              dispose(ref);
+                                            },
+                                            child: build(ref),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SizedBox(
+                                      height: ScreenSize.height * buildHeight(),
+                                      child: BottomSheetWidget(
+                                        widgetHeight: ScreenSize.height * buildHeight(),
+                                        callBackAnimationController: (AnimationController animationController) {
+                                          controller = animationController;
+                                        },
+                                        callBackClosePage: (Function callBackClosePage) {
+                                          closePage = callBackClosePage;
+                                        },
+                                        closeDispose: () {
+                                          dispose(ref);
+                                        },
+                                        child: build(ref),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
                         ),
                       ),
                     ),

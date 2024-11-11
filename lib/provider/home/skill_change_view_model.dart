@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../components/utilities/apiListView/base_api_list_provider.dart';
-import '../../components/utilities/endDrawers/skill_change_filter_end_drawer.dart';
 import '../../models/skill_model.dart';
 import '../../models/user_model.dart';
 import '../../services/skill_service.dart';

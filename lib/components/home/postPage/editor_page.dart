@@ -211,7 +211,6 @@ class PostBoardChoiceBottomSheet extends BaseBottomSheet {
       scrollController: scrollController,
       itemExtent: 50,
       onSelectedItemChanged: (int index) {
-        print(item[index]);
         ref.read(postCreateChoiceBoard.notifier).update((state) => item[index]);
         render();
       },

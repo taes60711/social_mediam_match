@@ -83,10 +83,9 @@ class CommonScaffold extends ConsumerStatefulWidget {
 class _CommonScaffoldState extends ConsumerState<CommonScaffold> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: widget.bgColor ?? ThemeStyle.bgColor,
-      body: GestureDetector(
+    return Material(
+      color: widget.bgColor ?? ThemeStyle.bgColor,
+      child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
@@ -94,15 +93,7 @@ class _CommonScaffoldState extends ConsumerState<CommonScaffold> {
         child: SafeArea(
           top: getSafeArea().top,
           bottom: getSafeArea().bottom,
-          child: SizedBox(
-            width: ScreenSize.width,
-            height: ScreenSize.height,
-            child: Column(
-              children: [
-                Expanded(child: widget.child),
-              ],
-            ),
-          ),
+          child: Container(child: widget.child),
         ),
       ),
     );

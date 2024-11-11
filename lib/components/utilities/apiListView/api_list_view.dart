@@ -16,6 +16,7 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
   final bool haveBottomBar;
   final Future<List<R>> Function(int page, int size) apiFunc;
   final StateNotifierProvider<APIListControllerNotifier, APIListController<dynamic>> listControllerProvider;
+  final Widget? initWidget;
   final Widget? loadingWidget;
   final Widget? noDataWidget;
   final Widget? customFloatBtn;
@@ -27,6 +28,7 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
     this.haveBottomBar = false,
     required this.apiFunc,
     required this.listControllerProvider,
+    this.initWidget,
     this.loadingWidget,
     this.noDataWidget,
     this.customFloatBtn,
@@ -55,9 +57,11 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     ref.read(widget.listControllerProvider.notifier).create(widget.size);
     setState(() {});
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      ///実際的init
-      await ref.read(widget.listControllerProvider.notifier).init(widget.apiFunc);
-      setState(() {});
+      if (widget.initWidget == null) {
+        ///実際的init
+        await ref.read(widget.listControllerProvider.notifier).init(widget.apiFunc);
+        setState(() {});
+      }
     });
   }
 
@@ -81,9 +85,9 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
       }
 
       ///データロード終わり場合
-      child = Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SizedBox(
+      child = Material(
+        color: Colors.transparent,
+        child: SizedBox(
           ///データ不足場合は高さ画面合うよう
           height: ScreenSize.height,
           child: Stack(
@@ -186,8 +190,13 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
         ),
       );
     } else if (loadDataStatus == LoadDataStatus.initial) {
-      ///ページに初めで遷移場合
-      child = widget.loadingWidget ?? const Center(child: Loading());
+      if (widget.initWidget == null) {
+        ///ページに初めで遷移場合
+        child = widget.loadingWidget ?? const Center(child: Loading());
+      } else {
+        ///ページに初めで遷移場合
+        child = widget.initWidget ?? Container();
+      }
     }
     return listenListView(context, child: child);
   }
