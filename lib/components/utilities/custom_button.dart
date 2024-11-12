@@ -114,8 +114,10 @@ class MainBtn extends StatefulWidget {
   ///MARK:スタイル
   // ボタン色
   final Color? backgroundColor;
+  final bool needOnPressEffect;
   final bool isFullWidth;
-  final EdgeInsetsGeometry innerPadding;
+  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry margin;
   final double borderRadius;
   final double? width;
   final double? height;
@@ -127,8 +129,10 @@ class MainBtn extends StatefulWidget {
     this.child,
     required this.onPress,
     this.backgroundColor,
+    this.needOnPressEffect = true,
     this.isFullWidth = false,
-    this.innerPadding = const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+    this.padding = EdgeInsets.zero,
+    this.margin = EdgeInsets.zero,
     this.borderRadius = 8,
     this.width,
     this.height,
@@ -140,9 +144,19 @@ class MainBtn extends StatefulWidget {
 
 class _MainBtnState extends State<MainBtn> {
   bool isPress = false;
+
   @override
   Widget build(BuildContext context) {
-    Color btnBackgroundColor = widget.backgroundColor ?? normalBgColor;
+    EdgeInsetsGeometry padding = widget.padding;
+    if (widget.title != null && widget.padding == EdgeInsets.zero) {
+      padding = EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10), vertical: ScreenSize.fitPxHeight(5));
+    }
+
+    Color btnBackgroundColor = Colors.transparent;
+    if (widget.title != null) {
+      btnBackgroundColor = widget.backgroundColor ?? AppColors.greyColor57;
+    }
+
     double? btnWidth;
     if (widget.isFullWidth) {
       btnWidth = ScreenSize.width;
@@ -152,27 +166,43 @@ class _MainBtnState extends State<MainBtn> {
       }
     }
 
+    double opacityNum = 1;
+    if (widget.needOnPressEffect) {
+      if (isPress) {
+        opacityNum = 0.8;
+      } else {
+        opacityNum = 1;
+      }
+    }
+
     return GestureDetector(
       onTap: () async {
         await _buttonPressHandle();
         widget.onPress();
       },
       child: Container(
-        padding: widget.innerPadding,
+        padding: padding,
+        margin: widget.margin,
         width: btnWidth,
         height: widget.height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.borderRadius),
-          color: isPress ? btnBackgroundColor.withOpacity(0.8) : btnBackgroundColor,
+          color: btnBackgroundColor,
         ),
-        child: Column(
-          children: [
-            widget.child ??
-                Text(
-                  widget.title ?? "please use title or child ",
-                  style: widget.titleStyle ?? const TextStyle(color: Colors.white),
-                ),
-          ],
+        child: Opacity(
+          opacity: opacityNum,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              widget.child ??
+                  Text(
+                    widget.title ?? "please use title or child ",
+                    style: widget.titleStyle ?? const TextStyle(color: Colors.white),
+                  ),
+            ],
+          ),
         ),
       ),
     );
@@ -180,52 +210,11 @@ class _MainBtnState extends State<MainBtn> {
 
   /// ボタン押すエフェクト
   _buttonPressHandle() async {
+    FocusScope.of(context).requestFocus(FocusNode());
     isPress = true;
     setState(() {});
     await Future.delayed(const Duration(milliseconds: 150));
     isPress = false;
     setState(() {});
-  }
-}
-
-class ColIconBtn extends StatelessWidget {
-  final IconData icon;
-  final Color? iconColor;
-  final double iconSize;
-  final String title;
-  final Color? titleColor;
-  final Function onPress;
-  const ColIconBtn({
-    super.key,
-    required this.icon,
-    this.iconColor,
-    this.iconSize = 25,
-    required this.title,
-    this.titleColor,
-    required this.onPress,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => onPress(),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              color: iconColor ?? normalBgColor,
-              size: iconSize,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              title,
-              style: TextStyle(color: titleColor ?? normalBgColor2),
-            )
-          ],
-        ),
-      ),
-    );
   }
 }

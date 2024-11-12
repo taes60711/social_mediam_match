@@ -1,80 +1,85 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/home/userPage/myCourse/added_courses_page.dart';
-import 'package:social_mediam_match/components/home/userPage/myCourse/created_courses_page.dart';
-import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
-import 'package:social_mediam_match/components/utilities/endDrawers/course_manager_end_drawer.dart';
-import 'package:social_mediam_match/models/course_model.dart';
-import '../../../utilities/apiListView/base_api_list_provider.dart';
-import '../../../utilities/endDrawers/course_detail_end_drawer.dart';
-import '../../../utilities/endDrawers/user_detail_end_drawer.dart';
-import '../../../utilities/style/style_config.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 
-class MyCourses extends StatelessWidget {
-  const MyCourses({super.key});
+import '../../../utilities/basic_top_bar.dart';
+import '../../../utilities/style/screen_size.dart';
+import '../../../utilities/style/style_config.dart';
+import 'added_courses_page.dart';
+import 'created_courses_page.dart';
+
+class MyCoursePage extends BaseEndDrawer {
+  int pageIndex = 0;
+  PageController pageController = PageController();
+  List<Widget> coursePage = [
+    const AddedCoursePage(),
+    const CreatedCoursePage(),
+  ];
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                const BaseTopBar(
-                  title: "技術分享",
-                ),
-                Expanded(
-                  child: DefaultTabController(
-                    length: 2,
-                    child: Scaffold(
-                      appBar: TabBar(
-                        tabs: const [
-                          SizedBox(
-                            height: 25,
-                            child: Tab(text: '已加入的分享文章'),
-                          ),
-                          SizedBox(
-                            height: 25,
-                            child: Tab(text: '已創建的分享文章'),
-                          ),
-                        ],
-                        isScrollable: true,
-                        indicator: UnderlineTabIndicator(
-                          borderSide: BorderSide(width: 1.0, color: normalBgColor),
-                          insets: const EdgeInsets.symmetric(horizontal: 10),
-                        ),
-                        labelPadding: const EdgeInsets.only(top: 5, left: 10, right: 10),
-                        labelColor: normalBgColor2,
-                      ),
-                      body: Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: TabBarView(
-                          children: [
-                            MultiProvider(
-                              providers: [
-                                ChangeNotifierProvider(create: (_) => BaseAPIListProvider<CourseModel>()),
-                              ],
-                              child: const AddedCoursesPage(),
-                            ),
-                            MultiProvider(
-                              providers: [
-                                ChangeNotifierProvider(create: (_) => BaseAPIListProvider<CourseModel>()),
-                              ],
-                              child: const CreatedCoursesPage(),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            courseDetailEndDrawer(),
-            courseManagerEndDrawer(),
-            userDetailEndDrawer(),
-          ],
+  Widget build(WidgetRef ref) {
+    return Column(
+      children: [
+        BaseTopBar(
+          title: "技術分享",
+          backFunc: () {
+            closePage();
+          },
+        ),
+        Container(
+          margin: EdgeInsets.only(
+            left: ScreenSize.fitPxHeight(30),
+            right: ScreenSize.fitPxHeight(30),
+            bottom: ScreenSize.fitPxHeight(5),
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: AppColors.greyColor98,
+          ),
+          child: Row(
+            children: [
+              Expanded(child: _buildTabBtn(context, tabText: "已加入", index: 0)),
+              Expanded(child: _buildTabBtn(context, tabText: "我的", index: 1)),
+            ],
+          ),
+        ),
+        SizedBox(height: ScreenSize.fitPxHeight(5)),
+        Expanded(
+          child: PageView(
+            controller: pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            onPageChanged: (value) {
+              pageIndex = value;
+              render();
+            },
+            children: coursePage,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTabBtn(BuildContext context, {required String tabText, required int index}) {
+    return GestureDetector(
+      onTap: () async {
+        pageController.animateToPage(
+          index,
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeIn,
+        );
+      },
+      child: Container(
+        height: ScreenSize.fitPxHeight(30),
+        alignment: Alignment.center,
+        decoration: pageIndex == index
+            ? BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: AppColors.orangeColor,
+              )
+            : const BoxDecoration(color: Colors.transparent),
+        child: Text(
+          tabText,
+          style: TextStyle(color: AppColors.whiteColor),
         ),
       ),
     );

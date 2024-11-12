@@ -9,16 +9,27 @@ class APIListController<R> {
   List<R> listData = [];
   late Future<List<R>> Function(int page, int size) apiFunc;
   LoadDataStatus loadDataStatus = LoadDataStatus.initial;
+  APIListController<R> copyWith({
+    List<R>? listData,
+    LoadDataStatus? loadDataStatus,
+    Future<List<R>> Function(int page, int size)? apiFunc,
+  }) {
+    return APIListController<R>()
+      ..listData = listData ?? this.listData
+      ..loadDataStatus = loadDataStatus ?? this.loadDataStatus
+      ..apiFunc = apiFunc ?? this.apiFunc;
+  }
 }
 
-class APIListControllerNotifier extends StateNotifier<APIListController> {
-  APIListControllerNotifier(APIListController state) : super(state);
-  List preLoadData = [];
+class APIListControllerNotifier<R> extends StateNotifier<APIListController<R>> {
+  APIListControllerNotifier(APIListController<R> state) : super(state);
+  List<R> preLoadData = [];
   int page = 0;
-  int size = 5;
+  int size = 0;
 
-  void create() {
+  void create(int initSize) {
     page = 0;
+    size = initSize;
     state.loadDataStatus = LoadDataStatus.initial;
   }
 
@@ -34,17 +45,23 @@ class APIListControllerNotifier extends StateNotifier<APIListController> {
     state.loadDataStatus = LoadDataStatus.loadingFinish;
   }
 
-  Future<void> replaceApi(Future<List> Function(int page, int size) replaceApiFunc) async {
-    create();
+  Future<void> replaceApi(Future<List<R>> Function(int page, int size) replaceApiFunc) async {
+    bool needJumpToTop = false;
+    if (state.listData.isNotEmpty) {
+      needJumpToTop = true;
+    }
+    create(size);
     state.apiFunc = replaceApiFunc;
     state.listData = await state.apiFunc(page, size);
     page++;
     await _preLoad();
     state.loadDataStatus = LoadDataStatus.loadingFinish;
-    state.scrollController.jumpTo(0);
+    if (needJumpToTop) {
+      state.scrollController.jumpTo(0);
+    }
   }
 
-  Future<void> init(Future<List> Function(int page, int size) initApiFunc) async {
+  Future<void> init(Future<List<R>> Function(int page, int size) initApiFunc) async {
     state.apiFunc = initApiFunc;
     state.listData = await state.apiFunc(page, size);
     page++;
@@ -66,5 +83,34 @@ class APIListControllerNotifier extends StateNotifier<APIListController> {
       state.loadDataStatus = LoadDataStatus.loadingFinish;
       page++;
     }
+  }
+
+  /// 画面レンダーリング
+  void addDataTofirst(R editedData) {
+    List<R> nowStateList = state.listData;
+    nowStateList.insert(0, editedData);
+
+    state = state.copyWith(listData: nowStateList);
+  }
+
+  void addDataToLast(R editedData) {
+    List<R> nowStateList = state.listData;
+    nowStateList = [...nowStateList, editedData];
+
+    state = state.copyWith(listData: nowStateList);
+  }
+
+  void removeData(int index) {
+    List<R> nowStateList = state.listData;
+    nowStateList.removeAt(index);
+
+    state = state.copyWith(listData: nowStateList);
+  }
+
+  void editData(int index, R editedData) {
+    List<R> nowStateList = state.listData;
+    nowStateList[index] = editedData;
+
+    state = state.copyWith(listData: nowStateList);
   }
 }

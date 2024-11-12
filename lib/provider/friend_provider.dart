@@ -5,7 +5,6 @@ import 'package:social_mediam_match/services/friend_service.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../components/utilities/endDrawers/chat_room_end_drawer.dart';
-import '../components/utilities/endDrawers/user_detail_end_drawer.dart';
 import '../global.dart';
 import '../models/friend_model.dart';
 import '../models/user_model.dart';
@@ -20,7 +19,7 @@ class FriendProvider extends ChangeNotifier {
 
   TextEditingController messageInput = TextEditingController();
   int roomId = -1;
-  LoginUser ohterUserData = LoginUser();
+  ProfileData ohterUserData = ProfileData();
   List<ChatRoomMsg> chatRoomMesaage = [];
   bool isLoading = true;
 
@@ -173,7 +172,7 @@ class FriendProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> openRoom(int roomId, LoginUser roomMember) async {
+  Future<void> openRoom(int roomId, ProfileData roomMember) async {
     this.roomId = roomId;
     ohterUserData = roomMember;
     isLoading = true;
@@ -184,19 +183,12 @@ class FriendProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  UserDetailEndDrawerType endDrawerOpenInfo = UserDetailEndDrawerType.close;
-  void changeEndDrawerStatus(UserDetailEndDrawerType status, LoginUser otherUser) {
-    ohterUserData = otherUser;
-    endDrawerOpenInfo = status;
-    notifyListeners();
-  }
-
-  ChatRoomEndDrawerType chatRoomEndDrawerOpenInfo = ChatRoomEndDrawerType.close;
-  void changeChatRoomEndDrawerStatus(ChatRoomEndDrawerType status) {
-    if (status == ChatRoomEndDrawerType.close) {
-      _chatRoomChannel.sink.close();
-    }
-    chatRoomEndDrawerOpenInfo = status;
-    notifyListeners();
-  }
+  // ChatRoomEndDrawerType chatRoomEndDrawerOpenInfo = ChatRoomEndDrawerType.close;
+  // void changeChatRoomEndDrawerStatus(ChatRoomEndDrawerType status) {
+  //   if (status == ChatRoomEndDrawerType.close) {
+  //     _chatRoomChannel.sink.close();
+  //   }
+  //   chatRoomEndDrawerOpenInfo = status;
+  //   notifyListeners();
+  // }
 }

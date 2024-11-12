@@ -1,48 +1,49 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../components/utilities/endDrawers/post_board_end_drawer.dart';
-import '../../components/utilities/endDrawers/post_page_by_text_filter_end_drawer.dart';
+import '../../components/utilities/apiListView/api_list_controller.dart';
 import '../../models/post_model.dart';
 
-class PostProvider extends ChangeNotifier {
-  TextEditingController textFilterInput = TextEditingController();
+final myPostlistControllerProvider = StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>(
+  (ref) => APIListControllerNotifier(APIListController<PostModel>()),
+);
 
-  List<PostBoard> allPostBoards = [];
-  void initAllPostBoard(List<PostBoard> postBoard) {
-    allPostBoards = [...allPostBoards, ...postBoard];
-    notifyListeners();
-  }
+final listControllerProvider = StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>(
+  (ref) => APIListControllerNotifier(APIListController<PostModel>()),
+);
 
-  List<PostModel> topPost = [];
-  void getTopPost(List<PostModel> requestPostData) {
-    topPost = [...topPost, ...requestPostData];
-    notifyListeners();
-  }
+final newlistControllerProvider = StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>(
+  (ref) => APIListControllerNotifier(APIListController<PostModel>()),
+);
 
-  bool isGood = false;
-  void changeIsGoodStatus(bool changedGood) {
-    isGood = changedGood;
-    notifyListeners();
-  }
+final typelistControllerProvider = StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>(
+  (ref) => APIListControllerNotifier(APIListController<PostModel>()),
+);
 
-  PostBoardEndDrawerType endDrawerOpenInfo = PostBoardEndDrawerType.close;
-  int selectedboardIndex = 0;
-  void changeEndDrawerStatus(PostBoardEndDrawerType status, int boardType) {
-    endDrawerOpenInfo = status;
-    selectedboardIndex = boardType;
-    notifyListeners();
-  }
+final textFilterControllerProvider = StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>(
+  (ref) => APIListControllerNotifier(APIListController<PostModel>()),
+);
 
-  PostPageBytextFilterEndDrawerType postPageBytextFilterEndDrawerOpenInfo = PostPageBytextFilterEndDrawerType.close;
-  void changePostPageBytextFilterEndDrawerStatus(PostPageBytextFilterEndDrawerType status) {
-    postPageBytextFilterEndDrawerOpenInfo = status;
-    notifyListeners();
-  }
+final topPostProvider = StateProvider<List<PostModel>>((ref) {
+  return [];
+});
 
-  PostBoard choicedPostType = PostBoard(id: 0, type: 0, name: "chat");
+final allPostBoardListData = StateProvider<List<PostBoard>>((ref) {
+  return [];
+});
 
-  void postEditBoardTypeOnChange(PostBoard postBoard) {
-    choicedPostType = postBoard;
-    notifyListeners();
-  }
-}
+final choicedPostBoardProvider = StateProvider<PostBoard>((ref) {
+  return PostBoard();
+});
+
+final choicedPostProvider = StateProvider<PostModel>((ref) {
+  return PostModel();
+});
+
+final postCommentListControllerProvider =
+    StateNotifierProvider<APIListControllerNotifier<PostCommentTextEditorModel>, APIListController<PostCommentTextEditorModel>>(
+  (ref) => APIListControllerNotifier(APIListController<PostCommentTextEditorModel>()),
+);
+
+final postCreateChoiceBoard = StateProvider<PostBoard>((ref) {
+  return PostBoard();
+});

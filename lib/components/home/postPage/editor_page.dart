@@ -1,230 +1,229 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
-import 'package:social_mediam_match/components/utilities/Stateful_wrapper.dart';
-import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
-import 'package:social_mediam_match/components/utilities/label_input.dart';
-import 'package:social_mediam_match/models/post_model.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
+import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
+import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
 import 'package:social_mediam_match/provider/post/post_provider.dart';
-import 'package:social_mediam_match/provider/post/post_view_model.dart';
-import '../../../pageManager/setting/route_controller.dart';
-import '../../../provider/post/edit_page_model.dart';
-import '../../../provider/post/my_post_view_model.dart';
-import '../../strings/userPage/user_page_string.dart';
-import '../../utilities/apiListView/base_api_list_provider.dart';
-import '../../utilities/basic_top_bar.dart';
+import '../../../models/post_model.dart';
+import '../../../models/rich_text_format.dart';
+import '../../../models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
+import '../../utilities/BottomSheets/base_bottom_sheet.dart';
+import '../../utilities/FadeScalePage/base_fade_scale_page.dart';
+import '../../utilities/rich_text_editor.dart';
+import '../../utilities/style/screen_size.dart';
+import '../../utilities/style/style_config.dart';
+import 'post_type_board/post_page_by_type.dart';
 
-QuillEditorController controller = QuillEditorController();
-TextEditingController titleInputController = TextEditingController();
+class PostEditorPage extends BaseFadeScalePage {
+  PostBoard? postBoard;
+  PostEditorPage({this.postBoard});
 
-class EditorPage extends StatefulWidget {
-  const EditorPage({super.key});
+  QuillEditorController quillEditorController = QuillEditorController();
+  TextEditingController titleController = TextEditingController();
 
   @override
-  State<EditorPage> createState() => _EditorPageState();
-}
-
-class _EditorPageState extends State<EditorPage> {
-  @override
-  Widget build(BuildContext context) {
-    BuildContext postContext = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postContext'];
-    int postBoradType = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['postBoradType'] ?? -1;
-    List<PostBoard> allPostBoradType =
-        (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['allPostBoradTypeList'];
-    String editorType = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['editorType'];
-
-    return StatefulWrapper(
-      onInit: () async {
-        if (postBoradType != -1) {
-          context
-              .read<PostProvider>()
-              .postEditBoardTypeOnChange(allPostBoradType.firstWhere((element) => element.type == postBoradType));
-        }
-      },
-      child: editorType == "update"
-          ? ChangeNotifierProvider.value(
-              value: postContext.read<BaseAPIListProvider<PostModel>>(),
-              child: Builder(builder: (context) {
-                PostModel postData = postContext.read<BaseAPIListProvider<PostModel>>().choiceData ?? PostModel();
-                titleInputController.text = postData.title;
-                return Scaffold(
-                  body: SafeArea(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        BaseTopBar(
-                          backFunc: () async {
-                            PostModel postData = postContext.read<BaseAPIListProvider<PostModel>>().choiceData ?? PostModel();
-                            titleInputController.text = postData.title;
-                            String content = await controller.getText();
-                            String title = titleInputController.text;
-                            if (postData.mainMessage != content || postData.title != title) {
-                              EditPageModel().editorExitCheck();
-                            } else {
-                              RouteOptions.pop();
-                            }
-                          },
-                          title: "文章編輯",
-                          rightWidget: GestureDetector(
-                            onTap: () async {
-                              await controller.getText().then(
-                                (content) {
-                                  if (titleInputController.text == "" || content == "") {
-                                    EditPageModel().createPostCheck(titleInputController.text, content);
-                                  } else {
-                                    MyPostViewModel(myPostContext: postContext)
-                                        .updatePost(title: titleInputController.text, updateMsg: content);
-                                    RouteOptions.pop();
-                                  }
-                                },
-                              );
-                            },
-                            child: Container(
-                              alignment: Alignment.centerRight,
-                              margin: const EdgeInsets.only(right: 10),
-                              width: 80,
-                              height: 35,
-                              child: Text(ProfileString().updateButtonText),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: editorContent(
-                            postContext: postContext,
-                            allPostBoradType: allPostBoradType,
-                            editorType: editorType,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }),
-            )
-          : Builder(builder: (context) {
-              PostModel postData = PostModel();
-              titleInputController.text = postData.title;
-              return Scaffold(
-                body: SafeArea(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      BaseTopBar(
-                        backFunc: () async {
-                          PostModel postData = PostModel();
-                          titleInputController.text = postData.title;
-                          String content = await controller.getText();
-                          String title = titleInputController.text;
-                          if (postData.mainMessage != content || postData.title != title) {
-                            EditPageModel().editorExitCheck();
-                          } else {
-                            RouteOptions.pop();
-                          }
-                        },
-                        title: "文章編輯",
-                        rightWidget: GestureDetector(
-                          onTap: () async {
-                            await controller.getText().then(
-                              (content) {
-                                if (titleInputController.text == "" || content == "") {
-                                  EditPageModel().createPostCheck(titleInputController.text, content);
-                                } else {
-                                  PostViewModel(context: postContext).createPost(
-                                    title: titleInputController.text,
-                                    msg: content,
-                                    type: context.read<PostProvider>().choicedPostType.type,
-                                  );
-                                  RouteOptions.pop();
-                                }
-                              },
-                            );
-                          },
-                          child: Container(
-                            alignment: Alignment.centerRight,
-                            margin: const EdgeInsets.only(right: 10),
-                            width: 80,
-                            height: 35,
-                            child: const Text("新增"),
-                          ),
-                        ),
-                      ),
-
-                      ///タイトル、掲示板、文章編集
-                      Expanded(
-                        child: editorContent(
-                          allPostBoradType: allPostBoradType,
-                          editorType: editorType,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-    );
+  bool needWaitOpenPage() {
+    return true;
   }
 
-  ///タイトル、掲示板、文章編集
-  Widget editorContent({BuildContext? postContext, required List<PostBoard> allPostBoradType, required String editorType}) {
-    return Builder(builder: (context) {
-      PostModel postData = PostModel();
-      if (postContext != null) {
-        postData = postContext.read<BaseAPIListProvider<PostModel>>().choiceData!;
-      }
-
-      titleInputController.text = postData.title;
-      return Column(
+  @override
+  Widget build(WidgetRef ref) {
+    return CommonScaffold(
+      type: PageType.main,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          LabelInput(title: '標題', textController: titleInputController),
-          const SizedBox(height: 10),
-          Builder(
-            builder: (context) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: [
-                    const Text("看板"),
-                    const SizedBox(width: 10),
-                    IgnorePointer(
-                      ignoring: editorType == "update",
-                      child: DropdownButton(
-                        value: allPostBoradType.contains(context.select((PostProvider value) => value.choicedPostType))
-                            ? context.select((PostProvider value) => value.choicedPostType)
-                            : null,
-                        icon: Icon(
-                          Icons.keyboard_arrow_down,
-                          color: editorType == "update" ? Colors.grey : Colors.black,
-                        ),
-                        items: allPostBoradType.map((PostBoard items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(
-                              items.name,
-                              style: TextStyle(
-                                color: editorType == "update" ? Colors.grey : Colors.black,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          context.read<PostProvider>().postEditBoardTypeOnChange(value as PostBoard);
-                        },
-                      ),
-                    ),
-                  ],
+          BaseTopBar(
+            leftWidget: GestureDetector(
+              onTap: () {
+                closePage();
+              },
+              child: Container(
+                width: ScreenSize.fitPxWidth(40),
+                height: ScreenSize.fitPxWidth(40),
+                color: Colors.transparent,
+                child: Center(
+                  child: Icon(
+                    Icons.close,
+                    size: ScreenSize.fontSize18,
+                    color: AppColors.whiteColor,
+                  ),
                 ),
-              );
-            },
+              ),
+            ),
+            rightWidget: MainBtn(
+              onPress: () async {
+                ProfileData userData = ref.watch(loginUserData);
+                String postTitle = titleController.text;
+                int postType = ref.read(postCreateChoiceBoard).type;
+
+                String postContent = await quillEditorController.getText();
+                String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
+                print("Title $postTitle Board: $postType   Message : $fomattedContent");
+
+                PostModel post = PostModel(
+                  id: 29,
+                  createdBy: userData.uid,
+                  title: postTitle,
+                  type: postType,
+                  mainMessage: fomattedContent,
+                  commentCount: 0,
+                  postTime: "2024-03-24T13:44:30.000+00:00",
+                  postUserInfo: userData,
+                );
+
+                RouteOptions.pop();
+                if (postBoard == null) {
+                  ref.read(choicedPostBoardProvider.notifier).update((state) => ref.read(postCreateChoiceBoard));
+                  PostPageByType().show(context);
+                } else {
+                  ref.read(typelistControllerProvider).scrollController.jumpTo(0);
+                  ref.read(typelistControllerProvider.notifier).addDataTofirst(post);
+                  render();
+                }
+              },
+              title: "投稿",
+            ),
           ),
-          const SizedBox(height: 10),
           Expanded(
-            child: RichTextEditor(
-              content: postData.mainMessage,
-              controller: controller,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BaseInputField(
+                    hintText: "標題",
+                    hintStyle: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize24),
+                    inputStyle: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize24),
+                    controller: titleController,
+                  ),
+                  SizedBox(height: ScreenSize.fitPxHeight(10)),
+                  PostBoardChoicedLabel(postBoard: postBoard),
+                  SizedBox(height: ScreenSize.fitPxHeight(15)),
+                  Expanded(
+                    child: RichTextEditor(
+                      content: "",
+                      controller: quillEditorController,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
-      );
-    });
+      ),
+    );
+  }
+}
+
+class PostBoardChoicedLabel extends ConsumerStatefulWidget {
+  final PostBoard? postBoard;
+
+  const PostBoardChoicedLabel({super.key, this.postBoard});
+
+  @override
+  ConsumerState<PostBoardChoicedLabel> createState() => _PostBoardChoicedLabelState();
+}
+
+class _PostBoardChoicedLabelState extends ConsumerState<PostBoardChoicedLabel> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          "看板",
+          style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+        ),
+        SizedBox(width: ScreenSize.fitPxWidth(10)),
+        widget.postBoard != null
+            ? Text(
+                widget.postBoard!.name,
+                style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize18),
+              )
+            : MainBtn(
+                onPress: () {
+                  PostBoardChoiceBottomSheet().show(context);
+                },
+                child: boardContaienr(
+                  Row(
+                    children: [
+                      Text(
+                        ref.watch(postCreateChoiceBoard).name,
+                        style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+                      ),
+                      SizedBox(width: ScreenSize.fitPxWidth(5)),
+                      Icon(
+                        FontAwesomeIcons.caretDown,
+                        size: ScreenSize.fontSize16,
+                        color: AppColors.whiteColor,
+                      )
+                    ],
+                  ),
+                )),
+      ],
+    );
+  }
+
+  Widget boardContaienr(Widget child) {
+    return Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: ScreenSize.fitPxHeight(5),
+          vertical: ScreenSize.fitPxHeight(1),
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: AppColors.greyColor98,
+        ),
+        child: child);
+  }
+}
+
+class PostBoardChoiceBottomSheet extends BaseBottomSheet {
+  FixedExtentScrollController scrollController = FixedExtentScrollController();
+  List<PostBoard> item = [];
+  @override
+  double buildHeight() {
+    return 0.3;
+  }
+
+  @override
+  Future<void> initState(WidgetRef ref) async {
+    item = ref.read(allPostBoardListData.notifier).state;
+
+    int choicedItemsIndex = item.indexWhere((element) => element.id == ref.read(postCreateChoiceBoard.notifier).state.id);
+
+    if (choicedItemsIndex != -1) {
+      scrollController.jumpToItem(choicedItemsIndex);
+    }
+
+    render();
+  }
+
+  @override
+  Widget build(WidgetRef ref) {
+    return CupertinoPicker(
+      scrollController: scrollController,
+      itemExtent: 50,
+      onSelectedItemChanged: (int index) {
+        ref.read(postCreateChoiceBoard.notifier).update((state) => item[index]);
+        render();
+      },
+      children: item
+          .map(
+            (e) => Center(
+              child: Text(
+                e.name,
+                style: TextStyle(color: AppColors.whiteColor),
+              ),
+            ),
+          )
+          .toList(),
+    );
   }
 }

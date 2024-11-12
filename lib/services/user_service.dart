@@ -7,14 +7,41 @@ import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/services/api_client.dart';
 
 import '../models/user_model.dart';
-import '../pageManager/setting/route_controller.dart';
 
 ///ユーザAPIサービス
 class UserService extends ApiClient {
   UserService() : super(overrideIp: "$ip:$port/user");
 
-  Future<List<LoginUser>> getAllUserData(int page, int size, {required String userUid, required List<String> filterSkill}) async {
-    List<LoginUser> users = [];
+  Future<List<ProfileData>> getADUserData(
+    int size, {
+    required String userUid,
+  }) async {
+    List<ProfileData> users = [];
+
+    try {
+      Map<String, dynamic> params = {
+        'size': '$size',
+        'userUid': userUid,
+      };
+
+      String responseData = await apiGet('/getADUserData', paramters: params);
+
+      print("getADUserData usersData: $responseData");
+
+      users = await handleResponse<ProfileData>(
+        responseData,
+        isList: true,
+        model: ProfileData.toModel,
+      );
+    } catch (e) {
+      onRequestFailed();
+    }
+    return users;
+  }
+
+  Future<List<ProfileData>> getAllUserData(int page, int size,
+      {required String userUid, required List<String> filterSkill}) async {
+    List<ProfileData> users = [];
 
     try {
       Map<String, dynamic> params = {
@@ -28,10 +55,10 @@ class UserService extends ApiClient {
 
       print("getAllUserData usersData: $responseData");
 
-      users = await handleResponse<LoginUser>(
+      users = await handleResponse<ProfileData>(
         responseData,
         isList: true,
-        model: LoginUser.toModel,
+        model: ProfileData.toModel,
       );
     } catch (e) {
       onRequestFailed();
@@ -39,8 +66,8 @@ class UserService extends ApiClient {
     return users;
   }
 
-  Future<List<LoginUser>> requestUserDataByNamePart(int page, int size, {required String userName}) async {
-    List<LoginUser> users = [];
+  Future<List<ProfileData>> requestUserDataByNamePart(int page, int size, {required String userName}) async {
+    List<ProfileData> users = [];
 
     try {
       Map<String, dynamic> params = {
@@ -53,10 +80,10 @@ class UserService extends ApiClient {
 
       print("requestUserDataByNamePart usersData: $responseData");
 
-      users = await handleResponse<LoginUser>(
+      users = await handleResponse<ProfileData>(
         responseData,
         isList: true,
-        model: LoginUser.toModel,
+        model: ProfileData.toModel,
       );
     } catch (e) {
       onRequestFailed();
@@ -67,19 +94,19 @@ class UserService extends ApiClient {
   ///MARK: ユーザのデータ取得
   ///Param,
   ///loginedUserUID: FirebaseログインしたユーザUID
-  Future<LoginUser> requestGetUserData(String loginedUserUID) async {
-    LoginUser userdata = LoginUser(uid: "-1");
+  Future<ProfileData> requestGetUserData(String loginedUserUID) async {
+    ProfileData userdata = ProfileData(uid: "-1");
     try {
       String responseData = await apiGet('/$loginedUserUID');
 
       print("Logined User Data :  $responseData");
 
-      userdata = await handleResponse<LoginUser>(
+      userdata = await handleResponse<ProfileData>(
         responseData,
-        model: LoginUser.toModel,
+        model: ProfileData.toModel,
       );
     } catch (e) {
-      onRequestFailed(onFailedFunc: () => RouteOptions.popUntilToHome());
+      // onRequestFailed(onFailedFunc: () => RouteOptions.popUntilToHome());
     }
 
     return userdata;

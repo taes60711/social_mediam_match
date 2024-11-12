@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/theme_style.dart';
 
 import '../../CustomBouncingScrollPhysics.dart';
-
-import 'style/style_config.dart';
 
 ScrollController singleScollController = ScrollController();
 
@@ -29,7 +25,6 @@ class BackgroundWidget extends StatelessWidget {
       singleScollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.bounceIn);
     }
     return Scaffold(
-      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       body: GestureDetector(
         onTap: () {
@@ -43,12 +38,7 @@ class BackgroundWidget extends StatelessWidget {
                   child: Container(
                     width: ScreenSize.width,
                     height: ScreenSize.height,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(backGround),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    decoration: BoxDecoration(),
                     child: child,
                   ),
                 ),
@@ -59,12 +49,7 @@ class BackgroundWidget extends StatelessWidget {
                 child: Container(
                   width: ScreenSize.width,
                   height: ScreenSize.height,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(backGround),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  decoration: BoxDecoration(),
                   child: child,
                 ),
               ),
@@ -73,9 +58,23 @@ class BackgroundWidget extends StatelessWidget {
   }
 }
 
+enum PageType {
+  main,
+  other,
+  window,
+}
+
+class SafeAreaViewModel {
+  final bool top;
+  final bool bottom;
+  SafeAreaViewModel({this.top = false, this.bottom = false});
+}
+
 class CommonScaffold extends ConsumerStatefulWidget {
   final Widget child;
-  const CommonScaffold({super.key, required this.child});
+  final PageType type;
+  final Color? bgColor;
+  const CommonScaffold({super.key, required this.child, this.type = PageType.other, this.bgColor});
 
   @override
   ConsumerState<CommonScaffold> createState() => _CommonScaffoldState();
@@ -84,17 +83,30 @@ class CommonScaffold extends ConsumerStatefulWidget {
 class _CommonScaffoldState extends ConsumerState<CommonScaffold> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ThemeStyle.bgColor,
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            Expanded(child: widget.child),
-            SizedBox(height: Platform.isIOS ? 30 : 12),
-          ],
+    return Material(
+      color: widget.bgColor ?? ThemeStyle.bgColor,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: SafeArea(
+          top: getSafeArea().top,
+          bottom: getSafeArea().bottom,
+          child: Container(child: widget.child),
         ),
       ),
     );
+  }
+
+  SafeAreaViewModel getSafeArea() {
+    switch (widget.type) {
+      case PageType.main:
+        return SafeAreaViewModel(bottom: true, top: true);
+      case PageType.other:
+        return SafeAreaViewModel(bottom: false, top: true);
+      case PageType.window:
+        return SafeAreaViewModel(bottom: false, top: false);
+    }
   }
 }

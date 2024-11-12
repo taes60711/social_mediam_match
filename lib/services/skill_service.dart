@@ -6,6 +6,7 @@ import 'api_client.dart';
 class SkillService extends ApiClient {
   SkillService() : super(overrideIp: "$ip:$port/skill");
 
+  ///MARK:  Appの全てスキル種類
   Future<List<RequestSkillListData>> requestSkillList() async {
     List<RequestSkillListData> requestSkillListData = [];
     try {

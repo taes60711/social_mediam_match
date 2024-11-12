@@ -1,276 +1,141 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-import 'package:social_mediam_match/models/course_model.dart';
-import 'package:social_mediam_match/models/user_model.dart';
-import 'package:social_mediam_match/provider/corse_view_model.dart';
-import 'package:social_mediam_match/services/course_service.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_utilites.dart';
 
-import '../../../global.dart';
-import '../../../pagemanager/enum/route_path.dart';
-import '../../../pagemanager/setting/route_controller.dart';
+import 'package:social_mediam_match/components/utilities/endDrawers/base_skill_filter_page.dart';
+import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/services/course_service.dart';
+import '../../../global/home_global_view_model.dart';
+import '../../../models/course_model.dart';
+import '../../../models/skill_model.dart';
+import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
-import '../../../provider/home/skill_change_view_model.dart';
+import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
-import '../../utilities/apiListView/base_api_list_provider.dart';
-import '../../utilities/basic_top_bar.dart';
-import '../../utilities/endDrawers/course_detail_end_drawer.dart';
-import '../../utilities/endDrawers/course_filter_end_drawer.dart';
-import '../../utilities/endDrawers/user_detail_end_drawer.dart';
+import '../../utilities/background_widget.dart';
 import '../../utilities/loading.dart';
 import '../../utilities/style/screen_size.dart';
-import '../../utilities/user_icon.dart';
 
-class CoursePage extends StatelessWidget {
-  const CoursePage({super.key});
+final couseFilteredSkillList = StateProvider<List<RequestSkillListData>>((ref) {
+  return [];
+});
+
+final courserMainPageListPorver = StateNotifierProvider<APIListControllerNotifier, APIListController>(
+  (ref) => APIListControllerNotifier(APIListController()),
+);
+
+final choicedCourseProvider = StateProvider<CourseModel>((ref) {
+  return CourseModel(courseCreateduserInfo: ProfileData());
+});
+
+class CourseMainPage extends ConsumerStatefulWidget {
+  const CourseMainPage({super.key});
+
+  @override
+  ConsumerState<CourseMainPage> createState() => _CourseMainPageState();
+}
+
+class _CourseMainPageState extends ConsumerState<CourseMainPage> {
+  @override
+  void initState() {
+    Future.delayed(Duration.zero).then((value) {
+      ref.read(couseFilteredSkillList.notifier).update((state) => []);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return StatefulWrapper(
-      onInit: () async {
-        courseContext = context;
-        await SkillChangeViewModel(context: context).init();
-      },
-      child: Scaffold(
-        backgroundColor: AppColors.bgColor,
-        body: Stack(
-          children: [
-            _mainBuild(context),
-            courseDetailEndDrawer(),
-            userDetailEndDrawer(),
-            courseFilterEndDrawer(),
-          ],
-        ),
+    ProfileData userData = ref.watch(loginUserData);
+    return CommonScaffold(
+      type: PageType.main,
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 50 : 0,
+              ),
+              Expanded(
+                child: APIListWidget(
+                    apiFunc: (int page, int size) {
+                      return CourseService().getAllCourses(userData.uid, page, size);
+                    },
+                    listControllerProvider: courserMainPageListPorver,
+                    haveBottomBar: true,
+                    loadingWidget: const CourseLoading(),
+                    itemChild: (data, index) {
+                      return CourseUtilites().courseItemContent(context, ref, data: data);
+                    }),
+              ),
+            ],
+          ),
+          AnimatedPositioned(
+            top: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 3 : -45,
+            left: 0,
+            right: 0,
+            duration: const Duration(milliseconds: 300),
+            child: _buildSearchBar(ref, () => setState(() {}), context),
+          ),
+        ],
       ),
     );
   }
 }
 
-Widget _mainBuild(BuildContext context) {
-  return Column(
-    children: [
-      BaseTopBar(
-        leftWidget: Container(),
-        rightWidget: GestureDetector(
-          onTap: () {
-            openCourseFilterEndDrawer(context: context);
-          },
-          child: const Icon(FontAwesomeIcons.sliders),
+Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+    decoration: BoxDecoration(
+      color: AppColors.greyColor57,
+      borderRadius: BorderRadius.circular(5),
+    ),
+    width: ScreenSize.width,
+    height: 36,
+    child: Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Icon(Icons.search, color: AppColors.whiteColor),
         ),
-      ),
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15),
-          child: APIListView<CourseModel>(
-            size: 6,
-            apiFunc: (int page, int size) {
-              LoginUser userData = context.read<UserProvider>().userData;
-              return CourseService().getAllCourses(userData.uid, page, size);
-            },
-            listType: ListType.grid,
-            providerList: context.watch<BaseAPIListProvider<CourseModel>>().listData,
-            customFloatbutton: GestureDetector(
-              onTap: () {
-                RouteOptions.pushTo(RoutePath.courseEditPage, arguments: {
-                  "courseData": null,
-                  "context": context,
-                });
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  Icons.edit,
-                  size: 18,
-                  color: normalBgColor,
-                ),
-              ),
-            ),
-            itemChild: (List<CourseModel> data, int index) {
-              return GestureDetector(
-                onTap: () {
-                  CourseViewModel(courseContext: context).courseDetailInit(openedCourse: data[index]);
-                },
-                child: Container(
-                  height: 260,
-                  margin: EdgeInsets.only(bottom: 5),
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      /// title
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 50,
-                              child: Text(
-                                data[index].title,
-                                style: TextStyle(fontSize: 16),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "類別: 前端",
-                                  style: TextStyle(fontSize: 12, color: normalBgColor2),
-                                ),
-                                Text(
-                                  "難度: ${data[index].needLevel}",
-                                  style: TextStyle(fontSize: 12, color: normalBgColor2),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 16,
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: data[index].courseLearningSkills.map((e) {
-                                    return Container(
-                                      decoration: BoxDecoration(color: normalBgColor2, borderRadius: BorderRadius.circular(5)),
-                                      margin: const EdgeInsets.only(right: 2),
-                                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                                      child: Text(
-                                        e,
-                                        style: const TextStyle(color: Colors.white, fontSize: 10),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "課程大綱: ",
-                              style: TextStyle(fontSize: 14, color: normalBgColor2),
-                            ),
-                            SizedBox(
-                              height: 45,
-                              child: Text(
-                                data[index].content,
-                                style: TextStyle(fontSize: 13, color: hintTextColor),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Text(
-                              "課程前需要: ",
-                              style: TextStyle(fontSize: 14, color: normalBgColor2),
-                            ),
-                            SizedBox(
-                              height: 25,
-                              child: Text(
-                                data[index].beforeNeed,
-                                style: TextStyle(color: hintTextColor, fontSize: 12),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 5),
-                        height: 0.3,
-                        width: ScreenSize.width,
-                        color: hintTextColor,
-                      ),
-                      const Expanded(child: SizedBox(height: 1)),
-                      GestureDetector(
-                        onTap: () {
-                          openUserDetailEndDrawer(context: context, otherUserData: data[index].courseCreateduserInfo);
-                        },
-                        child: Container(
-                          color: Colors.transparent,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  const Text(
-                                    "作成者:",
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                                    child: UserIcon(
-                                      iconSize: 25,
-                                      image: data[index].courseCreateduserInfo.image,
-                                    ),
-                                  ),
-                                  SizedBox(width: 5),
-                                  Container(
-                                    width: 30,
-                                    alignment: Alignment.centerLeft,
-                                    color: Colors.transparent,
-                                    child: const Icon(
-                                      FontAwesomeIcons.arrowUpRightFromSquare,
-                                      color: Colors.black87,
-                                      size: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "最終更新日:${data[index].postTime}",
-                                    style: TextStyle(fontSize: 11, color: hintTextColor),
-                                  ),
-                                  const Expanded(child: SizedBox(width: 1)),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8, bottom: 5),
-                                    child: Icon(
-                                      data[index].isPublic || data[index].signUpStatus == "added"
-                                          ? FontAwesomeIcons.unlock
-                                          : FontAwesomeIcons.lock,
-                                      size: 12,
-                                      color: data[index].isPublic ? normalBgColor : Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-            loadingBuilder: () {
-              return const PostLoading();
-            },
+        Expanded(
+          child: BaseInputField(
+            hintText: "搜尋",
+            controller: TextEditingController(),
           ),
         ),
-      ),
-    ],
+        const Expanded(child: SizedBox(width: 1)),
+        GestureDetector(
+          onTap: () {
+            BaseSkillFilterPage(
+              viewRender: render,
+              filteredSkillList: couseFilteredSkillList,
+              searchFunc: (choicedFilterSkillList) async {
+                List<String> filteredSkillIdList = choicedFilterSkillList.map((e) => e.id.toString()).toList();
+                ProfileData userData = ref.watch(loginUserData);
+                await ref.read(courserMainPageListPorver.notifier).replaceApi((page, size) {
+                  return CourseService().getAllCourses(userData.uid, page, size, skillId: filteredSkillIdList);
+                });
+
+                ref.read(couseFilteredSkillList.notifier).update((state) => choicedFilterSkillList);
+              },
+            ).show(context);
+          },
+          child: Container(
+            width: 50,
+            height: 40,
+            color: Colors.transparent,
+            child: Icon(
+              FontAwesomeIcons.sliders,
+              size: ScreenSize.fontSize14,
+              color: AppColors.whiteColor.withOpacity(.8),
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }

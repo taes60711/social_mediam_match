@@ -16,7 +16,7 @@ class BaseTopBar extends StatelessWidget {
     this.backFunc,
     this.title = "",
     this.centerWidget,
-    this.rightWidget = const SizedBox(),
+    this.rightWidget,
     this.padding = const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
   });
 
@@ -31,19 +31,28 @@ class BaseTopBar extends StatelessWidget {
               backFunc != null ? backFunc!() : RouteOptions.pop();
             },
             child: Container(
-              width: 35,
-              height: 35,
+              width: ScreenSize.fitPxWidth(40),
+              height: ScreenSize.fitPxWidth(40),
               color: Colors.transparent,
               child: Center(
                 child: Icon(
                   Icons.arrow_back_ios,
-                  color: normalBgColor2,
+                  size: ScreenSize.fontSize14,
+                  color: AppColors.whiteColor,
                 ),
               ),
             ),
           ),
-      centerWidget ?? Text(title),
-      rightWidget
+      centerWidget ??
+          Text(
+            title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: AppColors.whiteColor,
+            ),
+          ),
+      rightWidget ?? Container(),
     ];
 
     return GestureDetector(
@@ -63,16 +72,26 @@ class BaseTopBar extends StatelessWidget {
                   child: widgetList[0],
                 ),
               ),
-              Align(
-                alignment: list[1],
-                child: widgetList[1],
-              ),
-              Expanded(
+              Container(
+                constraints: BoxConstraints(
+                  maxWidth: ScreenSize.fitPxWidth(260),
+                ),
                 child: Align(
-                  alignment: list[2],
-                  child: widgetList[2],
+                  alignment: list[1],
+                  child: widgetList[1],
                 ),
               ),
+              rightWidget != null
+                  ? Align(
+                      alignment: list[2],
+                      child: widgetList[2],
+                    )
+                  : Expanded(
+                      child: Align(
+                        alignment: list[2],
+                        child: widgetList[2],
+                      ),
+                    ),
             ],
           ),
         ),

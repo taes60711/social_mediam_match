@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../provider/course_provider.dart';
 import '../../home/coursePage/course_edit_page/course_edit_skill_choice.dart';
 
-import 'custom_end_drawer.dart';
+import 'base_end_drawer.dart';
 
 enum CourseEditSkillChoiceEndDrawerType {
   open,

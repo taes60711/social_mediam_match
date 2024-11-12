@@ -28,7 +28,7 @@ class PostModel {
   int good;
   int type;
   int commentCount;
-  LoginUser postUserInfo;
+  ProfileData postUserInfo;
   PostModel({
     this.id = -1,
     this.createdBy = "",
@@ -39,8 +39,8 @@ class PostModel {
     this.good = 0,
     this.type = 0,
     this.commentCount = 0,
-    LoginUser? postUserInfo,
-  }) : postUserInfo = postUserInfo ?? LoginUser();
+    ProfileData? postUserInfo,
+  }) : postUserInfo = postUserInfo ?? ProfileData();
 
   factory PostModel.toMap(dynamic json) {
     return PostModel(
@@ -53,7 +53,7 @@ class PostModel {
       type: json['type'],
       commentCount: json['count'],
       postTime: dateFormatted(json['postTime']),
-      postUserInfo: LoginUser.toModel(json['user']),
+      postUserInfo: ProfileData.toModel(json['user']),
     );
   }
 
@@ -72,7 +72,7 @@ class PostModel {
   }
 
   ///My投稿のAPIからUserDataなし場合使用する
-  factory PostModel.noUserDataPostAddUserData({required PostModel noUserDatPost, required LoginUser userData}) {
+  factory PostModel.noUserDataPostAddUserData({required PostModel noUserDatPost, required ProfileData userData}) {
     PostModel addedUserDataPost = noUserDatPost;
     addedUserDataPost.postUserInfo = userData;
     return addedUserDataPost;
@@ -92,6 +92,23 @@ class PostModel {
     }
     String formattedTime = durationTime;
     return formattedTime;
+  }
+
+  PostModel copyWith({
+    PostModel? data,
+  }) {
+    return PostModel(
+      id: data?.id ?? id,
+      createdBy: data?.createdBy ?? createdBy,
+      title: data?.title ?? title,
+      mainMessage: data?.mainMessage ?? mainMessage,
+      postTime: data?.postTime ?? postTime,
+      viewed: data?.viewed ?? viewed,
+      good: data?.good ?? good,
+      type: data?.type ?? type,
+      commentCount: data?.commentCount ?? commentCount,
+      postUserInfo: data?.postUserInfo ?? postUserInfo,
+    );
   }
 }
 
@@ -118,7 +135,7 @@ class PostCommentTextEditorModel {
   String userUid;
   String message;
   String postTime;
-  LoginUser commentUserInfo;
+  ProfileData commentUserInfo;
   bool isEditor;
   TextEditingController textEditingController;
 
@@ -162,7 +179,7 @@ class PostCommentTextEditorModel {
       userUid: json['userUid'],
       message: json['message'],
       postTime: formattedTime,
-      commentUserInfo: LoginUser.toModel(json['user']),
+      commentUserInfo: ProfileData.toModel(json['user']),
       isEditor: false,
       textEditingController: controller,
     );

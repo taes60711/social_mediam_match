@@ -1,73 +1,83 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/account/welcome_page.dart';
 import 'package:social_mediam_match/pageManager/home.dart';
-import 'package:social_mediam_match/components/utilities/background_widget.dart';
-import 'package:social_mediam_match/components/utilities/loading.dart';
-import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
+import 'package:social_mediam_match/services/skill_service.dart';
+import '../../global/chat_ws_model.dart';
 
+import '../../models/post_model.dart';
+import '../../models/skill_model.dart';
 import '../../models/user_model.dart';
 import '../../provider/account/user_provider.dart';
 import '../../provider/Initial/initial_provider.dart';
 
-import '../utilities/style/screen_size.dart';
-import '../utilities/style/style_config.dart';
+import '../../provider/post/post_provider.dart';
+import '../../services/post_service.dart';
+import '../utilities/style/theme_style.dart';
+import 'splash_screen.dart';
 
-class Initialpage extends StatelessWidget {
+final allSkillListData = StateProvider<List<RequestSkillListData>>((ref) => []);
+
+class Initialpage extends ConsumerStatefulWidget {
   const Initialpage({super.key});
 
   @override
+  ConsumerState<Initialpage> createState() => _InitialpageState();
+}
+
+class _InitialpageState extends ConsumerState<Initialpage> {
+  bool isFirst = false;
+  bool initFinish = false;
+
+  @override
+  void initState() {
+    splashStart();
+    allFuncinit();
+
+    super.initState();
+  }
+
+  Future<void> splashStart() async {
+    await Future.delayed(const Duration(seconds: 3));
+    isFirst = true;
+    setState(() {});
+  }
+
+  Future<void> allFuncinit() async {
+    await Future.delayed(Duration.zero);
+    ThemeStyle().init(ref);
+
+    /// ユーザデータ取得
+    ProfileData userData = ref.watch(loginUserData);
+
+    /// チャットルームWS初始化
+    ChatWSModel().init(userData.uid);
+
+    /// request All Skill
+    List<RequestSkillListData> requestListData = await SkillService().requestSkillList();
+    ref.read(allSkillListData.notifier).update((state) => requestListData);
+
+    /// request TopPost
+    List<PostModel> topPosts = await PostService().getPostByType(0, 3, -1);
+    ref.read(topPostProvider.notifier).update((state) => topPosts);
+
+    /// request All PostBoard
+    List<PostBoard> allPostBoard = await PostService().getAllPostBoard();
+    ref.read(allPostBoardListData.notifier).update((state) => allPostBoard);
+    initFinish = true;
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
-    bool isfirstEnterApp = context.select((InitialProvider value) => value.isfirstEnterApp);
-    LoginUser userData = context.watch<UserProvider>().userData;
-    bool isLoginLoading = context.select((UserProvider value) => value.isLoading);
-
-    Widget component;
-
-    ///MARK: テスト用
-
-    if (isfirstEnterApp) {
-      component = splashScreen(context);
-    } else {
-      if (isLoginLoading) {
-        component = const Scaffold(
-          backgroundColor: Colors.white,
-          body: Loading(),
-        );
-      } else {
-        if (userData.uid != "-1") {
-          component = const ProviderScope(
-            child: Home(),
-          );
-        } else {
-          component = const WelcomePage();
-        }
-      }
+    Widget component = splashScreen(context);
+    if (isFirst && initFinish) {
+      component = const Home();
     }
 
     return component;
   }
-}
-
-Widget splashScreen(BuildContext context) {
-  return StatefulWrapper(
-    onInit: () => _enterApp(context),
-    child: BackgroundWidget(
-      isSafeArea: false,
-      child: Center(
-        child: SizedBox(
-          width: ScreenSize.width,
-          child: AspectRatio(
-            aspectRatio: 16.0 / 9.0,
-            child: Image.asset(logoImg),
-          ),
-        ),
-      ),
-    ),
-  );
 }
 
 Future<void> _enterApp(BuildContext context) async {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/utilities/endDrawers/skill_change_filter_end_drawer.dart';
 
 import '../../enum/skill_type.dart';
 import '../../models/skill_model.dart';
@@ -7,7 +6,7 @@ import '../../models/skill_model.dart';
 class SkillChangeProvider extends ChangeNotifier {
   List<RequestSkillListData> filteredSkill = [];
   List<RequestSkillListData> tempChoicedSkill = [];
-  SkillChangeEndDrawerType endDrawerOpenInfo = SkillChangeEndDrawerType.close;
+  // SkillChangeEndDrawerType endDrawerOpenInfo = SkillChangeEndDrawerType.close;
   TextEditingController nameFilterController = TextEditingController();
   TextEditingController filterController = TextEditingController();
   Map<SkillType, List<RequestSkillListData>> skillMap = {
@@ -77,10 +76,10 @@ class SkillChangeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeEndDrawerStatus(SkillChangeEndDrawerType status) {
-    endDrawerOpenInfo = status;
-    notifyListeners();
-  }
+  // void changeEndDrawerStatus(SkillChangeEndDrawerType status) {
+  //   endDrawerOpenInfo = status;
+  //   notifyListeners();
+  // }
 
   void onChangeSkillFilter(RequestSkillListData choicedSkill) {
     if (filteredSkill.any((element) => element == choicedSkill)) {

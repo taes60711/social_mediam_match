@@ -20,7 +20,7 @@ class SkillMapProvider extends ChangeNotifier {
   };
   TextEditingController filterController = TextEditingController();
 
-  Future<void> userSkillList({LoginUser? userData}) async {
+  Future<void> userSkillList({ProfileData? userData}) async {
     List<RequestSkillListData> requestSkillListData = await SkillService().requestSkillList();
 
     List<SkillModel> userSkillInfoList = [];

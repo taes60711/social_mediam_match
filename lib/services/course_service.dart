@@ -45,8 +45,7 @@ class CourseService extends ApiClient {
   }
 
   /// 全てコース
-  Future<List<CourseModel>> getAllCourses(String userUID, int page, int size,
-      {List<String>? skillId}) async {
+  Future<List<CourseModel>> getAllCourses(String userUID, int page, int size, {List<String>? skillId}) async {
     List<CourseModel> requestAllCourseData = [];
 
     Map<String, dynamic> paramters = {
@@ -123,7 +122,7 @@ class CourseService extends ApiClient {
 
   /// コースIDでコース内容を取得する
   Future<CourseModel> getCourseBycourseId(String userUID, int courseId) async {
-    CourseModel requestAddedCourseData = CourseModel(courseCreateduserInfo: LoginUser());
+    CourseModel requestAddedCourseData = CourseModel(courseCreateduserInfo: ProfileData());
 
     Map<String, dynamic> paramters = {
       'id': "$courseId",
@@ -144,8 +143,7 @@ class CourseService extends ApiClient {
   }
 
   /// コース管理
-  Future<List<AddedCourseMemberModel>> getCourseAddedMember(
-      int page, int size, int courseId) async {
+  Future<List<AddedCourseMemberModel>> getCourseAddedMember(int page, int size, int courseId) async {
     List<AddedCourseMemberModel> requestCourseAddedMemberData = [];
 
     Map<String, dynamic> paramters = {

@@ -14,7 +14,7 @@ class NotificationModel {
   int? courseId;
   int? roomId;
   DateTime postTime;
-  LoginUser sendNotificationuserInfo;
+  ProfileData sendNotificationuserInfo;
 
   NotificationModel({
     required this.id,
@@ -43,7 +43,7 @@ class NotificationModel {
       postId: json['postId'],
       courseId: json['courseId'],
       postTime: DateTime.parse(json['postTime']),
-      sendNotificationuserInfo: LoginUser.toModel(json['user']),
+      sendNotificationuserInfo: ProfileData.toModel(json['user']),
     );
   }
 
@@ -72,7 +72,7 @@ class NotificationModel {
       isRead: false,
       message: "",
       postTime: DateTime.now(),
-      sendNotificationuserInfo: LoginUser(),
+      sendNotificationuserInfo: ProfileData(),
     );
   }
 }

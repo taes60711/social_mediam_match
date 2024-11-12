@@ -2,11 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
-import 'pageManager/setting/route_manager.dart';
+import 'components/Initial/Initial_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,16 @@ void main() async {
     ],
   );
 
-  runApp(mainWidget);
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('zh', 'TW')], //const [Locale('zh', 'TW'), Locale('en', 'US'), Locale('ja', 'JP')],
+      fallbackLocale: const Locale('zh', 'TW'), //const Locale('en', 'US'),
+      path: 'assets/langs',
+      child: const ProviderScope(
+        child: MyApp(),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -39,6 +49,9 @@ class MyApp extends StatelessWidget {
       ),
       theme: ThemeData(
         fontFamily: 'GenJyu',
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(fontWeight: FontWeight.w500),
+        ),
         useMaterial3: false,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         pageTransitionsTheme: const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
@@ -46,7 +59,9 @@ class MyApp extends StatelessWidget {
           TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
         }),
       ),
-      routes: routeManager,
+      routes: <String, WidgetBuilder>{
+        "/": (BuildContext context) => const Initialpage(),
+      },
     );
   }
 }

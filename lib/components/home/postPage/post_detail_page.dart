@@ -1,177 +1,190 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:social_mediam_match/provider/post/post_view_model.dart';
-
+import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
+import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../../models/post_model.dart';
+import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
-import '../../../provider/post/post_comment_provider.dart';
 import '../../../provider/post/post_provider.dart';
-import '../../utilities/endDrawers/user_detail_end_drawer.dart';
-import '../../utilities/rich_text_view.dart';
-import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/apiListView/api_list_controller.dart';
+import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/user_icon.dart';
+import 'post_comment_page.dart';
 
-class PostDetailPage extends StatelessWidget {
-  const PostDetailPage({super.key});
+class PostDetailPage extends BaseEndDrawer {
+  final StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController;
+  final int dataIndex;
+
+  PostDetailPage({required this.dataIndex, this.postListController});
+  @override
+  bool needWaitOpenPage() {
+    return true;
+  }
 
   @override
-  Widget build(BuildContext context) {
-    PostModel viewChoicedPost = context.watch<PostCommentProvider>().viewChoicedPost;
-    print("postDetailPage");
-    return Container(
-      color: Colors.white,
-      height: ScreenSize.height,
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 10, right: 15, left: 15),
+  Widget build(ref) {
+    PostModel choiceData = ref.watch(choicedPostProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ///タイトルバー
+        BaseTopBar(
+          backFunc: () => closePage(),
+          title: choiceData.title,
+        ),
+
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: ScreenSize.width,
-                    padding: const EdgeInsets.only(top: 15, bottom: 8, left: 8, right: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3),
-                      color: const Color.fromARGB(255, 236, 157, 120),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                openUserDetailEndDrawer(context: context, otherUserData: viewChoicedPost.postUserInfo);
-                              },
-                              child: UserIcon(
-                                iconSize: 35,
-                                image: viewChoicedPost.postUserInfo.image,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              viewChoicedPost.postUserInfo.name != ""
-                                  ? viewChoicedPost.postUserInfo.name ?? ""
-                                  : viewChoicedPost.postUserInfo.email,
-                              style: TextStyle(fontSize: 12, color: normalTextColor),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          "${viewChoicedPost.postTime}${tr("skExChpage_beforDays")}",
-                          style: TextStyle(fontSize: 12, color: normalTextColor),
-                        ),
-                      ],
-                    ),
+                  /// ユーザデータ
+                  Row(
+                    children: [
+                      UserIcon(
+                        iconSize: ScreenSize.fitPxWidth(30),
+                        image: choiceData.postUserInfo.image,
+                      ),
+                      SizedBox(width: ScreenSize.fitPxWidth(5)),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            choiceData.postUserInfo.name ?? "",
+                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                          ),
+                          Text(
+                            choiceData.postTime,
+                            style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  RichTextView(content: viewChoicedPost.mainMessage),
-                  const SizedBox(height: 10),
-                  Container(margin: const EdgeInsets.symmetric(vertical: 6), height: 0.2, color: normalBgColor2),
+
+                  /// MainMessage
+                  RichTextView(content: choiceData.mainMessage),
+                  SizedBox(height: ScreenSize.fitPxWidth(10)),
+
+                  ///文章インフォ
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(5)),
                     child: Row(
                       children: [
-                        Builder(builder: (context) {
-                          bool isGood = context.select((PostProvider value) => value.isGood);
-                          return GestureDetector(
-                            onTap: () {
-                              PostViewModel(context: context).updatePostGood(isGood: isGood, viewChoicedPost: viewChoicedPost);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              child: Center(
-                                child: Container(
-                                  padding: const EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(width: .7, color: normalBgColor),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Icon(
-                                    isGood ? FontAwesomeIcons.solidThumbsUp : FontAwesomeIcons.thumbsUp,
-                                    color: normalBgColor,
-                                    size: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                        Builder(builder: (context) {
-                          int choicedPostGoodCount = context.select((PostCommentProvider value) => value.viewChoicedPost.good);
-                          return Text(
-                            "$choicedPostGoodCount",
-                            style: TextStyle(
-                              color: normalBgColor,
-                            ),
-                          );
-                        }),
-                      ],
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      PostViewModel(context: context).showPostCommentPageSheet(choicedPost: viewChoicedPost);
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "回覆 : ${viewChoicedPost.commentCount} 件",
-                          style: TextStyle(color: AppColors.normalblackColor),
+                        ///View数
+                        PostViewUtilities().iconWithText(
+                            iconData: FontAwesomeIcons.eye,
+                            iconColor: AppColors.greyColor130,
+                            text: "${choiceData.viewed}",
+                            style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                        SizedBox(width: ScreenSize.fitPxWidth(10)),
+                        PostViewUtilities().iconWithText(
+                            iconData: FontAwesomeIcons.commentDots,
+                            iconColor: AppColors.greyColor130,
+                            text: "${choiceData.commentCount}",
+                            style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                        SizedBox(width: ScreenSize.fitPxWidth(12)),
+
+                        ///いいね数
+                        GestureDetector(
+                          onTap: () {
+                            if (postListController != null) {
+                              choiceData.good++;
+                              ref.read(postListController!.notifier).editData(dataIndex, choiceData);
+                              render();
+                            }
+                          },
+                          child: PostViewUtilities().iconWithText(
+                              iconData: FontAwesomeIcons.heart,
+                              iconColor: AppColors.greyColor130,
+                              text: "${choiceData.good}",
+                              style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
                         ),
-                        Row(
-                          children: [
-                            UserIcon(
-                              iconSize: 25,
-                              image: context.watch<UserProvider>().userData.image,
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Container(
-                                height: 30,
-                                alignment: Alignment.centerLeft,
-                                decoration: BoxDecoration(color: AppColors.bgColor),
-                                child: const Padding(
-                                  padding: EdgeInsets.only(left: 5),
-                                  child: Text(
-                                    "留言",
-                                    style: TextStyle(color: Colors.grey, fontSize: 14),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: 30,
-                              margin: const EdgeInsets.only(left: 5),
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              decoration:
-                                  BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
-                              child: Center(
-                                child: Icon(
-                                  Icons.send,
-                                  size: 16,
-                                  color: normalTextColor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
+                        SizedBox(width: ScreenSize.fitPxWidth(12)),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 60),
+                  SizedBox(height: ScreenSize.fitPxHeight(10)),
                 ],
               ),
             ),
           ),
-        ],
-      ),
+        ),
+
+        ///コメント
+        Builder(builder: (context) {
+          ProfileData userData = ref.watch(loginUserData);
+          return GestureDetector(
+            onTap: () {
+              ///コメントページに遷移する
+              PostCommentPage(dataIndex: dataIndex, postListController: postListController).show(context);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: AppColors.greyColor54,
+                  ),
+                ),
+              ),
+              height: ScreenSize.fitPxHeight(65),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(12)),
+                child: Column(
+                  children: [
+                    SizedBox(height: ScreenSize.fitPxHeight(10)),
+                    Row(
+                      children: [
+                        UserIcon(
+                          iconSize: ScreenSize.fitPxHeight(25),
+                          image: userData.image,
+                        ),
+                        SizedBox(width: ScreenSize.fitPxHeight(10)),
+                        Expanded(
+                          child: Container(
+                            height: ScreenSize.fitPxHeight(30),
+                            alignment: Alignment.centerLeft,
+                            decoration: BoxDecoration(
+                              color: AppColors.greyColor57,
+                              borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(5)),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
+                              child: Text(
+                                "留言",
+                                style: TextStyle(color: AppColors.greyColor130, fontSize: 14),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: ScreenSize.fitPxWidth(12)),
+
+                        ///分享按鈕
+                        GestureDetector(
+                          onTap: () {},
+                          child: PostViewUtilities().iconWithText(
+                            iconData: FontAwesomeIcons.arrowUpRightFromSquare,
+                            iconColor: Color.fromARGB(221, 180, 179, 179),
+                            text: "分享",
+                            style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor),
+                          ),
+                        ),
+                        SizedBox(width: ScreenSize.fitPxWidth(12)),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        }),
+      ],
     );
   }
 }

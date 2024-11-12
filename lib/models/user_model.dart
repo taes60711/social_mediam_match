@@ -15,7 +15,7 @@ class UserModel {
     required this.uid,
     this.image,
     this.token,
-    this.name,
+    this.name = "",
     this.job,
     this.introduction,
     this.mainSkills,
@@ -23,13 +23,13 @@ class UserModel {
   });
 }
 
-class LoginUser extends UserModel {
+class ProfileData extends UserModel {
   String email;
   bool isEmailVerified;
   String lastLogin;
   int status;
 
-  LoginUser({
+  ProfileData({
     String uid = "-1",
     String? image,
     String? token,
@@ -53,7 +53,7 @@ class LoginUser extends UserModel {
           wantSkills: wantSkills,
         );
 
-  factory LoginUser.toModel(Map<String, dynamic> json) {
+  factory ProfileData.toModel(Map<String, dynamic> json) {
     //Map<String, dynamic> or dynamic
     List<RequestUserSkillData> mainSkills = (json["skills"] as List<dynamic>)
         .map((e) => RequestUserSkillData(name: e['name'], level: e['level'], month: e['month']))
@@ -79,7 +79,7 @@ class LoginUser extends UserModel {
       formattedTime = durationTime;
     }
 
-    return LoginUser(
+    return ProfileData(
       uid: json["uid"],
       image: json["image"],
       token: json["token"],

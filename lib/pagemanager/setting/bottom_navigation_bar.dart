@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import '../../components/utilities/style/screen_size.dart';
 import '../../components/utilities/style/style_config.dart';
-import '../../global/global_view_model.dart';
+import '../../global/home_global_view_model.dart';
 import '../enum/bottom_bar_path.dart';
 
 class BottomBar extends ConsumerStatefulWidget {
@@ -41,9 +42,9 @@ class _BottomBarState extends ConsumerState<BottomBar> {
                 leftPadding = ScreenSize.fitPxHeight(3);
               }
 
-              return GestureDetector(
-                onTap: () {
-                  GlobalViewModel().changeMainPage(pageIndex);
+              return MainBtn(
+                onPress: () {
+                  HomeGlobalViewModel().changeMainPage(pageIndex);
                 },
                 child: Container(
                   color: Colors.transparent,

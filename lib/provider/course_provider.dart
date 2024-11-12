@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/models/course_model.dart';
-import '../components/utilities/endDrawers/course_detail_end_drawer.dart';
+
 import '../components/utilities/endDrawers/course_edit_skill_choice_end_drawer.dart';
-import '../components/utilities/endDrawers/course_filter_end_drawer.dart';
-import '../components/utilities/endDrawers/course_manager_end_drawer.dart';
 import '../models/user_model.dart';
 
 class CourseProvider extends ChangeNotifier {
@@ -126,33 +124,32 @@ class CourseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  CourseEditSkillChoiceEndDrawerType editSkillChoiceEndDrawerOpenInfo =
-      CourseEditSkillChoiceEndDrawerType.close;
+  CourseEditSkillChoiceEndDrawerType editSkillChoiceEndDrawerOpenInfo = CourseEditSkillChoiceEndDrawerType.close;
   void editSkillChoiceEndDrawerStatus(CourseEditSkillChoiceEndDrawerType status) {
     editSkillChoiceEndDrawerOpenInfo = status;
     notifyListeners();
   }
 
   // MARK: View
-  CourseModel choicedCourse = CourseModel(courseCreateduserInfo: LoginUser());
-  CourseDetailEndDrawerType endDrawerOpenInfo = CourseDetailEndDrawerType.close;
-  void changeEndDrawerStatus(CourseDetailEndDrawerType status, CourseModel opendCourse) {
-    endDrawerOpenInfo = status;
-    choicedCourse = opendCourse;
-    notifyListeners();
-  }
+  CourseModel choicedCourse = CourseModel(courseCreateduserInfo: ProfileData());
+  // CourseDetailEndDrawerType endDrawerOpenInfo = CourseDetailEndDrawerType.close;
+  // void changeEndDrawerStatus(CourseDetailEndDrawerType status, CourseModel opendCourse) {
+  //   endDrawerOpenInfo = status;
+  //   choicedCourse = opendCourse;
+  //   notifyListeners();
+  // }
 
-  CourseFilterEndDrawerType filterEndDrawerOpenInfo = CourseFilterEndDrawerType.close;
-  void changeFilterEndDrawerStatus(CourseFilterEndDrawerType status) {
-    filterEndDrawerOpenInfo = status;
-    notifyListeners();
-  }
+  // CourseFilterEndDrawerType filterEndDrawerOpenInfo = CourseFilterEndDrawerType.close;
+  // void changeFilterEndDrawerStatus(CourseFilterEndDrawerType status) {
+  //   filterEndDrawerOpenInfo = status;
+  //   notifyListeners();
+  // }
 
-  CourseManagerEndDrawerType courseManagerEndDrawerOpenInfo = CourseManagerEndDrawerType.close;
-  int choicedCourseId = -1;
-  void courseManagerEndDrawerStatus(CourseManagerEndDrawerType status, int changedCourseId) {
-    courseManagerEndDrawerOpenInfo = status;
-    choicedCourseId = changedCourseId;
-    notifyListeners();
-  }
+  // CourseManagerEndDrawerType courseManagerEndDrawerOpenInfo = CourseManagerEndDrawerType.close;
+  // int choicedCourseId = -1;
+  // void courseManagerEndDrawerStatus(CourseManagerEndDrawerType status, int changedCourseId) {
+  //   courseManagerEndDrawerOpenInfo = status;
+  //   choicedCourseId = changedCourseId;
+  //   notifyListeners();
+  // }
 }

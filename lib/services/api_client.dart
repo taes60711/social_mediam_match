@@ -18,6 +18,7 @@ class ApiClient {
   Future<String> apiGet(
     String url, {
     Map<String, dynamic>? paramters,
+    bool needReturnPrint = false,
   }) async {
     final uri = Uri.parse("http://$_ip$url").replace(queryParameters: paramters);
     print("Get API  Url : $_ip$url");
@@ -29,6 +30,10 @@ class ApiClient {
     } catch (e) {
       _onError(e);
       return "null";
+    }
+
+    if (needReturnPrint) {
+      print("return Data : ${utf8.decode(response.bodyBytes)}");
     }
 
     return utf8.decode(response.bodyBytes);

@@ -7,7 +7,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:social_mediam_match/models/notification_model.dart';
-import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -81,7 +80,7 @@ class FirebaseNotificationService {
       onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
         NotificationModel receviceNotificaionData = NotificationModel.receviceDatatoModel(notificationResponse.payload ?? "");
 
-        RouteOptions.popUntilToHome();
+        // RouteOptions.popUntilToHome();
         await Future.delayed(Duration.zero);
         if (receviceNotificaionData.type == 0) {
           ///文章

@@ -19,7 +19,7 @@ class SignUpViewModel {
     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
     int preIndex = signUpViewProvider.pageIndex - 1;
     if (preIndex < 0) {
-      RouteOptions.popUntilToHome();
+      // RouteOptions.popUntilToHome();
     } else {
       signUpViewProvider.onChangeSignUpPage(preIndex);
     }

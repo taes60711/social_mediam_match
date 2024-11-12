@@ -1,230 +1,316 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/utilities/bottomSheets/base_bottom_sheet.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/utilities/custom_button.dart';
 
-import 'package:provider/provider.dart';
-import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
-import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
-import 'package:social_mediam_match/models/post_model.dart';
-import 'package:social_mediam_match/models/user_model.dart';
-import 'package:social_mediam_match/provider/account/user_provider.dart';
-import 'package:social_mediam_match/provider/post/post_comment_view_model.dart';
-import 'package:social_mediam_match/services/post_service.dart';
+import '../../../models/post_model.dart';
+import '../../../models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
+import '../../../provider/post/post_provider.dart';
+import '../../../services/post_service.dart';
 
-import '../../../pageManager/setting/route_controller.dart';
-import '../../../provider/post/post_comment_provider.dart';
-import '../../utilities/apiListView/base_api_list_provider.dart';
-import '../../utilities/endDrawers/user_detail_end_drawer.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/apiListView/api_list_controller.dart';
+import '../../utilities/apiListView/api_list_view.dart';
+import '../../utilities/dialog/confirm_dialog.dart';
 
-class PostCommentPage extends StatelessWidget {
-  final PostModel choicedPost;
+class PostCommentPage extends BaseBottomSheet {
+  final StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController;
+  final int dataIndex;
 
-  const PostCommentPage({super.key, required this.choicedPost});
+  PostCommentPage({required this.dataIndex, this.postListController});
+  bool isEditStart = false;
+  @override
+  double buildHeight() {
+    return 0.5;
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        BaseTopBar(
-          leftWidget: Container(),
-          title: "留言",
-          rightWidget: Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.all(5),
-            child: GestureDetector(
-              onTap: () => RouteOptions.pop(),
-              child: const Icon(
-                Icons.close,
-                size: 25,
-              ),
-            ),
+  Widget build(ref) {
+    return CommonScaffold(
+      type: PageType.window,
+      bgColor: Colors.transparent,
+      child: Column(
+        children: [
+          ///タイトル
+          Text(
+            "回覆",
+            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
           ),
-        ),
-        Builder(builder: (context) {
-          TextEditingController postCommentInput = context.read<PostCommentProvider>().postCommentInput;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                Expanded(
-                  child: SizedBox(
-                    height: 30,
-                    child: TextField(
-                      controller: postCommentInput,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.only(top: 5, left: 10),
-                        border: OutlineInputBorder(),
-                        hintText: '留言',
-                      ),
-                    ),
+
+          Expanded(
+            child: APIListWidget(
+                size: 7,
+                isNeedToTopBtn: false,
+                apiFunc: (page, size) {
+                  int choicedPostProviderId = ref.read(choicedPostProvider).id;
+                  return PostService().getPostCommentData(page, size, choicedPostProviderId);
+                },
+                listControllerProvider: postCommentListControllerProvider,
+                noDataWidget: Center(
+                  child: Text(
+                    "目前沒有任何留言",
+                    style: TextStyle(color: AppColors.whiteColor),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    PostCommentViewModel(postCommentContext: context)
-                        .commetMessageOnCreate(choicedPost: choicedPost, message: postCommentInput.text);
-                  },
-                  child: Container(
-                    height: 30,
-                    margin: const EdgeInsets.only(left: 5),
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
-                    child: Center(
-                      child: Icon(
-                        Icons.send,
-                        size: 16,
-                        color: normalTextColor,
-                      ),
+                itemChild: (data, index) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      left: ScreenSize.fitPxWidth(15),
+                      right: ScreenSize.fitPxWidth(15),
+                      bottom: ScreenSize.fitPxWidth(10),
                     ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 15.0, right: 15, top: 10),
-            child: APIListView<PostCommentTextEditorModel>(
-              size: 8,
-              needToTopWidget: false,
-              apiFunc: (page, size) {
-                return PostService().getPostCommentData(page, size, choicedPost.id);
-              },
-              providerList: context.watch<BaseAPIListProvider<PostCommentTextEditorModel>>().listData,
-              itemChild: (data, index) {
-                return Container(
-                  padding: const EdgeInsets.only(bottom: 15),
-                  width: ScreenSize.width,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ///アイコン
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: GestureDetector(
-                          onTap: () {
-                            RouteOptions.pop();
-                            openUserDetailEndDrawer(context: context, otherUserData: data[index].commentUserInfo);
-                          },
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ///ユーザアイコン
+                        Padding(
+                          padding: EdgeInsets.only(top: ScreenSize.fitPxHeight(3)),
                           child: UserIcon(
-                            iconSize: 35,
-                            image: data[index].commentUserInfo.image,
+                            iconSize: 30,
+                            image: data.commentUserInfo.image,
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 10),
+                        SizedBox(width: ScreenSize.fitPxWidth(5)),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ///ユーザ名前＆コメント時間
+                            Row(
+                              children: [
+                                ///ユーザ名前
+                                Text(
+                                  data.commentUserInfo.name ?? "",
+                                  style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                                ),
+                                SizedBox(width: ScreenSize.fitPxWidth(5)),
 
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ///ユーザネーム
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                data[index].commentUserInfo.name != ""
-                                    ? data[index].commentUserInfo.name ?? ""
-                                    : data[index].commentUserInfo.email,
-                                style: const TextStyle(fontSize: 14),
-                              ),
+                                ///コメント時間
+                                Text(
+                                  data.postTime,
+                                  style: TextStyle(color: AppColors.greyColor98, fontSize: ScreenSize.fontSize12),
+                                ),
+                              ],
+                            ),
 
-                              const SizedBox(width: 8),
+                            ///コメント：メッセージ/テキストフィールド
+                            commentEditBuild(ref, data),
 
-                              ///期日
-                              Text(
-                                data[index].postTime,
-                                style: const TextStyle(fontSize: 12, color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                          !data[index].isEditor
-                              ? Text(
-                                  data[index].message,
-                                  style: const TextStyle(fontSize: 14),
-                                )
-                              : SizedBox(
-                                  width: ScreenSize.width - 75,
-                                  height: 30,
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextField(
-                                          controller: data[index].textEditingController,
-                                          decoration: const InputDecoration(
-                                            contentPadding: EdgeInsets.only(top: -21),
-                                            border: InputBorder.none,
-                                          ),
-                                          style: const TextStyle(fontSize: 14),
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          PostCommentViewModel(postCommentContext: context)
-                                              .commetMessageOnChange(data[index], data[index].textEditingController.text);
-                                        },
-                                        child: const Icon(Icons.check),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          PostCommentViewModel(postCommentContext: context).editerStatusOnChange(data[index]);
-                                        },
-                                        child: const Icon(Icons.close),
-                                      )
-                                    ],
+                            SizedBox(height: ScreenSize.fitPxWidth(5)),
+                            Row(
+                              children: [
+                                ///コメント編集ボタン
+                                GestureDetector(
+                                  onTap: () {
+                                    if (!data.isEditor) {
+                                      data.isEditor = !data.isEditor;
+                                      isEditStart = true;
+                                    } else {
+                                      data.isEditor = !data.isEditor;
+                                      if (data.message != data.textEditingController.text) {
+                                        data.message = data.textEditingController.text;
+                                      }
+                                    }
+
+                                    render();
+                                  },
+                                  child: Text(
+                                    "編輯",
+                                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                                   ),
                                 ),
 
-                          const SizedBox(height: 3),
-                          Builder(builder: (context) {
-                            LoginUser loginUserData = context.read<UserProvider>().userData;
-                            return Visibility(
-                              visible: data[index].commentUserInfo.uid == loginUserData.uid,
-                              child: Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      PostCommentViewModel(postCommentContext: context).editerStatusOnChange(data[index]);
-                                    },
-                                    child: const Text(
-                                      "編輯",
-                                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                                    ),
+                                SizedBox(width: ScreenSize.fitPxWidth(5)),
+
+                                ///コメント削除ボタン
+                                GestureDetector(
+                                  onTap: () {
+                                    ///削除確認
+                                    ConfirmDilaog(
+                                        title: "提示",
+                                        content: "確定要刪除該回覆？",
+                                        conirmFunc: () {
+                                          ref.read(postCommentListControllerProvider.notifier).removeData(index);
+                                        }).show(context);
+                                  },
+                                  child: Text(
+                                    "刪除",
+                                    style: TextStyle(color: AppColors.greyColor98, fontSize: ScreenSize.fontSize12),
                                   ),
-                                  const SizedBox(width: 10),
-                                  GestureDetector(
-                                    onTap: () {
-                                      PostCommentViewModel(postCommentContext: context).deleteCommentPostCheck(
-                                        data[index],
-                                        choicedPost: choicedPost,
-                                      );
-                                    },
-                                    child: const Text(
-                                      "刪除",
-                                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            );
-                          }),
-                        ],
-                      )
-                    ],
-                  ),
-                );
-              },
-              loadingBuilder: () {
-                return Container();
-              },
-              noDataBuilder: const Center(
-                child: Text("目前沒有任何留言"),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+          ),
+
+          ///コメント欄
+          commentCntainerBuild(ref),
+        ],
+      ),
+    );
+  }
+
+  ///コメント：メッセージ/テキストフィールド
+  Widget commentEditBuild(WidgetRef ref, PostCommentTextEditorModel data) {
+    return data.isEditor
+
+        ///テキストフィールド
+        ? Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: ScreenSize.fitPxWidth(8),
+              vertical: ScreenSize.fitPxWidth(5),
+            ),
+            width: ScreenSize.width - ScreenSize.fitPxWidth(70),
+            decoration: BoxDecoration(
+              color: AppColors.greyColor57,
+              borderRadius: BorderRadius.circular(
+                ScreenSize.fitPxWidth(8),
               ),
             ),
+            child: BaseInputField(
+              controller: data.textEditingController,
+              autoFocus: true,
+              onFocusChanged: (va) async {
+                if (isEditStart) {
+                  await Future.delayed(Duration.zero);
+                  isEditStart = false;
+                } else {
+                  data.isEditor = !data.isEditor;
+                  if (data.message != data.textEditingController.text) {
+                    data.message = data.textEditingController.text;
+                  }
+                  render();
+                }
+              },
+            ),
+          )
+
+        ///メッセージ
+        : Text(
+            data.message,
+            style: TextStyle(color: AppColors.whiteColor),
+          );
+  }
+
+  ///コメント欄
+  Widget commentCntainerBuild(WidgetRef ref) {
+    ProfileData userData = ref.watch(loginUserData);
+    TextEditingController commentController = TextEditingController();
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: AppColors.greyColor54,
           ),
         ),
-      ],
+      ),
+      height: ScreenSize.fitPxHeight(70),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(12)),
+        child: Column(
+          children: [
+            SizedBox(height: ScreenSize.fitPxHeight(10)),
+            Row(
+              children: [
+                SizedBox(width: ScreenSize.fitPxHeight(10)),
+                UserIcon(
+                  iconSize: ScreenSize.fitPxHeight(25),
+                  image: userData.image,
+                ),
+                SizedBox(width: ScreenSize.fitPxHeight(10)),
+
+                /// コメント欄
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ScreenSize.fitPxHeight(8),
+                      vertical: ScreenSize.fitPxHeight(6),
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.greyColor57,
+                      borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(13)),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: BaseInputField(
+                            hintText: "留言",
+                            controller: commentController,
+                            autoFocus: true,
+                            onFieldSubmitted: (value) {
+                              createComment(ref, commentController.text);
+                            },
+                          ),
+                        ),
+                        MainBtn(
+                          onPress: () {
+                            createComment(ref, commentController.text);
+                          },
+                          child: Container(
+                            padding:
+                                EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8), vertical: ScreenSize.fitPxWidth(3)),
+                            decoration: BoxDecoration(
+                              color: AppColors.orangeColor,
+                              borderRadius: BorderRadius.circular(
+                                ScreenSize.fitPxWidth(10),
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.eco_sharp,
+                              color: AppColors.whiteColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(width: ScreenSize.fitPxWidth(12)),
+              ],
+            )
+          ],
+        ),
+      ),
     );
+  }
+
+  void createComment(WidgetRef ref, String message) {
+    ProfileData userData = ref.watch(loginUserData);
+
+    PostCommentTextEditorModel sdsat = PostCommentTextEditorModel(
+      uid: 63,
+      postId: ref.read(choicedPostProvider.notifier).state.id,
+      userUid: userData.uid,
+      message: message,
+      postTime: "2024-06-30T09:14:38.000+00:00",
+      commentUserInfo: userData,
+      isEditor: false,
+      textEditingController: TextEditingController(text: message),
+    );
+
+    ///コメントListにコメント追加する
+    ref.read(postCommentListControllerProvider.notifier).addDataTofirst(sdsat);
+
+    if (postListController != null) {
+      PostModel c = ref.read(postListController!).listData[dataIndex];
+      c.commentCount++;
+
+      /// 詳細ページのコメント”数”更新する
+      ref.read(choicedPostProvider.notifier).state = PostModel().copyWith(data: c);
+
+      /// Listページのコメント”数”更新する
+      ref.read(postListController!.notifier).editData(dataIndex, c);
+    }
+
+    render();
   }
 }

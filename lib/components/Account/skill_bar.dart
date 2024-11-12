@@ -57,7 +57,7 @@ Widget skillBar(
   SkillEndDrawerType skillType, {
   //スキルデータ
   dynamic userSettingProvider,
-  LoginUser? userData,
+  ProfileData? userData,
   List<String>? courseSkillData,
   //スタイル
   double? fontSize,

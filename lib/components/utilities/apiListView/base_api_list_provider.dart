@@ -17,6 +17,7 @@ enum LoadDataStatus {
   wantinSert,
   wantReload,
   allDataLoaded,
+  allDataLoadingFinish,
 }
 
 class BaseAPIListProvider<R> extends ChangeNotifier {

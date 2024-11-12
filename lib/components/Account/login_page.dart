@@ -1,6 +1,6 @@
 import 'package:social_mediam_match/components/strings/account/login_strings.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
-import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/fit_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
@@ -10,7 +10,6 @@ import 'package:social_mediam_match/components/utilities/label_input.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_view_model.dart';
-import '../../pageManager/setting/route_controller.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -33,7 +32,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
       child: Column(
         children: [
           // backButton,
-          BaseTopBar(backFunc: () => RouteOptions.popUntilToHome()),
+          // BaseTopBar(backFunc: () => RouteOptions.popUntilToHome()),
           //ロゴ
           logo,
           Column(
