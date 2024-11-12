@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_mediam_match/components/home/skillExChangePage/skill_change_filter_page.dart';
+
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -16,8 +16,17 @@ import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 
+import '../../utilities/endDrawers/base_skill_filter_page.dart';
 import '../../utilities/loading.dart';
 import '../../utilities/style/style_config.dart';
+
+final filteredSkillList = StateProvider<List<RequestSkillListData>>((ref) {
+  return [];
+});
+
+final userExChangelistControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
+  (ref) => APIListControllerNotifier(APIListController()),
+);
 
 class SkillUserChangePage extends ConsumerStatefulWidget {
   const SkillUserChangePage({super.key});
@@ -26,14 +35,13 @@ class SkillUserChangePage extends ConsumerStatefulWidget {
   ConsumerState<SkillUserChangePage> createState() => _SkillUserChangePageState();
 }
 
-final userExChangelistControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
-  (ref) => APIListControllerNotifier(APIListController()),
-);
-
 class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero).then((value) {
+      ref.read(filteredSkillList.notifier).update((state) => []);
+    });
   }
 
   @override
@@ -139,9 +147,9 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
                                 ///タイトル
                                 Container(
                                   padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
-                                  margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
+                                  margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 138, 138, 138),
+                                    color: const Color.fromARGB(255, 138, 138, 138),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Icon(
@@ -164,9 +172,9 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
                                 ///タイトル
                                 Container(
                                   padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
-                                  margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
+                                  margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 240, 123, 77),
+                                    color: const Color.fromARGB(255, 240, 123, 77),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Icon(
@@ -506,9 +514,21 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
             const Expanded(child: SizedBox(width: 1)),
             GestureDetector(
               onTap: () {
-                SkillChangeFilterPage(viewRender: () {
-                  setState(() {});
-                }).show(context);
+                BaseSkillFilterPage(
+                  viewRender: () {
+                    setState(() {});
+                  },
+                  filteredSkillList: filteredSkillList,
+                  searchFunc: (choicedFilterSkillList) async {
+                    List<String> filteredSkillIdList = choicedFilterSkillList.map((e) => e.id.toString()).toList();
+                    ProfileData userData = ref.watch(loginUserData);
+                    await ref.read(userExChangelistControllerProvider.notifier).replaceApi((page, size) {
+                      return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filteredSkillIdList);
+                    });
+
+                    ref.read(filteredSkillList.notifier).update((state) => choicedFilterSkillList);
+                  },
+                ).show(context);
               },
               child: Container(
                 width: 50,

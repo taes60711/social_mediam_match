@@ -51,7 +51,7 @@ class SearchUserPage extends BaseBottomSheet {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: AppColors.greyColor98,
+                        color: AppColors.greyColor57,
                         borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(8)),
                       ),
                       padding: EdgeInsets.symmetric(
@@ -59,7 +59,8 @@ class SearchUserPage extends BaseBottomSheet {
                         vertical: ScreenSize.fitPxWidth(5),
                       ),
                       margin: EdgeInsets.only(top: ScreenSize.fitPxWidth(10)),
-                      child: Expanded(
+                      child: SizedBox(
+                        width: ScreenSize.width,
                         child: Row(
                           children: [
                             UserIcon(

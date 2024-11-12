@@ -13,7 +13,7 @@ import '../../utilities/style/style_config.dart';
 class BaseSkillFilterPage extends BaseEndDrawer {
   final Function viewRender;
   final StateProvider<List<RequestSkillListData>> filteredSkillList;
-  final Function searchFunc;
+  final Function(List<RequestSkillListData> choicedFilterSkillList) searchFunc;
   BaseSkillFilterPage({required this.viewRender, required this.filteredSkillList, required this.searchFunc});
   Map<SkillType, List<RequestSkillListData>> mapedSkillList = {
     SkillType.frontend: [],
@@ -44,6 +44,8 @@ class BaseSkillFilterPage extends BaseEndDrawer {
               backFunc: () => closePage(),
               rightWidget: filterSearch(),
             ),
+            SizedBox(height: ScreenSize.fitPxWidth(8)),
+            choicedFilterSkillList(),
             SizedBox(height: ScreenSize.fitPxWidth(8)),
             Container(
               width: ScreenSize.width,
@@ -125,11 +127,59 @@ class BaseSkillFilterPage extends BaseEndDrawer {
     );
   }
 
+  Widget choicedFilterSkillList() {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: ScreenSize.fitPxWidth(10),
+      ),
+      width: ScreenSize.width,
+      child: Row(
+        children: [
+          Text(
+            "已選取",
+            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+          ),
+          SizedBox(width: ScreenSize.fitPxWidth(8)),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: tempFilteredSkillList
+                    .map(
+                      (e) => Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.greyColor98,
+                          borderRadius: BorderRadius.circular(
+                            ScreenSize.fitPxHeight(5),
+                          ),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ScreenSize.fitPxWidth(7),
+                          vertical: ScreenSize.fitPxHeight(2),
+                        ),
+                        margin: EdgeInsets.only(right: ScreenSize.fitPxHeight(7)),
+                        child: Text(
+                          e.name,
+                          style: TextStyle(color: AppColors.whiteColor),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget filterSearch() {
     return MainBtn(
         title: "搜尋",
         onPress: () async {
-          searchFunc();
+          await searchFunc(tempFilteredSkillList);
+          closePage();
+          viewRender();
         });
   }
 

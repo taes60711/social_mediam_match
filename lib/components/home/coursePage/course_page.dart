@@ -39,6 +39,14 @@ class CourseMainPage extends ConsumerStatefulWidget {
 
 class _CourseMainPageState extends ConsumerState<CourseMainPage> {
   @override
+  void initState() {
+    Future.delayed(Duration.zero).then((value) {
+      ref.read(couseFilteredSkillList.notifier).update((state) => []);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     ProfileData userData = ref.watch(loginUserData);
     return CommonScaffold(
@@ -105,7 +113,15 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
             BaseSkillFilterPage(
               viewRender: render,
               filteredSkillList: couseFilteredSkillList,
-              searchFunc: () {},
+              searchFunc: (choicedFilterSkillList) async {
+                List<String> filteredSkillIdList = choicedFilterSkillList.map((e) => e.id.toString()).toList();
+                ProfileData userData = ref.watch(loginUserData);
+                await ref.read(courserMainPageListPorver.notifier).replaceApi((page, size) {
+                  return CourseService().getAllCourses(userData.uid, page, size, skillId: filteredSkillIdList);
+                });
+
+                ref.read(couseFilteredSkillList.notifier).update((state) => choicedFilterSkillList);
+              },
             ).show(context);
           },
           child: Container(
