@@ -309,7 +309,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
   }
 
   Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
-    TextEditingController controller = TextEditingController();
+    TextEditingController searchController = TextEditingController();
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
       decoration: BoxDecoration(
@@ -320,15 +320,23 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
       height: 36,
       child: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Icon(Icons.search, color: AppColors.whiteColor),
+          MainBtn(
+            onPress: () {
+              if (searchController.text == "") {
+                return;
+              }
+              SkillUserChangeByTextFilter(searchText: searchController.text).show(context);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Icon(Icons.search, color: AppColors.whiteColor),
+            ),
           ),
           Expanded(
             child: BaseInputField(
               hintText: "搜尋",
               textInputAction: TextInputAction.search,
-              controller: controller,
+              controller: searchController,
               onFieldSubmitted: (value) {
                 if (value == "") {
                   return;

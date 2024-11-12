@@ -16,6 +16,7 @@ import '../../../provider/account/user_provider.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/background_widget.dart';
+import '../../utilities/custom_button.dart';
 import '../../utilities/loading.dart';
 import '../../utilities/style/screen_size.dart';
 
@@ -88,6 +89,7 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
 }
 
 Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
+  TextEditingController searchController = TextEditingController();
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
     decoration: BoxDecoration(
@@ -98,16 +100,27 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
     height: 36,
     child: Row(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Icon(Icons.search, color: AppColors.whiteColor),
+        MainBtn(
+          onPress: () {
+            if (searchController.text == "") {
+              return;
+            }
+            CoursePageByTextFilter(searchText: searchController.text).show(context);
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Icon(Icons.search, color: AppColors.whiteColor),
+          ),
         ),
         Expanded(
           child: BaseInputField(
             hintText: "搜尋",
             textInputAction: TextInputAction.search,
-            controller: TextEditingController(),
+            controller: searchController,
             onFieldSubmitted: (value) {
+              if (value == "") {
+                return;
+              }
               CoursePageByTextFilter(searchText: value).show(context);
             },
           ),

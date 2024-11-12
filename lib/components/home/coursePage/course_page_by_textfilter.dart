@@ -24,7 +24,7 @@ class CoursePageByTextFilter extends BaseEndDrawer {
     ProfileData userData = ref.watch(loginUserData);
     return Column(
       children: [
-        BaseTopBar(),
+        const BaseTopBar(),
         Expanded(
           child: APIListWidget(
               apiFunc: (int page, int size) {
