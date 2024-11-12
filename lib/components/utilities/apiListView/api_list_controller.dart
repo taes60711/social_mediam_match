@@ -85,6 +85,7 @@ class APIListControllerNotifier<R> extends StateNotifier<APIListController<R>> {
     }
   }
 
+  /// 画面レンダーリング
   void addDataTofirst(R editedData) {
     List<R> nowStateList = state.listData;
     nowStateList.insert(0, editedData);

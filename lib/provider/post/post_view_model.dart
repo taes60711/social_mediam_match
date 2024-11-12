@@ -241,8 +241,6 @@ class PostViewModel {
   final BuildContext context;
   PostViewModel({required this.ref, required this.context, required this.render});
 
-  List<Function> renderList = [];
-
   void postDetailPageInit(
     StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>> postListController,
     PostModel data,

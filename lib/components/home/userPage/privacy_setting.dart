@@ -192,6 +192,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/userPage/my_notification_page.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
+import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
@@ -228,7 +229,9 @@ class PrivacySettingPage extends BaseEndDrawer {
           child: _buildButtonContainer(iconData: Icons.notifications, text: "通知"),
         ),
         MainBtn(
-          onPress: () {},
+          onPress: () {
+            ConfirmDilaog(title: "提示", content: "確定要登出？", conirmFunc: () {}).show(context);
+          },
           child: _buildButtonContainer(
             iconData: FontAwesomeIcons.rightFromBracket,
             text: "登出",

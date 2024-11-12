@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 
@@ -29,7 +30,7 @@ class SearchUserPage extends BaseBottomSheet {
       type: PageType.window,
       bgColor: Colors.transparent,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10)),
+        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
         child: Column(
           children: [
             SizedBox(height: ScreenSize.fitPxHeight(10)),
@@ -37,33 +38,28 @@ class SearchUserPage extends BaseBottomSheet {
             SizedBox(height: ScreenSize.fitPxHeight(5)),
             Expanded(
               child: APIListWidget(
-                  apiFunc: (page, size) {
-                    return UserService().requestUserDataByNamePart(page, size, userName: "");
-                  },
-                  listControllerProvider: searchedUserControllerProvider,
-                  initWidget: Scaffold(
-                    backgroundColor: Colors.transparent,
-                    body: Center(
-                      child: Text(
-                        "first Search",
-                        style: TextStyle(color: AppColors.whiteColor),
+                apiFunc: (page, size) {
+                  return UserService().requestUserDataByNamePart(page, size, userName: "");
+                },
+                listControllerProvider: searchedUserControllerProvider,
+                initWidget: _buildInit(),
+                noDataWidget: _buildNoData(),
+                itemChild: (data, index) {
+                  return MainBtn(
+                    onPress: () {
+                      UserProfileAllInfoBottomSheet(userData: data).show(context);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.greyColor98,
+                        borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(8)),
                       ),
-                    ),
-                  ),
-                  itemChild: (data, index) {
-                    return MainBtn(
-                      onPress: () {
-                        UserProfileAllInfoBottomSheet(userData: data).show(context);
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.greyColor98,
-                          borderRadius: BorderRadius.circular(
-                            ScreenSize.fitPxWidth(5),
-                          ),
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10), vertical: ScreenSize.fitPxWidth(5)),
-                        margin: EdgeInsets.only(top: ScreenSize.fitPxWidth(10)),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ScreenSize.fitPxWidth(10),
+                        vertical: ScreenSize.fitPxWidth(5),
+                      ),
+                      margin: EdgeInsets.only(top: ScreenSize.fitPxWidth(10)),
+                      child: Expanded(
                         child: Row(
                           children: [
                             UserIcon(
@@ -71,25 +67,92 @@ class SearchUserPage extends BaseBottomSheet {
                               image: data.image,
                             ),
                             SizedBox(width: ScreenSize.fitPxWidth(10)),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  data.email,
-                                  style: TextStyle(color: AppColors.whiteColor),
-                                ),
-                                Text(
-                                  data.name ?? "",
-                                  style: TextStyle(color: AppColors.whiteColor),
-                                ),
-                              ],
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        data.name ?? "",
+                                        style: TextStyle(color: AppColors.whiteColor),
+                                      ),
+                                      Text(
+                                        data.lastLogin,
+                                        style: TextStyle(
+                                          color: AppColors.whiteColor.withOpacity(.5),
+                                          fontSize: ScreenSize.fontSize12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    data.email,
+                                    style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    );
-                  }),
+                    ),
+                  );
+                },
+              ),
             )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoData() {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: SizedBox(
+        width: ScreenSize.width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right: ScreenSize.fitPxHeight(20)),
+              child: Icon(
+                FontAwesomeIcons.usersSlash,
+                color: AppColors.whiteColor,
+                size: ScreenSize.fitPxWidth(80),
+              ),
+            ),
+            SizedBox(height: ScreenSize.fitPxHeight(10)),
+            Text(
+              "搜尋無結果",
+              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInit() {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: SizedBox(
+        width: ScreenSize.width,
+        child: Column(
+          children: [
+            SizedBox(height: ScreenSize.fitPxHeight(120)),
+            Icon(
+              Icons.search,
+              color: AppColors.whiteColor,
+              size: ScreenSize.fitPxWidth(80),
+            ),
+            SizedBox(height: ScreenSize.fitPxHeight(8)),
+            Text(
+              "請用名稱搜尋",
+              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+            ),
           ],
         ),
       ),
@@ -116,6 +179,9 @@ class SearchUserPage extends BaseBottomSheet {
               autoFocus: true,
               controller: controller,
               onFieldSubmitted: (value) async {
+                if (value == "") {
+                  return;
+                }
                 if (firstSearch) {
                   await ref.read(searchedUserControllerProvider.notifier).init((page, size) {
                     return UserService().requestUserDataByNamePart(page, size, userName: value);
