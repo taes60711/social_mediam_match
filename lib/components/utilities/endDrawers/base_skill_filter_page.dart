@@ -148,13 +148,13 @@ class BaseSkillFilterPage extends BaseEndDrawer {
                     .map(
                       (e) => Container(
                         decoration: BoxDecoration(
-                          color: AppColors.greyColor98,
+                          color: AppColors.greyColor54,
                           borderRadius: BorderRadius.circular(
                             ScreenSize.fitPxHeight(5),
                           ),
                         ),
                         padding: EdgeInsets.symmetric(
-                          horizontal: ScreenSize.fitPxWidth(7),
+                          horizontal: ScreenSize.fitPxWidth(10),
                           vertical: ScreenSize.fitPxHeight(2),
                         ),
                         margin: EdgeInsets.only(right: ScreenSize.fitPxHeight(7)),

@@ -45,7 +45,7 @@ class CourseService extends ApiClient {
   }
 
   /// 全てコース
-  Future<List<CourseModel>> getAllCourses(String userUID, int page, int size, {List<String>? skillId}) async {
+  Future<List<CourseModel>> getAllCourses(String userUID, int page, int size, {List<String>? skillId, String? namePart}) async {
     List<CourseModel> requestAllCourseData = [];
 
     Map<String, dynamic> paramters = {
@@ -53,7 +53,9 @@ class CourseService extends ApiClient {
       'size': '$size',
     };
 
-    if (skillId != null) {
+    if (namePart != null) {
+      paramters['namePart'] = namePart;
+    } else if (skillId != null) {
       paramters['skillIds'] = skillId;
     }
 

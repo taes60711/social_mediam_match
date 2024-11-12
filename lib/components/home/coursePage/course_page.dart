@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_page_by_textfilter.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_utilites.dart';
 
 import 'package:social_mediam_match/components/utilities/endDrawers/base_skill_filter_page.dart';
@@ -22,7 +23,7 @@ final couseFilteredSkillList = StateProvider<List<RequestSkillListData>>((ref) {
   return [];
 });
 
-final courserMainPageListPorver = StateNotifierProvider<APIListControllerNotifier, APIListController>(
+final courseMainPageListPorver = StateNotifierProvider<APIListControllerNotifier, APIListController>(
   (ref) => APIListControllerNotifier(APIListController()),
 );
 
@@ -64,7 +65,7 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
                     apiFunc: (int page, int size) {
                       return CourseService().getAllCourses(userData.uid, page, size);
                     },
-                    listControllerProvider: courserMainPageListPorver,
+                    listControllerProvider: courseMainPageListPorver,
                     haveBottomBar: true,
                     loadingWidget: const CourseLoading(),
                     itemChild: (data, index) {
@@ -104,10 +105,13 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
         Expanded(
           child: BaseInputField(
             hintText: "搜尋",
+            textInputAction: TextInputAction.search,
             controller: TextEditingController(),
+            onFieldSubmitted: (value) {
+              CoursePageByTextFilter(searchText: value).show(context);
+            },
           ),
         ),
-        const Expanded(child: SizedBox(width: 1)),
         GestureDetector(
           onTap: () {
             BaseSkillFilterPage(
@@ -116,7 +120,7 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
               searchFunc: (choicedFilterSkillList) async {
                 List<String> filteredSkillIdList = choicedFilterSkillList.map((e) => e.id.toString()).toList();
                 ProfileData userData = ref.watch(loginUserData);
-                await ref.read(courserMainPageListPorver.notifier).replaceApi((page, size) {
+                await ref.read(courseMainPageListPorver.notifier).replaceApi((page, size) {
                   return CourseService().getAllCourses(userData.uid, page, size, skillId: filteredSkillIdList);
                 });
 

@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/bottomSheets/base_bottom_sheet.dart';
 
-import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
+import '../../home/skillExChangePage/skill_utilites.dart';
 import '../../strings/skillExChangePage/skill_change_page_string.dart';
 import '../custom_button.dart';
 import '../style/screen_size.dart';
@@ -169,7 +169,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                 SizedBox(height: ScreenSize.fitPxHeight(5)),
 
                 ///得意なスキル
-                skillBar(skills: userData.mainSkills!),
+                SkillUtilites().skillBar(skills: userData.mainSkills!),
                 SizedBox(height: ScreenSize.fitPxHeight(5)),
 
                 Row(
@@ -200,7 +200,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                 SizedBox(height: ScreenSize.fitPxHeight(5)),
 
                 ///弱いスキル
-                skillBar(skills: userData.wantSkills!),
+                SkillUtilites().skillBar(skills: userData.wantSkills!),
                 SizedBox(height: ScreenSize.fitPxHeight(15)),
 
                 Row(
@@ -239,64 +239,6 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
       ),
     );
   }
-}
-
-Widget skillBar({required List<RequestUserSkillData> skills}) {
-  return Row(
-    children: [
-      ///スキル
-      Row(
-        children: skills.isEmpty
-            ? [
-                Container(
-                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.greyColor98,
-                  ),
-                  child: Text(
-                    "暫無",
-                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                  ),
-                )
-              ]
-            : skills.map((e) {
-                return Container(
-                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.greyColor98,
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: ScreenSize.fitPxWidth(15),
-                        height: ScreenSize.fitPxWidth(15),
-                        margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                        decoration: BoxDecoration(
-                          color: AppColors.black37,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "${e.level}",
-                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize10),
-                          ),
-                        ),
-                      ),
-                      Text(
-                        e.name,
-                        style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-      ),
-    ],
-  );
 }
 
 ///
