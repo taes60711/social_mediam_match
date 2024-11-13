@@ -65,6 +65,7 @@ class PostPageByType extends BaseEndDrawer {
               apiFunc: (page, size) {
                 return PostService().getPostByType(page, size, boardData.type);
               },
+              size: 7,
               listControllerProvider: typelistControllerProvider,
               loadingWidget: const PostLoading(),
               noDataWidget: PostViewUtilities.noPostData(),

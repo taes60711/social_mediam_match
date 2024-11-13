@@ -22,10 +22,12 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
   @override
   Future<void> initState(WidgetRef ref) async {
     ProfileData myUserData = ref.watch(loginUserData);
-    bool isFriend = await FriendService().getIsFrined(userUID: myUserData.uid, ohterUserUID: userData.uid);
+    if (myUserData.uid != userData.uid) {
+      bool isFriend = await FriendService().getIsFrined(userUID: myUserData.uid, ohterUserUID: userData.uid);
 
-    ref.read(isFriendProvider.notifier).update((state) => isFriend);
-    render();
+      ref.read(isFriendProvider.notifier).update((state) => isFriend);
+      render();
+    }
   }
 
   @override
@@ -264,10 +266,12 @@ class UserProfileBottomSheet extends BaseBottomSheet {
   @override
   Future<void> initState(WidgetRef ref) async {
     ProfileData myUserData = ref.watch(loginUserData);
-    bool isFriend = await FriendService().getIsFrined(userUID: myUserData.uid, ohterUserUID: userData.uid);
+    if (myUserData.uid != userData.uid) {
+      bool isFriend = await FriendService().getIsFrined(userUID: myUserData.uid, ohterUserUID: userData.uid);
 
-    ref.read(isFriendProvider.notifier).update((state) => isFriend);
-    render();
+      ref.read(isFriendProvider.notifier).update((state) => isFriend);
+      render();
+    }
   }
 
   @override
