@@ -1,13 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
-
 import '../../../models/post_model.dart';
-import '../../../models/user_model.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
@@ -16,7 +12,6 @@ import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
 import 'editor_page.dart';
-
 import 'post_manager_bottom_sheet.dart';
 
 class PostViewUtilities {
@@ -116,11 +111,6 @@ class PostViewUtilities {
                       ),
                       SizedBox(width: ScreenSize.fitPxWidth(4)),
 
-                      ///期日
-                      Text(
-                        "${data.postTime}${tr("skExChpage_beforDays")}",
-                        style: TextStyle(fontSize: ScreenSize.fontSize10, color: AppColors.greyColor130),
-                      ),
                       const Expanded(child: SizedBox(width: 1)),
                       GestureDetector(
                         onTap: () {
@@ -180,7 +170,7 @@ class PostViewUtilities {
                       ),
                       const SizedBox(width: 5),
 
-                      ///View数
+                      ///ビュー数
                       PostViewUtilities().iconWithText(
                           iconData: FontAwesomeIcons.eye,
                           iconColor: Color.fromARGB(255, 110, 124, 129),
@@ -219,6 +209,14 @@ class PostViewUtilities {
                           ),
                         ),
                       ),
+
+                      const Expanded(child: SizedBox(width: 1)),
+
+                      ///期日
+                      Text(
+                        "${data.postTime}前",
+                        style: TextStyle(fontSize: ScreenSize.fontSize10, color: AppColors.greyColor130),
+                      ),
                     ],
                   ),
                   SizedBox(height: 5),
@@ -228,154 +226,6 @@ class PostViewUtilities {
           ],
         ),
       ),
-    );
-  }
-
-  /// ユーザ詳細ページ
-  Widget userProfileView({required ProfileData userData}) {
-    return Column(
-      children: [
-        SizedBox(height: ScreenSize.fitPxHeight(10)),
-        UserIcon(
-          image: userData.image,
-          iconSize: ScreenSize.fitPxHeight(80),
-        ),
-        SizedBox(height: ScreenSize.fitPxHeight(10)),
-        Container(
-          width: ScreenSize.width,
-          margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
-          padding: EdgeInsets.symmetric(
-            horizontal: ScreenSize.fitPxHeight(10),
-            vertical: ScreenSize.fitPxHeight(10),
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.bgColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      userData.name ?? "",
-                      style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: ScreenSize.fontSize18,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    "${userData.lastLogin}${tr("skExChpage_beforDays")}",
-                    style: TextStyle(
-                      color: AppColors.greyColor130,
-                      fontSize: ScreenSize.fontSize12,
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                userData.email,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: ScreenSize.fontSize12,
-                ),
-              ),
-              Text(
-                userData.introduction ?? "",
-                style: TextStyle(
-                  color: AppColors.whiteColor,
-                  fontSize: ScreenSize.fontSize12,
-                ),
-              ),
-              SizedBox(height: ScreenSize.fitPxHeight(15)),
-              Center(
-                child: MainBtn(
-                  onPress: () {},
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: ScreenSize.fitPxHeight(15),
-                      vertical: ScreenSize.fitPxHeight(5),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: AppColors.greyColor54,
-                    ),
-                    child: Text(
-                      "新增好友",
-                      style: TextStyle(color: AppColors.whiteColor),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        SizedBox(height: ScreenSize.fitPxHeight(10)),
-        Container(
-          width: ScreenSize.width,
-          margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(20)),
-          padding: EdgeInsets.symmetric(
-            horizontal: ScreenSize.fitPxHeight(10),
-            vertical: ScreenSize.fitPxHeight(10),
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.bgColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "職業",
-                style: TextStyle(
-                  color: AppColors.whiteColor,
-                  fontSize: ScreenSize.fontSize14,
-                ),
-              ),
-              Text(
-                userData.job ?? "",
-                style: TextStyle(
-                  color: AppColors.whiteColor,
-                  fontSize: ScreenSize.fontSize12,
-                ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    "信箱認證",
-                    style: TextStyle(
-                      color: AppColors.whiteColor,
-                      fontSize: ScreenSize.fontSize14,
-                    ),
-                  ),
-                  SizedBox(width: ScreenSize.fitPxWidth(10)),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          ScreenSize.fitPxWidth(5),
-                        ),
-                        color: userData.isEmailVerified ? Color.fromARGB(255, 68, 197, 72) : AppColors.greyColor98),
-                    child: Text(
-                      userData.isEmailVerified ? "已認證" : "未認證",
-                      style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: ScreenSize.fontSize14,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: ScreenSize.fitPxHeight(5)),
-            ],
-          ),
-        ),
-        SizedBox(height: ScreenSize.fitPxHeight(15)),
-      ],
     );
   }
 

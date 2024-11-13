@@ -12,11 +12,11 @@ import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
+import '../../../provider/post/post_view_model.dart';
 import '../../../services/post_service.dart';
 
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
-import '../../utilities/dialog/confirm_dialog.dart';
 
 class PostCommentPage extends BaseBottomSheet {
   final StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController;
@@ -29,8 +29,16 @@ class PostCommentPage extends BaseBottomSheet {
     return 0.5;
   }
 
+  late PostViewModel viewModel;
+
+  @override
+  Future<void> initState(WidgetRef ref) async {
+    viewModel = PostViewModel(ref: ref, context: context, render: render);
+  }
+
   @override
   Widget build(ref) {
+    ProfileData userData = ref.watch(loginUserData);
     return CommonScaffold(
       type: PageType.window,
       bgColor: Colors.transparent,
@@ -101,48 +109,44 @@ class PostCommentPage extends BaseBottomSheet {
                             commentEditBuild(ref, data),
 
                             SizedBox(height: ScreenSize.fitPxWidth(5)),
-                            Row(
-                              children: [
-                                ///コメント編集ボタン
-                                GestureDetector(
-                                  onTap: () {
-                                    if (!data.isEditor) {
-                                      data.isEditor = !data.isEditor;
-                                      isEditStart = true;
-                                    } else {
-                                      data.isEditor = !data.isEditor;
-                                      if (data.message != data.textEditingController.text) {
-                                        data.message = data.textEditingController.text;
+                            Visibility(
+                              visible: data.commentUserInfo.uid == userData.uid,
+                              child: Row(
+                                children: [
+                                  ///コメント編集ボタン
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (!data.isEditor) {
+                                        data.isEditor = !data.isEditor;
+                                        isEditStart = true;
+                                        render();
+                                      } else {
+                                        ///編集
+                                        viewModel.postCommentEdit(data: data);
                                       }
-                                    }
-
-                                    render();
-                                  },
-                                  child: Text(
-                                    "編輯",
-                                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                                    },
+                                    child: Text(
+                                      "編輯",
+                                      style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                                    ),
                                   ),
-                                ),
 
-                                SizedBox(width: ScreenSize.fitPxWidth(5)),
+                                  SizedBox(width: ScreenSize.fitPxWidth(5)),
 
-                                ///コメント削除ボタン
-                                GestureDetector(
-                                  onTap: () {
-                                    ///削除確認
-                                    ConfirmDilaog(
-                                        title: "提示",
-                                        content: "確定要刪除該回覆？",
-                                        conirmFunc: () {
-                                          ref.read(postCommentListControllerProvider.notifier).removeData(index);
-                                        }).show(context);
-                                  },
-                                  child: Text(
-                                    "刪除",
-                                    style: TextStyle(color: AppColors.greyColor98, fontSize: ScreenSize.fontSize12),
+                                  ///コメント削除ボタン
+                                  GestureDetector(
+                                    onTap: () {
+                                      ///削除確認
+                                      viewModel.postCommentDeleteCheck(
+                                          data: data, dataIndex: index, postListController: postListController);
+                                    },
+                                    child: Text(
+                                      "刪除",
+                                      style: TextStyle(color: AppColors.greyColor98, fontSize: ScreenSize.fontSize12),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -184,20 +188,19 @@ class PostCommentPage extends BaseBottomSheet {
                   await Future.delayed(Duration.zero);
                   isEditStart = false;
                 } else {
-                  data.isEditor = !data.isEditor;
-                  if (data.message != data.textEditingController.text) {
-                    data.message = data.textEditingController.text;
-                  }
-                  render();
+                  viewModel.postCommentEdit(data: data);
                 }
               },
             ),
           )
 
         ///メッセージ
-        : Text(
-            data.message,
-            style: TextStyle(color: AppColors.whiteColor),
+        : SizedBox(
+            width: ScreenSize.width - ScreenSize.fitPxWidth(70),
+            child: Text(
+              data.message,
+              style: TextStyle(color: AppColors.whiteColor),
+            ),
           );
   }
 
@@ -247,13 +250,21 @@ class PostCommentPage extends BaseBottomSheet {
                             controller: commentController,
                             autoFocus: true,
                             onFieldSubmitted: (value) {
-                              createComment(ref, commentController.text);
+                              viewModel.postCommentCreate(
+                                message: commentController.text,
+                                dataIndex: dataIndex,
+                                postListController: postListController,
+                              );
                             },
                           ),
                         ),
                         MainBtn(
                           onPress: () {
-                            createComment(ref, commentController.text);
+                            viewModel.postCommentCreate(
+                              message: commentController.text,
+                              dataIndex: dataIndex,
+                              postListController: postListController,
+                            );
                           },
                           child: Container(
                             padding:
@@ -281,36 +292,5 @@ class PostCommentPage extends BaseBottomSheet {
         ),
       ),
     );
-  }
-
-  void createComment(WidgetRef ref, String message) {
-    ProfileData userData = ref.watch(loginUserData);
-
-    PostCommentTextEditorModel sdsat = PostCommentTextEditorModel(
-      uid: 63,
-      postId: ref.read(choicedPostProvider.notifier).state.id,
-      userUid: userData.uid,
-      message: message,
-      postTime: "2024-06-30T09:14:38.000+00:00",
-      commentUserInfo: userData,
-      isEditor: false,
-      textEditingController: TextEditingController(text: message),
-    );
-
-    ///コメントListにコメント追加する
-    ref.read(postCommentListControllerProvider.notifier).addDataTofirst(sdsat);
-
-    if (postListController != null) {
-      PostModel c = ref.read(postListController!).listData[dataIndex];
-      c.commentCount++;
-
-      /// 詳細ページのコメント”数”更新する
-      ref.read(choicedPostProvider.notifier).state = PostModel().copyWith(data: c);
-
-      /// Listページのコメント”数”更新する
-      ref.read(postListController!.notifier).editData(dataIndex, c);
-    }
-
-    render();
   }
 }

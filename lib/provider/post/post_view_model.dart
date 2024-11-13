@@ -21,32 +21,6 @@
 //   BuildContext context;
 //   PostViewModel({required this.context});
 
-//   Future<void> getAllPostBoard() async {
-//     List<PostBoard> requestBoardData = await PostService().getAllPostBoard();
-//     context.read<PostProvider>().initAllPostBoard(requestBoardData);
-//   }
-
-//   Future<void> getTopPost() async {
-//     List<PostModel> requestPostData = await PostService().getPostByType(0, 3, -1);
-//     context.read<PostProvider>().getTopPost(requestPostData);
-//   }
-
-//   Future<void> postDetailInit({required PostModel choicedPost}) async {
-//     openPostDetailEndDrawer(context: context, choicedPost: choicedPost);
-//     ProfileData userData = context.read<UserProvider>().userData;
-//     bool isGood = await PostService().checkIsPostGood(postId: choicedPost.id, userUID: userData.uid);
-//     context.read<PostProvider>().changeIsGoodStatus(isGood);
-
-//     if (choicedPost.createdBy != userData.uid) {
-//       await PostService().updatePostViewCount(choicedPost.id);
-//       if (choicedPost.type != -1) {
-//         choicedPost.viewed++;
-//         globalPostContext?.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: choicedPost);
-//         globalPostContext?.read<BaseAPIListProvider<PostModel>>().editData(updatedData: choicedPost);
-//       }
-//     }
-//   }
-
 //   Future<void> createPost({required String title, required String msg, required int type}) async {
 //     ProfileData userData = context.read<UserProvider>().userData;
 //     String fomattedContent = await RichTextFormat(htmlString: msg).sendPostImgFormat();
@@ -64,31 +38,6 @@
 //     );
 
 //     context.read<BaseAPIListProvider<PostModel>>().createData(createdData: createdData);
-//   }
-
-//   Future<void> updatePostGood({required bool isGood, required PostModel viewChoicedPost}) async {
-//     ProfileData userData = context.read<UserProvider>().userData;
-//     globalPostContext?.read<BaseAPIListProvider<PostModel>>().onChoiceData(choicedData: viewChoicedPost);
-//     if (isGood) {
-//       await PostService().updatePostGood(viewChoicedPost.id);
-//       context.read<PostCommentProvider>().updateChoicedPostGoodCount(isPlus: false);
-//     } else {
-//       await PostService().updatePostGood(viewChoicedPost.id, userUID: userData.uid);
-//       context.read<PostCommentProvider>().updateChoicedPostGoodCount(isPlus: true);
-//     }
-//     globalPostContext?.read<BaseAPIListProvider<PostModel>>().editData(updatedData: viewChoicedPost);
-//     context.read<PostProvider>().changeIsGoodStatus(!isGood);
-//   }
-
-//   Future<void> searchPostByTextFilter(String keyword) async {
-//     int loadSize = context.read<BaseAPIListProvider<PostModel>>().size;
-
-//     await context.read<BaseAPIListProvider<PostModel>>().replaceApiFunc(
-//       loadSize,
-//       replaceApiFunc: (page, size) {
-//         return PostService().getPostByTextFilter(page, size, keyword);
-//       },
-//     );
 //   }
 
 //   void showOptionBottomSheet({required PostModel choicedPost}) {
@@ -181,18 +130,6 @@
 //         });
 //   }
 
-//   /// 掲示板の名前取得する
-//   String getBoardName(PostModel post) {
-//     String result = "";
-//     if (post.type != -1) {
-//       result = context.read<PostProvider>().allPostBoards.firstWhere((e) {
-//         return e.type == post.type;
-//       }).name;
-//     }
-//     return result;
-//   }
-// }
-
 // Widget _bottomSheetBtn({required IconData icon, required String btnText, required bntFunc}) {
 //   return GestureDetector(
 //     onTap: () {
@@ -227,12 +164,18 @@
 //   );
 // }
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/post_model.dart';
-
 import '../../components/home/postPage/post_detail_page.dart';
 import '../../components/utilities/apiListView/api_list_controller.dart';
+import '../../components/utilities/dialog/confirm_dialog.dart';
+import '../../models/user_model.dart';
+import '../../services/post_service.dart';
+import '../account/user_provider.dart';
 import 'post_provider.dart';
 
 class PostViewModel {
@@ -241,14 +184,141 @@ class PostViewModel {
   final BuildContext context;
   PostViewModel({required this.ref, required this.context, required this.render});
 
-  void postDetailPageInit(
+  ///文章詳細ページ開く
+  Future<void> postDetailPageInit(
     StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>> postListController,
     PostModel data,
     int dataIndex,
-  ) {
+  ) async {
+    ProfileData userData = ref.watch(loginUserData);
+    if (data.createdBy != userData.uid) {
+      /// ビュー”数”更新する
+      await PostService().updatePostViewCount(data.id);
+      if (data.type != -1) {
+        data.viewed++;
+
+        /// Listページのビュー”数”更新する
+        ref.read(postListController.notifier).editData(dataIndex, data);
+      }
+    }
+
     ref.read(choicedPostProvider.notifier).update((state) => data);
+
+    ///”いいねしたこと”どうか取得する
+    bool isGooded = await PostService().checkIsPostGood(postId: data.id, userUID: userData.uid);
+    ref.read(choicedPostIsGoodProvider.notifier).update((state) => isGooded);
+
+    /// 詳細ページ開く
     PostDetailPage(dataIndex: dataIndex, postListController: postListController).show(context);
   }
 
-  void lookingPostGoodOnChange() {}
+  ///いいねする
+  Future<void> lookingPostGoodOnChange(
+    bool isGooded, {
+    required int dataIndex,
+    required StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController,
+  }) async {
+    PostModel choiceData = ref.read(choicedPostProvider);
+    ProfileData userData = ref.watch(loginUserData);
+    if (isGooded) {
+      ///いいねたす
+      choiceData.good--;
+      await PostService().updatePostGood(choiceData.id);
+    } else {
+      ///いいねひく
+      choiceData.good++;
+      await PostService().updatePostGood(choiceData.id, userUID: userData.uid);
+    }
+    ref.read(choicedPostIsGoodProvider.notifier).update((state) => !isGooded);
+
+    ///文章リストのいいね更新する
+    if (postListController != null) {
+      ref.read(postListController.notifier).editData(dataIndex, choiceData);
+    }
+
+    render();
+  }
+
+  ///コメント作成
+  Future<void> postCommentCreate({
+    required String message,
+    required int dataIndex,
+    required StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController,
+  }) async {
+    PostModel choiceData = ref.read(choicedPostProvider);
+    ProfileData userData = ref.watch(loginUserData);
+    int uid = await PostService().createPostComment(postUID: choiceData.id, userUID: userData.uid, message: message);
+    DateTime dateUtc = DateTime.now().toUtc();
+    DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
+    String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
+    PostCommentTextEditorModel sdsat = PostCommentTextEditorModel(
+      uid: uid,
+      postId: ref.read(choicedPostProvider.notifier).state.id,
+      userUid: userData.uid,
+      message: message,
+      postTime: formattedTime,
+      commentUserInfo: userData,
+      isEditor: false,
+      textEditingController: TextEditingController(text: message),
+    );
+
+    ///コメントListにコメント追加する
+    ref.read(postCommentListControllerProvider.notifier).addDataTofirst(sdsat);
+
+    PostModel c = choiceData;
+    c.commentCount++;
+
+    /// 詳細ページのコメント”数”更新する
+    ref.read(choicedPostProvider.notifier).state = PostModel().copyWith(data: c);
+    if (postListController != null) {
+      /// Listページのコメント”数”更新する
+      ref.read(postListController.notifier).editData(dataIndex, c);
+    }
+
+    render();
+  }
+
+  ///コメント編集
+  Future<void> postCommentEdit({required PostCommentTextEditorModel data}) async {
+    String newMessage = data.textEditingController.text;
+    data.isEditor = !data.isEditor;
+    if (data.message != newMessage) {
+      await PostService().updatePostComment(id: data.uid, mainMessage: newMessage);
+      data.message = newMessage;
+    }
+    render();
+  }
+
+  ////コメント削除確認
+  Future<void> postCommentDeleteCheck({
+    required PostCommentTextEditorModel data,
+    required int dataIndex,
+    StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController,
+  }) async {
+    ///削除確認
+    ConfirmDilaog(
+      title: "提示",
+      content: "確定要刪除該回覆？",
+      conirmFunc: () async {
+        ///削除実行する
+        await PostService().deletePostComment(id: data.uid);
+
+        PostModel choiceData = ref.read(choicedPostProvider);
+
+        PostModel c = choiceData;
+        c.commentCount--;
+
+        /// 詳細ページのコメント”数”更新する
+        ref.read(choicedPostProvider.notifier).state = PostModel().copyWith(data: c);
+
+        ///コメントListのコメント削除
+        ref.read(postCommentListControllerProvider.notifier).removeData(dataIndex);
+        if (postListController != null) {
+          /// Listページのコメント”数”更新する
+          ref.read(postListController.notifier).editData(dataIndex, c);
+        }
+        render();
+      },
+    ).show(context);
+  }
 }
