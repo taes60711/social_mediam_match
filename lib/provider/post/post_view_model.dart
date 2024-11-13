@@ -21,25 +21,6 @@
 //   BuildContext context;
 //   PostViewModel({required this.context});
 
-//   Future<void> createPost({required String title, required String msg, required int type}) async {
-//     ProfileData userData = context.read<UserProvider>().userData;
-//     String fomattedContent = await RichTextFormat(htmlString: msg).sendPostImgFormat();
-
-//     await PostService().createPost(userData.uid, title, fomattedContent, type);
-
-//     PostModel createdData = PostModel(
-//       id: 0,
-//       createdBy: userData.uid,
-//       title: title,
-//       mainMessage: fomattedContent,
-//       postTime: PostModel.dateFormatted(DateTime.now().toUtc().toString()),
-//       type: type,
-//       postUserInfo: userData,
-//     );
-
-//     context.read<BaseAPIListProvider<PostModel>>().createData(createdData: createdData);
-//   }
-
 //   void showOptionBottomSheet({required PostModel choicedPost}) {
 //     showModalBottomSheet(
 //         context: globalContext,
@@ -98,72 +79,6 @@
 //         });
 //   }
 
-//   void showPostCommentPageSheet({required PostModel choicedPost}) {
-//     showModalBottomSheet(
-//         context: context,
-//         isScrollControlled: true,
-//         backgroundColor: Colors.transparent,
-//         builder: (builder) {
-//           return MultiProvider(
-//             providers: [
-//               ChangeNotifierProvider(create: (_) => BaseAPIListProvider<PostCommentTextEditorModel>()),
-//               ChangeNotifierProvider(create: (_) => PostCommentProvider()),
-//             ],
-//             child: DraggableScrollableSheet(
-//               expand: false,
-//               minChildSize: 0.55,
-//               initialChildSize: 0.6,
-//               maxChildSize: 0.6,
-//               builder: (context, scrollController) {
-//                 return Container(
-//                   decoration: const BoxDecoration(
-//                     color: Colors.white,
-//                     borderRadius: BorderRadius.vertical(
-//                       top: Radius.circular(10),
-//                     ),
-//                   ),
-//                   child: PostCommentPage(choicedPost: choicedPost),
-//                 );
-//               },
-//             ),
-//           );
-//         });
-//   }
-
-// Widget _bottomSheetBtn({required IconData icon, required String btnText, required bntFunc}) {
-//   return GestureDetector(
-//     onTap: () {
-//       bntFunc();
-//     },
-//     child: Container(
-//       margin: const EdgeInsets.only(bottom: 10, right: 10, left: 10),
-//       height: 45,
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(10),
-//         color: normalBgColor2,
-//       ),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           Icon(
-//             icon,
-//             color: normalTextColor,
-//             size: 25,
-//           ),
-//           const SizedBox(width: 10),
-//           SizedBox(
-//             width: 70,
-//             child: Text(
-//               btnText,
-//               style: TextStyle(color: normalTextColor),
-//             ),
-//           ),
-//         ],
-//       ),
-//     ),
-//   );
-// }
-
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
@@ -171,9 +86,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 import '../../components/home/postPage/post_detail_page.dart';
+import '../../components/home/postPage/post_type_board/post_page_by_type.dart';
 import '../../components/utilities/apiListView/api_list_controller.dart';
 import '../../components/utilities/dialog/confirm_dialog.dart';
+import '../../models/rich_text_format.dart';
 import '../../models/user_model.dart';
+import '../../pagemanager/setting/route_controller.dart';
 import '../../services/post_service.dart';
 import '../account/user_provider.dart';
 import 'post_provider.dart';
@@ -183,6 +101,37 @@ class PostViewModel {
   final Function render;
   final BuildContext context;
   PostViewModel({required this.ref, required this.context, required this.render});
+
+  Future<void> postCreate({required String postTitle, required String postContent, PostBoard? postBoard}) async {
+    ProfileData userData = ref.watch(loginUserData);
+
+    int postType = ref.read(postCreateChoiceBoard).type;
+
+    String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
+    print("Title $postTitle Board: $postType   Message : $fomattedContent  Type: ${ref.watch(postCreateChoiceBoard).id}");
+    int postIndex = await PostService().createPost(userData.uid, postTitle, fomattedContent, ref.watch(postCreateChoiceBoard).id);
+    print("Create PostIndex ${postIndex}");
+    PostModel post = PostModel(
+      id: postIndex,
+      createdBy: userData.uid,
+      title: postTitle,
+      type: postType,
+      mainMessage: fomattedContent,
+      commentCount: 0,
+      postTime: PostModel.dateFormatted(DateTime.now().toUtc().toString()),
+      postUserInfo: userData,
+    );
+
+    RouteOptions.pop();
+    if (postBoard == null) {
+      ref.read(choicedPostBoardProvider.notifier).update((state) => ref.read(postCreateChoiceBoard));
+      PostPageByType().show(context);
+    } else {
+      ref.read(typelistControllerProvider).scrollController.jumpTo(0);
+      ref.read(typelistControllerProvider.notifier).addDataTofirst(post);
+      render();
+    }
+  }
 
   ///文章詳細ページ開く
   Future<void> postDetailPageInit(
@@ -265,14 +214,13 @@ class PostViewModel {
     ///コメントListにコメント追加する
     ref.read(postCommentListControllerProvider.notifier).addDataTofirst(sdsat);
 
-    PostModel c = choiceData;
-    c.commentCount++;
+    choiceData.commentCount++;
 
     /// 詳細ページのコメント”数”更新する
-    ref.read(choicedPostProvider.notifier).state = PostModel().copyWith(data: c);
+    ref.read(choicedPostProvider.notifier).state = PostModel().copyWith(data: choiceData);
     if (postListController != null) {
       /// Listページのコメント”数”更新する
-      ref.read(postListController.notifier).editData(dataIndex, c);
+      ref.read(postListController.notifier).editData(dataIndex, choiceData);
     }
 
     render();

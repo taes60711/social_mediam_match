@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/services/friend_service.dart';
 import 'package:web_socket_channel/io.dart';
 
-import '../components/utilities/endDrawers/chat_room_end_drawer.dart';
 import '../global.dart';
 import '../models/friend_model.dart';
 import '../models/user_model.dart';
@@ -192,3 +192,7 @@ class FriendProvider extends ChangeNotifier {
   //   notifyListeners();
   // }
 }
+
+final isFriendProvider = StateProvider<bool>((ref) {
+  return false;
+});

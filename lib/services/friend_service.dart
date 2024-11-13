@@ -42,6 +42,20 @@ class FriendService extends ApiClient {
     return roomMsg;
   }
 
+  /// フレンドチェク
+  Future<bool> getIsFrined({required String userUID, required String ohterUserUID}) async {
+    Map<String, dynamic> paramters = {
+      "useUId": userUID,
+      "otherUserUId": ohterUserUID,
+    };
+
+    String responseData = await apiGet("/chat/getIsFriend", paramters: paramters);
+
+    print("getIsFriend $responseData");
+
+    return responseData == "true" ? true : false;
+  }
+
   ///メッセージ送る
   ///roomid: チャットルームのID roomid: ログインユーザID　message:打ったメッセージ
   Future<bool> sendMessage(int roomId, String userId, String message) async {

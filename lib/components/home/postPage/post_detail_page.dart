@@ -11,6 +11,7 @@ import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
+import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/user_icon.dart';
@@ -55,9 +56,15 @@ class PostDetailPage extends BaseEndDrawer {
                   /// ユーザデータ
                   Row(
                     children: [
-                      UserIcon(
-                        iconSize: ScreenSize.fitPxWidth(30),
-                        image: choiceData.postUserInfo.image,
+                      GestureDetector(
+                        onTap: () {
+                          ///ユーザー詳細ページに遷移
+                          UserProfileBottomSheet(userData: choiceData.postUserInfo).show(context);
+                        },
+                        child: UserIcon(
+                          iconSize: ScreenSize.fitPxWidth(30),
+                          image: choiceData.postUserInfo.image,
+                        ),
                       ),
                       SizedBox(width: ScreenSize.fitPxWidth(5)),
                       Column(
