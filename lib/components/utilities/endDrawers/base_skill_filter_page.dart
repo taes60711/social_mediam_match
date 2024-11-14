@@ -43,7 +43,7 @@ class BaseSkillFilterPage extends BaseEndDrawer {
           children: [
             BaseTopBar(
               backFunc: () => closePage(),
-              rightWidget: filterSearch(),
+              rightWidget: filterSearchBtn(),
             ),
             SizedBox(height: ScreenSize.fitPxWidth(8)),
             choicedFilterSkillList(),
@@ -174,7 +174,7 @@ class BaseSkillFilterPage extends BaseEndDrawer {
     );
   }
 
-  Widget filterSearch() {
+  Widget filterSearchBtn() {
     return MainBtn(
         title: btnStr,
         onPress: () async {

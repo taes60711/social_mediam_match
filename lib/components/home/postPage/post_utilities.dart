@@ -11,7 +11,7 @@ import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
-import 'editor_page.dart';
+import 'post_editor_page.dart';
 import 'post_manager_bottom_sheet.dart';
 
 class PostViewUtilities {

@@ -20,15 +20,29 @@ enum EdiType {
 class CourseRichTextEdit extends BaseFadeScalePage {
   final Function courseEditPageRender;
   final EdiType ediType;
+  final String? tite;
+  final String? content;
 
   CourseRichTextEdit({
     this.ediType = EdiType.detail,
     required this.courseEditPageRender,
+    this.tite,
+    this.content,
   });
+  TextEditingController titleController = TextEditingController();
+  QuillEditorController courserController = QuillEditorController();
+
+  @override
+  Future<void> initState(WidgetRef ref) async {
+    if (tite != null && ediType == EdiType.chapter) {
+      titleController.text = tite ?? "";
+      courserController.setText(content ?? "");
+      render();
+    }
+  }
+
   @override
   Widget build(WidgetRef ref) {
-    TextEditingController titleController = TextEditingController();
-    QuillEditorController controller = QuillEditorController();
     return CommonScaffold(
       type: PageType.main,
       child: Padding(
@@ -39,7 +53,7 @@ class CourseRichTextEdit extends BaseFadeScalePage {
               rightWidget: MainBtn(
                 title: "保存",
                 onPress: () async {
-                  String richTextContent = await controller.getText();
+                  String richTextContent = await courserController.getText();
                   if (ediType == EdiType.chapter) {
                     String title = titleController.text;
                     print("titleController: $title  richTextContent $richTextContent");
@@ -68,7 +82,7 @@ class CourseRichTextEdit extends BaseFadeScalePage {
               ),
             ),
             Expanded(
-              child: RichTextEditor(controller: controller, content: ""),
+              child: RichTextEditor(controller: courserController, content: content ?? ""),
             ),
           ],
         ),

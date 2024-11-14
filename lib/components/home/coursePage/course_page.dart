@@ -63,16 +63,17 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
               ),
               Expanded(
                 child: APIListWidget(
-                    apiFunc: (int page, int size) {
-                      return CourseService().getAllCourses(userData.uid, page, size);
-                    },
-                    listControllerProvider: courseMainPageListPorver,
-                    haveBottomBar: true,
-                    customFloatBtn: CourseUtilites.courseCreateButton(context),
-                    loadingWidget: const CourseLoading(),
-                    itemChild: (data, index) {
-                      return CourseUtilites().courseItemContent(context, ref, data: data);
-                    }),
+                  apiFunc: (int page, int size) {
+                    return CourseService().getAllCourses(userData.uid, page, size);
+                  },
+                  listControllerProvider: courseMainPageListPorver,
+                  haveBottomBar: true,
+                  customFloatBtn: CourseUtilites.courseCreateButton(context),
+                  loadingWidget: const CourseLoading(),
+                  itemChild: (data, index) {
+                    return CourseUtilites().courseItemContent(context, ref, data: data);
+                  },
+                ),
               ),
             ],
           ),

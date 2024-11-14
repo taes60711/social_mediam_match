@@ -58,6 +58,7 @@ class CourseModel {
     this.postTime = "yyyy-MM-dd HH:mm:ss",
     this.type = -1,
     this.isPublic = false,
+    //none added signing
     this.signUpStatus = "",
     required this.courseCreateduserInfo,
   });
@@ -90,6 +91,25 @@ class CourseModel {
       isPublic: json['isPublic'],
       signUpStatus: json['signUpStatus'],
       courseCreateduserInfo: ProfileData.toModel(json['user']),
+    );
+  }
+
+  CourseModel copyWith({CourseModel? data}) {
+    return CourseModel(
+      id: data?.id ?? id,
+      createdBy: data?.createdBy ?? createdBy,
+      title: data?.title ?? title,
+      needLevel: data?.needLevel ?? needLevel,
+      content: data?.content ?? content,
+      beforeNeed: data?.beforeNeed ?? beforeNeed,
+      prStory: data?.prStory ?? prStory,
+      chapterList: data?.chapterList ?? chapterList,
+      courseLearningSkills: data?.courseLearningSkills ?? courseLearningSkills,
+      postTime: data?.postTime ?? postTime,
+      type: data?.type ?? type,
+      isPublic: data?.isPublic ?? isPublic,
+      signUpStatus: data?.signUpStatus ?? signUpStatus,
+      courseCreateduserInfo: data?.courseCreateduserInfo ?? courseCreateduserInfo,
     );
   }
 }

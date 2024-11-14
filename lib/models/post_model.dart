@@ -94,9 +94,7 @@ class PostModel {
     return formattedTime;
   }
 
-  PostModel copyWith({
-    PostModel? data,
-  }) {
+  PostModel copyWith({PostModel? data}) {
     return PostModel(
       id: data?.id ?? id,
       createdBy: data?.createdBy ?? createdBy,
