@@ -8,55 +8,9 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import '../../../../models/course_model.dart';
 import '../../../utilities/inputField/base_input.dart';
 import '../../../utilities/style/screen_size.dart';
-
-// class CourseRichTextEdit extends StatelessWidget {
-//   final BuildContext courseContext;
-//   final int? index;
-//   final String? prStory;
-//   const CourseRichTextEdit({
-//     super.key,
-//     this.index,
-//     this.prStory,
-//     required this.courseContext,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     TextEditingController titleController = TextEditingController();
-//     return Scaffold(
-//       body: Column(
-//         children: [
-//           BaseTopBar(
-//             title: prStory != null ? "詳細介紹" : "",
-//             rightWidget: TextBtn(
-//                 btnWidth: 55,
-//                 verticalMargin: 2,
-//                 btnRadius: 8,
-//                 title: "保存",
-//                 btnColor: normalBgColor2.withOpacity(0.8),
-//                 onPress: () async {
-//                   String editedContent = await controller.getText();
-//                   if (prStory != null) {
-//                     courseContext.read<CourseProvider>().prStoryOnChange(editedContent);
-//                   } else {
-//                     String chapterFormattedStr = '{"text":"${titleController.text}","url":"$editedContent"}';
-//                     courseContext.read<CourseProvider>().addChapterContent(index ?? -1, chapterFormattedStr);
-//                   }
-
-//                   RouteOptions.pop();
-//                 }),
-//           ),
-//           prStory != null ? Container() : LabelInput(title: "標題", textController: titleController),
-//           Expanded(
-//             child: RichTextEditor(controller: controller, content: prStory ?? ""),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 enum EdiType {
   detail,
@@ -65,7 +19,6 @@ enum EdiType {
 
 class CourseRichTextEdit extends BaseFadeScalePage {
   final Function courseEditPageRender;
-
   final EdiType ediType;
 
   CourseRichTextEdit({
@@ -89,16 +42,19 @@ class CourseRichTextEdit extends BaseFadeScalePage {
                   String richTextContent = await controller.getText();
                   if (ediType == EdiType.chapter) {
                     String title = titleController.text;
-
                     print("titleController: $title  richTextContent $richTextContent");
+                    List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
+                    CourseChapterInfo createChapter =
+                        CourseChapterInfo(chapter: chapterList.length + 1, chapterName: title, content: [richTextContent]);
+
+                    chapterList.add(createChapter);
+                    ref.read(courseEditChapterList.notifier).update((state) => chapterList);
                   } else {
-                    String richTextContent = await controller.getText();
                     print("richTextContent $richTextContent");
                     ref.read(courseDetailContent.notifier).update((state) => richTextContent);
-
-                    courseEditPageRender();
-                    closePage();
                   }
+                  courseEditPageRender();
+                  closePage();
                 },
               ),
             ),

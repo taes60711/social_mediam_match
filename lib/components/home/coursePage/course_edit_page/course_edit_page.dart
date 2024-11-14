@@ -419,6 +419,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade_scale_page.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_skill_filter_page.dart';
 
+import '../../../../models/course_model.dart';
 import '../../../../models/skill_model.dart';
 import '../../../utilities/background_widget.dart';
 import '../../../utilities/basic_top_bar.dart';
@@ -433,7 +434,9 @@ import 'course_rich_text_edit.dart';
 
 class CourseEditPage extends BaseFadeScalePage {
   TextEditingController titleController = TextEditingController();
+  bool isPublic = true;
 
+  List<CourseChapterInfo> chapters = [];
   @override
   Widget build(WidgetRef ref) {
     return CommonScaffold(
@@ -475,7 +478,7 @@ class CourseEditPage extends BaseFadeScalePage {
             inputField(hintText: "前置需求", editingController: TextEditingController()),
             SizedBox(height: ScreenSize.fitPxHeight(5)),
             const CourseLevelChoicedLabel(),
-            SizedBox(height: ScreenSize.fitPxHeight(10)),
+            SizedBox(height: ScreenSize.fitPxHeight(15)),
             MainBtn(
               onPress: () {
                 BaseSkillFilterPage(
@@ -496,37 +499,168 @@ class CourseEditPage extends BaseFadeScalePage {
                       "學習的技能",
                       style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
                     ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Row(
-                          children: ref.read(courseEditSkillList).map((e) {
-                            return Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: ScreenSize.fitPxWidth(5),
-                                vertical: ScreenSize.fitPxWidth(3),
+                    ref.read(courseEditSkillList).isEmpty
+                        ? Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: ScreenSize.fitPxWidth(5),
+                              vertical: ScreenSize.fitPxWidth(3),
+                            ),
+                            margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
+                            decoration: BoxDecoration(
+                              color: AppColors.greyColor57,
+                              borderRadius: BorderRadius.circular(
+                                ScreenSize.fitPxWidth(8),
                               ),
-                              margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
-                              decoration: BoxDecoration(
-                                color: AppColors.greyColor57,
-                                borderRadius: BorderRadius.circular(
-                                  ScreenSize.fitPxWidth(8),
-                                ),
+                            ),
+                            child: Text(
+                              "尚無",
+                              style: TextStyle(color: AppColors.whiteColor),
+                            ),
+                          )
+                        : Expanded(
+                            child: SingleChildScrollView(
+                              child: Row(
+                                children: ref.read(courseEditSkillList).map((e) {
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: ScreenSize.fitPxWidth(5),
+                                      vertical: ScreenSize.fitPxWidth(3),
+                                    ),
+                                    margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.greyColor57,
+                                      borderRadius: BorderRadius.circular(
+                                        ScreenSize.fitPxWidth(8),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      e.name,
+                                      style: TextStyle(color: AppColors.whiteColor),
+                                    ),
+                                  );
+                                }).toList(),
                               ),
-                              child: Text(
-                                e.name,
-                                style: TextStyle(color: AppColors.whiteColor),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
+                            ),
+                          ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: ScreenSize.fitPxHeight(10)),
+            SizedBox(height: ScreenSize.fitPxHeight(15)),
             courseDetailEdit(),
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    /// チャプター追加ボタン
+                    GestureDetector(
+                      onTap: () {
+                        CourseRichTextEdit(courseEditPageRender: render, ediType: EdiType.chapter).show(context);
+                      },
+                      child: Row(
+                        children: [
+                          Text(
+                            "章節",
+                            style: TextStyle(
+                              color: AppColors.whiteColor,
+                            ),
+                          ),
+                          Container(
+                            width: 30,
+                            height: 30,
+                            color: Colors.transparent,
+                            child: Icon(
+                              FontAwesomeIcons.plus,
+                              color: AppColors.greyColor130,
+                              size: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    ///公開チェックボックス
+                    GestureDetector(
+                      onTap: () {
+                        isPublic = !isPublic;
+                        render();
+                      },
+                      child: Row(
+                        children: [
+                          Checkbox(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                            activeColor: normalBgColor,
+                            side: MaterialStateBorderSide.resolveWith(
+                              (states) => BorderSide(width: 0.8, color: normalBgColor),
+                            ),
+                            value: isPublic,
+                            onChanged: (value) {
+                              isPublic = !isPublic;
+                              render();
+                            },
+                          ),
+                          Text(
+                            "公開",
+                            style: TextStyle(
+                              color: AppColors.whiteColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: ref.watch(courseEditChapterList).asMap().entries.map((e) {
+                    int index = e.key;
+                    CourseChapterInfo value = e.value;
+
+                    return CustomExpansionTile(
+                      initiallyExpanded: true,
+                      title: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              value.chapterName == "" ? "chapter ${value.chapter}" : value.chapterName,
+                              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+                            ),
+                          ),
+                          MainBtn(
+                            onPress: () {
+                              CourseRichTextEdit(courseEditPageRender: render).show(context);
+                            },
+                            child: Icon(
+                              Icons.edit,
+                              size: ScreenSize.fontSize20,
+                              color: normalBgColor,
+                            ),
+                          ),
+                          SizedBox(width: ScreenSize.fitPxWidth(10)),
+                          MainBtn(
+                            onPress: () {
+                              List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
+
+                              chapterList.removeAt(index);
+                              ref.read(courseEditChapterList.notifier).update((state) => chapterList);
+                              render();
+                            },
+                            child: Icon(
+                              Icons.close,
+                              size: ScreenSize.fontSize20,
+                              color: normalBgColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      children: [
+                        RichTextView(content: value.content[0]),
+                      ],
+                    );
+                  }).toList(),
+                )
+              ],
+            )
           ],
         ),
       ),
@@ -555,8 +689,8 @@ class CourseEditPage extends BaseFadeScalePage {
                 style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
               ),
             ),
-            GestureDetector(
-              onTap: () {
+            MainBtn(
+              onPress: () {
                 CourseRichTextEdit(courseEditPageRender: render).show(context);
               },
               child: Row(
@@ -589,6 +723,7 @@ class CourseEditPage extends BaseFadeScalePage {
   void resetAllData() {
     ref.read(courseDetailContent.notifier).update((state) => "");
     ref.read(courseEditSkillList.notifier).update((state) => []);
+    ref.read(courseEditChapterList.notifier).update((state) => []);
   }
 }
 
@@ -698,6 +833,8 @@ final courseChoiceLevel = StateProvider<String>((ref) {
 final courseEditSkillList = StateProvider<List<RequestSkillListData>>((ref) {
   return [];
 });
+
+final courseEditChapterList = StateProvider<List<CourseChapterInfo>>((ref) => []);
 
 final courseDetailContent = StateProvider<String>((ref) {
   return "";
