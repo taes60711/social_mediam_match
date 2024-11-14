@@ -246,6 +246,8 @@ import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 
 import '../../../models/course_model.dart';
+import '../../../models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
 import '../../utilities/basic_top_bar.dart';
 import '../../utilities/custom_expansion_title.dart';
 import '../../utilities/rich_text_view.dart';
@@ -263,6 +265,7 @@ class CourseDetailPage extends BaseEndDrawer {
   @override
   Widget build(WidgetRef ref) {
     CourseModel choiceData = ref.read(choicedCourseProvider);
+    ProfileData userData = ref.read(loginUserData);
     return Column(
       children: [
         BaseTopBar(
@@ -290,13 +293,13 @@ class CourseDetailPage extends BaseEndDrawer {
                         "類別 ${choiceData.type}",
                         style: TextStyle(fontSize: ScreenSize.fontSize12, color: hintTextColor),
                       ),
-                      Expanded(
-                          child: SizedBox(
-                        width: 1,
-                      )),
-                      MainBtn(
-                        title: "申請",
-                        onPress: () {},
+                      const Expanded(child: SizedBox(width: 1)),
+                      Visibility(
+                        visible: userData.uid != choiceData.createdBy && choiceData.signUpStatus != "added",
+                        child: MainBtn(
+                          title: "申請",
+                          onPress: () {},
+                        ),
                       ),
                     ],
                   ),

@@ -472,7 +472,7 @@ class CourseEditPage extends BaseFadeScalePage {
               ),
               rightWidget: MainBtn(
                 onPress: () async {
-                  ProfileData userData = ref.read(loginUserData.notifier).state;
+                  ProfileData userData = ref.read(loginUserData);
                   List<String> learningSkillList = ref.read(courseEditSkillList).map((e) => e.name).toList();
 
                   CourseModel createdCourse = CourseModel(
@@ -522,76 +522,7 @@ class CourseEditPage extends BaseFadeScalePage {
             ///レベル設定
             const CourseLevelChoicedLabel(),
             SizedBox(height: ScreenSize.fitPxHeight(15)),
-
-            /// スキル設定
-            MainBtn(
-              onPress: () {
-                BaseSkillFilterPage(
-                  viewRender: render,
-                  filteredSkillList: courseEditSkillList,
-                  btnStr: "確認",
-                  searchFunc: (list) {
-                    ref.read(courseEditSkillList.notifier).update((state) => list);
-                  },
-                ).show(context);
-              },
-              child: Container(
-                width: ScreenSize.width,
-                color: Colors.transparent,
-                child: Row(
-                  children: [
-                    Text(
-                      "學習的技能",
-                      style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
-                    ),
-                    ref.read(courseEditSkillList).isEmpty
-                        ? Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: ScreenSize.fitPxWidth(5),
-                              vertical: ScreenSize.fitPxWidth(3),
-                            ),
-                            margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
-                            decoration: BoxDecoration(
-                              color: AppColors.greyColor57,
-                              borderRadius: BorderRadius.circular(
-                                ScreenSize.fitPxWidth(8),
-                              ),
-                            ),
-                            child: Text(
-                              "尚無",
-                              style: TextStyle(color: AppColors.whiteColor),
-                            ),
-                          )
-                        : Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: ref.read(courseEditSkillList).map((e) {
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: ScreenSize.fitPxWidth(5),
-                                      vertical: ScreenSize.fitPxWidth(3),
-                                    ),
-                                    margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.greyColor57,
-                                      borderRadius: BorderRadius.circular(
-                                        ScreenSize.fitPxWidth(8),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      e.name,
-                                      style: TextStyle(color: AppColors.whiteColor),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ),
-                  ],
-                ),
-              ),
-            ),
+            skillChoiceBuild(),
             SizedBox(height: ScreenSize.fitPxHeight(15)),
 
             ///詳細内容
@@ -716,6 +647,78 @@ class CourseEditPage extends BaseFadeScalePage {
                 );
               }).toList(),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// スキル設定
+  Widget skillChoiceBuild() {
+    return MainBtn(
+      onPress: () {
+        BaseSkillFilterPage(
+          viewRender: render,
+          filteredSkillList: courseEditSkillList,
+          btnStr: "確認",
+          searchFunc: (list) {
+            ref.read(courseEditSkillList.notifier).update((state) => list);
+          },
+        ).show(context);
+      },
+      child: Container(
+        width: ScreenSize.width,
+        color: Colors.transparent,
+        child: Row(
+          children: [
+            Text(
+              "學習的技能",
+              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+            ),
+            ref.read(courseEditSkillList).isEmpty
+                ? Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ScreenSize.fitPxWidth(5),
+                      vertical: ScreenSize.fitPxWidth(3),
+                    ),
+                    margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
+                    decoration: BoxDecoration(
+                      color: AppColors.greyColor57,
+                      borderRadius: BorderRadius.circular(
+                        ScreenSize.fitPxWidth(8),
+                      ),
+                    ),
+                    child: Text(
+                      "尚無",
+                      style: TextStyle(color: AppColors.whiteColor),
+                    ),
+                  )
+                : Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: ref.read(courseEditSkillList).map((e) {
+                          return Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: ScreenSize.fitPxWidth(5),
+                              vertical: ScreenSize.fitPxWidth(3),
+                            ),
+                            margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
+                            decoration: BoxDecoration(
+                              color: AppColors.greyColor57,
+                              borderRadius: BorderRadius.circular(
+                                ScreenSize.fitPxWidth(8),
+                              ),
+                            ),
+                            child: Text(
+                              e.name,
+                              style: TextStyle(color: AppColors.whiteColor),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),
