@@ -131,35 +131,6 @@ class ApiClient {
             onFailedFunc != null ? onFailedFunc() : RouteOptions.pop();
             _isDialogShowing = false;
           }).show(globalContext);
-      // showDialog<void>(
-      //   context: globalContext,
-      //   builder: (BuildContext context) {
-      //     return AlertDialog(
-      //       contentPadding: EdgeInsets.zero,
-      //       content: Container(
-      //         padding: const EdgeInsets.all(10),
-      //         margin: const EdgeInsets.all(15),
-      //         width: 180,
-      //         height: 150,
-      //         child: Column(
-      //           children: [
-      //             const SizedBox(height: 10),
-      //             Expanded(
-      //               child: Text(tr("serverErrorContent")),
-      //             ),
-      //             MainBtn(
-      //               title: tr("errConfirm"),
-      //               onPress: () {
-      //                 onFailedFunc != null ? onFailedFunc() : RouteOptions.pop();
-      //                 _isDialogShowing = false;
-      //               },
-      //             )
-      //           ],
-      //         ),
-      //       ),
-      //     );
-      //   },
-      // );
     }
   }
 }

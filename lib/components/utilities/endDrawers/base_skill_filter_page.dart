@@ -13,8 +13,9 @@ import '../../utilities/style/style_config.dart';
 class BaseSkillFilterPage extends BaseEndDrawer {
   final Function viewRender;
   final StateProvider<List<RequestSkillListData>> filteredSkillList;
+  final String btnStr;
   final Function(List<RequestSkillListData> choicedFilterSkillList) searchFunc;
-  BaseSkillFilterPage({required this.viewRender, required this.filteredSkillList, required this.searchFunc});
+  BaseSkillFilterPage({required this.viewRender, required this.filteredSkillList, required this.searchFunc, this.btnStr = "搜尋"});
   Map<SkillType, List<RequestSkillListData>> mapedSkillList = {
     SkillType.frontend: [],
     SkillType.iot: [],
@@ -175,7 +176,7 @@ class BaseSkillFilterPage extends BaseEndDrawer {
 
   Widget filterSearch() {
     return MainBtn(
-        title: "搜尋",
+        title: btnStr,
         onPress: () async {
           await searchFunc(tempFilteredSkillList);
           closePage();

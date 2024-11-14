@@ -68,6 +68,7 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
                     },
                     listControllerProvider: courseMainPageListPorver,
                     haveBottomBar: true,
+                    customFloatBtn: CourseUtilites.courseCreateButton(context),
                     loadingWidget: const CourseLoading(),
                     itemChild: (data, index) {
                       return CourseUtilites().courseItemContent(context, ref, data: data);

@@ -1,22 +1,3 @@
-// // ignore_for_file: use_build_context_synchronously
-
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import 'package:social_mediam_match/components/home/postPage/post_comment_page.dart';
-// import 'package:social_mediam_match/models/user_model.dart';
-// import 'package:social_mediam_match/provider/post/post_provider.dart';
-// import '../../components/utilities/apiListView/base_api_list_provider.dart';
-// import '../../components/utilities/basic_top_bar.dart';
-// import '../../components/utilities/endDrawers/post_comment_end_drawer.dart';
-// import '../../components/utilities/style/style_config.dart';
-// import '../../global.dart';
-// import '../../models/post_model.dart';
-// import '../../models/rich_text_format.dart';
-// import '../../pageManager/setting/route_controller.dart';
-// import '../../services/post_service.dart';
-// import '../account/user_provider.dart';
-// import 'post_comment_provider.dart';
-
 // class PostViewModel {
 //   BuildContext context;
 //   PostViewModel({required this.context});

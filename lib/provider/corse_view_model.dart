@@ -7,8 +7,6 @@ import 'package:social_mediam_match/components/utilities/custom_button.dart';
 
 import 'package:social_mediam_match/services/course_service.dart';
 import 'package:social_mediam_match/services/skill_service.dart';
-
-import '../components/home/coursePage/course_edit_page/course_rich_text_edit.dart';
 import '../components/utilities/apiListView/base_api_list_provider.dart';
 import '../components/utilities/rich_text_view.dart';
 import '../components/utilities/style/style_config.dart';
@@ -25,10 +23,6 @@ import 'home/skill_change_view_provider.dart';
 class CourseViewModel {
   BuildContext courseContext;
   CourseViewModel({required this.courseContext});
-
-  // Future<void> courseDetailInit({required CourseModel openedCourse}) async {
-  //   openCourseDetailEndDrawer(context: courseContext, openedCourse: openedCourse);
-  // }
 
   Future<void> courseEditInit({CourseModel? courseData}) async {
     List<RequestSkillListData> requestSkillList = await SkillService().requestSkillList();
@@ -90,26 +84,6 @@ class CourseViewModel {
         },
       );
     }
-  }
-
-  void openRichEditPage({int? chapterIndex, String? prStory}) {
-    showModalBottomSheet(
-      isScrollControlled: true,
-      enableDrag: false,
-      context: courseContext,
-      backgroundColor: Colors.white,
-      useSafeArea: true,
-      builder: (builder) {
-        return FractionallySizedBox(
-          heightFactor: 1,
-          child: CourseRichTextEdit(
-            index: chapterIndex,
-            courseContext: courseContext,
-            prStory: prStory,
-          ),
-        );
-      },
-    );
   }
 
   void openCourseChapterContentPage({required String chapterText, required String chapterUrl}) {

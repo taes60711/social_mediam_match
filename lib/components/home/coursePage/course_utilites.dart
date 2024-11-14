@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_edit_page/course_edit_page.dart';
 
 import '../../../models/course_model.dart';
 import '../../utilities/custom_button.dart';
@@ -11,6 +12,28 @@ import 'course_detail.dart';
 import 'course_page.dart';
 
 class CourseUtilites {
+  ///コース作るボタン
+  static Widget courseCreateButton(BuildContext context) {
+    return MainBtn(
+      onPress: () {
+        CourseEditPage().show(context);
+      },
+      child: Container(
+        width: ScreenSize.fitPxWidth(40),
+        height: ScreenSize.fitPxWidth(40),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: AppColors.whiteColor,
+        ),
+        child: Icon(
+          FontAwesomeIcons.pen,
+          size: 16,
+          color: AppColors.orangeColor,
+        ),
+      ),
+    );
+  }
+
   Widget courseItemContent(BuildContext context, WidgetRef ref, {required CourseModel data}) {
     return MainBtn(
       onPress: () {
