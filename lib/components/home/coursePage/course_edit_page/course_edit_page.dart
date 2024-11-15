@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,20 +5,19 @@ import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade
 import 'package:social_mediam_match/components/utilities/endDrawers/base_skill_filter_page.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
-
 import '../../../../models/course_model.dart';
-import '../../../../models/skill_model.dart';
 import '../../../../provider/course_provider.dart';
 import '../../../../services/course_service.dart';
 import '../../../utilities/background_widget.dart';
 import '../../../utilities/basic_top_bar.dart';
-import '../../../utilities/bottomSheets/base_bottom_sheet.dart';
 import '../../../utilities/custom_button.dart';
 import '../../../utilities/custom_expansion_title.dart';
 import '../../../utilities/inputField/base_input.dart';
+import '../../../utilities/inputField/mutl_input.dart';
 import '../../../utilities/rich_text_view.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/style_config.dart';
+import 'course_level_choice_label.dart';
 import 'course_rich_text_edit.dart';
 
 class CourseEditPage extends BaseFadeScalePage {
@@ -36,7 +34,6 @@ class CourseEditPage extends BaseFadeScalePage {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             BaseTopBar(
               leftWidget: GestureDetector(
@@ -96,141 +93,154 @@ class CourseEditPage extends BaseFadeScalePage {
                 title: "投稿",
               ),
             ),
-            SizedBox(height: ScreenSize.fitPxHeight(10)),
-            inputField(hintText: "標題", editingController: titleController, fontSzie: ScreenSize.fontSize24),
-            SizedBox(height: ScreenSize.fitPxHeight(10)),
-            inputField(hintText: "大綱", editingController: contentController),
-            SizedBox(height: ScreenSize.fitPxHeight(10)),
-            inputField(hintText: "前置需求", editingController: beforeNeedController),
-            SizedBox(height: ScreenSize.fitPxHeight(5)),
-
-            ///レベル設定
-            const CourseLevelChoicedLabel(),
-            SizedBox(height: ScreenSize.fitPxHeight(15)),
-            skillChoiceBuild(),
-            SizedBox(height: ScreenSize.fitPxHeight(15)),
-
-            ///詳細内容
-            courseDetailEdit(),
-            SizedBox(height: ScreenSize.fitPxHeight(10)),
-
-            /// チャプター追加ボタン　＆　公開チェックボックス
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                /// チャプター追加ボタン
-                GestureDetector(
-                  onTap: () {
-                    CourseRichTextEdit(courseEditPageRender: render, ediType: EdiType.chapter).show(context);
-                  },
-                  child: Row(
-                    children: [
-                      Text(
-                        "章節",
-                        style: TextStyle(
-                          color: AppColors.whiteColor,
-                        ),
-                      ),
-                      Container(
-                        width: 30,
-                        height: 30,
-                        color: Colors.transparent,
-                        child: Icon(
-                          FontAwesomeIcons.plus,
-                          color: AppColors.greyColor130,
-                          size: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                ///公開チェックボックス
-                GestureDetector(
-                  onTap: () {
-                    isPublic = !isPublic;
-                    render();
-                  },
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                        activeColor: normalBgColor,
-                        side: MaterialStateBorderSide.resolveWith(
-                          (states) => BorderSide(width: 0.8, color: normalBgColor),
-                        ),
-                        value: isPublic,
-                        onChanged: (value) {
-                          isPublic = !isPublic;
-                          render();
-                        },
-                      ),
-                      Text(
-                        "公開",
-                        style: TextStyle(
-                          color: AppColors.whiteColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-            ///チャプター内容
-            Column(
-              children: ref.watch(courseEditChapterList).asMap().entries.map((e) {
-                int index = e.key;
-                CourseChapterInfo value = e.value;
-
-                return CustomExpansionTile(
-                  initiallyExpanded: true,
-                  isNeedLoadingWidget: false,
-                  title: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          value.chapterName == "" ? "chapter ${value.chapter}" : value.chapterName,
-                          style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
-                        ),
-                      ),
-                      MainBtn(
-                        onPress: () {
-                          CourseRichTextEdit(
-                            courseEditPageRender: render,
-                            ediType: EdiType.chapter,
-                            tite: value.chapterName,
-                            content: value.content[0],
-                          ).show(context);
-                        },
-                        child: Icon(
-                          Icons.edit,
-                          size: ScreenSize.fontSize20,
-                          color: normalBgColor,
-                        ),
-                      ),
-                      SizedBox(width: ScreenSize.fitPxWidth(10)),
-                      MainBtn(
-                        onPress: () {
-                          List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
-
-                          chapterList.removeAt(index);
-                          ref.read(courseEditChapterList.notifier).update((state) => chapterList);
-                          render();
-                        },
-                        child: Icon(
-                          Icons.close,
-                          size: ScreenSize.fontSize20,
-                          color: normalBgColor,
-                        ),
-                      ),
-                    ],
-                  ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RichTextView(content: value.content[0]),
+                    SizedBox(height: ScreenSize.fitPxHeight(10)),
+
+                    inputField(hintText: "標題", editingController: titleController, fontSzie: ScreenSize.fontSize24),
+                    SizedBox(height: ScreenSize.fitPxHeight(10)),
+
+                    multiInputField(hintText: "大綱", editingController: contentController),
+                    SizedBox(height: ScreenSize.fitPxHeight(10)),
+                    multiInputField(hintText: "前置需求", editingController: beforeNeedController),
+
+                    SizedBox(height: ScreenSize.fitPxHeight(10)),
+
+                    ///レベル設定
+                    const CourseLevelChoicedLabel(),
+                    SizedBox(height: ScreenSize.fitPxHeight(15)),
+                    skillChoiceBuild(),
+                    SizedBox(height: ScreenSize.fitPxHeight(15)),
+
+                    ///詳細内容
+                    courseDetailEdit(),
+                    SizedBox(height: ScreenSize.fitPxHeight(10)),
+
+                    /// チャプター追加ボタン　＆　公開チェックボックス
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        /// チャプター追加ボタン
+                        GestureDetector(
+                          onTap: () {
+                            CourseRichTextEdit(courseEditPageRender: render, ediType: EdiType.chapter).show(context);
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                "章節",
+                                style: TextStyle(
+                                  color: AppColors.whiteColor,
+                                ),
+                              ),
+                              Container(
+                                width: 30,
+                                height: 30,
+                                color: Colors.transparent,
+                                child: Icon(
+                                  FontAwesomeIcons.plus,
+                                  color: AppColors.greyColor130,
+                                  size: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        ///公開チェックボックス
+                        GestureDetector(
+                          onTap: () {
+                            isPublic = !isPublic;
+                            render();
+                          },
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                activeColor: normalBgColor,
+                                side: MaterialStateBorderSide.resolveWith(
+                                  (states) => BorderSide(width: 0.8, color: normalBgColor),
+                                ),
+                                value: isPublic,
+                                onChanged: (value) {
+                                  isPublic = !isPublic;
+                                  render();
+                                },
+                              ),
+                              Text(
+                                "公開",
+                                style: TextStyle(
+                                  color: AppColors.whiteColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    ///チャプター内容
+                    Column(
+                      children: ref.watch(courseEditChapterList).asMap().entries.map((e) {
+                        int index = e.key;
+                        CourseChapterInfo value = e.value;
+
+                        return CustomExpansionTile(
+                          initiallyExpanded: true,
+                          isNeedLoadingWidget: false,
+                          title: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  value.chapterName == "" ? "chapter ${value.chapter}" : value.chapterName,
+                                  style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+                                ),
+                              ),
+                              MainBtn(
+                                onPress: () {
+                                  CourseRichTextEdit(
+                                    courseEditPageRender: render,
+                                    ediType: EdiType.chapter,
+                                    tite: value.chapterName,
+                                    content: value.content[0],
+                                  ).show(context);
+                                },
+                                child: Icon(
+                                  Icons.edit,
+                                  size: ScreenSize.fontSize20,
+                                  color: normalBgColor,
+                                ),
+                              ),
+                              SizedBox(width: ScreenSize.fitPxWidth(10)),
+                              MainBtn(
+                                onPress: () {
+                                  List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
+
+                                  chapterList.removeAt(index);
+                                  ref.read(courseEditChapterList.notifier).update((state) => chapterList);
+                                  render();
+                                },
+                                child: Icon(
+                                  Icons.close,
+                                  size: ScreenSize.fontSize20,
+                                  color: normalBgColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          children: [
+                            RichTextView(content: value.content[0]),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: ScreenSize.fitPxHeight(10)),
                   ],
-                );
-              }).toList(),
+                ),
+              ),
             ),
           ],
         ),
@@ -320,6 +330,17 @@ class CourseEditPage extends BaseFadeScalePage {
     );
   }
 
+  Widget multiInputField({required String hintText, required TextEditingController editingController}) {
+    return MultInput(
+      controller: editingController,
+      hintText: hintText,
+      minLines: 3,
+      maxLines: 3,
+      editPageMaxLines: 10,
+      editPageMinLines: 10,
+    );
+  }
+
   Widget courseDetailEdit() {
     return Builder(builder: (context) {
       return CustomExpansionTile(
@@ -375,116 +396,3 @@ class CourseEditPage extends BaseFadeScalePage {
     ref.read(courseChoiceLevel.notifier).update((state) => "3");
   }
 }
-
-class CourseLevelChoicedLabel extends ConsumerStatefulWidget {
-  const CourseLevelChoicedLabel({super.key});
-
-  @override
-  ConsumerState<CourseLevelChoicedLabel> createState() => _CourseLevelChoicedLabelState();
-}
-
-class _CourseLevelChoicedLabelState extends ConsumerState<CourseLevelChoicedLabel> {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          "難度",
-          style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
-        ),
-        SizedBox(width: ScreenSize.fitPxWidth(10)),
-        MainBtn(
-            onPress: () {
-              CourseLevelChoiceBottomSheet().show(context);
-            },
-            child: boardContaienr(
-              Row(
-                children: [
-                  Text(
-                    ref.watch(courseChoiceLevel),
-                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
-                  ),
-                  SizedBox(width: ScreenSize.fitPxWidth(5)),
-                  Icon(
-                    FontAwesomeIcons.caretDown,
-                    size: ScreenSize.fontSize16,
-                    color: AppColors.whiteColor,
-                  )
-                ],
-              ),
-            )),
-      ],
-    );
-  }
-
-  Widget boardContaienr(Widget child) {
-    return Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: ScreenSize.fitPxHeight(5),
-          vertical: ScreenSize.fitPxHeight(1),
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: AppColors.greyColor98,
-        ),
-        child: child);
-  }
-}
-
-class CourseLevelChoiceBottomSheet extends BaseBottomSheet {
-  FixedExtentScrollController scrollController = FixedExtentScrollController();
-  List<String> item = [];
-  @override
-  double buildHeight() {
-    return 0.3;
-  }
-
-  @override
-  Future<void> initState(WidgetRef ref) async {
-    item = ["1", "2", "3", "4", "5"];
-
-    int choicedItemsIndex = item.indexWhere((element) => element == ref.read(courseChoiceLevel.notifier).state);
-
-    if (choicedItemsIndex != -1) {
-      scrollController.jumpToItem(choicedItemsIndex);
-    }
-
-    render();
-  }
-
-  @override
-  Widget build(WidgetRef ref) {
-    return CupertinoPicker(
-      scrollController: scrollController,
-      itemExtent: 50,
-      onSelectedItemChanged: (int index) {
-        ref.read(courseChoiceLevel.notifier).update((state) => item[index]);
-        render();
-      },
-      children: item
-          .map(
-            (e) => Center(
-              child: Text(
-                e,
-                style: TextStyle(color: AppColors.whiteColor),
-              ),
-            ),
-          )
-          .toList(),
-    );
-  }
-}
-
-final courseChoiceLevel = StateProvider<String>((ref) {
-  return "3";
-});
-
-final courseEditSkillList = StateProvider<List<RequestSkillListData>>((ref) {
-  return [];
-});
-
-final courseEditChapterList = StateProvider<List<CourseChapterInfo>>((ref) => []);
-
-final courseDetailContent = StateProvider<String>((ref) {
-  return "";
-});

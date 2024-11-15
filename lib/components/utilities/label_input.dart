@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
-import 'package:social_mediam_match/components/utilities/custom_button.dart';
+
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-
-import '../../pagemanager/setting/route_controller.dart';
 
 Widget _titleText({required bool isInputRequired, required String title}) {
   Widget titleWidget = Padding(
@@ -57,134 +54,6 @@ Widget _textField(TextEditingController textController, {required bool isMulti})
           controller: textController,
           decoration: inputDecoration,
         );
-}
-
-class MultiLabelInput extends StatelessWidget {
-  final TextEditingController textController;
-  final String displayText;
-  final Function(String) multiOnChange;
-  final String title;
-  final bool? isRequired;
-  final EdgeInsetsGeometry padding;
-  final int maxdisplayLine;
-
-  const MultiLabelInput({
-    super.key,
-    required this.title,
-    required this.textController,
-    required this.displayText,
-    required this.multiOnChange,
-    this.isRequired,
-    this.padding = const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-    this.maxdisplayLine = 3,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    bool isInputRequired = isRequired ?? false;
-    return Padding(
-      padding: padding,
-      child: SizedBox(
-        width: ScreenSize.width,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _titleText(isInputRequired: isInputRequired, title: title),
-            GestureDetector(
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  useSafeArea: true,
-                  builder: (builder) {
-                    return DraggableScrollableSheet(
-                      expand: false,
-                      minChildSize: 0.8,
-                      initialChildSize: 1,
-                      maxChildSize: 1,
-                      builder: (context, scrollController) {
-                        return Container(
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 15),
-                                GestureDetector(
-                                  onTap: () {
-                                    FocusScope.of(context).requestFocus(FocusNode());
-                                  },
-                                  child: Column(
-                                    children: [
-                                      _topBar(
-                                        title: title,
-                                        context: context,
-                                        textController: textController,
-                                        multiOnChange: multiOnChange,
-                                      ),
-                                      const SizedBox(height: 15),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: _textField(textController, isMulti: true),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-              child: _multiDisplayWidget(displayText: displayText, maxdisplayLine: maxdisplayLine),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-Widget _multiDisplayWidget({required String displayText, required int maxdisplayLine}) {
-  return Container(
-    width: ScreenSize.width,
-    padding: const EdgeInsets.all(8),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(
-        color: Colors.grey.withOpacity(0.4),
-      ),
-      color: Colors.grey.withOpacity(0.1),
-    ),
-    child: Text(
-      displayText,
-      maxLines: maxdisplayLine,
-      overflow: TextOverflow.ellipsis,
-    ),
-  );
-}
-
-Widget _topBar(
-    {required String title,
-    required BuildContext context,
-    required TextEditingController textController,
-    required Function(String) multiOnChange}) {
-  return BaseTopBar(
-    title: title,
-    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-    backFunc: () => RouteOptions.pop(),
-    rightWidget: MainBtn(
-      title: "保存",
-      backgroundColor: normalBgColor2,
-      onPress: () {
-        multiOnChange(textController.text);
-        RouteOptions.pop();
-      },
-    ),
-  );
 }
 
 class LabelInput extends StatelessWidget {

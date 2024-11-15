@@ -88,7 +88,7 @@ class PostViewUtilities {
             GestureDetector(
               onTap: () {
                 ///ユーザー詳細ページに遷移
-                UserProfileBottomSheet(userData: data.postUserInfo).show(context);
+                UserProfileAllInfoBottomSheet(userData: data.postUserInfo).show(context);
               },
               child: Padding(
                 padding: EdgeInsets.only(top: ScreenSize.fitPxHeight(2), right: ScreenSize.fitPxWidth(5)),

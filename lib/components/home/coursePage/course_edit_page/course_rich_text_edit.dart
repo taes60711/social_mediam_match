@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
-import 'package:social_mediam_match/components/home/coursePage/course_edit_page/course_edit_page.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade_scale_page.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
@@ -9,6 +8,7 @@ import 'package:social_mediam_match/components/utilities/custom_button.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../../../models/course_model.dart';
+import '../../../../provider/course_provider.dart';
 import '../../../utilities/inputField/base_input.dart';
 import '../../../utilities/style/screen_size.dart';
 

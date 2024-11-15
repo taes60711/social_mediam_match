@@ -9,6 +9,7 @@ import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/course_provider.dart';
 import '../../utilities/basic_top_bar.dart';
+import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/custom_expansion_title.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
@@ -153,27 +154,33 @@ class CourseDetailPage extends BaseEndDrawer {
                   SizedBox(height: ScreenSize.fitPxHeight(10)),
 
                   /// ユーザデータ
-                  Row(
-                    children: [
-                      UserIcon(
-                        iconSize: ScreenSize.fitPxWidth(30),
-                        image: choiceData.courseCreateduserInfo.image,
-                      ),
-                      SizedBox(width: ScreenSize.fitPxWidth(5)),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            choiceData.courseCreateduserInfo.name ?? "",
-                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
-                          ),
-                          Text(
-                            "最終更新日 : ${choiceData.postTime}",
-                            style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                          ),
-                        ],
-                      )
-                    ],
+                  MainBtn(
+                    onPress: () {
+                      ///ユーザー詳細ページに遷移
+                      UserProfileAllInfoBottomSheet(userData: choiceData.courseCreateduserInfo).show(context);
+                    },
+                    child: Row(
+                      children: [
+                        UserIcon(
+                          iconSize: ScreenSize.fitPxWidth(30),
+                          image: choiceData.courseCreateduserInfo.image,
+                        ),
+                        SizedBox(width: ScreenSize.fitPxWidth(5)),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              choiceData.courseCreateduserInfo.name ?? "",
+                              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                            ),
+                            Text(
+                              "最終更新日 : ${choiceData.postTime}",
+                              style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
 
                   SizedBox(height: ScreenSize.fitPxHeight(10)),

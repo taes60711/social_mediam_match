@@ -24,7 +24,10 @@ class BaseInputField extends StatefulWidget {
 
   final bool autoFocus;
   final Function(bool value)? onFocusChanged;
-
+  final Function(String value)? onChanged;
+  final int? maxLength;
+  final int? minLines;
+  final int? maxLines;
   final bool readOnly;
   const BaseInputField({
     super.key,
@@ -39,6 +42,10 @@ class BaseInputField extends StatefulWidget {
     this.isHidePwd = false,
     this.autoFocus = false,
     this.readOnly = false,
+    this.onChanged,
+    this.maxLength,
+    this.maxLines,
+    this.minLines,
   });
 
   @override
@@ -76,7 +83,15 @@ class _BaseInputFieldState extends State<BaseInputField> {
         obscureText: widget.type == InputType.pwd && widget.isHidePwd,
         cursorColor: AppColors.whiteColor,
         textInputAction: widget.textInputAction,
+        maxLength: widget.maxLength,
+        minLines: widget.minLines ?? 1,
+        maxLines: widget.maxLines ?? 1,
         readOnly: widget.readOnly,
+        onChanged: (value) {
+          if (widget.onChanged != null) {
+            widget.onChanged!(value);
+          }
+        },
         onFieldSubmitted: (value) {
           if (widget.onFieldSubmitted != null) {
             widget.onFieldSubmitted!(value);

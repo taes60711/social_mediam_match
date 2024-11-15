@@ -5,6 +5,7 @@ import 'package:social_mediam_match/components/home/coursePage/course_edit_page/
 
 import '../../../models/course_model.dart';
 import '../../../provider/course_provider.dart';
+import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/custom_button.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -51,19 +52,26 @@ class CourseUtilites {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                UserIcon(
-                  iconSize: 24,
-                  image: data.courseCreateduserInfo.image,
-                ),
-                SizedBox(width: ScreenSize.fitPxWidth(5)),
-                Text(
-                  data.courseCreateduserInfo.name ?? "",
-                  style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                )
-              ],
+            MainBtn(
+              onPress: () {
+                ///ユーザー詳細ページに遷移
+
+                UserProfileAllInfoBottomSheet(userData: data.courseCreateduserInfo).show(context);
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  UserIcon(
+                    iconSize: 24,
+                    image: data.courseCreateduserInfo.image,
+                  ),
+                  SizedBox(width: ScreenSize.fitPxWidth(5)),
+                  Text(
+                    data.courseCreateduserInfo.name ?? "",
+                    style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                  )
+                ],
+              ),
             ),
             Text(
               data.title,

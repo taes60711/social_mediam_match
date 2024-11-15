@@ -59,7 +59,7 @@ class PostDetailPage extends BaseEndDrawer {
                       GestureDetector(
                         onTap: () {
                           ///ユーザー詳細ページに遷移
-                          UserProfileBottomSheet(userData: choiceData.postUserInfo).show(context);
+                          UserProfileAllInfoBottomSheet(userData: choiceData.postUserInfo).show(context);
                         },
                         child: UserIcon(
                           iconSize: ScreenSize.fitPxWidth(30),

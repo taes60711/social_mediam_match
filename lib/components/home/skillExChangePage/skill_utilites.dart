@@ -140,60 +140,63 @@ class SkillUtilites {
   }
 
   Widget skillBar({required List<RequestUserSkillData> skills}) {
-    return Row(
-      children: [
-        ///スキル
-        Row(
-          children: skills.isEmpty
-              ? [
-                  Container(
-                    margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                    padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.greyColor98,
-                    ),
-                    child: Text(
-                      "暫無",
-                      style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                    ),
-                  )
-                ]
-              : skills.map((e) {
-                  return Container(
-                    margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                    padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.greyColor98,
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: ScreenSize.fitPxWidth(15),
-                          height: ScreenSize.fitPxWidth(15),
-                          margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                          decoration: BoxDecoration(
-                            color: AppColors.black37,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "${e.level}",
-                              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize10),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          ///スキル
+          Row(
+            children: skills.isEmpty
+                ? [
+                    Container(
+                      margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppColors.greyColor98,
+                      ),
+                      child: Text(
+                        "暫無",
+                        style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
+                      ),
+                    )
+                  ]
+                : skills.map((e) {
+                    return Container(
+                      margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppColors.greyColor98,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: ScreenSize.fitPxWidth(15),
+                            height: ScreenSize.fitPxWidth(15),
+                            margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
+                            decoration: BoxDecoration(
+                              color: AppColors.black37,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "${e.level}",
+                                style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize10),
+                              ),
                             ),
                           ),
-                        ),
-                        Text(
-                          e.name,
-                          style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
-        ),
-      ],
+                          Text(
+                            e.name,
+                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -23,18 +23,18 @@ class SignUpStepThird extends StatelessWidget {
           title: StepThirdPage.jobInputTitle,
           textController: userSettingViewProvider.jobInput,
         ),
-        Builder(
-          builder: (context) {
-            print("signUpStepThird introductInput");
-            String displayText = context.select((UserSettingViewProvider value) => value.introductionInput.text);
-            return MultiLabelInput(
-              title: StepThirdPage.introInputTitle,
-              textController: userSettingViewProvider.introductionInput,
-              displayText: displayText,
-              multiOnChange: (value) => userSettingViewProvider.inputOnChange(value),
-            );
-          },
-        ),
+        // Builder(
+        //   builder: (context) {
+        //     print("signUpStepThird introductInput");
+        //     String displayText = context.select((UserSettingViewProvider value) => value.introductionInput.text);
+        //     return MultiLabelInput(
+        //       title: StepThirdPage.introInputTitle,
+        //       textController: userSettingViewProvider.introductionInput,
+        //       displayText: displayText,
+        //       multiOnChange: (value) => userSettingViewProvider.inputOnChange(value),
+        //     );
+        //   },
+        // ),
         const SizedBox(height: 10),
         skillSettingTitleBarBtn(SkillEndDrawerType.haveSkill),
         const SizedBox(height: 20),

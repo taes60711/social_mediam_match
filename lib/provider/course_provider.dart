@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 
 import '../components/utilities/apiListView/api_list_controller.dart';
-import '../components/utilities/endDrawers/course_edit_skill_choice_end_drawer.dart';
+
 import '../models/skill_model.dart';
 import '../models/user_model.dart';
 
@@ -127,12 +127,6 @@ class CourseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  CourseEditSkillChoiceEndDrawerType editSkillChoiceEndDrawerOpenInfo = CourseEditSkillChoiceEndDrawerType.close;
-  void editSkillChoiceEndDrawerStatus(CourseEditSkillChoiceEndDrawerType status) {
-    editSkillChoiceEndDrawerOpenInfo = status;
-    notifyListeners();
-  }
-
   // MARK: View
   CourseModel choicedCourse = CourseModel(courseCreateduserInfo: ProfileData());
 }
@@ -151,4 +145,18 @@ final courseMainPageListPorver = StateNotifierProvider<APIListControllerNotifier
 
 final choicedCourseProvider = StateProvider<CourseModel>((ref) {
   return CourseModel(courseCreateduserInfo: ProfileData());
+});
+
+final courseChoiceLevel = StateProvider<String>((ref) {
+  return "3";
+});
+
+final courseEditSkillList = StateProvider<List<RequestSkillListData>>((ref) {
+  return [];
+});
+
+final courseEditChapterList = StateProvider<List<CourseChapterInfo>>((ref) => []);
+
+final courseDetailContent = StateProvider<String>((ref) {
+  return "";
 });

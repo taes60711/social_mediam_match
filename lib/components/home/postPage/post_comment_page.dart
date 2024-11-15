@@ -17,6 +17,7 @@ import '../../../services/post_service.dart';
 
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
+import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 
 class PostCommentPage extends BaseBottomSheet {
   final StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController;
@@ -76,11 +77,16 @@ class PostCommentPage extends BaseBottomSheet {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ///ユーザアイコン
-                        Padding(
-                          padding: EdgeInsets.only(top: ScreenSize.fitPxHeight(3)),
-                          child: UserIcon(
-                            iconSize: 30,
-                            image: data.commentUserInfo.image,
+                        MainBtn(
+                          onPress: () {
+                            UserProfileAllInfoBottomSheet(userData: data.commentUserInfo).show(context);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(top: ScreenSize.fitPxHeight(3)),
+                            child: UserIcon(
+                              iconSize: 30,
+                              image: data.commentUserInfo.image,
+                            ),
                           ),
                         ),
                         SizedBox(width: ScreenSize.fitPxWidth(5)),
