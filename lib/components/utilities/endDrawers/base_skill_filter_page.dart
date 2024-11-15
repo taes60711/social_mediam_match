@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../enum/skill_type.dart';
 import '../../../models/skill_model.dart';
@@ -26,6 +27,11 @@ class BaseSkillFilterPage extends BaseEndDrawer {
   List<RequestSkillListData> tempFilteredSkillList = [];
   SkillType isChoicedSkillType = SkillType.frontend;
   double bottomBtnHeight = ScreenSize.fitPxHeight(80);
+
+  @override
+  bool needGestureDetectorClosePage() {
+    return false;
+  }
 
   @override
   Future<void> initState(WidgetRef ref) async {
@@ -145,27 +151,44 @@ class BaseSkillFilterPage extends BaseEndDrawer {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: tempFilteredSkillList
-                    .map(
-                      (e) => Container(
+                children: tempFilteredSkillList.asMap().entries.map((e) {
+                  int index = e.key;
+                  RequestSkillListData data = e.value;
+                  return MainBtn(
+                    onPress: () {
+                      tempFilteredSkillList.removeAt(index);
+                      render();
+                    },
+                    child: Container(
                         decoration: BoxDecoration(
                           color: AppColors.greyColor54,
                           borderRadius: BorderRadius.circular(
                             ScreenSize.fitPxHeight(5),
                           ),
                         ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: ScreenSize.fitPxWidth(10),
-                          vertical: ScreenSize.fitPxHeight(2),
+                        padding: EdgeInsets.only(
+                          left: ScreenSize.fitPxWidth(8),
+                          right: ScreenSize.fitPxWidth(4),
+                          top: ScreenSize.fitPxHeight(2),
+                          bottom: ScreenSize.fitPxHeight(2),
                         ),
                         margin: EdgeInsets.only(right: ScreenSize.fitPxHeight(7)),
-                        child: Text(
-                          e.name,
-                          style: TextStyle(color: AppColors.whiteColor),
-                        ),
-                      ),
-                    )
-                    .toList(),
+                        child: Row(
+                          children: [
+                            Text(
+                              data.name,
+                              style: TextStyle(color: AppColors.whiteColor),
+                            ),
+                            SizedBox(width: ScreenSize.fitPxHeight(5)),
+                            Icon(
+                              FontAwesomeIcons.close,
+                              color: AppColors.whiteColor,
+                              size: ScreenSize.fitPxHeight(13),
+                            )
+                          ],
+                        )),
+                  );
+                }).toList(),
               ),
             ),
           ),

@@ -1,10 +1,11 @@
 // ip
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 String appVer = "1.0.0";
-String ip =
-    "119.77.173.122"; //Platform.isIOS ? "192.168.1.164" : "192.168.1.164"; //release mac: "192.168.1.161" Windows: "192.168.1.107"
+String ip = Platform.isIOS ? "192.168.1.164" : "192.168.1.164"; //release mac: "192.168.1.161" Windows: "192.168.1.107"
 String port = '80';
 
 String webSocketPort = "123";

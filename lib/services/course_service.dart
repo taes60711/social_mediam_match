@@ -7,7 +7,7 @@ import 'api_client.dart';
 class CourseService extends ApiClient {
   CourseService() : super(overrideIp: "$ip:$port/courses");
 
-  Future<bool> createOrUpdateCourse({
+  Future<int> createOrUpdateCourse({
     int? courseId,
     required String createdBy,
     required String title,
@@ -41,7 +41,8 @@ class CourseService extends ApiClient {
 
     print("createCourse $responseData");
 
-    return responseData != "null" ? true : false;
+    int index = int.parse(responseData);
+    return index;
   }
 
   /// 全てコース

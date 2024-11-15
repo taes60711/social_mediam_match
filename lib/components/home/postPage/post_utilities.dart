@@ -170,15 +170,6 @@ class PostViewUtilities {
                       ),
                       const SizedBox(width: 5),
 
-                      ///ビュー数
-                      PostViewUtilities().iconWithText(
-                          iconData: FontAwesomeIcons.eye,
-                          iconColor: Color.fromARGB(255, 110, 124, 129),
-                          text: "${data.viewed}",
-                          style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
-
-                      const SizedBox(width: 10),
-
                       ///いいね数
                       PostViewUtilities().iconWithText(
                           iconData: FontAwesomeIcons.heart,
@@ -193,6 +184,15 @@ class PostViewUtilities {
                           iconColor: Colors.blueAccent,
                           text: "${data.commentCount}",
                           style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                      const SizedBox(width: 8),
+
+                      ///ビュー数
+                      PostViewUtilities().iconWithText(
+                          iconData: FontAwesomeIcons.eye,
+                          iconColor: Color.fromARGB(255, 110, 124, 129),
+                          text: "${data.viewed}",
+                          style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+
                       const SizedBox(width: 13),
 
                       ///シャアボタン

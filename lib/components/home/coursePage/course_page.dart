@@ -9,28 +9,16 @@ import 'package:social_mediam_match/components/utilities/inputField/base_input.d
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 import '../../../global/home_global_view_model.dart';
-import '../../../models/course_model.dart';
-import '../../../models/skill_model.dart';
+
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
-import '../../utilities/apiListView/api_list_controller.dart';
+import '../../../provider/course_provider.dart';
+
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/custom_button.dart';
 import '../../utilities/loading.dart';
 import '../../utilities/style/screen_size.dart';
-
-final couseFilteredSkillList = StateProvider<List<RequestSkillListData>>((ref) {
-  return [];
-});
-
-final courseMainPageListPorver = StateNotifierProvider<APIListControllerNotifier, APIListController>(
-  (ref) => APIListControllerNotifier(APIListController()),
-);
-
-final choicedCourseProvider = StateProvider<CourseModel>((ref) {
-  return CourseModel(courseCreateduserInfo: ProfileData());
-});
 
 class CourseMainPage extends ConsumerStatefulWidget {
   const CourseMainPage({super.key});

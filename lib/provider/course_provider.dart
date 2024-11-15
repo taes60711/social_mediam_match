@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 
+import '../components/utilities/apiListView/api_list_controller.dart';
 import '../components/utilities/endDrawers/course_edit_skill_choice_end_drawer.dart';
+import '../models/skill_model.dart';
 import '../models/user_model.dart';
 
 class CourseProvider extends ChangeNotifier {
@@ -132,24 +135,20 @@ class CourseProvider extends ChangeNotifier {
 
   // MARK: View
   CourseModel choicedCourse = CourseModel(courseCreateduserInfo: ProfileData());
-  // CourseDetailEndDrawerType endDrawerOpenInfo = CourseDetailEndDrawerType.close;
-  // void changeEndDrawerStatus(CourseDetailEndDrawerType status, CourseModel opendCourse) {
-  //   endDrawerOpenInfo = status;
-  //   choicedCourse = opendCourse;
-  //   notifyListeners();
-  // }
-
-  // CourseFilterEndDrawerType filterEndDrawerOpenInfo = CourseFilterEndDrawerType.close;
-  // void changeFilterEndDrawerStatus(CourseFilterEndDrawerType status) {
-  //   filterEndDrawerOpenInfo = status;
-  //   notifyListeners();
-  // }
-
-  // CourseManagerEndDrawerType courseManagerEndDrawerOpenInfo = CourseManagerEndDrawerType.close;
-  // int choicedCourseId = -1;
-  // void courseManagerEndDrawerStatus(CourseManagerEndDrawerType status, int changedCourseId) {
-  //   courseManagerEndDrawerOpenInfo = status;
-  //   choicedCourseId = changedCourseId;
-  //   notifyListeners();
-  // }
 }
+
+final courseByTextFilterListPorver = StateNotifierProvider<APIListControllerNotifier, APIListController>(
+  (ref) => APIListControllerNotifier(APIListController()),
+);
+
+final couseFilteredSkillList = StateProvider<List<RequestSkillListData>>((ref) {
+  return [];
+});
+
+final courseMainPageListPorver = StateNotifierProvider<APIListControllerNotifier, APIListController>(
+  (ref) => APIListControllerNotifier(APIListController()),
+);
+
+final choicedCourseProvider = StateProvider<CourseModel>((ref) {
+  return CourseModel(courseCreateduserInfo: ProfileData());
+});
