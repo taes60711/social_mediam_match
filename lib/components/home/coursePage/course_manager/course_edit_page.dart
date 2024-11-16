@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/Initial/Initial_page.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade_scale_page.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_skill_filter_page.dart';
-import 'package:social_mediam_match/models/user_model.dart';
-import 'package:social_mediam_match/provider/account/user_provider.dart';
+import 'package:social_mediam_match/models/skill_model.dart';
 import '../../../../models/course_model.dart';
 import '../../../../provider/course_provider.dart';
 import '../../../../services/course_service.dart';
+import '../../../utilities/apiListView/api_list_controller.dart';
 import '../../../utilities/background_widget.dart';
 import '../../../utilities/basic_top_bar.dart';
 import '../../../utilities/main_button.dart';
@@ -17,16 +18,45 @@ import '../../../utilities/inputField/mutl_input.dart';
 import '../../../utilities/rich_text_view.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/style_config.dart';
-import 'course_level_choice_label.dart';
-import 'course_rich_text_edit.dart';
+import 'course_edit_page/course_level_choice_label.dart';
+import 'course_edit_page/course_rich_text_edit.dart';
 
 class CourseEditPage extends BaseFadeScalePage {
+  StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>> courseListController;
+
+  int dataIndex;
+  CourseEditPage(this.courseListController, {required this.dataIndex});
+
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
   TextEditingController beforeNeedController = TextEditingController();
   bool isPublic = true;
 
-  List<CourseChapterInfo> chapters = [];
+  @override
+  Future<void> initState(WidgetRef ref) async {
+    CourseModel courseData = ref.read(choicedCourseProvider);
+    titleController.text = courseData.title;
+    contentController.text = courseData.content;
+    beforeNeedController.text = courseData.beforeNeed;
+
+    ref.read(courseDetailContent.notifier).update((state) => courseData.prStory);
+
+    List<RequestSkillListData> formatListData = [];
+
+    for (var element in courseData.courseLearningSkills) {
+      int index = ref.read(allSkillListData).indexWhere((e) => e.name == element);
+      if (index != -1) {
+        formatListData.add(ref.read(allSkillListData)[index]);
+      }
+    }
+
+    ref.read(courseEditSkillList.notifier).update((state) => List.from(formatListData));
+    ref.read(courseEditChapterList.notifier).update((state) => List.from(courseData.chapterList));
+    ref.read(courseChoiceLevel.notifier).update((state) => courseData.needLevel.toString());
+
+    render();
+  }
+
   @override
   Widget build(WidgetRef ref) {
     return CommonScaffold(
@@ -55,24 +85,11 @@ class CourseEditPage extends BaseFadeScalePage {
               ),
               rightWidget: MainBtn(
                 onPress: () async {
-                  ProfileData userData = ref.read(loginUserData);
                   List<String> learningSkillList = ref.read(courseEditSkillList).map((e) => e.name).toList();
 
-                  int index = await CourseService().createOrUpdateCourse(
-                    createdBy: userData.uid,
-                    title: titleController.text,
-                    needLevel: ref.read(courseChoiceLevel.notifier).state,
-                    content: contentController.text,
-                    beforeNeed: beforeNeedController.text,
-                    prStory: ref.read(courseDetailContent),
-                    chapterList: ref.read(courseEditChapterList),
-                    courseLearningSkills: learningSkillList,
-                    type: "1",
-                    isPublic: isPublic,
-                  );
-                  CourseModel createdCourse = CourseModel(
-                    id: index,
-                    createdBy: userData.uid,
+                  CourseModel updateCourse = CourseModel(
+                    id: ref.read(choicedCourseProvider).id,
+                    createdBy: ref.read(choicedCourseProvider).courseCreateduserInfo.uid,
                     title: titleController.text,
                     needLevel: int.parse(ref.read(courseChoiceLevel.notifier).state),
                     content: contentController.text,
@@ -80,17 +97,34 @@ class CourseEditPage extends BaseFadeScalePage {
                     prStory: ref.read(courseDetailContent),
                     chapterList: ref.read(courseEditChapterList),
                     courseLearningSkills: learningSkillList,
-                    type: 1,
+                    type: ref.read(choicedCourseProvider).type,
                     isPublic: isPublic,
-                    signUpStatus: "none",
-                    courseCreateduserInfo: userData,
+                    signUpStatus: ref.read(choicedCourseProvider).signUpStatus,
+                    courseCreateduserInfo: ref.read(choicedCourseProvider).courseCreateduserInfo,
+                    postTime: ref.read(choicedCourseProvider).postTime,
                   );
-                  ref.read(courseMainPageListPorver.notifier).addDataTofirst(createdCourse);
-                  await Future.delayed(const Duration(milliseconds: 100));
-                  ref.read(courseMainPageListPorver).scrollController.jumpTo(0);
-                  pageClosePage();
+
+                  int result = await CourseService().createOrUpdateCourse(
+                    createdBy: updateCourse.createdBy,
+                    title: updateCourse.title,
+                    needLevel: updateCourse.needLevel.toString(),
+                    content: updateCourse.content,
+                    beforeNeed: updateCourse.beforeNeed,
+                    prStory: updateCourse.prStory,
+                    chapterList: updateCourse.chapterList,
+                    courseLearningSkills: updateCourse.courseLearningSkills,
+                    type: updateCourse.type.toString(),
+                    isPublic: isPublic,
+                    courseId: updateCourse.id,
+                  );
+
+                  /// -100 = success ; -101 = fail
+                  if (result == -100) {
+                    ref.read(courseListController.notifier).editData(dataIndex, updateCourse);
+                    pageClosePage();
+                  }
                 },
-                title: "投稿",
+                title: "修改",
               ),
             ),
             Expanded(

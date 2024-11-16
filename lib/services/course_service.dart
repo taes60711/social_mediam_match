@@ -7,6 +7,7 @@ import 'api_client.dart';
 class CourseService extends ApiClient {
   CourseService() : super(overrideIp: "$ip:$port/courses");
 
+  ///コース作成・更新
   Future<int> createOrUpdateCourse({
     int? courseId,
     required String createdBy,
@@ -33,16 +34,24 @@ class CourseService extends ApiClient {
       'isPublic': isPublic,
     };
 
+    String postType = "create";
+
     String url = "/createCourse";
     if (courseId != null) {
+      postType = "update";
       url = "/updateCourse/$courseId";
     }
     String responseData = await apiPush(url, body: body);
 
-    print("createCourse $responseData");
-
-    int index = int.parse(responseData);
-    return index;
+    if (postType == "create") {
+      print("createCourse $responseData");
+      int index = int.parse(responseData);
+      return index;
+    } else {
+      /// -100 = success ; -101 = fail
+      print("update $responseData");
+      return responseData != "null" ? -100 : -101;
+    }
   }
 
   /// 全てコース

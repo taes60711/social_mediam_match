@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_mediam_match/components/home/coursePage/course_edit_page/course_edit_page.dart';
+
+import 'package:social_mediam_match/components/home/coursePage/course_manager/course_manager_bottom_sheet.dart';
 
 import '../../../models/course_model.dart';
+import '../../../provider/account/user_provider.dart';
 import '../../../provider/course_provider.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
@@ -12,13 +14,14 @@ import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
 import 'course_detail.dart';
+import 'course_manager/course_create_page.dart';
 
 class CourseUtilites {
   ///コース作るボタン
   static Widget courseCreateButton(BuildContext context) {
     return MainBtn(
       onPress: () {
-        CourseEditPage().show(context);
+        CourseCreatePage().show(context);
       },
       child: Container(
         width: ScreenSize.fitPxWidth(40),
@@ -71,7 +74,27 @@ class CourseUtilites {
                   Text(
                     data.courseCreateduserInfo.name ?? "",
                     style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                  )
+                  ),
+                  const Expanded(child: SizedBox(width: 1)),
+                  Visibility(
+                    visible: data.courseCreateduserInfo.uid == ref.read(loginUserData).uid,
+                    child: GestureDetector(
+                      onTap: () {
+                        ref.read(choicedCourseProvider.notifier).update((state) => data);
+                        CourseManagerBtmSheet(courseListController, dataIndex: dataIndex).show(context);
+                      },
+                      child: Container(
+                        width: 30,
+                        alignment: Alignment.centerRight,
+                        color: Colors.transparent,
+                        child: Icon(
+                          FontAwesomeIcons.ellipsis,
+                          color: AppColors.greyColor130,
+                          size: ScreenSize.fontSize16,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

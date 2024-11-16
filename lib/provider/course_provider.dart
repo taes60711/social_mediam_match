@@ -148,6 +148,15 @@ final couseFilteredSkillList = StateProvider<List<RequestSkillListData>>((ref) {
   return [];
 });
 
+final courseMemberManagerListPorver =
+    StateNotifierProvider<APIListControllerNotifier<AddedCourseMemberModel>, APIListController<AddedCourseMemberModel>>(
+  (ref) => APIListControllerNotifier<AddedCourseMemberModel>(APIListController()),
+);
+
+final choicedCourseMemberProvider = StateProvider<AddedCourseMemberModel>((ref) {
+  return AddedCourseMemberModel(courseId: 0, memberUid: '', userData: ProfileData(), status: 0);
+});
+
 final courseMainPageListPorver = StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>>(
   (ref) => APIListControllerNotifier<CourseModel>(APIListController()),
 );

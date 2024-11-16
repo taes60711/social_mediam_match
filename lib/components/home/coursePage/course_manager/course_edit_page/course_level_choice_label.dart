@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../../provider/course_provider.dart';
-import '../../../utilities/bottomSheets/base_bottom_sheet.dart';
+import '../../../../../provider/course_provider.dart';
+import '../../../../utilities/bottomSheets/base_bottom_sheet.dart';
 
-import '../../../utilities/main_button.dart';
-import '../../../utilities/style/screen_size.dart';
-import '../../../utilities/style/style_config.dart';
+import '../../../../utilities/main_button.dart';
+import '../../../../utilities/style/screen_size.dart';
+import '../../../../utilities/style/style_config.dart';
 
 class CourseLevelChoicedLabel extends ConsumerStatefulWidget {
   const CourseLevelChoicedLabel({super.key});

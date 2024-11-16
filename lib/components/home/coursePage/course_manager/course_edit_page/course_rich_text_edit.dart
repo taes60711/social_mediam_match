@@ -7,11 +7,11 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-import '../../../../models/course_model.dart';
-import '../../../../provider/course_provider.dart';
-import '../../../utilities/inputField/base_input.dart';
-import '../../../utilities/main_button.dart';
-import '../../../utilities/style/screen_size.dart';
+import '../../../../../models/course_model.dart';
+import '../../../../../provider/course_provider.dart';
+import '../../../../utilities/inputField/base_input.dart';
+import '../../../../utilities/main_button.dart';
+import '../../../../utilities/style/screen_size.dart';
 
 enum EdiType {
   detail,
