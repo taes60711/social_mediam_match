@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 
-import '../../../utilities/basic_top_bar.dart';
+import '../../../utilities/appBar/basic_top_bar.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/style_config.dart';
 import 'added_courses_page.dart';

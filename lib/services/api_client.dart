@@ -1,11 +1,11 @@
 // ignore_for_file: avoid_print
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import '../../global.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import '../components/utilities/dialog/confirm_dialog.dart';
-import '../pageManager/setting/route_controller.dart';
 
 class ApiClient {
   final String _ip;
@@ -128,7 +128,7 @@ class ApiClient {
           content: tr("serverErrorContent"),
           btnAmount: 1,
           conirmFunc: () {
-            onFailedFunc != null ? onFailedFunc() : RouteOptions.pop();
+            onFailedFunc != null ? onFailedFunc() : Navigator.of(globalContext).pop();
             _isDialogShowing = false;
           }).show(globalContext);
     }

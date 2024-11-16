@@ -10,7 +10,7 @@ import 'package:social_mediam_match/components/utilities/inputField/mutl_input.d
 
 import '../../../models/feed_back_model.dart';
 import '../../../services/feed_back_service.dart';
-import '../../utilities/basic_top_bar.dart';
+import '../../utilities/appBar/basic_top_bar.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 

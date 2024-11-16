@@ -18,6 +18,7 @@ import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/inputField/base_input.dart';
 
 import '../../utilities/main_button.dart';
+import 'chat_room.dart';
 import 'search_user_page.dart';
 
 final frinedListProvider = StateProvider<List<FriendListModel>>((ref) => []);
@@ -147,48 +148,53 @@ class _FriendPageState extends ConsumerState<FriendPage> {
                       itemCount: ref.watch(frinedListProvider).length,
                       itemBuilder: (context, index) {
                         FriendListModel data = ref.watch(frinedListProvider)[index];
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(10)),
-                          child: Row(
-                            children: [
-                              UserIcon(iconSize: ScreenSize.fitPxWidth(40), image: data.userData.image),
-                              SizedBox(width: ScreenSize.fitPxWidth(10)),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          data.userData.name ?? "",
-                                          style: TextStyle(
-                                            fontSize: ScreenSize.fontSize14,
-                                            color: AppColors.whiteColor,
-                                            fontWeight: FontWeight.w600,
+                        return MainBtn(
+                          onPress: () {
+                            ChatRoom(roomData: data).show(context);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(10)),
+                            child: Row(
+                              children: [
+                                UserIcon(iconSize: ScreenSize.fitPxWidth(40), image: data.userData.image),
+                                SizedBox(width: ScreenSize.fitPxWidth(10)),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            data.userData.name ?? "",
+                                            style: TextStyle(
+                                              fontSize: ScreenSize.fontSize14,
+                                              color: AppColors.whiteColor,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          data.sentAt ?? "",
-                                          style: TextStyle(fontSize: ScreenSize.fontSize14, color: AppColors.greyColor98),
-                                        ),
-                                      ],
-                                    ),
-                                    data.lastMessage != null
-                                        ? Text(
-                                            data.lastMessage!.contains("http://\$ip") ? "傳送了圖像" : "${data.lastMessage}",
-                                            style: TextStyle(fontSize: ScreenSize.fontSize14, color: AppColors.greyColor98),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          )
-                                        : Text(
-                                            "沒有任何訊息",
+                                          Text(
+                                            data.sentAt ?? "",
                                             style: TextStyle(fontSize: ScreenSize.fontSize14, color: AppColors.greyColor98),
                                           ),
-                                  ],
-                                ),
-                              )
-                            ],
+                                        ],
+                                      ),
+                                      data.lastMessage != null
+                                          ? Text(
+                                              data.lastMessage!.contains("http://\$ip") ? "傳送了圖像" : "${data.lastMessage}",
+                                              style: TextStyle(fontSize: ScreenSize.fontSize14, color: AppColors.greyColor98),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            )
+                                          : Text(
+                                              "沒有任何訊息",
+                                              style: TextStyle(fontSize: ScreenSize.fontSize14, color: AppColors.greyColor98),
+                                            ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         );
                       }),

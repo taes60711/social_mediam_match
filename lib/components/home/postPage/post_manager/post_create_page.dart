@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
-import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';

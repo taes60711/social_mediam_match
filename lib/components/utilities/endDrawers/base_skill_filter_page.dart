@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../enum/skill_type.dart';
 import '../../../models/skill_model.dart';
 import '../../Initial/Initial_page.dart';
-import '../../utilities/basic_top_bar.dart';
+import '../appBar/basic_top_bar.dart';
 import '../main_button.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/style/screen_size.dart';

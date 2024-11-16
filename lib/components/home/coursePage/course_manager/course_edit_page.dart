@@ -10,7 +10,7 @@ import '../../../../provider/course_provider.dart';
 import '../../../../services/course_service.dart';
 import '../../../utilities/apiListView/api_list_controller.dart';
 import '../../../utilities/background_widget.dart';
-import '../../../utilities/basic_top_bar.dart';
+import '../../../utilities/appBar/basic_top_bar.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/custom_expansion_title.dart';
 import '../../../utilities/inputField/base_input.dart';

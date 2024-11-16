@@ -11,7 +11,7 @@ import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/course_provider.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
-import '../../utilities/basic_top_bar.dart';
+import '../../utilities/appBar/basic_top_bar.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/custom_expansion_title.dart';
 import '../../utilities/main_button.dart';

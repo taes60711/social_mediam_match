@@ -67,7 +67,7 @@ class LoginViewModel {
                         Positioned(
                             right: 25,
                             child: GestureDetector(
-                              onTap: () => RouteOptions.pop(),
+                              onTap: () => Navigator.of(globalContext).pop(),
                               child: Container(
                                 width: 60,
                                 height: 60,
@@ -107,7 +107,7 @@ class LoginViewModel {
 
     loadingPopView();
     bool isLoginSucess = await loginViewContext.read<LoginProvider>().signIn(inputedEmail, intputedPwd);
-    RouteOptions.pop();
+    Navigator.of(globalContext).pop();
     // isLoginSucess ? RouteOptions.popUntilToHome() : () {};
   }
 }

@@ -13,7 +13,7 @@ import 'package:social_mediam_match/services/user_service.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
-import '../../utilities/basic_top_bar.dart';
+import '../../utilities/appBar/basic_top_bar.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/endDrawers/user_skill_choice_page.dart';
 import '../../utilities/inputField/base_input.dart';

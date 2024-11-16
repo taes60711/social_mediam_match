@@ -277,7 +277,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
-import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';

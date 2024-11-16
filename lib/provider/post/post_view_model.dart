@@ -8,9 +8,9 @@ import '../../components/home/postPage/post_detail_page.dart';
 import '../../components/home/postPage/post_type_board/post_page_by_type.dart';
 import '../../components/utilities/apiListView/api_list_controller.dart';
 import '../../components/utilities/dialog/confirm_dialog.dart';
+import '../../global.dart';
 import '../../models/rich_text_format.dart';
 import '../../models/user_model.dart';
-import '../../pagemanager/setting/route_controller.dart';
 import '../../services/post_service.dart';
 import '../account/user_provider.dart';
 import 'post_provider.dart';
@@ -42,7 +42,7 @@ class PostViewModel {
       postUserInfo: userData,
     );
 
-    RouteOptions.pop();
+    Navigator.of(globalContext).pop();
     if (postBoard == null) {
       ref.read(choicedPostBoardProvider.notifier).update((state) => ref.read(postCreateChoiceBoard));
       PostPageByType().show(context);

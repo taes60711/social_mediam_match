@@ -648,3 +648,118 @@
 //     );
 //   }
 // }
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/utilities/appBar/chat_room_bar.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
+
+import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
+
+import '../../../models/friend_model.dart';
+
+import '../../utilities/inputField/base_input.dart';
+import '../../utilities/main_button.dart';
+import '../../utilities/style/screen_size.dart';
+import '../../utilities/style/style_config.dart';
+
+class ChatRoom extends BaseEndDrawer {
+  FriendListModel roomData;
+  ChatRoom({required this.roomData});
+  @override
+  Widget build(WidgetRef ref) {
+    return CommonScaffold(
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              userBar(),
+              Container(),
+            ],
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: commentCntainerBuild(ref),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget userBar() {
+    return Container(
+      padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(8)),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: AppColors.greyColor98, width: 0.5),
+        ),
+      ),
+      child: ChatRoomBar(
+        backFunc: () => closePage(),
+        title: roomData.userData.name ?? "",
+        userImg: roomData.userData.image,
+      ),
+    );
+  }
+
+  ///コメント欄
+  Widget commentCntainerBuild(WidgetRef ref) {
+    // ProfileData userData = ref.watch(loginUserData);
+    TextEditingController commentController = TextEditingController();
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: AppColors.greyColor54,
+          ),
+        ),
+      ),
+      height: ScreenSize.fitPxHeight(70),
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: ScreenSize.fitPxHeight(8),
+            vertical: ScreenSize.fitPxHeight(6),
+          ),
+          margin: EdgeInsets.symmetric(
+            horizontal: ScreenSize.fitPxHeight(15),
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.greyColor57,
+            borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(13)),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: BaseInputField(
+                  hintText: "輸入訊息",
+                  controller: commentController,
+                  autoFocus: true,
+                  onFieldSubmitted: (value) {},
+                ),
+              ),
+              MainBtn(
+                onPress: () {},
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8), vertical: ScreenSize.fitPxWidth(3)),
+                  decoration: BoxDecoration(
+                    color: AppColors.orangeColor,
+                    borderRadius: BorderRadius.circular(
+                      ScreenSize.fitPxWidth(10),
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.eco_sharp,
+                    color: AppColors.whiteColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
