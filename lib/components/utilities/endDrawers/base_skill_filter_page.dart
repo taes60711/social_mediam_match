@@ -49,7 +49,7 @@ class BaseSkillFilterPage extends BaseEndDrawer {
           children: [
             BaseTopBar(
               backFunc: () => closePage(),
-              rightWidget: filterSearchBtn(),
+              rightWidget: filterClearBtn(),
             ),
             SizedBox(height: ScreenSize.fitPxWidth(8)),
             choicedFilterSkillList(),
@@ -128,7 +128,7 @@ class BaseSkillFilterPage extends BaseEndDrawer {
             width: ScreenSize.width,
             height: bottomBtnHeight,
             color: AppColors.black37,
-            child: filterClearBtn(),
+            child: filterSearchBtn(),
           ),
         )
       ],
@@ -198,13 +198,12 @@ class BaseSkillFilterPage extends BaseEndDrawer {
     );
   }
 
-  Widget filterSearchBtn() {
+  Widget filterClearBtn() {
     return MainBtn(
-        title: btnStr,
+        title: "清空",
         onPress: () async {
-          await searchFunc(tempFilteredSkillList);
-          closePage();
-          viewRender();
+          tempFilteredSkillList.clear();
+          render();
         });
   }
 
@@ -236,7 +235,7 @@ class BaseSkillFilterPage extends BaseEndDrawer {
     );
   }
 
-  Widget filterClearBtn() {
+  Widget filterSearchBtn() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,14 +244,15 @@ class BaseSkillFilterPage extends BaseEndDrawer {
           child: Padding(
             padding: EdgeInsets.only(top: ScreenSize.fitPxHeight(15)),
             child: MainBtn(
-              padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
-              margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(40)),
-              onPress: () {
-                tempFilteredSkillList.clear();
-                render();
-              },
-              title: "清空",
-            ),
+                padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
+                margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(40)),
+                onPress: () async {
+                  await searchFunc(tempFilteredSkillList);
+                  closePage();
+                  viewRender();
+                },
+                title: btnStr //"清空",
+                ),
           ),
         ),
       ],

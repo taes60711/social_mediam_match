@@ -71,17 +71,6 @@ class FriendProvider extends ChangeNotifier {
     _friendListChannel.sink.close();
   }
 
-  //ユーザ友達かどうか確認する
-  void checkIsFriend(List<String> usersList) {
-    isFriend = false;
-    Future.delayed(Duration.zero).then((value) => notifyListeners());
-    List<String> usersListTemp = [];
-    for (var element in usersList) {
-      usersListTemp = [...usersListTemp, "\"$element\""];
-    }
-    _friendListChannel.sink.add('{"method" : "checkIsFriend","members" : $usersListTemp}');
-  }
-
   void addFriend(List<String> usersList) {
     List<String> usersListTemp = [];
     //index 0 : 使用者自己, index 1 : 對方

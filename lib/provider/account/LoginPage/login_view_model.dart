@@ -4,10 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
 
-import '../../../components/strings/account/login_strings.dart';
 import '../../../components/utilities/style/screen_size.dart';
 import '../../../components/utilities/style/style_config.dart';
-import '../../../components/utilities/label_input.dart';
+
 import '../../../pageManager/setting/route_controller.dart';
 
 class LoginViewModel {
@@ -49,7 +48,7 @@ class LoginViewModel {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 50),
-                                  LabelInput(title: PasswordForgot.emailInputTitle, textController: emailController),
+                                  // LabelInput(title: PasswordForgot.emailInputTitle, textController: emailController),
                                   Text(
                                     resetPwdError,
                                     style: const TextStyle(color: Colors.red),

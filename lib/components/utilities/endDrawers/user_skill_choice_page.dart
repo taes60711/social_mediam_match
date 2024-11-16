@@ -54,10 +54,10 @@ class UserSkillChoicePage extends BaseEndDrawer {
               backFunc: () => closePage(),
               rightWidget: MainBtn(
                 onPress: () {
-                  updateSkillDate(tempFilteredSkillList);
-                  closePage();
+                  tempFilteredSkillList.clear();
+                  render();
                 },
-                title: "保存",
+                title: "清空", //"保存",
               ),
             ),
             Expanded(
@@ -169,7 +169,7 @@ class UserSkillChoicePage extends BaseEndDrawer {
             width: ScreenSize.width,
             height: bottomBtnHeight,
             color: AppColors.black37,
-            child: filterClearBtn(),
+            child: filterSaveBtn(),
           ),
         )
       ],
@@ -252,7 +252,7 @@ class UserSkillChoicePage extends BaseEndDrawer {
     );
   }
 
-  Widget filterClearBtn() {
+  Widget filterSaveBtn() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,10 +264,10 @@ class UserSkillChoicePage extends BaseEndDrawer {
               padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
               margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(40)),
               onPress: () {
-                tempFilteredSkillList.clear();
-                render();
+                updateSkillDate(tempFilteredSkillList);
+                closePage();
               },
-              title: "清空",
+              title: "保存",
             ),
           ),
         ),
