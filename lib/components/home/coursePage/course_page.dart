@@ -16,7 +16,7 @@ import '../../../provider/course_provider.dart';
 
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/background_widget.dart';
-import '../../utilities/custom_button.dart';
+import '../../utilities/main_button.dart';
 import '../../utilities/loading.dart';
 import '../../utilities/style/screen_size.dart';
 

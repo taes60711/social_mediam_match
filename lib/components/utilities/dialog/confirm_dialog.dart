@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../custom_button.dart';
+import '../main_button.dart';
 import '../style/screen_size.dart';
 import '../style/style_config.dart';
 import 'base_dialog.dart';

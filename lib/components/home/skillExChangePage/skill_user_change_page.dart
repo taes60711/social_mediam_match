@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/skill_user_change_page_by_textfilter.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
-import 'package:social_mediam_match/components/utilities/custom_button.dart';
+
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import '../../../global/home_global_view_model.dart';
@@ -18,6 +18,7 @@ import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/endDrawers/base_skill_filter_page.dart';
 import '../../utilities/inputField/base_input.dart';
 import '../../utilities/loading.dart';
+import '../../utilities/main_button.dart';
 import '../../utilities/style/style_config.dart';
 import 'skill_utilites.dart';
 

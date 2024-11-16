@@ -9,7 +9,8 @@ import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../home/skillExChangePage/skill_utilites.dart';
 import '../../strings/skillExChangePage/skill_change_page_string.dart';
-import '../custom_button.dart';
+
+import '../main_button.dart';
 import '../style/screen_size.dart';
 import '../style/style_config.dart';
 import '../user_icon.dart';

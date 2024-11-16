@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
-import 'package:social_mediam_match/components/utilities/custom_button.dart';
+
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 
@@ -15,6 +15,7 @@ import '../../../provider/post/post_provider.dart';
 import '../../../provider/post/post_view_model.dart';
 import '../../utilities/bottomSheets/base_bottom_sheet.dart';
 import '../../utilities/FadeScalePage/base_fade_scale_page.dart';
+import '../../utilities/main_button.dart';
 import '../../utilities/rich_text_editor.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';

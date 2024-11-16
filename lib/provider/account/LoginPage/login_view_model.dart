@@ -5,7 +5,7 @@ import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_provider.dart';
 
 import '../../../components/strings/account/login_strings.dart';
-import '../../../components/utilities/custom_button.dart';
+import '../../../components/utilities/main_button.dart';
 import '../../../components/utilities/style/screen_size.dart';
 import '../../../components/utilities/style/style_config.dart';
 import '../../../components/utilities/label_input.dart';
@@ -55,12 +55,12 @@ class LoginViewModel {
                                     resetPwdError,
                                     style: const TextStyle(color: Colors.red),
                                   ),
-                                  TextBtn(
-                                    title: PasswordForgot.sendButtonText,
-                                    titleColor: normalTextColor,
-                                    btnColor: normalBgColor,
-                                    onPress: () => context.read<LoginProvider>().reSetPwd(emailController.text),
-                                  )
+                                  // TextBtn(
+                                  //   title: PasswordForgot.sendButtonText,
+                                  //   titleColor: normalTextColor,
+                                  //   btnColor: normalBgColor,
+                                  //   onPress: () => context.read<LoginProvider>().reSetPwd(emailController.text),
+                                  // )
                                 ],
                               ),
                             ),

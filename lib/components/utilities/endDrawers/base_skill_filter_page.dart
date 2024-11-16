@@ -6,7 +6,7 @@ import '../../../enum/skill_type.dart';
 import '../../../models/skill_model.dart';
 import '../../Initial/Initial_page.dart';
 import '../../utilities/basic_top_bar.dart';
-import '../../utilities/custom_button.dart';
+import '../main_button.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';

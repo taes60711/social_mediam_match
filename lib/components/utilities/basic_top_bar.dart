@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
-import 'custom_button.dart';
+import 'main_button.dart';
 import 'style/screen_size.dart';
 
 class BaseTopBar extends StatelessWidget {

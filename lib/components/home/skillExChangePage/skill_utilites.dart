@@ -4,7 +4,8 @@ import 'package:social_mediam_match/models/user_model.dart';
 
 import '../../../models/skill_model.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
-import '../../utilities/custom_button.dart';
+
+import '../../utilities/main_button.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';

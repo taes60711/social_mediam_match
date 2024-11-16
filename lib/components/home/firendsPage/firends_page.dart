@@ -14,9 +14,10 @@ import '../../../models/friend_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../services/friend_service.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
-import '../../utilities/custom_button.dart';
+
 import '../../utilities/inputField/base_input.dart';
 
+import '../../utilities/main_button.dart';
 import 'search_user_page.dart';
 
 final frinedListProvider = StateProvider<List<FriendListModel>>((ref) => []);

@@ -11,7 +11,8 @@ import '../../../models/skill_model.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/style/screen_size.dart';
 import '../bottomSheets/base_bottom_sheet.dart';
-import '../custom_button.dart';
+
+import '../main_button.dart';
 import '../style/style_config.dart';
 
 class UserSkillChoicePage extends BaseEndDrawer {

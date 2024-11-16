@@ -14,7 +14,7 @@ import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../utilities/basic_top_bar.dart';
-import '../../utilities/custom_button.dart';
+import '../../utilities/main_button.dart';
 import '../../utilities/endDrawers/user_skill_choice_page.dart';
 import '../../utilities/inputField/base_input.dart';
 import '../../utilities/inputField/mutl_input.dart';
