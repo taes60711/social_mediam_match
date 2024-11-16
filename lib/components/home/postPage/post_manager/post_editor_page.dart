@@ -24,7 +24,7 @@ class PostEditorPage extends BaseFadeScalePage {
   PostEditorPage(this.postListController, {required this.dataIndex});
   QuillEditorController quillEditorController = QuillEditorController();
   TextEditingController titleController = TextEditingController();
-
+  String typeName = "";
   @override
   bool needWaitOpenPage() {
     return true;
@@ -35,6 +35,13 @@ class PostEditorPage extends BaseFadeScalePage {
   @override
   Future<void> initState(WidgetRef ref) async {
     titleController.text = ref.read(choicedPostProvider.notifier).state.title;
+    typeName = ref
+        .read(allPostBoardListData)
+        .firstWhere(
+          (e) => e.id == ref.read(choicedPostProvider.notifier).state.type,
+          orElse: () => PostBoard(),
+        )
+        .name;
     viewModel = PostViewModel(ref: ref, context: context, render: render);
     render();
   }
@@ -111,7 +118,7 @@ class PostEditorPage extends BaseFadeScalePage {
                   ),
                   SizedBox(height: ScreenSize.fitPxHeight(10)),
                   Text(
-                    "看板${ref.read(choicedPostProvider.notifier).state.type}",
+                    "看板 $typeName",
                     style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize18),
                   ),
                   SizedBox(height: ScreenSize.fitPxHeight(15)),
