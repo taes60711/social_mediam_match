@@ -1,0 +1,132 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
+import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
+import 'package:social_mediam_match/services/post_service.dart';
+import '../../../../models/post_model.dart';
+import '../../../../models/rich_text_format.dart';
+import '../../../../provider/post/post_provider.dart';
+import '../../../../provider/post/post_view_model.dart';
+import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
+import '../../../utilities/apiListView/api_list_controller.dart';
+import '../../../utilities/main_button.dart';
+import '../../../utilities/rich_text_editor.dart';
+import '../../../utilities/style/screen_size.dart';
+import '../../../utilities/style/style_config.dart';
+
+class PostEditorPage extends BaseFadeScalePage {
+  StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>> postListController;
+
+  int dataIndex;
+  PostEditorPage(this.postListController, {required this.dataIndex});
+  QuillEditorController quillEditorController = QuillEditorController();
+  TextEditingController titleController = TextEditingController();
+
+  @override
+  bool needWaitOpenPage() {
+    return true;
+  }
+
+  late PostViewModel viewModel;
+
+  @override
+  Future<void> initState(WidgetRef ref) async {
+    titleController.text = ref.read(choicedPostProvider.notifier).state.title;
+    viewModel = PostViewModel(ref: ref, context: context, render: render);
+    render();
+  }
+
+  @override
+  Widget build(WidgetRef ref) {
+    return CommonScaffold(
+      type: PageType.main,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BaseTopBar(
+            leftWidget: GestureDetector(
+              onTap: () {
+                closePage();
+              },
+              child: Container(
+                width: ScreenSize.fitPxWidth(40),
+                height: ScreenSize.fitPxWidth(40),
+                color: Colors.transparent,
+                child: Center(
+                  child: Icon(
+                    Icons.close,
+                    size: ScreenSize.fontSize18,
+                    color: AppColors.whiteColor,
+                  ),
+                ),
+              ),
+            ),
+            rightWidget: MainBtn(
+              onPress: () async {
+                String postTitle = titleController.text;
+                String postContent = await quillEditorController.getText();
+                String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
+                if (postTitle == "" || postContent == "") {
+                  String content = "";
+                  if (postTitle == "" && postContent == "") {
+                    content = "\"標題\"不得為空\n\"內文\"不得為空";
+                  } else if (postTitle == "") {
+                    content = "\"標題\"不得為空";
+                  } else if (postContent == "") {
+                    content = "\"內文\"不得為空";
+                  }
+
+                  ConfirmDilaog(title: '警告', content: content).show(context);
+                  return;
+                }
+                PostModel post = ref.read(choicedPostProvider.notifier).state;
+                bool isSucess = await PostService().updatePost(postId: post.id, title: postTitle, mainMessage: fomattedContent);
+
+                if (isSucess) {
+                  post.title = postTitle;
+                  post.mainMessage = fomattedContent;
+                  ref.read(postListController.notifier).editData(dataIndex, post);
+
+                  render();
+                  closePage();
+                }
+              },
+              title: "更新",
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BaseInputField(
+                    hintText: "標題",
+                    hintStyle: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize24),
+                    inputStyle: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize24),
+                    controller: titleController,
+                  ),
+                  SizedBox(height: ScreenSize.fitPxHeight(10)),
+                  Text(
+                    "看板${ref.read(choicedPostProvider.notifier).state.type}",
+                    style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize18),
+                  ),
+                  SizedBox(height: ScreenSize.fitPxHeight(15)),
+                  Expanded(
+                    child: RichTextEditor(
+                      content: ref.read(choicedPostProvider.notifier).state.mainMessage,
+                      controller: quillEditorController,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

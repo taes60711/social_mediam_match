@@ -124,6 +124,8 @@ class UserProfileEditPage extends BaseBottomSheet {
                       title: "選擇圖像",
                     ),
                     inputField(hintText: "名前", editingController: nameController),
+                    inputField(hintText: "職業", editingController: jobController),
+                    SizedBox(height: ScreenSize.fitPxWidth(8)),
                     SizedBox(height: ScreenSize.fitPxWidth(8)),
                     //強いスキル設定
                     MainBtn(
@@ -175,8 +177,6 @@ class UserProfileEditPage extends BaseBottomSheet {
                       ),
                     ),
 
-                    SizedBox(height: ScreenSize.fitPxWidth(8)),
-                    inputField(hintText: "職業", editingController: jobController),
                     SizedBox(height: ScreenSize.fitPxWidth(8)),
                     // 自己紹介
                     multiInputField(hintText: "自我介紹", editingController: introductionController),

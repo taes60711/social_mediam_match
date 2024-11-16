@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
 
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../models/post_model.dart';
@@ -12,8 +13,8 @@ import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
-import 'post_editor_page.dart';
-import 'post_manager_bottom_sheet.dart';
+import 'post_manager/post_create_page.dart';
+import 'post_manager/post_manager_bottom_sheet.dart';
 
 class PostViewUtilities {
   ///データなレイアウト
@@ -113,19 +114,24 @@ class PostViewUtilities {
                       SizedBox(width: ScreenSize.fitPxWidth(4)),
 
                       const Expanded(child: SizedBox(width: 1)),
-                      GestureDetector(
-                        onTap: () {
-                          ///右上のアイコンのボタン
-                          PostManagerBtmSheet().show(context);
-                        },
-                        child: Container(
-                          width: 30,
-                          alignment: Alignment.centerRight,
-                          color: Colors.transparent,
-                          child: Icon(
-                            FontAwesomeIcons.ellipsis,
-                            color: AppColors.greyColor130,
-                            size: ScreenSize.fontSize16,
+                      Visibility(
+                        visible: data.postUserInfo.uid == ref.read(loginUserData).uid,
+                        child: GestureDetector(
+                          onTap: () {
+                            ref.read(choicedPostProvider.notifier).update((state) => data);
+
+                            ///右上のアイコンのボタン
+                            PostManagerBtmSheet(postListController, dataIndex: dataIndex).show(context);
+                          },
+                          child: Container(
+                            width: 30,
+                            alignment: Alignment.centerRight,
+                            color: Colors.transparent,
+                            child: Icon(
+                              FontAwesomeIcons.ellipsis,
+                              color: AppColors.greyColor130,
+                              size: ScreenSize.fontSize16,
+                            ),
                           ),
                         ),
                       ),
@@ -234,7 +240,7 @@ class PostViewUtilities {
   static Widget postCreateButton(BuildContext context, {PostBoard? postBoard}) {
     return MainBtn(
       onPress: () {
-        PostEditorPage(postBoard: postBoard).show(context);
+        PostCreatePage(postBoard: postBoard).show(context);
       },
       child: Container(
         width: ScreenSize.fitPxWidth(40),

@@ -9,20 +9,20 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 
-import '../../../models/post_model.dart';
+import '../../../../models/post_model.dart';
 
-import '../../../provider/post/post_provider.dart';
-import '../../../provider/post/post_view_model.dart';
-import '../../utilities/bottomSheets/base_bottom_sheet.dart';
-import '../../utilities/FadeScalePage/base_fade_scale_page.dart';
-import '../../utilities/main_button.dart';
-import '../../utilities/rich_text_editor.dart';
-import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
+import '../../../../provider/post/post_provider.dart';
+import '../../../../provider/post/post_view_model.dart';
+import '../../../utilities/bottomSheets/base_bottom_sheet.dart';
+import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
+import '../../../utilities/main_button.dart';
+import '../../../utilities/rich_text_editor.dart';
+import '../../../utilities/style/screen_size.dart';
+import '../../../utilities/style/style_config.dart';
 
-class PostEditorPage extends BaseFadeScalePage {
+class PostCreatePage extends BaseFadeScalePage {
   PostBoard? postBoard;
-  PostEditorPage({this.postBoard});
+  PostCreatePage({this.postBoard});
 
   QuillEditorController quillEditorController = QuillEditorController();
   TextEditingController titleController = TextEditingController();

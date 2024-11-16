@@ -21,6 +21,7 @@ class PostViewModel {
   final BuildContext context;
   PostViewModel({required this.ref, required this.context, required this.render});
 
+  ///文章作る
   Future<void> postCreate({required String postTitle, required String postContent, PostBoard? postBoard}) async {
     ProfileData userData = ref.watch(loginUserData);
 
