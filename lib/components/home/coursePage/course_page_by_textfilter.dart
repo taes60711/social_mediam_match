@@ -31,7 +31,7 @@ class CoursePageByTextFilter extends BaseEndDrawer {
               haveBottomBar: true,
               loadingWidget: const CourseLoading(),
               itemChild: (data, index) {
-                return CourseUtilites().courseItemContent(context, ref, data: data);
+                return CourseUtilites().courseItemContent(context, ref, courseMainPageListPorver, data: data, dataIndex: index);
               }),
         ),
       ],

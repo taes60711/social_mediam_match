@@ -5,6 +5,7 @@ import 'package:social_mediam_match/components/home/coursePage/course_edit_page/
 
 import '../../../models/course_model.dart';
 import '../../../provider/course_provider.dart';
+import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/custom_button.dart';
 import '../../utilities/style/screen_size.dart';
@@ -35,11 +36,13 @@ class CourseUtilites {
     );
   }
 
-  Widget courseItemContent(BuildContext context, WidgetRef ref, {required CourseModel data}) {
+  Widget courseItemContent(BuildContext context, WidgetRef ref,
+      StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>> courseListController,
+      {required int dataIndex, required CourseModel data}) {
     return MainBtn(
       onPress: () {
         ref.read(choicedCourseProvider.notifier).update((state) => data);
-        CourseDetailPage().show(context);
+        CourseDetailPage(courseListController: courseListController, data: data, dataIndex: dataIndex).show(context);
       },
       child: Container(
         width: ScreenSize.width,
@@ -55,7 +58,6 @@ class CourseUtilites {
             MainBtn(
               onPress: () {
                 ///ユーザー詳細ページに遷移
-
                 UserProfileAllInfoBottomSheet(userData: data.courseCreateduserInfo).show(context);
               },
               child: Row(

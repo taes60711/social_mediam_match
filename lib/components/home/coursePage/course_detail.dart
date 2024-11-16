@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/custom_button.dart';
+import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
+import 'package:social_mediam_match/services/course_service.dart';
 
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/course_provider.dart';
+import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/basic_top_bar.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/custom_expansion_title.dart';
@@ -17,6 +20,10 @@ import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
 
 class CourseDetailPage extends BaseEndDrawer {
+  int dataIndex;
+  CourseModel data;
+  StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>> courseListController;
+  CourseDetailPage({required this.courseListController, required this.data, required this.dataIndex});
   @override
   bool needWaitOpenPage() {
     return true;
@@ -41,6 +48,7 @@ class CourseDetailPage extends BaseEndDrawer {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  ///タグ
                   Row(
                     children: [
                       Icon(
@@ -54,16 +62,35 @@ class CourseDetailPage extends BaseEndDrawer {
                         style: TextStyle(fontSize: ScreenSize.fontSize12, color: hintTextColor),
                       ),
                       const Expanded(child: SizedBox(width: 1)),
+
+                      ///申請ボタン
                       Visibility(
-                        visible: userData.uid != choiceData.createdBy && choiceData.signUpStatus != "added",
+                        visible: userData.uid != choiceData.createdBy && choiceData.signUpStatus == "none",
                         child: MainBtn(
                           title: "申請",
-                          onPress: () {},
+                          onPress: () {
+                            ConfirmDilaog(
+                              title: '提示',
+                              content: '確定要申請？',
+                              conirmFunc: () async {
+                                bool isSucess =
+                                    await CourseService().signUpCourse(courseId: choiceData.id, userUID: userData.uid);
+                                if (isSucess) {
+                                  choiceData.signUpStatus = "signing";
+                                  ref.read(choicedCourseProvider.notifier).update((state) => choiceData);
+                                  ref.read(courseListController.notifier).editData(dataIndex, choiceData);
+                                  render();
+                                }
+                              },
+                            ).show(context);
+                          },
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: ScreenSize.fitPxHeight(8)),
+
+                  ///勉強するスキルバー
                   Wrap(
                     children: choiceData.courseLearningSkills.map((e) {
                       return Container(
@@ -84,6 +111,8 @@ class CourseDetailPage extends BaseEndDrawer {
                     }).toList(),
                   ),
                   SizedBox(height: ScreenSize.fitPxHeight(5)),
+
+                  ///内容
                   Row(
                     children: [
                       Icon(
@@ -99,9 +128,10 @@ class CourseDetailPage extends BaseEndDrawer {
                     ],
                   ),
                   SizedBox(height: ScreenSize.fitPxHeight(5)),
+
                   Container(
                     width: ScreenSize.width,
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                     decoration: BoxDecoration(
                       color: hintTextColor.withAlpha(50),
                       borderRadius: BorderRadius.circular(3),
@@ -112,6 +142,7 @@ class CourseDetailPage extends BaseEndDrawer {
                     ),
                   ),
                   SizedBox(height: ScreenSize.fitPxHeight(8)),
+
                   Row(
                     children: [
                       Icon(
@@ -139,6 +170,8 @@ class CourseDetailPage extends BaseEndDrawer {
                     ],
                   ),
                   SizedBox(height: ScreenSize.fitPxHeight(5)),
+
+                  ///勉強前必要な知識
                   Container(
                     width: ScreenSize.width,
                     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
@@ -185,6 +218,7 @@ class CourseDetailPage extends BaseEndDrawer {
 
                   SizedBox(height: ScreenSize.fitPxHeight(10)),
 
+                  ///詳細内容
                   Visibility(
                     visible: choiceData.prStory != "",
                     child: CustomExpansionTile(
@@ -207,6 +241,7 @@ class CourseDetailPage extends BaseEndDrawer {
                     ),
                   ),
 
+                  ///チャプター
                   Column(
                     children: choiceData.chapterList.asMap().entries.map((e) {
                       int index = e.key;

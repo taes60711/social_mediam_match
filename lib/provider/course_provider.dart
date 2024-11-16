@@ -131,16 +131,25 @@ class CourseProvider extends ChangeNotifier {
   CourseModel choicedCourse = CourseModel(courseCreateduserInfo: ProfileData());
 }
 
-final courseByTextFilterListPorver = StateNotifierProvider<APIListControllerNotifier, APIListController>(
-  (ref) => APIListControllerNotifier(APIListController()),
+final addedCourserListPorver = StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>>(
+  (ref) => APIListControllerNotifier<CourseModel>(APIListController()),
+);
+
+final createdCourserListPorver = StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>>(
+  (ref) => APIListControllerNotifier<CourseModel>(APIListController()),
+);
+
+final courseByTextFilterListPorver =
+    StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>>(
+  (ref) => APIListControllerNotifier<CourseModel>(APIListController()),
 );
 
 final couseFilteredSkillList = StateProvider<List<RequestSkillListData>>((ref) {
   return [];
 });
 
-final courseMainPageListPorver = StateNotifierProvider<APIListControllerNotifier, APIListController>(
-  (ref) => APIListControllerNotifier(APIListController()),
+final courseMainPageListPorver = StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>>(
+  (ref) => APIListControllerNotifier<CourseModel>(APIListController()),
 );
 
 final choicedCourseProvider = StateProvider<CourseModel>((ref) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/components/utilities/custom_button.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
 
 import '../BottomSheets/base_bottom_sheet.dart';
 import '../basic_top_bar.dart';
@@ -38,6 +38,7 @@ class _MultLableInputState extends ConsumerState<MultInput> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
         MultInputBottomSheet(
           textEditingController: widget.controller,
           hintText: widget.hintText,
@@ -104,46 +105,37 @@ class MultInputBottomSheet extends BaseBottomSheet {
 
   @override
   Widget build(WidgetRef ref) {
-    return Column(
-      children: [
-        BaseTopBar(
-          leftWidget: Container(),
-          rightWidget: MainBtn(
-            onPress: () {
+    return CommonScaffold(
+      type: PageType.window,
+      bgColor: Colors.transparent,
+      child: Column(
+        children: [
+          BaseTopBar(
+            leftWidget: Container(),
+            rightWidget: downCloseBtn(onPress: () {
               closePage();
-            },
-            child: Container(
-              width: ScreenSize.fitPxWidth(40),
-              height: ScreenSize.fitPxWidth(40),
-              color: Colors.transparent,
-              child: Center(
-                child: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: AppColors.whiteColor,
-                ),
+            }),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.greyColor130),
+              borderRadius: BorderRadius.circular(
+                ScreenSize.fitPxWidth(8),
               ),
             ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.greyColor130),
-            borderRadius: BorderRadius.circular(
-              ScreenSize.fitPxWidth(8),
+            child: BaseInputField(
+              hintText: hintText,
+              hintStyle: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize18),
+              inputStyle: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+              controller: textEditingController,
+              minLines: editPageMinLines ?? minLines,
+              maxLines: editPageMaxLines ?? maxLines,
             ),
           ),
-          child: BaseInputField(
-            hintText: hintText,
-            hintStyle: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize18),
-            inputStyle: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
-            controller: textEditingController,
-            minLines: editPageMinLines ?? minLines,
-            maxLines: editPageMaxLines ?? maxLines,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
