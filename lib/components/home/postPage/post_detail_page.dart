@@ -6,10 +6,12 @@ import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
+import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/user_icon.dart';
@@ -23,6 +25,13 @@ class PostDetailPage extends BaseEndDrawer {
   @override
   bool needWaitOpenPage() {
     return true;
+  }
+
+  late PostViewModel viewModel;
+
+  @override
+  Future<void> initState(WidgetRef ref) async {
+    viewModel = PostViewModel(ref: ref, context: context, render: render);
   }
 
   @override
@@ -47,9 +56,15 @@ class PostDetailPage extends BaseEndDrawer {
                   /// ユーザデータ
                   Row(
                     children: [
-                      UserIcon(
-                        iconSize: ScreenSize.fitPxWidth(30),
-                        image: choiceData.postUserInfo.image,
+                      GestureDetector(
+                        onTap: () {
+                          ///ユーザー詳細ページに遷移
+                          UserProfileAllInfoBottomSheet(userData: choiceData.postUserInfo).show(context);
+                        },
+                        child: UserIcon(
+                          iconSize: ScreenSize.fitPxWidth(30),
+                          image: choiceData.postUserInfo.image,
+                        ),
                       ),
                       SizedBox(width: ScreenSize.fitPxWidth(5)),
                       Column(
@@ -84,25 +99,28 @@ class PostDetailPage extends BaseEndDrawer {
                             text: "${choiceData.viewed}",
                             style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
                         SizedBox(width: ScreenSize.fitPxWidth(10)),
-                        PostViewUtilities().iconWithText(
-                            iconData: FontAwesomeIcons.commentDots,
-                            iconColor: AppColors.greyColor130,
-                            text: "${choiceData.commentCount}",
-                            style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                        GestureDetector(
+                          onTap: () {
+                            ///コメントページに遷移する
+                            PostCommentPage(dataIndex: dataIndex, postListController: postListController).show(context);
+                          },
+                          child: PostViewUtilities().iconWithText(
+                              iconData: FontAwesomeIcons.commentDots,
+                              iconColor: AppColors.greyColor130,
+                              text: "${choiceData.commentCount}",
+                              style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                        ),
                         SizedBox(width: ScreenSize.fitPxWidth(12)),
 
                         ///いいね数
                         GestureDetector(
                           onTap: () {
-                            if (postListController != null) {
-                              choiceData.good++;
-                              ref.read(postListController!.notifier).editData(dataIndex, choiceData);
-                              render();
-                            }
+                            viewModel.lookingPostGoodOnChange(ref.read(choicedPostIsGoodProvider.notifier).state,
+                                dataIndex: dataIndex, postListController: postListController);
                           },
                           child: PostViewUtilities().iconWithText(
                               iconData: FontAwesomeIcons.heart,
-                              iconColor: AppColors.greyColor130,
+                              iconColor: ref.read(choicedPostIsGoodProvider.notifier).state ? Colors.red : AppColors.greyColor130,
                               text: "${choiceData.good}",
                               style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
                         ),

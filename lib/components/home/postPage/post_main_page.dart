@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/home/postPage/post_page_by_textfilter.dart';
 import 'package:social_mediam_match/components/home/postPage/post_type_board/post_type_board.dart';
-import 'package:social_mediam_match/components/utilities/custom_button.dart';
+import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 
 import '../../../global/home_global_view_model.dart';

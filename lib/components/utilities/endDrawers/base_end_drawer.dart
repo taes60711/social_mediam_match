@@ -129,6 +129,10 @@ abstract class BaseEndDrawer {
     return false;
   }
 
+  bool needGestureDetectorClosePage() {
+    return true;
+  }
+
   // initState前に
   void create() {}
   // （レンダリング、APIとか必要場合）
@@ -151,6 +155,7 @@ abstract class BaseEndDrawer {
             body: EndDrawerWidget(
               callBackAnimationController: (AnimationController animationController) => controller = animationController,
               needWaitPageOpen: needWaitOpenPage(),
+              needGestureDetectorClosePage: needGestureDetectorClosePage(),
               callBackClosePage: (Function callBackClosePage) {
                 closePage = () {
                   callBackClosePage();
@@ -189,6 +194,7 @@ class EndDrawerWidget extends ConsumerStatefulWidget {
   final Widget child;
   final bool needWaitPageOpen;
   final Function closeDispose;
+  final bool needGestureDetectorClosePage;
 
   final Function(AnimationController controller) callBackAnimationController;
   final Function(Function closepage) callBackClosePage;
@@ -199,6 +205,7 @@ class EndDrawerWidget extends ConsumerStatefulWidget {
     required this.callBackClosePage,
     this.needWaitPageOpen = false,
     required this.closeDispose,
+    required this.needGestureDetectorClosePage,
   });
 
   @override
@@ -294,24 +301,41 @@ class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTi
     } else {
       component = widget.child;
     }
-    return GestureDetector(
-      onHorizontalDragStart: _onHorizontalDragStart,
-      onHorizontalDragUpdate: _onHorizontalDragUpdate,
-      onHorizontalDragEnd: _onHorizontalDragEnd,
-      child: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SlideTransition(
-          position: _offsetAnimation,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            color: AppColors.bgColor,
-            child: CommonScaffold(
-              child: component,
+    return widget.needGestureDetectorClosePage
+        ? GestureDetector(
+            onHorizontalDragStart: _onHorizontalDragStart,
+            onHorizontalDragUpdate: _onHorizontalDragUpdate,
+            onHorizontalDragEnd: _onHorizontalDragEnd,
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _offsetAnimation,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  color: AppColors.bgColor,
+                  child: CommonScaffold(
+                    child: component,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          )
+        : GestureDetector(
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _offsetAnimation,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  color: AppColors.bgColor,
+                  child: CommonScaffold(
+                    child: component,
+                  ),
+                ),
+              ),
+            ),
+          );
   }
 }

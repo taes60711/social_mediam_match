@@ -41,7 +41,7 @@ class MyPostPage extends BaseEndDrawer {
         ),
         Expanded(
           child: APIListWidget(
-              size: 6,
+              size: 7,
               apiFunc: (page, size) {
                 return PostService().getPostDataByUID(page, size, userData);
               },

@@ -5,24 +5,24 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 import 'package:social_mediam_match/components/utilities/basic_top_bar.dart';
-import 'package:social_mediam_match/components/utilities/custom_button.dart';
-import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
-import 'package:social_mediam_match/pagemanager/setting/route_controller.dart';
-import 'package:social_mediam_match/provider/post/post_provider.dart';
-import '../../../models/post_model.dart';
-import '../../../models/rich_text_format.dart';
-import '../../../models/user_model.dart';
-import '../../../provider/account/user_provider.dart';
-import '../../utilities/BottomSheets/base_bottom_sheet.dart';
-import '../../utilities/FadeScalePage/base_fade_scale_page.dart';
-import '../../utilities/rich_text_editor.dart';
-import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
-import 'post_type_board/post_page_by_type.dart';
 
-class PostEditorPage extends BaseFadeScalePage {
+import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
+import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
+
+import '../../../../models/post_model.dart';
+
+import '../../../../provider/post/post_provider.dart';
+import '../../../../provider/post/post_view_model.dart';
+import '../../../utilities/bottomSheets/base_bottom_sheet.dart';
+import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
+import '../../../utilities/main_button.dart';
+import '../../../utilities/rich_text_editor.dart';
+import '../../../utilities/style/screen_size.dart';
+import '../../../utilities/style/style_config.dart';
+
+class PostCreatePage extends BaseFadeScalePage {
   PostBoard? postBoard;
-  PostEditorPage({this.postBoard});
+  PostCreatePage({this.postBoard});
 
   QuillEditorController quillEditorController = QuillEditorController();
   TextEditingController titleController = TextEditingController();
@@ -30,6 +30,13 @@ class PostEditorPage extends BaseFadeScalePage {
   @override
   bool needWaitOpenPage() {
     return true;
+  }
+
+  late PostViewModel viewModel;
+
+  @override
+  Future<void> initState(WidgetRef ref) async {
+    viewModel = PostViewModel(ref: ref, context: context, render: render);
   }
 
   @override
@@ -59,34 +66,27 @@ class PostEditorPage extends BaseFadeScalePage {
             ),
             rightWidget: MainBtn(
               onPress: () async {
-                ProfileData userData = ref.watch(loginUserData);
                 String postTitle = titleController.text;
-                int postType = ref.read(postCreateChoiceBoard).type;
-
                 String postContent = await quillEditorController.getText();
-                String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
-                print("Title $postTitle Board: $postType   Message : $fomattedContent");
+                if (postTitle == "" || postContent == "") {
+                  String content = "";
+                  if (postTitle == "" && postContent == "") {
+                    content = "\"標題\"不得為空\n\"內文\"不得為空";
+                  } else if (postTitle == "") {
+                    content = "\"標題\"不得為空";
+                  } else if (postContent == "") {
+                    content = "\"內文\"不得為空";
+                  }
 
-                PostModel post = PostModel(
-                  id: 29,
-                  createdBy: userData.uid,
-                  title: postTitle,
-                  type: postType,
-                  mainMessage: fomattedContent,
-                  commentCount: 0,
-                  postTime: "2024-03-24T13:44:30.000+00:00",
-                  postUserInfo: userData,
-                );
-
-                RouteOptions.pop();
-                if (postBoard == null) {
-                  ref.read(choicedPostBoardProvider.notifier).update((state) => ref.read(postCreateChoiceBoard));
-                  PostPageByType().show(context);
-                } else {
-                  ref.read(typelistControllerProvider).scrollController.jumpTo(0);
-                  ref.read(typelistControllerProvider.notifier).addDataTofirst(post);
-                  render();
+                  ConfirmDilaog(title: '警告', content: content).show(context);
+                  return;
                 }
+
+                viewModel.postCreate(
+                  postTitle: titleController.text,
+                  postContent: await quillEditorController.getText(),
+                  postBoard: postBoard,
+                );
               },
               title: "投稿",
             ),

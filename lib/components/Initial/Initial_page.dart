@@ -10,7 +10,6 @@ import '../../models/post_model.dart';
 import '../../models/skill_model.dart';
 import '../../models/user_model.dart';
 import '../../provider/account/user_provider.dart';
-import '../../provider/Initial/initial_provider.dart';
 
 import '../../provider/post/post_provider.dart';
 import '../../services/post_service.dart';
@@ -82,12 +81,7 @@ class _InitialpageState extends ConsumerState<Initialpage> {
 
 Future<void> _enterApp(BuildContext context) async {
   print("firstEnterApp");
-  int delayTime = 3;
 
   // ユーザの資料を取得、最後ログインのタイム更新、友達リスト（WS）繋がる
   context.read<UserProvider>().isLoginCheck(context);
-
-  Timer(Duration(seconds: delayTime), () {
-    context.read<InitialProvider>().onChange();
-  });
 }

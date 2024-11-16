@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_page_by_textfilter.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_utilites.dart';
 
 import 'package:social_mediam_match/components/utilities/endDrawers/base_skill_filter_page.dart';
@@ -8,27 +9,16 @@ import 'package:social_mediam_match/components/utilities/inputField/base_input.d
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 import '../../../global/home_global_view_model.dart';
-import '../../../models/course_model.dart';
-import '../../../models/skill_model.dart';
+
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
-import '../../utilities/apiListView/api_list_controller.dart';
+import '../../../provider/course_provider.dart';
+
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/background_widget.dart';
+import '../../utilities/main_button.dart';
 import '../../utilities/loading.dart';
 import '../../utilities/style/screen_size.dart';
-
-final couseFilteredSkillList = StateProvider<List<RequestSkillListData>>((ref) {
-  return [];
-});
-
-final courserMainPageListPorver = StateNotifierProvider<APIListControllerNotifier, APIListController>(
-  (ref) => APIListControllerNotifier(APIListController()),
-);
-
-final choicedCourseProvider = StateProvider<CourseModel>((ref) {
-  return CourseModel(courseCreateduserInfo: ProfileData());
-});
 
 class CourseMainPage extends ConsumerStatefulWidget {
   const CourseMainPage({super.key});
@@ -61,15 +51,18 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
               ),
               Expanded(
                 child: APIListWidget(
-                    apiFunc: (int page, int size) {
-                      return CourseService().getAllCourses(userData.uid, page, size);
-                    },
-                    listControllerProvider: courserMainPageListPorver,
-                    haveBottomBar: true,
-                    loadingWidget: const CourseLoading(),
-                    itemChild: (data, index) {
-                      return CourseUtilites().courseItemContent(context, ref, data: data);
-                    }),
+                  apiFunc: (int page, int size) {
+                    return CourseService().getAllCourses(userData.uid, page, size);
+                  },
+                  listControllerProvider: courseMainPageListPorver,
+                  haveBottomBar: true,
+                  customFloatBtn: CourseUtilites.courseCreateButton(context),
+                  loadingWidget: const CourseLoading(),
+                  itemChild: (data, index) {
+                    return CourseUtilites()
+                        .courseItemContent(context, ref, courseMainPageListPorver, data: data, dataIndex: index);
+                  },
+                ),
               ),
             ],
           ),
@@ -87,6 +80,7 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
 }
 
 Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
+  TextEditingController searchController = TextEditingController();
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
     decoration: BoxDecoration(
@@ -97,17 +91,31 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
     height: 36,
     child: Row(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Icon(Icons.search, color: AppColors.whiteColor),
+        MainBtn(
+          onPress: () {
+            if (searchController.text == "") {
+              return;
+            }
+            CoursePageByTextFilter(searchText: searchController.text).show(context);
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Icon(Icons.search, color: AppColors.whiteColor),
+          ),
         ),
         Expanded(
           child: BaseInputField(
             hintText: "搜尋",
-            controller: TextEditingController(),
+            textInputAction: TextInputAction.search,
+            controller: searchController,
+            onFieldSubmitted: (value) {
+              if (value == "") {
+                return;
+              }
+              CoursePageByTextFilter(searchText: value).show(context);
+            },
           ),
         ),
-        const Expanded(child: SizedBox(width: 1)),
         GestureDetector(
           onTap: () {
             BaseSkillFilterPage(
@@ -116,7 +124,7 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
               searchFunc: (choicedFilterSkillList) async {
                 List<String> filteredSkillIdList = choicedFilterSkillList.map((e) => e.id.toString()).toList();
                 ProfileData userData = ref.watch(loginUserData);
-                await ref.read(courserMainPageListPorver.notifier).replaceApi((page, size) {
+                await ref.read(courseMainPageListPorver.notifier).replaceApi((page, size) {
                   return CourseService().getAllCourses(userData.uid, page, size, skillId: filteredSkillIdList);
                 });
 

@@ -14,9 +14,10 @@ import '../../../models/friend_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../services/friend_service.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
-import '../../utilities/custom_button.dart';
+
 import '../../utilities/inputField/base_input.dart';
-import 'my_friends.dart';
+
+import '../../utilities/main_button.dart';
 import 'search_user_page.dart';
 
 final frinedListProvider = StateProvider<List<FriendListModel>>((ref) => []);
@@ -75,23 +76,7 @@ class _FriendPageState extends ConsumerState<FriendPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: ScreenSize.fitPxHeight(10)),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildSearchBar(ref, () => setState(() {}), context),
-                ),
-                SizedBox(width: ScreenSize.fitPxHeight(10)),
-                MainBtn(
-                  onPress: () {
-                    MyFriendPage().show(context);
-                  },
-                  child: Icon(
-                    Icons.settings,
-                    color: AppColors.greyColor130,
-                  ),
-                ),
-              ],
-            ),
+            _buildSearchBar(ref, () => setState(() {}), context),
             SizedBox(height: ScreenSize.fitPxHeight(15)),
             Text(
               "推薦",

@@ -4,12 +4,21 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 
 import '../style/style_config.dart';
 
+enum BottomSheetPageType {
+  normal,
+  edit,
+}
+
 abstract class BaseBottomSheet {
   late AnimationController controller;
   late Function render;
   late Function closePage;
   bool _isInit = false;
   late BuildContext context;
+
+  BottomSheetPageType bottomSheetPageType() {
+    return BottomSheetPageType.normal;
+  }
 
   double buildHeight() {
     return 0.8;
@@ -44,7 +53,9 @@ abstract class BaseBottomSheet {
                     render = () => setState(() {});
                     Future.delayed(Duration.zero).then((value) {
                       create();
-                      initState(ref).then((value) => _isInit = true);
+                      initState(ref).then((value) {
+                        _isInit = true;
+                      });
                     });
                   }
 
@@ -83,6 +94,7 @@ abstract class BaseBottomSheet {
                                             closeDispose: () {
                                               dispose(ref);
                                             },
+                                            pageType: bottomSheetPageType(),
                                             child: build(ref),
                                           ),
                                         ),
@@ -106,6 +118,7 @@ abstract class BaseBottomSheet {
                                         closeDispose: () {
                                           dispose(ref);
                                         },
+                                        pageType: bottomSheetPageType(),
                                         child: build(ref),
                                       ),
                                     ),
@@ -132,6 +145,7 @@ class BottomSheetWidget extends StatefulWidget {
   final Function(AnimationController controller) callBackAnimationController;
   final Function(Function closepage) callBackClosePage;
   final Widget child;
+  final BottomSheetPageType pageType;
 
   const BottomSheetWidget({
     super.key,
@@ -140,6 +154,7 @@ class BottomSheetWidget extends StatefulWidget {
     required this.callBackClosePage,
     required this.child,
     required this.closeDispose,
+    required this.pageType,
   });
 
   @override
@@ -219,17 +234,20 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
           width: ScreenSize.width,
           decoration: BoxDecoration(
             color: AppColors.black37,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(BottomSheetPageType.edit == widget.pageType ? 0 : 15)),
           ),
           child: Column(
             children: [
-              Container(
-                width: ScreenSize.width * 0.1,
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.greyColor98,
-                  borderRadius: BorderRadius.circular(10),
+              Visibility(
+                visible: BottomSheetPageType.normal == widget.pageType,
+                child: Container(
+                  width: ScreenSize.width * 0.1,
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppColors.greyColor98,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
               Expanded(child: widget.child),

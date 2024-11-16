@@ -4,14 +4,11 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 
 import '../../../../models/user_model.dart';
 import '../../../../provider/account/user_provider.dart';
+import '../../../../provider/course_provider.dart';
 import '../../../../services/course_service.dart';
-import '../../../utilities/apiListView/api_list_controller.dart';
+
 import '../../../utilities/apiListView/api_list_view.dart';
 import '../../coursePage/course_utilites.dart';
-
-final addedCourserListPorver = StateNotifierProvider<APIListControllerNotifier, APIListController>(
-  (ref) => APIListControllerNotifier(APIListController()),
-);
 
 class AddedCoursePage extends ConsumerStatefulWidget {
   const AddedCoursePage({super.key});
@@ -25,13 +22,14 @@ class _PostByViewState extends ConsumerState<AddedCoursePage> {
   Widget build(BuildContext context) {
     ProfileData userData = ref.watch(loginUserData);
     return APIListWidget(
-        apiFunc: (page, size) {
-          return CourseService().getAddedCourses(page, size, userData.uid);
-        },
-        listControllerProvider: addedCourserListPorver,
-        loadingWidget: const CourseLoading(),
-        itemChild: (data, index) {
-          return CourseUtilites().courseItemContent(context, ref, data: data);
-        });
+      apiFunc: (page, size) {
+        return CourseService().getAddedCourses(page, size, userData.uid);
+      },
+      listControllerProvider: addedCourserListPorver,
+      loadingWidget: const CourseLoading(),
+      itemChild: (data, index) {
+        return CourseUtilites().courseItemContent(context, ref, addedCourserListPorver, data: data, dataIndex: index);
+      },
+    );
   }
 }

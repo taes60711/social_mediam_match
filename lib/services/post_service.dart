@@ -182,7 +182,7 @@ class PostService extends ApiClient {
   }
 
   ///MARK: 文章作成
-  Future<bool> createPost(String uid, String title, String message, int type) async {
+  Future<int> createPost(String uid, String title, String message, int type) async {
     Map<String, dynamic> body = {
       "createdBy": uid,
       "title": title,
@@ -192,9 +192,8 @@ class PostService extends ApiClient {
 
     String responseData = await apiPush("/createPost", body: body);
 
-    print("updatePost $responseData");
-
-    return responseData != "null" ? true : false;
+    int index = int.parse(responseData);
+    return index;
   }
 
   /// 文章編集

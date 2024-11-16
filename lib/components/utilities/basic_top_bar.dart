@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/pageManager/setting/route_controller.dart';
+import 'main_button.dart';
 import 'style/screen_size.dart';
 
 class BaseTopBar extends StatelessWidget {
@@ -98,4 +99,25 @@ class BaseTopBar extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget downCloseBtn({Function? onPress}) {
+  return MainBtn(
+    onPress: () {
+      if (onPress != null) {
+        onPress();
+      }
+    },
+    child: Container(
+      width: ScreenSize.fitPxWidth(40),
+      height: ScreenSize.fitPxWidth(40),
+      color: Colors.transparent,
+      child: Center(
+        child: Icon(
+          Icons.keyboard_arrow_down,
+          color: AppColors.whiteColor,
+        ),
+      ),
+    ),
+  );
 }

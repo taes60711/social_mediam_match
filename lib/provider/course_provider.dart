@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 
-import '../components/utilities/endDrawers/course_edit_skill_choice_end_drawer.dart';
+import '../components/utilities/apiListView/api_list_controller.dart';
+
+import '../models/skill_model.dart';
 import '../models/user_model.dart';
 
 class CourseProvider extends ChangeNotifier {
@@ -124,32 +127,54 @@ class CourseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  CourseEditSkillChoiceEndDrawerType editSkillChoiceEndDrawerOpenInfo = CourseEditSkillChoiceEndDrawerType.close;
-  void editSkillChoiceEndDrawerStatus(CourseEditSkillChoiceEndDrawerType status) {
-    editSkillChoiceEndDrawerOpenInfo = status;
-    notifyListeners();
-  }
-
   // MARK: View
   CourseModel choicedCourse = CourseModel(courseCreateduserInfo: ProfileData());
-  // CourseDetailEndDrawerType endDrawerOpenInfo = CourseDetailEndDrawerType.close;
-  // void changeEndDrawerStatus(CourseDetailEndDrawerType status, CourseModel opendCourse) {
-  //   endDrawerOpenInfo = status;
-  //   choicedCourse = opendCourse;
-  //   notifyListeners();
-  // }
-
-  // CourseFilterEndDrawerType filterEndDrawerOpenInfo = CourseFilterEndDrawerType.close;
-  // void changeFilterEndDrawerStatus(CourseFilterEndDrawerType status) {
-  //   filterEndDrawerOpenInfo = status;
-  //   notifyListeners();
-  // }
-
-  // CourseManagerEndDrawerType courseManagerEndDrawerOpenInfo = CourseManagerEndDrawerType.close;
-  // int choicedCourseId = -1;
-  // void courseManagerEndDrawerStatus(CourseManagerEndDrawerType status, int changedCourseId) {
-  //   courseManagerEndDrawerOpenInfo = status;
-  //   choicedCourseId = changedCourseId;
-  //   notifyListeners();
-  // }
 }
+
+final addedCourserListPorver = StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>>(
+  (ref) => APIListControllerNotifier<CourseModel>(APIListController()),
+);
+
+final createdCourserListPorver = StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>>(
+  (ref) => APIListControllerNotifier<CourseModel>(APIListController()),
+);
+
+final courseByTextFilterListPorver =
+    StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>>(
+  (ref) => APIListControllerNotifier<CourseModel>(APIListController()),
+);
+
+final couseFilteredSkillList = StateProvider<List<RequestSkillListData>>((ref) {
+  return [];
+});
+
+final courseMemberManagerListPorver =
+    StateNotifierProvider<APIListControllerNotifier<AddedCourseMemberModel>, APIListController<AddedCourseMemberModel>>(
+  (ref) => APIListControllerNotifier<AddedCourseMemberModel>(APIListController()),
+);
+
+final choicedCourseMemberProvider = StateProvider<AddedCourseMemberModel>((ref) {
+  return AddedCourseMemberModel(courseId: 0, memberUid: '', userData: ProfileData(), status: 0);
+});
+
+final courseMainPageListPorver = StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>>(
+  (ref) => APIListControllerNotifier<CourseModel>(APIListController()),
+);
+
+final choicedCourseProvider = StateProvider<CourseModel>((ref) {
+  return CourseModel(courseCreateduserInfo: ProfileData());
+});
+
+final courseChoiceLevel = StateProvider<String>((ref) {
+  return "3";
+});
+
+final courseEditSkillList = StateProvider<List<RequestSkillListData>>((ref) {
+  return [];
+});
+
+final courseEditChapterList = StateProvider<List<CourseChapterInfo>>((ref) => []);
+
+final courseDetailContent = StateProvider<String>((ref) {
+  return "";
+});

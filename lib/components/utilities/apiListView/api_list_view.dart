@@ -6,7 +6,7 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../../CustomBouncingScrollPhysics.dart';
 import '../../../global/home_global_view_model.dart';
-import '../custom_button.dart';
+import '../main_button.dart';
 import '../loading.dart';
 import 'api_list_controller.dart';
 

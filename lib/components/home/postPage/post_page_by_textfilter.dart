@@ -35,6 +35,7 @@ class PostPageByTextFilter extends BaseEndDrawer {
               apiFunc: (page, size) {
                 return PostService().getPostByTextFilter(page, size, searchText);
               },
+              size: 7,
               listControllerProvider: textFilterControllerProvider,
               noDataWidget: PostViewUtilities.noPostData(),
               customFloatBtn: PostViewUtilities.postCreateButton(context),

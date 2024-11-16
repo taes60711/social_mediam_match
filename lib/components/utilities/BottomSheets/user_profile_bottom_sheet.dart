@@ -1,13 +1,16 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/bottomSheets/base_bottom_sheet.dart';
+import 'package:social_mediam_match/provider/friend_provider.dart';
+import 'package:social_mediam_match/services/friend_service.dart';
 
-import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
+import '../../../provider/account/user_provider.dart';
+import '../../home/skillExChangePage/skill_utilites.dart';
 import '../../strings/skillExChangePage/skill_change_page_string.dart';
-import '../custom_button.dart';
+
+import '../main_button.dart';
 import '../style/screen_size.dart';
 import '../style/style_config.dart';
 import '../user_icon.dart';
@@ -16,6 +19,17 @@ import '../user_icon.dart';
 class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
   final ProfileData userData;
   UserProfileAllInfoBottomSheet({required this.userData});
+
+  @override
+  Future<void> initState(WidgetRef ref) async {
+    ProfileData myUserData = ref.watch(loginUserData);
+    if (myUserData.uid != userData.uid) {
+      bool isFriend = await FriendService().getIsFrined(userUID: myUserData.uid, ohterUserUID: userData.uid);
+
+      ref.read(isFriendProvider.notifier).update((state) => isFriend);
+      render();
+    }
+  }
 
   @override
   Widget build(WidgetRef ref) {
@@ -78,21 +92,26 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                   ),
                 ),
                 SizedBox(height: ScreenSize.fitPxHeight(15)),
-                Center(
-                  child: MainBtn(
-                    onPress: () {},
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: ScreenSize.fitPxHeight(15),
-                        vertical: ScreenSize.fitPxHeight(5),
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: AppColors.greyColor54,
-                      ),
-                      child: Text(
-                        "新增好友",
-                        style: TextStyle(color: AppColors.whiteColor),
+
+                /// チャットルーム遷移/フレンド追加ボタン
+                Visibility(
+                  visible: ref.watch(loginUserData).uid != userData.uid,
+                  child: Center(
+                    child: MainBtn(
+                      onPress: () {},
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ScreenSize.fitPxHeight(15),
+                          vertical: ScreenSize.fitPxHeight(5),
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: ref.watch(isFriendProvider) ? AppColors.orangeColor : AppColors.greyColor54,
+                        ),
+                        child: Text(
+                          ref.watch(isFriendProvider) ? "開啟聊天室" : "新增好友",
+                          style: TextStyle(color: AppColors.whiteColor),
+                        ),
                       ),
                     ),
                   ),
@@ -169,7 +188,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                 SizedBox(height: ScreenSize.fitPxHeight(5)),
 
                 ///得意なスキル
-                skillBar(skills: userData.mainSkills!),
+                SkillUtilites().skillBar(skills: userData.mainSkills!),
                 SizedBox(height: ScreenSize.fitPxHeight(5)),
 
                 Row(
@@ -200,7 +219,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                 SizedBox(height: ScreenSize.fitPxHeight(5)),
 
                 ///弱いスキル
-                skillBar(skills: userData.wantSkills!),
+                SkillUtilites().skillBar(skills: userData.wantSkills!),
                 SizedBox(height: ScreenSize.fitPxHeight(15)),
 
                 Row(
@@ -241,68 +260,20 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
   }
 }
 
-Widget skillBar({required List<RequestUserSkillData> skills}) {
-  return Row(
-    children: [
-      ///スキル
-      Row(
-        children: skills.isEmpty
-            ? [
-                Container(
-                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.greyColor98,
-                  ),
-                  child: Text(
-                    "暫無",
-                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                  ),
-                )
-              ]
-            : skills.map((e) {
-                return Container(
-                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.greyColor98,
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: ScreenSize.fitPxWidth(15),
-                        height: ScreenSize.fitPxWidth(15),
-                        margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                        decoration: BoxDecoration(
-                          color: AppColors.black37,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "${e.level}",
-                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize10),
-                          ),
-                        ),
-                      ),
-                      Text(
-                        e.name,
-                        style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-      ),
-    ],
-  );
-}
-
 ///
 class UserProfileBottomSheet extends BaseBottomSheet {
   final ProfileData userData;
   UserProfileBottomSheet({required this.userData});
+  @override
+  Future<void> initState(WidgetRef ref) async {
+    ProfileData myUserData = ref.watch(loginUserData);
+    if (myUserData.uid != userData.uid) {
+      bool isFriend = await FriendService().getIsFrined(userUID: myUserData.uid, ohterUserUID: userData.uid);
+
+      ref.read(isFriendProvider.notifier).update((state) => isFriend);
+      render();
+    }
+  }
 
   @override
   Widget build(WidgetRef ref) {
@@ -342,7 +313,7 @@ class UserProfileBottomSheet extends BaseBottomSheet {
                       ),
                     ),
                     Text(
-                      "${userData.lastLogin}${tr("skExChpage_beforDays")}",
+                      "${userData.lastLogin}前",
                       style: TextStyle(
                         color: AppColors.greyColor130,
                         fontSize: ScreenSize.fontSize12,
@@ -365,21 +336,26 @@ class UserProfileBottomSheet extends BaseBottomSheet {
                   ),
                 ),
                 SizedBox(height: ScreenSize.fitPxHeight(15)),
-                Center(
-                  child: MainBtn(
-                    onPress: () {},
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: ScreenSize.fitPxHeight(15),
-                        vertical: ScreenSize.fitPxHeight(5),
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: AppColors.greyColor54,
-                      ),
-                      child: Text(
-                        "新增好友",
-                        style: TextStyle(color: AppColors.whiteColor),
+
+                /// チャットルーム遷移/フレンド追加ボタン
+                Visibility(
+                  visible: ref.watch(loginUserData).uid != userData.uid,
+                  child: Center(
+                    child: MainBtn(
+                      onPress: () {},
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ScreenSize.fitPxHeight(15),
+                          vertical: ScreenSize.fitPxHeight(5),
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: ref.watch(isFriendProvider) ? AppColors.orangeColor : AppColors.greyColor54,
+                        ),
+                        child: Text(
+                          ref.watch(isFriendProvider) ? "聊天室" : "新增好友",
+                          style: TextStyle(color: AppColors.whiteColor),
+                        ),
                       ),
                     ),
                   ),

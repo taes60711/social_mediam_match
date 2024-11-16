@@ -15,7 +15,7 @@ class ChatRoomModel {
     return ChatRoomModel(
       pageCount: json['PageCount'],
       members: (json["Members"] as List<dynamic>).map((e) => "\"$e\"").toList(),
-      chatRoomMsg: (json["Message"] as List<dynamic>).map((e) => ChatRoomMsg.toModel(e)).toList(), //json['Message'],
+      chatRoomMsg: (json["Message"] as List<dynamic>).map((e) => ChatRoomMsg.toModel(e)).toList(),
     );
   }
 }

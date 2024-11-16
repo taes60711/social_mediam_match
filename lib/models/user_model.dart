@@ -53,6 +53,23 @@ class ProfileData extends UserModel {
           wantSkills: wantSkills,
         );
 
+  ProfileData copyWith({ProfileData? data}) {
+    return ProfileData(
+      uid: data?.uid ?? uid,
+      image: data?.image ?? image,
+      token: data?.token ?? token,
+      name: data?.name ?? name,
+      job: data?.job ?? job,
+      introduction: data?.introduction ?? introduction,
+      lastLogin: data?.lastLogin ?? lastLogin,
+      mainSkills: data?.mainSkills ?? mainSkills,
+      wantSkills: data?.wantSkills ?? wantSkills,
+      email: data?.email ?? email,
+      isEmailVerified: data?.isEmailVerified ?? isEmailVerified,
+      status: data?.status ?? status,
+    );
+  }
+
   factory ProfileData.toModel(Map<String, dynamic> json) {
     //Map<String, dynamic> or dynamic
     List<RequestUserSkillData> mainSkills = (json["skills"] as List<dynamic>)

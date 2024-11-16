@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../enum/skill_type.dart';
 import '../../../models/skill_model.dart';
 import '../../Initial/Initial_page.dart';
 import '../../utilities/basic_top_bar.dart';
-import '../../utilities/custom_button.dart';
+import '../main_button.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -13,8 +14,9 @@ import '../../utilities/style/style_config.dart';
 class BaseSkillFilterPage extends BaseEndDrawer {
   final Function viewRender;
   final StateProvider<List<RequestSkillListData>> filteredSkillList;
+  final String btnStr;
   final Function(List<RequestSkillListData> choicedFilterSkillList) searchFunc;
-  BaseSkillFilterPage({required this.viewRender, required this.filteredSkillList, required this.searchFunc});
+  BaseSkillFilterPage({required this.viewRender, required this.filteredSkillList, required this.searchFunc, this.btnStr = "搜尋"});
   Map<SkillType, List<RequestSkillListData>> mapedSkillList = {
     SkillType.frontend: [],
     SkillType.iot: [],
@@ -25,6 +27,11 @@ class BaseSkillFilterPage extends BaseEndDrawer {
   List<RequestSkillListData> tempFilteredSkillList = [];
   SkillType isChoicedSkillType = SkillType.frontend;
   double bottomBtnHeight = ScreenSize.fitPxHeight(80);
+
+  @override
+  bool needGestureDetectorClosePage() {
+    return false;
+  }
 
   @override
   Future<void> initState(WidgetRef ref) async {
@@ -42,7 +49,7 @@ class BaseSkillFilterPage extends BaseEndDrawer {
           children: [
             BaseTopBar(
               backFunc: () => closePage(),
-              rightWidget: filterSearch(),
+              rightWidget: filterSearchBtn(),
             ),
             SizedBox(height: ScreenSize.fitPxWidth(8)),
             choicedFilterSkillList(),
@@ -65,6 +72,7 @@ class BaseSkillFilterPage extends BaseEndDrawer {
 
                       return Column(
                         children: [
+                          ///スキルレベル選択
                           GestureDetector(
                             onTap: () {
                               if (isChoiced) {
@@ -144,27 +152,44 @@ class BaseSkillFilterPage extends BaseEndDrawer {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: tempFilteredSkillList
-                    .map(
-                      (e) => Container(
+                children: tempFilteredSkillList.asMap().entries.map((e) {
+                  int index = e.key;
+                  RequestSkillListData data = e.value;
+                  return MainBtn(
+                    onPress: () {
+                      tempFilteredSkillList.removeAt(index);
+                      render();
+                    },
+                    child: Container(
                         decoration: BoxDecoration(
-                          color: AppColors.greyColor98,
+                          color: AppColors.greyColor54,
                           borderRadius: BorderRadius.circular(
                             ScreenSize.fitPxHeight(5),
                           ),
                         ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: ScreenSize.fitPxWidth(7),
-                          vertical: ScreenSize.fitPxHeight(2),
+                        padding: EdgeInsets.only(
+                          left: ScreenSize.fitPxWidth(8),
+                          right: ScreenSize.fitPxWidth(4),
+                          top: ScreenSize.fitPxHeight(2),
+                          bottom: ScreenSize.fitPxHeight(2),
                         ),
                         margin: EdgeInsets.only(right: ScreenSize.fitPxHeight(7)),
-                        child: Text(
-                          e.name,
-                          style: TextStyle(color: AppColors.whiteColor),
-                        ),
-                      ),
-                    )
-                    .toList(),
+                        child: Row(
+                          children: [
+                            Text(
+                              data.name,
+                              style: TextStyle(color: AppColors.whiteColor),
+                            ),
+                            SizedBox(width: ScreenSize.fitPxHeight(5)),
+                            Icon(
+                              FontAwesomeIcons.close,
+                              color: AppColors.whiteColor,
+                              size: ScreenSize.fitPxHeight(13),
+                            )
+                          ],
+                        )),
+                  );
+                }).toList(),
               ),
             ),
           ),
@@ -173,9 +198,9 @@ class BaseSkillFilterPage extends BaseEndDrawer {
     );
   }
 
-  Widget filterSearch() {
+  Widget filterSearchBtn() {
     return MainBtn(
-        title: "搜尋",
+        title: btnStr,
         onPress: () async {
           await searchFunc(tempFilteredSkillList);
           closePage();
