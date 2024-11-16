@@ -11,7 +11,7 @@ import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
-import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
+import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/user_icon.dart';

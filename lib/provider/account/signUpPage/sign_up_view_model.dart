@@ -1,138 +1,138 @@
-import 'package:flutter/material.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:provider/provider.dart';
-import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_provider.dart';
-import 'package:social_mediam_match/provider/account/user_provider.dart';
-import '../../../components/utilities/style/style_config.dart';
-import '../../../models/user_model.dart';
-import '../../../pageManager/setting/route_controller.dart';
-import '../../../services/firebase_service.dart';
-import '../../../services/user_service.dart';
-import '../../home/user_setting_view_provider.dart';
+// import 'package:flutter/material.dart';
+// import 'package:loading_animation_widget/loading_animation_widget.dart';
+// import 'package:provider/provider.dart';
+// import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_provider.dart';
+// import 'package:social_mediam_match/provider/account/user_provider.dart';
+// import '../../../components/utilities/style/style_config.dart';
+// import '../../../models/user_model.dart';
+// import '../../../pageManager/setting/route_controller.dart';
+// import '../../../services/firebase_service.dart';
+// import '../../../services/user_service.dart';
+// import '../../home/user_setting_view_provider.dart';
 
-class SignUpViewModel {
-  BuildContext context;
-  SignUpViewModel({required this.context});
+// class SignUpViewModel {
+//   BuildContext context;
+//   SignUpViewModel({required this.context});
 
-  ///ページ遷移の関数
-  void backButtonFUnc() {
-    SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
-    int preIndex = signUpViewProvider.pageIndex - 1;
-    if (preIndex < 0) {
-      // RouteOptions.popUntilToHome();
-    } else {
-      signUpViewProvider.onChangeSignUpPage(preIndex);
-    }
-  }
+//   ///ページ遷移の関数
+//   void backButtonFUnc() {
+//     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+//     int preIndex = signUpViewProvider.pageIndex - 1;
+//     if (preIndex < 0) {
+//       // RouteOptions.popUntilToHome();
+//     } else {
+//       signUpViewProvider.onChangeSignUpPage(preIndex);
+//     }
+//   }
 
-  ///メールチェック
-  void emailCheck() {
-    SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
-    bool isEmail = signUpViewProvider.signUpEmailCheck(signUpViewProvider.emailController.text);
-    if (isEmail) {
-      signUpViewProvider.onChangeSignUpPage(1);
-      signUpViewProvider.signUpErrorReset();
-    }
-  }
+//   ///メールチェック
+//   void emailCheck() {
+//     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+//     bool isEmail = signUpViewProvider.signUpEmailCheck(signUpViewProvider.emailController.text);
+//     if (isEmail) {
+//       signUpViewProvider.onChangeSignUpPage(1);
+//       signUpViewProvider.signUpErrorReset();
+//     }
+//   }
 
-  ///登録始まる
-  Future<void> signUpStart() async {
-    Future<void> loadingPopView() {
-      return showDialog<void>(
-        barrierDismissible: false,
-        barrierColor: barrierColor,
-        context: context,
-        builder: (BuildContext context) {
-          return LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35);
-        },
-      );
-    }
+//   ///登録始まる
+//   Future<void> signUpStart() async {
+//     Future<void> loadingPopView() {
+//       return showDialog<void>(
+//         barrierDismissible: false,
+//         barrierColor: barrierColor,
+//         context: context,
+//         builder: (BuildContext context) {
+//           return LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35);
+//         },
+//       );
+//     }
 
-    SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+//     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
 
-    String email = signUpViewProvider.emailController.text;
-    String password = signUpViewProvider.pwdController.text;
+//     String email = signUpViewProvider.emailController.text;
+//     String password = signUpViewProvider.pwdController.text;
 
-    print("Email $email Pwd $password");
+//     print("Email $email Pwd $password");
 
-    loadingPopView();
+//     loadingPopView();
 
-    String signUpResult = await signUp(email, password);
+//     String signUpResult = await signUp(email, password);
 
-    RouteOptions.pop();
+//     RouteOptions.pop();
 
-    if (signUpResult == "signUp-Sucess") {
-      signUpViewProvider.onChangeSignUpPage(2);
-    }
-  }
+//     if (signUpResult == "signUp-Sucess") {
+//       signUpViewProvider.onChangeSignUpPage(2);
+//     }
+//   }
 
-  ///firebaseServer、MysqlServer登録
-  ///email：メールアドレス，password：パスワード
-  Future<String> signUp(String email, String password) async {
-    String signUpResult = "";
-    UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
-    SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
-    if (userSettingViewProvider.nameInput.text == "") {
-      signUpResult = "no-userName";
-    } else {
-      context.read<UserProvider>().signUpStatusChange(true);
-      String firebaseSignUpResult = await FirebaseSerivce().firebaseSignUp(email, password);
-      await FirebaseSerivce().firebaseSignOut();
-      context.read<UserProvider>().signUpStatusChange(false);
+//   ///firebaseServer、MysqlServer登録
+//   ///email：メールアドレス，password：パスワード
+//   Future<String> signUp(String email, String password) async {
+//     String signUpResult = "";
+//     UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
+//     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+//     if (userSettingViewProvider.nameInput.text == "") {
+//       signUpResult = "no-userName";
+//     } else {
+//       context.read<UserProvider>().signUpStatusChange(true);
+//       String firebaseSignUpResult = await FirebaseSerivce().firebaseSignUp(email, password);
+//       await FirebaseSerivce().firebaseSignOut();
+//       context.read<UserProvider>().signUpStatusChange(false);
 
-      if (firebaseSignUpResult.contains("sucess:")) {
-        String tempSignedUID = firebaseSignUpResult.substring(("sucess:").length);
+//       if (firebaseSignUpResult.contains("sucess:")) {
+//         String tempSignedUID = firebaseSignUpResult.substring(("sucess:").length);
 
-        ///Firebase登録したらSQLにユーザデータ作成する
-        await UserService().sqlSignUp(tempSignedUID, email, password).then((isMySqlSignUpSucess) async {
-          if (isMySqlSignUpSucess) {
-            ///登録結果画面を更新する（UID）
-            ///FirebaseからUID取得する
-            signUpViewProvider.signUpResultChange(firebaseSignUpResult);
+//         ///Firebase登録したらSQLにユーザデータ作成する
+//         await UserService().sqlSignUp(tempSignedUID, email, password).then((isMySqlSignUpSucess) async {
+//           if (isMySqlSignUpSucess) {
+//             ///登録結果画面を更新する（UID）
+//             ///FirebaseからUID取得する
+//             signUpViewProvider.signUpResultChange(firebaseSignUpResult);
 
-            ///名前更新するよう（名前輸入あれば）
-            await updateUserData();
+//             ///名前更新するよう（名前輸入あれば）
+//             await updateUserData();
 
-            signUpResult = "signUp-Sucess";
-          } else {
-            signUpResult = "mysql-error";
-          }
-        });
-      } else {
-        signUpResult = firebaseSignUpResult;
-      }
-    }
+//             signUpResult = "signUp-Sucess";
+//           } else {
+//             signUpResult = "mysql-error";
+//           }
+//         });
+//       } else {
+//         signUpResult = firebaseSignUpResult;
+//       }
+//     }
 
-    ///登録結果画面を更新する（エラーメッセージ）
-    signUpViewProvider.signUpResultChange(signUpResult);
+//     ///登録結果画面を更新する（エラーメッセージ）
+//     signUpViewProvider.signUpResultChange(signUpResult);
 
-    return signUpResult;
-  }
+//     return signUpResult;
+//   }
 
-  ///ユーザデータ更新する
-  Future<void> updateUserData() async {
-    UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
-    SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
+//   ///ユーザデータ更新する
+//   Future<void> updateUserData() async {
+//     UserSettingViewProvider userSettingViewProvider = context.read<UserSettingViewProvider>();
+//     SignUpViewProvider signUpViewProvider = context.read<SignUpViewProvider>();
 
-    UpdateUser updateData = UpdateUser.update(
-      uid: signUpViewProvider.signedUID,
-      name: userSettingViewProvider.nameInput.text,
-      job: userSettingViewProvider.jobInput.text,
-      introduction: userSettingViewProvider.introductionInput.text,
-      mainSkills: userSettingViewProvider.haveSkillList,
-      wantSkills: userSettingViewProvider.wantSkillList,
-    );
+//     UpdateUser updateData = UpdateUser.update(
+//       uid: signUpViewProvider.signedUID,
+//       name: userSettingViewProvider.nameInput.text,
+//       job: userSettingViewProvider.jobInput.text,
+//       introduction: userSettingViewProvider.introductionInput.text,
+//       mainSkills: userSettingViewProvider.haveSkillList,
+//       wantSkills: userSettingViewProvider.wantSkillList,
+//     );
 
-    print(
-        "name : ${userSettingViewProvider.nameInput.text} job : ${userSettingViewProvider.jobInput.text} introduction : ${userSettingViewProvider.introductionInput.text}");
-    print("haveSkillList : ${userSettingViewProvider.haveSkillList} wantSkillList : ${userSettingViewProvider.wantSkillList}");
-    print("updateData $updateData");
-    await UserService().sqlUpdateUserData(signUpViewProvider.signedUID, updateData).then(
-      (isSucess) async {
-        if (isSucess) {
-          signUpViewProvider.onChangeSignUpPage(3);
-        }
-      },
-    );
-  }
-}
+//     print(
+//         "name : ${userSettingViewProvider.nameInput.text} job : ${userSettingViewProvider.jobInput.text} introduction : ${userSettingViewProvider.introductionInput.text}");
+//     print("haveSkillList : ${userSettingViewProvider.haveSkillList} wantSkillList : ${userSettingViewProvider.wantSkillList}");
+//     print("updateData $updateData");
+//     await UserService().sqlUpdateUserData(signUpViewProvider.signedUID, updateData).then(
+//       (isSucess) async {
+//         if (isSucess) {
+//           signUpViewProvider.onChangeSignUpPage(3);
+//         }
+//       },
+//     );
+//   }
+// }

@@ -22,13 +22,14 @@ class _PostByViewState extends ConsumerState<AddedCoursePage> {
   Widget build(BuildContext context) {
     ProfileData userData = ref.watch(loginUserData);
     return APIListWidget(
-        apiFunc: (page, size) {
-          return CourseService().getAddedCourses(page, size, userData.uid);
-        },
-        listControllerProvider: addedCourserListPorver,
-        loadingWidget: const CourseLoading(),
-        itemChild: (data, index) {
-          return CourseUtilites().courseItemContent(context, ref, courseMainPageListPorver, data: data, dataIndex: index);
-        });
+      apiFunc: (page, size) {
+        return CourseService().getAddedCourses(page, size, userData.uid);
+      },
+      listControllerProvider: addedCourserListPorver,
+      loadingWidget: const CourseLoading(),
+      itemChild: (data, index) {
+        return CourseUtilites().courseItemContent(context, ref, courseMainPageListPorver, data: data, dataIndex: index);
+      },
+    );
   }
 }

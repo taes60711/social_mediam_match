@@ -72,6 +72,7 @@ class BaseSkillFilterPage extends BaseEndDrawer {
 
                       return Column(
                         children: [
+                          ///スキルレベル選択
                           GestureDetector(
                             onTap: () {
                               if (isChoiced) {

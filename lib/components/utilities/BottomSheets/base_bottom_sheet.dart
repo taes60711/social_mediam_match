@@ -53,7 +53,9 @@ abstract class BaseBottomSheet {
                     render = () => setState(() {});
                     Future.delayed(Duration.zero).then((value) {
                       create();
-                      initState(ref).then((value) => _isInit = true);
+                      initState(ref).then((value) {
+                        _isInit = true;
+                      });
                     });
                   }
 

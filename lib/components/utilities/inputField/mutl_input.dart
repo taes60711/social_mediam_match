@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 
-import '../BottomSheets/base_bottom_sheet.dart';
+import '../bottomSheets/base_bottom_sheet.dart';
 import '../basic_top_bar.dart';
 import '../style/screen_size.dart';
 import '../style/style_config.dart';
