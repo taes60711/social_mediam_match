@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/src/consumer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:social_mediam_match/components/utilities/dialog/base_dialog.dart';
+
+import 'package:social_mediam_match/components/utilities/inputField/label_input.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/components/utilities/label_input.dart';
+
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 import '../../models/rich_text_format.dart';
+import 'main_button.dart';
 
 class RichTextEditor extends StatelessWidget {
   final String content;
@@ -83,46 +88,23 @@ class RichTextEditor extends StatelessWidget {
             toolBarConfig: customToolBarList,
             iconColor: AppColors.greyColor130,
             customButtons: [
-              InkWell(
+              GestureDetector(
                 onTap: () async {
                   TextEditingController imageLinkController = TextEditingController();
 
-                  Future<void> setLinkView() {
-                    return showDialog<void>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Image Link'),
-                          content: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 5),
-                            width: ScreenSize.width,
-                            child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                              LabelInput(title: 'Imgae URL', textController: imageLinkController),
-                            ]),
-                          ),
-                          actions: [
-                            ElevatedButton(
-                                child: Text('cancel'),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                }),
-                            ElevatedButton(
-                              onPressed: () async {
-                                String imgUrl = imageLinkController.text;
-                                String urlString = '<img src="$imgUrl" width="${ScreenSize.width * 0.9}">';
-
-                                await controller.insertText(urlString);
-                                Navigator.pop(context);
-                              },
-                              child: Text("send"),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-
-                  await setLinkView();
+                  RichtTextDialog(
+                    contentWidget: LabelInput(
+                      hintText: "請輸入圖片網址",
+                      controller: imageLinkController,
+                      label: '圖片網址',
+                    ),
+                    conirmFunc: () async {
+                      String imgUrl = imageLinkController.text;
+                      print(imgUrl);
+                      String urlString = '<img src="$imgUrl" width="${ScreenSize.width * 0.9}">';
+                      await controller.insertText(urlString);
+                    },
+                  ).show(context);
                 },
                 child: SizedBox(
                   width: 26,
@@ -150,48 +132,24 @@ class RichTextEditor extends StatelessWidget {
                   ),
                 ),
               ),
-              InkWell(
+              GestureDetector(
                 onTap: () async {
                   TextEditingController linkController = TextEditingController();
+                  RichtTextDialog(
+                    contentWidget: LabelInput(
+                      hintText: "請輸入Youtube網址",
+                      controller: linkController,
+                      label: 'Youtube網址',
+                    ),
+                    conirmFunc: () async {
+                      String ytId = RichTextFormat().getYtvideoID(linkController.text);
+                      String ytURL = 'https://www.youtube.com/embed/$ytId';
+                      String urlString =
+                          '<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="$ytURL"></iframe><p><br></p>';
 
-                  Future<void> setLinkView() {
-                    return showDialog<void>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Link'),
-                          content: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 5),
-                            width: ScreenSize.width,
-                            child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                              LabelInput(title: 'Youtube URL', textController: linkController),
-                            ]),
-                          ),
-                          actions: [
-                            ElevatedButton(
-                                child: Text('cancel'),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                }),
-                            ElevatedButton(
-                              onPressed: () async {
-                                String ytId = RichTextFormat().getYtvideoID(linkController.text);
-                                String ytURL = 'https://www.youtube.com/embed/$ytId';
-                                String urlString =
-                                    '<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="$ytURL"></iframe><p><br></p>';
-
-                                await controller.insertText(urlString);
-                                Navigator.pop(context);
-                              },
-                              child: Text("send"),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-
-                  await setLinkView();
+                      await controller.insertText(urlString);
+                    },
+                  ).show(context);
                 },
                 child: Icon(
                   FontAwesomeIcons.film,
@@ -202,47 +160,98 @@ class RichTextEditor extends StatelessWidget {
                 onTap: () async {
                   TextEditingController linkController = TextEditingController();
                   TextEditingController linkTextController = TextEditingController();
-
-                  Future<void> setLinkView() {
-                    return showDialog<void>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Link'),
-                          content: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 5),
-                            width: ScreenSize.width,
-                            child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                              LabelInput(title: 'Link Text', textController: linkTextController),
-                              LabelInput(title: 'URL', textController: linkController),
-                            ]),
-                          ),
-                          actions: [
-                            ElevatedButton(
-                                child: Text('cancel'),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                }),
-                            ElevatedButton(
-                              onPressed: () async {
-                                String urlString =
-                                    '<p><a href=${linkController.text} rel="noopener noreferrer" target="_blank">${linkTextController.text}</a><br></p>';
-                                await controller.insertText(urlString);
-                                Navigator.pop(context);
-                              },
-                              child: Text("send"),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-
-                  await setLinkView();
+                  RichtTextDialog(
+                    contentWidget: Column(
+                      children: [
+                        LabelInput(
+                          hintText: "請輸入連結網址",
+                          controller: linkController,
+                          label: '連結網址',
+                        ),
+                        SizedBox(
+                          height: ScreenSize.fitPxWidth(10),
+                        ),
+                        LabelInput(
+                          hintText: "請輸入文字",
+                          controller: linkTextController,
+                          label: '文字',
+                        ),
+                      ],
+                    ),
+                    conirmFunc: () async {
+                      String urlString =
+                          '<p><a href=${linkController.text} rel="noopener noreferrer" target="_blank">${linkTextController.text}</a><br></p>';
+                      await controller.insertText(urlString);
+                    },
+                  ).show(context);
                 },
                 child: Icon(
                   Icons.link_sharp,
                   color: AppColors.greyColor130,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class RichtTextDialog extends BaseDialog {
+  Widget contentWidget;
+  dynamic conirmFunc;
+  Function? cancelFunc;
+  RichtTextDialog({
+    required this.contentWidget,
+    this.conirmFunc,
+    this.cancelFunc,
+  });
+  @override
+  Widget build(WidgetRef ref) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: ScreenSize.fitPxWidth(25),
+        vertical: ScreenSize.fitPxHeight(15),
+      ),
+      margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(30)),
+      decoration: BoxDecoration(
+        color: AppColors.greyColor54,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        children: [
+          contentWidget,
+          SizedBox(
+            height: ScreenSize.fitPxWidth(15),
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: MainBtn(
+                  backgroundColor: AppColors.black37,
+                  padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(10)),
+                  onPress: () {
+                    if (cancelFunc != null) {
+                      cancelFunc!();
+                    }
+                    closePage();
+                  },
+                  title: "取消",
+                ),
+              ),
+              SizedBox(width: ScreenSize.fitPxWidth(15)),
+              Expanded(
+                child: MainBtn(
+                  padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(10)),
+                  backgroundColor: AppColors.orangeColor,
+                  onPress: () {
+                    if (conirmFunc != null) {
+                      conirmFunc!();
+                    }
+                    closePage();
+                  },
+                  title: "確認",
                 ),
               ),
             ],

@@ -12,7 +12,7 @@ class ConfirmDilaog extends BaseDialog {
   Function? cancelFunc;
   int btnAmount;
 
-  ConfirmDilaog({required this.title, required this.content, this.conirmFunc, this.btnAmount = 2});
+  ConfirmDilaog({required this.title, required this.content, this.cancelFunc, this.conirmFunc, this.btnAmount = 2});
   @override
   Widget build(WidgetRef ref) {
     return Container(
