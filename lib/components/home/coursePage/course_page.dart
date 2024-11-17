@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_page_by_skillfilter.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_page_by_textfilter.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_utilites.dart';
 
@@ -123,10 +124,7 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
               filteredSkillList: couseFilteredSkillList,
               searchFunc: (choicedFilterSkillList) async {
                 List<String> filteredSkillIdList = choicedFilterSkillList.map((e) => e.id.toString()).toList();
-                ProfileData userData = ref.watch(loginUserData);
-                await ref.read(courseMainPageListPorver.notifier).replaceApi((page, size) {
-                  return CourseService().getAllCourses(userData.uid, page, size, skillId: filteredSkillIdList);
-                });
+                CoursePageBySkillFilter(filterSkill: filteredSkillIdList).show(context);
 
                 ref.read(couseFilteredSkillList.notifier).update((state) => choicedFilterSkillList);
               },

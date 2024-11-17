@@ -28,7 +28,6 @@ class CoursePageByTextFilter extends BaseEndDrawer {
                 return CourseService().getAllCourses(userData.uid, page, size, namePart: searchText);
               },
               listControllerProvider: courseByTextFilterListPorver,
-              haveBottomBar: true,
               loadingWidget: const CourseLoading(),
               itemChild: (data, index) {
                 return CourseUtilites().courseItemContent(context, ref, courseMainPageListPorver, data: data, dataIndex: index);

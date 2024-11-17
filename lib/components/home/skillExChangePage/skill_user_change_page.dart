@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/home/skillExChangePage/skill_user_change_page_by_skill_filter.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/skill_user_change_page_by_textfilter.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 
@@ -135,11 +136,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
                 filteredSkillList: filteredSkillList,
                 searchFunc: (choicedFilterSkillList) async {
                   List<String> filteredSkillIdList = choicedFilterSkillList.map((e) => e.id.toString()).toList();
-                  ProfileData userData = ref.watch(loginUserData);
-                  await ref.read(userExChangelistControllerProvider.notifier).replaceApi((page, size) {
-                    return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filteredSkillIdList);
-                  });
-
+                  SkillUserChangeBySkillFilter(filterSkill: filteredSkillIdList).show(context);
                   ref.read(filteredSkillList.notifier).update((state) => choicedFilterSkillList);
                 },
               ).show(context);
