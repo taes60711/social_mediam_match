@@ -28,9 +28,12 @@ import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import 'package:any_link_preview/any_link_preview.dart';
 
+import 'firends_page.dart';
+
 class ChatRoom extends BaseEndDrawer {
   FriendListModel roomData;
-  ChatRoom({required this.roomData});
+  int dataIndex;
+  ChatRoom({required this.roomData, required this.dataIndex});
 
   ChatRoomWSModel chatRoomWSModel = ChatRoomWSModel();
 
@@ -405,6 +408,16 @@ class ChatRoom extends BaseEndDrawer {
 
   void sendMsg(ChatRoomWSModel chatRoomWSModel, {required String userId, required String message}) {
     chatRoomWSModel.sendMessage(loginUserUID: userId, message: message);
+
+    if (message.contains('http://\$ip:\$port')) {
+      message = "傳送了圖像";
+    }
+
+    List<FriendListModel> friendList = ref.read(frinedListProvider);
+    friendList[dataIndex].lastMessage = message;
+    ref.read(frinedListProvider.notifier).update((state) => List.from(friendList));
+    render();
+
     _scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.linear);
   }
 }

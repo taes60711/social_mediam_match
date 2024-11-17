@@ -130,7 +130,7 @@ class _FriendPageState extends ConsumerState<FriendPage> {
                         FriendListModel data = ref.watch(frinedListProvider)[index];
                         return MainBtn(
                           onPress: () {
-                            ChatRoom(roomData: data).show(context);
+                            ChatRoom(roomData: data, dataIndex: index).show(context);
                           },
                           child: Padding(
                             padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(10)),
