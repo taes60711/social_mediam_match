@@ -107,7 +107,7 @@ class CourseMemberManagerPage extends BaseEndDrawer {
                             ),
                             Text(
                               "${signingUserData.lastLogin}前",
-                              style: TextStyle(color: hintTextColor, fontSize: 12),
+                              style: TextStyle(color: AppColors.greyColor176, fontSize: 12),
                             ),
                           ],
                         ),

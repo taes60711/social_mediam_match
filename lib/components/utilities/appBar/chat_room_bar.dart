@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/utilities/bottomSheets/user_profile_bottom_sheet.dart';
+import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 
 import '../../../global.dart';
+import '../../../models/user_model.dart';
 import '../style/screen_size.dart';
 import '../style/style_config.dart';
 
 class ChatRoomBar extends StatelessWidget {
   final Function? backFunc;
   final dynamic leftWidget;
-  final String? userImg;
-  final String title;
+  final ProfileData userData;
   final TextStyle? titleStyle;
   const ChatRoomBar({
     super.key,
     this.leftWidget,
-    this.userImg,
+    required this.userData,
     this.backFunc,
-    this.title = "",
     this.titleStyle,
   });
 
@@ -41,13 +42,20 @@ class ChatRoomBar extends StatelessWidget {
             ),
           ),
         ),
-        UserIcon(iconSize: 40, image: userImg),
-        SizedBox(
-          width: ScreenSize.fitPxWidth(10),
-        ),
-        Text(
-          title,
-          style: titleStyle ?? const TextStyle(color: Colors.white),
+        MainBtn(
+          onPress: () {
+            UserProfileAllInfoBottomSheet(userData: userData).show(context);
+          },
+          child: Row(
+            children: [
+              UserIcon(iconSize: 40, image: userData.image),
+              SizedBox(width: ScreenSize.fitPxWidth(10)),
+              Text(
+                userData.name ?? "",
+                style: titleStyle ?? const TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
         ),
       ],
     );

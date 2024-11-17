@@ -4,8 +4,8 @@ import 'package:social_mediam_match/components/home/firendsPage/chat_room.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:web_socket_channel/io.dart';
 
-import '../models/friend_model.dart';
-import '../services/friend_service.dart';
+import '../../models/friend_model.dart';
+import '../../services/friend_service.dart';
 
 class ChatRoomWSModel {
   static ChatRoomWSModel? _instance;

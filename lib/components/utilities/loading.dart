@@ -11,7 +11,7 @@ class Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: LoadingAnimationWidget.hexagonDots(color: normalBgColor, size: 35),
+      child: LoadingAnimationWidget.hexagonDots(color: AppColors.orangeColor, size: 35),
     );
   }
 }

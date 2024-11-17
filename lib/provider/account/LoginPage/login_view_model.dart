@@ -56,7 +56,7 @@ class LoginViewModel {
                                   // TextBtn(
                                   //   title: PasswordForgot.sendButtonText,
                                   //   titleColor: normalTextColor,
-                                  //   btnColor: normalBgColor,
+                                  //   btnColor: AppColors.orangeColor,
                                   //   onPress: () => context.read<LoginProvider>().reSetPwd(emailController.text),
                                   // )
                                 ],
@@ -72,7 +72,7 @@ class LoginViewModel {
                                 width: 60,
                                 height: 60,
                                 decoration: BoxDecoration(
-                                  color: normalBgColor,
+                                  color: AppColors.orangeColor,
                                   borderRadius: const BorderRadius.all(Radius.circular(15)),
                                 ),
                                 child: const Icon(
@@ -89,25 +89,25 @@ class LoginViewModel {
         });
   }
 
-  /// ログインステップ開始
-  Future<void> loginStart() async {
-    Future<void> loadingPopView() {
-      return showDialog<void>(
-        barrierDismissible: false,
-        barrierColor: barrierColor,
-        context: globalContext,
-        builder: (BuildContext context) {
-          return LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35);
-        },
-      );
-    }
+  // /// ログインステップ開始
+  // Future<void> loginStart() async {
+  //   Future<void> loadingPopView() {
+  //     return showDialog<void>(
+  //       barrierDismissible: false,
+  //       barrierColor: barrierColor,
+  //       context: globalContext,
+  //       builder: (BuildContext context) {
+  //         return LoadingAnimationWidget.inkDrop(color: AppColors.orangeColor, size: 35);
+  //       },
+  //     );
+  //   }
 
-    String inputedEmail = loginViewContext.read<LoginProvider>().emailController.text;
-    String intputedPwd = loginViewContext.read<LoginProvider>().pwdController.text;
+  //   String inputedEmail = loginViewContext.read<LoginProvider>().emailController.text;
+  //   String intputedPwd = loginViewContext.read<LoginProvider>().pwdController.text;
 
-    loadingPopView();
-    bool isLoginSucess = await loginViewContext.read<LoginProvider>().signIn(inputedEmail, intputedPwd);
-    Navigator.of(globalContext).pop();
-    // isLoginSucess ? RouteOptions.popUntilToHome() : () {};
-  }
+  //   loadingPopView();
+  //   bool isLoginSucess = await loginViewContext.read<LoginProvider>().signIn(inputedEmail, intputedPwd);
+  //   Navigator.of(globalContext).pop();
+  //   // isLoginSucess ? RouteOptions.popUntilToHome() : () {};
+  // }
 }

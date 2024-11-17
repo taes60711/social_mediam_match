@@ -60,7 +60,7 @@ class CourseDetailPage extends BaseEndDrawer {
                       SizedBox(width: ScreenSize.fitPxWidth(5)),
                       Text(
                         "類別 ${choiceData.type}",
-                        style: TextStyle(fontSize: ScreenSize.fontSize12, color: hintTextColor),
+                        style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.greyColor176),
                       ),
                       const Expanded(child: SizedBox(width: 1)),
 
@@ -134,7 +134,7 @@ class CourseDetailPage extends BaseEndDrawer {
                     width: ScreenSize.width,
                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                     decoration: BoxDecoration(
-                      color: hintTextColor.withAlpha(50),
+                      color: AppColors.greyColor176.withAlpha(50),
                       borderRadius: BorderRadius.circular(3),
                     ),
                     child: Text(
@@ -177,7 +177,7 @@ class CourseDetailPage extends BaseEndDrawer {
                     width: ScreenSize.width,
                     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                     decoration: BoxDecoration(
-                      color: hintTextColor.withAlpha(50),
+                      color: AppColors.greyColor176.withAlpha(50),
                       borderRadius: BorderRadius.circular(3),
                     ),
                     child: Text(

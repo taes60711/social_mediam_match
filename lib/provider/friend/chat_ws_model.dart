@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_socket_channel/io.dart';
 
-import '../components/home/firendsPage/firends_page.dart';
-import '../global.dart';
-import '../models/friend_model.dart';
-import '../services/friend_service.dart';
+import '../../components/home/firendsPage/firends_page.dart';
+import '../../global.dart';
+import '../../models/friend_model.dart';
+import '../../services/friend_service.dart';
 
 class ChatWSModel {
   static ChatWSModel? _instance;

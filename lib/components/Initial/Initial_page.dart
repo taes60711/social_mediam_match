@@ -4,13 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:social_mediam_match/pageManager/home.dart';
 import 'package:social_mediam_match/services/skill_service.dart';
-import '../../global/chat_ws_model.dart';
 
 import '../../models/post_model.dart';
 import '../../models/skill_model.dart';
 import '../../models/user_model.dart';
 import '../../provider/account/user_provider.dart';
 
+import '../../provider/friend/chat_ws_model.dart';
 import '../../provider/post/post_provider.dart';
 import '../../services/post_service.dart';
 import '../utilities/style/theme_style.dart';

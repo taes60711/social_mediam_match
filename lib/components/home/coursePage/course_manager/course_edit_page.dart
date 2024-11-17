@@ -194,9 +194,9 @@ class CourseEditPage extends BaseFadeScalePage {
                             children: [
                               Checkbox(
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                activeColor: normalBgColor,
+                                activeColor: AppColors.orangeColor,
                                 side: MaterialStateBorderSide.resolveWith(
-                                  (states) => BorderSide(width: 0.8, color: normalBgColor),
+                                  (states) => BorderSide(width: 0.8, color: AppColors.orangeColor),
                                 ),
                                 value: isPublic,
                                 onChanged: (value) {
@@ -245,7 +245,7 @@ class CourseEditPage extends BaseFadeScalePage {
                                 child: Icon(
                                   Icons.edit,
                                   size: ScreenSize.fontSize20,
-                                  color: normalBgColor,
+                                  color: AppColors.orangeColor,
                                 ),
                               ),
                               SizedBox(width: ScreenSize.fitPxWidth(10)),
@@ -260,7 +260,7 @@ class CourseEditPage extends BaseFadeScalePage {
                                 child: Icon(
                                   Icons.close,
                                   size: ScreenSize.fontSize20,
-                                  color: normalBgColor,
+                                  color: AppColors.orangeColor,
                                 ),
                               ),
                             ],
@@ -396,7 +396,7 @@ class CourseEditPage extends BaseFadeScalePage {
                   Icon(
                     Icons.edit,
                     size: ScreenSize.fontSize20,
-                    color: normalBgColor,
+                    color: AppColors.orangeColor,
                   ),
                   const SizedBox(width: 5),
                   Text(

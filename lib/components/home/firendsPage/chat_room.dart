@@ -13,7 +13,7 @@ import 'package:social_mediam_match/components/utilities/background_widget.dart'
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
-import 'package:social_mediam_match/global/chat_room_ws_model.dart';
+
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
@@ -21,6 +21,7 @@ import '../../../models/friend_model.dart';
 
 import '../../../models/rich_text_format.dart';
 import '../../../provider/account/user_provider.dart';
+import '../../../provider/friend/chat_room_ws_model.dart';
 import '../../../services/image_service.dart';
 import '../../utilities/inputField/base_input.dart';
 import '../../utilities/main_button.dart';
@@ -300,11 +301,7 @@ class ChatRoom extends BaseEndDrawer {
           bottom: BorderSide(color: AppColors.greyColor98, width: 0.5),
         ),
       ),
-      child: ChatRoomBar(
-        backFunc: () => closePage(),
-        title: roomData.userData.name ?? "",
-        userImg: roomData.userData.image,
-      ),
+      child: ChatRoomBar(backFunc: () => closePage(), userData: roomData.userData),
     );
   }
 
