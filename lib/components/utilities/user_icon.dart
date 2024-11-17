@@ -35,6 +35,8 @@ class UserIcon extends StatelessWidget {
               ),
             )
           : Container(
+              width: iconSize,
+              height: iconSize,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(borderRadius)),
                 color: AppColors.greyColor130,
@@ -43,7 +45,7 @@ class UserIcon extends StatelessWidget {
                 child: Icon(
                   FontAwesomeIcons.userLarge,
                   color: AppColors.whiteColor.withOpacity(.8),
-                  size: iconSize - 20 - ScreenSize.fitPxWidth(borderRadius) * 0.2,
+                  size: iconSize - ScreenSize.fitPxWidth(10) - ScreenSize.fitPxWidth(borderRadius) * 0.2,
                 ),
               ),
             ),

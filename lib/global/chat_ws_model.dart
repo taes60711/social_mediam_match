@@ -37,13 +37,4 @@ class ChatWSModel {
     }
     return _broadcastStream = _friendListChannel.stream.asBroadcastStream();
   }
-
-  void test() {
-    Map<String, dynamic> map = {
-      "method": "connect",
-      "ip": "$ip:$port",
-      "userid": "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2",
-    };
-    _friendListChannel.sink.add(jsonEncode(map));
-  }
 }

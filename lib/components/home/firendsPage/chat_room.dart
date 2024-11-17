@@ -1,686 +1,119 @@
-// import 'dart:convert';
-// import 'dart:io';
+import 'dart:convert';
+import 'dart:io';
 
-// import 'package:any_link_preview/any_link_preview.dart';
-// import 'package:easy_localization/easy_localization.dart';
-// import 'package:flutter/gestures.dart';
-// import 'package:flutter/material.dart';
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:loading_animation_widget/loading_animation_widget.dart';
-// import 'package:photo_view/photo_view.dart';
-// import 'package:provider/provider.dart';
-// import 'package:social_mediam_match/components/utilities/stateful_wrapper.dart';
-// import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-// import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-// import 'package:social_mediam_match/components/utilities/user_icon.dart';
-// import 'package:social_mediam_match/models/friend_model.dart';
-// import 'package:social_mediam_match/models/rich_text_format.dart';
-// import 'package:social_mediam_match/provider/account/user_provider.dart';
-// import 'package:url_launcher/url_launcher.dart';
-// import 'package:uuid/uuid.dart';
-// import '../../../CustomBouncingScrollPhysics.dart';
-// import '../../../models/user_model.dart';
-// import '../../../pagemanager/setting/route_controller.dart';
-// import '../../../services/image_service.dart';
-
-// import '../../../provider/friend_provider.dart';
-// import '../../utilities/endDrawers/chat_room_end_drawer.dart';
-// import '../../utilities/loading.dart';
-
-// class ChatRoom extends StatelessWidget {
-//   ChatRoom({super.key});
-
-//   final _scrollController = ScrollController();
-//   @override
-//   Widget build(BuildContext context) {
-//     ProfileData userData = context.watch<UserProvider>().userData;
-//     ProfileData ohterUserData = context.watch<FriendProvider>().ohterUserData;
-//     FriendProvider friendFuture = context.read<FriendProvider>();
-//     bool isLoading = context.select((FriendProvider value) => value.isLoading);
-//     List<ChatRoomMsg> messageData = context.watch<FriendProvider>().chatRoomMesaage;
-//     int pageNumber = context.select((FriendProvider value) => value.pageNumber);
-//     int pageCount = context.select((FriendProvider value) => value.pageCount);
-//     int roomId = context.select((FriendProvider value) => value.roomId);
-//     TextEditingController messageInput = context.select((FriendProvider value) => value.messageInput);
-//     bool isDataAddLoding = context.select((FriendProvider value) => value.isDataAddLoding);
-
-//     //例: ["2024-04-20",ChatRoomMessageModel,"2024-05-03",ChatRoomMessageModel...]
-//     List<dynamic> ss = [];
-//     //true的時候要顯示使用者圖像
-//     bool test = true;
-//     if (messageData.length == 1) {
-//       {
-//         ss.add(ChatRoomMsg(
-//             userId: messageData[0].userId, message: messageData[0].message, sentAt: messageData[0].sentAt, needAppearImg: true));
-
-//         DateTime now = DateTime.now().toUtc();
-//         String formattedTime = DateFormat("yyyy-MM-dd ").format(now.toLocal());
-//         if (formattedTime == messageData[0].sentAt.substring(0, "yyyy-MM-dd ".length)) {
-//           ss.add("今日");
-//         } else {
-//           ss.add(messageData[0].sentAt.substring(0, "yyyy-MM-dd ".length));
-//         }
-//       }
-//     } else {
-//       for (int i = 0; i < messageData.length; i++) {
-//         DateTime now = DateTime.now().toUtc();
-//         String formattedTime = DateFormat("yyyy-MM-dd ").format(now.toLocal());
-//         //index : 0 - last比較
-//         // 防止range over 問題
-//         if (i < messageData.length - 1) {
-//           //i 與 i + 1 的 message時間不同時 ||  i 與 i + 1 的使用者不同時
-//           if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
-//                   messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
-//               messageData[i].userId != messageData[i + 1].userId) {
-//             //這邊的 needAppearImg 應該都要為 false
-//             ss.add(ChatRoomMsg(
-//                 userId: messageData[i].userId,
-//                 message: messageData[i].message,
-//                 sentAt: test ? messageData[i].sentAt : "",
-//                 needAppearImg: true));
-//             // 當下一筆資料為不同使用者或是時間不同時 要顯示頭像 才讓boolean變為true
-//             test = true;
-//           } else {
-//             //這邊的 needAppearImg 應該都要為 true
-//             ss.add(ChatRoomMsg(
-//                 userId: messageData[i].userId,
-//                 message: messageData[i].message,
-//                 sentAt: test ? messageData[i].sentAt : "",
-//                 needAppearImg: false));
-//             //當下一筆資料為同使用者和時間相同 不要顯示頭像 才讓boolean變為false
-//             test = false;
-//           }
-//           //i 與 i + 1 的 message時間 不同時insert 時間
-//           if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
-//               messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length)) {
-//             if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length)) {
-//               ss.add("今日");
-//             } else {
-//               ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length));
-//             }
-//           }
-//           //index : index last - last -1 比較
-//         } else {
-//           //當最後一筆資料 與 最後前一筆資料進行比對 時間不同或使用者不同時 顯示頭像
-//           if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
-//                   messageData[i - 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
-//               messageData[i].userId != messageData[i - 1].userId) {
-//             ss.add(
-//               ChatRoomMsg(
-//                   userId: messageData[i].userId,
-//                   message: messageData[i].message,
-//                   sentAt: messageData[i].sentAt,
-//                   needAppearImg: true),
-//             );
-//           } else {
-//             //當最後一筆資料 與 最後前一筆資料進行比對 時間和使用者相同時 不顯示頭像
-//             ss.add(ChatRoomMsg(userId: messageData[i].userId, message: messageData[i].message, sentAt: "", needAppearImg: true));
-//           }
-//           //最後一筆補上日期
-//           if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length)) {
-//             ss.add("今日");
-//           } else {
-//             ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length));
-//           }
-//         }
-//       }
-//     }
-
-//     Widget dataAddLoading = Container();
-//     if (isDataAddLoding) {
-//       if (pageCount > pageNumber) {
-//         dataAddLoading = const Padding(padding: EdgeInsets.all(10), child: Loading());
-//       } else {
-//         dataAddLoading = Padding(
-//             padding: const EdgeInsets.all(10),
-//             child: Column(
-//               children: [
-//                 Icon(FontAwesomeIcons.commentSlash, color: normalBgColor),
-//                 Text(
-//                   "沒有資訊",
-//                   style: TextStyle(color: normalBgColor),
-//                 )
-//               ],
-//             ));
-//       }
-//     }
-
-//     Future<void> imageView(String imgUrl) {
-//       return showDialog<void>(
-//         context: context,
-//         builder: (BuildContext context) {
-//           return Scaffold(
-//             backgroundColor: Colors.black,
-//             body: Column(
-//               children: [
-//                 Align(
-//                   alignment: Alignment.topLeft,
-//                   child: Padding(
-//                     padding: const EdgeInsets.all(15),
-//                     child: GestureDetector(
-//                       onTap: () {
-//                         RouteOptions.pop();
-//                       },
-//                       child: const Icon(
-//                         Icons.arrow_back_ios,
-//                         color: Colors.white,
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//                 Expanded(
-//                   child: PhotoView.customChild(
-//                     backgroundDecoration: const BoxDecoration(color: Colors.transparent),
-//                     child: GestureDetector(
-//                         onDoubleTap: () {
-//                           print("onDoubleTap");
-//                           RouteOptions.pop();
-//                         },
-//                         child: Image.network(
-//                           imgUrl,
-//                           gaplessPlayback: true,
-//                         )),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           );
-//         },
-//       );
-//     }
-
-//     return StatefulWrapper(
-//       onInit: () {
-//         Future.delayed(Duration(milliseconds: 300)).then((value) {
-//           friendFuture.initialRoomListener(roomId, userData.uid);
-//           if (_scrollController.hasClients) {
-//             _scrollController.jumpTo(0);
-//           }
-//         });
-//       },
-//       child: GestureDetector(
-//         onTap: () {
-//           FocusScope.of(context).requestFocus(FocusNode());
-//         },
-//         child: Scaffold(
-//           body: Column(
-//             children: [
-//               Container(
-//                 padding: EdgeInsets.all(10),
-//                 margin: EdgeInsets.only(bottom: 10),
-//                 width: ScreenSize.width,
-//                 color: normalBgColor2.withOpacity(0.1),
-//                 child: Padding(
-//                   padding: const EdgeInsets.only(top: 8.0),
-//                   child: Row(
-//                     children: [
-//                       GestureDetector(
-//                         onTap: () async {
-//                           print("Chat Room close");
-//                           closecChatRoomEndDrawer(context: context);
-//                         },
-//                         child: Icon(Icons.arrow_back_ios_sharp, color: normalBgColor2),
-//                       ),
-//                       Padding(
-//                         padding: const EdgeInsets.symmetric(horizontal: 10),
-//                         child: UserIcon(
-//                           iconSize: 35,
-//                           image: ohterUserData.image,
-//                         ),
-//                       ),
-//                       Text(
-//                         ohterUserData.name ?? ohterUserData.email,
-//                         style: TextStyle(color: normalBgColor2),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               dataAddLoading,
-//               Expanded(
-//                 child: isLoading
-//                     ? LoadingAnimationWidget.inkDrop(color: normalBgColor, size: 35)
-//                     : Align(
-//                         alignment: Alignment.topCenter,
-//                         child: NotificationListener<ScrollNotification>(
-//                           onNotification: (ScrollNotification scrollNotification) {
-//                             if (scrollNotification is ScrollUpdateNotification) {
-//                               final scrollPosition = scrollNotification.metrics.pixels;
-//                               final max = scrollNotification.metrics.maxScrollExtent;
-//                               if (scrollPosition >= max && !isDataAddLoding) {
-//                                 friendFuture.dataAddLoadingChange(true);
-//                               }
-//                             } else if (scrollNotification is ScrollEndNotification) {
-//                               if (isDataAddLoding) {
-//                                 friendFuture.loadMessage(roomId, userData.uid, pageNumber);
-//                               }
-//                             }
-//                             return false;
-//                           },
-//                           child: ListView.builder(
-//                             reverse: true,
-//                             shrinkWrap: true,
-//                             physics: const ChatRoomCustomBouncingScrollPhysics(),
-//                             controller: _scrollController,
-//                             itemCount: ss.length,
-//                             itemBuilder: (context, index) {
-//                               Widget component;
-//                               if (ss[index].runtimeType == String) {
-//                                 component = Center(
-//                                   child: Container(
-//                                       margin: EdgeInsets.all(2),
-//                                       padding: EdgeInsets.all(5),
-//                                       decoration: BoxDecoration(
-//                                         borderRadius: BorderRadius.circular(3),
-//                                         color: Colors.black.withOpacity(0.1),
-//                                       ),
-//                                       child: Text(
-//                                         ss[index],
-//                                         style: TextStyle(fontSize: 10),
-//                                       )),
-//                                 );
-//                               } else if (ss[index].runtimeType == ChatRoomMsg) {
-//                                 ChatRoomMsg messageData = ss[index];
-//                                 List<String> splitStringAndUrls(String input) {
-//                                   final urlPattern = RegExp(r'https?://\S+');
-//                                   List<String> parts = [];
-//                                   int start = 0;
-
-//                                   for (final match in urlPattern.allMatches(input)) {
-//                                     if (match.start > start) {
-//                                       parts.add(input.substring(start, match.start));
-//                                     }
-//                                     parts.add(match.group(0)!);
-//                                     start = match.end;
-//                                   }
-
-//                                   if (start < input.length) {
-//                                     parts.add(input.substring(start));
-//                                   }
-
-//                                   return parts;
-//                                 }
-
-//                                 List<String> messageContents = splitStringAndUrls(messageData.message);
-
-//                                 String firstUrl = messageContents.firstWhere((element) {
-//                                   return element.contains('https');
-//                                 }, orElse: () => "-1");
-
-//                                 List<String> noContiainText = [
-//                                   'jpg',
-//                                   "gif",
-//                                   "png",
-//                                   "jpeg",
-//                                   "svg",
-//                                   "icon",
-//                                 ];
-
-//                                 bool urlPreview = firstUrl != "-1" &&
-//                                     noContiainText.any((text) => !firstUrl.contains(text.toUpperCase())) &&
-//                                     noContiainText.any((text) => !firstUrl.contains(text));
-
-//                                 String firstImageUrl = messageContents.firstWhere((element) {
-//                                   return element.contains('http://\$ip:\$port');
-//                                 }, orElse: () => "-1");
-//                                 if (ss[index].userId == userData.uid) {
-//                                   component = Padding(
-//                                     padding: const EdgeInsets.only(bottom: 5),
-//                                     child: Row(
-//                                       mainAxisAlignment: MainAxisAlignment.end,
-//                                       crossAxisAlignment: CrossAxisAlignment.start,
-//                                       children: [
-//                                         Row(
-//                                           crossAxisAlignment: CrossAxisAlignment.end,
-//                                           children: [
-//                                             Text(
-//                                               messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
-//                                               style: TextStyle(fontSize: 10),
-//                                             ),
-//                                             Padding(
-//                                               padding: EdgeInsets.all(4),
-//                                               child: Column(
-//                                                 children: [
-//                                                   Container(
-//                                                     padding: EdgeInsets.all(5),
-//                                                     decoration: BoxDecoration(
-//                                                       borderRadius: BorderRadius.circular(5),
-//                                                       color: Color.fromARGB(255, 200, 199, 202),
-//                                                     ),
-//                                                     child: Column(
-//                                                       children: [
-//                                                         ConstrainedBox(
-//                                                           constraints: BoxConstraints(
-//                                                             maxWidth: ScreenSize.width * 0.6,
-//                                                           ),
-//                                                           child: firstImageUrl != '-1'
-//                                                               ? GestureDetector(
-//                                                                   onTap: () async {
-//                                                                     print(firstImageUrl);
-//                                                                     await imageView(RichTextFormat(htmlString: firstImageUrl)
-//                                                                         .mappingIPAndPort(firstImageUrl));
-//                                                                   },
-//                                                                   child: Image.network(
-//                                                                     RichTextFormat(htmlString: firstImageUrl)
-//                                                                         .mappingIPAndPort(firstImageUrl),
-//                                                                   ),
-//                                                                 )
-//                                                               : RichText(
-//                                                                   text: TextSpan(
-//                                                                     children: messageContents.map((e) {
-//                                                                       if (e.startsWith('https')) {
-//                                                                         return TextSpan(
-//                                                                             text: e,
-//                                                                             style: TextStyle(
-//                                                                                 color: googleColor,
-//                                                                                 decoration: TextDecoration.underline),
-//                                                                             recognizer: TapGestureRecognizer()
-//                                                                               ..onTap = () {
-//                                                                                 final Uri _url = Uri.parse(e);
-//                                                                                 launchUrl(_url);
-//                                                                               });
-//                                                                       } else {
-//                                                                         return TextSpan(
-//                                                                             text: e, style: TextStyle(color: Colors.black));
-//                                                                       }
-//                                                                     }).toList(),
-//                                                                   ),
-//                                                                 ),
-//                                                         ),
-//                                                       ],
-//                                                     ),
-//                                                   ),
-//                                                   firstUrl != "-1" && !firstUrl.contains("JPG")
-//                                                       ? Container(
-//                                                           margin: EdgeInsets.only(top: 2),
-//                                                           padding: EdgeInsets.all(5),
-//                                                           decoration: BoxDecoration(
-//                                                             borderRadius: BorderRadius.circular(5),
-//                                                             color: Color.fromARGB(255, 200, 199, 202),
-//                                                           ),
-//                                                           child: Padding(
-//                                                             padding: const EdgeInsets.only(top: 8),
-//                                                             child: ConstrainedBox(
-//                                                               constraints: BoxConstraints(
-//                                                                   maxWidth: ScreenSize.width * 0.6, maxHeight: 160),
-//                                                               child: AnyLinkPreview(
-//                                                                 link: firstUrl,
-//                                                                 titleStyle: TextStyle(fontSize: 14),
-//                                                                 backgroundColor: Colors.transparent,
-//                                                                 boxShadow: [BoxShadow(color: Colors.transparent)],
-//                                                                 bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
-//                                                                 borderRadius: 0,
-//                                                                 bodyMaxLines: 2,
-//                                                               ),
-//                                                             ),
-//                                                           ))
-//                                                       : Container(),
-//                                                 ],
-//                                               ),
-//                                             ),
-//                                           ],
-//                                         ),
-//                                         Padding(
-//                                           padding: const EdgeInsets.only(right: 3),
-//                                           child: messageData.needAppearImg
-//                                               ? UserIcon(
-//                                                   iconSize: 35,
-//                                                   image: userData.image,
-//                                                 )
-//                                               : Container(width: 35),
-//                                         ),
-//                                       ],
-//                                     ),
-//                                   );
-//                                 } else {
-//                                   component = Padding(
-//                                     padding: const EdgeInsets.only(bottom: 5),
-//                                     child: Row(
-//                                       crossAxisAlignment: CrossAxisAlignment.start,
-//                                       children: [
-//                                         Padding(
-//                                           padding: const EdgeInsets.only(right: 3),
-//                                           child: messageData.needAppearImg
-//                                               ? UserIcon(
-//                                                   iconSize: 35,
-//                                                   image: ohterUserData.image,
-//                                                 )
-//                                               : Container(width: 35),
-//                                         ),
-//                                         Row(
-//                                           crossAxisAlignment: CrossAxisAlignment.end,
-//                                           children: [
-//                                             Padding(
-//                                               padding: const EdgeInsets.only(right: 8),
-//                                               child: Column(
-//                                                 children: [
-//                                                   Container(
-//                                                     decoration: BoxDecoration(
-//                                                       borderRadius: BorderRadius.circular(5),
-//                                                       color: const Color.fromARGB(255, 196, 175, 233),
-//                                                     ),
-//                                                     child: Padding(
-//                                                       padding: EdgeInsets.all(4),
-//                                                       child: Column(
-//                                                         children: [
-//                                                           ConstrainedBox(
-//                                                             constraints: BoxConstraints(
-//                                                               maxWidth: ScreenSize.width * 0.6,
-//                                                             ),
-//                                                             child: firstImageUrl != '-1'
-//                                                                 ? GestureDetector(
-//                                                                     onTap: () async {
-//                                                                       print(firstImageUrl);
-//                                                                       await imageView(RichTextFormat(htmlString: firstImageUrl)
-//                                                                           .mappingIPAndPort(firstImageUrl));
-//                                                                     },
-//                                                                     child: Image.network(
-//                                                                       RichTextFormat(htmlString: firstImageUrl)
-//                                                                           .mappingIPAndPort(firstImageUrl),
-//                                                                     ),
-//                                                                   )
-//                                                                 : RichText(
-//                                                                     text: TextSpan(
-//                                                                       children: messageContents.map((e) {
-//                                                                         if (e.startsWith('https')) {
-//                                                                           return TextSpan(
-//                                                                               text: e,
-//                                                                               style: TextStyle(
-//                                                                                   color: googleColor,
-//                                                                                   decoration: TextDecoration.underline),
-//                                                                               recognizer: TapGestureRecognizer()
-//                                                                                 ..onTap = () {
-//                                                                                   final Uri _url = Uri.parse(e);
-//                                                                                   launchUrl(_url);
-//                                                                                 });
-//                                                                         } else {
-//                                                                           return TextSpan(
-//                                                                               text: e, style: TextStyle(color: Colors.black));
-//                                                                         }
-//                                                                       }).toList(),
-//                                                                     ),
-//                                                                   ),
-//                                                           ),
-//                                                         ],
-//                                                       ),
-//                                                     ),
-//                                                   ),
-//                                                   urlPreview
-//                                                       ? Container(
-//                                                           margin: EdgeInsets.only(top: 2),
-//                                                           padding: EdgeInsets.all(5),
-//                                                           decoration: BoxDecoration(
-//                                                             borderRadius: BorderRadius.circular(5),
-//                                                             color: const Color.fromARGB(255, 196, 175, 233),
-//                                                           ),
-//                                                           child: Padding(
-//                                                             padding: const EdgeInsets.only(top: 8),
-//                                                             child: ConstrainedBox(
-//                                                               constraints: BoxConstraints(
-//                                                                   maxWidth: ScreenSize.width * 0.6, maxHeight: 160),
-//                                                               child: AnyLinkPreview(
-//                                                                 link: firstUrl,
-//                                                                 titleStyle: TextStyle(fontSize: 14),
-//                                                                 backgroundColor: Colors.transparent,
-//                                                                 boxShadow: [BoxShadow(color: Colors.transparent)],
-//                                                                 bodyStyle: TextStyle(color: normalTextColor, fontSize: 12),
-//                                                                 borderRadius: 0,
-//                                                                 bodyMaxLines: 2,
-//                                                               ),
-//                                                             ),
-//                                                           ))
-//                                                       : Container(),
-//                                                 ],
-//                                               ),
-//                                             ),
-//                                             Text(
-//                                               messageData.sentAt != "" ? messageData.sentAt.substring("yyyy-MM-dd ".length) : "",
-//                                               style: TextStyle(fontSize: 10),
-//                                             ),
-//                                           ],
-//                                         ),
-//                                       ],
-//                                     ),
-//                                   );
-//                                 }
-//                               } else {
-//                                 component = Container();
-//                               }
-//                               return component;
-//                             },
-//                           ),
-//                         ),
-//                       ),
-//               ),
-
-//               /// メッセージインプット
-//               Container(
-//                 width: ScreenSize.width,
-//                 margin: EdgeInsets.symmetric(horizontal: 10),
-//                 child: Row(
-//                   children: [
-//                     Expanded(
-//                       child: SizedBox(
-//                         height: 30,
-//                         child: TextField(
-//                           controller: messageInput,
-//                           decoration: const InputDecoration(
-//                             contentPadding: EdgeInsets.only(top: 5, left: 10),
-//                             border: OutlineInputBorder(),
-//                             hintText: 'Enter Message',
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                     GestureDetector(
-//                       onTap: () async {
-//                         Future<String> imageChange() async {
-//                           final ImagePicker picker = ImagePicker();
-//                           final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-//                           String result = "";
-
-//                           if (image != null) {
-//                             File _image = File(image.path);
-//                             String base64String = base64Encode(_image.readAsBytesSync());
-//                             result = base64String;
-//                           }
-//                           return result;
-//                         }
-
-//                         String imageString = await imageChange();
-//                         if (imageString != "") {
-//                           String uid = const Uuid().v1();
-//                           if (await ImageService().imageIsExist(imageString) != "-1") {
-//                             uid = await ImageService().imageIsExist(imageString);
-//                           } else {
-//                             await ImageService().saveImg(uid, imageString);
-//                           }
-//                           String sendImgString = "http://\$ip:\$port/images/$uid";
-//                           print("sendImgString $sendImgString");
-
-//                           friendFuture.sendMessage(roomId, userData.uid, sendImgString);
-//                           _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
-//                         } else {
-//                           print("no Image");
-//                         }
-//                       },
-//                       child: Container(
-//                         height: 30,
-//                         margin: EdgeInsets.only(left: 5),
-//                         padding: EdgeInsets.symmetric(horizontal: 10),
-//                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
-//                         child: Center(
-//                           child: Icon(
-//                             FontAwesomeIcons.fileImage,
-//                             size: 16,
-//                             color: normalTextColor,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                     GestureDetector(
-//                       onTap: () {
-//                         friendFuture.sendMessage(roomId, userData.uid, messageInput.text);
-//                         _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
-//                       },
-//                       child: Container(
-//                         height: 30,
-//                         margin: EdgeInsets.only(left: 5),
-//                         padding: EdgeInsets.symmetric(horizontal: 10),
-//                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: normalBgColor2.withOpacity(0.5)),
-//                         child: Center(
-//                           child: Icon(
-//                             Icons.send,
-//                             size: 16,
-//                             color: normalTextColor,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:social_mediam_match/components/utilities/appBar/chat_room_bar.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
 
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
-
+import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:social_mediam_match/components/utilities/user_icon.dart';
+import 'package:social_mediam_match/global/chat_room_ws_model.dart';
+import 'package:social_mediam_match/models/user_model.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 import '../../../models/friend_model.dart';
 
+import '../../../models/rich_text_format.dart';
+import '../../../provider/account/user_provider.dart';
+import '../../../services/image_service.dart';
 import '../../utilities/inputField/base_input.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
+import 'package:any_link_preview/any_link_preview.dart';
 
 class ChatRoom extends BaseEndDrawer {
   FriendListModel roomData;
   ChatRoom({required this.roomData});
+
+  ChatRoomWSModel chatRoomWSModel = ChatRoomWSModel();
+
+  List formattedRoomMsg = [];
+  final _scrollController = ScrollController();
+  bool addData = false;
+
+  @override
+  Future<void> initState(WidgetRef ref) async {
+    chatRoomWSModel.init(ref, () => render(), userId: roomData.createdBy, roomId: roomData.roomId);
+  }
+
+  @override
+  Future<void> dispose(WidgetRef ref) async {
+    chatRoomWSModel.closeRoom();
+  }
+
   @override
   Widget build(WidgetRef ref) {
+    List<ChatRoomMsg> roomMsg = ref.read(roomMessageProvider.notifier).state.chatRoomMsg;
+
+    formattedRoomMsg = formatChatMsg(roomMsg);
+
+    formattedRoomMsg = formattedRoomMsg.reversed.toList();
     return CommonScaffold(
       child: Stack(
         children: [
           Column(
             children: [
               userBar(),
-              Container(),
+              Visibility(visible: addData, child: const Loading()),
+              Expanded(
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollNotification) {
+                    if (scrollNotification is ScrollUpdateNotification) {
+                      final scrollPosition = scrollNotification.metrics.pixels;
+                      final max = scrollNotification.metrics.maxScrollExtent;
+
+                      if (chatRoomWSModel.roomAllPage > chatRoomWSModel.pageNum) {
+                        if (scrollPosition >= max && !addData) {
+                          addData = true;
+                          render();
+                        }
+                      }
+                    } else if (scrollNotification is ScrollEndNotification) {
+                      if (addData) {
+                        ProfileData userData = ref.watch(loginUserData);
+                        chatRoomWSModel.loadRoomData(loginUserUID: userData.uid);
+                        addData = false;
+                      }
+                    }
+                    return false;
+                  },
+                  child: SingleChildScrollView(
+                    reverse: true,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    controller: _scrollController,
+                    child: Column(
+                      children: formattedRoomMsg.map(
+                        (e) {
+                          Widget component = Container();
+
+                          if (e.runtimeType == ChatRoomMsg) {
+                            if (e.userId == ref.read(loginUserData).uid) {
+                              component = myMessagebuild(ref.read(loginUserData), e);
+                            } else {
+                              component = otherMessagebuild(roomData.userData, e);
+                            }
+                          } else if (e.runtimeType == String) {
+                            component = chatRoomInfobuild(e);
+                          }
+                          return component;
+                        },
+                      ).toList(),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: ScreenSize.fitPxHeight(70)),
             ],
           ),
           Positioned(
             bottom: 0,
-            left: 0,
-            right: 0,
             child: commentCntainerBuild(ref),
           ),
         ],
@@ -688,6 +121,174 @@ class ChatRoom extends BaseEndDrawer {
     );
   }
 
+  Widget chatRoomInfobuild(String info) {
+    return Center(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(3),
+          color: AppColors.greyColor57,
+        ),
+        child: Text(
+          info,
+          style: TextStyle(color: AppColors.whiteColor),
+        ),
+      ),
+    );
+  }
+
+  Widget otherMessagebuild(ProfileData userData, ChatRoomMsg data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        data.needAppearImg
+            ? UserIcon(
+                iconSize: 30,
+                image: userData.image,
+              )
+            : Container(width: 30),
+        Container(
+          padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(8)),
+          margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(5)),
+          alignment: Alignment.centerLeft,
+          child: formatMsgBuild(data.message),
+        ),
+        Text(
+          data.sentAt,
+          style: TextStyle(color: AppColors.greyColor130),
+        ),
+      ],
+    );
+  }
+
+  Widget myMessagebuild(ProfileData userData, ChatRoomMsg data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Container(
+        //   width: ScreenSize.width * .1,
+        //   child: Text(
+        //     data.sentAt,
+        //     style: TextStyle(color: AppColors.greyColor130),
+        //   ),
+        // ),
+
+        Container(
+          padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(8)),
+          margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(5)),
+          alignment: Alignment.centerRight,
+          child: formatMsgBuild(data.message),
+        ),
+        data.needAppearImg
+            ? UserIcon(
+                iconSize: 30,
+                image: userData.image,
+              )
+            : Container(width: 30),
+      ],
+    );
+  }
+
+  Widget formatMsgBuild(String msg) {
+    ///テキスト
+    Widget component = msgTextContianer(
+      child: Text(
+        msg,
+        style: TextStyle(color: AppColors.whiteColor),
+      ),
+    );
+
+    String urlLink = splitStringAndUrls(msg).firstWhere((element) {
+      return element.contains('https');
+    }, orElse: () => "-1");
+
+    /// Link
+    if (urlLink != "-1") {
+      component = Column(
+        children: [
+          msgTextContianer(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: ScreenSize.width * .7),
+              child: RichText(
+                text: TextSpan(
+                  children: splitStringAndUrls(msg).map((e) {
+                    if (e.startsWith('https')) {
+                      return TextSpan(
+                          text: e,
+                          style: TextStyle(color: AppColors.blueColor, decoration: TextDecoration.underline),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Uri url = Uri.parse(e);
+                              launchUrl(url);
+                            });
+                    } else {
+                      return TextSpan(text: e, style: TextStyle(color: AppColors.whiteColor));
+                    }
+                  }).toList(),
+                ),
+              ),
+            ),
+          ),
+          Container(
+              margin: EdgeInsets.only(top: ScreenSize.fitPxWidth(5)),
+              padding: EdgeInsets.all(ScreenSize.fitPxWidth(7)),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColors.greyColor57),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: ScreenSize.width * 0.7, maxHeight: 160),
+                  child: AnyLinkPreview(
+                    link: urlLink,
+                    titleStyle: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                    backgroundColor: Colors.transparent,
+                    boxShadow: const [BoxShadow(color: Colors.transparent)],
+                    bodyStyle: TextStyle(color: AppColors.greyColor130, fontSize: 12),
+                    borderRadius: 0,
+                    bodyMaxLines: 2,
+                  ),
+                ),
+              ))
+        ],
+      );
+    }
+
+    /// 画像
+    else if (msg.contains('http://\$ip:\$port')) {
+      String imgUrl = RichTextFormat(htmlString: msg).mappingIPAndPort(msg);
+      component = ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: ScreenSize.width * .7),
+        child: GestureDetector(
+          onTap: () async {
+            print(imgUrl);
+            // await imageView(RichTextFormat(htmlString: imgUrl)
+            //     .mappingIPAndPort(imgUrl));
+          },
+          child: Image.network(imgUrl),
+        ),
+      );
+    }
+
+    return component;
+  }
+
+  Widget msgTextContianer({required Widget child}) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: ScreenSize.fitPxWidth(8),
+        vertical: ScreenSize.fitPxWidth(5),
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.greyColor54,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: child,
+    );
+  }
+
+  ///TopBar
   Widget userBar() {
     return Container(
       padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(8)),
@@ -706,10 +307,12 @@ class ChatRoom extends BaseEndDrawer {
 
   ///コメント欄
   Widget commentCntainerBuild(WidgetRef ref) {
-    // ProfileData userData = ref.watch(loginUserData);
+    ProfileData userData = ref.watch(loginUserData);
     TextEditingController commentController = TextEditingController();
     return Container(
+      width: ScreenSize.width,
       decoration: BoxDecoration(
+        color: AppColors.bgColor,
         border: Border(
           top: BorderSide(
             color: AppColors.greyColor54,
@@ -717,49 +320,226 @@ class ChatRoom extends BaseEndDrawer {
         ),
       ),
       height: ScreenSize.fitPxHeight(70),
-      child: Center(
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: ScreenSize.fitPxHeight(8),
-            vertical: ScreenSize.fitPxHeight(6),
-          ),
-          margin: EdgeInsets.symmetric(
-            horizontal: ScreenSize.fitPxHeight(15),
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.greyColor57,
-            borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(13)),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: BaseInputField(
-                  hintText: "輸入訊息",
-                  controller: commentController,
-                  autoFocus: true,
-                  onFieldSubmitted: (value) {},
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(15)),
+        child: Row(
+          children: [
+            ///画像ボタン
+            MainBtn(
+              onPress: () async {
+                String imageString = await imageChoice();
+                if (imageString != "") {
+                  sendMsg(chatRoomWSModel, userId: userData.uid, message: imageString);
+                }
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(8), horizontal: ScreenSize.fitPxHeight(8)),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  color: AppColors.greyColor57,
                 ),
-              ),
-              MainBtn(
-                onPress: () {},
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8), vertical: ScreenSize.fitPxWidth(3)),
-                  decoration: BoxDecoration(
-                    color: AppColors.orangeColor,
-                    borderRadius: BorderRadius.circular(
-                      ScreenSize.fitPxWidth(10),
-                    ),
-                  ),
+                margin: EdgeInsets.only(right: ScreenSize.fitPxHeight(10)),
+                child: Center(
                   child: Icon(
-                    Icons.eco_sharp,
+                    FontAwesomeIcons.fileImage,
+                    size: 16,
                     color: AppColors.whiteColor,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+
+            ///コメント
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ScreenSize.fitPxHeight(8),
+                  vertical: ScreenSize.fitPxHeight(6),
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.greyColor57,
+                  borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(13)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: BaseInputField(
+                        hintText: "輸入訊息",
+                        controller: commentController,
+                        autoFocus: true,
+                        onFieldSubmitted: (value) {
+                          sendMsg(chatRoomWSModel, userId: userData.uid, message: commentController.text);
+                        },
+                      ),
+                    ),
+                    MainBtn(
+                      onPress: () {
+                        sendMsg(chatRoomWSModel, userId: userData.uid, message: commentController.text);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ScreenSize.fitPxWidth(8),
+                          vertical: ScreenSize.fitPxWidth(3),
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.orangeColor,
+                          borderRadius: BorderRadius.circular(
+                            ScreenSize.fitPxWidth(10),
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.eco_sharp,
+                          color: AppColors.whiteColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+
+  void sendMsg(ChatRoomWSModel chatRoomWSModel, {required String userId, required String message}) {
+    chatRoomWSModel.sendMessage(loginUserUID: userId, message: message);
+    _scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.linear);
+  }
 }
+
+Future<String> imageChoice() async {
+  final ImagePicker picker = ImagePicker();
+  final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+  String result = "";
+  String imgPickerResult = "";
+
+  if (image != null) {
+    File imgPath = File(image.path);
+    String base64String = base64Encode(imgPath.readAsBytesSync());
+    imgPickerResult = base64String;
+  }
+
+  if (imgPickerResult != "") {
+    String uid = const Uuid().v1();
+    if (await ImageService().imageIsExist(imgPickerResult) != "-1") {
+      uid = await ImageService().imageIsExist(imgPickerResult);
+    } else {
+      await ImageService().saveImg(uid, imgPickerResult);
+    }
+    String sendImgString = "http://\$ip:\$port/images/$uid";
+    result = sendImgString;
+    print("sendImgString $sendImgString");
+  } else {
+    print("no Image");
+  }
+  return result;
+}
+
+List formatChatMsg(List<ChatRoomMsg> messageData) {
+  //例: ["2024-04-20",ChatRoomMessageModel,"2024-05-03",ChatRoomMessageModel...]
+  List<dynamic> ss = [];
+  //true的時候要顯示使用者圖像
+  bool test = true;
+  if (messageData.length == 1) {
+    {
+      ss.add(ChatRoomMsg(
+          userId: messageData[0].userId, message: messageData[0].message, sentAt: messageData[0].sentAt, needAppearImg: true));
+
+      DateTime now = DateTime.now().toUtc();
+      String formattedTime = DateFormat("yyyy-MM-dd ").format(now.toLocal());
+      if (formattedTime == messageData[0].sentAt.substring(0, "yyyy-MM-dd ".length)) {
+        ss.add("今日");
+      } else {
+        ss.add(messageData[0].sentAt.substring(0, "yyyy-MM-dd ".length));
+      }
+    }
+  } else {
+    for (int i = 0; i < messageData.length; i++) {
+      DateTime now = DateTime.now().toUtc();
+      String formattedTime = DateFormat("yyyy-MM-dd ").format(now.toLocal());
+      //index : 0 - last比較
+      // 防止range over 問題
+      if (i < messageData.length - 1) {
+        //i 與 i + 1 的 message時間不同時 ||  i 與 i + 1 的使用者不同時
+        if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
+                messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
+            messageData[i].userId != messageData[i + 1].userId) {
+          //這邊的 needAppearImg 應該都要為 false
+          ss.add(ChatRoomMsg(
+              userId: messageData[i].userId,
+              message: messageData[i].message,
+              sentAt: test ? messageData[i].sentAt : "",
+              needAppearImg: true));
+          // 當下一筆資料為不同使用者或是時間不同時 要顯示頭像 才讓boolean變為true
+          test = true;
+        } else {
+          //這邊的 needAppearImg 應該都要為 true
+          ss.add(ChatRoomMsg(
+              userId: messageData[i].userId,
+              message: messageData[i].message,
+              sentAt: test ? messageData[i].sentAt : "",
+              needAppearImg: false));
+          //當下一筆資料為同使用者和時間相同 不要顯示頭像 才讓boolean變為false
+          test = false;
+        }
+        //i 與 i + 1 的 message時間 不同時insert 時間
+        if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
+            messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length)) {
+          if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length)) {
+            ss.add("今日");
+          } else {
+            ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length));
+          }
+        }
+        //index : index last - last -1 比較
+      } else {
+        //當最後一筆資料 與 最後前一筆資料進行比對 時間不同或使用者不同時 顯示頭像
+        if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
+                messageData[i - 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
+            messageData[i].userId != messageData[i - 1].userId) {
+          ss.add(
+            ChatRoomMsg(
+                userId: messageData[i].userId,
+                message: messageData[i].message,
+                sentAt: messageData[i].sentAt,
+                needAppearImg: true),
+          );
+        } else {
+          //當最後一筆資料 與 最後前一筆資料進行比對 時間和使用者相同時 不顯示頭像
+          ss.add(ChatRoomMsg(userId: messageData[i].userId, message: messageData[i].message, sentAt: "", needAppearImg: true));
+        }
+        //最後一筆補上日期
+        if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length)) {
+          ss.add("今日");
+        } else {
+          ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length));
+        }
+      }
+    }
+  }
+  return ss;
+}
+
+List<String> splitStringAndUrls(String msg) {
+  final urlPattern = RegExp(r'https?://\S+');
+  List<String> parts = [];
+  int start = 0;
+
+  for (final match in urlPattern.allMatches(msg)) {
+    if (match.start > start) {
+      parts.add(msg.substring(start, match.start));
+    }
+    parts.add(match.group(0)!);
+    start = match.end;
+  }
+
+  if (start < msg.length) {
+    parts.add(msg.substring(start));
+  }
+
+  return parts;
+}
+
+final roomMessageProvider = StateProvider<ChatRoomModel>((ref) => ChatRoomModel(chatRoomMsg: []));

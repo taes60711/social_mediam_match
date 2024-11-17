@@ -1,0 +1,132 @@
+import 'dart:convert';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/home/firendsPage/chat_room.dart';
+import 'package:social_mediam_match/global.dart';
+import 'package:web_socket_channel/io.dart';
+
+import '../models/friend_model.dart';
+import '../services/friend_service.dart';
+
+class ChatRoomWSModel {
+  static ChatRoomWSModel? _instance;
+
+  ChatRoomWSModel._();
+
+  factory ChatRoomWSModel() {
+    return _instance ??= ChatRoomWSModel._();
+  }
+
+  late WidgetRef ref;
+  late Function render;
+  int enterRoomID = -1;
+  int roomAllPage = -1;
+  int pageNum = 0;
+
+  late IOWebSocketChannel _chatroomListChannel;
+  Stream<dynamic>? _broadcastStream;
+
+  Future<void> init(WidgetRef ref, Function render, {required String userId, required int roomId}) async {
+    this.ref = ref;
+    this.render = render;
+    enterRoomID = roomId;
+
+    _chatroomListChannel = IOWebSocketChannel.connect(channelRoomUrl);
+    print("chatRoom connect");
+    await _chatroomListChannel.ready;
+
+    Map<String, dynamic> map = {
+      "method": "connect",
+      "ip": "$ip:$port",
+      "userid": userId,
+      "roomid": roomId,
+      "pageNumber": pageNum,
+    };
+
+    _chatroomListChannel.sink.add(jsonEncode(map));
+    stream();
+  }
+
+  Stream<dynamic>? stream() {
+    if (_broadcastStream != null) {
+      return null;
+    }
+
+    _chatroomListChannel.stream.listen((event) async {
+      print("_chatroomListChannel $event");
+      Map<String, dynamic> requestMapData = jsonDecode((event as String));
+      String listendMethod = requestMapData['method'];
+
+      switch (listendMethod) {
+        case "connect":
+          String searchUrl = requestMapData['apiUrl'];
+
+          ChatRoomModel chatRoomModel = await FriendService().getChatRoomMsg(searchUrl);
+          ref.read(roomMessageProvider.notifier).update((state) => chatRoomModel);
+          roomAllPage = chatRoomModel.pageCount;
+          render();
+        case "load":
+          String searchUrl = requestMapData['apiUrl'];
+          ChatRoomModel chatRoomModel = await FriendService().getChatRoomMsg(searchUrl);
+
+          List<ChatRoomMsg> chatRoomMesaage = ref.read(roomMessageProvider.notifier).state.chatRoomMsg;
+          chatRoomMesaage = [...chatRoomMesaage, ...chatRoomModel.chatRoomMsg];
+          chatRoomModel.chatRoomMsg = chatRoomMesaage;
+          ref.read(roomMessageProvider.notifier).update((state) => chatRoomModel);
+
+          render();
+        case "sendMessage":
+          var loadedData = event;
+          ChatRoomMsg tempchatRoomMessage = ChatRoomMsg.toModel(jsonDecode(loadedData)['Message']);
+          ChatRoomModel chatRoomModel = ref.read(roomMessageProvider.notifier).state;
+
+          chatRoomModel.chatRoomMsg.insert(0, tempchatRoomMessage);
+
+          ref.read(roomMessageProvider.notifier).update((state) => chatRoomModel);
+
+          _chatroomListChannel.sink
+              .add('{"method" : "sendMessage" , "ip" : "$ip:$port"  , "members" : ${chatRoomModel.members}}');
+          render();
+        default:
+          break;
+      }
+    });
+
+    return _broadcastStream = _chatroomListChannel.stream;
+  }
+
+  void loadRoomData({required String loginUserUID}) {
+    pageNum = pageNum + 1;
+    Map<String, dynamic> map = {
+      "method": "loadRoomMessage",
+      "ip": "$ip:$port",
+      "roomid": enterRoomID,
+      "userid": loginUserUID,
+      "pageNumber": pageNum,
+    };
+
+    _chatroomListChannel.sink.add(jsonEncode(map));
+  }
+
+  Future<void> sendMessage({required String loginUserUID, required String message}) async {
+    Map<String, dynamic> map = {
+      "method": "sendMessage",
+      "roomid": enterRoomID,
+      "userid": loginUserUID,
+      "message": message,
+    };
+
+    if (await FriendService().sendMessage(enterRoomID, loginUserUID, message)) {
+      _chatroomListChannel.sink.add(jsonEncode(map));
+    }
+  }
+
+  void closeRoom() {
+    print("chatRoom close");
+    _broadcastStream = null;
+    roomAllPage = -1;
+    enterRoomID = -1;
+    pageNum = 0;
+    ref.read(roomMessageProvider.notifier).update((state) => ChatRoomModel(chatRoomMsg: []));
+    _chatroomListChannel.sink.close();
+  }
+}

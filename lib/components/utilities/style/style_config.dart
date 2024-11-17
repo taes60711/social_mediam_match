@@ -20,6 +20,7 @@ class AppColors {
   static Color whiteColor = Colors.white;
   static Color redColor = Colors.red;
   static Color orangeColor = const Color.fromARGB(255, 247, 147, 100);
+  static Color blueColor = const Color.fromARGB(255, 46, 138, 236);
   static Color bgColor = const Color.fromARGB(255, 29, 28, 28);
   static Color black37 = const Color.fromARGB(255, 37, 37, 37);
 
