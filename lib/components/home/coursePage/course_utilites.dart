@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:social_mediam_match/components/home/coursePage/course_manager/course_manager_bottom_sheet.dart';
-
 import '../../../models/course_model.dart';
 import '../../../provider/account/user_provider.dart';
-import '../../../provider/course_provider.dart';
+import '../../../provider/course/course_provider.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/main_button.dart';

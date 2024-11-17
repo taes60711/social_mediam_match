@@ -6,7 +6,7 @@ import 'package:social_mediam_match/components/utilities/endDrawers/base_end_dra
 
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
-import '../../../provider/course_provider.dart';
+import '../../../provider/course/course_provider.dart';
 import '../../../services/course_service.dart';
 
 import '../../utilities/apiListView/api_list_view.dart';

@@ -1,10 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 
-import '../components/utilities/apiListView/api_list_controller.dart';
-
-import '../models/skill_model.dart';
-import '../models/user_model.dart';
+import '../../components/utilities/apiListView/api_list_controller.dart';
+import '../../models/skill_model.dart';
+import '../../models/user_model.dart';
 
 final addedCourserListPorver = StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>>(
   (ref) => APIListControllerNotifier<CourseModel>(APIListController()),

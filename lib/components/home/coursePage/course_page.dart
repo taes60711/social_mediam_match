@@ -13,8 +13,7 @@ import '../../../global/home_global_view_model.dart';
 
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
-import '../../../provider/course_provider.dart';
-
+import '../../../provider/course/course_provider.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/background_widget.dart';
 import '../../utilities/main_button.dart';

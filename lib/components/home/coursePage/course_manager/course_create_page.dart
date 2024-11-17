@@ -6,7 +6,7 @@ import 'package:social_mediam_match/components/utilities/endDrawers/base_skill_f
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 import '../../../../models/course_model.dart';
-import '../../../../provider/course_provider.dart';
+import '../../../../provider/course/course_provider.dart';
 import '../../../../services/course_service.dart';
 import '../../../utilities/background_widget.dart';
 import '../../../utilities/appBar/basic_top_bar.dart';

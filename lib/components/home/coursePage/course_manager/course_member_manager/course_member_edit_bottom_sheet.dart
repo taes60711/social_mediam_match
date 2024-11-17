@@ -8,7 +8,7 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import 'package:social_mediam_match/services/course_service.dart';
 
 import '../../../../../models/course_model.dart';
-import '../../../../../provider/course_provider.dart';
+import '../../../../../provider/course/course_provider.dart';
 import '../../../../utilities/apiListView/api_list_controller.dart';
 import '../../../../utilities/bottomSheets/base_bottom_sheet.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../../../provider/course_provider.dart';
+import '../../../../../provider/course/course_provider.dart';
 import '../../../../utilities/bottomSheets/base_bottom_sheet.dart';
 
 import '../../../../utilities/main_button.dart';

@@ -6,7 +6,7 @@ import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade
 import 'package:social_mediam_match/components/utilities/endDrawers/base_skill_filter_page.dart';
 import 'package:social_mediam_match/models/skill_model.dart';
 import '../../../../models/course_model.dart';
-import '../../../../provider/course_provider.dart';
+import '../../../../provider/course/course_provider.dart';
 import '../../../../services/course_service.dart';
 import '../../../utilities/apiListView/api_list_controller.dart';
 import '../../../utilities/background_widget.dart';
