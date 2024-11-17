@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,10 +7,10 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/services/user_service.dart';
-import '../../../global/chat_ws_model.dart';
+
 import '../../../models/friend_model.dart';
 import '../../../provider/account/user_provider.dart';
-import '../../../services/friend_service.dart';
+
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 
 import '../../utilities/inputField/base_input.dart';
@@ -35,10 +33,6 @@ class FriendPage extends ConsumerStatefulWidget {
 class _FriendPageState extends ConsumerState<FriendPage> {
   @override
   void initState() {
-    ChatWSModel().listen()?.listen((event) {
-      print("FriendPage received: $event");
-      init(event);
-    });
     Future.delayed(Duration.zero).then(
       (value) async {
         if (ref.read(suggestUserProvider).isEmpty) {
@@ -49,20 +43,6 @@ class _FriendPageState extends ConsumerState<FriendPage> {
       },
     );
     super.initState();
-  }
-
-  Future<void> init(event) async {
-    if (event != "is already Friend") {
-      String searchUrl = jsonDecode((event))['apiUrl'];
-      List<FriendListModel> tempfriendList = await FriendService().getFriendList(searchUrl);
-      String initDate = "1997-01-01T00:00:00.000+00:00";
-      tempfriendList.sort((a, b) => DateTime.parse(a.sentAt ?? initDate).compareTo(DateTime.parse(b.sentAt ?? initDate)));
-      tempfriendList = tempfriendList.map((e) {
-        return friendListFormatDate(e);
-      }).toList();
-
-      ref.read(frinedListProvider.notifier).update((state) => tempfriendList);
-    }
   }
 
   @override

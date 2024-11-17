@@ -54,7 +54,7 @@ class _MultLableInputState extends ConsumerState<MultInput> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.greyColor130),
+            border: Border.all(color: AppColors.greyColor98),
             borderRadius: BorderRadius.circular(
               ScreenSize.fitPxWidth(8),
             ),
@@ -120,7 +120,7 @@ class MultInputBottomSheet extends BaseBottomSheet {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.greyColor130),
+              border: Border.all(color: AppColors.greyColor98),
               borderRadius: BorderRadius.circular(
                 ScreenSize.fitPxWidth(8),
               ),

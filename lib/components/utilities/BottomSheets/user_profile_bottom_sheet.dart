@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/bottomSheets/base_bottom_sheet.dart';
+import 'package:social_mediam_match/global/chat_ws_model.dart';
+import 'package:social_mediam_match/global/home_global_view_model.dart';
+import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
 import 'package:social_mediam_match/provider/friend_provider.dart';
 import 'package:social_mediam_match/services/friend_service.dart';
 
@@ -98,7 +101,16 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                   visible: ref.watch(loginUserData).uid != userData.uid,
                   child: Center(
                     child: MainBtn(
-                      onPress: () {},
+                      onPress: () {
+                        if (ref.read(isFriendProvider.notifier).state == false) {
+                          ChatWSModel().addFriend([ref.watch(loginUserData).uid, userData.uid]);
+                          ref.read(isFriendProvider.notifier).update((state) => true);
+                          render();
+                        } else {
+                          closePage();
+                          HomeGlobalViewModel().changeMainPage(BottomBarPath.chatRoom);
+                        }
+                      },
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: ScreenSize.fitPxHeight(15),

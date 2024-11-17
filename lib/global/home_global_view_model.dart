@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../components/utilities/style/screen_size.dart';
 import '../global.dart';
+import '../pageManager/enum/bottom_bar_path.dart';
 
 final bottomNavigationBarProvider = StateProvider<int>((ref) {
   return 0;
@@ -32,8 +33,8 @@ class HomeGlobalViewModel {
   }
 
   ///BottomNavigiatonbarのページコントローラー
-  void changeMainPage(int page) {
-    ref.read(bottomNavigationBarProvider.notifier).update((state) => page);
+  void changeMainPage(BottomBarPath page) {
+    ref.read(bottomNavigationBarProvider.notifier).update((state) => page.path);
     render();
   }
 

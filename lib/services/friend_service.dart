@@ -67,4 +67,14 @@ class FriendService extends ApiClient {
 
     return responseData != "null" ? true : false;
   }
+
+  Future<bool> deleteFriend(int roomId, String userId) async {
+    Map<String, dynamic> body = {};
+
+    String responseData = await apiPush("/chat/deleteFriend/$roomId/$userId", body: body);
+
+    print("deleteFriend : $responseData");
+
+    return responseData != "null" ? true : false;
+  }
 }

@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:social_mediam_match/components/utilities/bottomSheets/base_bottom_sheet.dart';
+import 'package:social_mediam_match/components/utilities/inputField/label_input.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/services/user_service.dart';
@@ -16,7 +17,6 @@ import '../../../provider/account/user_provider.dart';
 import '../../utilities/appBar/basic_top_bar.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/endDrawers/user_skill_choice_page.dart';
-import '../../utilities/inputField/base_input.dart';
 import '../../utilities/inputField/mutl_input.dart';
 import '../../utilities/user_icon.dart';
 import '../skillExChangePage/skill_utilites.dart';
@@ -223,30 +223,11 @@ class UserProfileEditPage extends BaseBottomSheet {
 
   Widget inputField({required String hintText, required TextEditingController editingController, double? fontSzie}) {
     double fs = fontSzie ?? ScreenSize.fontSize16;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          hintText,
-          style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8), vertical: ScreenSize.fitPxWidth(6)),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: AppColors.greyColor130,
-            ),
-          ),
-          child: BaseInputField(
-            hintText: hintText,
-            hintStyle: TextStyle(color: AppColors.greyColor130, fontSize: fs),
-            inputStyle: TextStyle(color: AppColors.whiteColor, fontSize: fs),
-            controller: editingController,
-          ),
-        ),
-      ],
+    return LabelInput(
+      controller: editingController,
+      label: hintText,
+      hintStyle: TextStyle(color: AppColors.greyColor98, fontSize: fs),
+      inputStyle: TextStyle(color: AppColors.whiteColor, fontSize: fs),
     );
   }
 

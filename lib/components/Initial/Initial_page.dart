@@ -51,7 +51,7 @@ class _InitialpageState extends ConsumerState<Initialpage> {
     ProfileData userData = ref.watch(loginUserData);
 
     /// チャットルームWS初始化
-    ChatWSModel().init(userData.uid);
+    ChatWSModel().init(ref, () => setState(() {}), userId: userData.uid);
 
     /// request All Skill
     List<RequestSkillListData> requestListData = await SkillService().requestSkillList();

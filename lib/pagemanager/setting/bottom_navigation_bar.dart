@@ -5,7 +5,7 @@ import '../../components/utilities/main_button.dart';
 import '../../components/utilities/style/screen_size.dart';
 import '../../components/utilities/style/style_config.dart';
 import '../../global/home_global_view_model.dart';
-import '../enum/bottom_bar_path.dart';
+import '../../pageManager/enum/bottom_bar_path.dart';
 
 class BottomBar extends ConsumerStatefulWidget {
   const BottomBar({super.key});
@@ -47,7 +47,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
 
                 return MainBtn(
                   onPress: () {
-                    HomeGlobalViewModel().changeMainPage(pageIndex);
+                    HomeGlobalViewModel().changeMainPage(e);
                   },
                   child: Container(
                     color: Colors.transparent,
