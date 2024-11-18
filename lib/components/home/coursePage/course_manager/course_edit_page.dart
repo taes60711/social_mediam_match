@@ -155,67 +155,7 @@ class CourseEditPage extends BaseFadeScalePage {
                     SizedBox(height: ScreenSize.fitPxHeight(10)),
 
                     /// チャプター追加ボタン　＆　公開チェックボックス
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        /// チャプター追加ボタン
-                        GestureDetector(
-                          onTap: () {
-                            CourseRichTextCreate(courseEditPageRender: render, ediType: CreateEdiType.chapter).show(context);
-                          },
-                          child: Row(
-                            children: [
-                              Text(
-                                "章節",
-                                style: TextStyle(
-                                  color: AppColors.whiteColor,
-                                ),
-                              ),
-                              Container(
-                                width: 30,
-                                height: 30,
-                                color: Colors.transparent,
-                                child: Icon(
-                                  FontAwesomeIcons.plus,
-                                  color: AppColors.greyColor130,
-                                  size: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        ///公開チェックボックス
-                        GestureDetector(
-                          onTap: () {
-                            isPublic = !isPublic;
-                            render();
-                          },
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                activeColor: AppColors.orangeColor,
-                                side: MaterialStateBorderSide.resolveWith(
-                                  (states) => BorderSide(width: 0.8, color: AppColors.orangeColor),
-                                ),
-                                value: isPublic,
-                                onChanged: (value) {
-                                  isPublic = !isPublic;
-                                  render();
-                                },
-                              ),
-                              Text(
-                                "公開",
-                                style: TextStyle(
-                                  color: AppColors.whiteColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    couseChapterCreateBuild(),
 
                     ///チャプター内容
                     Column(
@@ -234,6 +174,8 @@ class CourseEditPage extends BaseFadeScalePage {
                                   style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
                                 ),
                               ),
+
+                              ///チャプター編集
                               MainBtn(
                                 onPress: () {
                                   CourseRichTextEdit(
@@ -376,6 +318,7 @@ class CourseEditPage extends BaseFadeScalePage {
     );
   }
 
+  ///詳細内容
   Widget courseDetailEdit() {
     return Builder(builder: (context) {
       return CustomExpansionTile(
@@ -421,6 +364,71 @@ class CourseEditPage extends BaseFadeScalePage {
         ],
       );
     });
+  }
+
+  /// チャプター追加ボタン　＆　公開チェックボックス
+  Widget couseChapterCreateBuild() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        /// チャプター追加ボタン
+        GestureDetector(
+          onTap: () {
+            CourseRichTextCreate(courseEditPageRender: render, ediType: CreateEdiType.chapter).show(context);
+          },
+          child: Row(
+            children: [
+              Text(
+                "章節",
+                style: TextStyle(
+                  color: AppColors.whiteColor,
+                ),
+              ),
+              Container(
+                width: 30,
+                height: 30,
+                color: Colors.transparent,
+                child: Icon(
+                  FontAwesomeIcons.plus,
+                  color: AppColors.greyColor130,
+                  size: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        ///公開チェックボックス
+        GestureDetector(
+          onTap: () {
+            isPublic = !isPublic;
+            render();
+          },
+          child: Row(
+            children: [
+              Checkbox(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                activeColor: AppColors.orangeColor,
+                side: MaterialStateBorderSide.resolveWith(
+                  (states) => BorderSide(width: 0.8, color: AppColors.orangeColor),
+                ),
+                value: isPublic,
+                onChanged: (value) {
+                  isPublic = !isPublic;
+                  render();
+                },
+              ),
+              Text(
+                "公開",
+                style: TextStyle(
+                  color: AppColors.whiteColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   void pageClosePage() {
