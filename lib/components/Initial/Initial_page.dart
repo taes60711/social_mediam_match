@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
 import 'package:social_mediam_match/pageManager/home.dart';
 import 'package:social_mediam_match/services/skill_service.dart';
 
@@ -13,10 +12,13 @@ import '../../provider/account/user_provider.dart';
 import '../../provider/friend/chat_ws_model.dart';
 import '../../provider/post/post_provider.dart';
 import '../../services/post_service.dart';
+import '../../services/user_service.dart';
 import '../utilities/style/theme_style.dart';
 import 'splash_screen.dart';
 
 final allSkillListData = StateProvider<List<RequestSkillListData>>((ref) => []);
+
+final loginedUserUID = StateProvider<String>((ref) => "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2");
 
 class Initialpage extends ConsumerStatefulWidget {
   const Initialpage({super.key});
@@ -48,10 +50,12 @@ class _InitialpageState extends ConsumerState<Initialpage> {
     ThemeStyle().init(ref);
 
     /// ユーザデータ取得
-    ProfileData userData = ref.watch(loginUserData);
+    ProfileData requestUserData = await UserService().requestGetUserData(ref.read(loginedUserUID));
+
+    ref.read(loginUserData.notifier).update((state) => requestUserData);
 
     /// チャットルームWS初始化
-    ChatWSModel().init(ref, () => setState(() {}), userId: userData.uid);
+    ChatWSModel().init(ref, () => setState(() {}), userId: ref.watch(loginUserData).uid);
 
     /// request All Skill
     List<RequestSkillListData> requestListData = await SkillService().requestSkillList();
@@ -79,9 +83,9 @@ class _InitialpageState extends ConsumerState<Initialpage> {
   }
 }
 
-Future<void> _enterApp(BuildContext context) async {
-  print("firstEnterApp");
+// Future<void> _enterApp(BuildContext context) async {
+//   print("firstEnterApp");
 
-  // ユーザの資料を取得、最後ログインのタイム更新、友達リスト（WS）繋がる
-  context.read<UserProvider>().isLoginCheck(context);
-}
+//   // ユーザの資料を取得、最後ログインのタイム更新、友達リスト（WS）繋がる
+//   context.read<UserProvider>().isLoginCheck(context);
+// }
