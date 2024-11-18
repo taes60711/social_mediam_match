@@ -19,6 +19,7 @@ import '../../../utilities/rich_text_view.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/style_config.dart';
 import 'course_edit_page/course_level_choice_label.dart';
+import 'course_edit_page/course_rich_text_create.dart';
 import 'course_edit_page/course_rich_text_edit.dart';
 
 class CourseEditPage extends BaseFadeScalePage {
@@ -160,7 +161,7 @@ class CourseEditPage extends BaseFadeScalePage {
                         /// チャプター追加ボタン
                         GestureDetector(
                           onTap: () {
-                            CourseRichTextEdit(courseEditPageRender: render, ediType: EdiType.chapter).show(context);
+                            CourseRichTextCreate(courseEditPageRender: render, ediType: CreateEdiType.chapter).show(context);
                           },
                           child: Row(
                             children: [
@@ -238,8 +239,8 @@ class CourseEditPage extends BaseFadeScalePage {
                                   CourseRichTextEdit(
                                     courseEditPageRender: render,
                                     ediType: EdiType.chapter,
-                                    tite: value.chapterName,
-                                    content: value.content[0],
+                                    courseChapterInfo: value,
+                                    courseChaterIndex: index,
                                   ).show(context);
                                 },
                                 child: Icon(
@@ -389,7 +390,11 @@ class CourseEditPage extends BaseFadeScalePage {
             ),
             MainBtn(
               onPress: () {
-                CourseRichTextEdit(courseEditPageRender: render).show(context);
+                if (ref.read(courseDetailContent) != "") {
+                  CourseRichTextEdit(courseEditPageRender: render, content: ref.read(courseDetailContent)).show(context);
+                } else {
+                  CourseRichTextCreate(courseEditPageRender: render).show(context);
+                }
               },
               child: Row(
                 children: [

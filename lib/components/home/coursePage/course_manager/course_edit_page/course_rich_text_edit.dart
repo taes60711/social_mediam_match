@@ -21,25 +21,36 @@ enum EdiType {
 class CourseRichTextEdit extends BaseFadeScalePage {
   final Function courseEditPageRender;
   final EdiType ediType;
-  final String? tite;
+
+  ///詳細内容用
   final String? content;
+
+  ///チャプター用
+  final CourseChapterInfo? courseChapterInfo;
+  final int? courseChaterIndex;
 
   CourseRichTextEdit({
     this.ediType = EdiType.detail,
     required this.courseEditPageRender,
-    this.tite,
+    this.courseChapterInfo,
+    this.courseChaterIndex,
     this.content,
   });
   TextEditingController titleController = TextEditingController();
   QuillEditorController courserController = QuillEditorController();
-
+  String realContent = "";
   @override
   Future<void> initState(WidgetRef ref) async {
-    if (tite != null && ediType == EdiType.chapter) {
-      titleController.text = tite ?? "";
+    if (courseChapterInfo != null && ediType == EdiType.chapter) {
+      titleController.text = courseChapterInfo!.chapterName;
+      courserController.setText(courseChapterInfo!.content[0]);
+      realContent = courseChapterInfo!.content[0];
+    } else {
       courserController.setText(content ?? "");
-      render();
+      realContent = content ?? "";
     }
+
+    render();
   }
 
   @override
@@ -59,10 +70,11 @@ class CourseRichTextEdit extends BaseFadeScalePage {
                     String title = titleController.text;
                     print("titleController: $title  richTextContent $richTextContent");
                     List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
-                    CourseChapterInfo createChapter =
-                        CourseChapterInfo(chapter: chapterList.length + 1, chapterName: title, content: [richTextContent]);
 
-                    chapterList.add(createChapter);
+                    courseChapterInfo!.chapterName = title;
+                    courseChapterInfo!.content = [richTextContent];
+                    chapterList[courseChaterIndex ?? -1] = courseChapterInfo!;
+
                     ref.read(courseEditChapterList.notifier).update((state) => chapterList);
                   } else {
                     print("richTextContent $richTextContent");
@@ -83,7 +95,7 @@ class CourseRichTextEdit extends BaseFadeScalePage {
               ),
             ),
             Expanded(
-              child: RichTextEditor(controller: courserController, content: content ?? ""),
+              child: RichTextEditor(controller: courserController, content: realContent),
             ),
           ],
         ),
