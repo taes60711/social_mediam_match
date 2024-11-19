@@ -8,7 +8,7 @@ import 'package:social_mediam_match/provider/post/post_provider.dart';
 
 import '../../../../global/home_global_view_model.dart';
 import '../../../../models/post_model.dart';
-import '../../../utilities/background_widget.dart';
+import '../../../utilities/common_scaffold.dart';
 import '../../../utilities/main_button.dart';
 import 'post_page_by_type.dart';
 

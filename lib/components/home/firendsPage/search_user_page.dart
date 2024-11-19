@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
-import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 
 import 'package:social_mediam_match/components/utilities/bottomSheets/base_bottom_sheet.dart';
 

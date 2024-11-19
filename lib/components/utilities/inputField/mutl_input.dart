@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 
 import '../bottomSheets/base_bottom_sheet.dart';
 import '../appBar/basic_top_bar.dart';

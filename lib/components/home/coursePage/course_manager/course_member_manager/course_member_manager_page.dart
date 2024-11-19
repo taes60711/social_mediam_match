@@ -7,7 +7,7 @@ import 'package:social_mediam_match/models/user_model.dart';
 import '../../../../../provider/course/course_provider.dart';
 import '../../../../../services/course_service.dart';
 import '../../../../utilities/apiListView/api_list_view.dart';
-import '../../../../utilities/background_widget.dart';
+import '../../../../utilities/common_scaffold.dart';
 import '../../../../utilities/main_button.dart';
 import '../../../../utilities/style/screen_size.dart';
 import '../../../../utilities/style/style_config.dart';

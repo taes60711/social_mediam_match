@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/skill_user_change_page_by_skill_filter.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/skill_user_change_page_by_textfilter.dart';
-import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 

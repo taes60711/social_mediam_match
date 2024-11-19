@@ -195,7 +195,9 @@ import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/global/user_login_status_controller.dart';
+import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
 
 import '../../utilities/style/style_config.dart';
 import '../firendsPage/my_friends.dart';
@@ -243,6 +245,7 @@ class PrivacySettingPage extends BaseEndDrawer {
                 content: "確定要登出？",
                 conirmFunc: () {
                   UserLoginStatusController().logOut();
+                  HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
                   closePage();
                 }).show(context);
           },
