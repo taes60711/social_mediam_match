@@ -164,3 +164,26 @@
 //     ),
 //   );
 // }
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+
+class LoginPage extends ConsumerStatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  ConsumerState<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends ConsumerState<LoginPage> {
+  @override
+  Widget build(BuildContext context) {
+    return CommonScaffold(
+        bgColor: AppColors.whiteColor,
+        child: Column(
+          children: [],
+        ));
+  }
+}

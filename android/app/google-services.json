@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "921286210624",
     "project_id": "socialmediammatch",
-    "storage_bucket": "socialmediammatch.appspot.com"
+    "storage_bucket": "socialmediammatch.firebasestorage.app"
   },
   "client": [
     {
@@ -12,7 +12,20 @@
           "package_name": "com.example.social_mediam_match"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "921286210624-arkrh24d2tp5s6o1u90rkfauk2oj3uan.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.social_mediam_match",
+            "certificate_hash": "dabdf2da5a69c3568816c005cc217574ad3f474e"
+          }
+        },
+        {
+          "client_id": "921286210624-nenb1roob3rgmjufevein4hj5apc8138.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC5ZXNdlRN-fuva79LjQNUD1m-zKhYsaL8"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "921286210624-nenb1roob3rgmjufevein4hj5apc8138.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "921286210624-ggc14mr0m9ev2iue5o6ormbfsnq57pvl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.socialMediamMatch"
+              }
+            }
+          ]
         }
       }
     }

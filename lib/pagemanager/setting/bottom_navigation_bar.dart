@@ -68,13 +68,6 @@ class _BottomBarState extends ConsumerState<BottomBar> {
                                 SizedBox(
                                   height: ScreenSize.fitPxHeight(4),
                                 ),
-                                // Padding(
-                                //   padding: EdgeInsets.only(left: leftPadding),
-                                //   child: Text(
-                                //     e.label,
-                                //     style: TextStyle(fontSize: ScreenSize.fontSize10, color: AppColors.whiteColor),
-                                //   ),
-                                // ),
                                 Container(
                                   width: 10,
                                   margin: EdgeInsets.only(left: leftPadding),

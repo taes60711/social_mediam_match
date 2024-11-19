@@ -63,7 +63,7 @@ dependencies:
   any_link_preview: ^3.0.1
   googleapis_auth: ^1.6.0
   flutter_riverpod: ^2.5.3
-
+  google_sign_in: ^6.2.1
   
   
 

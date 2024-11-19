@@ -8,6 +8,7 @@ import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
+
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 

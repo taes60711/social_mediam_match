@@ -176,4 +176,14 @@ class UserService extends ApiClient {
 
     return responseData != "null" ? true : false;
   }
+
+  Future<void> sendMail() async {
+    try {
+      Map<String, dynamic> params = {};
+
+      await apiGet('/getMail', paramters: params);
+    } catch (e) {
+      onRequestFailed();
+    }
+  }
 }
