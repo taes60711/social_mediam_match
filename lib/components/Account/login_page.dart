@@ -168,8 +168,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/utilities/inputField/label_input.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/global/user_login_status_controller.dart';
 import 'package:social_mediam_match/services/firebase_service.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -180,19 +182,34 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
+  TextEditingController accountController = TextEditingController(text: "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2");
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-        bgColor: AppColors.whiteColor,
-        child: Column(
-          children: [
-            MainBtn(
-              onPress: () {
-                FirebaseSerivce().signInWithGoogle();
-              },
-              title: "asdasd",
-            ),
-          ],
-        ));
+        child: Padding(
+      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          LabelInput(controller: accountController, label: "Email"),
+          SizedBox(height: ScreenSize.fitPxWidth(16)),
+          MainBtn(
+            onPress: () async {
+              ///tzLaMcP3V9XOAMOcD0FAY5Nf4tE2
+              UserLoginStatusController().login(userUID: accountController.text);
+            },
+            title: "login",
+          ),
+          SizedBox(height: ScreenSize.fitPxWidth(16)),
+          // MainBtn(
+          //   onPress: () {
+          //     FirebaseSerivce().signInWithGoogle();
+          //   },
+          //   title: "google signIn",
+          // ),
+        ],
+      ),
+    ));
   }
 }

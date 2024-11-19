@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:social_mediam_match/CustomBouncingScrollPhysics.dart';
-import 'package:social_mediam_match/components/Initial/test_page.dart';
+
 import 'package:social_mediam_match/firebase_options.dart';
 import 'package:social_mediam_match/global.dart';
 import 'components/Initial/Initial_page.dart';
@@ -63,8 +63,6 @@ class MyApp extends StatelessWidget {
         }),
       ),
       routes: <String, WidgetBuilder>{
-        // "/": (BuildContext context) => TestPage(),
-
         "/": (BuildContext context) => const Initialpage(),
       },
     );

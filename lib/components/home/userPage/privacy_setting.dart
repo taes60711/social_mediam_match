@@ -195,6 +195,7 @@ import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/global/user_login_status_controller.dart';
 
 import '../../utilities/style/style_config.dart';
 import '../firendsPage/my_friends.dart';
@@ -237,7 +238,13 @@ class PrivacySettingPage extends BaseEndDrawer {
         ),
         MainBtn(
           onPress: () {
-            ConfirmDilaog(title: "提示", content: "確定要登出？", conirmFunc: () {}).show(context);
+            ConfirmDilaog(
+                title: "提示",
+                content: "確定要登出？",
+                conirmFunc: () {
+                  UserLoginStatusController().logOut();
+                  closePage();
+                }).show(context);
           },
           child: _buildButtonContainer(
             iconData: FontAwesomeIcons.rightFromBracket,
