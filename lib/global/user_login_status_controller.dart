@@ -70,6 +70,7 @@ class UserLoginStatusController {
 
   Future<void> logOut() async {
     await sharedPreference.loginOutRemoveUserUID();
+
     ref.read(loginedUserUID.notifier).update((state) => "");
     ref.read(loginUserData.notifier).update((state) => ProfileData());
     render();
