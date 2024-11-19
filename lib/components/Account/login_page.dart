@@ -168,7 +168,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/background_widget.dart';
+import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/services/firebase_service.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -183,7 +185,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     return CommonScaffold(
         bgColor: AppColors.whiteColor,
         child: Column(
-          children: [],
+          children: [
+            MainBtn(
+              onPress: () {
+                FirebaseSerivce().signInWithGoogle();
+              },
+              title: "asdasd",
+            ),
+          ],
         ));
   }
 }

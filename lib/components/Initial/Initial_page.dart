@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/Account/login_page.dart';
 import 'package:social_mediam_match/pageManager/home.dart';
 import 'package:social_mediam_match/services/skill_service.dart';
 
@@ -30,11 +31,13 @@ class Initialpage extends ConsumerStatefulWidget {
 class _InitialpageState extends ConsumerState<Initialpage> {
   bool isFirst = false;
   bool initFinish = false;
+  bool isLoginCheckFinish = false;
 
   @override
   void initState() {
     splashStart();
     allFuncinit();
+    loginCheck();
 
     super.initState();
   }
@@ -49,14 +52,6 @@ class _InitialpageState extends ConsumerState<Initialpage> {
     await Future.delayed(Duration.zero);
     ThemeStyle().init(ref);
 
-    /// ユーザデータ取得
-    ProfileData requestUserData = await UserService().requestGetUserData(ref.read(loginedUserUID));
-
-    ref.read(loginUserData.notifier).update((state) => requestUserData);
-
-    /// チャットルームWS初始化
-    ChatWSModel().init(ref, () => setState(() {}), userId: ref.watch(loginUserData).uid);
-
     /// request All Skill
     List<RequestSkillListData> requestListData = await SkillService().requestSkillList();
     ref.read(allSkillListData.notifier).update((state) => requestListData);
@@ -68,18 +63,42 @@ class _InitialpageState extends ConsumerState<Initialpage> {
     /// request All PostBoard
     List<PostBoard> allPostBoard = await PostService().getAllPostBoard();
     ref.read(allPostBoardListData.notifier).update((state) => allPostBoard);
+
     initFinish = true;
+    setState(() {});
+  }
+
+  Future<void> loginCheck() async {
+    if (userIsLogined()) {
+      /// ユーザデータ取得
+      ProfileData requestUserData = await UserService().requestGetUserData(ref.read(loginedUserUID));
+
+      ref.read(loginUserData.notifier).update((state) => requestUserData);
+
+      /// チャットルームWS初始化
+      ChatWSModel().init(ref, () => setState(() {}), userId: ref.watch(loginUserData).uid);
+    }
+
+    isLoginCheckFinish = true;
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     Widget component = splashScreen(context);
-    if (isFirst && initFinish) {
-      component = const Home();
+    if (isFirst && initFinish && isLoginCheckFinish) {
+      if (userIsLogined()) {
+        component = const Home();
+      } else {
+        component = const LoginPage();
+      }
     }
 
     return component;
+  }
+
+  bool userIsLogined() {
+    return ref.read(loginedUserUID) != "";
   }
 }
 

@@ -15,6 +15,13 @@ class BottomBar extends ConsumerStatefulWidget {
 }
 
 class _BottomBarState extends ConsumerState<BottomBar> {
+  List<BottomBarPath> mainPagePath = [
+    BottomBarPath.home,
+    BottomBarPath.skillExChange,
+    BottomBarPath.course,
+    BottomBarPath.chatRoom,
+    BottomBarPath.my,
+  ];
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -32,7 +39,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
-              children: BottomBarPath.values.map((e) {
+              children: mainPagePath.map((e) {
                 int pageIndex = e.path;
                 double rightPadding = 0;
                 double leftPadding = 0;
