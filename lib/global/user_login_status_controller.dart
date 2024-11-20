@@ -45,7 +45,7 @@ class UserLoginStatusController {
 
       ref.read(loginUserData.notifier).update((state) => requestUserData);
 
-      /// チャットルームWS初始化
+      /// チャットルームリストWSS初始化
       ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
     }
   }
@@ -61,6 +61,9 @@ class UserLoginStatusController {
       ref.read(loginUserData.notifier).update((state) => requestUserData);
       await sharedPreference.loginSetUserUID(userUID);
       ref.read(loginedUserUID.notifier).update((state) => userUID);
+
+      /// チャットルームリストWSWS初期化
+      ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
       loginSuccess = true;
     }
 
@@ -73,6 +76,9 @@ class UserLoginStatusController {
 
     ref.read(loginedUserUID.notifier).update((state) => "");
     ref.read(loginUserData.notifier).update((state) => ProfileData());
+
+    /// チャットルームリストWS スローズ
+    ChatWSModel().closeStream();
     render();
   }
 }

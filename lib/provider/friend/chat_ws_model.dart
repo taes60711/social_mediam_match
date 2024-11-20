@@ -41,6 +41,10 @@ class ChatWSModel {
     stream();
   }
 
+  void closeStream() {
+    _friendListChannel.sink.close();
+  }
+
   Stream<dynamic>? stream() {
     if (_broadcastStream != null) {
       return null;

@@ -49,13 +49,13 @@ class _InitialpageState extends ConsumerState<Initialpage> {
   Future<void> allFuncinit() async {
     await Future.delayed(Duration.zero);
 
-    /// sharedPreference init
+    /// sharedPreference 初期化
     await SharedPreference().init();
 
-    /// ユーザログインステータスinit
-    await loginCheck();
+    ///ログインステータスチュック
+    await _loginCheck();
 
-    ///　テーマinit
+    ///　テーマ初期化
     ThemeStyle().init(ref);
 
     /// request All Skill
@@ -76,7 +76,9 @@ class _InitialpageState extends ConsumerState<Initialpage> {
     setState(() {});
   }
 
-  Future<void> loginCheck() async {
+  ///ログインステータスチュック
+  Future<void> _loginCheck() async {
+    /// ログインステータス初期化
     await UserLoginStatusController().init(
       initRef: ref,
       initRender: () => setState(() {}),
