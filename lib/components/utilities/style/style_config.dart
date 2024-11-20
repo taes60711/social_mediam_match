@@ -7,7 +7,9 @@ String twitterIcon = 'assets/twitter_w_Logo.png';
 class AppColors {
   static Color whiteColor = Colors.white;
   static Color redColor = Colors.red;
+  static Color greenColor = const Color.fromARGB(255, 143, 206, 146);
   static Color orangeColor = const Color.fromARGB(255, 247, 147, 100);
+  static Color purpleColor = const Color.fromARGB(255, 81, 96, 144);
   static Color blueColor = const Color.fromARGB(255, 46, 138, 236);
 
   static Color bgColor = const Color.fromARGB(255, 29, 28, 28);

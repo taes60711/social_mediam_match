@@ -14,25 +14,25 @@ class LoginProvider extends ChangeNotifier {
   ///ログインのエラーメッセージ
   String loginError = LoginError.noError;
 
-  ///メソッド：ログイン
-  ///email：メールアドレス，password：パスワード
-  Future<bool> signIn(String email, String password) async {
-    bool isSucess = true;
+  // ///メソッド：ログイン
+  // ///email：メールアドレス，password：パスワード
+  // Future<bool> signIn(String email, String password) async {
+  //   bool isSucess = true;
 
-    String signInResult = await FirebaseSerivce().firebaseSignIn(email, password);
-    if (!signInResult.contains("Sucess")) {
-      loginError = signInResult;
-      isSucess = false;
-      notifyListeners();
-    }
+  //   String signInResult = await FirebaseSerivce().firebaseSignIn(email, password);
+  //   if (!signInResult.contains("Sucess")) {
+  //     loginError = signInResult;
+  //     isSucess = false;
+  //     notifyListeners();
+  //   }
 
-    return isSucess;
-  }
+  //   return isSucess;
+  // }
 
-  ///メソッド：パスワード忘れた場合，パスワードがメール送ってリセット
-  ///email：ユーザ登録のメールアドレス
-  Future<void> reSetPwd(String email) async {
-    resetPwdError = await FirebaseSerivce().reSetPwd(email);
-    notifyListeners();
-  }
+  // ///メソッド：パスワード忘れた場合，パスワードがメール送ってリセット
+  // ///email：ユーザ登録のメールアドレス
+  // Future<void> reSetPwd(String email) async {
+  //   resetPwdError = await FirebaseSerivce().reSetPwd(email);
+  //   notifyListeners();
+  // }
 }

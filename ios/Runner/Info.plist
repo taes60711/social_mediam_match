@@ -55,6 +55,16 @@
 		<string>ja</string>
 		<string>zh_TW</string>
 	</array>
-
+	<key>GIDClientID</key>
+	<string>921286210624-ggc14mr0m9ev2iue5o6ormbfsnq57pvl.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.921286210624-ggc14mr0m9ev2iue5o6ormbfsnq57pvl</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

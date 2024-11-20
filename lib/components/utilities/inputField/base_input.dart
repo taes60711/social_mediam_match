@@ -80,7 +80,7 @@ class _BaseInputFieldState extends State<BaseInputField> {
       },
       child: TextFormField(
         focusNode: _focusNode,
-        obscureText: widget.type == InputType.pwd && widget.isHidePwd,
+        obscureText: widget.type == InputType.pwd, //&& widget.isHidePwd,
         cursorColor: AppColors.whiteColor,
         textInputAction: widget.textInputAction,
         maxLength: widget.maxLength,

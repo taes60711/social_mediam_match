@@ -132,7 +132,7 @@ class ChatRoom extends BaseEndDrawer {
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(3),
-          color: AppColors.greyColor57,
+          color: AppColors.greyColor54,
         ),
         child: Text(
           info,
@@ -270,7 +270,7 @@ class ChatRoom extends BaseEndDrawer {
             // await imageView(RichTextFormat(htmlString: imgUrl)
             //     .mappingIPAndPort(imgUrl));
           },
-          child: Image.network(imgUrl),
+          child: ClipRRect(borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(10)), child: Image.network(imgUrl)),
         ),
       );
     }
