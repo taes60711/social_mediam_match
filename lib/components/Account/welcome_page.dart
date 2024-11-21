@@ -31,11 +31,7 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
           SizedBox(height: ScreenSize.fitPxWidth(100)),
 
           ///　Logo
-          Container(
-            width: ScreenSize.fitPxWidth(180),
-            height: ScreenSize.fitPxWidth(180),
-            color: AppColors.orangeColor,
-          ),
+          AccountPageUtilites().logo(),
           const Expanded(child: SizedBox(height: 1)),
           AccountPageUtilites().btnContainer(
             onPress: () {

@@ -24,9 +24,9 @@ class _AccountMainPageState extends ConsumerState<AccountMainPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pageWidget = [
-      SignUpPage(),
-      WelcomePage(),
-      LoginPage(),
+      const SignUpPage(),
+      const WelcomePage(),
+      const LoginPage(),
     ];
 
     return CommonScaffold(

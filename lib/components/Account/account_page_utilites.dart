@@ -5,6 +5,20 @@ import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
 
 class AccountPageUtilites {
+  Widget logo() {
+    return Container(
+      width: ScreenSize.fitPxWidth(200),
+      height: ScreenSize.fitPxWidth(200),
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(
+          ScreenSize.fitPxWidth(30),
+        ),
+      ),
+      child: Image.asset('assets/Logo.png'),
+    );
+  }
+
   Widget btnContainer({required Function onPress, required String btnText, String? imgIcon, Color? btnBgColor}) {
     return MainBtn(
       onPress: () async {

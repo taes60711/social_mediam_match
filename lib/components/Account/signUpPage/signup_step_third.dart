@@ -113,12 +113,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 
+import '../../../models/skill_model.dart';
+import '../../home/skillExChangePage/skill_utilites.dart';
+import '../../utilities/endDrawers/user_skill_choice_page.dart';
 import '../../utilities/inputField/label_input.dart';
 import '../../utilities/inputField/mutl_input.dart';
 import '../../utilities/style/screen_size.dart';
@@ -134,7 +138,8 @@ class SignUpStepThirdPage extends BaseEndDrawer {
   }
 
   String? editImg;
-
+  List<RequestUserSkillData> mainSkillList = [];
+  List<RequestUserSkillData> wantSkillList = [];
   @override
   Widget build(WidgetRef ref) {
     return CommonScaffold(
@@ -166,10 +171,64 @@ class SignUpStepThirdPage extends BaseEndDrawer {
               ),
               inputField(hintText: "職業", editingController: TextEditingController()),
               SizedBox(height: ScreenSize.fitPxWidth(16)),
+              //強いスキル設定
+              MainBtn(
+                onPress: () {
+                  UserSkillChoicePage(
+                    initSkillData: mainSkillList,
+                    updateSkillDate: (List<RequestUserSkillData> value) {
+                      mainSkillList = value;
+                      render();
+                    },
+                  ).show(context);
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    skillTitle(
+                      titile: "能教的技能",
+                      iconData: FontAwesomeIcons.reply,
+                      iconBgColor: const Color.fromARGB(255, 138, 138, 138),
+                    ),
+                    SizedBox(height: ScreenSize.fitPxWidth(5)),
+                    SkillUtilites().skillBar(skills: mainSkillList),
+                  ],
+                ),
+              ),
+              SizedBox(height: ScreenSize.fitPxWidth(16)),
+
+              //弱いスキル設定
+              MainBtn(
+                onPress: () {
+                  UserSkillChoicePage(
+                    initSkillData: wantSkillList,
+                    updateSkillDate: (List<RequestUserSkillData> value) {
+                      wantSkillList = value;
+                      render();
+                    },
+                  ).show(context);
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    skillTitle(
+                      titile: "想學的技能",
+                      iconData: FontAwesomeIcons.share,
+                      iconBgColor: const Color.fromARGB(255, 240, 123, 77),
+                    ),
+                    SizedBox(height: ScreenSize.fitPxWidth(5)),
+                    SkillUtilites().skillBar(skills: wantSkillList),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: ScreenSize.fitPxWidth(16)),
 
               // 自己紹介
               multiInputField(hintText: "自我介紹", editingController: TextEditingController()),
-              SizedBox(height: ScreenSize.fitPxWidth(20)),
+
+              SizedBox(height: ScreenSize.fitPxWidth(25)),
+
               AccountPageUtilites().btnContainer(
                 onPress: () {
                   Navigator.of(context).popUntil((route) => route.isFirst);
@@ -182,6 +241,34 @@ class SignUpStepThirdPage extends BaseEndDrawer {
         ),
       ],
     ));
+  }
+
+  Widget skillTitle({required Color iconBgColor, required IconData iconData, required String titile}) {
+    return Row(
+      children: [
+        ///タイトル
+        Container(
+          padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
+          margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
+          decoration: BoxDecoration(
+            color: iconBgColor,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Icon(
+            iconData,
+            color: AppColors.whiteColor,
+            size: ScreenSize.fitPxWidth(12),
+          ),
+        ),
+        Text(
+          titile,
+          style: TextStyle(
+            color: AppColors.whiteColor,
+            fontSize: ScreenSize.fontSize18,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget multiInputField({required String hintText, required TextEditingController editingController, double? fontSzie}) {

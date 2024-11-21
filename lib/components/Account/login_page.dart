@@ -37,15 +37,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: ScreenSize.fitPxWidth(40)),
+            SizedBox(height: ScreenSize.fitPxWidth(50)),
 
             ///　Logo
-            Container(
-              width: ScreenSize.fitPxWidth(180),
-              height: ScreenSize.fitPxWidth(180),
-              color: AppColors.orangeColor,
-            ),
-            SizedBox(height: ScreenSize.fitPxWidth(16)),
+            AccountPageUtilites().logo(),
+
+            SizedBox(height: ScreenSize.fitPxWidth(20)),
 
             ///　帳號輸入
             accountBuild(),
