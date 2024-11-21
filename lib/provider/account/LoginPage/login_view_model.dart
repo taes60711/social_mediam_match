@@ -12,8 +12,8 @@ class LoginViewModel {
   LoginDataModel editData = LoginDataModel.emptyData();
 
   ///tzLaMcP3V9XOAMOcD0FAY5Nf4tE2
-  TextEditingController accountController = TextEditingController(text: "tzLaMcP3V9XOAMOcD0FAY5Nf4tE2");
-  TextEditingController pwdController = TextEditingController();
+  TextEditingController accountController = TextEditingController(text: "taes60811@gmail.com");
+  TextEditingController pwdController = TextEditingController(text: "toto60811");
   String errMsg = "";
 
   bool pwdleastSix = false;
@@ -36,7 +36,7 @@ class LoginViewModel {
     render!();
   }
 
-  void updateAPIData() {
+  void updateLoginInputData() {
     editData = LoginDataModel(
       account: accountController.text,
       pwd: pwdController.text,
@@ -64,10 +64,10 @@ class LoginViewModel {
   }
 
   Future<void> login() async {
-    updateAPIData();
+    updateLoginInputData();
     bool isErr = apiBerforeErrCheck();
     if (!isErr) {
-      bool apiIsSuccess = await UserLoginStatusController().login(userUID: accountController.text);
+      bool apiIsSuccess = await UserLoginStatusController().login(loginInputData: editData);
       if (!apiIsSuccess) {
         errMsg = "帳號或密碼錯誤";
         render!();

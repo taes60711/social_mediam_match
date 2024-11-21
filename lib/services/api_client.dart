@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 import '../../global.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +19,7 @@ class ApiClient {
   }) async {
     final uri = Uri.parse("http://$_ip$url").replace(queryParameters: paramters);
     print("Get API  Url : $_ip$url");
+    print("paramters : $paramters");
     Response response = await http.get(uri);
     try {
       if (response.statusCode != 200) {
@@ -124,13 +124,17 @@ class ApiClient {
     if (!_isDialogShowing) {
       _isDialogShowing = true;
       ConfirmDilaog(
-          title: "警告",
-          content: tr("serverErrorContent"),
-          btnAmount: 1,
-          conirmFunc: () {
-            onFailedFunc != null ? onFailedFunc() : Navigator.of(globalContext).pop();
-            _isDialogShowing = false;
-          }).show(globalContext);
+        title: "警告",
+        content: tr("serverErrorContent"),
+        btnAmount: 1,
+        conirmFunc: () {
+          if (onFailedFunc != null) {
+            onFailedFunc();
+          }
+
+          _isDialogShowing = false;
+        },
+      ).show(globalContext);
     }
   }
 }

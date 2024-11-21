@@ -106,7 +106,30 @@ class UserService extends ApiClient {
         model: ProfileData.toModel,
       );
     } catch (e) {
-      // onRequestFailed(onFailedFunc: () => RouteOptions.popUntilToHome());
+      onRequestFailed();
+    }
+
+    return userdata;
+  }
+
+  Future<ProfileData> login(String email, String password) async {
+    ProfileData userdata = ProfileData(uid: "-1");
+    var sha256Password = sha256.convert(utf8.encode(password));
+
+    Map<String, dynamic> params = {
+      'email': email,
+      'password': "$sha256Password",
+    };
+
+    String responseData = await apiGet('/login', paramters: params);
+
+    print("Login User Data :  $responseData");
+
+    if (responseData != "") {
+      userdata = await handleResponse<ProfileData>(
+        responseData,
+        model: ProfileData.toModel,
+      );
     }
 
     return userdata;

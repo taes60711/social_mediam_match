@@ -141,9 +141,14 @@ class SignUpStepThirdPage extends BaseEndDrawer {
         child: Column(
       children: [
         BaseTopBar(
-          backFunc: () => closePage(),
+          backFunc: () {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          },
           rightWidget: MainBtn(
-            onPress: () {},
+            onPress: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+              ref.read(pageControllerProvider).jumpToPage(2);
+            },
             title: "略過",
           ),
         ),
@@ -162,7 +167,6 @@ class SignUpStepThirdPage extends BaseEndDrawer {
               inputField(hintText: "職業", editingController: TextEditingController()),
               SizedBox(height: ScreenSize.fitPxWidth(16)),
 
-              SizedBox(height: ScreenSize.fitPxWidth(16)),
               // 自己紹介
               multiInputField(hintText: "自我介紹", editingController: TextEditingController()),
               SizedBox(height: ScreenSize.fitPxWidth(20)),

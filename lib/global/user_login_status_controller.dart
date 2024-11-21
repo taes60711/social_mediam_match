@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/global/shared_preference.dart';
 
 import '../models/user_model.dart';
+import '../provider/account/LoginPage/login_view_model.dart';
 import '../provider/account/user_provider.dart';
 import '../provider/friend/chat_ws_model.dart';
 import '../services/user_service.dart';
@@ -50,19 +51,19 @@ class UserLoginStatusController {
     }
   }
 
-  Future<bool> login({required String userUID}) async {
+  Future<bool> login({required LoginDataModel loginInputData}) async {
     bool loginSuccess = false;
 
     /// ユーザデータ取得
-    ProfileData requestUserData = await UserService().requestGetUserData(userUID);
+    ProfileData requestUserData = await UserService().login(loginInputData.account, loginInputData.pwd);
 
     print("LoginUserUID: ${requestUserData.uid}");
     if (requestUserData.uid != "-1") {
       ref.read(loginUserData.notifier).update((state) => requestUserData);
-      await sharedPreference.loginSetUserUID(userUID);
-      ref.read(loginedUserUID.notifier).update((state) => userUID);
+      await sharedPreference.loginSetUserUID(requestUserData.uid);
+      ref.read(loginedUserUID.notifier).update((state) => requestUserData.uid);
 
-      /// チャットルームリストWSWS初期化
+      /// チャットルームリストWS初期化
       ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
       loginSuccess = true;
     }
