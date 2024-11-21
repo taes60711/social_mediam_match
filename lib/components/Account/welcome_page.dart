@@ -1,85 +1,69 @@
-// // ignore_for_file: no_leading_underscores_for_local_identifiers
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/Account/account_main_page.dart';
 
-// import 'package:flutter/material.dart';
-// import 'package:social_mediam_match/components/strings/welcome_strings.dart';
-// import 'package:social_mediam_match/components/utilities/background_widget.dart';
-// import 'package:social_mediam_match/components/utilities/custom_button.dart';
-// import 'package:social_mediam_match/components/utilities/fit_widget.dart';
-// import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 
-// import '../../global.dart';
+import '../utilities/style/screen_size.dart';
+import '../utilities/style/style_config.dart';
+import 'account_page_utilites.dart';
 
-// import '../utilities/style/screen_size.dart';
+class WelcomePage extends ConsumerStatefulWidget {
+  const WelcomePage({super.key});
 
-// class WelcomePage extends StatelessWidget {
-//   const WelcomePage({super.key});
+  @override
+  ConsumerState<WelcomePage> createState() => _WelcomePageState();
+}
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return BackgroundWidget(
-//       isSafeArea: false,
-//       child: Column(
-//         children: [
-//           //ロゴ
-//           SizedBox(
-//             height: ScreenSize.height * 0.8,
-//             child: Center(
-//               child: SizedBox(
-//                 width: 180,
-//                 height: 180,
-//                 child: Image.asset(logoImg),
-//               ),
-//             ),
-//           ),
-//           FitWidget(
-//             height: ScreenSize.height * 0.2,
-//             child: Column(
-//               children: [
-//                 //登録ボタン
-//                 _button(
-//                     title: "註冊帳號", //WelcomeStrings().firstButtonText,
-//                     titleColor: normalTextColor,
-//                     backgroundColor: normalBgColor,
-//                     onPressed: () {}),
-//                 const SizedBox(height: 10),
-//                 //”ログインページ遷移”ボタン
-//                 _button(
-//                     title: WelcomeStrings().loginButtonText,
-//                     titleColor: normalBgColor2,
-//                     backgroundColor: disAbleColor,
-//                     onPressed: () {}),
-//                 const SizedBox(height: 30),
-//                 //バージョンテキスト
-//                 _versionText,
-//               ],
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
+class _WelcomePageState extends ConsumerState<WelcomePage> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
-// //バージョンテキスト
-// Widget _versionText = Text(
-//   "${WelcomeStrings().version} $appVer",
-//   style: const TextStyle(
-//     fontSize: 12,
-//     color: Color.fromARGB(255, 177, 176, 176),
-//   ),
-// );
+  @override
+  Widget build(BuildContext context) {
+    return CommonScaffold(
+        child: Padding(
+      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
+      child: Column(
+        children: [
+          SizedBox(height: ScreenSize.fitPxWidth(100)),
 
-// ///ボタン
-// ///title: ボタン内の文字、　titleColor:　ボタン内の文字の色
-// ///backgroundColor: ボタンの色、　onPressed: ボタンの機能関数
-// _button({required title, required titleColor, required backgroundColor, required onPressed}) {
-//   return Padding(
-//     padding: const EdgeInsets.symmetric(horizontal: 20),
-//     child: TextBtn(
-//       title: title,
-//       titleColor: titleColor,
-//       btnColor: backgroundColor,
-//       onPress: onPressed,
-//     ),
-//   );
-// }
+          ///　Logo
+          Container(
+            width: ScreenSize.fitPxWidth(180),
+            height: ScreenSize.fitPxWidth(180),
+            color: AppColors.orangeColor,
+          ),
+          const Expanded(child: SizedBox(height: 1)),
+          AccountPageUtilites().btnContainer(
+            onPress: () {
+              ref.read(pageControllerProvider).animateToPage(
+                    2,
+                    duration: const Duration(milliseconds: 150),
+                    curve: Curves.easeIn,
+                  );
+            },
+            btnText: "登入",
+          ),
+
+          SizedBox(height: ScreenSize.fitPxWidth(16)),
+          AccountPageUtilites().btnContainer(
+            btnBgColor: AppColors.orangeColor,
+            onPress: () {
+              ref.read(pageControllerProvider).animateToPage(
+                    0,
+                    duration: const Duration(milliseconds: 150),
+                    curve: Curves.easeIn,
+                  );
+            },
+            btnText: "註冊",
+          ),
+
+          SizedBox(height: ScreenSize.fitPxWidth(120)),
+        ],
+      ),
+    ));
+  }
+}

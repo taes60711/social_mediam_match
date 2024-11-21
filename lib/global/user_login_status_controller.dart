@@ -45,7 +45,7 @@ class UserLoginStatusController {
 
       ref.read(loginUserData.notifier).update((state) => requestUserData);
 
-      /// チャットルームリストWSS初始化
+      /// チャットルームリストWS初始化
       ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
     }
   }

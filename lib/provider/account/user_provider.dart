@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:social_mediam_match/models/user_model.dart';
-import '../../services/firebase_service.dart';
 import '../../services/notification_service.dart';
 import '../../services/user_service.dart';
 

@@ -45,7 +45,7 @@ class UserIcon extends StatelessWidget {
                 child: Icon(
                   FontAwesomeIcons.userLarge,
                   color: AppColors.whiteColor.withOpacity(.8),
-                  size: iconSize - ScreenSize.fitPxWidth(10) - ScreenSize.fitPxWidth(borderRadius) * 0.2,
+                  size: iconSize - ScreenSize.fitPxWidth(40) * .8,
                 ),
               ),
             ),

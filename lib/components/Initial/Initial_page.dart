@@ -1,7 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/components/Account/login_page.dart';
+
 import 'package:social_mediam_match/global/user_login_status_controller.dart';
 import 'package:social_mediam_match/global/shared_preference.dart';
 import 'package:social_mediam_match/pageManager/home.dart';
@@ -12,6 +11,8 @@ import '../../models/skill_model.dart';
 
 import '../../provider/post/post_provider.dart';
 import '../../services/post_service.dart';
+
+import '../Account/account_main_page.dart';
 
 import '../utilities/style/theme_style.dart';
 import 'splash_screen.dart';
@@ -97,7 +98,7 @@ class _InitialpageState extends ConsumerState<Initialpage> {
       if (UserLoginStatusController().isLogin()) {
         component = const Home();
       } else {
-        component = const LoginPage();
+        component = const AccountMainPage();
       }
     }
 

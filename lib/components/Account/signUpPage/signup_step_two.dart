@@ -48,3 +48,74 @@
 //     );
 //   }
 // }
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
+
+import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
+import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
+
+import '../../utilities/inputField/label_input.dart';
+import '../../utilities/style/screen_size.dart';
+import '../account_page_utilites.dart';
+import 'signup_step_third.dart';
+
+class SignUpStepTwoPage extends BaseEndDrawer {
+  @override
+  bool needGestureDetectorClosePage() {
+    return false;
+  }
+
+  @override
+  Widget build(WidgetRef ref) {
+    return CommonScaffold(
+        child: Column(
+      children: [
+        BaseTopBar(
+          backFunc: () => closePage(),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
+          child: Column(
+            children: [
+              verifyBuild(),
+              SizedBox(height: ScreenSize.fitPxWidth(16)),
+              pwdBuild(),
+              SizedBox(height: ScreenSize.fitPxWidth(16)),
+              idBuild(),
+              SizedBox(height: ScreenSize.fitPxWidth(25)),
+              AccountPageUtilites().btnContainer(
+                onPress: () {
+                  SignUpStepThirdPage().show(context);
+                },
+                btnText: "下一步",
+              ),
+            ],
+          ),
+        ),
+      ],
+    ));
+  }
+
+  Widget verifyBuild() {
+    return LabelInput(
+      controller: TextEditingController(),
+      label: "驗證碼",
+    );
+  }
+
+  Widget pwdBuild() {
+    return LabelInput(
+      controller: TextEditingController(),
+      label: "パスワード",
+    );
+  }
+
+  Widget idBuild() {
+    return LabelInput(
+      controller: TextEditingController(),
+      label: "名前",
+    );
+  }
+}

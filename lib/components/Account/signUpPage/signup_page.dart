@@ -108,3 +108,73 @@
 //     },
 //   );
 // }
+
+import 'package:flutter/material.dart';
+import 'package:social_mediam_match/components/Account/signUpPage/signup_step_two.dart';
+import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
+import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+
+import '../../../services/firebase_service.dart';
+import '../../utilities/inputField/label_input.dart';
+import '../../utilities/style/style_config.dart';
+import '../account_page_utilites.dart';
+
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  @override
+  Widget build(BuildContext context) {
+    return CommonScaffold(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
+        child: Column(
+          children: [
+            SizedBox(height: ScreenSize.fitPxWidth(60)),
+
+            ///　Logo
+            Container(
+              width: ScreenSize.fitPxWidth(180),
+              height: ScreenSize.fitPxWidth(180),
+              color: AppColors.orangeColor,
+            ),
+            SizedBox(height: ScreenSize.fitPxWidth(16)),
+            accountBuild(),
+            SizedBox(height: ScreenSize.fitPxWidth(16)),
+
+            ///
+            AccountPageUtilites().btnContainer(
+              onPress: () {
+                SignUpStepTwoPage().show(context);
+              },
+              btnText: "開始註冊",
+            ),
+
+            SizedBox(height: ScreenSize.fitPxWidth(16)),
+
+            ///　Google登入
+            AccountPageUtilites().btnContainer(
+              onPress: () {
+                FirebaseSerivce().signInWithGoogle();
+              },
+              imgIcon: 'assets/google_w_Logo.png',
+              btnBgColor: AppColors.blueColor,
+              btnText: "登入",
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget accountBuild() {
+    return LabelInput(
+      controller: TextEditingController(),
+      label: "Email",
+    );
+  }
+}
