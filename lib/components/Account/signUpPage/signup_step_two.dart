@@ -56,9 +56,11 @@ import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.da
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 
+import '../../../provider/account/signUpPage/sign_up_view_model.dart';
 import '../../utilities/inputField/label_input.dart';
 import '../../utilities/style/screen_size.dart';
 import '../account_page_utilites.dart';
+import 'signup_page.dart';
 import 'signup_step_third.dart';
 
 class SignUpStepTwoPage extends BaseEndDrawer {
@@ -86,8 +88,11 @@ class SignUpStepTwoPage extends BaseEndDrawer {
               idBuild(),
               SizedBox(height: ScreenSize.fitPxWidth(25)),
               AccountPageUtilites().btnContainer(
-                onPress: () {
-                  SignUpStepThirdPage().show(context);
+                onPress: () async {
+                  bool result = await ref.read(viewModelProvider.notifier).state.signUp();
+                  if (result) {
+                    SignUpStepThirdPage().show(context);
+                  }
                 },
                 btnText: "下一步",
               ),
@@ -100,22 +105,22 @@ class SignUpStepTwoPage extends BaseEndDrawer {
 
   Widget verifyBuild() {
     return LabelInput(
-      controller: TextEditingController(),
+      controller: ref.read(viewModelProvider.notifier).state.verifyController,
       label: "驗證碼",
     );
   }
 
   Widget pwdBuild() {
     return LabelInput(
-      controller: TextEditingController(),
-      label: "パスワード",
+      controller: ref.read(viewModelProvider.notifier).state.passwordController,
+      label: "密碼",
     );
   }
 
   Widget idBuild() {
     return LabelInput(
-      controller: TextEditingController(),
-      label: "名前",
+      controller: ref.read(viewModelProvider.notifier).state.nameController,
+      label: "名稱",
     );
   }
 }

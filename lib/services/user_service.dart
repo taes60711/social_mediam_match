@@ -166,24 +166,24 @@ class UserService extends ApiClient {
     print("updateUserToken : $responseData");
   }
 
-  //MARK: MYSQLにデータを作成する
   //param
-  //uid：firebaseからアカウントid,　email：メールアドレス，password：パスワード
-  Future<bool> sqlSignUp(String uid, String email, String password) async {
+  //email：メールアドレス，password：パスワード
+  Future<bool> signUp(
+      {required String captchaCode, required String email, required String password, required String name}) async {
     var sha256Password = sha256.convert(utf8.encode(password));
     print("Digest as hex password: $sha256Password");
 
     Map<String, dynamic> body = {
-      'uid': uid,
       "email": email,
       "password": "$sha256Password",
-      "isEmailVerified": false,
+      "name": name,
+      "isEmailVerified": true,
     };
-    String responseData = await apiPush('/signUp', body: body);
+    String responseData = await apiPush('/signUp/$captchaCode', body: body);
 
     print("signUpUser : $responseData");
 
-    return responseData != "null" ? true : false;
+    return responseData == "true" ? true : false;
   }
 
   ///MARK: データを更新する
@@ -200,13 +200,18 @@ class UserService extends ApiClient {
     return responseData != "null" ? true : false;
   }
 
-  Future<void> sendMail() async {
-    try {
-      Map<String, dynamic> params = {};
+  /// emailType：
+  /// "signUp", "resetPwd", "verify"
+  Future<bool> sendCaptchaMail({required String email}) async {
+    Map<String, dynamic> params = {
+      "email": email,
+      "emailType": "signUp",
+    };
 
-      await apiGet('/getMail', paramters: params);
-    } catch (e) {
-      onRequestFailed();
-    }
+    String responseData = await apiGet('/sendCaptchaMail', paramters: params);
+
+    print("sendCaptchaMail : $responseData");
+
+    return responseData == "true" ? true : false;
   }
 }

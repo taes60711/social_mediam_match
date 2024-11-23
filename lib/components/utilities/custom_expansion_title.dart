@@ -122,8 +122,12 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> with SingleTi
                         ),
                       )
                     : _isExpanded
-                        ? Column(
-                            children: widget.children,
+                        ? SizedBox(
+                            width: ScreenSize.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: widget.children,
+                            ),
                           )
                         : Container(),
               );
