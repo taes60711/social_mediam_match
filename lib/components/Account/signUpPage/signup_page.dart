@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/global/lodaing_dialog.dart';
 
 import '../../../services/firebase_service.dart';
 import '../../utilities/inputField/label_input.dart';
@@ -66,7 +67,10 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             ///　普通登録
             AccountPageUtilites().btnContainer(
               onPress: () async {
-                if (await ref.read(viewModelProvider.notifier).state.sendCaptchaMail()) {
+                LoadingDialog().show();
+                bool isSendOK = await ref.read(viewModelProvider.notifier).state.sendCaptchaMail();
+                LoadingDialog().close();
+                if (isSendOK) {
                   SignUpStepTwoPage().show(context);
                 }
                 setState(() {});
