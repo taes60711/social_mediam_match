@@ -6,7 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
 
 import '../../../services/firebase_service.dart';
 import '../../utilities/inputField/label_input.dart';
@@ -14,8 +13,6 @@ import '../../utilities/style/style_config.dart';
 import '../account_main_page.dart';
 import '../account_page_utilites.dart';
 import 'signup_step_two.dart';
-
-StateProvider<SignUpViewModel> viewModelProvider = StateProvider<SignUpViewModel>((ref) => SignUpViewModel());
 
 class SignUpPage extends ConsumerStatefulWidget {
   const SignUpPage({super.key});
@@ -27,11 +24,6 @@ class SignUpPage extends ConsumerStatefulWidget {
 class _SignUpPageState extends ConsumerState<SignUpPage> {
   @override
   void initState() {
-    SignUpViewModel viewModel = SignUpViewModel(ref: ref, context: context);
-    Future.delayed(Duration.zero).then((_) {
-      ref.read(viewModelProvider.notifier).update((state) => viewModel);
-    });
-
     super.initState();
   }
 

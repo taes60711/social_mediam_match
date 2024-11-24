@@ -7,10 +7,10 @@ class SignUpViewModel {
   WidgetRef? ref;
 
   SignUpViewModel({this.ref, this.context});
-  TextEditingController accountController = TextEditingController(text: "taes60511@gmail.com");
-  TextEditingController verifyController = TextEditingController(text: "");
-  TextEditingController passwordController = TextEditingController(text: "toto60511");
-  TextEditingController nameController = TextEditingController(text: "name");
+  TextEditingController accountController = TextEditingController();
+  TextEditingController verifyController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
 
   String emailErr = "";
   String nameErr = "";
@@ -26,8 +26,7 @@ class SignUpViewModel {
     String result = "";
     _resetAllErrMsg();
 
-    _checkEmailFormat();
-    if (emailErr == "") {
+    if (_checkEmailFormat()) {
       result = await UserService().sendCaptchaMail(email: accountController.text);
     }
 
@@ -91,13 +90,17 @@ class SignUpViewModel {
     return isOK;
   }
 
-  void _checkEmailFormat() {
+  bool _checkEmailFormat() {
+    bool isOK = true;
     RegExp emailRegExp = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
     if (accountController.text == "") {
       emailErr = "信箱不能為空";
+      isOK = false;
     } else if (!emailRegExp.hasMatch(accountController.text)) {
       emailErr = "信箱格式錯誤";
+      isOK = false;
     }
+    return isOK;
   }
 
   void resetAllData() {
