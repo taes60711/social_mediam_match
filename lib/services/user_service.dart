@@ -168,7 +168,8 @@ class UserService extends ApiClient {
 
   //param
   //email：メールアドレス，password：パスワード
-  Future<bool> signUp(
+  /// success, emailExist , captchaCodeErr
+  Future<String> signUp(
       {required String captchaCode, required String email, required String password, required String name}) async {
     var sha256Password = sha256.convert(utf8.encode(password));
     print("Digest as hex password: $sha256Password");
@@ -183,7 +184,7 @@ class UserService extends ApiClient {
 
     print("signUpUser : $responseData");
 
-    return responseData == "true" ? true : false;
+    return responseData;
   }
 
   ///MARK: データを更新する
@@ -202,7 +203,7 @@ class UserService extends ApiClient {
 
   /// emailType：
   /// "signUp", "resetPwd", "verify"
-  Future<bool> sendCaptchaMail({required String email}) async {
+  Future<String> sendCaptchaMail({required String email}) async {
     Map<String, dynamic> params = {
       "email": email,
       "emailType": "signUp",
@@ -212,6 +213,6 @@ class UserService extends ApiClient {
 
     print("sendCaptchaMail : $responseData");
 
-    return responseData == "true" ? true : false;
+    return responseData;
   }
 }

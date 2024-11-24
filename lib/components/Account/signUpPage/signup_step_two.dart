@@ -55,8 +55,7 @@ import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.da
 
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
-
-import '../../../provider/account/signUpPage/sign_up_view_model.dart';
+import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 import '../../utilities/inputField/label_input.dart';
 import '../../utilities/style/screen_size.dart';
 import '../account_page_utilites.dart';
@@ -76,6 +75,7 @@ class SignUpStepTwoPage extends BaseEndDrawer {
       children: [
         BaseTopBar(
           backFunc: () => closePage(),
+          title: "註冊(1/2)",
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
@@ -89,10 +89,10 @@ class SignUpStepTwoPage extends BaseEndDrawer {
               SizedBox(height: ScreenSize.fitPxWidth(25)),
               AccountPageUtilites().btnContainer(
                 onPress: () async {
-                  bool result = await ref.read(viewModelProvider.notifier).state.signUp();
-                  if (result) {
+                  if (await ref.read(viewModelProvider.notifier).state.signUp()) {
                     SignUpStepThirdPage().show(context);
                   }
+                  render();
                 },
                 btnText: "下一步",
               ),
@@ -107,13 +107,20 @@ class SignUpStepTwoPage extends BaseEndDrawer {
     return LabelInput(
       controller: ref.read(viewModelProvider.notifier).state.verifyController,
       label: "驗證碼",
+      errMsg: [ref.read(viewModelProvider.notifier).state.verifyErr],
     );
   }
 
   Widget pwdBuild() {
     return LabelInput(
+      type: InputType.pwd,
       controller: ref.read(viewModelProvider.notifier).state.passwordController,
       label: "密碼",
+      errMsg: [
+        ref.read(viewModelProvider.notifier).state.pwdleastSixErr,
+        ref.read(viewModelProvider.notifier).state.pwdNeedNumErr,
+        ref.read(viewModelProvider.notifier).state.pwdNeedEnglishErr
+      ],
     );
   }
 
@@ -121,6 +128,7 @@ class SignUpStepTwoPage extends BaseEndDrawer {
     return LabelInput(
       controller: ref.read(viewModelProvider.notifier).state.nameController,
       label: "名稱",
+      errMsg: [ref.read(viewModelProvider.notifier).state.nameErr],
     );
   }
 }

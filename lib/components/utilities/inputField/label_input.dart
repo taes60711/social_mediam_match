@@ -12,6 +12,7 @@ class LabelInput extends StatefulWidget {
   final TextStyle? inputStyle;
   final Function(String value)? onChanged;
   final InputType type;
+  final List<String>? errMsg;
   const LabelInput({
     super.key,
     required this.controller,
@@ -21,6 +22,7 @@ class LabelInput extends StatefulWidget {
     required this.label,
     this.onChanged,
     this.type = InputType.normal,
+    this.errMsg,
   });
 
   @override
@@ -62,6 +64,26 @@ class _LabelInputState extends State<LabelInput> {
               }
             },
           ),
+        ),
+        SizedBox(height: ScreenSize.fitPxWidth(5)),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+          child: widget.errMsg == null
+              ? Container()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: widget.errMsg!
+                      .map(
+                        (e) => Visibility(
+                          visible: e != "",
+                          child: Text(
+                            e,
+                            style: TextStyle(color: AppColors.redColor),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
         ),
       ],
     );

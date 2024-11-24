@@ -2,13 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
+import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/provider/account/signUpPage/sign_up_view_model.dart';
 
 import '../../../services/firebase_service.dart';
 import '../../utilities/inputField/label_input.dart';
 import '../../utilities/style/style_config.dart';
+import '../account_main_page.dart';
 import '../account_page_utilites.dart';
 import 'signup_step_two.dart';
 
@@ -24,7 +27,7 @@ class SignUpPage extends ConsumerStatefulWidget {
 class _SignUpPageState extends ConsumerState<SignUpPage> {
   @override
   void initState() {
-    SignUpViewModel viewModel = SignUpViewModel(ref: ref, context: context, render: () => setState(() {}));
+    SignUpViewModel viewModel = SignUpViewModel(ref: ref, context: context);
     Future.delayed(Duration.zero).then((_) {
       ref.read(viewModelProvider.notifier).update((state) => viewModel);
     });
@@ -39,7 +42,27 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
         padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
         child: Column(
           children: [
-            SizedBox(height: ScreenSize.fitPxWidth(50)),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                width: ScreenSize.fitPxWidth(40),
+                height: ScreenSize.fitPxWidth(40),
+                color: Colors.transparent,
+                child: MainBtn(
+                    onPress: () {
+                      ref.read(pageControllerProvider).animateToPage(
+                            1,
+                            duration: const Duration(milliseconds: 150),
+                            curve: Curves.easeIn,
+                          );
+                    },
+                    child: Icon(
+                      FontAwesomeIcons.arrowRight,
+                      color: AppColors.whiteColor,
+                    )),
+              ),
+            ),
+            SizedBox(height: ScreenSize.fitPxWidth(20)),
 
             ///　Logo
             AccountPageUtilites().logo(),
@@ -48,19 +71,20 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             accountBuild(),
             SizedBox(height: ScreenSize.fitPxWidth(16)),
 
-            ///
+            ///　普通登録
             AccountPageUtilites().btnContainer(
               onPress: () async {
                 if (await ref.read(viewModelProvider.notifier).state.sendCaptchaMail()) {
                   SignUpStepTwoPage().show(context);
                 }
+                setState(() {});
               },
               btnText: "開始註冊",
             ),
 
             SizedBox(height: ScreenSize.fitPxWidth(16)),
 
-            ///　Google登入
+            ///　Google登録
             AccountPageUtilites().btnContainer(
               onPress: () {
                 FirebaseSerivce().signInWithGoogle();
@@ -79,6 +103,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
     return LabelInput(
       controller: ref.read(viewModelProvider.notifier).state.accountController,
       label: "Email",
+      errMsg: [ref.read(viewModelProvider.notifier).state.emailErr],
     );
   }
 }

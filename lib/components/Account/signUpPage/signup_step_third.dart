@@ -149,6 +149,7 @@ class SignUpStepThirdPage extends BaseEndDrawer {
           backFunc: () {
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
+          title: "註冊(2/2)",
           rightWidget: MainBtn(
             onPress: () {
               Navigator.of(context).popUntil((route) => route.isFirst);
