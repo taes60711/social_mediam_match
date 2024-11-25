@@ -152,48 +152,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         SizedBox(height: ScreenSize.fitPxWidth(8)),
         Row(
           children: [
-            textCheckBuild(condition: viewModel.pwdleastSix, text: "六碼以上"),
+            AccountPageUtilites().textCheckBuild(condition: viewModel.pwdleastSix, text: "六碼以上"),
             SizedBox(width: ScreenSize.fitPxWidth(5)),
-            textCheckBuild(condition: viewModel.pwdNeedEnglish, text: "含有英文"),
+            AccountPageUtilites().textCheckBuild(condition: viewModel.pwdNeedEnglish, text: "含有英文"),
             SizedBox(width: ScreenSize.fitPxWidth(5)),
-            textCheckBuild(condition: viewModel.pwdNeedNum, text: "含有數字"),
+            AccountPageUtilites().textCheckBuild(condition: viewModel.pwdNeedNum, text: "含有數字"),
           ],
-        ),
-      ],
-    );
-  }
-
-  Widget textCheckBuild({required bool condition, required text}) {
-    return Row(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10), vertical: ScreenSize.fitPxWidth(2)),
-          decoration: BoxDecoration(
-            color: condition ? AppColors.purpleColor : AppColors.greyColor57,
-            borderRadius: BorderRadius.circular(
-              ScreenSize.fitPxWidth(15),
-            ),
-          ),
-          child: Row(
-            children: [
-              condition
-                  ? Icon(
-                      Icons.check,
-                      color: AppColors.greenColor,
-                      size: ScreenSize.fontSize14,
-                    )
-                  : Icon(
-                      Icons.close,
-                      color: AppColors.redColor,
-                      size: ScreenSize.fontSize14,
-                    ),
-              SizedBox(width: ScreenSize.fitPxWidth(2)),
-              Text(
-                text,
-                style: TextStyle(color: AppColors.whiteColor),
-              ),
-            ],
-          ),
         ),
       ],
     );

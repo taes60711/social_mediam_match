@@ -1,12 +1,9 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:intl/intl.dart';
+import 'package:social_mediam_match/components/home/firendsPage/comment_build.dart';
 import 'package:social_mediam_match/components/utilities/appBar/chat_room_bar.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 
@@ -16,20 +13,16 @@ import 'package:social_mediam_match/components/utilities/user_icon.dart';
 
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:uuid/uuid.dart';
+
 import '../../../models/friend_model.dart';
 
 import '../../../models/rich_text_format.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/friend/chat_room_ws_model.dart';
-import '../../../services/image_service.dart';
-import '../../utilities/inputField/base_input.dart';
-import '../../utilities/main_button.dart';
+
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import 'package:any_link_preview/any_link_preview.dart';
-
-import 'firends_page.dart';
 
 class ChatRoom extends BaseEndDrawer {
   FriendListModel roomData;
@@ -118,7 +111,11 @@ class ChatRoom extends BaseEndDrawer {
           ),
           Positioned(
             bottom: 0,
-            child: commentCntainerBuild(ref),
+            child: CommentBuild(
+              chatRoomWSModel: chatRoomWSModel,
+              dataIndex: dataIndex,
+              scrollController: _scrollController,
+            ),
           ),
         ],
       ),
@@ -304,147 +301,6 @@ class ChatRoom extends BaseEndDrawer {
       child: ChatRoomBar(backFunc: () => closePage(), userData: roomData.userData),
     );
   }
-
-  ///コメント欄
-  Widget commentCntainerBuild(WidgetRef ref) {
-    ProfileData userData = ref.watch(loginUserData);
-    TextEditingController commentController = TextEditingController();
-    return Container(
-      width: ScreenSize.width,
-      decoration: BoxDecoration(
-        color: AppColors.bgColor,
-        border: Border(
-          top: BorderSide(
-            color: AppColors.greyColor54,
-          ),
-        ),
-      ),
-      height: ScreenSize.fitPxHeight(70),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(15)),
-        child: Row(
-          children: [
-            ///画像ボタン
-            MainBtn(
-              onPress: () async {
-                String imageString = await imageChoice();
-                if (imageString != "") {
-                  sendMsg(chatRoomWSModel, userId: userData.uid, message: imageString);
-                }
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(8), horizontal: ScreenSize.fitPxHeight(8)),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  color: AppColors.greyColor57,
-                ),
-                margin: EdgeInsets.only(right: ScreenSize.fitPxHeight(10)),
-                child: Center(
-                  child: Icon(
-                    FontAwesomeIcons.fileImage,
-                    size: 16,
-                    color: AppColors.whiteColor,
-                  ),
-                ),
-              ),
-            ),
-
-            ///コメント
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ScreenSize.fitPxHeight(8),
-                  vertical: ScreenSize.fitPxHeight(6),
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.greyColor57,
-                  borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(13)),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: BaseInputField(
-                        hintText: "輸入訊息",
-                        controller: commentController,
-                        autoFocus: true,
-                        onFieldSubmitted: (value) {
-                          sendMsg(chatRoomWSModel, userId: userData.uid, message: commentController.text);
-                        },
-                      ),
-                    ),
-                    MainBtn(
-                      onPress: () {
-                        sendMsg(chatRoomWSModel, userId: userData.uid, message: commentController.text);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: ScreenSize.fitPxWidth(8),
-                          vertical: ScreenSize.fitPxWidth(3),
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.orangeColor,
-                          borderRadius: BorderRadius.circular(
-                            ScreenSize.fitPxWidth(10),
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.eco_sharp,
-                          color: AppColors.whiteColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void sendMsg(ChatRoomWSModel chatRoomWSModel, {required String userId, required String message}) {
-    chatRoomWSModel.sendMessage(loginUserUID: userId, message: message);
-
-    if (message.contains('http://\$ip:\$port')) {
-      message = "傳送了圖像";
-    }
-
-    List<FriendListModel> friendList = ref.read(frinedListProvider);
-    friendList[dataIndex].lastMessage = message;
-    ref.read(frinedListProvider.notifier).update((state) => List.from(friendList));
-    render();
-
-    _scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.linear);
-  }
-}
-
-Future<String> imageChoice() async {
-  final ImagePicker picker = ImagePicker();
-  final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-  String result = "";
-  String imgPickerResult = "";
-
-  if (image != null) {
-    File imgPath = File(image.path);
-    String base64String = base64Encode(imgPath.readAsBytesSync());
-    imgPickerResult = base64String;
-  }
-
-  if (imgPickerResult != "") {
-    String uid = const Uuid().v1();
-    if (await ImageService().imageIsExist(imgPickerResult) != "-1") {
-      uid = await ImageService().imageIsExist(imgPickerResult);
-    } else {
-      await ImageService().saveImg(uid, imgPickerResult);
-    }
-    String sendImgString = "http://\$ip:\$port/images/$uid";
-    result = sendImgString;
-    print("sendImgString $sendImgString");
-  } else {
-    print("no Image");
-  }
-  return result;
 }
 
 List formatChatMsg(List<ChatRoomMsg> messageData) {

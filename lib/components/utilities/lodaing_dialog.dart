@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+
+import 'style/style_config.dart';
 
 class LoadingDialog {
   static final LoadingDialog _singleton = LoadingDialog._internal();
@@ -20,6 +22,9 @@ class LoadingDialog {
     print("Loading畫面初始化, 畫面需要使用時 啟動：”LoadingDialog().show()”、關閉：”LoadingDialog().close()”");
     _context = context;
     _overlay = Overlay.of(_context);
+  }
+
+  void show({String loadingMsg = "Loading..."}) {
     _overlayEntry = OverlayEntry(
       builder: (context) => Material(
         color: Colors.transparent,
@@ -36,10 +41,10 @@ class LoadingDialog {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Loading(),
+                  LoadingAnimationWidget.inkDrop(color: AppColors.orangeColor, size: 35),
                   SizedBox(height: ScreenSize.fitPxWidth(16)),
-                  const Text(
-                    "Loading...",
+                  Text(
+                    loadingMsg,
                     style: TextStyle(color: Colors.white),
                   ),
                 ],
@@ -49,9 +54,6 @@ class LoadingDialog {
         ),
       ),
     );
-  }
-
-  void show() {
     _overlay.insert(_overlayEntry);
   }
 

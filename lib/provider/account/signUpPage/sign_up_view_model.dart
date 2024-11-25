@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../components/utilities/lodaing_dialog.dart';
+import '../../../models/user_model.dart';
 import '../../../services/user_service.dart';
 
 class SignUpViewModel {
@@ -12,23 +14,26 @@ class SignUpViewModel {
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
 
+  String signUpedUserUID = "";
+
   String emailErr = "";
   String nameErr = "";
-
   String verifyErr = "";
 
-  String pwdleastSixErr = "";
-  String pwdNeedEnglishErr = "";
-  String pwdNeedNumErr = "";
+  bool pwdleastSix = false;
+  bool pwdNeedEnglish = false;
+  bool pwdNeedNum = false;
 
   /// 送驗證碼
   Future<bool> sendCaptchaMail() async {
     String result = "";
+    LoadingDialog().show(loadingMsg: "驗證碼寄送至信箱中...");
     _resetAllErrMsg();
 
     if (_checkEmailFormat()) {
       result = await UserService().sendCaptchaMail(email: accountController.text);
     }
+    LoadingDialog().close();
 
     if (result == "success") {
       return true;
@@ -45,6 +50,7 @@ class SignUpViewModel {
   Future<bool> signUp() async {
     _resetAllErrMsg();
     String result = "";
+    LoadingDialog().show(loadingMsg: "註冊中...");
     if (signUpSendBeforeCheck()) {
       result = await UserService().signUp(
         captchaCode: verifyController.text,
@@ -55,39 +61,56 @@ class SignUpViewModel {
     }
 
     if (result == "success") {
+      ProfileData requestUserData = await UserService().login(accountController.text, passwordController.text);
+      signUpedUserUID = requestUserData.uid;
+      LoadingDialog().close();
       return true;
     } else if (result == "captchaCodeErr") {
       verifyErr = "驗證碼輸入錯誤";
+      LoadingDialog().close();
       return false;
     } else {
+      LoadingDialog().close();
       return false;
     }
   }
 
   bool signUpSendBeforeCheck() {
     bool isOK = true;
+    pwdCheck();
     if (verifyController.text == "") {
       verifyErr = "驗證碼不得為空";
       isOK = false;
+      print("object");
     }
-    if (passwordController.text.length < 6) {
-      pwdleastSixErr = "密碼未達６碼";
+
+    if (!pwdleastSix || !pwdNeedEnglish || !pwdNeedNum) {
       isOK = false;
+      print("object123 pwdleastSix ${pwdleastSix} pwdNeedEnglish ${pwdNeedEnglish} pwdNeedNum ${pwdNeedNum}");
     }
-    if (!RegExp(r'[a-zA-Z]').hasMatch(passwordController.text)) {
-      pwdNeedEnglishErr = "密碼必須含有任一英文字母";
-      isOK = false;
-    }
-    if (!RegExp(r'[0-9]').hasMatch(passwordController.text)) {
-      pwdNeedNumErr = "密碼必須含有任一數字";
-      isOK = false;
-    }
+
     if (nameController.text == "") {
       nameErr = "名稱不得為空";
       isOK = false;
+      print("object1234");
     }
 
     return isOK;
+  }
+
+  void pwdCheck() {
+    pwdleastSix = false;
+    pwdNeedEnglish = false;
+    pwdNeedNum = false;
+    if (passwordController.text.length >= 6) {
+      pwdleastSix = true;
+    }
+    if (RegExp(r'[a-zA-Z]').hasMatch(passwordController.text)) {
+      pwdNeedEnglish = true;
+    }
+    if (RegExp(r'[0-9]').hasMatch(passwordController.text)) {
+      pwdNeedNum = true;
+    }
   }
 
   bool _checkEmailFormat() {
@@ -114,9 +137,9 @@ class SignUpViewModel {
   void _resetAllErrMsg() {
     emailErr = "";
     nameErr = "";
-    pwdleastSixErr = "";
-    pwdNeedEnglishErr = "";
-    pwdNeedNumErr = "";
+    pwdleastSix = false;
+    pwdNeedEnglish = false;
+    pwdNeedNum = false;
     verifyErr = "";
   }
 }

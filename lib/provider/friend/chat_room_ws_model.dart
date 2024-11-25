@@ -1,7 +1,9 @@
 import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/home/firendsPage/chat_room.dart';
 import 'package:social_mediam_match/global.dart';
+import 'package:social_mediam_match/provider/friend/chat_ws_model.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../../models/friend_model.dart';
@@ -83,8 +85,9 @@ class ChatRoomWSModel {
 
           ref.read(roomMessageProvider.notifier).update((state) => chatRoomModel);
 
-          _chatroomListChannel.sink
-              .add('{"method" : "sendMessage" , "ip" : "$ip:$port"  , "members" : ${chatRoomModel.members}}');
+          List<String> userIds = chatRoomModel.members.map((e) => e.replaceAll("\"", "")).toList();
+
+          ChatWSModel().sendMsg(userIds);
           render();
         default:
           break;

@@ -74,6 +74,7 @@ class UserProfileEditPage extends BaseBottomSheet {
             rightWidget: MainBtn(
               onPress: () async {
                 ProfileData updateData = ref.read(loginUserData);
+
                 updateData = updateData.copyWith(
                   data: ProfileData(
                     uid: updateData.uid,
@@ -93,12 +94,13 @@ class UserProfileEditPage extends BaseBottomSheet {
                 UpdateUser sqlUpdateData = UpdateUser.update(
                   uid: updateData.uid,
                   name: updateData.name,
+                  image: editImg,
                   job: updateData.job,
                   introduction: updateData.introduction,
                   mainSkills: updateData.mainSkills,
                   wantSkills: updateData.wantSkills,
                 );
-                await UserService().sqlUpdateUserData(updateData.uid, sqlUpdateData);
+                await UserService().updateUserData(updateData.uid, sqlUpdateData);
 
                 ref.read(loginUserData.notifier).update((state) => updateData);
                 render();

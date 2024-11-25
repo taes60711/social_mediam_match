@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../../components/home/firendsPage/firends_page.dart';
@@ -42,6 +43,7 @@ class ChatWSModel {
   }
 
   void closeStream() {
+    _broadcastStream = null;
     _friendListChannel.sink.close();
   }
 
@@ -51,21 +53,37 @@ class ChatWSModel {
     }
 
     _friendListChannel.stream.listen((event) async {
-      print(event);
+      print("_friendListChannel $event");
+
       String searchUrl = jsonDecode((event))['apiUrl'];
-      List<FriendListModel> tempfriendList = await FriendService().getFriendList(searchUrl);
-      String initDate = "1997-01-01T00:00:00.000+00:00";
 
-      tempfriendList.sort((a, b) => DateTime.parse(a.sentAt ?? initDate).compareTo(DateTime.parse(b.sentAt ?? initDate)));
-      tempfriendList = tempfriendList.map((e) {
-        return friendListFormatDate(e);
-      }).toList();
+      ///監聽會有added 為被加的使用者資訊
+      String? realApiUrl = searchUrl.contains(ref.watch(loginUserData).uid) ? searchUrl : null;
+      if (realApiUrl != null) {
+        List<FriendListModel> tempfriendList = await FriendService().getFriendList(searchUrl);
+        String initDate = "1997-01-01T00:00:00.000+00:00";
 
-      ref.read(frinedListProvider.notifier).update((state) => tempfriendList);
-      render();
+        tempfriendList.sort((a, b) => DateTime.parse(a.sentAt ?? initDate).compareTo(DateTime.parse(b.sentAt ?? initDate)));
+        tempfriendList = tempfriendList.map((e) {
+          return friendListFormatDate(e);
+        }).toList();
+
+        ref.read(frinedListProvider.notifier).update((state) => tempfriendList);
+        render();
+      }
     });
 
     return _broadcastStream = _friendListChannel.stream.asBroadcastStream();
+  }
+
+  void sendMsg(List<String> usersList) {
+    Map<String, dynamic> map = {
+      "method": "sendMessage",
+      "ip": "$ip:$port",
+      "members": usersList,
+    };
+
+    _friendListChannel.sink.add(jsonEncode(map));
   }
 
   void addFriend(List<String> usersList) {

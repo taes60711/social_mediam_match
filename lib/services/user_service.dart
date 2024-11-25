@@ -138,7 +138,7 @@ class UserService extends ApiClient {
   ///MARK: ログインのタイム更新する
   ///Param,
   ///userUID: ログインしたユーザUID
-  Future<void> sqlUpdateUserLoginLastTime(String userUID) async {
+  Future<void> updateUserLoginLastTime(String userUID) async {
     String lastLoginTime = DateTime.now().toUtc().toIso8601String();
     Map<String, dynamic> body = {
       'uid': userUID,
@@ -154,7 +154,7 @@ class UserService extends ApiClient {
   ///MARK: スマホのToken更新する
   ///Param,
   ///userUID: ログインしたユーザUID, token : ユーザスマホのToken
-  Future<void> sqlUpdateUserToken(String userUID, String token) async {
+  Future<void> updateUserToken(String userUID, String token) async {
     Map<String, dynamic> body = {
       'uid': userUID,
       "token": token,
@@ -190,7 +190,7 @@ class UserService extends ApiClient {
   ///MARK: データを更新する
   ///Param,
   ///uid：ログインしたユーザUID,　updateData：ユーザの個人情報
-  Future<bool> sqlUpdateUserData(String uid, UpdateUser updateData) async {
+  Future<bool> updateUserData(String uid, UpdateUser updateData) async {
     Map<String, dynamic> body = updateData.toMap();
 
     String responseData = await apiPush('/update/$uid', body: body);

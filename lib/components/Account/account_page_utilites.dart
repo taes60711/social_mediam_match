@@ -19,6 +19,42 @@ class AccountPageUtilites {
     );
   }
 
+  Widget textCheckBuild({required bool condition, required text}) {
+    return Row(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10), vertical: ScreenSize.fitPxWidth(2)),
+          decoration: BoxDecoration(
+            color: condition ? AppColors.purpleColor : AppColors.greyColor57,
+            borderRadius: BorderRadius.circular(
+              ScreenSize.fitPxWidth(15),
+            ),
+          ),
+          child: Row(
+            children: [
+              condition
+                  ? Icon(
+                      Icons.check,
+                      color: AppColors.greenColor,
+                      size: ScreenSize.fontSize14,
+                    )
+                  : Icon(
+                      Icons.close,
+                      color: AppColors.redColor,
+                      size: ScreenSize.fontSize14,
+                    ),
+              SizedBox(width: ScreenSize.fitPxWidth(2)),
+              Text(
+                text,
+                style: TextStyle(color: AppColors.whiteColor),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget btnContainer({required Function onPress, required String btnText, String? imgIcon, Color? btnBgColor}) {
     return MainBtn(
       onPress: () async {

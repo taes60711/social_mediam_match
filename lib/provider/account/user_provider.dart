@@ -39,7 +39,7 @@ class UserProvider extends ChangeNotifier {
       //     userData = await UserService().requestGetUserData(userUID);
       //     if (userData.uid != "-1") {
       //       // 最後ログインのタイム更新する
-      //       await UserService().sqlUpdateUserLoginLastTime(userUID);
+      //       await UserService().updateUserLoginLastTime(userUID);
       //       // 友達リスト（WS）繋がる
       //       context.read<FriendProvider>().friendListConnect(userUID);
 
@@ -49,7 +49,7 @@ class UserProvider extends ChangeNotifier {
       //         // 取得使用者TOKEN > 通知系統在上架前,先暫時只給安卓使用
       //         final fcmToken = await FirebaseMessaging.instance.getToken();
       //         print("fcmToken $fcmToken");
-      //         await UserService().sqlUpdateUserToken(userUID, fcmToken!);
+      //         await UserService().updateUserToken(userUID, fcmToken!);
       //       }
       //     }
 

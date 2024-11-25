@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/global/lodaing_dialog.dart';
+import 'package:social_mediam_match/components/utilities/lodaing_dialog.dart';
 
 import 'package:social_mediam_match/global/user_login_status_controller.dart';
 import 'package:social_mediam_match/global/shared_preference.dart';

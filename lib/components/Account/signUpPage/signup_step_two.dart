@@ -5,12 +5,13 @@ import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.da
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
+
 import '../../utilities/inputField/label_input.dart';
 import '../../utilities/style/screen_size.dart';
 import '../account_main_page.dart';
 import '../account_page_utilites.dart';
 
-import 'signup_step_third.dart';
+import 'signup_step_last.dart';
 
 class SignUpStepTwoPage extends BaseEndDrawer {
   @override
@@ -35,18 +36,18 @@ class SignUpStepTwoPage extends BaseEndDrawer {
           padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
           child: Column(
             children: [
-              verifyBuild(),
+              idBuild(),
               SizedBox(height: ScreenSize.fitPxWidth(16)),
               pwdBuild(),
               SizedBox(height: ScreenSize.fitPxWidth(16)),
-              idBuild(),
+              verifyBuild(),
               SizedBox(height: ScreenSize.fitPxWidth(25)),
               AccountPageUtilites().btnContainer(
                 onPress: () async {
                   if (await ref.read(viewModelProvider.notifier).state.signUp()) {
-                    ref.read(viewModelProvider.notifier).state.resetAllData();
-                    SignUpStepThirdPage().show(context);
+                    SignUpStepLastPage().show(context);
                   }
+
                   render();
                 },
                 btnText: "下一步",
@@ -67,14 +68,36 @@ class SignUpStepTwoPage extends BaseEndDrawer {
   }
 
   Widget pwdBuild() {
-    return LabelInput(
-      type: InputType.pwd,
-      controller: ref.read(viewModelProvider.notifier).state.passwordController,
-      label: "密碼",
-      errMsg: [
-        ref.read(viewModelProvider.notifier).state.pwdleastSixErr,
-        ref.read(viewModelProvider.notifier).state.pwdNeedNumErr,
-        ref.read(viewModelProvider.notifier).state.pwdNeedEnglishErr
+    return Column(
+      children: [
+        LabelInput(
+          controller: ref.read(viewModelProvider.notifier).state.passwordController,
+          label: "密碼",
+          type: InputType.pwd,
+          onChanged: (value) {
+            ref.read(viewModelProvider.notifier).state.pwdCheck();
+            render();
+          },
+        ),
+        SizedBox(height: ScreenSize.fitPxWidth(8)),
+        Row(
+          children: [
+            AccountPageUtilites().textCheckBuild(
+              condition: ref.read(viewModelProvider.notifier).state.pwdleastSix,
+              text: "六碼以上",
+            ),
+            SizedBox(width: ScreenSize.fitPxWidth(5)),
+            AccountPageUtilites().textCheckBuild(
+              condition: ref.read(viewModelProvider.notifier).state.pwdNeedEnglish,
+              text: "含有英文",
+            ),
+            SizedBox(width: ScreenSize.fitPxWidth(5)),
+            AccountPageUtilites().textCheckBuild(
+              condition: ref.read(viewModelProvider.notifier).state.pwdNeedNum,
+              text: "含有數字",
+            ),
+          ],
+        ),
       ],
     );
   }

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 import 'style/screen_size.dart';
@@ -42,12 +41,10 @@ class UserIcon extends StatelessWidget {
                 color: AppColors.greyColor130,
               ),
               child: Center(
-                child: Icon(
-                  FontAwesomeIcons.userLarge,
-                  color: AppColors.whiteColor.withOpacity(.8),
-                  size: iconSize - ScreenSize.fitPxWidth(40) * .8,
-                ),
-              ),
+                  child: Text(
+                "None",
+                style: TextStyle(color: AppColors.whiteColor),
+              )),
             ),
     );
   }
