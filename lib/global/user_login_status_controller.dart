@@ -5,6 +5,7 @@ import '../models/user_model.dart';
 import '../provider/account/LoginPage/login_view_model.dart';
 import '../provider/account/user_provider.dart';
 import '../provider/friend/chat_ws_model.dart';
+import '../services/notification_service.dart';
 import '../services/user_service.dart';
 
 final loginedUserUID = StateProvider<String>((ref) => "");
@@ -37,17 +38,17 @@ class UserLoginStatusController {
   }
 
   Future<void> loginedCheck() async {
+    /// ＳＤからユーザUID取得
     String userUID = SharedPreference().loginCheckGetuserUID();
     print("loginCheck LoginUserUID : $userUID");
     ref.read(loginedUserUID.notifier).update((state) => userUID);
+
     if (ref.watch(loginedUserUID) != "") {
       /// ユーザデータ取得
-      ProfileData requestUserData = await UserService().requestGetUserData(userUID);
+      ProfileData requestUserData = await UserService().requestUserDataByUID(userUID);
 
-      ref.read(loginUserData.notifier).update((state) => requestUserData);
-
-      /// チャットルームリストWS初始化
-      ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
+      /// ログイン処理
+      await commonLoginFunc(requestUserData: requestUserData);
     }
   }
 
@@ -55,16 +56,17 @@ class UserLoginStatusController {
     bool loginSuccess = false;
 
     /// ユーザデータ取得
-    ProfileData requestUserData = await UserService().login(loginInputData.account, loginInputData.pwd);
+    ProfileData requestUserData = await UserService().requestUserDataByEmail(loginInputData.account, loginInputData.pwd);
 
     print("LoginUserUID: ${requestUserData.uid}");
     if (requestUserData.uid != "-1") {
-      ref.read(loginUserData.notifier).update((state) => requestUserData);
+      /// ＳＤにユーザUID保存
       await sharedPreference.loginSetUserUID(requestUserData.uid);
       ref.read(loginedUserUID.notifier).update((state) => requestUserData.uid);
 
-      /// チャットルームリストWS初期化
-      ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
+      /// ログイン処理
+      await commonLoginFunc(requestUserData: requestUserData);
+
       loginSuccess = true;
     }
 
@@ -78,8 +80,21 @@ class UserLoginStatusController {
     ref.read(loginedUserUID.notifier).update((state) => "");
     ref.read(loginUserData.notifier).update((state) => ProfileData());
 
-    /// チャットルームリストWS スローズ
+    /// チャットルームリストWS クローズ
     ChatWSModel().closeStream();
     render();
+  }
+
+  Future<void> commonLoginFunc({required ProfileData requestUserData}) async {
+    ref.read(loginUserData.notifier).update((state) => requestUserData);
+
+    /// 最後ログインのタイム更新する
+    await UserService().updateUserLoginLastTime(requestUserData.uid);
+
+    /// 読んでいない通知数取得する
+    await NotificationService().requestNoReadNotificationAmount(userUId: requestUserData.uid);
+
+    /// チャットルームリストWS初始化
+    ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
   }
 }

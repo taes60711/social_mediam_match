@@ -23,11 +23,12 @@ List<String> backendType = [
 
 ///dataType
 enum SkillType {
-  frontend("前端"),
-  backend("後端"),
-  iot("韌體"),
-  other("語言");
+  frontend("前端", 0),
+  backend("後端", 1),
+  iot("韌體", 2),
+  other("語言", 3);
 
   final String value;
-  const SkillType(this.value);
+  final int type;
+  const SkillType(this.value, this.type);
 }

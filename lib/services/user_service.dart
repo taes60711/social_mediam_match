@@ -94,7 +94,7 @@ class UserService extends ApiClient {
   ///MARK: ユーザのデータ取得
   ///Param,
   ///loginedUserUID: FirebaseログインしたユーザUID
-  Future<ProfileData> requestGetUserData(String loginedUserUID) async {
+  Future<ProfileData> requestUserDataByUID(String loginedUserUID) async {
     ProfileData userdata = ProfileData(uid: "-1");
     try {
       String responseData = await apiGet('/$loginedUserUID');
@@ -112,7 +112,7 @@ class UserService extends ApiClient {
     return userdata;
   }
 
-  Future<ProfileData> login(String email, String password) async {
+  Future<ProfileData> requestUserDataByEmail(String email, String password) async {
     ProfileData userdata = ProfileData(uid: "-1");
     var sha256Password = sha256.convert(utf8.encode(password));
 

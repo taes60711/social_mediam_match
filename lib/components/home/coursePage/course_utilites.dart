@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_manager/course_manager_bottom_sheet.dart';
+import 'package:social_mediam_match/enum/skill_type.dart';
 import '../../../models/course_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/course/course_provider.dart';
@@ -119,7 +120,7 @@ class CourseUtilites {
                     ),
                     SizedBox(width: ScreenSize.fitPxWidth(2)),
                     Text(
-                      "前端",
+                      formattedTag(data.type),
                       style: TextStyle(color: AppColors.whiteColor.withOpacity(.6), fontSize: ScreenSize.fontSize12),
                     ),
                   ],
@@ -230,5 +231,9 @@ class CourseUtilites {
         ),
       ),
     );
+  }
+
+  String formattedTag(int type) {
+    return SkillType.values.firstWhere((element) => element.type == type).value;
   }
 }

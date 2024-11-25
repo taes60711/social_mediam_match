@@ -12,12 +12,14 @@ class SignUpViewModel {
   TextEditingController accountController = TextEditingController();
   TextEditingController verifyController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
 
   String signUpedUserUID = "";
 
   String emailErr = "";
   String nameErr = "";
+  String confrimPwdErr = "";
   String verifyErr = "";
 
   bool pwdleastSix = false;
@@ -61,7 +63,7 @@ class SignUpViewModel {
     }
 
     if (result == "success") {
-      ProfileData requestUserData = await UserService().login(accountController.text, passwordController.text);
+      ProfileData requestUserData = await UserService().requestUserDataByEmail(accountController.text, passwordController.text);
       signUpedUserUID = requestUserData.uid;
       LoadingDialog().close();
       return true;
@@ -81,18 +83,20 @@ class SignUpViewModel {
     if (verifyController.text == "") {
       verifyErr = "驗證碼不得為空";
       isOK = false;
-      print("object");
+    }
+
+    if (passwordController.text != confirmPasswordController.text) {
+      confrimPwdErr = "輸入的密碼不正確";
+      isOK = false;
     }
 
     if (!pwdleastSix || !pwdNeedEnglish || !pwdNeedNum) {
       isOK = false;
-      print("object123 pwdleastSix ${pwdleastSix} pwdNeedEnglish ${pwdNeedEnglish} pwdNeedNum ${pwdNeedNum}");
     }
 
     if (nameController.text == "") {
       nameErr = "名稱不得為空";
       isOK = false;
-      print("object1234");
     }
 
     return isOK;
@@ -131,6 +135,7 @@ class SignUpViewModel {
     verifyController.text = "";
     passwordController.text = "";
     nameController.text = "";
+    confirmPasswordController.text = "";
     _resetAllErrMsg();
   }
 
@@ -140,6 +145,7 @@ class SignUpViewModel {
     pwdleastSix = false;
     pwdNeedEnglish = false;
     pwdNeedNum = false;
+    confrimPwdErr = "";
     verifyErr = "";
   }
 }

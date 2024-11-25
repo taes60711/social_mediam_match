@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
+import 'package:social_mediam_match/components/utilities/main_button.dart';
 
 import '../utilities/inputField/label_input.dart';
 import '../utilities/style/screen_size.dart';
@@ -42,9 +43,23 @@ class PwdForgotPage extends BaseEndDrawer {
   }
 
   Widget mailBuild() {
-    return LabelInput(
-      controller: TextEditingController(),
-      label: "メール",
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          child: LabelInput(
+            controller: TextEditingController(),
+            label: "Email",
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(16), bottom: ScreenSize.fitPxWidth(6)),
+          child: MainBtn(
+            onPress: () {},
+            title: "寄送驗證碼",
+          ),
+        )
+      ],
     );
   }
 
@@ -58,7 +73,7 @@ class PwdForgotPage extends BaseEndDrawer {
   Widget pwdBuild() {
     return LabelInput(
       controller: TextEditingController(),
-      label: "パスワード",
+      label: "密碼",
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_utilites.dart';
 
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
@@ -59,7 +60,7 @@ class CourseDetailPage extends BaseEndDrawer {
                       ),
                       SizedBox(width: ScreenSize.fitPxWidth(5)),
                       Text(
-                        "類別 ${choiceData.type}",
+                        "類別 : ${CourseUtilites().formattedTag(choiceData.type)}",
                         style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.greyColor176),
                       ),
                       const Expanded(child: SizedBox(width: 1)),
@@ -175,7 +176,7 @@ class CourseDetailPage extends BaseEndDrawer {
                   ///勉強前必要な知識
                   Container(
                     width: ScreenSize.width,
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                     decoration: BoxDecoration(
                       color: AppColors.greyColor176.withAlpha(50),
                       borderRadius: BorderRadius.circular(3),

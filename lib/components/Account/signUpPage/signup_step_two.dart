@@ -40,6 +40,8 @@ class SignUpStepTwoPage extends BaseEndDrawer {
               SizedBox(height: ScreenSize.fitPxWidth(16)),
               pwdBuild(),
               SizedBox(height: ScreenSize.fitPxWidth(16)),
+              confirmPwdBuild(),
+              SizedBox(height: ScreenSize.fitPxWidth(16)),
               verifyBuild(),
               SizedBox(height: ScreenSize.fitPxWidth(25)),
               AccountPageUtilites().btnContainer(
@@ -99,6 +101,15 @@ class SignUpStepTwoPage extends BaseEndDrawer {
           ],
         ),
       ],
+    );
+  }
+
+  Widget confirmPwdBuild() {
+    return LabelInput(
+      controller: ref.read(viewModelProvider.notifier).state.confirmPasswordController,
+      label: "確認密碼",
+      type: InputType.pwd,
+      errMsg: [ref.read(viewModelProvider.notifier).state.confrimPwdErr],
     );
   }
 

@@ -41,17 +41,18 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 height: ScreenSize.fitPxWidth(40),
                 color: Colors.transparent,
                 child: MainBtn(
-                    onPress: () {
-                      ref.read(pageControllerProvider).animateToPage(
-                            1,
-                            duration: const Duration(milliseconds: 150),
-                            curve: Curves.easeIn,
-                          );
-                    },
-                    child: Icon(
-                      FontAwesomeIcons.arrowRight,
-                      color: AppColors.whiteColor,
-                    )),
+                  onPress: () {
+                    ref.read(pageControllerProvider).animateToPage(
+                          1,
+                          duration: const Duration(milliseconds: 150),
+                          curve: Curves.easeIn,
+                        );
+                  },
+                  child: Icon(
+                    FontAwesomeIcons.arrowRight,
+                    color: AppColors.whiteColor,
+                  ),
+                ),
               ),
             ),
             SizedBox(height: ScreenSize.fitPxWidth(20)),

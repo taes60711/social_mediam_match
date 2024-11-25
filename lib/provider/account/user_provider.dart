@@ -60,22 +60,9 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  // void signUpStatusChange(bool nowSignUpStatus) {
-  //   isSignUp = nowSignUpStatus;
-  //   notifyListeners();
-  // }
-
-  // ///メソッド：ログアウト
-  // Future<void> signOut(dynamic chatListChannel) async {
-  //   await FirebaseSerivce().firebaseSignOut();
-  //   chatListChannel.closefriendList();
-  //   userData = ProfileData();
-  //   notifyListeners();
-  // }
-
   ///メソッド：ユーザ資料更新する
   Future<void> updateProfile(String uid, UpdateUser updateData) async {
-    userData = await UserService().requestGetUserData(uid);
+    userData = await UserService().requestUserDataByUID(uid);
     notifyListeners();
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/enum/skill_type.dart';
 import 'package:social_mediam_match/models/course_model.dart';
 
 import '../../components/utilities/apiListView/api_list_controller.dart';
@@ -41,6 +42,10 @@ final choicedCourseProvider = StateProvider<CourseModel>((ref) {
 
 final courseChoiceLevel = StateProvider<String>((ref) {
   return "3";
+});
+
+final courseChoiceType = StateProvider<String>((ref) {
+  return SkillType.frontend.value;
 });
 
 final courseEditSkillList = StateProvider<List<RequestSkillListData>>((ref) {

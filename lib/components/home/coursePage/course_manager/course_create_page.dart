@@ -20,6 +20,7 @@ import '../../../utilities/style/style_config.dart';
 import 'course_edit_page/course_level_choice_label.dart';
 import 'course_edit_page/course_rich_text_create.dart';
 import 'course_edit_page/course_rich_text_edit.dart';
+import 'course_edit_page/course_type_choiced_label.dart';
 
 class CourseCreatePage extends BaseFadeScalePage {
   TextEditingController titleController = TextEditingController();
@@ -67,7 +68,7 @@ class CourseCreatePage extends BaseFadeScalePage {
                     prStory: ref.read(courseDetailContent),
                     chapterList: ref.read(courseEditChapterList),
                     courseLearningSkills: learningSkillList,
-                    type: "1",
+                    type: ref.read(courseChoiceType.notifier).state,
                     isPublic: isPublic,
                   );
                   CourseModel createdCourse = CourseModel(
@@ -80,7 +81,7 @@ class CourseCreatePage extends BaseFadeScalePage {
                     prStory: ref.read(courseDetailContent),
                     chapterList: ref.read(courseEditChapterList),
                     courseLearningSkills: learningSkillList,
-                    type: 1,
+                    type: int.parse(ref.read(courseChoiceType.notifier).state),
                     isPublic: isPublic,
                     signUpStatus: "none",
                     courseCreateduserInfo: userData,
@@ -111,6 +112,10 @@ class CourseCreatePage extends BaseFadeScalePage {
 
                     ///レベル設定
                     const CourseLevelChoicedLabel(),
+                    SizedBox(height: ScreenSize.fitPxHeight(15)),
+
+                    /// タグ設定
+                    const CourseTypeChoicedLabel(),
                     SizedBox(height: ScreenSize.fitPxHeight(15)),
                     skillChoiceBuild(),
                     SizedBox(height: ScreenSize.fitPxHeight(15)),

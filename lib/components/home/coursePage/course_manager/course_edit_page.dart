@@ -21,6 +21,7 @@ import '../../../utilities/style/style_config.dart';
 import 'course_edit_page/course_level_choice_label.dart';
 import 'course_edit_page/course_rich_text_create.dart';
 import 'course_edit_page/course_rich_text_edit.dart';
+import 'course_edit_page/course_type_choiced_label.dart';
 
 class CourseEditPage extends BaseFadeScalePage {
   StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>> courseListController;
@@ -54,6 +55,8 @@ class CourseEditPage extends BaseFadeScalePage {
     ref.read(courseEditSkillList.notifier).update((state) => List.from(formatListData));
     ref.read(courseEditChapterList.notifier).update((state) => List.from(courseData.chapterList));
     ref.read(courseChoiceLevel.notifier).update((state) => courseData.needLevel.toString());
+
+    ref.read(courseChoiceType.notifier).update((state) => courseData.type.toString());
 
     render();
   }
@@ -98,7 +101,7 @@ class CourseEditPage extends BaseFadeScalePage {
                     prStory: ref.read(courseDetailContent),
                     chapterList: ref.read(courseEditChapterList),
                     courseLearningSkills: learningSkillList,
-                    type: ref.read(choicedCourseProvider).type,
+                    type: int.parse(ref.read(courseChoiceType.notifier).state),
                     isPublic: isPublic,
                     signUpStatus: ref.read(choicedCourseProvider).signUpStatus,
                     courseCreateduserInfo: ref.read(choicedCourseProvider).courseCreateduserInfo,
@@ -146,6 +149,10 @@ class CourseEditPage extends BaseFadeScalePage {
 
                     ///レベル設定
                     const CourseLevelChoicedLabel(),
+                    SizedBox(height: ScreenSize.fitPxHeight(15)),
+
+                    /// タグ設定
+                    const CourseTypeChoicedLabel(),
                     SizedBox(height: ScreenSize.fitPxHeight(15)),
                     skillChoiceBuild(),
                     SizedBox(height: ScreenSize.fitPxHeight(15)),
