@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../components/Account/account_main_page.dart';
+import '../../../components/account/account_main_page.dart';
 import '../../../components/utilities/lodaing_dialog.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/components/Account/login_page.dart';
-import 'package:social_mediam_match/components/Account/welcome_page.dart';
+import 'package:social_mediam_match/components/account/login_page.dart';
+import 'package:social_mediam_match/components/account/welcome_page.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import '../../provider/account/signUpPage/sign_up_view_model.dart';
 import 'signUpPage/signup_page.dart';

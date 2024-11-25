@@ -91,9 +91,7 @@ class UserService extends ApiClient {
     return users;
   }
 
-  ///MARK: ユーザのデータ取得
-  ///Param,
-  ///loginedUserUID: FirebaseログインしたユーザUID
+  ///MARK: ユーザのデータ取得 ByUID
   Future<ProfileData> requestUserDataByUID(String loginedUserUID) async {
     ProfileData userdata = ProfileData(uid: "-1");
     try {
@@ -112,6 +110,7 @@ class UserService extends ApiClient {
     return userdata;
   }
 
+  ///MARK: ユーザのデータ取得 By メール
   Future<ProfileData> requestUserDataByEmail(String email, String password) async {
     ProfileData userdata = ProfileData(uid: "-1");
     var sha256Password = sha256.convert(utf8.encode(password));
@@ -187,6 +186,22 @@ class UserService extends ApiClient {
     return responseData;
   }
 
+  ///　パスワード変更
+  Future<String> updateUserPwdByMail({required String captchaCode, required String email, required String newPwd}) async {
+    var sha256Password = sha256.convert(utf8.encode(newPwd));
+    print("Digest as hex password: $sha256Password");
+
+    Map<String, dynamic> body = {
+      "email": email,
+      "password": "$sha256Password",
+    };
+    String responseData = await apiPush('/updateUserPwdByEmail/$captchaCode', body: body);
+
+    print("updateUserPwdByEmail : $responseData");
+
+    return responseData;
+  }
+
   ///MARK: データを更新する
   ///Param,
   ///uid：ログインしたユーザUID,　updateData：ユーザの個人情報
@@ -203,10 +218,10 @@ class UserService extends ApiClient {
 
   /// emailType：
   /// "signUp", "resetPwd", "verify"
-  Future<String> sendCaptchaMail({required String email}) async {
+  Future<String> sendCaptchaMail({required String email, required String type}) async {
     Map<String, dynamic> params = {
       "email": email,
-      "emailType": "signUp",
+      "emailType": type,
     };
 
     String responseData = await apiGet('/sendCaptchaMail', paramters: params);

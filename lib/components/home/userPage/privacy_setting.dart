@@ -192,6 +192,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/userPage/about_page.dart';
 import 'package:social_mediam_match/components/home/userPage/my_notification_page.dart';
+import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
@@ -209,22 +210,11 @@ class PrivacySettingPage extends BaseEndDrawer {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
-          onTap: () {
+        BaseTopBar(
+          backFunc: () {
             closePage();
           },
-          child: Container(
-            width: ScreenSize.fitPxWidth(40),
-            height: ScreenSize.fitPxWidth(40),
-            color: Colors.transparent,
-            child: Center(
-              child: Icon(
-                Icons.arrow_back_ios,
-                size: ScreenSize.fontSize14,
-                color: AppColors.whiteColor,
-              ),
-            ),
-          ),
+          title: "一般",
         ),
         SizedBox(height: ScreenSize.fitPxHeight(15)),
         MainBtn(

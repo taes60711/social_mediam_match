@@ -15,7 +15,7 @@ import '../../models/skill_model.dart';
 import '../../provider/post/post_provider.dart';
 import '../../services/post_service.dart';
 
-import '../Account/account_main_page.dart';
+import '../account/account_main_page.dart';
 
 import '../utilities/style/theme_style.dart';
 import 'splash_screen.dart';

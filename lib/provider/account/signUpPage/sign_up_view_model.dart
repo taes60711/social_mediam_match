@@ -33,7 +33,10 @@ class SignUpViewModel {
     _resetAllErrMsg();
 
     if (_checkEmailFormat()) {
-      result = await UserService().sendCaptchaMail(email: accountController.text);
+      result = await UserService().sendCaptchaMail(
+        email: accountController.text,
+        type: "signUp",
+      );
     }
     LoadingDialog().close();
 

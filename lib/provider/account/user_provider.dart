@@ -1,13 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:social_mediam_match/models/user_model.dart';
-import '../../services/notification_service.dart';
-import '../../services/user_service.dart';
 
 /// ログイン中のユーザデータ
 final loginUserData = StateProvider<ProfileData>((ref) {
@@ -60,17 +56,17 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  ///メソッド：ユーザ資料更新する
-  Future<void> updateProfile(String uid, UpdateUser updateData) async {
-    userData = await UserService().requestUserDataByUID(uid);
-    notifyListeners();
-  }
+  // ///メソッド：ユーザ資料更新する
+  // Future<void> updateProfile(String uid, UpdateUser updateData) async {
+  //   userData = await UserService().requestUserDataByUID(uid);
+  //   notifyListeners();
+  // }
 
-  ///メソッド： 読んでいない通知数取得する
-  Future<void> getNotificationCount() async {
-    notReadNotificationCount = await NotificationService().requestNoReadNotificationAmount(userUId: userData.uid);
-    notifyListeners();
-  }
+  // ///メソッド： 読んでいない通知数取得する
+  // Future<void> getNotificationCount() async {
+  //   notReadNotificationCount = await NotificationService().requestNoReadNotificationAmount(userUId: userData.uid);
+  //   notifyListeners();
+  // }
 
   ///メソッド： 通知数更新する
   void updateNotificationCount({bool allRead = false}) {

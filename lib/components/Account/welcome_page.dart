@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/components/Account/account_main_page.dart';
+import 'package:social_mediam_match/components/account/account_main_page.dart';
 
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 
