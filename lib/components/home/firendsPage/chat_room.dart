@@ -9,6 +9,7 @@ import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
+import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 
 import 'package:social_mediam_match/models/user_model.dart';
@@ -20,6 +21,7 @@ import '../../../models/rich_text_format.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/friend/chat_room_ws_model.dart';
 
+import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import 'package:any_link_preview/any_link_preview.dart';
@@ -67,7 +69,7 @@ class ChatRoom extends BaseEndDrawer {
                       final scrollPosition = scrollNotification.metrics.pixels;
                       final max = scrollNotification.metrics.maxScrollExtent;
 
-                      if (chatRoomWSModel.roomAllPage > chatRoomWSModel.pageNum) {
+                      if (chatRoomWSModel.roomAllPage >= chatRoomWSModel.pageNum) {
                         if (scrollPosition >= max && !addData) {
                           addData = true;
                           render();
@@ -148,9 +150,14 @@ class ChatRoom extends BaseEndDrawer {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         data.needAppearImg
-            ? UserIcon(
-                iconSize: 30,
-                image: userData.image,
+            ? MainBtn(
+                onPress: () {
+                  UserProfileAllInfoBottomSheet(userData: userData).show(context);
+                },
+                child: UserIcon(
+                  iconSize: 30,
+                  image: userData.image,
+                ),
               )
             : Container(width: 30),
         Container(

@@ -46,6 +46,7 @@ class MainBtn extends StatefulWidget {
 
 class _MainBtnState extends State<MainBtn> {
   bool isPress = false;
+  bool canPress = true;
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +80,14 @@ class _MainBtnState extends State<MainBtn> {
 
     return GestureDetector(
       onTap: () async {
-        await _buttonPressHandle();
-        widget.onPress();
+        ///ボタン0.5秒まで押されないよう
+        if (canPress) {
+          canPress = false;
+          await _buttonPressHandle();
+          widget.onPress();
+          await Future.delayed(const Duration(milliseconds: 500));
+          canPress = true;
+        }
       },
       child: Container(
         padding: padding,

@@ -45,7 +45,7 @@ final courseChoiceLevel = StateProvider<String>((ref) {
 });
 
 final courseChoiceType = StateProvider<String>((ref) {
-  return SkillType.frontend.value;
+  return SkillType.frontend.type.toString();
 });
 
 final courseEditSkillList = StateProvider<List<RequestSkillListData>>((ref) {

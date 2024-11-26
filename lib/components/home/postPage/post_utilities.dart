@@ -261,15 +261,19 @@ class PostViewUtilities {
 
   ///アイコン＆文字
   Widget iconWithText({required IconData iconData, Color? iconColor, required String text, TextStyle? style}) {
-    return Row(
-      children: [
-        Icon(iconData, size: 14, color: iconColor),
-        const SizedBox(width: 5),
-        Text(
-          text,
-          style: style ?? const TextStyle(color: Colors.black87),
-        ),
-      ],
+    return Container(
+      color: Colors.transparent,
+      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(3), vertical: ScreenSize.fitPxWidth(3)),
+      child: Row(
+        children: [
+          Icon(iconData, size: 14, color: iconColor),
+          const SizedBox(width: 5),
+          Text(
+            text,
+            style: style ?? const TextStyle(color: Colors.black87),
+          ),
+        ],
+      ),
     );
   }
 }

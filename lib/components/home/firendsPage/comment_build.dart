@@ -98,8 +98,8 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
                         },
                       ),
                     ),
-                    MainBtn(
-                      onPress: () {
+                    GestureDetector(
+                      onTap: () {
                         sendMsg(widget.chatRoomWSModel, userId: userData.uid, message: commentController.text);
                       },
                       child: Container(

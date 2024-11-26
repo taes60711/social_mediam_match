@@ -8,6 +8,7 @@ import 'package:social_mediam_match/components/utilities/inputField/base_input.d
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
+import '../../../enum/date_format_utilities.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
@@ -105,7 +106,7 @@ class PostCommentPage extends BaseBottomSheet {
 
                                 ///コメント時間
                                 Text(
-                                  data.postTime,
+                                  DateFormatUtilities().noYYYYMMDDformat(data.postTime),
                                   style: TextStyle(color: AppColors.greyColor98, fontSize: ScreenSize.fontSize12),
                                 ),
                               ],
