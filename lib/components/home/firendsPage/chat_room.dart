@@ -37,7 +37,8 @@ class ChatRoom extends BaseEndDrawer {
 
   @override
   Future<void> initState(WidgetRef ref) async {
-    chatRoomWSModel.init(ref, () => render(), userId: roomData.createdBy, roomId: roomData.roomId);
+    ProfileData myUserData = ref.watch(loginUserData);
+    chatRoomWSModel.init(ref, () => render(), userId: myUserData.uid, roomId: roomData.roomId);
   }
 
   @override
@@ -79,6 +80,8 @@ class ChatRoom extends BaseEndDrawer {
                         addData = false;
                       }
                     }
+
+                    print(addData);
                     return false;
                   },
                   child: SingleChildScrollView(
