@@ -152,7 +152,7 @@ class ChatRoom extends BaseEndDrawer {
         data.needAppearImg
             ? MainBtn(
                 onPress: () {
-                  UserProfileAllInfoBottomSheet(userData: userData).show(context);
+                  UserProfileAllInfoBottomSheet(needToChatRoomBtn: false, userData: userData).show(context);
                 },
                 child: UserIcon(
                   iconSize: 30,

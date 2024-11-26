@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/utilities/bottomSheets/user_profile_bottom_sheet.dart';
+
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 
 import '../../../global.dart';
 import '../../../models/user_model.dart';
+import '../BottomSheets/user_profile_bottom_sheet.dart';
 import '../style/screen_size.dart';
 import '../style/style_config.dart';
 
@@ -44,7 +45,7 @@ class ChatRoomBar extends StatelessWidget {
         ),
         MainBtn(
           onPress: () {
-            UserProfileAllInfoBottomSheet(userData: userData).show(context);
+            UserProfileAllInfoBottomSheet(needToChatRoomBtn: false, userData: userData).show(context);
           },
           child: Row(
             children: [

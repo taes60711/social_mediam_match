@@ -11,8 +11,7 @@ import 'package:social_mediam_match/services/user_service.dart';
 import '../../../models/friend_model.dart';
 import '../../../provider/account/user_provider.dart';
 
-import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
-
+import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/inputField/base_input.dart';
 
 import '../../utilities/main_button.dart';

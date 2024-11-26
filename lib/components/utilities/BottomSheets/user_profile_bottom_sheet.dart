@@ -22,7 +22,8 @@ import '../user_icon.dart';
 /// AllInfo Ver
 class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
   final ProfileData userData;
-  UserProfileAllInfoBottomSheet({required this.userData});
+  bool needToChatRoomBtn;
+  UserProfileAllInfoBottomSheet({required this.userData, this.needToChatRoomBtn = true});
 
   @override
   Future<void> initState(WidgetRef ref) async {
@@ -88,18 +89,25 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                     fontSize: ScreenSize.fontSize12,
                   ),
                 ),
-                Text(
-                  userData.introduction ?? "",
-                  style: TextStyle(
-                    color: AppColors.whiteColor,
-                    fontSize: ScreenSize.fontSize12,
+                Visibility(
+                  visible: userData.introduction != "",
+                  child: Column(
+                    children: [
+                      Text(
+                        userData.introduction ?? "",
+                        style: TextStyle(
+                          color: AppColors.whiteColor,
+                          fontSize: ScreenSize.fontSize12,
+                        ),
+                      ),
+                      SizedBox(height: ScreenSize.fitPxHeight(15)),
+                    ],
                   ),
                 ),
-                SizedBox(height: ScreenSize.fitPxHeight(15)),
 
                 /// チャットルーム遷移/フレンド追加ボタン
                 Visibility(
-                  visible: ref.watch(loginUserData).uid != userData.uid,
+                  visible: needToChatRoomBtn && ref.watch(loginUserData).uid != userData.uid,
                   child: Center(
                     child: MainBtn(
                       onPress: () {

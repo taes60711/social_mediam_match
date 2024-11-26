@@ -162,7 +162,7 @@ class CourseDetailPage extends BaseEndDrawer {
                       Padding(
                         padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(3)),
                         child: Text(
-                          "難度 ${choiceData.needLevel}",
+                          "程度 ${choiceData.needLevel}",
                           style: TextStyle(
                             color: AppColors.greyColor130,
                             fontSize: ScreenSize.fontSize12,

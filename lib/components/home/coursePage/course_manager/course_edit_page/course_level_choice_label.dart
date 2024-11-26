@@ -23,7 +23,7 @@ class _CourseLevelChoicedLabelState extends ConsumerState<CourseLevelChoicedLabe
     return Row(
       children: [
         Text(
-          "難度",
+          "程度",
           style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
         ),
         SizedBox(width: ScreenSize.fitPxWidth(10)),

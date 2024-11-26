@@ -51,20 +51,13 @@ class MyFriendPage extends BaseEndDrawer {
                         onDismissed: (direction) {
                           print(direction);
                         },
-                        child: Row(
-                          children: [
-                            UserIcon(iconSize: ScreenSize.fitPxWidth(40), image: data.userData.image),
-                            SizedBox(width: ScreenSize.fitPxWidth(10)),
-                            Text(
-                              data.userData.name ?? "",
-                              style: TextStyle(
-                                fontSize: ScreenSize.fontSize14,
-                                color: AppColors.whiteColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
+                          child: Row(
+                            children: [
+                              UserIcon(iconSize: ScreenSize.fitPxWidth(40), image: data.userData.image),
+                              SizedBox(width: ScreenSize.fitPxWidth(10)),
+                              Text(
                                 data.userData.name ?? "",
                                 style: TextStyle(
                                   fontSize: ScreenSize.fontSize14,
@@ -72,8 +65,18 @@ class MyFriendPage extends BaseEndDrawer {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            )
-                          ],
+                              Expanded(
+                                child: Text(
+                                  data.userData.name ?? "",
+                                  style: TextStyle(
+                                    fontSize: ScreenSize.fontSize14,
+                                    color: AppColors.whiteColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     );

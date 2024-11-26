@@ -200,7 +200,7 @@ class CourseUtilites {
                 Padding(
                   padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(3)),
                   child: Text(
-                    "難度 ${data.needLevel}",
+                    "程度 ${data.needLevel}",
                     style: TextStyle(
                       color: AppColors.greyColor130,
                       fontSize: ScreenSize.fontSize12,
