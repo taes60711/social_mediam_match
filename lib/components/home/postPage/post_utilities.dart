@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
+import '../../../enum/date_format_utilities.dart';
 import '../../../models/post_model.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
@@ -221,12 +222,12 @@ class PostViewUtilities {
 
                       ///期日
                       Text(
-                        "${data.postTime}前",
+                        DateFormatUtilities().format(data.postTime),
                         style: TextStyle(fontSize: ScreenSize.fontSize10, color: AppColors.greyColor130),
                       ),
                     ],
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                 ],
               ),
             ),

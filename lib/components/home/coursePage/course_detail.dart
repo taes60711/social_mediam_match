@@ -7,6 +7,7 @@ import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.d
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 
+import '../../../enum/date_format_utilities.dart';
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
@@ -209,7 +210,7 @@ class CourseDetailPage extends BaseEndDrawer {
                               style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                             ),
                             Text(
-                              "最終更新日 : ${choiceData.postTime}",
+                              "最終更新日 : ${DateFormatUtilities().format(choiceData.postTime)}",
                               style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
                             ),
                           ],

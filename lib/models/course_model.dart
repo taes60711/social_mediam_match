@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
 class CourseChapterInfo {
@@ -64,9 +63,9 @@ class CourseModel {
   });
 
   factory CourseModel.toMap(dynamic json) {
-    DateTime dateUtc = DateTime.parse(json['createdTime']).toUtc();
-    DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
-    String formattedTime = DateFormat("yyyy/MM/dd").format(dateTime.toLocal());
+    // DateTime dateUtc = DateTime.parse(json['createdTime']).toUtc();
+    // DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
+    // String formattedTime = DateFormat("yyyy/MM/dd").format(dateTime.toLocal());
 
     List<String> courseLearningSkillList = (json['courseLearningkillList'] as List<dynamic>).map((e) {
       return e as String;
@@ -86,7 +85,7 @@ class CourseModel {
       prStory: json['prStory'] ?? "",
       chapterList: chapterList,
       courseLearningSkills: courseLearningSkillList,
-      postTime: formattedTime,
+      postTime: json['createdTime'] ?? "",
       type: json['type'],
       isPublic: json['isPublic'],
       signUpStatus: json['signUpStatus'],

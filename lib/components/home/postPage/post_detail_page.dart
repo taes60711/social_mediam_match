@@ -7,6 +7,7 @@ import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
+import '../../../enum/date_format_utilities.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
@@ -75,7 +76,7 @@ class PostDetailPage extends BaseEndDrawer {
                             style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                           ),
                           Text(
-                            choiceData.postTime,
+                            DateFormatUtilities().format(choiceData.postTime),
                             style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
                           ),
                         ],

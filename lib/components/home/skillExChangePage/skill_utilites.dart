@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/enum/date_format_utilities.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
 import '../../../models/skill_model.dart';
@@ -79,7 +80,7 @@ class SkillUtilites {
                   ),
                 ),
                 Text(
-                  "${data.lastLogin}前",
+                  "${DateFormatUtilities().noYYYYMMDDformat(data.lastLogin)} 上線",
                   style: TextStyle(color: AppColors.greyColor176, fontSize: 12),
                 ),
               ],

@@ -282,6 +282,7 @@ import 'package:social_mediam_match/components/utilities/endDrawers/base_end_dra
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 
+import '../../../enum/date_format_utilities.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../services/notification_service.dart';
@@ -331,7 +332,6 @@ class MyNotificationPage extends BaseEndDrawer {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   UserIcon(
                                     iconSize: ScreenSize.fitPxWidth(30),
@@ -350,7 +350,7 @@ class MyNotificationPage extends BaseEndDrawer {
                               ),
                               SizedBox(height: ScreenSize.fitPxWidth(5)),
                               Text(
-                                "${data.postTime}",
+                                DateFormatUtilities().format(data.postTime.toString()),
                                 style: const TextStyle(fontSize: 12, color: Colors.grey),
                               ),
                             ],

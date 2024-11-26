@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/bottomSheets/base_bottom_sheet.dart';
+import 'package:social_mediam_match/enum/date_format_utilities.dart';
 
 import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
@@ -13,8 +14,6 @@ import '../../../provider/account/user_provider.dart';
 import '../../../provider/friend/chat_ws_model.dart';
 import '../../../provider/friend/friend_provider.dart';
 import '../../home/skillExChangePage/skill_utilites.dart';
-import '../../strings/skillExChangePage/skill_change_page_string.dart';
-
 import '../main_button.dart';
 import '../style/screen_size.dart';
 import '../style/style_config.dart';
@@ -74,7 +73,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                       ),
                     ),
                     Text(
-                      "${userData.lastLogin}${SkillChangePageString.skExChpagebeforDays}",
+                      "${DateFormatUtilities().format(userData.lastLogin)} 上線",
                       style: TextStyle(
                         color: AppColors.greyColor130,
                         fontSize: ScreenSize.fontSize12,

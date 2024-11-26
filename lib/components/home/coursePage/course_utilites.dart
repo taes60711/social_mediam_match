@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_manager/course_manager_bottom_sheet.dart';
 import 'package:social_mediam_match/enum/skill_type.dart';
+import '../../../enum/date_format_utilities.dart';
 import '../../../models/course_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/course/course_provider.dart';
@@ -220,7 +221,7 @@ class CourseUtilites {
             ),
             SizedBox(height: ScreenSize.fitPxHeight(5)),
             Text(
-              "最終更新日:${data.postTime}",
+              "最終更新日: ${DateFormatUtilities().format(data.postTime)}",
               style: TextStyle(
                 color: AppColors.whiteColor.withOpacity(.6),
                 fontSize: ScreenSize.fontSize12,

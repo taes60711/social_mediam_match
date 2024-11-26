@@ -52,7 +52,7 @@ class PostModel {
       good: json['good'],
       type: json['type'],
       commentCount: json['count'],
-      postTime: dateFormatted(json['postTime']),
+      postTime: json['postTime'],
       postUserInfo: ProfileData.toModel(json['user']),
     );
   }
@@ -67,7 +67,7 @@ class PostModel {
       good: json['good'],
       type: json['type'],
       commentCount: json['count'],
-      postTime: dateFormatted(json['postTime']),
+      postTime: json['postTime'],
     );
   }
 
@@ -78,21 +78,21 @@ class PostModel {
     return addedUserDataPost;
   }
 
-  static String dateFormatted(String time) {
-    DateTime dateUtc = DateTime.parse(time).toUtc();
+  // static String dateFormatted(String time) {
+  //   DateTime dateUtc = DateTime.parse(time).toUtc();
 
-    Duration duration = DateTime.now().toUtc().difference(dateUtc);
-    String durationTime = "";
-    if (duration.inMinutes < 60) {
-      durationTime = "${duration.inMinutes} 分";
-    } else if (duration.inMinutes >= 60 && duration.inMinutes < 1440) {
-      durationTime = "${duration.inHours} 時";
-    } else if (duration.inMinutes >= 1440) {
-      durationTime = "${duration.inDays} 天";
-    }
-    String formattedTime = durationTime;
-    return formattedTime;
-  }
+  //   Duration duration = DateTime.now().toUtc().difference(dateUtc);
+  //   String durationTime = "";
+  //   if (duration.inMinutes < 60) {
+  //     durationTime = "${duration.inMinutes} 分";
+  //   } else if (duration.inMinutes >= 60 && duration.inMinutes < 1440) {
+  //     durationTime = "${duration.inHours} 時";
+  //   } else if (duration.inMinutes >= 1440) {
+  //     durationTime = "${duration.inDays} 天";
+  //   }
+  //   String formattedTime = durationTime;
+  //   return formattedTime;
+  // }
 
   PostModel copyWith({PostModel? data}) {
     return PostModel(
