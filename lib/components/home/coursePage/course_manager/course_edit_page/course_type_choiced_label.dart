@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/enum/skill_type.dart';
 
 import '../../../../../provider/course/course_provider.dart';
+
 import '../../../../utilities/bottomSheets/base_bottom_sheet.dart';
 
 import '../../../../utilities/main_button.dart';

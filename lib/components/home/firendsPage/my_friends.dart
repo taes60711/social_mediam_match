@@ -48,9 +48,6 @@ class MyFriendPage extends BaseEndDrawer {
                           }
                           return isConfirm;
                         },
-                        onDismissed: (direction) {
-                          print(direction);
-                        },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
                           child: Row(

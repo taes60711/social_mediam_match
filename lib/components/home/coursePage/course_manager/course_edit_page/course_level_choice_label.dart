@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../../provider/course/course_provider.dart';
+import '../../../../utilities/app_common_tools.dart';
 import '../../../../utilities/bottomSheets/base_bottom_sheet.dart';
 
 import '../../../../utilities/main_button.dart';
@@ -28,25 +29,28 @@ class _CourseLevelChoicedLabelState extends ConsumerState<CourseLevelChoicedLabe
         ),
         SizedBox(width: ScreenSize.fitPxWidth(10)),
         MainBtn(
-            onPress: () {
-              CourseLevelChoiceBottomSheet().show(context);
-            },
-            child: boardContaienr(
-              Row(
-                children: [
-                  Text(
-                    ref.watch(courseChoiceLevel),
-                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
-                  ),
-                  SizedBox(width: ScreenSize.fitPxWidth(5)),
-                  Icon(
-                    FontAwesomeIcons.caretDown,
-                    size: ScreenSize.fontSize16,
-                    color: AppColors.whiteColor,
-                  )
-                ],
-              ),
-            )),
+          onPress: () {
+            CourseLevelChoiceBottomSheet().show(context);
+          },
+          child: boardContaienr(
+            Row(
+              children: [
+                Text(
+                  ref.watch(courseChoiceLevel),
+                  style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+                ),
+                SizedBox(width: ScreenSize.fitPxWidth(5)),
+                Icon(
+                  FontAwesomeIcons.caretDown,
+                  size: ScreenSize.fontSize16,
+                  color: AppColors.whiteColor,
+                )
+              ],
+            ),
+          ),
+        ),
+        SizedBox(width: ScreenSize.fitPxWidth(10)),
+        AppCommonTools().levelSetsumeiBtn(context)
       ],
     );
   }
