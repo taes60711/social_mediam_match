@@ -110,10 +110,3 @@ class _InitialpageState extends ConsumerState<Initialpage> {
     return component;
   }
 }
-
-// Future<void> _enterApp(BuildContext context) async {
-//   print("firstEnterApp");
-
-//   // ユーザの資料を取得、最後ログインのタイム更新、友達リスト（WS）繋がる
-//   context.read<UserProvider>().isLoginCheck(context);
-// }

@@ -52,11 +52,17 @@ class UserLoginStatusController {
     }
   }
 
-  Future<bool> login({required LoginDataModel loginInputData}) async {
+  ///loginType = normalSign , googleSign
+  Future<bool> login({required LoginDataModel loginInputData, String loginType = "normalSign"}) async {
     bool loginSuccess = false;
 
     /// ユーザデータ取得
-    ProfileData requestUserData = await UserService().requestUserDataByEmail(loginInputData.account, loginInputData.pwd);
+    ///loginType = normalSign , googleSign
+    ProfileData requestUserData = await UserService().requestUserDataByEmail(
+      loginInputData.account,
+      loginInputData.pwd,
+      loginType: loginType,
+    );
 
     print("LoginUserUID: ${requestUserData.uid}");
     if (requestUserData.uid != "-1") {

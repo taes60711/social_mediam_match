@@ -8,10 +8,7 @@ import 'package:social_mediam_match/components/utilities/inputField/label_input.
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
-
 import 'package:social_mediam_match/provider/account/LoginPage/login_view_model.dart';
-import 'package:social_mediam_match/services/firebase_service.dart';
-
 import 'account_main_page.dart';
 import 'account_page_utilites.dart';
 
@@ -99,7 +96,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               imgIcon: 'assets/google_w_Logo.png',
               btnBgColor: AppColors.blueColor,
               onPress: () {
-                FirebaseSerivce().signInWithGoogle();
+                viewModel.googleLogin();
               },
               btnText: "登入",
             ),

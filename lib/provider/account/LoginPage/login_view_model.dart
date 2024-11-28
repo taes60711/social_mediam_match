@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../global/user_login_status_controller.dart';
+import '../../../services/google_sign_in_service.dart';
 
 class LoginViewModel {
   BuildContext? context;
@@ -12,8 +14,8 @@ class LoginViewModel {
   LoginDataModel editData = LoginDataModel.emptyData();
 
   ///tzLaMcP3V9XOAMOcD0FAY5Nf4tE2
-  TextEditingController accountController = TextEditingController(text: "taes60811@gmail.com");
-  TextEditingController pwdController = TextEditingController(text: "toto60811");
+  TextEditingController accountController = TextEditingController(text: "taes60711@gmail.com");
+  TextEditingController pwdController = TextEditingController(text: "toto60711");
   String errMsg = "";
 
   bool pwdleastSix = false;
@@ -72,6 +74,14 @@ class LoginViewModel {
         errMsg = "帳號或密碼錯誤";
         render!();
       }
+    }
+  }
+
+  Future<void> googleLogin() async {
+    GoogleSignInAccount? googleUser = await GoogleSinginService().signInWithGoogle();
+    if (googleUser != null) {
+      LoginDataModel loginDataModel = LoginDataModel(account: googleUser.email, pwd: googleUser.id);
+      await UserLoginStatusController().login(loginInputData: loginDataModel, loginType: "googleSign");
     }
   }
 }

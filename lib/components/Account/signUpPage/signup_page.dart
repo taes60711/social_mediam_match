@@ -6,8 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-
-import '../../../services/firebase_service.dart';
 import '../../utilities/inputField/label_input.dart';
 import '../../utilities/style/style_config.dart';
 import '../account_main_page.dart';
@@ -81,8 +79,11 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
             ///　Google登録
             AccountPageUtilites().btnContainer(
-              onPress: () {
-                FirebaseSerivce().signInWithGoogle();
+              onPress: () async {
+                bool isSendOK = await ref.read(viewModelProvider.notifier).state.googleSignUp();
+                if (isSendOK) {
+                  ref.read(pageControllerProvider).jumpToPage(2);
+                }
               },
               imgIcon: 'assets/google_w_Logo.png',
               btnBgColor: AppColors.blueColor,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../../components/utilities/lodaing_dialog.dart';
 import '../../../models/user_model.dart';
+import '../../../services/google_sign_in_service.dart';
 import '../../../services/user_service.dart';
 
 class SignUpViewModel {
@@ -21,6 +23,7 @@ class SignUpViewModel {
   String nameErr = "";
   String confrimPwdErr = "";
   String verifyErr = "";
+  String googleSignUpErr = "";
 
   bool pwdleastSix = false;
   bool pwdNeedEnglish = false;
@@ -48,6 +51,28 @@ class SignUpViewModel {
     } else {
       return false;
     }
+  }
+
+  /// Google註冊
+  /// success
+  Future<bool> googleSignUp() async {
+    _resetAllErrMsg();
+    GoogleSignInAccount? googleUser = await GoogleSinginService().signInWithGoogle();
+    if (googleUser != null) {
+      String apiReturn = await UserService().googleSignUp(
+        email: googleUser.email,
+        password: googleUser.id,
+        name: googleUser.email,
+      );
+
+      if (apiReturn == "success") {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    return false;
   }
 
   /// 註冊
@@ -150,5 +175,6 @@ class SignUpViewModel {
     pwdNeedNum = false;
     confrimPwdErr = "";
     verifyErr = "";
+    googleSignUpErr = "";
   }
 }

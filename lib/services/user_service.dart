@@ -111,9 +111,15 @@ class UserService extends ApiClient {
   }
 
   ///MARK: ユーザのデータ取得 By メール
-  Future<ProfileData> requestUserDataByEmail(String email, String password) async {
+  ///loginType = normalSign , googleSign
+  Future<ProfileData> requestUserDataByEmail(String email, String password, {String loginType = "normalSign"}) async {
     ProfileData userdata = ProfileData(uid: "-1");
-    var sha256Password = sha256.convert(utf8.encode(password));
+    var sha256Password;
+    if (loginType == "googleSign") {
+      sha256Password = password;
+    } else if (loginType == "normalSign") {
+      sha256Password = sha256.convert(utf8.encode(password));
+    }
 
     Map<String, dynamic> params = {
       'email': email,
@@ -163,6 +169,20 @@ class UserService extends ApiClient {
     await handleResponse(responseData);
 
     print("updateUserToken : $responseData");
+  }
+
+  Future<String> googleSignUp({required String email, required String password, required String name}) async {
+    Map<String, dynamic> body = {
+      "email": email,
+      "password": password,
+      "name": name,
+      "isEmailVerified": true,
+    };
+    String responseData = await apiPush('/googleSignUpUser', body: body);
+
+    print("googleSignUpUser : $responseData");
+
+    return responseData;
   }
 
   //param
