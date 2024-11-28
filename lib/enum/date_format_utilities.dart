@@ -89,7 +89,6 @@ class DateFormatUtilities {
     DateTime dateUtc = DateTime.parse(timeStr).toUtc();
     DateTime dateLocal = dateUtc.toLocal();
 
-    // 使用 DateFormat 來格式化時間，顯示 HH:mm
     String formattedTime = DateFormat('HH:mm').format(dateLocal);
     return formattedTime;
   }

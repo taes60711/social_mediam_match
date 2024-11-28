@@ -2,6 +2,7 @@ import 'package:html/dom.dart';
 import 'package:html/parser.dart' as html;
 import 'package:uuid/uuid.dart';
 
+import '../components/utilities/style/screen_size.dart';
 import '../global.dart';
 import '../services/image_service.dart';
 
@@ -20,6 +21,10 @@ class RichTextFormat {
 
   Future<String> sendPostImgFormat() async {
     String _htmlString = htmlString ?? "";
+
+    /// 圖片編輯的時候有*.8寬度 所以在整形的時候 要去除掉該處理
+    _htmlString = _htmlString.replaceAll(" width=\"${ScreenSize.width * 0.8}\"", "");
+
     var node = html.parse(_htmlString).body;
 
     if (node!.nodeType == Node.ELEMENT_NODE) {
@@ -31,17 +36,19 @@ class RichTextFormat {
 
             await Future.forEach(document.body?.querySelectorAll('*') ?? [], (e) async {
               if (e.localName == 'img') {
-                String uid = const Uuid().v1();
-                String resultString = _getImage(e.outerHtml);
+                if (e.outerHtml.contains("base64,")) {
+                  String resultString = _getImage(e.outerHtml);
 
-                if (await ImageService().imageIsExist(resultString) != "-1") {
-                  uid = await ImageService().imageIsExist(resultString);
-                } else {
-                  await ImageService().saveImg(uid, resultString);
+                  String uid = const Uuid().v1();
+                  if (await ImageService().imageIsExist(resultString) != "-1") {
+                    uid = await ImageService().imageIsExist(resultString);
+                  } else {
+                    await ImageService().saveImg(uid, resultString);
+                  }
+
+                  String imgStringToHttp = '<img src="http://\$ip:\$port/images/$uid">';
+                  _htmlString = _htmlString.replaceAll(e.outerHtml, imgStringToHttp);
                 }
-
-                String imgStringToHttp = '<img src="http://\$ip:\$port/images/$uid">';
-                _htmlString = _htmlString.replaceAll(e.outerHtml, imgStringToHttp);
               }
             });
             break;
@@ -198,6 +205,7 @@ class RichTextFormat {
 
   String _getImage(String htmlString) {
     int startIndex = -1;
+
     if (htmlString.contains('src="data:image/')) {
       startIndex = htmlString.indexOf('src="data:image/') + 27;
       if (htmlString.contains('src="data:image/jpeg')) {
@@ -224,6 +232,7 @@ class RichTextFormat {
 
   String getYtvideoID(String url) {
     int start = 0;
+
     if (url.contains('/shorts/')) {
       start = url.indexOf('/shorts/') + '/shorts/'.length;
     } else if (url.contains('/youtu.be/')) {

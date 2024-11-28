@@ -32,15 +32,10 @@ class ChatRoomMsg {
     required this.needAppearImg,
   });
   factory ChatRoomMsg.toModel(dynamic json) {
-    // DateTime dateUtc = DateTime.parse(json['sentAt']).toUtc();
-
-    // DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
-    // String formattedTime = DateFormat("yyyy-MM-dd a hh:mm").format(dateTime.toLocal());
-
     return ChatRoomMsg(
       userId: json['userId'],
       message: json['message'],
-      sentAt: json['sentAt'], //formattedTime,
+      sentAt: json['sentAt'],
       needAppearImg: false,
     );
   }

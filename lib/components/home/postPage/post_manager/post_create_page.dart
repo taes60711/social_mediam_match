@@ -10,7 +10,6 @@ import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.d
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 
 import '../../../../models/post_model.dart';
-
 import '../../../../provider/post/post_provider.dart';
 import '../../../../provider/post/post_view_model.dart';
 import '../../../utilities/bottomSheets/base_bottom_sheet.dart';
@@ -68,6 +67,7 @@ class PostCreatePage extends BaseFadeScalePage {
               onPress: () async {
                 String postTitle = titleController.text;
                 String postContent = await quillEditorController.getText();
+
                 if (postTitle == "" || postContent == "") {
                   String content = "";
                   if (postTitle == "" && postContent == "") {
@@ -84,7 +84,7 @@ class PostCreatePage extends BaseFadeScalePage {
 
                 viewModel.postCreate(
                   postTitle: titleController.text,
-                  postContent: await quillEditorController.getText(),
+                  postContent: postContent,
                   postBoard: postBoard,
                 );
               },

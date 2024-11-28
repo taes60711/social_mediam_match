@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/src/consumer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/dialog/base_dialog.dart';
 
@@ -11,6 +15,7 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
 import '../../models/rich_text_format.dart';
+
 import 'main_button.dart';
 
 class RichTextEditor extends StatelessWidget {
@@ -21,7 +26,7 @@ class RichTextEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final customToolBarList = [ToolBarStyle.color, ToolBarStyle.size, ToolBarStyle.image];
+    final customToolBarList = [ToolBarStyle.color, ToolBarStyle.size];
     double fontSize = 18;
     return SizedBox(
       width: ScreenSize.width,
@@ -90,6 +95,24 @@ class RichTextEditor extends StatelessWidget {
             customButtons: [
               GestureDetector(
                 onTap: () async {
+                  String bas64img = await imageChoice();
+
+                  /// 圖片編輯的時候*.8寬度
+                  String urlString = '<img src="data:image/jpeg;base64,$bas64img" width="${ScreenSize.width * 0.8}">';
+                  await controller.insertText(urlString);
+                },
+                child: SizedBox(
+                  width: 26,
+                  height: 24,
+                  child: Icon(
+                    FontAwesomeIcons.image,
+                    size: 19,
+                    color: AppColors.greyColor130,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
                   TextEditingController imageLinkController = TextEditingController();
 
                   RichtTextDialog(
@@ -100,8 +123,9 @@ class RichTextEditor extends StatelessWidget {
                     ),
                     conirmFunc: () async {
                       String imgUrl = imageLinkController.text;
-                      print(imgUrl);
-                      String urlString = '<img src="$imgUrl" width="${ScreenSize.width * 0.9}">';
+
+                      /// 圖片編輯的時候*.8寬度
+                      String urlString = '<img src="$imgUrl" width="${ScreenSize.width * 0.8}">';
                       await controller.insertText(urlString);
                     },
                   ).show(context);
@@ -195,6 +219,22 @@ class RichTextEditor extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<String> imageChoice() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    String result = "";
+    String imgPickerResult = "";
+
+    if (image != null) {
+      File imgPath = File(image.path);
+      String base64String = base64Encode(imgPath.readAsBytesSync());
+      imgPickerResult = base64String;
+      result = imgPickerResult;
+    }
+
+    return result;
   }
 }
 

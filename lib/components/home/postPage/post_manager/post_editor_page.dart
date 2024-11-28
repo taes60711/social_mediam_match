@@ -76,6 +76,7 @@ class PostEditorPage extends BaseFadeScalePage {
                 String postTitle = titleController.text;
                 String postContent = await quillEditorController.getText();
                 String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
+
                 if (postTitle == "" || postContent == "") {
                   String content = "";
                   if (postTitle == "" && postContent == "") {
@@ -90,7 +91,11 @@ class PostEditorPage extends BaseFadeScalePage {
                   return;
                 }
                 PostModel post = ref.read(choicedPostProvider.notifier).state;
-                bool isSucess = await PostService().updatePost(postId: post.id, title: postTitle, mainMessage: fomattedContent);
+                bool isSucess = await PostService().updatePost(
+                  postId: post.id,
+                  title: postTitle,
+                  mainMessage: fomattedContent,
+                );
 
                 if (isSucess) {
                   post.title = postTitle;

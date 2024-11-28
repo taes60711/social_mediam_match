@@ -38,7 +38,7 @@ class PostViewModel {
       type: postType,
       mainMessage: fomattedContent,
       commentCount: 0,
-      postTime: DateTime.now().toUtc().toString(), //PostModel.dateFormatted(DateTime.now().toUtc().toString()),
+      postTime: DateTime.now().toUtc().toString(),
       postUserInfo: userData,
     );
 
