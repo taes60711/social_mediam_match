@@ -14,8 +14,8 @@ class LoginViewModel {
   LoginDataModel editData = LoginDataModel.emptyData();
 
   ///tzLaMcP3V9XOAMOcD0FAY5Nf4tE2
-  TextEditingController accountController = TextEditingController(text: "taes60711@gmail.com");
-  TextEditingController pwdController = TextEditingController(text: "toto60711");
+  TextEditingController accountController = TextEditingController(text: "taes60811@gmail.com");
+  TextEditingController pwdController = TextEditingController(text: "toto60811");
   String errMsg = "";
 
   bool pwdleastSix = false;

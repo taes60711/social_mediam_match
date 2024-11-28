@@ -5,6 +5,7 @@ import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
+import 'package:social_mediam_match/enum/date_format_utilities.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/services/user_service.dart';
 
@@ -153,7 +154,7 @@ class _FriendPageState extends ConsumerState<FriendPage> {
                                             ),
                                           ),
                                           Text(
-                                            data.sentAt ?? "",
+                                            DateFormatUtilities().format(data.sentAt ?? ""),
                                             style: TextStyle(fontSize: ScreenSize.fontSize14, color: AppColors.greyColor98),
                                           ),
                                         ],

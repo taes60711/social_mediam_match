@@ -11,6 +11,7 @@ import 'package:social_mediam_match/components/utilities/endDrawers/base_end_dra
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
+import 'package:social_mediam_match/enum/date_format_utilities.dart';
 
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -83,7 +84,6 @@ class ChatRoom extends BaseEndDrawer {
                       }
                     }
 
-                    print(addData);
                     return false;
                   },
                   child: SingleChildScrollView(
@@ -160,15 +160,21 @@ class ChatRoom extends BaseEndDrawer {
                 ),
               )
             : Container(width: 30),
-        Container(
-          padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(8)),
-          margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(5)),
-          alignment: Alignment.centerLeft,
-          child: formatMsgBuild(data.message),
-        ),
-        Text(
-          data.sentAt,
-          style: TextStyle(color: AppColors.greyColor130),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+              padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(8)),
+              margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(5)),
+              alignment: Alignment.centerLeft,
+              child: formatMsgBuild(data.message, whoMsg: "other"),
+            ),
+            SizedBox(width: ScreenSize.fitPxWidth(5)),
+            Text(
+              DateFormatUtilities().hHMMformat(data.sentAt),
+              style: TextStyle(color: AppColors.greyColor130),
+            ),
+          ],
         ),
       ],
     );
@@ -179,19 +185,23 @@ class ChatRoom extends BaseEndDrawer {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Container(
-        //   width: ScreenSize.width * .1,
-        //   child: Text(
-        //     data.sentAt,
-        //     style: TextStyle(color: AppColors.greyColor130),
-        //   ),
-        // ),
-
-        Container(
+        Padding(
           padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(8)),
-          margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(5)),
-          alignment: Alignment.centerRight,
-          child: formatMsgBuild(data.message),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                DateFormatUtilities().hHMMformat(data.sentAt),
+                style: TextStyle(color: AppColors.greyColor130),
+              ),
+              SizedBox(width: ScreenSize.fitPxWidth(5)),
+              Container(
+                margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(5)),
+                alignment: Alignment.centerRight,
+                child: formatMsgBuild(data.message, whoMsg: "my"),
+              ),
+            ],
+          ),
         ),
         data.needAppearImg
             ? UserIcon(
@@ -203,12 +213,16 @@ class ChatRoom extends BaseEndDrawer {
     );
   }
 
-  Widget formatMsgBuild(String msg) {
+  Widget formatMsgBuild(String msg, {required String whoMsg}) {
     ///テキスト
     Widget component = msgTextContianer(
-      child: Text(
-        msg,
-        style: TextStyle(color: AppColors.whiteColor),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: ScreenSize.width * 0.7),
+        child: Text(
+          msg,
+          textAlign: whoMsg == "my" ? TextAlign.right : TextAlign.left,
+          style: TextStyle(color: AppColors.whiteColor),
+        ),
       ),
     );
 
@@ -219,6 +233,7 @@ class ChatRoom extends BaseEndDrawer {
     /// Link
     if (urlLink != "-1") {
       component = Column(
+        crossAxisAlignment: whoMsg == "my" ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           msgTextContianer(
             child: ConstrainedBox(
@@ -245,7 +260,6 @@ class ChatRoom extends BaseEndDrawer {
           ),
           Container(
               margin: EdgeInsets.only(top: ScreenSize.fitPxWidth(5)),
-              padding: EdgeInsets.all(ScreenSize.fitPxWidth(7)),
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColors.greyColor57),
               child: Padding(
                 padding: const EdgeInsets.only(top: 8),
@@ -259,6 +273,7 @@ class ChatRoom extends BaseEndDrawer {
                     bodyStyle: TextStyle(color: AppColors.greyColor130, fontSize: 12),
                     borderRadius: 0,
                     bodyMaxLines: 2,
+                    placeholderWidget: const Loading(),
                   ),
                 ),
               ))
@@ -324,23 +339,23 @@ List formatChatMsg(List<ChatRoomMsg> messageData) {
           userId: messageData[0].userId, message: messageData[0].message, sentAt: messageData[0].sentAt, needAppearImg: true));
 
       DateTime now = DateTime.now().toUtc();
-      String formattedTime = DateFormat("yyyy-MM-dd ").format(now.toLocal());
+      String formattedTime = DateFormat("yyyy-MM-dd").format(now.toLocal());
       if (formattedTime == messageData[0].sentAt.substring(0, "yyyy-MM-dd ".length)) {
         ss.add("今日");
       } else {
-        ss.add(messageData[0].sentAt.substring(0, "yyyy-MM-dd ".length));
+        ss.add(messageData[0].sentAt.substring(0, "yyyy-MM-dd".length));
       }
     }
   } else {
     for (int i = 0; i < messageData.length; i++) {
       DateTime now = DateTime.now().toUtc();
-      String formattedTime = DateFormat("yyyy-MM-dd ").format(now.toLocal());
+      String formattedTime = DateFormat("yyyy-MM-dd").format(now.toLocal());
       //index : 0 - last比較
       // 防止range over 問題
       if (i < messageData.length - 1) {
         //i 與 i + 1 的 message時間不同時 ||  i 與 i + 1 的使用者不同時
-        if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
-                messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
+        if (messageData[i].sentAt.substring(0, "yyyy-MM-dd".length) !=
+                messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd".length) ||
             messageData[i].userId != messageData[i + 1].userId) {
           //這邊的 needAppearImg 應該都要為 false
           ss.add(ChatRoomMsg(
@@ -361,19 +376,19 @@ List formatChatMsg(List<ChatRoomMsg> messageData) {
           test = false;
         }
         //i 與 i + 1 的 message時間 不同時insert 時間
-        if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
-            messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd ".length)) {
-          if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length)) {
+        if (messageData[i].sentAt.substring(0, "yyyy-MM-dd".length) !=
+            messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd".length)) {
+          if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd".length)) {
             ss.add("今日");
           } else {
-            ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length));
+            ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd".length));
           }
         }
         //index : index last - last -1 比較
       } else {
         //當最後一筆資料 與 最後前一筆資料進行比對 時間不同或使用者不同時 顯示頭像
-        if (messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length) !=
-                messageData[i - 1].sentAt.substring(0, "yyyy-MM-dd ".length) ||
+        if (messageData[i].sentAt.substring(0, "yyyy-MM-dd".length) !=
+                messageData[i - 1].sentAt.substring(0, "yyyy-MM-dd".length) ||
             messageData[i].userId != messageData[i - 1].userId) {
           ss.add(
             ChatRoomMsg(
@@ -387,10 +402,10 @@ List formatChatMsg(List<ChatRoomMsg> messageData) {
           ss.add(ChatRoomMsg(userId: messageData[i].userId, message: messageData[i].message, sentAt: "", needAppearImg: true));
         }
         //最後一筆補上日期
-        if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length)) {
+        if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd".length)) {
           ss.add("今日");
         } else {
-          ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd ".length));
+          ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd".length));
         }
       }
     }

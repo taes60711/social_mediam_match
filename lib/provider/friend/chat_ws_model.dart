@@ -64,9 +64,6 @@ class ChatWSModel {
         String initDate = "1997-01-01T00:00:00.000+00:00";
 
         tempfriendList.sort((a, b) => DateTime.parse(a.sentAt ?? initDate).compareTo(DateTime.parse(b.sentAt ?? initDate)));
-        tempfriendList = tempfriendList.map((e) {
-          return friendListFormatDate(e);
-        }).toList();
 
         ref.read(frinedListProvider.notifier).update((state) => tempfriendList);
         render();

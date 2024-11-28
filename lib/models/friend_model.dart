@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
 class ChatRoomModel {
@@ -33,15 +32,15 @@ class ChatRoomMsg {
     required this.needAppearImg,
   });
   factory ChatRoomMsg.toModel(dynamic json) {
-    DateTime dateUtc = DateTime.parse(json['sentAt']).toUtc();
+    // DateTime dateUtc = DateTime.parse(json['sentAt']).toUtc();
 
-    DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
-    String formattedTime = DateFormat("yyyy-MM-dd a hh:mm").format(dateTime.toLocal());
+    // DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
+    // String formattedTime = DateFormat("yyyy-MM-dd a hh:mm").format(dateTime.toLocal());
 
     return ChatRoomMsg(
       userId: json['userId'],
       message: json['message'],
-      sentAt: formattedTime,
+      sentAt: json['sentAt'], //formattedTime,
       needAppearImg: false,
     );
   }
@@ -77,30 +76,4 @@ class FriendListModel {
       userData: userData ?? ProfileData.toModel(json['user']),
     );
   }
-}
-
-FriendListModel friendListFormatDate(FriendListModel friendListInfo) {
-  String? formattedTime;
-  if (friendListInfo.sentAt != null) {
-    DateTime sentAtTime =
-        DateFormat("yyyy-MM-dd HH:mm:ss").parse(DateTime.parse(friendListInfo.sentAt ?? "").toUtc().toString(), true).toLocal();
-    DateTime dateTimeNow = DateFormat("yyyy-MM-dd HH:mm:ss").parse(DateTime.now().toUtc().toString(), true).toLocal();
-    String sentTimeString = sentAtTime.toIso8601String().substring(0, "yyyy-MM-dd".length);
-    String timseNowString = dateTimeNow.toIso8601String().substring(0, "yyyy-MM-dd".length);
-
-    if (timseNowString != sentTimeString) {
-      formattedTime = sentTimeString;
-    } else {
-      formattedTime = DateFormat("a hh:mm").format(sentAtTime);
-    }
-  }
-  return FriendListModel(
-    roomId: friendListInfo.roomId,
-    memberId: friendListInfo.memberId,
-    createdBy: friendListInfo.createdBy,
-    lastMessage: friendListInfo.lastMessage,
-    sentAt: formattedTime,
-    roomType: friendListInfo.roomType,
-    userData: friendListInfo.userData,
-  );
 }
