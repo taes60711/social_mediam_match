@@ -1,14 +1,13 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 
 import 'package:social_mediam_match/components/utilities/bottomSheets/base_bottom_sheet.dart';
+import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/inputField/label_input.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/provider/account/user_profile_edit_view_model.dart';
 import 'package:social_mediam_match/services/user_service.dart';
 
 import '../../../models/skill_model.dart';
@@ -22,7 +21,7 @@ import '../../utilities/user_icon.dart';
 import '../skillExChangePage/skill_utilites.dart';
 
 class UserProfileEditPage extends BaseBottomSheet {
-  bool isInit = false;
+  bool isInit = true;
   @override
   double buildHeight() {
     return 0.92;
@@ -38,41 +37,34 @@ class UserProfileEditPage extends BaseBottomSheet {
     return false;
   }
 
-  String? editImg;
-  TextEditingController nameController = TextEditingController();
-  TextEditingController jobController = TextEditingController();
-  TextEditingController introductionController = TextEditingController();
-  List<RequestUserSkillData> mainSkillList = [];
-  List<RequestUserSkillData> wantSkillList = [];
+  UserProfileEditViewModel viewModel = UserProfileEditViewModel();
 
   @override
   Future<void> initState(WidgetRef ref) async {
-    await Future(() {
-      ProfileData editUserData = ref.read(loginUserData);
-      editImg = editUserData.image;
-      nameController.text = editUserData.name ?? "";
-      jobController.text = editUserData.job ?? "";
-      introductionController.text = editUserData.introduction ?? "";
-
-      mainSkillList = List.from(editUserData.mainSkills ?? []);
-      wantSkillList = List.from(editUserData.wantSkills ?? []);
-    });
-
-    isInit = true;
-    render();
+    viewModel.init(context, ref, () => render());
   }
 
   @override
   Widget build(WidgetRef ref) {
-    Widget component = Container();
-    if (isInit) {
-      return Column(
-        children: [
-          BaseTopBar(
-            leftWidget: downCloseBtn(onPress: () => closePage()),
-            title: "個人資料",
-            rightWidget: MainBtn(
-              onPress: () async {
+    return Column(
+      children: [
+        BaseTopBar(
+          leftWidget: downCloseBtn(onPress: () {
+            if (viewModel.closePageCheck()) {
+              closePage();
+            } else {
+              ConfirmDilaog(
+                  title: '提示',
+                  content: '正在編輯中　確定要離開嗎？',
+                  conirmFunc: () {
+                    closePage();
+                  }).show(context);
+            }
+          }),
+          title: "個人資料",
+          rightWidget: MainBtn(
+            onPress: () async {
+              if (viewModel.sendBeforeCheck()) {
                 ProfileData updateData = ref.read(loginUserData);
 
                 updateData = updateData.copyWith(
@@ -80,12 +72,12 @@ class UserProfileEditPage extends BaseBottomSheet {
                     uid: updateData.uid,
                     email: updateData.email,
                     token: updateData.token,
-                    image: editImg,
-                    name: nameController.text,
-                    mainSkills: List.from(mainSkillList),
-                    wantSkills: List.from(wantSkillList),
-                    job: jobController.text,
-                    introduction: introductionController.text,
+                    image: viewModel.editImg,
+                    name: viewModel.nameController.text,
+                    mainSkills: List.from(viewModel.mainSkillList),
+                    wantSkills: List.from(viewModel.wantSkillList),
+                    job: viewModel.jobController.text,
+                    introduction: viewModel.introductionController.text,
                     isEmailVerified: updateData.isEmailVerified,
                     status: updateData.status,
                     lastLogin: updateData.lastLogin,
@@ -94,7 +86,7 @@ class UserProfileEditPage extends BaseBottomSheet {
                 UpdateUser sqlUpdateData = UpdateUser.update(
                   uid: updateData.uid,
                   name: updateData.name,
-                  image: editImg,
+                  image: viewModel.editImg,
                   job: updateData.job,
                   introduction: updateData.introduction,
                   mainSkills: updateData.mainSkills,
@@ -105,94 +97,102 @@ class UserProfileEditPage extends BaseBottomSheet {
                 ref.read(loginUserData.notifier).update((state) => updateData);
                 render();
                 closePage();
-              },
-              title: "更新",
-            ),
+              }
+            },
+            title: "更新",
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
-                child: Column(
-                  children: [
-                    UserIcon(iconSize: 100, image: editImg),
-                    SizedBox(height: ScreenSize.fitPxWidth(15)),
-                    //アイコン選択
-                    MainBtn(
-                      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(20), vertical: ScreenSize.fitPxWidth(8)),
-                      onPress: () async {
-                        await imageChange();
-                      },
-                      title: "選擇圖像",
-                    ),
-                    inputField(hintText: "名前", editingController: nameController),
-                    inputField(hintText: "職業", editingController: jobController),
-                    SizedBox(height: ScreenSize.fitPxWidth(8)),
-                    SizedBox(height: ScreenSize.fitPxWidth(8)),
-                    //強いスキル設定
-                    MainBtn(
-                      onPress: () {
-                        UserSkillChoicePage(
-                          initSkillData: mainSkillList,
-                          updateSkillDate: (List<RequestUserSkillData> value) {
-                            mainSkillList = value;
-                            render();
-                          },
-                        ).show(context);
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          skillTitle(
-                            titile: "能教的技能",
-                            iconData: FontAwesomeIcons.reply,
-                            iconBgColor: const Color.fromARGB(255, 138, 138, 138),
-                          ),
-                          SizedBox(height: ScreenSize.fitPxWidth(5)),
-                          SkillUtilites().skillBar(skills: mainSkillList),
-                        ],
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
+              child: Column(
+                children: [
+                  UserIcon(iconSize: 100, image: viewModel.editImg),
+                  SizedBox(height: ScreenSize.fitPxWidth(15)),
+                  //アイコン選択
+                  MainBtn(
+                    padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(20), vertical: ScreenSize.fitPxWidth(8)),
+                    onPress: () async {
+                      await viewModel.avatarChange();
+                    },
+                    title: "選擇圖像",
+                  ),
+                  inputField(hintText: "名稱", editingController: viewModel.nameController),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Visibility(
+                      visible: viewModel.errMsg != "",
+                      child: Text(
+                        viewModel.errMsg,
+                        style: TextStyle(color: AppColors.redColor),
                       ),
                     ),
-                    SizedBox(height: ScreenSize.fitPxWidth(8)),
-                    //弱いスキル設定
-                    MainBtn(
-                      onPress: () {
-                        UserSkillChoicePage(
-                          initSkillData: wantSkillList,
-                          updateSkillDate: (List<RequestUserSkillData> value) {
-                            wantSkillList = value;
-                            render();
-                          },
-                        ).show(context);
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          skillTitle(
-                            titile: "想學的技能",
-                            iconData: FontAwesomeIcons.share,
-                            iconBgColor: const Color.fromARGB(255, 240, 123, 77),
-                          ),
-                          SizedBox(height: ScreenSize.fitPxWidth(5)),
-                          SkillUtilites().skillBar(skills: wantSkillList),
-                        ],
-                      ),
+                  ),
+                  inputField(hintText: "職業", editingController: viewModel.jobController),
+                  SizedBox(height: ScreenSize.fitPxWidth(8)),
+                  SizedBox(height: ScreenSize.fitPxWidth(8)),
+                  //強いスキル設定
+                  MainBtn(
+                    onPress: () {
+                      UserSkillChoicePage(
+                        initSkillData: viewModel.mainSkillList,
+                        updateSkillDate: (List<RequestUserSkillData> value) {
+                          viewModel.mainSkillList = value;
+                          render();
+                        },
+                      ).show(context);
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        skillTitle(
+                          titile: "能教的技能",
+                          iconData: FontAwesomeIcons.reply,
+                          iconBgColor: const Color.fromARGB(255, 138, 138, 138),
+                        ),
+                        SizedBox(height: ScreenSize.fitPxWidth(5)),
+                        SkillUtilites().skillBar(skills: viewModel.mainSkillList),
+                      ],
                     ),
+                  ),
+                  SizedBox(height: ScreenSize.fitPxWidth(8)),
+                  //弱いスキル設定
+                  MainBtn(
+                    onPress: () {
+                      UserSkillChoicePage(
+                        initSkillData: viewModel.wantSkillList,
+                        updateSkillDate: (List<RequestUserSkillData> value) {
+                          viewModel.wantSkillList = value;
+                          render();
+                        },
+                      ).show(context);
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        skillTitle(
+                          titile: "想學的技能",
+                          iconData: FontAwesomeIcons.share,
+                          iconBgColor: const Color.fromARGB(255, 240, 123, 77),
+                        ),
+                        SizedBox(height: ScreenSize.fitPxWidth(5)),
+                        SkillUtilites().skillBar(skills: viewModel.wantSkillList),
+                      ],
+                    ),
+                  ),
 
-                    SizedBox(height: ScreenSize.fitPxWidth(8)),
-                    // 自己紹介
-                    multiInputField(hintText: "自我介紹", editingController: introductionController),
-                    SizedBox(height: ScreenSize.fitPxWidth(8)),
-                  ],
-                ),
+                  SizedBox(height: ScreenSize.fitPxWidth(8)),
+                  // 自己紹介
+                  multiInputField(hintText: "自我介紹", editingController: viewModel.introductionController),
+                  SizedBox(height: ScreenSize.fitPxWidth(8)),
+                ],
               ),
             ),
           ),
-        ],
-      );
-    }
-
-    return component;
+        ),
+      ],
+    );
   }
 
   Widget skillTitle({required Color iconBgColor, required IconData iconData, required String titile}) {
@@ -245,7 +245,7 @@ class UserProfileEditPage extends BaseBottomSheet {
         ),
         SizedBox(height: ScreenSize.fitPxWidth(5)),
         MultInput(
-          controller: introductionController,
+          controller: viewModel.introductionController,
           hintText: hintText,
           minLines: 5,
           maxLines: 5,
@@ -256,19 +256,5 @@ class UserProfileEditPage extends BaseBottomSheet {
         ),
       ],
     );
-  }
-
-  ///ユーザ画像アップロードすると画面にチェンジ
-  Future<void> imageChange() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickerImage = await picker.pickImage(source: ImageSource.gallery); //, maxHeight: 150, maxWidth: 150
-
-    if (pickerImage != null) {
-      File image = File(pickerImage.path);
-
-      String base64String = base64Encode(image.readAsBytesSync());
-      editImg = base64String;
-      render();
-    }
   }
 }

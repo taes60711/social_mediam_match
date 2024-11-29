@@ -6,7 +6,6 @@ import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 
-import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 
 import '../../../../models/post_model.dart';
@@ -68,25 +67,14 @@ class PostCreatePage extends BaseFadeScalePage {
                 String postTitle = titleController.text;
                 String postContent = await quillEditorController.getText();
 
-                if (postTitle == "" || postContent == "") {
-                  String content = "";
-                  if (postTitle == "" && postContent == "") {
-                    content = "\"標題\"不得為空\n\"內文\"不得為空";
-                  } else if (postTitle == "") {
-                    content = "\"標題\"不得為空";
-                  } else if (postContent == "") {
-                    content = "\"內文\"不得為空";
-                  }
-
-                  ConfirmDilaog(title: '警告', content: content).show(context);
-                  return;
+                ///　文章作る
+                if (viewModel.postCreateBeforCheck(postTitle: postTitle, postContent: postContent)) {
+                  viewModel.postCreate(
+                    postTitle: titleController.text,
+                    postContent: postContent,
+                    postBoard: postBoard,
+                  );
                 }
-
-                viewModel.postCreate(
-                  postTitle: titleController.text,
-                  postContent: postContent,
-                  postBoard: postBoard,
-                );
               },
               title: "投稿",
             ),

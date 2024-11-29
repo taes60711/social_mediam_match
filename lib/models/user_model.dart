@@ -81,21 +81,6 @@ class ProfileData extends UserModel {
     mainSkills.sort((a, b) => a.name.length.compareTo(b.name.length));
     wantSkills.sort((a, b) => a.name.length.compareTo(b.name.length));
 
-    // String formattedTime = "";
-    // if (json['lastlogin'] != null) {
-    //   DateTime dateUtc = DateTime.parse(json['lastlogin']).toUtc();
-    //   Duration duration = DateTime.now().toUtc().difference(dateUtc);
-    //   String durationTime = "";
-    //   if (duration.inMinutes < 60) {
-    //     durationTime = "${duration.inMinutes} 分";
-    //   } else if (duration.inMinutes >= 60 && duration.inMinutes < 1440) {
-    //     durationTime = "${duration.inHours} 時";
-    //   } else if (duration.inMinutes >= 1440) {
-    //     durationTime = "${duration.inDays} 天";
-    //   }
-    //   formattedTime = durationTime;
-    // }
-
     return ProfileData(
       uid: json["uid"],
       image: json["image"],
@@ -169,8 +154,8 @@ class UpdateUser extends UserModel {
       'name': name,
       'job': job,
       'introduction': introduction,
-      'skills': mainSkills!.map((e) => e.toMap()).toList(),
-      'wantSkills': wantSkills!.map((e) => e.toMap()).toList(),
+      'skills': mainSkills!.map((e) => e.toJson()).toList(),
+      'wantSkills': wantSkills!.map((e) => e.toJson()).toList(),
     };
   }
 }

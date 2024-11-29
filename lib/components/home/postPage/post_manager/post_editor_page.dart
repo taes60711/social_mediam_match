@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
@@ -77,33 +79,22 @@ class PostEditorPage extends BaseFadeScalePage {
                 String postContent = await quillEditorController.getText();
                 String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
 
-                if (postTitle == "" || postContent == "") {
-                  String content = "";
-                  if (postTitle == "" && postContent == "") {
-                    content = "\"標題\"不得為空\n\"內文\"不得為空";
-                  } else if (postTitle == "") {
-                    content = "\"標題\"不得為空";
-                  } else if (postContent == "") {
-                    content = "\"內文\"不得為空";
+                if (await sendBeforeCheck()) {
+                  PostModel post = ref.read(choicedPostProvider.notifier).state;
+                  bool isSucess = await PostService().updatePost(
+                    postId: post.id,
+                    title: postTitle,
+                    mainMessage: fomattedContent,
+                  );
+
+                  if (isSucess) {
+                    post.title = postTitle;
+                    post.mainMessage = fomattedContent;
+                    ref.read(postListController.notifier).editData(dataIndex, post);
+
+                    render();
+                    closePage();
                   }
-
-                  ConfirmDilaog(title: '警告', content: content).show(context);
-                  return;
-                }
-                PostModel post = ref.read(choicedPostProvider.notifier).state;
-                bool isSucess = await PostService().updatePost(
-                  postId: post.id,
-                  title: postTitle,
-                  mainMessage: fomattedContent,
-                );
-
-                if (isSucess) {
-                  post.title = postTitle;
-                  post.mainMessage = fomattedContent;
-                  ref.read(postListController.notifier).editData(dataIndex, post);
-
-                  render();
-                  closePage();
                 }
               },
               title: "更新",
@@ -140,5 +131,24 @@ class PostEditorPage extends BaseFadeScalePage {
         ],
       ),
     );
+  }
+
+  Future<bool> sendBeforeCheck() async {
+    bool isOK = true;
+    String postContent = await quillEditorController.getText();
+
+    if (titleController.text == "" || postContent == "") {
+      String content = "";
+      if (titleController.text == "" && postContent == "") {
+        content = "\"標題\"不得為空\n\"內文\"不得為空";
+      } else if (titleController.text == "") {
+        content = "\"標題\"不得為空";
+      } else if (titleController.text == "") {
+        content = "\"內文\"不得為空";
+      }
+      isOK = false;
+      ConfirmDilaog(title: '警告', content: content).show(context);
+    }
+    return isOK;
   }
 }

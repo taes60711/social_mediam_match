@@ -35,6 +35,15 @@ class RequestUserSkillData {
   int month;
 
   RequestUserSkillData({required this.name, required this.level, required this.month});
+
+  factory RequestUserSkillData.empty() {
+    return RequestUserSkillData(
+      name: "",
+      level: 0,
+      month: 0,
+    );
+  }
+
   RequestUserSkillData.copy(RequestUserSkillData data)
       : name = data.name,
         level = data.level,
@@ -48,7 +57,15 @@ class RequestUserSkillData {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  RequestUserSkillData copy() {
+    return RequestUserSkillData(
+      name: name,
+      level: level,
+      month: month,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
     return {
       'name': name,
       'level': level,

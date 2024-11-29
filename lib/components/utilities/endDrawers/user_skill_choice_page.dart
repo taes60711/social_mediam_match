@@ -94,17 +94,23 @@ class UserSkillChoicePage extends BaseEndDrawer {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                SkillLevelChoice(onLevelChange: (value) {
-                                  RequestUserSkillData wantAddSkill = e;
-                                  wantAddSkill.level = int.parse(value);
-                                  int index = tempFilteredSkillList.indexWhere((element) => element.name == e.name);
-                                  if (index == -1) {
-                                    tempFilteredSkillList.add(wantAddSkill);
-                                  } else {
-                                    tempFilteredSkillList[index].level = wantAddSkill.level;
-                                  }
-                                  render();
-                                }).show(context);
+                                SkillLevelChoice(
+                                    intSelectedItem: tempFilteredSkillList
+                                        .firstWhere((element) => element.name == e.name,
+                                            orElse: () => RequestUserSkillData.empty())
+                                        .level
+                                        .toString(),
+                                    onLevelChange: (value) {
+                                      RequestUserSkillData wantAddSkill = e;
+                                      wantAddSkill.level = int.parse(value);
+                                      int index = tempFilteredSkillList.indexWhere((element) => element.name == e.name);
+                                      if (index == -1) {
+                                        tempFilteredSkillList.add(wantAddSkill);
+                                      } else {
+                                        tempFilteredSkillList[index].level = wantAddSkill.level;
+                                      }
+                                      render();
+                                    }).show(context);
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(
@@ -332,8 +338,9 @@ class UserSkillChoicePage extends BaseEndDrawer {
 
 ///スキルレベル調整
 class SkillLevelChoice extends BaseBottomSheet {
+  String? intSelectedItem;
   final Function(String value)? onLevelChange;
-  SkillLevelChoice({this.onLevelChange});
+  SkillLevelChoice({this.intSelectedItem, this.onLevelChange});
   @override
   BottomSheetPageType bottomSheetPageType() {
     return BottomSheetPageType.edit;
@@ -349,7 +356,14 @@ class SkillLevelChoice extends BaseBottomSheet {
   int choicedIndex = 0;
 
   @override
-  Future<void> initState(WidgetRef ref) async {}
+  Future<void> initState(WidgetRef ref) async {
+    if (intSelectedItem != null) {
+      int index = item.indexWhere((e) => e == intSelectedItem);
+      if (index != -1) {
+        scrollController.animateToItem(index, duration: const Duration(milliseconds: 300), curve: Curves.bounceIn);
+      }
+    }
+  }
 
   @override
   Widget build(WidgetRef ref) {
@@ -374,6 +388,7 @@ class SkillLevelChoice extends BaseBottomSheet {
         Expanded(
           child: CupertinoPicker(
             itemExtent: 50,
+            scrollController: scrollController,
             onSelectedItemChanged: (int value) {
               choicedIndex = value;
             },

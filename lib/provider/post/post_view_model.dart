@@ -21,6 +21,24 @@ class PostViewModel {
   final BuildContext context;
   PostViewModel({required this.ref, required this.context, required this.render});
 
+  ///文章作る前チェック
+  bool postCreateBeforCheck({required String postTitle, required String postContent}) {
+    bool isOk = true;
+    if (postTitle == "" || postContent == "") {
+      String content = "";
+      if (postTitle == "" && postContent == "") {
+        content = "\"標題\"不得為空\n\"內文\"不得為空";
+      } else if (postTitle == "") {
+        content = "\"標題\"不得為空";
+      } else if (postContent == "") {
+        content = "\"內文\"不得為空";
+      }
+      isOk = false;
+      ConfirmDilaog(title: '警告', content: content).show(context);
+    }
+    return isOk;
+  }
+
   ///文章作る
   Future<void> postCreate({required String postTitle, required String postContent, PostBoard? postBoard}) async {
     ProfileData userData = ref.watch(loginUserData);
