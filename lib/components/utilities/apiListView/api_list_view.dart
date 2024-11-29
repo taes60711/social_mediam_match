@@ -153,11 +153,14 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
 
                   if (isTop) {
                     if (!widget.haveBottomBar) {
+                      ///　bottombarない場合
                       flatButtonPos = ScreenSize.fitPxHeight(baseFloatBottomPos);
                     } else {
+                      ///　bottombarある場合
                       flatButtonPos = ScreenSize.fitPxHeight(65);
                     }
                   } else {
+                    ///　bottombarある場合、かつ隠れてる場合
                     if (ref.watch(bottomNavationBarPosProvider) == ScreenSize.fitPxHeight(-60)) {
                       flatButtonPos = ScreenSize.fitPxHeight(65);
                     }
@@ -172,19 +175,25 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                 },
               ),
 
-              ///　FloatButton
+              ///　toTopボタン
               Builder(
                 builder: (context) {
                   double flatButtonPos = ScreenSize.fitPxHeight(-60);
 
+                  ///　カスタマfloatボタンある場合
                   if (widget.customFloatBtn != null) {
                     flatButtonPos = ScreenSize.fitPxHeight(-100);
                   }
+
+                  ///　bottombarない場合
                   if (!widget.haveBottomBar) {
                     if (!isTop) {
                       flatButtonPos = ScreenSize.fitPxHeight(baseFloatBottomPos);
                     }
+
+                    ///　bottombarある場合
                   } else {
+                    ///　隠れてる場合
                     if (ref.watch(bottomNavationBarPosProvider) == ScreenSize.fitPxHeight(-60)) {
                       flatButtonPos = ScreenSize.fitPxHeight(15);
                     }
@@ -275,8 +284,6 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
         if (scrollNotification is ScrollUpdateNotification) {
           final scrollPosition = scrollNotification.metrics.pixels;
           final max = scrollNotification.metrics.maxScrollExtent;
-
-          // print("scrollPosition ${scrollPosition} max ${max} nowStatus ${nowStatus} isTop ${isTop}");
 
           ///最上部場合bottomBar表示される
           if (scrollPosition == 0) {
