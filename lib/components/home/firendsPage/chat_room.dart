@@ -376,7 +376,9 @@ List formatChatMsg(List<ChatRoomMsg> messageData) {
   } else {
     for (int i = 0; i < messageData.length; i++) {
       DateTime now = DateTime.now().toUtc();
+
       String formattedTime = DateFormat("yyyy-MM-dd").format(now.toLocal());
+
       //index : 0 - last比較
       // 防止range over 問題
       if (i < messageData.length - 1) {

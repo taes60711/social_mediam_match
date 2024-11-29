@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -46,6 +48,8 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   bool isTop = true;
   double scrollStartPos = 0;
 
+  double baseFloatBottomPos = Platform.isAndroid ? 15 : 45;
+
   @override
   void initState() {
     init();
@@ -74,13 +78,30 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
       if (ref.watch(widget.listControllerProvider).listData.isEmpty) {
         return Scaffold(
           backgroundColor: Colors.transparent,
-          body: widget.noDataWidget ??
-              Center(
-                child: Text(
-                  "NoData",
-                  style: TextStyle(color: AppColors.whiteColor),
-                ),
+          body: Stack(
+            children: [
+              widget.noDataWidget ??
+                  Center(
+                    child: Text(
+                      "NoData",
+                      style: TextStyle(color: AppColors.whiteColor),
+                    ),
+                  ),
+
+              ///　CustomFloatButton
+              Builder(
+                builder: (context) {
+                  double flatButtonPos = ScreenSize.fitPxHeight(baseFloatBottomPos);
+
+                  return Positioned(
+                    right: ScreenSize.fitPxWidth(15),
+                    bottom: flatButtonPos,
+                    child: widget.customFloatBtn ?? Container(),
+                  );
+                },
               ),
+            ],
+          ),
         );
       }
 
@@ -125,6 +146,32 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                 ),
               ),
 
+              ///　CustomFloatButton
+              Builder(
+                builder: (context) {
+                  double flatButtonPos = ScreenSize.fitPxHeight(-60);
+
+                  if (isTop) {
+                    if (!widget.haveBottomBar) {
+                      flatButtonPos = ScreenSize.fitPxHeight(baseFloatBottomPos);
+                    } else {
+                      flatButtonPos = ScreenSize.fitPxHeight(65);
+                    }
+                  } else {
+                    if (ref.watch(bottomNavationBarPosProvider) == ScreenSize.fitPxHeight(-60)) {
+                      flatButtonPos = ScreenSize.fitPxHeight(65);
+                    }
+                  }
+
+                  return AnimatedPositioned(
+                    duration: const Duration(milliseconds: 300),
+                    right: ScreenSize.fitPxWidth(15),
+                    bottom: flatButtonPos,
+                    child: widget.customFloatBtn ?? Container(),
+                  );
+                },
+              ),
+
               ///　FloatButton
               Builder(
                 builder: (context) {
@@ -135,7 +182,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                   }
                   if (!widget.haveBottomBar) {
                     if (!isTop) {
-                      flatButtonPos = ScreenSize.fitPxHeight(15);
+                      flatButtonPos = ScreenSize.fitPxHeight(baseFloatBottomPos);
                     }
                   } else {
                     if (ref.watch(bottomNavationBarPosProvider) == ScreenSize.fitPxHeight(-60)) {
@@ -152,11 +199,6 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              /// カスタム FloatBtn
-                              widget.customFloatBtn ?? Container(),
-
-                              SizedBox(height: ScreenSize.fitPxHeight(10)),
-
                               ///トップに移動ボタン
                               MainBtn(
                                 onPress: () {
@@ -313,9 +355,8 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
             if (isPosNotInTop) {
               ///TOPでるって設定する
               isTop = true;
-              if (!widget.haveBottomBar) {
-                setState(() {});
-              }
+
+              setState(() {});
             }
 
             ///TOPでいる

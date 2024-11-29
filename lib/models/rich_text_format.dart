@@ -249,11 +249,14 @@ class RichTextFormat {
       end = url.indexOf('?si');
     } else if (url.contains('src=')) {
       end = url.indexOf('">');
+    } else if (url.contains('&')) {
+      end = url.indexOf('&');
     } else {
       end = url.length;
     }
 
     String tmpId = url.substring(start, end);
+
     return tmpId;
   }
 }

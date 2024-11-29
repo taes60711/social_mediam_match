@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/image_view_page.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -88,7 +89,32 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                     child: YoutubePlayer(
                       controller: ytController[index],
                       onReady: () => {},
-                      bottomActions: [CurrentPosition(), ProgressBar(isExpanded: true), RemainingDuration(), FullScreenButton()],
+                      bottomActions: [
+                        CurrentPosition(),
+                        ProgressBar(isExpanded: true),
+                        RemainingDuration(),
+                        PlaybackSpeedButton(
+                          icon: Icon(
+                            FontAwesomeIcons.gear,
+                            size: ScreenSize.fontSize18,
+                            color: AppColors.whiteColor,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            final Uri _url = Uri.parse("https://www.youtube.com/watch?v=$ytId");
+                            launchUrl(_url);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Icon(
+                              FontAwesomeIcons.windowRestore,
+                              size: ScreenSize.fontSize18,
+                              color: AppColors.whiteColor,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   );
                 } else {

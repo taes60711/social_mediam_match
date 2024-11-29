@@ -140,6 +140,8 @@ class PostViewUtilities {
                   ),
                   Text(
                     data.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: AppColors.whiteColor,
                       fontSize: ScreenSize.fontSize16,
