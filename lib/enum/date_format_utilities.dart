@@ -17,12 +17,12 @@ class DateFormatUtilities {
 
     // 幾秒鐘前
     if (diff.inSeconds < 60) {
-      return '${diff.inSeconds}秒前';
+      return '剛剛';
     }
 
     // 幾分鐘前
     if (diff.inMinutes < 60) {
-      return '${diff.inMinutes}鐘前';
+      return '${diff.inMinutes}分鐘前';
     }
 
     // 幾小時前
@@ -38,7 +38,7 @@ class DateFormatUtilities {
     // 幾週前
     if (diff.inDays < 30) {
       int weeks = (diff.inDays / 7).floor();
-      return '$weeks 週前';
+      return '$weeks週前';
     }
 
     return '';
@@ -55,12 +55,12 @@ class DateFormatUtilities {
 
     // 幾秒鐘前
     if (diff.inSeconds < 60) {
-      return '${diff.inSeconds}秒前';
+      return '剛剛';
     }
 
     // 幾分鐘前
     if (diff.inMinutes < 60) {
-      return '${diff.inMinutes}鐘前';
+      return '${diff.inMinutes}分鐘前';
     }
 
     // 幾小時前

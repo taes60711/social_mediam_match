@@ -82,6 +82,7 @@ class CourseCreatePage extends BaseFadeScalePage {
                     chapterList: ref.read(courseEditChapterList),
                     courseLearningSkills: learningSkillList,
                     type: int.parse(ref.read(courseChoiceType.notifier).state),
+                    postTime: DateTime.now().toUtc().toString(),
                     isPublic: isPublic,
                     signUpStatus: "none",
                     courseCreateduserInfo: userData,

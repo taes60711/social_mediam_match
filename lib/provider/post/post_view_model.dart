@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+
 import 'package:social_mediam_match/models/post_model.dart';
 import '../../components/home/postPage/post_detail_page.dart';
 import '../../components/home/postPage/post_type_board/post_page_by_type.dart';
@@ -117,15 +117,13 @@ class PostViewModel {
     PostModel choiceData = ref.read(choicedPostProvider);
     ProfileData userData = ref.watch(loginUserData);
     int uid = await PostService().createPostComment(postUID: choiceData.id, userUID: userData.uid, message: message);
-    DateTime dateUtc = DateTime.now().toUtc();
-    DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
-    String formattedTime = DateFormat("yyyy-MM-dd hh:mm a").format(dateTime.toLocal());
+
     PostCommentTextEditorModel sdsat = PostCommentTextEditorModel(
       uid: uid,
       postId: ref.read(choicedPostProvider.notifier).state.id,
       userUid: userData.uid,
       message: message,
-      postTime: formattedTime,
+      postTime: DateTime.now().toUtc().toString(),
       commentUserInfo: userData,
       isEditor: false,
       textEditingController: TextEditingController(text: message),

@@ -54,7 +54,7 @@ class CourseModel {
     this.prStory = "",
     this.chapterList = const [],
     this.courseLearningSkills = const [],
-    this.postTime = "yyyy-MM-dd HH:mm:ss",
+    this.postTime = "",
     this.type = -1,
     this.isPublic = false,
     //none added signing
@@ -63,10 +63,6 @@ class CourseModel {
   });
 
   factory CourseModel.toMap(dynamic json) {
-    // DateTime dateUtc = DateTime.parse(json['createdTime']).toUtc();
-    // DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateUtc.toString(), true);
-    // String formattedTime = DateFormat("yyyy/MM/dd").format(dateTime.toLocal());
-
     List<String> courseLearningSkillList = (json['courseLearningkillList'] as List<dynamic>).map((e) {
       return e as String;
     }).toList();

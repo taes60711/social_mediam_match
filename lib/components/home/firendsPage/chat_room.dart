@@ -1,9 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/components/home/firendsPage/comment_build.dart';
+import 'package:social_mediam_match/components/utilities/FadeScalePage/image_view_page.dart';
 import 'package:social_mediam_match/components/utilities/appBar/chat_room_bar.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 
@@ -218,10 +220,20 @@ class ChatRoom extends BaseEndDrawer {
     Widget component = msgTextContianer(
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: ScreenSize.width * 0.7),
-        child: Text(
-          msg,
-          textAlign: whoMsg == "my" ? TextAlign.right : TextAlign.left,
-          style: TextStyle(color: AppColors.whiteColor),
+        child: GestureDetector(
+          onDoubleTap: () {
+            Clipboard.setData(ClipboardData(text: msg));
+          },
+          child: SelectableText.rich(
+            textAlign: TextAlign.left,
+            TextSpan(
+              text: msg,
+              style: TextStyle(
+                color: AppColors.whiteColor,
+                fontSize: ScreenSize.fontSize14,
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -238,22 +250,37 @@ class ChatRoom extends BaseEndDrawer {
           msgTextContianer(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: ScreenSize.width * .7),
-              child: RichText(
-                text: TextSpan(
-                  children: splitStringAndUrls(msg).map((e) {
-                    if (e.startsWith('https')) {
-                      return TextSpan(
+              child: GestureDetector(
+                onDoubleTap: () {
+                  Clipboard.setData(ClipboardData(text: msg));
+                },
+                child: SelectableText.rich(
+                  TextSpan(
+                    children: splitStringAndUrls(msg).map((e) {
+                      if (e.startsWith('https')) {
+                        return TextSpan(
+                            text: e,
+                            style: TextStyle(
+                              color: AppColors.blueColor,
+                              decoration: TextDecoration.underline,
+                              fontSize: ScreenSize.fontSize14,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Uri url = Uri.parse(e);
+                                launchUrl(url);
+                              });
+                      } else {
+                        return TextSpan(
                           text: e,
-                          style: TextStyle(color: AppColors.blueColor, decoration: TextDecoration.underline),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Uri url = Uri.parse(e);
-                              launchUrl(url);
-                            });
-                    } else {
-                      return TextSpan(text: e, style: TextStyle(color: AppColors.whiteColor));
-                    }
-                  }).toList(),
+                          style: TextStyle(
+                            color: AppColors.whiteColor,
+                            fontSize: ScreenSize.fontSize14,
+                          ),
+                        );
+                      }
+                    }).toList(),
+                  ),
                 ),
               ),
             ),
@@ -289,8 +316,8 @@ class ChatRoom extends BaseEndDrawer {
         child: GestureDetector(
           onTap: () async {
             print(imgUrl);
-            // await imageView(RichTextFormat(htmlString: imgUrl)
-            //     .mappingIPAndPort(imgUrl));
+
+            ImageViewPage(imgUrl: imgUrl).show(context);
           },
           child: ClipRRect(borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(10)), child: Image.network(imgUrl)),
         ),
