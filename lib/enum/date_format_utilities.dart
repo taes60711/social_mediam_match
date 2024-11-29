@@ -27,7 +27,7 @@ class DateFormatUtilities {
 
     // 幾小時前
     if (diff.inHours < 24) {
-      return '${diff.inHours}時前';
+      return '${diff.inHours}小時前';
     }
 
     // 幾天前
@@ -65,7 +65,7 @@ class DateFormatUtilities {
 
     // 幾小時前
     if (diff.inHours < 24) {
-      return '${diff.inHours}時前';
+      return '${diff.inHours}小時前';
     }
 
     // 幾天前
