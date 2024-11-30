@@ -19,6 +19,15 @@ class CourseChapterInfo {
     );
   }
 
+  CourseChapterInfo copy() {
+    return CourseChapterInfo(
+      chapter: chapter,
+      chapterName: chapterName,
+      chapterNameEditController: chapterNameEditController,
+      content: List<String>.from(content),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'chapter': chapter,

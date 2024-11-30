@@ -21,11 +21,25 @@ class RequestSkillListData {
       : id = skillListData.id,
         name = skillListData.name;
 
+  RequestSkillListData copy() {
+    return RequestSkillListData(
+      id: id,
+      name: name,
+    );
+  }
+
   factory RequestSkillListData.toModel(Map<String, dynamic> json) {
     return RequestSkillListData(
       id: json["id"],
       name: json["name"],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+    };
   }
 }
 

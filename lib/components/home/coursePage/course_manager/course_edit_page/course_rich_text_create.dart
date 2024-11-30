@@ -10,7 +10,8 @@ import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.da
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../../../../models/course_model.dart';
-import '../../../../../provider/course/course_provider.dart';
+import '../../../../../provider/course/corse_edit_view_model.dart';
+
 import '../../../../utilities/dialog/confirm_dialog.dart';
 import '../../../../utilities/inputField/base_input.dart';
 import '../../../../utilities/main_button.dart';

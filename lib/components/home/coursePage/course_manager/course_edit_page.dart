@@ -6,11 +6,13 @@ import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade
 import 'package:social_mediam_match/components/utilities/endDrawers/base_skill_filter_page.dart';
 import 'package:social_mediam_match/models/skill_model.dart';
 import '../../../../models/course_model.dart';
+import '../../../../provider/course/corse_edit_view_model.dart';
 import '../../../../provider/course/course_provider.dart';
 import '../../../../services/course_service.dart';
 import '../../../utilities/apiListView/api_list_controller.dart';
 import '../../../utilities/common_scaffold.dart';
 import '../../../utilities/appBar/basic_top_bar.dart';
+import '../../../utilities/dialog/confirm_dialog.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/custom_expansion_title.dart';
 import '../../../utilities/inputField/base_input.dart';
@@ -29,36 +31,13 @@ class CourseEditPage extends BaseFadeScalePage {
   int dataIndex;
   CourseEditPage(this.courseListController, {required this.dataIndex});
 
-  TextEditingController titleController = TextEditingController();
-  TextEditingController contentController = TextEditingController();
-  TextEditingController beforeNeedController = TextEditingController();
-  bool isPublic = true;
+  late CourseEditViewModel viewModel = CourseEditViewModel();
 
   @override
   Future<void> initState(WidgetRef ref) async {
+    viewModel.init(context, ref, () => render());
     CourseModel courseData = ref.read(choicedCourseProvider);
-    titleController.text = courseData.title;
-    contentController.text = courseData.content;
-    beforeNeedController.text = courseData.beforeNeed;
-
-    ref.read(courseDetailContent.notifier).update((state) => courseData.prStory);
-
-    List<RequestSkillListData> formatListData = [];
-
-    for (var element in courseData.courseLearningSkills) {
-      int index = ref.read(allSkillListData).indexWhere((e) => e.name == element);
-      if (index != -1) {
-        formatListData.add(ref.read(allSkillListData)[index]);
-      }
-    }
-
-    ref.read(courseEditSkillList.notifier).update((state) => List.from(formatListData));
-    ref.read(courseEditChapterList.notifier).update((state) => List.from(courseData.chapterList));
-    ref.read(courseChoiceLevel.notifier).update((state) => courseData.needLevel.toString());
-
-    ref.read(courseChoiceType.notifier).update((state) => courseData.type.toString());
-
-    render();
+    viewModel.initData(courseData: courseData);
   }
 
   @override
@@ -72,7 +51,18 @@ class CourseEditPage extends BaseFadeScalePage {
             BaseTopBar(
               leftWidget: GestureDetector(
                 onTap: () {
-                  pageClosePage();
+                  if (viewModel.isEditedCheck()) {
+                    ConfirmDilaog(
+                        title: '提示',
+                        content: '正在編輯中　確定要離開嗎？',
+                        conirmFunc: () {
+                          viewModel.resetAllData();
+                          closePage();
+                        }).show(context);
+                  } else {
+                    viewModel.resetAllData();
+                    closePage();
+                  }
                 },
                 child: Container(
                   width: ScreenSize.fitPxWidth(40),
@@ -89,20 +79,25 @@ class CourseEditPage extends BaseFadeScalePage {
               ),
               rightWidget: MainBtn(
                 onPress: () async {
+                  if (!viewModel.sendBeforeCheck()) {
+                    return;
+                  }
+                  CourseEditingModel courseEditingData = viewModel.editingData;
+
                   List<String> learningSkillList = ref.read(courseEditSkillList).map((e) => e.name).toList();
 
                   CourseModel updateCourse = CourseModel(
                     id: ref.read(choicedCourseProvider).id,
                     createdBy: ref.read(choicedCourseProvider).courseCreateduserInfo.uid,
-                    title: titleController.text,
-                    needLevel: int.parse(ref.read(courseChoiceLevel.notifier).state),
-                    content: contentController.text,
-                    beforeNeed: beforeNeedController.text,
-                    prStory: ref.read(courseDetailContent),
-                    chapterList: ref.read(courseEditChapterList),
+                    title: courseEditingData.title,
+                    needLevel: int.parse(courseEditingData.courseChoiceLevel),
+                    content: courseEditingData.content,
+                    beforeNeed: courseEditingData.beforeNeed,
+                    prStory: courseEditingData.courseDetailContent,
+                    chapterList: courseEditingData.courseEditChapterList,
                     courseLearningSkills: learningSkillList,
-                    type: int.parse(ref.read(courseChoiceType.notifier).state),
-                    isPublic: isPublic,
+                    type: int.parse(courseEditingData.courseChoiceType),
+                    isPublic: courseEditingData.isPublic,
                     signUpStatus: ref.read(choicedCourseProvider).signUpStatus,
                     courseCreateduserInfo: ref.read(choicedCourseProvider).courseCreateduserInfo,
                     postTime: ref.read(choicedCourseProvider).postTime,
@@ -118,14 +113,16 @@ class CourseEditPage extends BaseFadeScalePage {
                     chapterList: updateCourse.chapterList,
                     courseLearningSkills: updateCourse.courseLearningSkills,
                     type: updateCourse.type.toString(),
-                    isPublic: isPublic,
+                    isPublic: updateCourse.isPublic,
                     courseId: updateCourse.id,
                   );
 
                   /// -100 = success ; -101 = fail
                   if (result == -100) {
                     ref.read(courseListController.notifier).editData(dataIndex, updateCourse);
-                    pageClosePage();
+                    viewModel.resetAllData();
+                    ref.read(choicedCourseProvider.notifier).update((state) => updateCourse);
+                    closePage();
                   }
                 },
                 title: "修改",
@@ -138,12 +135,24 @@ class CourseEditPage extends BaseFadeScalePage {
                   children: [
                     SizedBox(height: ScreenSize.fitPxHeight(10)),
 
-                    inputField(hintText: "標題", editingController: titleController, fontSzie: ScreenSize.fontSize24),
+                    inputField(
+                      hintText: "標題",
+                      editingController: viewModel.titleController,
+                      fontSzie: ScreenSize.fontSize24,
+                      errMsg: viewModel.titleErr,
+                    ),
                     SizedBox(height: ScreenSize.fitPxHeight(10)),
 
-                    multiInputField(hintText: "大綱", editingController: contentController),
+                    multiInputField(
+                      hintText: "大綱",
+                      editingController: viewModel.contentController,
+                      errMsg: viewModel.contentErr,
+                    ),
                     SizedBox(height: ScreenSize.fitPxHeight(10)),
-                    multiInputField(hintText: "前置需求", editingController: beforeNeedController),
+                    multiInputField(
+                      hintText: "前置需求",
+                      editingController: viewModel.beforeNeedController,
+                    ),
 
                     SizedBox(height: ScreenSize.fitPxHeight(10)),
 
@@ -154,7 +163,9 @@ class CourseEditPage extends BaseFadeScalePage {
                     /// タグ設定
                     const CourseTypeChoicedLabel(),
                     SizedBox(height: ScreenSize.fitPxHeight(15)),
-                    skillChoiceBuild(),
+                    skillChoiceBuild(
+                      errMsg: viewModel.learningSkillListErr,
+                    ),
                     SizedBox(height: ScreenSize.fitPxHeight(15)),
 
                     ///詳細内容
@@ -233,95 +244,141 @@ class CourseEditPage extends BaseFadeScalePage {
   }
 
   /// スキル設定
-  Widget skillChoiceBuild() {
-    return MainBtn(
-      onPress: () {
-        BaseSkillFilterPage(
-          viewRender: render,
-          filteredSkillList: courseEditSkillList,
-          btnStr: "確認",
-          searchFunc: (list) {
-            ref.read(courseEditSkillList.notifier).update((state) => list);
+  Widget skillChoiceBuild({String? errMsg}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MainBtn(
+          onPress: () {
+            BaseSkillFilterPage(
+              viewRender: render,
+              filteredSkillList: courseEditSkillList,
+              btnStr: "確認",
+              searchFunc: (list) {
+                ref.read(courseEditSkillList.notifier).update((state) => list);
+              },
+            ).show(context);
           },
-        ).show(context);
-      },
-      child: Container(
-        width: ScreenSize.width,
-        color: Colors.transparent,
-        child: Row(
-          children: [
-            Text(
-              "學習的技能",
-              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+          child: Container(
+            width: ScreenSize.width,
+            color: Colors.transparent,
+            child: Row(
+              children: [
+                Text(
+                  "學習的技能",
+                  style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+                ),
+                ref.read(courseEditSkillList).isEmpty
+                    ? Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ScreenSize.fitPxWidth(5),
+                          vertical: ScreenSize.fitPxWidth(3),
+                        ),
+                        margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
+                        decoration: BoxDecoration(
+                          color: AppColors.greyColor57,
+                          borderRadius: BorderRadius.circular(
+                            ScreenSize.fitPxWidth(8),
+                          ),
+                        ),
+                        child: Text(
+                          "尚無",
+                          style: TextStyle(color: AppColors.whiteColor),
+                        ),
+                      )
+                    : Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: ref.read(courseEditSkillList).map((e) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: ScreenSize.fitPxWidth(5),
+                                  vertical: ScreenSize.fitPxWidth(3),
+                                ),
+                                margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
+                                decoration: BoxDecoration(
+                                  color: AppColors.greyColor57,
+                                  borderRadius: BorderRadius.circular(
+                                    ScreenSize.fitPxWidth(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  e.name,
+                                  style: TextStyle(color: AppColors.whiteColor),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+              ],
             ),
-            ref.read(courseEditSkillList).isEmpty
-                ? Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: ScreenSize.fitPxWidth(5),
-                      vertical: ScreenSize.fitPxWidth(3),
-                    ),
-                    margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
-                    decoration: BoxDecoration(
-                      color: AppColors.greyColor57,
-                      borderRadius: BorderRadius.circular(
-                        ScreenSize.fitPxWidth(8),
-                      ),
-                    ),
-                    child: Text(
-                      "尚無",
-                      style: TextStyle(color: AppColors.whiteColor),
-                    ),
-                  )
-                : Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: ref.read(courseEditSkillList).map((e) {
-                          return Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: ScreenSize.fitPxWidth(5),
-                              vertical: ScreenSize.fitPxWidth(3),
-                            ),
-                            margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
-                            decoration: BoxDecoration(
-                              color: AppColors.greyColor57,
-                              borderRadius: BorderRadius.circular(
-                                ScreenSize.fitPxWidth(8),
-                              ),
-                            ),
-                            child: Text(
-                              e.name,
-                              style: TextStyle(color: AppColors.whiteColor),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-          ],
+          ),
         ),
-      ),
+        Visibility(
+          visible: errMsg != null && errMsg != "",
+          child: Text(
+            errMsg ?? "",
+            style: TextStyle(
+              color: AppColors.redColor,
+              fontSize: ScreenSize.fontSize14,
+            ),
+          ),
+        )
+      ],
     );
   }
 
-  Widget inputField({required String hintText, required TextEditingController editingController, double? fontSzie}) {
+  Widget inputField(
+      {required String hintText, required TextEditingController editingController, double? fontSzie, String? errMsg}) {
     double fs = fontSzie ?? ScreenSize.fontSize18;
-    return BaseInputField(
-      hintText: hintText,
-      hintStyle: TextStyle(color: AppColors.greyColor130, fontSize: fs),
-      inputStyle: TextStyle(color: AppColors.whiteColor, fontSize: fs),
-      controller: editingController,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        BaseInputField(
+          hintText: hintText,
+          hintStyle: TextStyle(color: AppColors.greyColor130, fontSize: fs),
+          inputStyle: TextStyle(color: AppColors.whiteColor, fontSize: fs),
+          controller: editingController,
+        ),
+        Visibility(
+          visible: errMsg != null && errMsg != "",
+          child: Text(
+            errMsg ?? "",
+            style: TextStyle(
+              color: AppColors.redColor,
+              fontSize: ScreenSize.fontSize14,
+            ),
+          ),
+        )
+      ],
     );
   }
 
-  Widget multiInputField({required String hintText, required TextEditingController editingController}) {
-    return MultInput(
-      controller: editingController,
-      hintText: hintText,
-      minLines: 3,
-      maxLines: 3,
-      editPageMaxLines: 10,
-      editPageMinLines: 10,
+  Widget multiInputField({required String hintText, required TextEditingController editingController, String? errMsg}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MultInput(
+          controller: editingController,
+          hintText: hintText,
+          minLines: 3,
+          maxLines: 3,
+          editPageMaxLines: 10,
+          editPageMinLines: 10,
+        ),
+        Visibility(
+          visible: errMsg != null && errMsg != "",
+          child: Text(
+            errMsg ?? "",
+            style: TextStyle(
+              color: AppColors.redColor,
+              fontSize: ScreenSize.fontSize14,
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -408,8 +465,7 @@ class CourseEditPage extends BaseFadeScalePage {
         ///公開チェックボックス
         GestureDetector(
           onTap: () {
-            isPublic = !isPublic;
-            render();
+            viewModel.isPublicStatusOnChange();
           },
           child: Row(
             children: [
@@ -419,10 +475,9 @@ class CourseEditPage extends BaseFadeScalePage {
                 side: MaterialStateBorderSide.resolveWith(
                   (states) => BorderSide(width: 0.8, color: AppColors.orangeColor),
                 ),
-                value: isPublic,
+                value: viewModel.isPublic,
                 onChanged: (value) {
-                  isPublic = !isPublic;
-                  render();
+                  viewModel.isPublicStatusOnChange();
                 },
               ),
               Text(
@@ -438,15 +493,15 @@ class CourseEditPage extends BaseFadeScalePage {
     );
   }
 
-  void pageClosePage() {
-    resetAllData();
-    closePage();
-  }
+  // void pageClosePage() {
+  //   resetAllData();
+  //   closePage();
+  // }
 
-  void resetAllData() {
-    ref.read(courseDetailContent.notifier).update((state) => "");
-    ref.read(courseEditSkillList.notifier).update((state) => []);
-    ref.read(courseEditChapterList.notifier).update((state) => []);
-    ref.read(courseChoiceLevel.notifier).update((state) => "3");
-  }
+  // void resetAllData() {
+  //   ref.read(courseDetailContent.notifier).update((state) => "");
+  //   ref.read(courseEditSkillList.notifier).update((state) => []);
+  //   ref.read(courseEditChapterList.notifier).update((state) => []);
+  //   ref.read(courseChoiceLevel.notifier).update((state) => "3");
+  // }
 }
