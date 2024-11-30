@@ -98,7 +98,10 @@ class UserLoginStatusController {
     await UserService().updateUserLoginLastTime(requestUserData.uid);
 
     /// 読んでいない通知数取得する
-    await NotificationService().requestNoReadNotificationAmount(userUId: requestUserData.uid);
+    String notReadNotificationCount = await NotificationService().requestNoReadNotificationAmount(
+      userUId: requestUserData.uid,
+    );
+    ref.read(loginUserNotReadNotificationCount.notifier).update((state) => int.parse(notReadNotificationCount));
 
     /// チャットルームリストWS初始化
     ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);

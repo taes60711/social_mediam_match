@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/userPage/my_posts.dart';
 import 'package:social_mediam_match/components/home/userPage/user_profile_edit_page.dart';
+import 'package:social_mediam_match/components/utilities/app_common_tools.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
@@ -277,6 +278,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                 icon: FontAwesomeIcons.gear,
                 text: "一般",
                 onPress: () => PrivacySettingPage().show(context),
+                ref: ref,
               ),
               SizedBox(height: ScreenSize.fitPxHeight(10)),
               infoBtn(
@@ -293,7 +295,8 @@ class _UserPageState extends ConsumerState<UserPage> {
   }
 }
 
-Widget infoBtn({IconData? icon, String text = "", Function? onPress}) {
+/// ref 通知ドット用に
+Widget infoBtn({IconData? icon, String text = "", Function? onPress, WidgetRef? ref}) {
   return MainBtn(
     onPress: () {
       if (onPress != null) {
@@ -325,6 +328,14 @@ Widget infoBtn({IconData? icon, String text = "", Function? onPress}) {
               fontSize: ScreenSize.fontSize12,
             ),
           ),
+
+          ///  通知ドット
+          ref != null
+              ? Padding(
+                  padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(8), left: ScreenSize.fitPxWidth(4)),
+                  child: AppCommonTools().notificationDotWidget(ref.watch(loginUserNotReadNotificationCount) != 0),
+                )
+              : Container()
         ],
       ),
     ),

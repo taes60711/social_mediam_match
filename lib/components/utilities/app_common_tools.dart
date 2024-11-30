@@ -60,6 +60,36 @@ class AppCommonTools {
     );
   }
 
+  Widget notificationDotWidget(bool condiion, {int? notReadCount}) {
+    return Visibility(
+      visible: condiion,
+      child: notReadCount == null
+          ? Container(
+              width: ScreenSize.fitPxWidth(6),
+              height: ScreenSize.fitPxWidth(6),
+              decoration: BoxDecoration(
+                color: AppColors.redColor,
+                borderRadius: BorderRadius.circular(
+                  ScreenSize.fontSize16,
+                ),
+              ),
+            )
+          : Container(
+              decoration: BoxDecoration(
+                color: AppColors.redColor,
+                borderRadius: BorderRadius.circular(
+                  ScreenSize.fontSize16,
+                ),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8)),
+              child: Text(
+                "$notReadCount",
+                style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
+              ),
+            ),
+    );
+  }
+
   Widget titleBuild({required String str}) {
     return Text(
       str,

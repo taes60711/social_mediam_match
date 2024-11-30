@@ -10,6 +10,11 @@ final loginUserData = StateProvider<ProfileData>((ref) {
   return ProfileData();
 });
 
+/// ログイン中のユーザデータ
+final loginUserNotReadNotificationCount = StateProvider<int>((ref) {
+  return -1;
+});
+
 ///ユーザ資料について（登録の関数がSignUpViewModel、SignUpViewProivderにいる）
 class UserProvider extends ChangeNotifier {
   ///ユーザでータ
@@ -55,18 +60,6 @@ class UserProvider extends ChangeNotifier {
       // });
     }
   }
-
-  // ///メソッド：ユーザ資料更新する
-  // Future<void> updateProfile(String uid, UpdateUser updateData) async {
-  //   userData = await UserService().requestUserDataByUID(uid);
-  //   notifyListeners();
-  // }
-
-  // ///メソッド： 読んでいない通知数取得する
-  // Future<void> getNotificationCount() async {
-  //   notReadNotificationCount = await NotificationService().requestNoReadNotificationAmount(userUId: userData.uid);
-  //   notifyListeners();
-  // }
 
   ///メソッド： 通知数更新する
   void updateNotificationCount({bool allRead = false}) {

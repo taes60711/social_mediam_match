@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/utilities/app_common_tools.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
 
 import '../../components/utilities/main_button.dart';
 import '../../components/utilities/style/screen_size.dart';
@@ -59,40 +61,50 @@ class _BottomBarState extends ConsumerState<BottomBar> {
                   child: Container(
                     color: Colors.transparent,
                     width: (ScreenSize.width - ScreenSize.fitPxHeight(40)) / 5,
-                    child: Center(
-                      child: ref.watch(bottomNavigationBarProvider) == pageIndex
-                          ?
-                          //　選択してる
-                          Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  e.icon,
-                                  color: AppColors.whiteColor,
-                                  size: ScreenSize.fitPxHeight(23),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: ref.watch(bottomNavigationBarProvider) == pageIndex
+                              ?
+                              //　選択してる
+                              Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      e.icon,
+                                      color: AppColors.whiteColor,
+                                      size: ScreenSize.fitPxHeight(23),
+                                    ),
+                                    SizedBox(
+                                      height: ScreenSize.fitPxHeight(4),
+                                    ),
+                                    Container(
+                                      width: 10,
+                                      margin: EdgeInsets.only(left: leftPadding),
+                                      height: 2,
+                                      color: AppColors.whiteColor,
+                                    ),
+                                  ],
+                                )
+                              :
+                              //　選択してない
+                              Padding(
+                                  padding: EdgeInsets.only(right: rightPadding),
+                                  child: Icon(
+                                    e.icon,
+                                    color: AppColors.greyColor130,
+                                    size: ScreenSize.fitPxHeight(23),
+                                  ),
                                 ),
-                                SizedBox(
-                                  height: ScreenSize.fitPxHeight(4),
-                                ),
-                                Container(
-                                  width: 10,
-                                  margin: EdgeInsets.only(left: leftPadding),
-                                  height: 2,
-                                  color: AppColors.whiteColor,
-                                ),
-                              ],
-                            )
-                          :
-                          //　選択してない
-                          Padding(
-                              padding: EdgeInsets.only(right: rightPadding),
-                              child: Icon(
-                                e.icon,
-                                color: AppColors.greyColor130,
-                                size: ScreenSize.fitPxHeight(23),
-                              ),
-                            ),
+                        ),
+                        Positioned(
+                          right: ScreenSize.fitPxWidth(18),
+                          child: AppCommonTools().notificationDotWidget(
+                            e == BottomBarPath.my && ref.watch(loginUserNotReadNotificationCount) != 0,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );

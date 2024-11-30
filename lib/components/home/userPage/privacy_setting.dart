@@ -193,6 +193,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/userPage/about_page.dart';
 import 'package:social_mediam_match/components/home/userPage/my_notification_page.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/app_common_tools.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
@@ -201,6 +202,7 @@ import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/global/user_login_status_controller.dart';
 import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
 
+import '../../../provider/account/user_provider.dart';
 import '../../utilities/style/style_config.dart';
 import '../firendsPage/my_friends.dart';
 
@@ -227,7 +229,7 @@ class PrivacySettingPage extends BaseEndDrawer {
           onPress: () {
             MyNotificationPage().show(context);
           },
-          child: _buildButtonContainer(iconData: Icons.notifications, text: "通知"),
+          child: _buildButtonContainer(iconData: Icons.notifications, text: "通知", needNotificationDot: true),
         ),
         MainBtn(
           onPress: () {
@@ -256,7 +258,12 @@ class PrivacySettingPage extends BaseEndDrawer {
     );
   }
 
-  Widget _buildButtonContainer({required IconData iconData, required String text, bool needEnterIcon = true}) {
+  Widget _buildButtonContainer({
+    required IconData iconData,
+    required String text,
+    bool needEnterIcon = true,
+    bool needNotificationDot = false,
+  }) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
       decoration: BoxDecoration(
@@ -274,14 +281,27 @@ class PrivacySettingPage extends BaseEndDrawer {
               color: AppColors.whiteColor,
             ),
             SizedBox(width: ScreenSize.fitPxWidth(10)),
-            Text(
-              text,
-              style: TextStyle(
-                color: AppColors.whiteColor,
-                fontSize: ScreenSize.fontSize16,
+            Expanded(
+              child: Row(
+                children: [
+                  Text(
+                    text,
+                    style: TextStyle(
+                      color: AppColors.whiteColor,
+                      fontSize: ScreenSize.fontSize16,
+                    ),
+                  ),
+                  SizedBox(width: ScreenSize.fitPxWidth(5)),
+                  Visibility(
+                    visible: needNotificationDot,
+                    child: AppCommonTools().notificationDotWidget(
+                      ref.watch(loginUserNotReadNotificationCount) != 0,
+                      notReadCount: ref.watch(loginUserNotReadNotificationCount),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const Expanded(child: SizedBox(width: 1)),
             Visibility(
               visible: needEnterIcon,
               child: Icon(
