@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_mediam_match/components/Initial/Initial_page.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade_scale_page.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_skill_filter_page.dart';
-import 'package:social_mediam_match/models/skill_model.dart';
 import '../../../../models/course_model.dart';
 import '../../../../provider/course/corse_edit_view_model.dart';
 import '../../../../provider/course/course_provider.dart';
@@ -492,16 +490,4 @@ class CourseEditPage extends BaseFadeScalePage {
       ],
     );
   }
-
-  // void pageClosePage() {
-  //   resetAllData();
-  //   closePage();
-  // }
-
-  // void resetAllData() {
-  //   ref.read(courseDetailContent.notifier).update((state) => "");
-  //   ref.read(courseEditSkillList.notifier).update((state) => []);
-  //   ref.read(courseEditChapterList.notifier).update((state) => []);
-  //   ref.read(courseChoiceLevel.notifier).update((state) => "3");
-  // }
 }
