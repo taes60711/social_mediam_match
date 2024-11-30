@@ -191,7 +191,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/userPage/about_page.dart';
-import 'package:social_mediam_match/components/home/userPage/my_notification_page.dart';
+import 'package:social_mediam_match/components/home/userPage/my_notification_page/my_notification_page.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/app_common_tools.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
