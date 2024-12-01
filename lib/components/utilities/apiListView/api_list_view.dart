@@ -49,6 +49,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   double scrollStartPos = 0;
 
   double baseFloatBottomPos = Platform.isAndroid ? 15 : 45;
+  double floatBottomPos = Platform.isAndroid ? 75 : 65;
 
   @override
   void initState() {
@@ -157,12 +158,12 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                       flatButtonPos = ScreenSize.fitPxHeight(baseFloatBottomPos);
                     } else {
                       ///　bottombarある場合
-                      flatButtonPos = ScreenSize.fitPxHeight(65);
+                      flatButtonPos = ScreenSize.fitPxHeight(floatBottomPos);
                     }
                   } else {
                     ///　bottombarある場合、かつ隠れてる場合
                     if (ref.watch(bottomNavationBarPosProvider) == ScreenSize.fitPxHeight(-60)) {
-                      flatButtonPos = ScreenSize.fitPxHeight(65);
+                      flatButtonPos = ScreenSize.fitPxHeight(floatBottomPos);
                     }
                   }
 

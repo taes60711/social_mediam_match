@@ -86,6 +86,7 @@ class _InitialpageState extends ConsumerState<Initialpage> {
   Future<void> _loginCheck() async {
     /// ログインステータス初期化
     await UserLoginStatusController().init(
+      initContext: context,
       initRef: ref,
       initRender: () => setState(() {}),
       initSharedPreference: SharedPreference(),

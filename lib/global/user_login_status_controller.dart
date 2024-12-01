@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/global/shared_preference.dart';
+import 'package:social_mediam_match/services/firebase_notification_service.dart';
 
 import '../models/user_model.dart';
 import '../provider/account/LoginPage/login_view_model.dart';
@@ -21,11 +26,14 @@ class UserLoginStatusController {
   late WidgetRef ref;
   late SharedPreference sharedPreference;
   late Function render;
+  late BuildContext context;
   Future<void> init({
+    required BuildContext initContext,
     required WidgetRef initRef,
     required Function initRender,
     required SharedPreference initSharedPreference,
   }) async {
+    context = initContext;
     ref = initRef;
     render = initRender;
 
@@ -81,13 +89,17 @@ class UserLoginStatusController {
   }
 
   Future<void> logOut() async {
-    await sharedPreference.loginOutRemoveUserUID();
+    /// 通知用のtoken削除
+    await notificationTokenUpdate(userUID: ref.read(loginUserData.notifier).state.uid, fcmToken: '');
 
-    ref.read(loginedUserUID.notifier).update((state) => "");
-    ref.read(loginUserData.notifier).update((state) => ProfileData());
+    /// SDのユーザUID削除
+    await sharedPreference.loginOutRemoveUserUID();
 
     /// チャットルームリストWS クローズ
     ChatWSModel().closeStream();
+    ref.read(loginedUserUID.notifier).update((state) => "");
+    ref.read(loginUserData.notifier).update((state) => ProfileData());
+
     render();
   }
 
@@ -105,5 +117,20 @@ class UserLoginStatusController {
 
     /// チャットルームリストWS初始化
     ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
+
+    /// 通知用のtoken取得
+    if (Platform.isAndroid) {
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      await notificationTokenUpdate(userUID: requestUserData.uid, fcmToken: fcmToken ?? '');
+
+      FirebaseNotificationService().initNotification(context, (p0, postId, courseId, roomId, userUID) => {});
+      FirebaseNotificationService().notificationListen(getNotReadNotificationCount: () {});
+    }
+  }
+
+  /// 通知用のtokenデータベースに更新する
+  Future<void> notificationTokenUpdate({required String userUID, required String fcmToken}) async {
+    print("fcmToken $fcmToken");
+    await UserService().updateUserToken(userUID, fcmToken);
   }
 }

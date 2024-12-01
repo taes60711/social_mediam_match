@@ -79,22 +79,22 @@ class FirebaseNotificationService {
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
         NotificationModel receviceNotificaionData = NotificationModel.receviceDatatoModel(notificationResponse.payload ?? "");
+        print(receviceNotificaionData.type);
 
-        // RouteOptions.popUntilToHome();
-        await Future.delayed(Duration.zero);
-        if (receviceNotificaionData.type == 0) {
-          ///文章
-          bottomBarPageGoto(0, receviceNotificaionData.postId, null, null, null);
-        } else if (receviceNotificaionData.type == 1) {
-          ///コース
-          bottomBarPageGoto(1, null, receviceNotificaionData.courseId, null, null);
-        } else if (receviceNotificaionData.type == 2) {
-          ///友達追加
-          bottomBarPageGoto(2, null, null, null, null);
-        } else if (receviceNotificaionData.type == 3) {
-          ///チャットルーム
-          bottomBarPageGoto(3, null, null, 19, receviceNotificaionData.otherUserUid);
-        }
+        // await Future.delayed(Duration.zero);
+        // if (receviceNotificaionData.type == 0) {
+        //   ///文章
+        //   bottomBarPageGoto(0, receviceNotificaionData.postId, null, null, null);
+        // } else if (receviceNotificaionData.type == 1) {
+        //   ///コース
+        //   bottomBarPageGoto(1, null, receviceNotificaionData.courseId, null, null);
+        // } else if (receviceNotificaionData.type == 2) {
+        //   ///友達追加
+        //   bottomBarPageGoto(2, null, null, null, null);
+        // } else if (receviceNotificaionData.type == 3) {
+        //   ///チャットルーム
+        //   bottomBarPageGoto(3, null, null, 19, receviceNotificaionData.otherUserUid);
+        // }
       },
     );
   }
@@ -117,7 +117,7 @@ class FirebaseNotificationService {
             "body": message,
           },
           "data": {
-            "notifiactionInfo": NotificationModel.receviceData(notifiactionInfo),
+            "notifiactionInfo": NotificationModel.receviceDataToJson(notifiactionInfo),
           },
         }
       },
@@ -131,8 +131,8 @@ class FirebaseNotificationService {
       'Authorization': 'Bearer $serverToken',
     };
 
-    await http.post(uri, headers: headers, body: body).then((_) {
-      print("sendNotification :${_.body}");
+    await http.post(uri, headers: headers, body: body).then((value) {
+      print("sendNotification :${value.body}");
     });
   }
 
@@ -171,17 +171,18 @@ class FirebaseNotificationService {
     return credentials.accessToken.data;
   }
 
-  notificationDetails() {
-    return const NotificationDetails(
-      android: AndroidNotificationDetails(
-        "channel.id",
-        "channel.name",
-        importance: Importance.high,
-      ),
-    );
-  }
-
   Future showNotification({int id = 0, String? title, String? body, String payload = "payload"}) async {
-    return notificationsPlugin.show(id, title, body, await notificationDetails(), payload: payload);
+    return notificationsPlugin.show(
+        id,
+        title,
+        body,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            "channel.id",
+            "channel.name",
+            importance: Importance.high,
+          ),
+        ),
+        payload: payload);
   }
 }

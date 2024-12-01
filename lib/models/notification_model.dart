@@ -47,7 +47,7 @@ class NotificationModel {
     );
   }
 
-  static String receviceData(NotificationModel data) {
+  static String receviceDataToJson(NotificationModel data) {
     Map<String, dynamic> returnData = {
       "type": data.type,
       "postId": data.postId,
