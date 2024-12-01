@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
+import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/services/friend_service.dart';
 import '../../../models/friend_model.dart';
+import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/appBar/basic_top_bar.dart';
 import '../../utilities/dialog/await_confirm_dialog.dart';
 import '../../utilities/style/screen_size.dart';
@@ -49,21 +51,27 @@ class MyFriendPage extends BaseEndDrawer {
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
-                          child: Row(
-                            children: [
-                              UserIcon(iconSize: ScreenSize.fitPxWidth(40), image: data.userData.image),
-                              SizedBox(width: ScreenSize.fitPxWidth(10)),
-                              Expanded(
-                                child: Text(
-                                  data.userData.name ?? "",
-                                  style: TextStyle(
-                                    fontSize: ScreenSize.fontSize14,
-                                    color: AppColors.whiteColor,
-                                    fontWeight: FontWeight.w600,
+                          child: MainBtn(
+                            onPress: () {
+                              ///ユーザー詳細ページに遷移
+                              UserProfileAllInfoBottomSheet(userData: data.userData).show(context);
+                            },
+                            child: Row(
+                              children: [
+                                UserIcon(iconSize: ScreenSize.fitPxWidth(40), image: data.userData.image),
+                                SizedBox(width: ScreenSize.fitPxWidth(10)),
+                                Expanded(
+                                  child: Text(
+                                    data.userData.name ?? "",
+                                    style: TextStyle(
+                                      fontSize: ScreenSize.fontSize14,
+                                      color: AppColors.whiteColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
