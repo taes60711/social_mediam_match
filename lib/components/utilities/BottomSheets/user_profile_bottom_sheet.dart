@@ -122,8 +122,11 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                           closePage();
 
                           HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
+
+                          /// メンバーIdでRoomId探す
                           int index = ref.watch(frinedListProvider).indexWhere((e) => e.memberId == userData.uid);
 
+                          /// 探したとルームIdない場合ルーム作成者IDでRoomId探す
                           if (index == -1) {
                             index = ref.watch(frinedListProvider).indexWhere((e) => e.createdBy == userData.uid);
                           }
