@@ -42,6 +42,7 @@ class SignUpStepLastPage extends BaseEndDrawer {
         BaseTopBar(
           backFunc: () {
             ref.read(viewModelProvider.notifier).state.resetAllData();
+
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
           title: "註冊(2/2)",

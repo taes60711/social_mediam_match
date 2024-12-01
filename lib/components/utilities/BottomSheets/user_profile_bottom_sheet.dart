@@ -9,10 +9,13 @@ import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
 
 import 'package:social_mediam_match/services/friend_service.dart';
 
+import '../../../models/friend_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/friend/chat_ws_model.dart';
 import '../../../provider/friend/friend_provider.dart';
+import '../../home/firendsPage/chat_room.dart';
+import '../../home/firendsPage/firends_page.dart';
 import '../../home/skillExChangePage/skill_utilites.dart';
 import '../main_button.dart';
 import '../style/screen_size.dart';
@@ -117,7 +120,18 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                           render();
                         } else {
                           closePage();
-                          HomeGlobalViewModel().changeMainPage(BottomBarPath.chatRoom);
+
+                          HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
+                          int index = ref.watch(frinedListProvider).indexWhere((e) => e.memberId == userData.uid);
+
+                          if (index == -1) {
+                            index = ref.watch(frinedListProvider).indexWhere((e) => e.createdBy == userData.uid);
+                          }
+
+                          if (index != -1) {
+                            FriendListModel data = ref.watch(frinedListProvider)[index];
+                            ChatRoom(roomData: data, dataIndex: index).show(context);
+                          }
                         }
                       },
                       child: Container(

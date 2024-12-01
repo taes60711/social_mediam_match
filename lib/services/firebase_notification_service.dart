@@ -1,12 +1,30 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:googleapis_auth/auth_io.dart' as auth;
+import 'package:social_mediam_match/components/home/firendsPage/chat_room.dart';
+import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
+
+import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/models/notification_model.dart';
+import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
+
+import '../components/home/userPage/my_notification_page/course/my_notification_course_page.dart';
+import '../components/home/userPage/my_notification_page/my_notification_post_page.dart';
+import '../models/course_model.dart';
+import '../models/friend_model.dart';
+import '../models/post_model.dart';
+import 'course_service.dart';
+import 'post_service.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -24,9 +42,12 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class FirebaseNotificationService {
+  late BuildContext context;
+  late WidgetRef ref;
+
   final FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  Future<void> notificationListen({required Function getNotReadNotificationCount}) async {
+  Future<void> notificationListen() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
     NotificationSettings settings = await messaging.requestPermission(
@@ -52,7 +73,6 @@ class FirebaseNotificationService {
             body: message.notification?.body,
             payload: message.data['notifiactionInfo'],
           );
-          getNotReadNotificationCount();
         }
       });
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -60,8 +80,7 @@ class FirebaseNotificationService {
     }
   }
 
-  Future<void> initNotification(
-      BuildContext context, Function(int, int? postId, int? courseId, int? roomId, String? userUID) bottomBarPageGoto) async {
+  Future<void> initNotification({required BuildContext context, required WidgetRef ref}) async {
     print("initNotification 通知初始化");
     AndroidInitializationSettings initializationSettingsAndroid = const AndroidInitializationSettings('flutter_logo');
     var initializationSettingsIOS = DarwinInitializationSettings(
@@ -79,22 +98,31 @@ class FirebaseNotificationService {
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
         NotificationModel receviceNotificaionData = NotificationModel.receviceDatatoModel(notificationResponse.payload ?? "");
-        print(receviceNotificaionData.type);
 
-        // await Future.delayed(Duration.zero);
-        // if (receviceNotificaionData.type == 0) {
-        //   ///文章
-        //   bottomBarPageGoto(0, receviceNotificaionData.postId, null, null, null);
-        // } else if (receviceNotificaionData.type == 1) {
-        //   ///コース
-        //   bottomBarPageGoto(1, null, receviceNotificaionData.courseId, null, null);
-        // } else if (receviceNotificaionData.type == 2) {
-        //   ///友達追加
-        //   bottomBarPageGoto(2, null, null, null, null);
-        // } else if (receviceNotificaionData.type == 3) {
-        //   ///チャットルーム
-        //   bottomBarPageGoto(3, null, null, 19, receviceNotificaionData.otherUserUid);
-        // }
+        await Future.delayed(Duration.zero);
+        if (receviceNotificaionData.type == 0) {
+          ///文章
+          HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.home);
+          PostModel choicedPost = await PostService().getPostDataByPostId(receviceNotificaionData.postId ?? -1);
+          MyNotificationPostPage(data: choicedPost).show(context);
+        } else if (receviceNotificaionData.type == 1) {
+          ///コース
+          HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.course);
+
+          CourseModel openedCourse = await CourseService().getCourseBycourseId(
+            ref.read(loginUserData).uid,
+            receviceNotificaionData.courseId ?? -1,
+          );
+          MyNotificationCourseDetailPage(data: openedCourse).show(context);
+        } else if (receviceNotificaionData.type == 2 || receviceNotificaionData.type == 3) {
+          ///友達追加 / チャットルーム
+          HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
+          int index = ref.watch(frinedListProvider).indexWhere((e) => e.roomId == receviceNotificaionData.roomId);
+          if (index != -1) {
+            FriendListModel data = ref.watch(frinedListProvider)[index];
+            ChatRoom(roomData: data, dataIndex: index).show(context);
+          }
+        }
       },
     );
   }

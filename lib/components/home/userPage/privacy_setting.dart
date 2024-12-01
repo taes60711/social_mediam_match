@@ -71,7 +71,7 @@ class PrivacySettingPage extends BaseEndDrawer {
         SizedBox(height: ScreenSize.fitPxWidth(50)),
         MainBtn(
           onPress: () {
-            String message = '"12135"對文章"1"按讚';
+            String message = '"12135"對文章"Dreamcatcher2RingsLive4KAtlantaGA"按讚';
             NotificationModel notification = NotificationModel(
               id: -1,
               userUid: 'tzLaMcP3V9XOAMOcD0FAY5Nf4tE2',
@@ -80,7 +80,7 @@ class PrivacySettingPage extends BaseEndDrawer {
               title: message,
               isRead: false,
               message: '',
-              postId: 1,
+              postId: 16,
               postTime: DateTime.now(),
               sendNotificationuserInfo: ProfileData(),
             );
@@ -95,14 +95,14 @@ class PrivacySettingPage extends BaseEndDrawer {
         SizedBox(height: ScreenSize.fitPxWidth(20)),
         MainBtn(
           onPress: () {
-            String message = '"555"將你加為好友';
+            String message = '"金門胖胖"將你加為好友';
             NotificationModel notification = NotificationModel(
               id: -1,
               userUid: ref.read(loginUserData.notifier).state.uid,
-              otherUserUid: 'kTmSC7QNzoc1pf2jWd4sFOAr6q02',
-              type: 3,
+              otherUserUid: 'ACqYscxtd2VSdPlkv1G8OgSTKxd2',
+              type: 2,
               title: message,
-              roomId: 19,
+              roomId: 1,
               isRead: false,
               message: '',
               postTime: DateTime.now(),
@@ -128,7 +128,7 @@ class PrivacySettingPage extends BaseEndDrawer {
               title: message,
               isRead: false,
               message: '',
-              courseId: 19,
+              courseId: 2,
               postTime: DateTime.now(),
               sendNotificationuserInfo: ProfileData(),
             );

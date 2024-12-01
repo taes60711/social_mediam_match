@@ -55,15 +55,6 @@ class _InitialpageState extends ConsumerState<Initialpage> {
 
     LoadingDialog().init(context);
 
-    /// sharedPreference 初期化
-    await SharedPreference().init();
-
-    ///ログインステータスチュック
-    await _loginCheck();
-
-    ///　テーマ初期化
-    ThemeStyle().init(ref);
-
     /// request All Skill
     List<RequestSkillListData> requestListData = await SkillService().requestSkillList();
     ref.read(allSkillListData.notifier).update((state) => requestListData);
@@ -75,6 +66,15 @@ class _InitialpageState extends ConsumerState<Initialpage> {
     /// request All PostBoard
     List<PostBoard> allPostBoard = await PostService().getAllPostBoard();
     ref.read(allPostBoardListData.notifier).update((state) => allPostBoard);
+
+    /// sharedPreference 初期化
+    await SharedPreference().init();
+
+    ///ログインステータスチュック
+    await _loginCheck();
+
+    ///　テーマ初期化
+    ThemeStyle().init(ref);
 
     initFinish = true;
 

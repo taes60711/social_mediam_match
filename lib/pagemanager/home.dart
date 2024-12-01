@@ -21,6 +21,7 @@ class _HomeState extends ConsumerState<Home> {
   @override
   void initState() {
     HomeGlobalViewModel().init(
+      context: context,
       ref: ref,
       render: () => setState(() {}),
     );
