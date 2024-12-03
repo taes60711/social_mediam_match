@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:typed_data';
-import 'package:path_provider/path_provider.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:social_mediam_match/services/api_client.dart';
@@ -57,15 +55,11 @@ class ImageService extends ApiClient {
     final response = await http.get(Uri.parse(imgUrl));
 
     if (response.statusCode == 200) {
-      final directory = await getTemporaryDirectory();
-
-      final filePath = '${directory.path}/image.jpg';
-      final file = File(filePath);
-
-      await file.writeAsBytes(response.bodyBytes);
+      final Uint8List imageBytes = response.bodyBytes;
+      XFile imageFile = XFile.fromData(imageBytes, mimeType: 'image/png');
       LoadingDialog().close();
-      XFile imageFile = XFile(filePath);
-      await Share.shareXFiles([imageFile]);
+      final result = await Share.shareXFiles([imageFile]);
+      print(result.status);
     }
   }
 
@@ -73,10 +67,11 @@ class ImageService extends ApiClient {
   Future<void> saveImageToLocal(String imgUrl) async {
     LoadingDialog().show();
     final response = await http.get(Uri.parse(imgUrl));
-
-    final Uint8List imageBytes = response.bodyBytes;
-    final result = await ImageGallerySaver.saveImage(imageBytes);
-    LoadingDialog().close();
-    print(result);
+    if (response.statusCode == 200) {
+      final Uint8List imageBytes = response.bodyBytes;
+      final result = await ImageGallerySaver.saveImage(imageBytes);
+      LoadingDialog().close();
+      print(result);
+    }
   }
 }

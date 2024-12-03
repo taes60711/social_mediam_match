@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
@@ -207,7 +208,9 @@ class PostViewUtilities {
 
                       ///シャアボタン
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          await sharePost();
+                        },
                         child: Container(
                           width: 30,
                           alignment: Alignment.centerLeft,
@@ -277,5 +280,9 @@ class PostViewUtilities {
         ],
       ),
     );
+  }
+
+  Future<void> sharePost() async {
+    await Share.share("https://www.youtube.com/watch?v=udGwca1HBM4&list=RDudGwca1HBM4&start_radio=1&ab_channel=1theK%28원더케이%29");
   }
 }
