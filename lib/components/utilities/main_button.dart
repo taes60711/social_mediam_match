@@ -108,7 +108,11 @@ class _MainBtnState extends State<MainBtn> {
               widget.child ??
                   Text(
                     widget.title ?? "please use title or child ",
-                    style: widget.titleStyle ?? const TextStyle(color: Colors.white),
+                    style: widget.titleStyle ??
+                        TextStyle(
+                          color: Colors.white,
+                          fontSize: ScreenSize.fontSize12,
+                        ),
                   ),
             ],
           ),

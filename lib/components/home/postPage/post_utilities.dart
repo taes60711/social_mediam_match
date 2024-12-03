@@ -168,18 +168,18 @@ class PostViewUtilities {
                       Row(
                         children: [
                           Container(
-                            width: 12,
-                            height: 12,
+                            width: ScreenSize.fontSize14,
+                            height: ScreenSize.fontSize14,
                             color: const Color.fromARGB(96, 175, 170, 170),
                           ),
-                          SizedBox(width: 5),
+                          SizedBox(width: ScreenSize.fitPxWidth(5)),
                           Text(
                             typeName,
                             style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor),
                           ),
                         ],
                       ),
-                      const SizedBox(width: 5),
+                      SizedBox(width: ScreenSize.fitPxWidth(5)),
 
                       ///いいね数
                       PostViewUtilities().iconWithText(
@@ -187,7 +187,7 @@ class PostViewUtilities {
                           iconColor: const Color.fromARGB(255, 248, 110, 110),
                           text: "${data.good}",
                           style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
-                      const SizedBox(width: 8),
+                      SizedBox(width: ScreenSize.fitPxWidth(5)),
 
                       ///コメント数
                       PostViewUtilities().iconWithText(
@@ -195,7 +195,7 @@ class PostViewUtilities {
                           iconColor: Colors.blueAccent,
                           text: "${data.commentCount}",
                           style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
-                      const SizedBox(width: 8),
+                      SizedBox(width: ScreenSize.fitPxWidth(5)),
 
                       ///ビュー数
                       PostViewUtilities().iconWithText(
@@ -204,7 +204,7 @@ class PostViewUtilities {
                           text: "${data.viewed}",
                           style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
 
-                      const SizedBox(width: 13),
+                      SizedBox(width: ScreenSize.fitPxWidth(13)),
 
                       ///シャアボタン
                       GestureDetector(
@@ -215,10 +215,10 @@ class PostViewUtilities {
                           width: 30,
                           alignment: Alignment.centerLeft,
                           color: Colors.transparent,
-                          child: const Icon(
+                          child: Icon(
                             FontAwesomeIcons.arrowUpRightFromSquare,
-                            color: Color.fromARGB(221, 180, 179, 179),
-                            size: 14,
+                            color: const Color.fromARGB(221, 180, 179, 179),
+                            size: ScreenSize.fontSize14,
                           ),
                         ),
                       ),
@@ -232,7 +232,7 @@ class PostViewUtilities {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 5),
+                  SizedBox(height: ScreenSize.fitPxWidth(5)),
                 ],
               ),
             ),
@@ -252,12 +252,12 @@ class PostViewUtilities {
         width: ScreenSize.fitPxWidth(40),
         height: ScreenSize.fitPxWidth(40),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
+          shape: BoxShape.circle,
           color: AppColors.whiteColor,
         ),
         child: Icon(
           FontAwesomeIcons.pen,
-          size: 16,
+          size: ScreenSize.fontSize14,
           color: AppColors.orangeColor,
         ),
       ),
@@ -271,8 +271,12 @@ class PostViewUtilities {
       padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(3), vertical: ScreenSize.fitPxWidth(3)),
       child: Row(
         children: [
-          Icon(iconData, size: 14, color: iconColor),
-          const SizedBox(width: 5),
+          Icon(
+            iconData,
+            size: ScreenSize.fontSize14,
+            color: iconColor,
+          ),
+          SizedBox(width: ScreenSize.fitPxWidth(5)),
           Text(
             text,
             style: style ?? const TextStyle(color: Colors.black87),

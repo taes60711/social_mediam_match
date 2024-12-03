@@ -111,8 +111,8 @@ class SkillUtilites {
                   ),
                 ),
                 Text(
-                  "${DateFormatUtilities().noYYYYMMDDformat(data.lastLogin)} 上線",
-                  style: TextStyle(color: AppColors.greyColor176, fontSize: 12),
+                  DateFormatUtilities().noYYYYMMDDformat(data.lastLogin),
+                  style: TextStyle(color: AppColors.greyColor176, fontSize: ScreenSize.fontSize10),
                 ),
               ],
             ),

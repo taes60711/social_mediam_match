@@ -87,12 +87,17 @@ class PostManagerBtmSheet extends BaseBottomSheet {
         ),
         child: Row(
           children: [
-            Icon(iconData, color: AppColors.whiteColor),
+            Icon(
+              iconData,
+              color: AppColors.whiteColor,
+              size: ScreenSize.fontSize14,
+            ),
             SizedBox(width: ScreenSize.fitPxWidth(10)),
             Text(
               text,
               style: TextStyle(
                 color: AppColors.whiteColor,
+                fontSize: ScreenSize.fontSize12,
               ),
             )
           ],

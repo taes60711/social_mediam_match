@@ -222,12 +222,12 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                                   width: ScreenSize.fitPxWidth(40),
                                   height: ScreenSize.fitPxWidth(40),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
+                                    shape: BoxShape.circle,
                                     color: AppColors.greyColor98,
                                   ),
                                   child: Icon(
                                     FontAwesomeIcons.angleUp,
-                                    size: 16,
+                                    size: ScreenSize.fontSize14,
                                     color: AppColors.whiteColor,
                                   ),
                                 ),

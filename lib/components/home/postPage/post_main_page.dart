@@ -177,14 +177,14 @@ Widget _buildTabBtn(BuildContext context, {required String tabText, required int
         children: [
           Text(
             tabText,
-            style: TextStyle(color: AppColors.whiteColor),
+            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
           ),
           Visibility(
             visible: pageIndex == index,
             child: Container(
-              width: 15,
-              height: 1.5,
-              color: Colors.white,
+              width: ScreenSize.fitPxWidth(15),
+              height: ScreenSize.fitPxWidth(1),
+              color: AppColors.whiteColor,
             ),
           ),
         ],
@@ -233,7 +233,11 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Icon(Icons.search, color: AppColors.whiteColor),
+            child: Icon(
+              Icons.search,
+              color: AppColors.whiteColor,
+              size: ScreenSize.fontSize16,
+            ),
           ),
         ),
       ],
