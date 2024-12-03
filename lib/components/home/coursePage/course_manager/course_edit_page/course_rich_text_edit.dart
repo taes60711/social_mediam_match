@@ -146,11 +146,11 @@ class CourseRichTextEdit extends BaseFadeScalePage {
     bool isOK = true;
     String errMsg = "";
     if (ediType == EdiType.chapter) {
-      if (titleController.text == "") {
+      if (titleController.text.replaceAll(" ", "") == "") {
         errMsg += "\"標題\"不得為空";
         isOK = false;
       }
-      if (content == "") {
+      if (content.replaceAll(" ", "") == "") {
         if (errMsg != "") errMsg += "\n";
         errMsg += "\"內文\"不得為空";
         isOK = false;

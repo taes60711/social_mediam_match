@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/dialog/base_dialog.dart';
+import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 
 import 'package:social_mediam_match/components/utilities/inputField/label_input.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
@@ -96,10 +97,11 @@ class RichTextEditor extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   String bas64img = await imageChoice();
-
-                  /// 圖片編輯的時候*.8寬度
-                  String urlString = '<img src="data:image/jpeg;base64,$bas64img" width="${ScreenSize.width * 0.8}">';
-                  await controller.insertText(urlString);
+                  if (bas64img != "") {
+                    /// 圖片編輯的時候*.8寬度
+                    String urlString = '<img src="data:image/jpeg;base64,$bas64img" width="${ScreenSize.width * 0.8}">';
+                    await controller.insertText(urlString);
+                  }
                 },
                 child: SizedBox(
                   width: 26,
@@ -124,9 +126,15 @@ class RichTextEditor extends StatelessWidget {
                     conirmFunc: () async {
                       String imgUrl = imageLinkController.text;
 
+                      if (!RichTextFormat().imgUrlCheck(imgUrl)) {
+                        ConfirmDilaog(title: "警告", content: "請輸入有效的圖片網址", btnAmount: 1).show(context);
+                        return false;
+                      }
+
                       /// 圖片編輯的時候*.8寬度
                       String urlString = '<img src="$imgUrl" width="${ScreenSize.width * 0.8}">';
                       await controller.insertText(urlString);
+                      return true;
                     },
                   ).show(context);
                 },
@@ -167,11 +175,18 @@ class RichTextEditor extends StatelessWidget {
                     ),
                     conirmFunc: () async {
                       String ytId = RichTextFormat().getYtvideoID(linkController.text);
+
+                      if (ytId == "err") {
+                        ConfirmDilaog(title: "警告", content: "請輸入有效的Youtube網址", btnAmount: 1).show(context);
+                        return false;
+                      }
                       String ytURL = 'https://www.youtube.com/embed/$ytId';
                       String urlString =
                           '<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="$ytURL"></iframe><p><br></p>';
 
                       await controller.insertText(urlString);
+
+                      return true;
                     },
                   ).show(context);
                 },
@@ -180,7 +195,7 @@ class RichTextEditor extends StatelessWidget {
                   color: AppColors.greyColor130,
                 ),
               ),
-              InkWell(
+              GestureDetector(
                 onTap: () async {
                   TextEditingController linkController = TextEditingController();
                   TextEditingController linkTextController = TextEditingController();
@@ -240,12 +255,11 @@ class RichTextEditor extends StatelessWidget {
 
 class RichtTextDialog extends BaseDialog {
   Widget contentWidget;
-  dynamic conirmFunc;
-  Function? cancelFunc;
+  Function conirmFunc;
+
   RichtTextDialog({
     required this.contentWidget,
-    this.conirmFunc,
-    this.cancelFunc,
+    required this.conirmFunc,
   });
   @override
   Widget build(WidgetRef ref) {
@@ -272,9 +286,6 @@ class RichtTextDialog extends BaseDialog {
                   backgroundColor: AppColors.black37,
                   padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(10)),
                   onPress: () {
-                    if (cancelFunc != null) {
-                      cancelFunc!();
-                    }
                     closePage();
                   },
                   title: "取消",
@@ -285,11 +296,12 @@ class RichtTextDialog extends BaseDialog {
                 child: MainBtn(
                   padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(10)),
                   backgroundColor: AppColors.orangeColor,
-                  onPress: () {
-                    if (conirmFunc != null) {
-                      conirmFunc!();
+                  onPress: () async {
+                    bool isValid = await conirmFunc();
+
+                    if (isValid) {
+                      closePage();
                     }
-                    closePage();
                   },
                   title: "確認",
                 ),

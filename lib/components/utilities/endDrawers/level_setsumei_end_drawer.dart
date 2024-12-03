@@ -15,12 +15,14 @@ class LevelsetsumeiEndDrawer extends BaseEndDrawer {
           BaseTopBar(
             backFunc: () => closePage(),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: ScreenSize.fitPxWidth(20),
-            ),
+          Expanded(
             child: SingleChildScrollView(
-              child: AppCommonTools().levelsetsumeiBuild(),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ScreenSize.fitPxWidth(20),
+                ),
+                child: AppCommonTools().levelsetsumeiBuild(),
+              ),
             ),
           ),
         ],

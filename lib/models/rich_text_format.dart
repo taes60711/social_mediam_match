@@ -230,6 +230,15 @@ class RichTextFormat {
     return changedHtmlString;
   }
 
+  bool imgUrlCheck(String url) {
+    final validImageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+    final uri = Uri.tryParse(url);
+    if (uri == null) return false;
+
+    final ext = uri.path.split('.').last.toLowerCase();
+    return validImageExtensions.contains(ext);
+  }
+
   String getYtvideoID(String url) {
     int start = 0;
 
@@ -252,10 +261,14 @@ class RichTextFormat {
     } else if (url.contains('&')) {
       end = url.indexOf('&');
     } else {
-      end = url.length;
+      end = -1;
     }
-
-    String tmpId = url.substring(start, end);
+    String tmpId = "";
+    if (end == -1) {
+      tmpId = "err";
+    } else {
+      tmpId = url.substring(start, end);
+    }
 
     return tmpId;
   }

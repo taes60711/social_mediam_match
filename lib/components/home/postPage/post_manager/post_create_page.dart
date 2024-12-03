@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +15,7 @@ import '../../../../provider/post/post_provider.dart';
 import '../../../../provider/post/post_view_model.dart';
 import '../../../utilities/bottomSheets/base_bottom_sheet.dart';
 import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
+import '../../../utilities/dialog/confirm_dialog.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/rich_text_editor.dart';
 import '../../../utilities/style/screen_size.dart';
@@ -46,8 +49,17 @@ class PostCreatePage extends BaseFadeScalePage {
         children: [
           BaseTopBar(
             leftWidget: GestureDetector(
-              onTap: () {
-                closePage();
+              onTap: () async {
+                if (await postExitCheck()) {
+                  ConfirmDilaog(
+                      title: '提示',
+                      content: '正在編輯中　確定要離開嗎？',
+                      conirmFunc: () {
+                        closePage();
+                      }).show(context);
+                } else {
+                  closePage();
+                }
               },
               child: Container(
                 width: ScreenSize.fitPxWidth(40),
@@ -107,6 +119,16 @@ class PostCreatePage extends BaseFadeScalePage {
         ],
       ),
     );
+  }
+
+  Future<bool> postExitCheck() async {
+    bool isEdit = false;
+    String postTitle = titleController.text;
+    String postContent = await quillEditorController.getText();
+    if (postTitle != "" || postContent != "") {
+      isEdit = true;
+    }
+    return isEdit;
   }
 }
 

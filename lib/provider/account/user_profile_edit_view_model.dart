@@ -151,7 +151,7 @@ class UserProfileEditViewModel {
   bool sendBeforeCheck() {
     bool isOk = true;
     errMsg = "";
-    if (nameController.text == "") {
+    if (nameController.text.replaceAll(" ", "") == "") {
       errMsg = "名稱不得為空";
       isOk = false;
     }

@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
-import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 import 'package:social_mediam_match/services/post_service.dart';
 import '../../../../models/post_model.dart';
@@ -14,6 +13,7 @@ import '../../../../provider/post/post_provider.dart';
 import '../../../../provider/post/post_view_model.dart';
 import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
 import '../../../utilities/apiListView/api_list_controller.dart';
+import '../../../utilities/dialog/confirm_dialog.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/rich_text_editor.dart';
 import '../../../utilities/style/screen_size.dart';
@@ -57,8 +57,17 @@ class PostEditorPage extends BaseFadeScalePage {
         children: [
           BaseTopBar(
             leftWidget: GestureDetector(
-              onTap: () {
-                closePage();
+              onTap: () async {
+                if (await postExitCheck()) {
+                  ConfirmDilaog(
+                      title: '提示',
+                      content: '正在編輯中　確定要離開嗎？',
+                      conirmFunc: () {
+                        closePage();
+                      }).show(context);
+                } else {
+                  closePage();
+                }
               },
               child: Container(
                 width: ScreenSize.fitPxWidth(40),
@@ -79,7 +88,7 @@ class PostEditorPage extends BaseFadeScalePage {
                 String postContent = await quillEditorController.getText();
                 String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
 
-                if (await sendBeforeCheck()) {
+                if (viewModel.postCreateBeforCheck(postTitle: postTitle, postContent: postContent)) {
                   PostModel post = ref.read(choicedPostProvider.notifier).state;
                   bool isSucess = await PostService().updatePost(
                     postId: post.id,
@@ -133,22 +142,16 @@ class PostEditorPage extends BaseFadeScalePage {
     );
   }
 
-  Future<bool> sendBeforeCheck() async {
-    bool isOK = true;
+  Future<bool> postExitCheck() async {
+    bool isEdit = false;
+    String postTitle = titleController.text;
     String postContent = await quillEditorController.getText();
 
-    if (titleController.text == "" || postContent == "") {
-      String content = "";
-      if (titleController.text == "" && postContent == "") {
-        content = "\"標題\"不得為空\n\"內文\"不得為空";
-      } else if (titleController.text == "") {
-        content = "\"標題\"不得為空";
-      } else if (titleController.text == "") {
-        content = "\"內文\"不得為空";
-      }
-      isOK = false;
-      ConfirmDilaog(title: '警告', content: content).show(context);
+    String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
+    if (postTitle != ref.read(choicedPostProvider.notifier).state.title ||
+        fomattedContent != ref.read(choicedPostProvider.notifier).state.mainMessage) {
+      isEdit = true;
     }
-    return isOK;
+    return isEdit;
   }
 }

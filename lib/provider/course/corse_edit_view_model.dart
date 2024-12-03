@@ -99,6 +99,8 @@ class CourseEditViewModel {
   String learningSkillListErr = "";
   bool isPublic = true;
 
+  String chapterErr = "";
+
   void initData({CourseModel? courseData}) {
     if (courseData != null) {
       List<RequestSkillListData> formatListData = [];
@@ -173,11 +175,11 @@ class CourseEditViewModel {
     bool isOk = true;
     errReset();
     updateEditData();
-    if (editingData.title == "") {
+    if (editingData.title.replaceAll(" ", "") == "") {
       isOk = false;
       titleErr = "標題不得為空";
     }
-    if (editingData.content == "") {
+    if (editingData.content.replaceAll(" ", "") == "") {
       isOk = false;
       contentErr = "大綱不得為空";
     }
@@ -185,6 +187,11 @@ class CourseEditViewModel {
     if (editingData.courseEditSkillList.isEmpty) {
       isOk = false;
       learningSkillListErr = "請至少選擇一個以上的技能";
+    }
+
+    if (ref.read(courseEditChapterList).isEmpty) {
+      isOk = false;
+      chapterErr = "至少要填寫一個章節";
     }
 
     render();
@@ -205,6 +212,7 @@ class CourseEditViewModel {
     titleErr = "";
     contentErr = "";
     learningSkillListErr = "";
+    chapterErr = "";
   }
 
   void resetAllData() {

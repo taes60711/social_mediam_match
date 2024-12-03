@@ -9,6 +9,7 @@ import 'package:social_mediam_match/components/utilities/bottomSheets/base_botto
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
+import '../../../enum/date_format_utilities.dart';
 import '../../../services/user_service.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
@@ -81,7 +82,7 @@ class SearchUserPage extends BaseBottomSheet {
                                         style: TextStyle(color: AppColors.whiteColor),
                                       ),
                                       Text(
-                                        data.lastLogin,
+                                        DateFormatUtilities().format(data.lastLogin),
                                         style: TextStyle(
                                           color: AppColors.whiteColor.withOpacity(.5),
                                           fontSize: ScreenSize.fontSize12,

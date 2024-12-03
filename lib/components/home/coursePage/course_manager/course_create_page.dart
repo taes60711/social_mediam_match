@@ -213,6 +213,34 @@ class CourseCreatePage extends BaseFadeScalePage {
                                   color: AppColors.orangeColor,
                                 ),
                               ),
+                              Visibility(
+                                visible: index != ref.watch(courseEditChapterList).length - 1,
+                                child: Row(
+                                  children: [
+                                    SizedBox(width: ScreenSize.fitPxWidth(10)),
+                                    MainBtn(
+                                      onPress: () {
+                                        List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
+
+                                        if (index < chapterList.length - 1) {
+                                          var temp = chapterList[index];
+                                          chapterList[index] = chapterList[index + 1];
+                                          chapterList[index + 1] = temp;
+
+                                          ref.read(courseEditChapterList.notifier).update((state) => chapterList);
+
+                                          render();
+                                        }
+                                      },
+                                      child: Icon(
+                                        FontAwesomeIcons.arrowTurnDown,
+                                        size: ScreenSize.fontSize20,
+                                        color: AppColors.orangeColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                           children: [
@@ -221,7 +249,16 @@ class CourseCreatePage extends BaseFadeScalePage {
                         );
                       }).toList(),
                     ),
-                    SizedBox(height: ScreenSize.fitPxHeight(10)),
+                    Visibility(
+                      visible: viewModel.chapterErr != "",
+                      child: Text(
+                        viewModel.chapterErr,
+                        style: TextStyle(
+                          color: AppColors.redColor,
+                          fontSize: ScreenSize.fontSize14,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

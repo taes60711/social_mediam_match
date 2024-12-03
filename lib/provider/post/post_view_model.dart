@@ -24,6 +24,9 @@ class PostViewModel {
   ///文章作る前チェック
   bool postCreateBeforCheck({required String postTitle, required String postContent}) {
     bool isOk = true;
+
+    postTitle = postTitle.replaceAll(" ", "");
+    postContent = postContent..replaceAll(" ", "");
     if (postTitle == "" || postContent == "") {
       String content = "";
       if (postTitle == "" && postContent == "") {
