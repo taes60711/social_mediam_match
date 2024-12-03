@@ -247,6 +247,9 @@ class BaseSkillFilterPage extends BaseEndDrawer {
                 padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
                 margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(40)),
                 onPress: () async {
+                  if (tempFilteredSkillList.isEmpty) {
+                    return;
+                  }
                   await searchFunc(tempFilteredSkillList);
                   if (btnStr != "搜尋") {
                     closePage();

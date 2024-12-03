@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/src/consumer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
@@ -27,7 +27,8 @@ class RichTextEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final customToolBarList = [ToolBarStyle.color, ToolBarStyle.size];
+    final customToolBarList = [ToolBarStyle.color];
+
     double fontSize = 18;
     return SizedBox(
       width: ScreenSize.width,
@@ -94,6 +95,7 @@ class RichTextEditor extends StatelessWidget {
             toolBarConfig: customToolBarList,
             iconColor: AppColors.greyColor130,
             customButtons: [
+              ///相簿Image
               GestureDetector(
                 onTap: () async {
                   String bas64img = await imageChoice();
@@ -113,6 +115,8 @@ class RichTextEditor extends StatelessWidget {
                   ),
                 ),
               ),
+
+              ///Image網址
               GestureDetector(
                 onTap: () async {
                   TextEditingController imageLinkController = TextEditingController();
@@ -164,6 +168,8 @@ class RichTextEditor extends StatelessWidget {
                   ),
                 ),
               ),
+
+              ///Youtube網址
               GestureDetector(
                 onTap: () async {
                   TextEditingController linkController = TextEditingController();
@@ -195,6 +201,8 @@ class RichTextEditor extends StatelessWidget {
                   color: AppColors.greyColor130,
                 ),
               ),
+
+              ///連結網址
               GestureDetector(
                 onTap: () async {
                   TextEditingController linkController = TextEditingController();
