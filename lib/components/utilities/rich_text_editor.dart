@@ -218,9 +218,21 @@ class RichTextEditor extends StatelessWidget {
                       ],
                     ),
                     conirmFunc: () async {
-                      String urlString =
-                          '<p><a href=${linkController.text} rel="noopener noreferrer" target="_blank">${linkTextController.text}</a><br></p>';
+                      String url = linkController.text;
+                      String urlText = linkTextController.text;
+                      if (url.replaceAll(" ", "") == "" || !url.contains("http")) {
+                        ConfirmDilaog(title: "警告", content: "請輸入有效的網址", btnAmount: 1).show(context);
+                        return false;
+                      }
+
+                      if (urlText.replaceAll(" ", "") == "") {
+                        urlText = url;
+                      }
+
+                      String urlString = '<p><a href=$url rel="noopener noreferrer" target="_blank">$urlText</a><br></p>';
                       await controller.insertText(urlString);
+
+                      return true;
                     },
                   ).show(context);
                 },
