@@ -9,9 +9,11 @@ import 'package:social_mediam_match/components/home/firendsPage/firends_page.dar
 import 'package:uuid/uuid.dart';
 
 import '../../../models/friend_model.dart';
+import '../../../models/notification_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/friend/chat_room_ws_model.dart';
+import '../../../services/firebase_notification_service.dart';
 import '../../../services/image_service.dart';
 import '../../utilities/inputField/base_input.dart';
 import '../../utilities/main_button.dart';
@@ -174,5 +176,20 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
     setState(() {});
     commentController.text = "";
     widget.scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.linear);
+
+    sendChatRoomNotification(message: message);
+  }
+
+  void sendChatRoomNotification({required String message}) {
+    NotificationModel notification = NotificationModel.empty();
+    notification.type = 3;
+    notification.roomId = widget.chatRoomWSModel.enterRoomID;
+
+    FirebaseNotificationService().sendNotification(
+      title: ref.read(loginUserData.notifier).state.name ?? "",
+      message: message,
+      sendto: ref.read(loginUserData.notifier).state.token ?? "",
+      notifiactionInfo: notification,
+    );
   }
 }

@@ -31,6 +31,23 @@ class NotificationModel {
     required this.sendNotificationuserInfo,
   });
 
+  factory NotificationModel.empty() {
+    return NotificationModel(
+      id: 0,
+      userUid: '',
+      otherUserUid: '',
+      type: 0,
+      title: '',
+      isRead: false,
+      message: '',
+      postId: null,
+      courseId: null,
+      roomId: null,
+      postTime: DateTime.now(),
+      sendNotificationuserInfo: ProfileData(),
+    );
+  }
+
   factory NotificationModel.toMap(Map<String, dynamic> json) {
     return NotificationModel(
       id: json['id'],

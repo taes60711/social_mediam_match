@@ -10,10 +10,12 @@ import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
 import 'package:social_mediam_match/services/friend_service.dart';
 
 import '../../../models/friend_model.dart';
+import '../../../models/notification_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/friend/chat_ws_model.dart';
 import '../../../provider/friend/friend_provider.dart';
+import '../../../services/firebase_notification_service.dart';
 import '../../home/firendsPage/chat_room.dart';
 import '../../home/firendsPage/firends_page.dart';
 import '../../home/skillExChangePage/skill_utilites.dart';
@@ -117,6 +119,21 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                         if (ref.read(isFriendProvider.notifier).state == false) {
                           ChatWSModel().addFriend([ref.watch(loginUserData).uid, userData.uid]);
                           ref.read(isFriendProvider.notifier).update((state) => true);
+
+                          String message = '"${ref.watch(loginUserData).name}"將你加為好友';
+
+                          NotificationModel notification = NotificationModel.empty();
+                          notification.userUid = ref.read(loginUserData.notifier).state.uid;
+                          notification.otherUserUid = userData.uid;
+                          notification.type = 2;
+                          notification.title = message;
+                          notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
+
+                          FirebaseNotificationService().sendNotification(
+                            message: message,
+                            sendto: ref.read(loginUserData.notifier).state.token ?? "",
+                            notifiactionInfo: notification,
+                          );
                           render();
                         } else {
                           closePage();
