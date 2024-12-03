@@ -17,6 +17,38 @@ import 'course_detail.dart';
 import 'course_manager/course_create_page.dart';
 
 class CourseUtilites {
+  ///データなレイアウト
+  static Widget noCourseData() {
+    return SizedBox(
+      width: ScreenSize.width,
+      height: ScreenSize.height,
+      child: AspectRatio(
+        aspectRatio: 16.0 / 9.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right: ScreenSize.fitPxHeight(8)),
+              child: Icon(
+                FontAwesomeIcons.commentSlash,
+                size: 50,
+                color: AppColors.whiteColor,
+              ),
+            ),
+            SizedBox(height: ScreenSize.fitPxHeight(10)),
+            Text(
+              "沒有文章",
+              style: TextStyle(
+                fontSize: ScreenSize.fontSize20,
+                color: AppColors.greyColor130,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   ///コース作るボタン
   static Widget courseCreateButton(BuildContext context) {
     return MainBtn(

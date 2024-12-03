@@ -23,6 +23,7 @@ import '../../../../services/course_service.dart';
 import '../../../../services/notification_service.dart';
 import '../../../../services/post_service.dart';
 import '../../../utilities/apiListView/api_list_controller.dart';
+import '../../../utilities/style/style_config.dart';
 import 'my_notification_post_page.dart';
 
 final notificationListControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(
@@ -40,24 +41,6 @@ class MyNotificationPage extends BaseEndDrawer {
             closePage();
           },
           title: "通知",
-          rightWidget: MainBtn(
-            onPress: () async {
-              if (ref.read(loginUserNotReadNotificationCount.notifier).state <= 0) {
-                return;
-              }
-
-              // await NotificationService().updateReadNotificationCount(userUid: userData.uid);
-              for (int i = 0; i < ref.read(notificationListControllerProvider).listData.length; i++) {
-                NotificationModel updateData = ref.read(notificationListControllerProvider).listData[i];
-                updateData.isRead = !updateData.isRead;
-                ref.read(notificationListControllerProvider.notifier).editData(i, updateData);
-              }
-              ref.read(loginUserNotReadNotificationCount.notifier).update((e) => 0);
-
-              render();
-            },
-            title: "全部已讀",
-          ),
         ),
         SizedBox(height: ScreenSize.fitPxWidth(16)),
         Expanded(
@@ -153,7 +136,45 @@ class MyNotificationPage extends BaseEndDrawer {
                 );
               }),
         ),
+        filterSearchBtn(),
       ],
+    );
+  }
+
+  Widget filterSearchBtn() {
+    return Container(
+      height: ScreenSize.fitPxHeight(80),
+      color: AppColors.black37,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(top: ScreenSize.fitPxHeight(15)),
+              child: MainBtn(
+                  padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
+                  margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(40)),
+                  onPress: () async {
+                    if (ref.read(loginUserNotReadNotificationCount.notifier).state <= 0) {
+                      return;
+                    }
+
+                    // await NotificationService().updateReadNotificationCount(userUid: userData.uid);
+                    for (int i = 0; i < ref.read(notificationListControllerProvider).listData.length; i++) {
+                      NotificationModel updateData = ref.read(notificationListControllerProvider).listData[i];
+                      updateData.isRead = !updateData.isRead;
+                      ref.read(notificationListControllerProvider.notifier).editData(i, updateData);
+                    }
+                    ref.read(loginUserNotReadNotificationCount.notifier).update((e) => 0);
+
+                    render();
+                  },
+                  title: "全部已讀"),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

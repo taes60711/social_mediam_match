@@ -27,6 +27,7 @@ class _CreatedCourseState extends ConsumerState<CreatedCoursePage> {
         },
         listControllerProvider: createdCourserListPorver,
         loadingWidget: const CourseLoading(),
+        noDataWidget: CourseUtilites.noCourseData(),
         itemChild: (data, index) {
           return CourseUtilites().courseItemContent(context, ref, createdCourserListPorver, data: data, dataIndex: index);
         });

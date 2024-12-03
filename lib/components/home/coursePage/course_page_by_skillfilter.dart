@@ -29,6 +29,7 @@ class CoursePageBySkillFilter extends BaseEndDrawer {
               },
               listControllerProvider: courseByTextFilterListPorver,
               loadingWidget: const CourseLoading(),
+              noDataWidget: CourseUtilites.noCourseData(),
               itemChild: (data, index) {
                 return CourseUtilites().courseItemContent(context, ref, courseMainPageListPorver, data: data, dataIndex: index);
               }),

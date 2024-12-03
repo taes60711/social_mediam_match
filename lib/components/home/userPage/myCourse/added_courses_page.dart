@@ -28,6 +28,7 @@ class _PostByViewState extends ConsumerState<AddedCoursePage> {
       },
       listControllerProvider: addedCourserListPorver,
       loadingWidget: const CourseLoading(),
+      noDataWidget: CourseUtilites.noCourseData(),
       itemChild: (data, index) {
         return CourseUtilites().courseItemContent(context, ref, addedCourserListPorver, data: data, dataIndex: index);
       },

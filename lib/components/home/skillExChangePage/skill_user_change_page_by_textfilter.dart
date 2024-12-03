@@ -32,6 +32,7 @@ class SkillUserChangeByTextFilter extends BaseEndDrawer {
             },
             listControllerProvider: userExChangeTextFilteredlistControllerProvider,
             loadingWidget: const SkillChangeLoading(),
+            noDataWidget: SkillUtilites().noDataBuilder(),
             itemChild: (data, index) {
               return SkillUtilites().skillUserChangeContent(context, data: data);
             },

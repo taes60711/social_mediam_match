@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
@@ -25,7 +26,7 @@ class MyFriendPage extends BaseEndDrawer {
         ),
         Expanded(
           child: ref.watch(frinedListProvider).isEmpty
-              ? Container()
+              ? noDataBuilder()
               : ListView.builder(
                   itemCount: ref.watch(frinedListProvider).length,
                   itemBuilder: (context, index) {
@@ -79,6 +80,37 @@ class MyFriendPage extends BaseEndDrawer {
                   }),
         ),
       ],
+    );
+  }
+
+  Widget noDataBuilder() {
+    return SizedBox(
+      width: ScreenSize.width,
+      height: ScreenSize.height,
+      child: AspectRatio(
+        aspectRatio: 16.0 / 9.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right: ScreenSize.fitPxHeight(8)),
+              child: Icon(
+                FontAwesomeIcons.userSlash,
+                size: 50,
+                color: AppColors.whiteColor,
+              ),
+            ),
+            SizedBox(height: ScreenSize.fitPxHeight(10)),
+            Text(
+              "目前沒有好友",
+              style: TextStyle(
+                fontSize: ScreenSize.fontSize20,
+                color: AppColors.greyColor130,
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
