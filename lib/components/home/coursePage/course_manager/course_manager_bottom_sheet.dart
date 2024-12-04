@@ -26,40 +26,42 @@ class CourseManagerBtmSheet extends BaseBottomSheet {
 
   @override
   Widget build(WidgetRef ref) {
-    return Column(
-      children: [
-        SizedBox(height: ScreenSize.fitPxWidth(10)),
-        managerPageMainBtn(
-            iconData: FontAwesomeIcons.penToSquare,
-            text: "編輯課程",
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(height: ScreenSize.fitPxWidth(10)),
+          managerPageMainBtn(
+              iconData: FontAwesomeIcons.penToSquare,
+              text: "編輯課程",
+              onPress: () {
+                CourseEditPage(courseListController, dataIndex: dataIndex).show(context);
+              }),
+          SizedBox(height: ScreenSize.fitPxWidth(15)),
+          managerPageMainBtn(
+            iconData: FontAwesomeIcons.gears,
+            text: "管理成員",
             onPress: () {
-              CourseEditPage(courseListController, dataIndex: dataIndex).show(context);
-            }),
-        SizedBox(height: ScreenSize.fitPxWidth(15)),
-        managerPageMainBtn(
-          iconData: FontAwesomeIcons.gears,
-          text: "管理成員",
-          onPress: () {
-            CourseMemberManagerPage().show(context);
-          },
-        ),
-        SizedBox(height: ScreenSize.fitPxWidth(15)),
-        managerPageMainBtn(
-          iconData: FontAwesomeIcons.trash,
-          text: "刪除課程",
-          onPress: () {
-            ConfirmDilaog(
-              title: "警告",
-              content: "確定要刪除該課程?",
-              conirmFunc: () async {
-                ref.read(courseListController.notifier).removeData(dataIndex);
-                render();
-                closePage();
-              },
-            ).show(context);
-          },
-        ),
-      ],
+              CourseMemberManagerPage().show(context);
+            },
+          ),
+          SizedBox(height: ScreenSize.fitPxWidth(15)),
+          managerPageMainBtn(
+            iconData: FontAwesomeIcons.trash,
+            text: "刪除課程",
+            onPress: () {
+              ConfirmDilaog(
+                title: "警告",
+                content: "確定要刪除該課程?",
+                conirmFunc: () async {
+                  ref.read(courseListController.notifier).removeData(dataIndex);
+                  render();
+                  closePage();
+                },
+              ).show(context);
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -84,12 +86,17 @@ class CourseManagerBtmSheet extends BaseBottomSheet {
         ),
         child: Row(
           children: [
-            Icon(iconData, color: AppColors.whiteColor),
+            Icon(
+              iconData,
+              color: AppColors.whiteColor,
+              size: ScreenSize.fontSize14,
+            ),
             SizedBox(width: ScreenSize.fitPxWidth(10)),
             Text(
               text,
               style: TextStyle(
                 color: AppColors.whiteColor,
+                fontSize: ScreenSize.fontSize12,
               ),
             )
           ],

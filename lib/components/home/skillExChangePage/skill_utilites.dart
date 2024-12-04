@@ -126,9 +126,9 @@ class SkillUtilites {
                 Container(
                   padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
                   margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 138, 138, 138),
-                    borderRadius: BorderRadius.circular(15),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 138, 138, 138),
+                    shape: BoxShape.circle,
                   ),
                   child: Icon(
                     FontAwesomeIcons.reply,
@@ -151,9 +151,9 @@ class SkillUtilites {
                 Container(
                   padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
                   margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 240, 123, 77),
-                    borderRadius: BorderRadius.circular(15),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 240, 123, 77),
+                    shape: BoxShape.circle,
                   ),
                   child: Icon(
                     FontAwesomeIcons.share,
@@ -199,7 +199,7 @@ class SkillUtilites {
                       margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
                       padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(100),
                         color: AppColors.greyColor98,
                       ),
                       child: Row(
@@ -210,7 +210,7 @@ class SkillUtilites {
                             margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
                             decoration: BoxDecoration(
                               color: AppColors.black37,
-                              borderRadius: BorderRadius.circular(10),
+                              shape: BoxShape.circle,
                             ),
                             child: Center(
                               child: Text(

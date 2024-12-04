@@ -57,7 +57,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
           Column(
             children: [
               Container(
-                height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 40 : 0,
+                height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? ScreenSize.fitPxWidth(40) : 0,
               ),
               Expanded(
                 child: APIListWidget<ProfileData>(
@@ -93,13 +93,13 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
   Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
     TextEditingController searchController = TextEditingController();
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+      margin: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(5)),
       decoration: BoxDecoration(
         color: AppColors.greyColor57,
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
       ),
       width: ScreenSize.width,
-      height: 36,
+      height: ScreenSize.fitPxWidth(36),
       child: Row(
         children: [
           MainBtn(
@@ -109,9 +109,15 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
               }
               SkillUserChangeByTextFilter(searchText: searchController.text).show(context);
             },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Icon(Icons.search, color: AppColors.whiteColor),
+            child: Container(
+              width: ScreenSize.fitPxWidth(30),
+              height: ScreenSize.fitPxWidth(36),
+              color: Colors.transparent,
+              child: Icon(
+                Icons.search,
+                color: AppColors.whiteColor,
+                size: ScreenSize.fontSize16,
+              ),
             ),
           ),
           Expanded(
@@ -142,8 +148,8 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
               ).show(context);
             },
             child: Container(
-              width: 50,
-              height: 40,
+              width: ScreenSize.fitPxWidth(30),
+              height: ScreenSize.fitPxWidth(40),
               color: Colors.transparent,
               child: Icon(
                 FontAwesomeIcons.sliders,

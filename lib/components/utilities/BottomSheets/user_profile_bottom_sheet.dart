@@ -165,7 +165,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                         ),
                         child: Text(
                           ref.watch(isFriendProvider) ? "聊天室" : "新增好友",
-                          style: TextStyle(color: AppColors.whiteColor),
+                          style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                         ),
                       ),
                     ),

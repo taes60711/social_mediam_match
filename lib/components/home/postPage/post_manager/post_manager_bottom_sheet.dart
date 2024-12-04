@@ -34,35 +34,37 @@ class PostManagerBtmSheet extends BaseBottomSheet {
 
   @override
   Widget build(WidgetRef ref) {
-    return Column(
-      children: [
-        SizedBox(height: ScreenSize.fitPxWidth(10)),
-        managerPageMainBtn(
-            iconData: FontAwesomeIcons.penToSquare,
-            text: "編輯文章",
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(height: ScreenSize.fitPxWidth(10)),
+          managerPageMainBtn(
+              iconData: FontAwesomeIcons.penToSquare,
+              text: "編輯文章",
+              onPress: () {
+                PostEditorPage(dataIndex: dataIndex, postListController).show(context);
+              }),
+          SizedBox(height: ScreenSize.fitPxWidth(15)),
+          managerPageMainBtn(
+            iconData: FontAwesomeIcons.trash,
+            text: "刪除文章",
             onPress: () {
-              PostEditorPage(dataIndex: dataIndex, postListController).show(context);
-            }),
-        SizedBox(height: ScreenSize.fitPxWidth(15)),
-        managerPageMainBtn(
-          iconData: FontAwesomeIcons.trash,
-          text: "刪除文章",
-          onPress: () {
-            ConfirmDilaog(
-              title: "警告",
-              content: "確定要刪除該文章?",
-              conirmFunc: () async {
-                bool isSucess = await PostService().deletePost(ref.read(choicedPostProvider.notifier).state.id);
-                if (isSucess) {
-                  ref.read(postListController.notifier).removeData(dataIndex);
-                  render();
-                  closePage();
-                }
-              },
-            ).show(context);
-          },
-        ),
-      ],
+              ConfirmDilaog(
+                title: "警告",
+                content: "確定要刪除該文章?",
+                conirmFunc: () async {
+                  bool isSucess = await PostService().deletePost(ref.read(choicedPostProvider.notifier).state.id);
+                  if (isSucess) {
+                    ref.read(postListController.notifier).removeData(dataIndex);
+                    render();
+                    closePage();
+                  }
+                },
+              ).show(context);
+            },
+          ),
+        ],
+      ),
     );
   }
 

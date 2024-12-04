@@ -59,7 +59,7 @@ class CourseUtilites {
         width: ScreenSize.fitPxWidth(40),
         height: ScreenSize.fitPxWidth(40),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
+          shape: BoxShape.circle,
           color: AppColors.whiteColor,
         ),
         child: Icon(
@@ -168,7 +168,7 @@ class CourseUtilites {
                           margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
                           padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8)),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(100),
                             color: AppColors.greyColor98,
                           ),
                           child: Text(
@@ -199,6 +199,7 @@ class CourseUtilites {
                   style: TextStyle(
                     color: AppColors.whiteColor,
                     fontWeight: FontWeight.w600,
+                    fontSize: ScreenSize.fontSize14,
                   ),
                 ),
               ],
@@ -226,6 +227,7 @@ class CourseUtilites {
                   style: TextStyle(
                     color: AppColors.whiteColor,
                     fontWeight: FontWeight.w600,
+                    fontSize: ScreenSize.fontSize14,
                   ),
                 ),
                 SizedBox(width: ScreenSize.fitPxWidth(5)),
