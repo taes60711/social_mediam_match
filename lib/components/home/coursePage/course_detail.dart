@@ -119,7 +119,7 @@ class CourseDetailPage extends BaseEndDrawer {
                         margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3), bottom: ScreenSize.fitPxWidth(8)),
                         padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(100)),
                           color: AppColors.greyColor98,
                         ),
                         child: Text(
@@ -145,7 +145,10 @@ class CourseDetailPage extends BaseEndDrawer {
                       SizedBox(width: ScreenSize.fitPxWidth(5)),
                       Text(
                         "大綱",
-                        style: TextStyle(color: AppColors.whiteColor),
+                        style: TextStyle(
+                          color: AppColors.whiteColor,
+                          fontSize: ScreenSize.fontSize14,
+                        ),
                       ),
                     ],
                   ),
@@ -153,14 +156,20 @@ class CourseDetailPage extends BaseEndDrawer {
 
                   Container(
                     width: ScreenSize.width,
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                    padding: EdgeInsets.symmetric(
+                      vertical: ScreenSize.fitPxHeight(5),
+                      horizontal: ScreenSize.fitPxHeight(8),
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.greyColor176.withAlpha(50),
-                      borderRadius: BorderRadius.circular(3),
+                      borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(5)),
                     ),
                     child: Text(
                       choiceData.content,
-                      style: TextStyle(color: AppColors.whiteColor),
+                      style: TextStyle(
+                        color: AppColors.whiteColor,
+                        fontSize: ScreenSize.fontSize14,
+                      ),
                     ),
                   ),
                   SizedBox(height: ScreenSize.fitPxHeight(8)),
@@ -175,7 +184,10 @@ class CourseDetailPage extends BaseEndDrawer {
                       SizedBox(width: ScreenSize.fitPxWidth(5)),
                       Text(
                         "前置需求",
-                        style: TextStyle(color: AppColors.whiteColor),
+                        style: TextStyle(
+                          color: AppColors.whiteColor,
+                          fontSize: ScreenSize.fontSize14,
+                        ),
                       ),
                       SizedBox(width: ScreenSize.fitPxWidth(5)),
                       Padding(
@@ -196,14 +208,20 @@ class CourseDetailPage extends BaseEndDrawer {
                   ///勉強前必要な知識
                   Container(
                     width: ScreenSize.width,
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                    padding: EdgeInsets.symmetric(
+                      vertical: ScreenSize.fitPxHeight(5),
+                      horizontal: ScreenSize.fitPxHeight(8),
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.greyColor176.withAlpha(50),
                       borderRadius: BorderRadius.circular(3),
                     ),
                     child: Text(
                       choiceData.beforeNeed,
-                      style: TextStyle(color: AppColors.whiteColor),
+                      style: TextStyle(
+                        color: AppColors.whiteColor,
+                        fontSize: ScreenSize.fontSize14,
+                      ),
                     ),
                   ),
                   SizedBox(height: ScreenSize.fitPxHeight(10)),
@@ -247,15 +265,20 @@ class CourseDetailPage extends BaseEndDrawer {
                       initiallyExpanded: choiceData.signUpStatus != "added",
                       title: Text(
                         "詳細內容",
-                        style: TextStyle(color: AppColors.whiteColor),
+                        style: TextStyle(
+                          color: AppColors.whiteColor,
+                          fontSize: ScreenSize.fontSize16,
+                        ),
                       ),
                       collapsedTrailingWidget: Icon(
                         Icons.keyboard_arrow_up,
                         color: AppColors.whiteColor,
+                        size: ScreenSize.fontSize16,
                       ),
                       expandedTrailingWidget: Icon(
                         Icons.keyboard_arrow_down,
                         color: AppColors.whiteColor,
+                        size: ScreenSize.fontSize16,
                       ),
                       children: <Widget>[
                         RichTextView(content: choiceData.prStory),
@@ -272,15 +295,20 @@ class CourseDetailPage extends BaseEndDrawer {
                         initiallyExpanded: true,
                         title: Text(
                           chapterInfo.chapterName == "" ? "chapter${index + 1}" : chapterInfo.chapterName,
-                          style: TextStyle(color: AppColors.whiteColor),
+                          style: TextStyle(
+                            color: AppColors.whiteColor,
+                            fontSize: ScreenSize.fontSize16,
+                          ),
                         ),
                         collapsedTrailingWidget: Icon(
                           Icons.keyboard_arrow_up,
                           color: AppColors.whiteColor,
+                          size: ScreenSize.fontSize16,
                         ),
                         expandedTrailingWidget: Icon(
                           Icons.keyboard_arrow_down,
                           color: AppColors.whiteColor,
+                          size: ScreenSize.fontSize16,
                         ),
                         children: <Widget>[
                           SizedBox(

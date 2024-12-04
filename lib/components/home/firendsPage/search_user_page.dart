@@ -79,7 +79,10 @@ class SearchUserPage extends BaseBottomSheet {
                                     children: [
                                       Text(
                                         data.name ?? "",
-                                        style: TextStyle(color: AppColors.whiteColor),
+                                        style: TextStyle(
+                                          color: AppColors.whiteColor,
+                                          fontSize: ScreenSize.fontSize16,
+                                        ),
                                       ),
                                       Text(
                                         DateFormatUtilities().format(data.lastLogin),
@@ -92,7 +95,7 @@ class SearchUserPage extends BaseBottomSheet {
                                   ),
                                   Text(
                                     data.email,
-                                    style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor),
+                                    style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.greyColor130),
                                   ),
                                 ],
                               ),
@@ -169,12 +172,16 @@ class SearchUserPage extends BaseBottomSheet {
         color: AppColors.greyColor57,
         borderRadius: BorderRadius.circular(5),
       ),
-      height: 36,
+      height: ScreenSize.fitPxWidth(36),
       child: Row(
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Icon(Icons.search, color: AppColors.whiteColor),
+            child: Icon(
+              Icons.search,
+              color: AppColors.whiteColor,
+              size: ScreenSize.fontSize16,
+            ),
           ),
           Expanded(
             child: BaseInputField(

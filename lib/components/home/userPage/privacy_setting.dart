@@ -165,6 +165,7 @@ class PrivacySettingPage extends BaseEndDrawer {
             Icon(
               iconData,
               color: AppColors.whiteColor,
+              size: ScreenSize.fontSize16,
             ),
             SizedBox(width: ScreenSize.fitPxWidth(10)),
             Expanded(

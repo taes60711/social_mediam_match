@@ -79,7 +79,10 @@ class MyCoursePage extends BaseEndDrawer {
             : const BoxDecoration(color: Colors.transparent),
         child: Text(
           tabText,
-          style: TextStyle(color: AppColors.whiteColor),
+          style: TextStyle(
+            color: AppColors.whiteColor,
+            fontSize: ScreenSize.fontSize12,
+          ),
         ),
       ),
     );

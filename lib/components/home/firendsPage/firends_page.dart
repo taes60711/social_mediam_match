@@ -191,14 +191,18 @@ class _FriendPageState extends ConsumerState<FriendPage> {
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.greyColor57,
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
         ),
-        height: 36,
+        height: ScreenSize.fitPxWidth(36),
         child: Row(
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Icon(Icons.search, color: AppColors.whiteColor),
+              child: Icon(
+                Icons.search,
+                color: AppColors.whiteColor,
+                size: ScreenSize.fontSize16,
+              ),
             ),
             Expanded(
               child: BaseInputField(

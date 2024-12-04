@@ -135,12 +135,15 @@ class ChatRoom extends BaseEndDrawer {
         margin: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(3),
+          borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
           color: AppColors.greyColor54,
         ),
         child: Text(
           info,
-          style: TextStyle(color: AppColors.whiteColor),
+          style: TextStyle(
+            color: AppColors.whiteColor,
+            fontSize: ScreenSize.fontSize14,
+          ),
         ),
       ),
     );
@@ -174,7 +177,10 @@ class ChatRoom extends BaseEndDrawer {
             SizedBox(width: ScreenSize.fitPxWidth(5)),
             Text(
               DateFormatUtilities().hHMMformat(data.sentAt),
-              style: TextStyle(color: AppColors.greyColor130),
+              style: TextStyle(
+                color: AppColors.greyColor130,
+                fontSize: ScreenSize.fontSize10,
+              ),
             ),
           ],
         ),
@@ -194,7 +200,7 @@ class ChatRoom extends BaseEndDrawer {
             children: [
               Text(
                 DateFormatUtilities().hHMMformat(data.sentAt),
-                style: TextStyle(color: AppColors.greyColor130),
+                style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize10),
               ),
               SizedBox(width: ScreenSize.fitPxWidth(5)),
               Container(

@@ -50,9 +50,7 @@ class BaseTopBar extends StatelessWidget {
             title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: AppColors.whiteColor,
-            ),
+            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
           ),
       rightWidget ?? Container(),
     ];

@@ -76,7 +76,9 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
             ],
           ),
           AnimatedPositioned(
-            top: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 3 : -45,
+            top: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60)
+                ? ScreenSize.fitPxHeight(5)
+                : ScreenSize.fitPxHeight(-50),
             left: 0,
             right: 0,
             duration: const Duration(milliseconds: 300),

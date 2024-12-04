@@ -34,16 +34,18 @@ class AboutPage extends BaseEndDrawer {
                       "程度分級",
                       style: TextStyle(
                         color: AppColors.whiteColor,
-                        fontSize: ScreenSize.fontSize18,
+                        fontSize: ScreenSize.fontSize16,
                       ),
                     ),
                     collapsedTrailingWidget: Icon(
                       Icons.keyboard_arrow_down,
                       color: AppColors.whiteColor,
+                      size: ScreenSize.fontSize16,
                     ),
                     expandedTrailingWidget: Icon(
                       Icons.keyboard_arrow_up,
                       color: AppColors.whiteColor,
+                      size: ScreenSize.fontSize16,
                     ),
                     children: [
                       AppCommonTools().levelsetsumeiBuild(),

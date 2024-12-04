@@ -64,7 +64,7 @@ class CourseUtilites {
         ),
         child: Icon(
           FontAwesomeIcons.pen,
-          size: 16,
+          size: ScreenSize.fontSize14,
           color: AppColors.orangeColor,
         ),
       ),
@@ -86,7 +86,7 @@ class CourseUtilites {
           vertical: ScreenSize.fitPxHeight(8),
           horizontal: ScreenSize.fitPxHeight(15),
         ),
-        margin: const EdgeInsets.only(bottom: 10),
+        margin: EdgeInsets.only(top: ScreenSize.fitPxHeight(8)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

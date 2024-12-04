@@ -194,7 +194,7 @@ class PostDetailPage extends BaseEndDrawer {
                               padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(8)),
                               child: Text(
                                 "留言",
-                                style: TextStyle(color: AppColors.greyColor130, fontSize: 14),
+                                style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
                               ),
                             ),
                           ),

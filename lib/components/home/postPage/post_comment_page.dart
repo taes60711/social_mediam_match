@@ -64,7 +64,7 @@ class PostCommentPage extends BaseBottomSheet {
                 noDataWidget: Center(
                   child: Text(
                     "目前沒有任何留言",
-                    style: TextStyle(color: AppColors.whiteColor),
+                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                   ),
                 ),
                 itemChild: (data, index) {

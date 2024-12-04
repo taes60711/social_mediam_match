@@ -53,7 +53,7 @@ class ChatRoomBar extends StatelessWidget {
               SizedBox(width: ScreenSize.fitPxWidth(10)),
               Text(
                 userData.name ?? "",
-                style: titleStyle ?? const TextStyle(color: Colors.white),
+                style: titleStyle ?? TextStyle(color: Colors.white, fontSize: ScreenSize.fontSize14),
               ),
             ],
           ),

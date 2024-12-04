@@ -47,7 +47,7 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 50 : 0,
+                height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? ScreenSize.fitPxWidth(40) : 0,
               ),
               Expanded(
                 child: APIListWidget(
@@ -68,7 +68,9 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
             ],
           ),
           AnimatedPositioned(
-            top: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? 3 : -45,
+            top: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60)
+                ? ScreenSize.fitPxHeight(5)
+                : ScreenSize.fitPxHeight(-50),
             left: 0,
             right: 0,
             duration: const Duration(milliseconds: 300),
@@ -83,13 +85,15 @@ class _CourseMainPageState extends ConsumerState<CourseMainPage> {
 Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
   TextEditingController searchController = TextEditingController();
   return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+    margin: EdgeInsets.symmetric(
+      horizontal: ScreenSize.fitPxWidth(10),
+    ),
     decoration: BoxDecoration(
       color: AppColors.greyColor57,
-      borderRadius: BorderRadius.circular(5),
+      borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
     ),
     width: ScreenSize.width,
-    height: 36,
+    height: ScreenSize.fitPxWidth(36),
     child: Row(
       children: [
         MainBtn(
@@ -99,9 +103,15 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
             }
             CoursePageByTextFilter(searchText: searchController.text).show(context);
           },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Icon(Icons.search, color: AppColors.whiteColor),
+          child: Container(
+            width: ScreenSize.fitPxWidth(30),
+            height: ScreenSize.fitPxWidth(36),
+            color: Colors.transparent,
+            child: Icon(
+              Icons.search,
+              color: AppColors.whiteColor,
+              size: ScreenSize.fontSize16,
+            ),
           ),
         ),
         Expanded(
@@ -131,8 +141,8 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
             ).show(context);
           },
           child: Container(
-            width: 50,
-            height: 40,
+            width: ScreenSize.fitPxWidth(30),
+            height: ScreenSize.fitPxWidth(40),
             color: Colors.transparent,
             child: Icon(
               FontAwesomeIcons.sliders,

@@ -80,9 +80,9 @@ class _BottomBarState extends ConsumerState<BottomBar> {
                                       height: ScreenSize.fitPxHeight(4),
                                     ),
                                     Container(
-                                      width: 10,
+                                      width: ScreenSize.fitPxWidth(10),
                                       margin: EdgeInsets.only(left: leftPadding),
-                                      height: 2,
+                                      height: ScreenSize.fitPxHeight(2),
                                       color: AppColors.whiteColor,
                                     ),
                                   ],

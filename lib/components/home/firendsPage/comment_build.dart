@@ -63,14 +63,14 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(8), horizontal: ScreenSize.fitPxHeight(8)),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(8)),
                   color: AppColors.greyColor57,
                 ),
                 margin: EdgeInsets.only(right: ScreenSize.fitPxHeight(10)),
                 child: Center(
                   child: Icon(
                     FontAwesomeIcons.fileImage,
-                    size: 16,
+                    size: ScreenSize.fontSize16,
                     color: AppColors.whiteColor,
                   ),
                 ),
