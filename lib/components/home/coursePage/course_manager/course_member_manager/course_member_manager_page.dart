@@ -168,7 +168,7 @@ class CourseMemberManagerPage extends BaseEndDrawer {
                                 ),
                               ),
                               child: Text(
-                                data.status == 0 ? "審核中" : "已加入",
+                                data.status == 0 ? "等待批准" : "已加入",
                                 style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                               ),
                             ),

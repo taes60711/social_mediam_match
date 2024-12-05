@@ -6,6 +6,7 @@ import '../models/user_model.dart';
 import '../provider/account/LoginPage/login_view_model.dart';
 import '../provider/account/user_provider.dart';
 import '../provider/friend/chat_ws_model.dart';
+import '../services/google_sign_in_service.dart';
 import '../services/notification_service.dart';
 import '../services/user_service.dart';
 
@@ -90,6 +91,9 @@ class UserLoginStatusController {
 
     /// SDのユーザUID削除
     await sharedPreference.loginOutRemoveUserUID();
+
+    ///　グーグルログインしたユーザログアウト
+    await GoogleSinginService().signOutFromGoogle();
 
     /// チャットルームリストWS クローズ
     ChatWSModel().closeStream();

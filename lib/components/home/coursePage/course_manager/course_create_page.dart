@@ -47,7 +47,7 @@ class CourseCreatePage extends BaseFadeScalePage {
                   if (viewModel.isEditedCheck()) {
                     ConfirmDilaog(
                         title: '提示',
-                        content: '正在編輯中　確定要離開嗎？',
+                        content: '正在編輯中, 確定要離開嗎？',
                         conirmFunc: () {
                           viewModel.resetAllData();
                           closePage();

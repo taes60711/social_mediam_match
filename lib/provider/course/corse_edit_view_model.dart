@@ -126,7 +126,7 @@ class CourseEditViewModel {
       titleController.text = editingData.title;
       contentController.text = editingData.content;
       beforeNeedController.text = editingData.beforeNeed;
-
+      isPublic = editingData.isPublic;
       ref.read(courseDetailContent.notifier).update((state) => courseData.prStory);
       ref.read(courseEditSkillList.notifier).update((state) => List.from(formatListData));
       ref.read(courseEditChapterList.notifier).update((state) => List.from(courseData.chapterList));

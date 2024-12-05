@@ -72,6 +72,7 @@ class CourseDetailPage extends BaseEndDrawer {
 
                       ///申請ボタン
                       Visibility(
+                        /// added signing none
                         visible: userData.uid != choiceData.createdBy && choiceData.signUpStatus == "none",
                         child: MainBtn(
                           title: "申請",
@@ -287,48 +288,60 @@ class CourseDetailPage extends BaseEndDrawer {
                   ),
 
                   ///チャプター
-                  Column(
-                    children: choiceData.chapterList.asMap().entries.map((e) {
-                      int index = e.key;
-                      CourseChapterInfo chapterInfo = e.value;
-                      return CustomExpansionTile(
-                        initiallyExpanded: true,
-                        title: Text(
-                          chapterInfo.chapterName == "" ? "chapter${index + 1}" : chapterInfo.chapterName,
-                          style: TextStyle(
-                            color: AppColors.whiteColor,
-                            fontSize: ScreenSize.fontSize16,
-                          ),
-                        ),
-                        collapsedTrailingWidget: Icon(
-                          Icons.keyboard_arrow_up,
-                          color: AppColors.whiteColor,
-                          size: ScreenSize.fontSize16,
-                        ),
-                        expandedTrailingWidget: Icon(
-                          Icons.keyboard_arrow_down,
-                          color: AppColors.whiteColor,
-                          size: ScreenSize.fontSize16,
-                        ),
-                        children: <Widget>[
-                          SizedBox(
-                            width: ScreenSize.width,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: choiceData.chapterList[index].content.map((e) {
-                                String content = e;
+                  Builder(builder: (context) {
+                    bool isVisible = true;
 
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 5),
-                                  child: RichTextView(content: content),
-                                );
-                              }).toList(),
+                    /// added signing none
+                    if (!choiceData.isPublic && choiceData.signUpStatus != "added" && userData.uid != choiceData.createdBy) {
+                      isVisible = false;
+                    }
+
+                    return Visibility(
+                      visible: isVisible,
+                      child: Column(
+                        children: choiceData.chapterList.asMap().entries.map((e) {
+                          int index = e.key;
+                          CourseChapterInfo chapterInfo = e.value;
+                          return CustomExpansionTile(
+                            initiallyExpanded: true,
+                            title: Text(
+                              chapterInfo.chapterName == "" ? "chapter${index + 1}" : chapterInfo.chapterName,
+                              style: TextStyle(
+                                color: AppColors.whiteColor,
+                                fontSize: ScreenSize.fontSize16,
+                              ),
                             ),
-                          ),
-                        ],
-                      );
-                    }).toList(),
-                  ),
+                            collapsedTrailingWidget: Icon(
+                              Icons.keyboard_arrow_up,
+                              color: AppColors.whiteColor,
+                              size: ScreenSize.fontSize16,
+                            ),
+                            expandedTrailingWidget: Icon(
+                              Icons.keyboard_arrow_down,
+                              color: AppColors.whiteColor,
+                              size: ScreenSize.fontSize16,
+                            ),
+                            children: <Widget>[
+                              SizedBox(
+                                width: ScreenSize.width,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: choiceData.chapterList[index].content.map((e) {
+                                    String content = e;
+
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 5),
+                                      child: RichTextView(content: content),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  }),
 
                   SizedBox(height: ScreenSize.fitPxHeight(20))
                 ],

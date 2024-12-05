@@ -34,7 +34,8 @@ class ConfirmDilaog extends BaseDialog {
           SizedBox(height: ScreenSize.fitPxWidth(15)),
           Text(
             content,
-            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
+            textAlign: TextAlign.center,
+            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize16),
           ),
           SizedBox(height: ScreenSize.fitPxWidth(25)),
           btnAmount == 1 ? oneBtnWidget() : twoBtnWidget(),

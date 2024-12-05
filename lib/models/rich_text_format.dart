@@ -261,7 +261,7 @@ class RichTextFormat {
     } else if (url.contains('&')) {
       end = url.indexOf('&');
     } else {
-      end = -1;
+      end = url.length;
     }
     String tmpId = "";
     if (end == -1) {

@@ -53,7 +53,7 @@ class RichTextEditor extends StatelessWidget {
                       controller: controller,
                       minHeight: ScreenSize.height / 2 - 100,
                       hintText: "請輸入文字",
-                      hintTextStyle: const TextStyle(color: Colors.grey),
+                      hintTextStyle: TextStyle(color: Colors.grey, fontSize: ScreenSize.fontSize14),
                       textStyle: TextStyle(fontSize: fontSize, color: AppColors.whiteColor),
                       loadingBuilder: (context) {
                         return Container(

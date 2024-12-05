@@ -48,8 +48,8 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   bool isTop = true;
   double scrollStartPos = 0;
 
-  double baseFloatBottomPos = Platform.isAndroid ? 15 : 45;
-  double floatBottomPos = Platform.isAndroid ? 75 : 65;
+  double baseFloatBottomPos = Platform.isAndroid ? 25 : 45;
+  double floatBottomPos = Platform.isAndroid ? 75 : 60;
 
   @override
   void initState() {
@@ -65,7 +65,9 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
       if (widget.initWidget == null) {
         ///実際的init
         await ref.read(widget.listControllerProvider.notifier).init(widget.apiFunc);
-        setState(() {});
+        if (mounted) {
+          setState(() {});
+        }
       }
     });
   }
@@ -93,7 +95,10 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
               Builder(
                 builder: (context) {
                   double flatButtonPos = ScreenSize.fitPxHeight(baseFloatBottomPos);
-
+                  if (widget.haveBottomBar) {
+                    ///　bottombarある場合
+                    flatButtonPos = ScreenSize.fitPxHeight(floatBottomPos);
+                  }
                   return Positioned(
                     right: ScreenSize.fitPxWidth(15),
                     bottom: flatButtonPos,
