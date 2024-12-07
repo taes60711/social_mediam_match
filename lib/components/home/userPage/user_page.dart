@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/home/skillExChangePage/skill_utilites.dart';
 import 'package:social_mediam_match/components/home/userPage/my_posts.dart';
 import 'package:social_mediam_match/components/home/userPage/user_profile_edit_page.dart';
 import 'package:social_mediam_match/components/utilities/app_common_tools.dart';
@@ -10,7 +11,6 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 
-import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 
 import '../../utilities/style/screen_size.dart';
@@ -212,7 +212,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                     SizedBox(height: ScreenSize.fitPxHeight(8)),
 
                     ///得意なスキル
-                    skillBar(skills: userData.mainSkills!),
+                    SkillUtilites().skillBar(skills: userData.mainSkills!),
                     SizedBox(height: ScreenSize.fitPxHeight(10)),
 
                     Row(
@@ -243,7 +243,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                     SizedBox(height: ScreenSize.fitPxHeight(5)),
 
                     ///弱いスキル
-                    skillBar(skills: userData.wantSkills!),
+                    SkillUtilites().skillBar(skills: userData.wantSkills!),
                   ],
                 ),
               ),
@@ -339,63 +339,5 @@ Widget infoBtn({IconData? icon, String text = "", Function? onPress, WidgetRef? 
         ],
       ),
     ),
-  );
-}
-
-Widget skillBar({required List<RequestUserSkillData> skills}) {
-  return Row(
-    children: [
-      ///スキル
-      Row(
-        children: skills.isEmpty
-            ? [
-                Container(
-                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.greyColor98,
-                  ),
-                  child: Text(
-                    "暫無",
-                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                  ),
-                )
-              ]
-            : skills.map((e) {
-                return Container(
-                  margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(5)),
-                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.greyColor98,
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: ScreenSize.fitPxWidth(15),
-                        height: ScreenSize.fitPxWidth(15),
-                        margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
-                        decoration: BoxDecoration(
-                          color: AppColors.black37,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "${e.level}",
-                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize10),
-                          ),
-                        ),
-                      ),
-                      Text(
-                        e.name,
-                        style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize12),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-      ),
-    ],
   );
 }

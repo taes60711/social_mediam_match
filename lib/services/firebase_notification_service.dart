@@ -159,9 +159,10 @@ class FirebaseNotificationService {
       'Authorization': 'Bearer $serverToken',
     };
 
-    await http.post(uri, headers: headers, body: body).then((value) {
-      print("sendNotification :${value.body}");
-    });
+    /// 暫時關
+    // await http.post(uri, headers: headers, body: body).then((value) {
+    //   print("sendNotification :${value.body}");
+    // });
   }
 
   static Future<String> getServerAccessToken() async {

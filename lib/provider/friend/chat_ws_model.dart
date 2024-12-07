@@ -61,9 +61,10 @@ class ChatWSModel {
       String? realApiUrl = searchUrl.contains(ref.watch(loginUserData).uid) ? searchUrl : null;
       if (realApiUrl != null) {
         List<FriendListModel> tempfriendList = await FriendService().getFriendList(searchUrl);
+
         String initDate = "1997-01-01T00:00:00.000+00:00";
 
-        tempfriendList.sort((a, b) => DateTime.parse(a.sentAt ?? initDate).compareTo(DateTime.parse(b.sentAt ?? initDate)));
+        tempfriendList.sort((a, b) => DateTime.parse(b.sentAt ?? initDate).compareTo(DateTime.parse(a.sentAt ?? initDate)));
 
         ref.read(frinedListProvider.notifier).update((state) => tempfriendList);
         render();

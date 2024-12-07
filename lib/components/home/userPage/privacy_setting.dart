@@ -12,7 +12,6 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/global/user_login_status_controller.dart';
 import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
-import 'package:social_mediam_match/services/google_sign_in_service.dart';
 
 import '../../../models/notification_model.dart';
 import '../../../models/user_model.dart';

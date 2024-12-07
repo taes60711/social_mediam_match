@@ -92,4 +92,23 @@ class DateFormatUtilities {
     String formattedTime = DateFormat('HH:mm').format(dateLocal);
     return formattedTime;
   }
+
+  /// UTC > 2024-12-01 06:57
+  String utcTimeToLocalFormat(String utcTimeStr) {
+    DateTime utcTime = DateTime.parse(utcTimeStr);
+
+    DateTime localTime = utcTime.toLocal();
+
+    return localTime.toString();
+  }
+
+  /// UTC > 12/01(日)
+  String utcTimeToLocalMMddFormat(String utcTimeStr) {
+    DateTime utcTime = DateTime.parse(utcTimeStr);
+    DateTime localTime = utcTime.toLocal();
+    String formattedDate = DateFormat('MM/dd').format(localTime);
+    String weekday = DateFormat.E().format(localTime);
+
+    return '$formattedDate($weekday)';
+  }
 }

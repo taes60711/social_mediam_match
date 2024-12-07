@@ -195,6 +195,14 @@ class SkillUtilites {
                     )
                   ]
                 : skills.map((e) {
+                    List<Map<String, Color>> levelColor = [
+                      {"textColor": const Color(0xFF000000), "bgColor": const Color(0xFFE0E0E0)},
+                      {"textColor": const Color(0xFF191919), "bgColor": const Color(0xFFDDDBDB)},
+                      {"textColor": const Color(0xFF1F1E1E), "bgColor": const Color(0xFFADACAC)},
+                      {"textColor": const Color(0xFFFFFFFF), "bgColor": const Color(0xFF3C3C3C)},
+                      {"textColor": const Color(0xFFFFFFFF), "bgColor": const Color(0xFF212121)}
+                    ];
+
                     return Container(
                       margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
                       padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
@@ -209,13 +217,13 @@ class SkillUtilites {
                             height: ScreenSize.fitPxWidth(15),
                             margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3)),
                             decoration: BoxDecoration(
-                              color: AppColors.black37,
+                              color: levelColor[e.level - 1]['bgColor'],
                               shape: BoxShape.circle,
                             ),
                             child: Center(
                               child: Text(
                                 "${e.level}",
-                                style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize10),
+                                style: TextStyle(color: levelColor[e.level - 1]['textColor'], fontSize: ScreenSize.fontSize10),
                               ),
                             ),
                           ),

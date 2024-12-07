@@ -2,28 +2,22 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/components/home/firendsPage/comment_build.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/image_view_page.dart';
 import 'package:social_mediam_match/components/utilities/appBar/chat_room_bar.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
-
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/enum/date_format_utilities.dart';
-
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../models/friend_model.dart';
-
 import '../../../models/rich_text_format.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/friend/chat_room_ws_model.dart';
-
 import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
@@ -133,10 +127,10 @@ class ChatRoom extends BaseEndDrawer {
     return Center(
       child: Container(
         margin: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
-        padding: const EdgeInsets.all(5),
+        padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(3), horizontal: ScreenSize.fitPxWidth(10)),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
-          color: AppColors.greyColor54,
+          color: AppColors.greyColor54.withOpacity(0.5),
         ),
         child: Text(
           info,
@@ -363,28 +357,24 @@ class ChatRoom extends BaseEndDrawer {
 
 List formatChatMsg(List<ChatRoomMsg> messageData) {
   //例: ["2024-04-20",ChatRoomMessageModel,"2024-05-03",ChatRoomMessageModel...]
-  List<dynamic> ss = [];
+  List<dynamic> formattedMsg = [];
   //true的時候要顯示使用者圖像
-  bool test = true;
+  bool nextDataNeedAppearImg = true;
   if (messageData.length == 1) {
     {
-      ss.add(ChatRoomMsg(
-          userId: messageData[0].userId, message: messageData[0].message, sentAt: messageData[0].sentAt, needAppearImg: true));
+      formattedMsg.add(
+        ChatRoomMsg(
+          userId: messageData[0].userId,
+          message: messageData[0].message,
+          sentAt: messageData[0].sentAt,
+          needAppearImg: true,
+        ),
+      );
 
-      DateTime now = DateTime.now().toUtc();
-      String formattedTime = DateFormat("yyyy-MM-dd").format(now.toLocal());
-      if (formattedTime == messageData[0].sentAt.substring(0, "yyyy-MM-dd ".length)) {
-        ss.add("今日");
-      } else {
-        ss.add(messageData[0].sentAt.substring(0, "yyyy-MM-dd".length));
-      }
+      formattedMsg.add(getMsgInfoDate(messageData[0].sentAt));
     }
   } else {
     for (int i = 0; i < messageData.length; i++) {
-      DateTime now = DateTime.now().toUtc();
-
-      String formattedTime = DateFormat("yyyy-MM-dd").format(now.toLocal());
-
       //index : 0 - last比較
       // 防止range over 問題
       if (i < messageData.length - 1) {
@@ -393,31 +383,33 @@ List formatChatMsg(List<ChatRoomMsg> messageData) {
                 messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd".length) ||
             messageData[i].userId != messageData[i + 1].userId) {
           //這邊的 needAppearImg 應該都要為 false
-          ss.add(ChatRoomMsg(
+          formattedMsg.add(
+            ChatRoomMsg(
               userId: messageData[i].userId,
               message: messageData[i].message,
-              sentAt: test ? messageData[i].sentAt : "",
-              needAppearImg: true));
+              sentAt: nextDataNeedAppearImg ? messageData[i].sentAt : "",
+              needAppearImg: true,
+            ),
+          );
           // 當下一筆資料為不同使用者或是時間不同時 要顯示頭像 才讓boolean變為true
-          test = true;
+          nextDataNeedAppearImg = true;
         } else {
           //這邊的 needAppearImg 應該都要為 true
-          ss.add(ChatRoomMsg(
+          formattedMsg.add(
+            ChatRoomMsg(
               userId: messageData[i].userId,
               message: messageData[i].message,
-              sentAt: test ? messageData[i].sentAt : "",
-              needAppearImg: false));
+              sentAt: nextDataNeedAppearImg ? messageData[i].sentAt : "",
+              needAppearImg: false,
+            ),
+          );
           //當下一筆資料為同使用者和時間相同 不要顯示頭像 才讓boolean變為false
-          test = false;
+          nextDataNeedAppearImg = false;
         }
         //i 與 i + 1 的 message時間 不同時insert 時間
         if (messageData[i].sentAt.substring(0, "yyyy-MM-dd".length) !=
             messageData[i + 1].sentAt.substring(0, "yyyy-MM-dd".length)) {
-          if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd".length)) {
-            ss.add("今日");
-          } else {
-            ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd".length));
-          }
+          formattedMsg.add(getMsgInfoDate(messageData[i].sentAt));
         }
         //index : index last - last -1 比較
       } else {
@@ -425,27 +417,47 @@ List formatChatMsg(List<ChatRoomMsg> messageData) {
         if (messageData[i].sentAt.substring(0, "yyyy-MM-dd".length) !=
                 messageData[i - 1].sentAt.substring(0, "yyyy-MM-dd".length) ||
             messageData[i].userId != messageData[i - 1].userId) {
-          ss.add(
+          formattedMsg.add(
             ChatRoomMsg(
-                userId: messageData[i].userId,
-                message: messageData[i].message,
-                sentAt: messageData[i].sentAt,
-                needAppearImg: true),
+              userId: messageData[i].userId,
+              message: messageData[i].message,
+              sentAt: messageData[i].sentAt,
+              needAppearImg: true,
+            ),
           );
         } else {
           //當最後一筆資料 與 最後前一筆資料進行比對 時間和使用者相同時 不顯示頭像
-          ss.add(ChatRoomMsg(userId: messageData[i].userId, message: messageData[i].message, sentAt: "", needAppearImg: true));
+          formattedMsg.add(
+            ChatRoomMsg(
+              userId: messageData[i].userId,
+              message: messageData[i].message,
+              sentAt: "",
+              needAppearImg: true,
+            ),
+          );
         }
+
         //最後一筆補上日期
-        if (formattedTime == messageData[i].sentAt.substring(0, "yyyy-MM-dd".length)) {
-          ss.add("今日");
-        } else {
-          ss.add(messageData[i].sentAt.substring(0, "yyyy-MM-dd".length));
-        }
+        formattedMsg.add(getMsgInfoDate(messageData[i].sentAt));
       }
     }
   }
-  return ss;
+  return formattedMsg;
+}
+
+///　取得format過的日期資訊（聊天室中間的）
+String getMsgInfoDate(String msgTime) {
+  String formattedNow = DateFormat("yyyy-MM-dd").format(DateTime.now());
+  String formattedYesterday = DateFormat("yyyy-MM-dd").format(DateTime.now().subtract(const Duration(days: 1)));
+  String formattedSendMsgTime = DateFormatUtilities().utcTimeToLocalFormat(msgTime);
+
+  if (formattedSendMsgTime.contains(formattedNow)) {
+    return "今日";
+  } else if (formattedSendMsgTime.contains(formattedYesterday)) {
+    return "昨日";
+  } else {
+    return DateFormatUtilities().utcTimeToLocalMMddFormat(msgTime);
+  }
 }
 
 List<String> splitStringAndUrls(String msg) {

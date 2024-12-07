@@ -2,9 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
-import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import '../../utilities/inputField/label_input.dart';
 import '../../utilities/style/style_config.dart';
@@ -32,28 +30,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
         padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                width: ScreenSize.fitPxWidth(40),
-                height: ScreenSize.fitPxWidth(40),
-                color: Colors.transparent,
-                child: MainBtn(
-                  onPress: () {
-                    ref.read(pageControllerProvider).animateToPage(
-                          1,
-                          duration: const Duration(milliseconds: 150),
-                          curve: Curves.easeIn,
-                        );
-                  },
-                  child: Icon(
-                    FontAwesomeIcons.arrowRight,
-                    color: AppColors.whiteColor,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: ScreenSize.fitPxWidth(20)),
+            SizedBox(height: ScreenSize.fitPxWidth(70)),
 
             ///　Logo
             AccountPageUtilites().logo(),

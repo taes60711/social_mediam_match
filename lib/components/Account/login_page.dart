@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:social_mediam_match/components/account/pwd_forgot_page.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
@@ -9,7 +9,7 @@ import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_view_model.dart';
-import 'account_main_page.dart';
+
 import 'account_page_utilites.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -36,27 +36,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                width: ScreenSize.fitPxWidth(40),
-                height: ScreenSize.fitPxWidth(40),
-                color: Colors.transparent,
-                child: MainBtn(
-                    onPress: () {
-                      ref.read(pageControllerProvider).animateToPage(
-                            1,
-                            duration: const Duration(milliseconds: 150),
-                            curve: Curves.easeIn,
-                          );
-                    },
-                    child: Icon(
-                      FontAwesomeIcons.arrowLeft,
-                      color: AppColors.whiteColor,
-                    )),
-              ),
-            ),
-            SizedBox(height: ScreenSize.fitPxWidth(20)),
+            SizedBox(height: ScreenSize.fitPxWidth(70)),
 
             ///　Logo
             AccountPageUtilites().logo(),
