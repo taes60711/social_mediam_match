@@ -15,36 +15,41 @@ class PostPageByTextFilter extends BaseEndDrawer {
 
   PostPageByTextFilter({required this.searchText});
   late PostViewModel viewModel;
-
+  bool isInit = true;
   @override
   Future<void> initState(WidgetRef ref) async {
     viewModel = PostViewModel(ref: ref, context: context, render: () => render());
+    isInit = false;
+    render();
   }
 
   @override
   Widget build(WidgetRef ref) {
-    return Column(
-      children: [
-        BaseTopBar(
-          backFunc: () {
-            closePage();
-          },
-        ),
-        Expanded(
-          child: APIListWidget(
-              apiFunc: (page, size) {
-                return PostService().getPostByTextFilter(page, size, searchText);
-              },
-              size: 7,
-              listControllerProvider: textFilterControllerProvider,
-              noDataWidget: PostViewUtilities.noPostData(),
-              customFloatBtn: PostViewUtilities.postCreateButton(context),
-              loadingWidget: const PostLoading(),
-              itemChild: (data, index) {
-                return PostViewUtilities().postItemContent(viewModel, textFilterControllerProvider, data: data, dataIndex: index);
-              }),
-        ),
-      ],
-    );
+    return isInit
+        ? Container()
+        : Column(
+            children: [
+              BaseTopBar(
+                backFunc: () {
+                  closePage();
+                },
+              ),
+              Expanded(
+                child: APIListWidget(
+                    apiFunc: (page, size) {
+                      return PostService().getPostByTextFilter(page, size, searchText);
+                    },
+                    size: 7,
+                    listControllerProvider: textFilterControllerProvider,
+                    noDataWidget: PostViewUtilities.noPostData(),
+                    customFloatBtn: PostViewUtilities.postCreateButton(context),
+                    loadingWidget: const PostLoading(),
+                    itemChild: (data, index) {
+                      return PostViewUtilities()
+                          .postItemContent(viewModel, textFilterControllerProvider, data: data, dataIndex: index);
+                    }),
+              ),
+            ],
+          );
   }
 }

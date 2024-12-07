@@ -23,19 +23,21 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
   final Widget? noDataWidget;
   final Widget? customFloatBtn;
   final Widget Function(R data, int index) itemChild;
-  const APIListWidget({
-    super.key,
-    this.size = 5,
-    this.isNeedToTopBtn = true,
-    this.haveBottomBar = false,
-    required this.apiFunc,
-    required this.listControllerProvider,
-    this.initWidget,
-    this.loadingWidget,
-    this.noDataWidget,
-    this.customFloatBtn,
-    required this.itemChild,
-  });
+
+  final bool needReloadCheck;
+  const APIListWidget(
+      {super.key,
+      this.size = 5,
+      this.isNeedToTopBtn = true,
+      this.haveBottomBar = false,
+      required this.apiFunc,
+      required this.listControllerProvider,
+      this.initWidget,
+      this.loadingWidget,
+      this.noDataWidget,
+      this.customFloatBtn,
+      required this.itemChild,
+      this.needReloadCheck = false});
 
   @override
   ConsumerState<APIListWidget<R>> createState() {
@@ -62,7 +64,11 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     if (ref.read(widget.listControllerProvider).listData.isEmpty) {
       initFunc();
     } else {
-      if (await ref.read(widget.listControllerProvider.notifier).needReloadCheck()) {
+      if (widget.needReloadCheck) {
+        if (await ref.read(widget.listControllerProvider.notifier).reloadCheck(widget.apiFunc)) {
+          initFunc();
+        }
+      } else {
         initFunc();
       }
     }

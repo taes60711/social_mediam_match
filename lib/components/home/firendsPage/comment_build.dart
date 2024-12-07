@@ -177,7 +177,7 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
     commentController.text = "";
     widget.scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.linear);
 
-    sendChatRoomNotification(message: message);
+    // sendChatRoomNotification(message: message);
   }
 
   void sendChatRoomNotification({required String message}) {

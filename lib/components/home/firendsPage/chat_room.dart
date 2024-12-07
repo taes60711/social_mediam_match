@@ -12,6 +12,7 @@ import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/enum/date_format_utilities.dart';
+import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../models/friend_model.dart';
@@ -38,6 +39,7 @@ class ChatRoom extends BaseEndDrawer {
   Future<void> initState(WidgetRef ref) async {
     ProfileData myUserData = ref.watch(loginUserData);
     chatRoomWSModel.init(ref, () => render(), userId: myUserData.uid, roomId: roomData.roomId);
+    HomeGlobalViewModel().bottomBarHideStateChage(false);
   }
 
   @override

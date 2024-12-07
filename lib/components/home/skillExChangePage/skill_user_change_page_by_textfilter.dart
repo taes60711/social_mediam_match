@@ -30,6 +30,7 @@ class SkillUserChangeByTextFilter extends BaseEndDrawer {
             apiFunc: (page, size) {
               return UserService().requestUserDataByNamePart(page, size, userName: searchText);
             },
+            needReloadCheck: true,
             listControllerProvider: userExChangeTextFilteredlistControllerProvider,
             loadingWidget: const SkillChangeLoading(),
             noDataWidget: SkillUtilites().noDataBuilder(),

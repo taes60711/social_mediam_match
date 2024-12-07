@@ -25,6 +25,7 @@ class _CreatedCourseState extends ConsumerState<CreatedCoursePage> {
         apiFunc: (page, size) {
           return CourseService().getCreatedCourses(page, size, userData.uid);
         },
+        needReloadCheck: true,
         listControllerProvider: createdCourserListPorver,
         loadingWidget: const CourseLoading(),
         noDataWidget: CourseUtilites.noCourseData(),

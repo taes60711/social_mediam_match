@@ -18,9 +18,12 @@ import '../postPage/post_utilities.dart';
 class MyPostPage extends BaseEndDrawer {
   late PostViewModel viewModel;
 
+  bool isInit = false;
   @override
   Future<void> initState(WidgetRef ref) async {
     viewModel = PostViewModel(ref: ref, context: context, render: () => render());
+    isInit = true;
+    render();
   }
 
   @override
@@ -31,28 +34,32 @@ class MyPostPage extends BaseEndDrawer {
   @override
   Widget build(WidgetRef ref) {
     ProfileData userData = ref.watch(loginUserData);
-    return Column(
-      children: [
-        BaseTopBar(
-          title: "我的文章",
-          backFunc: () {
-            closePage();
-          },
-        ),
-        Expanded(
-          child: APIListWidget(
-              size: 7,
-              apiFunc: (page, size) {
-                return PostService().getPostDataByUID(page, size, userData);
-              },
-              listControllerProvider: myPostlistControllerProvider,
-              noDataWidget: PostViewUtilities.noPostData(),
-              loadingWidget: const PostLoading(),
-              itemChild: (data, index) {
-                return PostViewUtilities().postItemContent(viewModel, myPostlistControllerProvider, data: data, dataIndex: index);
-              }),
-        ),
-      ],
-    );
+    return !isInit
+        ? Container()
+        : Column(
+            children: [
+              BaseTopBar(
+                title: "我的文章",
+                backFunc: () {
+                  closePage();
+                },
+              ),
+              Expanded(
+                child: APIListWidget(
+                    size: 7,
+                    apiFunc: (page, size) {
+                      return PostService().getPostDataByUID(page, size, userData);
+                    },
+                    needReloadCheck: true,
+                    listControllerProvider: myPostlistControllerProvider,
+                    noDataWidget: PostViewUtilities.noPostData(),
+                    loadingWidget: const PostLoading(),
+                    itemChild: (data, index) {
+                      return PostViewUtilities()
+                          .postItemContent(viewModel, myPostlistControllerProvider, data: data, dataIndex: index);
+                    }),
+              ),
+            ],
+          );
   }
 }

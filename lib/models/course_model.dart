@@ -71,6 +71,25 @@ class CourseModel {
     required this.courseCreateduserInfo,
   });
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'createdBy': createdBy,
+      'title': title,
+      'needLevel': needLevel,
+      'content': content,
+      'beforeNeed': beforeNeed,
+      'prStory': prStory,
+      'chapterList': chapterList.map((e) => e.toJson()).toList(),
+      'courseLearningSkills': courseLearningSkills,
+      'postTime': postTime,
+      'type': type,
+      'isPublic': isPublic,
+      'signUpStatus': signUpStatus,
+      'courseCreateduserInfo': courseCreateduserInfo.toJson(),
+    };
+  }
+
   factory CourseModel.toMap(dynamic json) {
     List<String> courseLearningSkillList = (json['courseLearningkillList'] as List<dynamic>).map((e) {
       return e as String;

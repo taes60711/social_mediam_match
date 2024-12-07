@@ -18,6 +18,7 @@ import '../../services/post_service.dart';
 import '../account/account_main_page.dart';
 
 import '../utilities/style/theme_style.dart';
+import '../utilities/toast.dart';
 import 'splash_screen.dart';
 
 final allSkillListData = StateProvider<List<RequestSkillListData>>((ref) => []);
@@ -54,6 +55,7 @@ class _InitialpageState extends ConsumerState<Initialpage> {
     await Future.delayed(Duration.zero);
 
     LoadingDialog().init(context);
+    Toast().init(context);
 
     /// request All Skill
     List<RequestSkillListData> requestListData = await SkillService().requestSkillList();

@@ -32,6 +32,7 @@ class SkillUserChangeBySkillFilter extends BaseEndDrawer {
             apiFunc: (page, size) {
               return UserService().getAllUserData(page, size, userUid: userData.uid, filterSkill: filterSkill);
             },
+            needReloadCheck: true,
             listControllerProvider: userExChangeSkillFilterlistControllerProvider,
             loadingWidget: const SkillChangeLoading(),
             noDataWidget: SkillUtilites().noDataBuilder(),

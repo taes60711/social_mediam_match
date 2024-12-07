@@ -23,6 +23,7 @@ class ChatRoomWSModel {
   int enterRoomID = -1;
   int roomAllPage = -1;
   int pageNum = 0;
+  int insendMsgCount = 0;
 
   late IOWebSocketChannel _chatroomListChannel;
   Stream<dynamic>? _broadcastStream;
@@ -71,8 +72,10 @@ class ChatRoomWSModel {
           ChatRoomModel chatRoomModel = await FriendService().getChatRoomMsg(searchUrl);
 
           List<ChatRoomMsg> chatRoomMesaage = ref.read(roomMessageProvider.notifier).state.chatRoomMsg;
+
           chatRoomMesaage = [...chatRoomMesaage, ...chatRoomModel.chatRoomMsg];
           chatRoomModel.chatRoomMsg = chatRoomMesaage;
+
           ref.read(roomMessageProvider.notifier).update((state) => chatRoomModel);
 
           render();
@@ -88,6 +91,12 @@ class ChatRoomWSModel {
           List<String> userIds = chatRoomModel.members.map((e) => e.replaceAll("\"", "")).toList();
 
           ChatWSModel().sendMsg(userIds);
+          if (insendMsgCount < 20) {
+            insendMsgCount++;
+          } else {
+            pageNum++;
+            insendMsgCount = 0;
+          }
           render();
         default:
           break;

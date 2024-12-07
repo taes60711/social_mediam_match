@@ -1,5 +1,4 @@
-import 'dart:developer';
-import 'package:collection/collection.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
@@ -28,6 +27,8 @@ class APIListControllerNotifier<R> extends StateNotifier<APIListController<R>> {
   List<R> preLoadData = [];
   int page = 0;
   int size = 0;
+  int checkPage = 0;
+  int checkSize = 1;
 
   void create(int initSize) {
     page = 0;
@@ -63,11 +64,14 @@ class APIListControllerNotifier<R> extends StateNotifier<APIListController<R>> {
     }
   }
 
-  Future<bool> needReloadCheck() async {
-    List<R> firstData = await state.apiFunc(0, 1);
-    const deepEquality = DeepCollectionEquality();
+  Future<bool> reloadCheck(Future<List<R>> Function(int page, int size) initApiFunc) async {
+    List<R> firstData = await initApiFunc(checkPage, checkSize);
 
-    return deepEquality.equals(state.listData.first, firstData);
+    if (firstData.isEmpty) {
+      return true;
+    } else {
+      return jsonEncode(state.listData.first) != jsonEncode(firstData.first);
+    }
   }
 
   Future<void> init(Future<List<R>> Function(int page, int size) initApiFunc) async {

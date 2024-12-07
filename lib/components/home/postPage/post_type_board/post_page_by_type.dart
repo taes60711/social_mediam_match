@@ -18,10 +18,13 @@ import '../post_utilities.dart';
 
 class PostPageByType extends BaseEndDrawer {
   late PostViewModel viewModel;
+  bool isInit = true;
 
   @override
   Future<void> initState(WidgetRef ref) async {
     viewModel = PostViewModel(ref: ref, context: context, render: () => render());
+    isInit = false;
+    render();
   }
 
   @override
@@ -34,47 +37,51 @@ class PostPageByType extends BaseEndDrawer {
           orElse: () => PostBoard(name: '', id: 0),
         )
         .name;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: ScreenSize.fitPxHeight(10),
-            vertical: ScreenSize.fitPxHeight(10),
-          ),
-          child: Row(
+    return isInit
+        ? Container()
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: ScreenSize.fitPxHeight(30),
-                height: ScreenSize.fitPxHeight(30),
-                color: const Color.fromARGB(96, 175, 170, 170),
-              ),
-              SizedBox(width: ScreenSize.fitPxHeight(10)),
-              Text(
-                typeName,
-                style: TextStyle(
-                  color: AppColors.whiteColor.withOpacity(0.8),
-                  fontSize: ScreenSize.fontSize18,
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ScreenSize.fitPxHeight(10),
+                  vertical: ScreenSize.fitPxHeight(10),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: ScreenSize.fitPxHeight(30),
+                      height: ScreenSize.fitPxHeight(30),
+                      color: const Color.fromARGB(96, 175, 170, 170),
+                    ),
+                    SizedBox(width: ScreenSize.fitPxHeight(10)),
+                    Text(
+                      typeName,
+                      style: TextStyle(
+                        color: AppColors.whiteColor.withOpacity(0.8),
+                        fontSize: ScreenSize.fontSize18,
+                      ),
+                    ),
+                  ],
                 ),
               ),
+              Expanded(
+                child: APIListWidget(
+                    apiFunc: (page, size) {
+                      return PostService().getPostByType(page, size, boardData.type);
+                    },
+                    size: 7,
+                    needReloadCheck: true,
+                    listControllerProvider: typelistControllerProvider,
+                    loadingWidget: const PostLoading(),
+                    noDataWidget: PostViewUtilities.noPostData(),
+                    customFloatBtn: PostViewUtilities.postCreateButton(context, postBoard: boardData),
+                    itemChild: (data, index) {
+                      return PostViewUtilities()
+                          .postItemContent(viewModel, typelistControllerProvider, data: data, dataIndex: index);
+                    }),
+              ),
             ],
-          ),
-        ),
-        Expanded(
-          child: APIListWidget(
-              apiFunc: (page, size) {
-                return PostService().getPostByType(page, size, boardData.type);
-              },
-              size: 7,
-              listControllerProvider: typelistControllerProvider,
-              loadingWidget: const PostLoading(),
-              noDataWidget: PostViewUtilities.noPostData(),
-              customFloatBtn: PostViewUtilities.postCreateButton(context, postBoard: boardData),
-              itemChild: (data, index) {
-                return PostViewUtilities().postItemContent(viewModel, typelistControllerProvider, data: data, dataIndex: index);
-              }),
-        ),
-      ],
-    );
+          );
   }
 }

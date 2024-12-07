@@ -39,6 +39,7 @@ class _PostByViewState extends ConsumerState<PostByNew> {
               },
               listControllerProvider: newlistControllerProvider,
               haveBottomBar: true,
+              needReloadCheck: true,
               loadingWidget: const PostLoading(),
               noDataWidget: PostViewUtilities.noPostData(),
               customFloatBtn: PostViewUtilities.postCreateButton(context),

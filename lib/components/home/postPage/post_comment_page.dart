@@ -36,6 +36,8 @@ class PostCommentPage extends BaseBottomSheet {
   @override
   Future<void> initState(WidgetRef ref) async {
     viewModel = PostViewModel(ref: ref, context: context, render: render);
+
+    render();
   }
 
   @override

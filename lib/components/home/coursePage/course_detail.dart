@@ -73,7 +73,8 @@ class CourseDetailPage extends BaseEndDrawer {
                       ///申請ボタン
                       Visibility(
                         /// added signing none
-                        visible: userData.uid != choiceData.createdBy && choiceData.signUpStatus == "none",
+                        visible:
+                            userData.uid != choiceData.createdBy && choiceData.signUpStatus == "none" && !choiceData.isPublic,
                         child: MainBtn(
                           title: "申請",
                           onPress: () {

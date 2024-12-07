@@ -26,6 +26,7 @@ class _PostByViewState extends ConsumerState<AddedCoursePage> {
       apiFunc: (page, size) {
         return CourseService().getAddedCourses(page, size, userData.uid);
       },
+      needReloadCheck: true,
       listControllerProvider: addedCourserListPorver,
       loadingWidget: const CourseLoading(),
       noDataWidget: CourseUtilites.noCourseData(),

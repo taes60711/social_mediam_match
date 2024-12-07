@@ -78,22 +78,6 @@ class PostModel {
     return addedUserDataPost;
   }
 
-  // static String dateFormatted(String time) {
-  //   DateTime dateUtc = DateTime.parse(time).toUtc();
-
-  //   Duration duration = DateTime.now().toUtc().difference(dateUtc);
-  //   String durationTime = "";
-  //   if (duration.inMinutes < 60) {
-  //     durationTime = "${duration.inMinutes} 分";
-  //   } else if (duration.inMinutes >= 60 && duration.inMinutes < 1440) {
-  //     durationTime = "${duration.inHours} 時";
-  //   } else if (duration.inMinutes >= 1440) {
-  //     durationTime = "${duration.inDays} 天";
-  //   }
-  //   String formattedTime = durationTime;
-  //   return formattedTime;
-  // }
-
   PostModel copyWith({PostModel? data}) {
     return PostModel(
       id: data?.id ?? id,
@@ -107,6 +91,21 @@ class PostModel {
       commentCount: data?.commentCount ?? commentCount,
       postUserInfo: data?.postUserInfo ?? postUserInfo,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'createdBy': createdBy,
+      'title': title,
+      'mainMessage': mainMessage,
+      'postTime': postTime,
+      'viewed': viewed,
+      'good': good,
+      'type': type,
+      'commentCount': commentCount,
+      'postUserInfo': postUserInfo.toJson(),
+    };
   }
 }
 
