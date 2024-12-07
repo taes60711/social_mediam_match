@@ -265,7 +265,7 @@ class RichTextFormat {
     }
     String tmpId = "";
 
-    if (end == -1 || !url.contains("youtu.be/") && !url.contains("www.youtube.com")) {
+    if (end == -1 || !url.contains("youtu.be/") && !url.contains("youtube.com")) {
       tmpId = "err";
     } else {
       tmpId = url.substring(start, end);

@@ -64,6 +64,29 @@ class MyNotificationPage extends BaseEndDrawer {
                         }
                         return isConfirm;
                       },
+                      background: Container(
+                        color: Colors.red,
+                        child: Padding(
+                          padding: EdgeInsets.only(right: ScreenSize.fitPxWidth(20)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.trash,
+                                color: AppColors.whiteColor,
+                                size: ScreenSize.fontSize18,
+                              ),
+                              SizedBox(
+                                width: ScreenSize.fitPxWidth(5),
+                              ),
+                              Text(
+                                "刪除",
+                                style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       child: MainBtn(
                         onPress: () async {
                           if (data.type == 0) {
