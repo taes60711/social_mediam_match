@@ -7,8 +7,6 @@ class GoogleSinginService {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser != null) {
-        // GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
         print("googleUser.email : ${googleUser.email} id : ${googleUser.id}");
 
         return googleUser;

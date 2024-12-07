@@ -45,7 +45,7 @@ class LoadingDialog {
                   SizedBox(height: ScreenSize.fitPxWidth(16)),
                   Text(
                     loadingMsg,
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white, fontSize: ScreenSize.fontSize14),
                   ),
                 ],
               ),

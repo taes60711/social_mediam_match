@@ -90,7 +90,6 @@ flutter:
   assets:
     - assets/Logo.png
     - assets/google_w_Logo.png
-    - assets/twitter_w_Logo.png
     - assets/langs/
   fonts:
     - family: GenJyu

@@ -22,6 +22,7 @@ import '../../home/skillExChangePage/skill_utilites.dart';
 import '../main_button.dart';
 import '../style/screen_size.dart';
 import '../style/style_config.dart';
+import '../toast.dart';
 import '../user_icon.dart';
 
 /// AllInfo Ver
@@ -134,10 +135,10 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                             sendto: ref.read(loginUserData.notifier).state.token ?? "",
                             notifiactionInfo: notification,
                           );
+                          Toast().showCenter(msg: "添加成功");
                           render();
                         } else {
                           closePage();
-
                           HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
 
                           /// メンバーIdでRoomId探す

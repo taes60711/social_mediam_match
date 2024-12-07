@@ -59,6 +59,16 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
 
   Future<void> init() async {
     ///init前に
+    if (ref.read(widget.listControllerProvider).listData.isEmpty) {
+      initFunc();
+    } else {
+      if (await ref.read(widget.listControllerProvider.notifier).needReloadCheck()) {
+        initFunc();
+      }
+    }
+  }
+
+  void initFunc() {
     ref.read(widget.listControllerProvider.notifier).create(widget.size);
     setState(() {});
     WidgetsBinding.instance.addPostFrameCallback((_) async {

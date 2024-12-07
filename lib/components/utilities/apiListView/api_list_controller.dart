@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/base_api_list_provider.dart';
@@ -59,6 +61,13 @@ class APIListControllerNotifier<R> extends StateNotifier<APIListController<R>> {
     if (needJumpToTop) {
       state.scrollController.jumpTo(0);
     }
+  }
+
+  Future<bool> needReloadCheck() async {
+    List<R> firstData = await state.apiFunc(0, 1);
+    const deepEquality = DeepCollectionEquality();
+
+    return deepEquality.equals(state.listData.first, firstData);
   }
 
   Future<void> init(Future<List<R>> Function(int page, int size) initApiFunc) async {

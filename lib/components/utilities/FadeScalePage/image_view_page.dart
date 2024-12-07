@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,6 +18,7 @@ class ImageViewPage extends BaseFadeScalePage {
   PhotoViewController photoViewController = PhotoViewController();
 
   bool canUseScaleClosePage = false;
+  Timer timer = Timer(Duration.zero, () {});
 
   @override
   Future<void> initState(WidgetRef ref) async {
@@ -46,9 +49,18 @@ class ImageViewPage extends BaseFadeScalePage {
             },
             backgroundDecoration: const BoxDecoration(color: Colors.transparent),
             controller: photoViewController,
-            child: Image.network(
-              imgUrl,
-              gaplessPlayback: true,
+            child: GestureDetector(
+              onDoubleTap: () {
+                if (photoViewController.scale! > 1) {
+                  photoViewController.scale = 1;
+                } else {
+                  photoViewController.scale = 2;
+                }
+              },
+              child: Image.network(
+                imgUrl,
+                gaplessPlayback: true,
+              ),
             ),
           ),
           Positioned(
@@ -69,6 +81,7 @@ class ImageViewPage extends BaseFadeScalePage {
                   Expanded(
                     child: iconBtnWidget(
                       onPress: () {
+                        ///　画像シェアする
                         ImageService().shareImage(imgUrl);
                       },
                       icon: FontAwesomeIcons.arrowUpFromBracket,
@@ -80,6 +93,7 @@ class ImageViewPage extends BaseFadeScalePage {
                       alignment: Alignment.centerRight,
                       child: iconBtnWidget(
                         onPress: () {
+                          ///　画像ダウンロードする
                           ImageService().saveImageToLocal(imgUrl);
                         },
                         icon: FontAwesomeIcons.download,
@@ -118,3 +132,112 @@ class ImageViewPage extends BaseFadeScalePage {
     );
   }
 }
+
+
+  // Future<void> imageView(String imgUrl) {
+  //   double value = 1;
+  //   double zoomSpeed = 0.01 * ScreenSize.height / ScreenSize.width;
+  //   if (Platform.isAndroid || Platform.isIOS) {
+  //     zoomSpeed = 0.01;
+  //   }
+  //   Timer timer = Timer(Duration.zero, () {});
+
+  //   return showDialog<void>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       void imageViewExit() {
+  //         if (timer.isActive) {
+  //           timer.cancel();
+  //         }
+
+  //         setState(() {
+  //           value = 1;
+  //           photoViewController.scale = value;
+  //         });
+  //         RouteOptions.pop();
+  //       }
+
+  //       return Scaffold(
+  //         backgroundColor: Colors.black,
+  //         body: Column(
+  //           children: [
+  //             Align(
+  //               alignment: Alignment.topLeft,
+  //               child: Padding(
+  //                 padding: const EdgeInsets.all(15),
+  //                 child: GestureDetector(
+  //                   onTap: () {
+  //                     imageViewExit();
+  //                   },
+  //                   child: const Icon(
+  //                     Icons.arrow_back_ios,
+  //                     color: Colors.white,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             Expanded(
+  //               child: PhotoView.customChild(
+  //                 controller: photoViewController,
+  //                 backgroundDecoration: const BoxDecoration(color: Colors.transparent),
+  //                 child: GestureDetector(
+  //                     onTapDown: (details) {
+  //                       print("onTapDown");
+  //                       void zoomFunc({required double zoomChangeValue, required double resizeValue, required String type}) {
+  //                         timer = Timer.periodic(const Duration(microseconds: 5), (timer) {
+  //                           setState(() {
+  //                             bool isEnd = false;
+  //                             switch (type) {
+  //                               case "less":
+  //                                 if (zoomChangeValue < resizeValue) {
+  //                                   zoomChangeValue += zoomSpeed;
+  //                                 } else {
+  //                                   isEnd = true;
+  //                                 }
+  //                                 break;
+  //                               case "greater":
+  //                                 if (zoomChangeValue >= resizeValue) {
+  //                                   zoomChangeValue -= zoomSpeed;
+  //                                 } else {
+  //                                   isEnd = true;
+  //                                 }
+  //                                 break;
+  //                             }
+
+  //                             if (isEnd) {
+  //                               photoViewController.scale = resizeValue;
+  //                               timer.cancel();
+  //                             } else {
+  //                               photoViewController.scale = zoomChangeValue;
+  //                               print(zoomChangeValue);
+  //                             }
+  //                           });
+  //                         });
+  //                       }
+
+  //                       value = photoViewController.scale ?? 1;
+  //                       double zoomChangeValue = photoViewController.scale ?? 1;
+  //                       if (value < 1) {
+  //                         zoomFunc(zoomChangeValue: zoomChangeValue, resizeValue: 1, type: "less");
+  //                       } else if (value < 2.5) {
+  //                         zoomFunc(zoomChangeValue: zoomChangeValue, resizeValue: 2.5, type: "less");
+  //                       } else {
+  //                         zoomFunc(zoomChangeValue: zoomChangeValue, resizeValue: 1, type: "greater");
+  //                       }
+  //                     },
+  //                     onDoubleTap: () {
+  //                       print("onDoubleTap");
+  //                       imageViewExit();
+  //                     },
+  //                     child: Image.network(
+  //                       imgUrl,
+  //                       gaplessPlayback: true,
+  //                     )),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
