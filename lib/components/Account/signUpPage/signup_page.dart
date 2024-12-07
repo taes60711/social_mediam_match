@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
+import 'package:social_mediam_match/components/utilities/toast.dart';
 import '../../utilities/inputField/label_input.dart';
 import '../../utilities/style/style_config.dart';
 import '../account_main_page.dart';
@@ -59,6 +60,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               onPress: () async {
                 bool isSendOK = await ref.read(viewModelProvider.notifier).state.googleSignUp();
                 if (isSendOK) {
+                  Toast().showBottom(msg: "註冊成功");
                   ref.read(pageControllerProvider).jumpToPage(2);
                 }
               },

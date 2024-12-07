@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:social_mediam_match/components/utilities/toast.dart';
 
 import '../../../global/user_login_status_controller.dart';
 import '../../../services/google_sign_in_service.dart';
@@ -81,7 +82,11 @@ class LoginViewModel {
     GoogleSignInAccount? googleUser = await GoogleSinginService().signInWithGoogle();
     if (googleUser != null) {
       LoginDataModel loginDataModel = LoginDataModel(account: googleUser.email, pwd: googleUser.id);
-      await UserLoginStatusController().login(loginInputData: loginDataModel, loginType: "googleSign");
+      bool success = await UserLoginStatusController().login(loginInputData: loginDataModel, loginType: "googleSign");
+
+      if (!success) {
+        Toast().showCenter(msg: "請先至註冊頁面,進行Google註冊");
+      }
     }
   }
 }
