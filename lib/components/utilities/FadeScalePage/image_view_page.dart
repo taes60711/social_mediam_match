@@ -18,11 +18,14 @@ class ImageViewPage extends BaseFadeScalePage {
   PhotoViewController photoViewController = PhotoViewController();
 
   bool canUseScaleClosePage = false;
+  bool isZooming = true;
   Timer timer = Timer(Duration.zero, () {});
 
   @override
   Future<void> initState(WidgetRef ref) async {
+    await Future.delayed(const Duration(milliseconds: 300));
     canUseScaleClosePage = true;
+    isZooming = false;
   }
 
   @override
@@ -33,21 +36,26 @@ class ImageViewPage extends BaseFadeScalePage {
         children: [
           PhotoView.customChild(
             onTapUp: (context, details, controllerValue) {
-              if (photoViewController.scale == 1 && canUseScaleClosePage) {
-                closePage();
+              if (controllerValue.scale! > 1) {
+                /// 當大小為大於１時單擊變回１的大小
+                if (!isZooming) {
+                  zoomImageFunc(zoomType: "toMin");
+                }
+              } else if (photoViewController.scale! <= 1 && canUseScaleClosePage) {
+                /// 當大小為１時單擊關閉圖片視窗
+                closeView();
               }
             },
             onScaleEnd: (context, details, controllerValue) {
-              if (controllerValue.scale! < 1) {
-                photoViewController.scale = 1;
-                Future.delayed(const Duration(milliseconds: 300)).then(
-                  (value) => canUseScaleClosePage = true,
-                );
-              } else if (photoViewController.scale == 1 &&
-                  canUseScaleClosePage &&
+              if (controllerValue.scale! < 1 && details.pointerCount != 0) {
+                /// 當大小縮小至１&以下且雙指的情況自動變回１
+                scaleToNormal();
+              } else if (photoViewController.scale! <= 1 &&
                   details.pointerCount == 0 &&
+                  canUseScaleClosePage &&
                   details.velocity.pixelsPerSecond.dy.abs() > 800) {
-                closePage();
+                /// 上下滑動關閉圖片視窗
+                closeView();
               } else if (controllerValue.scale! > 1) {
                 canUseScaleClosePage = false;
               }
@@ -56,10 +64,13 @@ class ImageViewPage extends BaseFadeScalePage {
             controller: photoViewController,
             child: GestureDetector(
               onDoubleTap: () {
-                if (photoViewController.scale! > 1) {
-                  photoViewController.scale = 1;
-                } else {
-                  photoViewController.scale = 2;
+                if (!isZooming) {
+                  if (photoViewController.scale! >= 2) {
+                    /// 當圖片大小大於２時 縮小回１
+                    zoomImageFunc(zoomType: "toMin");
+                  } else {
+                    zoomImageFunc(zoomType: "toLarge");
+                  }
                 }
               },
               child: Image.network(
@@ -71,7 +82,7 @@ class ImageViewPage extends BaseFadeScalePage {
           Positioned(
             top: 0,
             child: BaseTopBar(
-              backFunc: () => closePage(),
+              backFunc: () => closeView(),
             ),
           ),
           Positioned(
@@ -114,6 +125,53 @@ class ImageViewPage extends BaseFadeScalePage {
     );
   }
 
+  void zoomImageFunc({required String zoomType}) {
+    double photoScale = photoViewController.scale!;
+    double zoomvalue = -1;
+    isZooming = true;
+    if (zoomType == "toLarge") {
+      zoomvalue = 0.01;
+    } else if (zoomType == "toMin") {
+      zoomvalue = -0.01;
+    }
+
+    timer = Timer.periodic(const Duration(milliseconds: 1), (timer) {
+      bool condition = false;
+      if (zoomType == "toLarge") {
+        condition = photoScale <= 2;
+      } else if (zoomType == "toMin") {
+        condition = photoScale >= 1;
+      }
+      if (isZooming) {
+        if (condition) {
+          photoScale += zoomvalue;
+          photoViewController.scale = photoScale;
+        } else {
+          timer.cancel();
+          if (zoomType == "toMin") {
+            scaleToNormal();
+          }
+          Future.delayed(const Duration(milliseconds: 300)).then((value) => isZooming = false);
+        }
+      }
+
+      render();
+    });
+  }
+
+  void scaleToNormal() {
+    photoViewController.scale = 1;
+    Future.delayed(const Duration(milliseconds: 300)).then((value) => canUseScaleClosePage = true);
+  }
+
+  void closeView() {
+    if (timer.isActive) {
+      photoViewController.scale = 1;
+      timer.cancel();
+    }
+    closePage();
+  }
+
   Widget iconBtnWidget({required IconData icon, required Function onPress}) {
     return MainBtn(
       onPress: () {
@@ -137,112 +195,3 @@ class ImageViewPage extends BaseFadeScalePage {
     );
   }
 }
-
-
-  // Future<void> imageView(String imgUrl) {
-  //   double value = 1;
-  //   double zoomSpeed = 0.01 * ScreenSize.height / ScreenSize.width;
-  //   if (Platform.isAndroid || Platform.isIOS) {
-  //     zoomSpeed = 0.01;
-  //   }
-  //   Timer timer = Timer(Duration.zero, () {});
-
-  //   return showDialog<void>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       void imageViewExit() {
-  //         if (timer.isActive) {
-  //           timer.cancel();
-  //         }
-
-  //         setState(() {
-  //           value = 1;
-  //           photoViewController.scale = value;
-  //         });
-  //         RouteOptions.pop();
-  //       }
-
-  //       return Scaffold(
-  //         backgroundColor: Colors.black,
-  //         body: Column(
-  //           children: [
-  //             Align(
-  //               alignment: Alignment.topLeft,
-  //               child: Padding(
-  //                 padding: const EdgeInsets.all(15),
-  //                 child: GestureDetector(
-  //                   onTap: () {
-  //                     imageViewExit();
-  //                   },
-  //                   child: const Icon(
-  //                     Icons.arrow_back_ios,
-  //                     color: Colors.white,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //             Expanded(
-  //               child: PhotoView.customChild(
-  //                 controller: photoViewController,
-  //                 backgroundDecoration: const BoxDecoration(color: Colors.transparent),
-  //                 child: GestureDetector(
-  //                     onTapDown: (details) {
-  //                       print("onTapDown");
-  //                       void zoomFunc({required double zoomChangeValue, required double resizeValue, required String type}) {
-  //                         timer = Timer.periodic(const Duration(microseconds: 5), (timer) {
-  //                           setState(() {
-  //                             bool isEnd = false;
-  //                             switch (type) {
-  //                               case "less":
-  //                                 if (zoomChangeValue < resizeValue) {
-  //                                   zoomChangeValue += zoomSpeed;
-  //                                 } else {
-  //                                   isEnd = true;
-  //                                 }
-  //                                 break;
-  //                               case "greater":
-  //                                 if (zoomChangeValue >= resizeValue) {
-  //                                   zoomChangeValue -= zoomSpeed;
-  //                                 } else {
-  //                                   isEnd = true;
-  //                                 }
-  //                                 break;
-  //                             }
-
-  //                             if (isEnd) {
-  //                               photoViewController.scale = resizeValue;
-  //                               timer.cancel();
-  //                             } else {
-  //                               photoViewController.scale = zoomChangeValue;
-  //                               print(zoomChangeValue);
-  //                             }
-  //                           });
-  //                         });
-  //                       }
-
-  //                       value = photoViewController.scale ?? 1;
-  //                       double zoomChangeValue = photoViewController.scale ?? 1;
-  //                       if (value < 1) {
-  //                         zoomFunc(zoomChangeValue: zoomChangeValue, resizeValue: 1, type: "less");
-  //                       } else if (value < 2.5) {
-  //                         zoomFunc(zoomChangeValue: zoomChangeValue, resizeValue: 2.5, type: "less");
-  //                       } else {
-  //                         zoomFunc(zoomChangeValue: zoomChangeValue, resizeValue: 1, type: "greater");
-  //                       }
-  //                     },
-  //                     onDoubleTap: () {
-  //                       print("onDoubleTap");
-  //                       imageViewExit();
-  //                     },
-  //                     child: Image.network(
-  //                       imgUrl,
-  //                       gaplessPlayback: true,
-  //                     )),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
