@@ -17,6 +17,8 @@ class BaseSkillFilterPage extends BaseEndDrawer {
   final String btnStr;
   final Function(List<RequestSkillListData> choicedFilterSkillList) searchFunc;
   BaseSkillFilterPage({required this.viewRender, required this.filteredSkillList, required this.searchFunc, this.btnStr = "搜尋"});
+  ScrollController scrollController = ScrollController();
+
   Map<SkillType, List<RequestSkillListData>> mapedSkillList = {
     SkillType.frontend: [],
     SkillType.iot: [],
@@ -64,6 +66,7 @@ class BaseSkillFilterPage extends BaseEndDrawer {
               child: SizedBox(
                 width: ScreenSize.width,
                 child: SingleChildScrollView(
+                  controller: scrollController,
                   child: Column(
                     children: mapedSkillList[isChoicedSkillType]!.map((e) {
                       RequestSkillListData data = e;
@@ -97,6 +100,7 @@ class BaseSkillFilterPage extends BaseEndDrawer {
                                       data.name,
                                       style: TextStyle(
                                         color: isChoiced ? AppColors.whiteColor : AppColors.greyColor130,
+                                        fontSize: ScreenSize.fontSize14,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
@@ -178,13 +182,16 @@ class BaseSkillFilterPage extends BaseEndDrawer {
                           children: [
                             Text(
                               data.name,
-                              style: TextStyle(color: AppColors.whiteColor),
+                              style: TextStyle(
+                                color: AppColors.whiteColor,
+                                fontSize: ScreenSize.fontSize14,
+                              ),
                             ),
                             SizedBox(width: ScreenSize.fitPxHeight(5)),
                             Icon(
                               FontAwesomeIcons.close,
                               color: AppColors.whiteColor,
-                              size: ScreenSize.fitPxHeight(13),
+                              size: ScreenSize.fontSize12,
                             )
                           ],
                         )),
@@ -225,6 +232,7 @@ class BaseSkillFilterPage extends BaseEndDrawer {
                   title: e.value,
                   onPress: () {
                     isChoicedSkillType = e;
+                    scrollController.jumpTo(0);
                     render();
                   },
                 ),

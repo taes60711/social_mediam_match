@@ -219,7 +219,7 @@ class PostBoardChoiceBottomSheet extends BaseBottomSheet {
   Widget build(WidgetRef ref) {
     return CupertinoPicker(
       scrollController: scrollController,
-      itemExtent: 50,
+      itemExtent: ScreenSize.fitPxWidth(50),
       onSelectedItemChanged: (int index) {
         ref.read(postCreateChoiceBoard.notifier).update((state) => item[index]);
         render();
@@ -229,7 +229,10 @@ class PostBoardChoiceBottomSheet extends BaseBottomSheet {
             (e) => Center(
               child: Text(
                 e.name,
-                style: TextStyle(color: AppColors.whiteColor),
+                style: TextStyle(
+                  color: AppColors.whiteColor,
+                  fontSize: ScreenSize.fontSize14,
+                ),
               ),
             ),
           )

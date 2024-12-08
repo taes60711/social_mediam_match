@@ -31,7 +31,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
         padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
         child: Column(
           children: [
-            SizedBox(height: ScreenSize.fitPxWidth(70)),
+            SizedBox(height: ScreenSize.fitPxWidth(40)),
 
             ///　Logo
             AccountPageUtilites().logo(),

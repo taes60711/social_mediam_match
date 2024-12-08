@@ -93,7 +93,7 @@ class CourseLevelChoiceBottomSheet extends BaseBottomSheet {
   Widget build(WidgetRef ref) {
     return CupertinoPicker(
       scrollController: scrollController,
-      itemExtent: 50,
+      itemExtent: ScreenSize.fitPxWidth(50),
       onSelectedItemChanged: (int index) {
         ref.read(courseChoiceType.notifier).update((state) => item[index]);
         render();
@@ -103,7 +103,10 @@ class CourseLevelChoiceBottomSheet extends BaseBottomSheet {
             (e) => Center(
               child: Text(
                 CourseUtilites().formattedTag(int.parse(e)),
-                style: TextStyle(color: AppColors.whiteColor),
+                style: TextStyle(
+                  color: AppColors.whiteColor,
+                  fontSize: ScreenSize.fontSize14,
+                ),
               ),
             ),
           )

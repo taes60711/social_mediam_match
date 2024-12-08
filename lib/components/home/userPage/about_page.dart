@@ -38,14 +38,14 @@ class AboutPage extends BaseEndDrawer {
                       ),
                     ),
                     collapsedTrailingWidget: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: AppColors.whiteColor,
-                      size: ScreenSize.fontSize16,
-                    ),
-                    expandedTrailingWidget: Icon(
                       Icons.keyboard_arrow_up,
                       color: AppColors.whiteColor,
-                      size: ScreenSize.fontSize16,
+                      size: ScreenSize.fontSize22,
+                    ),
+                    expandedTrailingWidget: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: AppColors.whiteColor,
+                      size: ScreenSize.fontSize22,
                     ),
                     children: [
                       AppCommonTools().levelsetsumeiBuild(),

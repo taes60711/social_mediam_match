@@ -28,7 +28,7 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
       padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
       child: Column(
         children: [
-          SizedBox(height: ScreenSize.fitPxWidth(100)),
+          SizedBox(height: ScreenSize.fitPxWidth(80)),
 
           ///　Logo
           AccountPageUtilites().logo(),

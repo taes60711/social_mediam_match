@@ -22,6 +22,9 @@ class UserSkillChoicePage extends BaseEndDrawer {
   Function(List<RequestUserSkillData>) updateSkillDate;
 
   UserSkillChoicePage({required this.initSkillData, required this.updateSkillDate});
+
+  ScrollController scrollController = ScrollController();
+
   Map<SkillType, List<RequestUserSkillData>> mapedSkillList = {
     SkillType.frontend: [],
     SkillType.iot: [],
@@ -67,19 +70,20 @@ class UserSkillChoicePage extends BaseEndDrawer {
                 title: "清空", //"保存",
               ),
             ),
+            SizedBox(height: ScreenSize.fitPxWidth(8)),
+            choicedFilterSkillList(),
+            SizedBox(height: ScreenSize.fitPxWidth(8)),
+            Container(
+              width: ScreenSize.width,
+              margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(16)),
+              child: skillTypeItems(),
+            ),
+            SizedBox(height: ScreenSize.fitPxWidth(16)),
             Expanded(
               child: SingleChildScrollView(
+                controller: scrollController,
                 child: Column(
                   children: [
-                    SizedBox(height: ScreenSize.fitPxWidth(8)),
-                    choicedFilterSkillList(),
-                    SizedBox(height: ScreenSize.fitPxWidth(8)),
-                    Container(
-                      width: ScreenSize.width,
-                      margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(16)),
-                      child: skillTypeItems(),
-                    ),
-                    SizedBox(height: ScreenSize.fitPxWidth(16)),
                     Column(
                       children: mapedSkillList[isChoicedSkillType]!.map((e) {
                         RequestUserSkillData data = e;
@@ -127,6 +131,7 @@ class UserSkillChoicePage extends BaseEndDrawer {
                                         style: TextStyle(
                                           color: choicedData != null ? AppColors.whiteColor : AppColors.greyColor130,
                                           fontWeight: FontWeight.w400,
+                                          fontSize: ScreenSize.fontSize14,
                                         ),
                                       ),
                                     ),
@@ -139,6 +144,7 @@ class UserSkillChoicePage extends BaseEndDrawer {
                                                 style: TextStyle(
                                                   color: AppColors.whiteColor,
                                                   fontWeight: FontWeight.w400,
+                                                  fontSize: ScreenSize.fontSize14,
                                                 ),
                                               ),
                                               MainBtn(
@@ -232,10 +238,7 @@ class UserSkillChoicePage extends BaseEndDrawer {
                               width: ScreenSize.fitPxWidth(15),
                               height: ScreenSize.fitPxWidth(15),
                               margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(5)),
-                              decoration: BoxDecoration(
-                                color: AppColors.black37,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                              decoration: BoxDecoration(color: AppColors.black37, shape: BoxShape.circle),
                               child: Center(
                                 child: Text(
                                   "${data.level}",
@@ -245,13 +248,16 @@ class UserSkillChoicePage extends BaseEndDrawer {
                             ),
                             Text(
                               data.name,
-                              style: TextStyle(color: AppColors.whiteColor),
+                              style: TextStyle(
+                                color: AppColors.whiteColor,
+                                fontSize: ScreenSize.fontSize12,
+                              ),
                             ),
                             SizedBox(width: ScreenSize.fitPxHeight(5)),
                             Icon(
                               FontAwesomeIcons.close,
                               color: AppColors.whiteColor,
-                              size: ScreenSize.fitPxHeight(13),
+                              size: ScreenSize.fontSize14,
                             )
                           ],
                         )),
@@ -306,6 +312,7 @@ class UserSkillChoicePage extends BaseEndDrawer {
                   title: e.value,
                   onPress: () {
                     isChoicedSkillType = e;
+                    scrollController.jumpTo(0);
                     render();
                   },
                 ),
@@ -387,7 +394,7 @@ class SkillLevelChoice extends BaseBottomSheet {
         SizedBox(height: ScreenSize.fitPxWidth(10)),
         Expanded(
           child: CupertinoPicker(
-            itemExtent: 50,
+            itemExtent: ScreenSize.fitPxWidth(50),
             scrollController: scrollController,
             onSelectedItemChanged: (int value) {
               choicedIndex = value;
@@ -397,7 +404,10 @@ class SkillLevelChoice extends BaseBottomSheet {
                   (e) => Center(
                     child: Text(
                       "程度 $e",
-                      style: TextStyle(color: AppColors.whiteColor),
+                      style: TextStyle(
+                        color: AppColors.whiteColor,
+                        fontSize: ScreenSize.fontSize14,
+                      ),
                     ),
                   ),
                 )

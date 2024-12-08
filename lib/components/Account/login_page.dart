@@ -36,7 +36,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: ScreenSize.fitPxWidth(70)),
+            SizedBox(height: ScreenSize.fitPxWidth(40)),
 
             ///　Logo
             AccountPageUtilites().logo(),

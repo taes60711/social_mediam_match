@@ -40,9 +40,12 @@ class Toast {
         ),
       ),
     );
-    _overlay.insert(_overlayEntry);
 
-    Future.delayed(Duration(seconds: duration)).then((value) => {close()});
+    Future.delayed(const Duration(milliseconds: 200)).then((value) {
+      _overlay.insert(_overlayEntry);
+
+      Future.delayed(Duration(seconds: duration)).then((value) => {close()});
+    });
   }
 
   void showBottom({String msg = "please insert msg", int duration = 2}) {

@@ -304,12 +304,15 @@ class CourseCreatePage extends BaseFadeScalePage {
                         decoration: BoxDecoration(
                           color: AppColors.greyColor57,
                           borderRadius: BorderRadius.circular(
-                            ScreenSize.fitPxWidth(8),
+                            ScreenSize.fitPxWidth(100),
                           ),
                         ),
                         child: Text(
                           "尚無",
-                          style: TextStyle(color: AppColors.whiteColor),
+                          style: TextStyle(
+                            color: AppColors.whiteColor,
+                            fontSize: ScreenSize.fontSize14,
+                          ),
                         ),
                       )
                     : Expanded(
@@ -326,12 +329,15 @@ class CourseCreatePage extends BaseFadeScalePage {
                                 decoration: BoxDecoration(
                                   color: AppColors.greyColor57,
                                   borderRadius: BorderRadius.circular(
-                                    ScreenSize.fitPxWidth(8),
+                                    ScreenSize.fitPxWidth(100),
                                   ),
                                 ),
                                 child: Text(
                                   e.name,
-                                  style: TextStyle(color: AppColors.whiteColor),
+                                  style: TextStyle(
+                                    color: AppColors.whiteColor,
+                                    fontSize: ScreenSize.fontSize14,
+                                  ),
                                 ),
                               );
                             }).toList(),
@@ -470,9 +476,7 @@ class CourseCreatePage extends BaseFadeScalePage {
             children: [
               Text(
                 "章節",
-                style: TextStyle(
-                  color: AppColors.whiteColor,
-                ),
+                style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
               ),
               Container(
                 width: 30,
@@ -481,7 +485,7 @@ class CourseCreatePage extends BaseFadeScalePage {
                 child: Icon(
                   FontAwesomeIcons.plus,
                   color: AppColors.greyColor130,
-                  size: 14,
+                  size: ScreenSize.fontSize14,
                 ),
               ),
             ],
@@ -513,6 +517,7 @@ class CourseCreatePage extends BaseFadeScalePage {
                 "公開",
                 style: TextStyle(
                   color: AppColors.whiteColor,
+                  fontSize: ScreenSize.fontSize14,
                 ),
               ),
             ],

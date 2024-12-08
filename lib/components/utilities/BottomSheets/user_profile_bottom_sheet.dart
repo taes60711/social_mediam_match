@@ -135,7 +135,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                             sendto: ref.read(loginUserData.notifier).state.token ?? "",
                             notifiactionInfo: notification,
                           );
-                          Toast().showCenter(msg: "添加成功");
+                          Toast().showBottom(msg: "添加成功");
                           render();
                         } else {
                           closePage();

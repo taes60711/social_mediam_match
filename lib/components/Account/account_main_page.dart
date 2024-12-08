@@ -84,7 +84,7 @@ class _AccountMainPageState extends ConsumerState<AccountMainPage> {
                       child: isInPage
                           ? Container(
                               width: ScreenSize.fitPxWidth(30),
-                              height: ScreenSize.fitPxWidth(12),
+                              height: ScreenSize.fitPxWidth(8),
                               decoration: BoxDecoration(
                                 color: AppColors.greyColor176,
                                 borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(100)),

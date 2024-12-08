@@ -223,10 +223,12 @@ class MyNotificationCourseDetailPage extends BaseEndDrawer {
                       collapsedTrailingWidget: Icon(
                         Icons.keyboard_arrow_up,
                         color: AppColors.whiteColor,
+                        size: ScreenSize.fontSize22,
                       ),
                       expandedTrailingWidget: Icon(
                         Icons.keyboard_arrow_down,
                         color: AppColors.whiteColor,
+                        size: ScreenSize.fontSize22,
                       ),
                       children: <Widget>[
                         RichTextView(content: choiceData.prStory),

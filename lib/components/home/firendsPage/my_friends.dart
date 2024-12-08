@@ -6,12 +6,13 @@ import 'package:social_mediam_match/components/utilities/endDrawers/base_end_dra
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/services/friend_service.dart';
 import '../../../models/friend_model.dart';
-import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
+
 import '../../utilities/appBar/basic_top_bar.dart';
 import '../../utilities/dialog/await_confirm_dialog.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 import '../../utilities/user_icon.dart';
+import 'my_friend_edit_bottom_sheet.dart';
 
 class MyFriendPage extends BaseEndDrawer {
   @override
@@ -31,71 +32,82 @@ class MyFriendPage extends BaseEndDrawer {
                   itemCount: ref.watch(frinedListProvider).length,
                   itemBuilder: (context, index) {
                     FriendListModel data = ref.watch(frinedListProvider)[index];
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        bottom: ScreenSize.fitPxWidth(10),
-                      ),
-                      child: Dismissible(
-                        key: const Key(""),
-                        direction: DismissDirection.endToStart,
-                        confirmDismiss: (v) async {
-                          bool isConfirm = await awaitConfirmDialog(context, title: "提示", content: "您確定要刪除好友嗎？");
-                          if (isConfirm) {
-                            List<FriendListModel> frinedList = ref.read(frinedListProvider.notifier).state;
-                            FriendListModel deleteFriend = frinedList[index];
-                            await FriendService().deleteFriend(deleteFriend.roomId, deleteFriend.memberId);
+                    return Dismissible(
+                      key: const Key(""),
+                      direction: DismissDirection.endToStart,
+                      confirmDismiss: (v) async {
+                        bool isConfirm = await awaitConfirmDialog(context, title: "提示", content: "您確定要刪除好友嗎？");
+                        if (isConfirm) {
+                          List<FriendListModel> frinedList = ref.read(frinedListProvider.notifier).state;
+                          FriendListModel deleteFriend = frinedList[index];
+                          await FriendService().deleteFriend(deleteFriend.roomId, deleteFriend.memberId);
 
-                            frinedList.removeAt(index);
-                            ref.read(frinedListProvider.notifier).update((state) => frinedList);
-                          }
-                          return isConfirm;
-                        },
-                        background: Container(
-                          color: Colors.red,
-                          child: Padding(
-                            padding: EdgeInsets.only(right: ScreenSize.fitPxWidth(20)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(
-                                  FontAwesomeIcons.trash,
-                                  color: AppColors.whiteColor,
-                                  size: ScreenSize.fontSize18,
-                                ),
-                                SizedBox(
-                                  width: ScreenSize.fitPxWidth(5),
-                                ),
-                                Text(
-                                  "刪除",
-                                  style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
-                                ),
-                              ],
-                            ),
+                          frinedList.removeAt(index);
+                          ref.read(frinedListProvider.notifier).update((state) => frinedList);
+                        }
+                        return isConfirm;
+                      },
+                      background: Container(
+                        padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(8)),
+                        color: AppColors.redColor,
+                        child: Padding(
+                          padding: EdgeInsets.only(right: ScreenSize.fitPxWidth(20)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.trash,
+                                color: AppColors.whiteColor,
+                                size: ScreenSize.fontSize18,
+                              ),
+                              SizedBox(
+                                width: ScreenSize.fitPxWidth(5),
+                              ),
+                              Text(
+                                "刪除",
+                                style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                              ),
+                            ],
                           ),
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
-                          child: MainBtn(
-                            onPress: () {
-                              ///ユーザー詳細ページに遷移
-                              UserProfileAllInfoBottomSheet(userData: data.userData).show(context);
-                            },
-                            child: Row(
-                              children: [
-                                UserIcon(iconSize: ScreenSize.fitPxWidth(40), image: data.userData.image),
-                                SizedBox(width: ScreenSize.fitPxWidth(10)),
-                                Expanded(
-                                  child: Text(
-                                    data.userData.name ?? "",
-                                    style: TextStyle(
-                                      fontSize: ScreenSize.fontSize14,
-                                      color: AppColors.whiteColor,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16), vertical: ScreenSize.fitPxWidth(8)),
+                        child: MainBtn(
+                          onPress: () {
+                            ///フレンド編集ページ
+                            MyFriendEditBtmSheet(
+                                friendData: data.userData,
+                                index: index,
+                                myFriendPageRender: () {
+                                  render();
+                                }).show(context);
+                          },
+                          child: Row(
+                            children: [
+                              UserIcon(iconSize: ScreenSize.fitPxWidth(40), image: data.userData.image),
+                              SizedBox(width: ScreenSize.fitPxWidth(10)),
+                              Expanded(
+                                child: Text(
+                                  data.userData.name ?? "",
+                                  style: TextStyle(
+                                    fontSize: ScreenSize.fontSize14,
+                                    color: AppColors.whiteColor,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                )
-                              ],
-                            ),
+                                ),
+                              ),
+                              Container(
+                                width: 30,
+                                alignment: Alignment.centerRight,
+                                color: Colors.transparent,
+                                child: Icon(
+                                  FontAwesomeIcons.ellipsis,
+                                  color: AppColors.greyColor130,
+                                  size: ScreenSize.fontSize16,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

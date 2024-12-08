@@ -32,6 +32,11 @@ class ImageViewPage extends BaseFadeScalePage {
         alignment: Alignment.center,
         children: [
           PhotoView.customChild(
+            onTapUp: (context, details, controllerValue) {
+              if (photoViewController.scale == 1 && canUseScaleClosePage) {
+                closePage();
+              }
+            },
             onScaleEnd: (context, details, controllerValue) {
               if (controllerValue.scale! < 1) {
                 photoViewController.scale = 1;
