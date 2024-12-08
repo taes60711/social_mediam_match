@@ -85,6 +85,7 @@ class PostDetailPage extends BaseEndDrawer {
                       )
                     ],
                   ),
+                  SizedBox(height: ScreenSize.fitPxWidth(8)),
 
                   /// MainMessage
                   RichTextView(content: choiceData.mainMessage),

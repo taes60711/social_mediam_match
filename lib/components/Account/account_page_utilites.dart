@@ -55,7 +55,8 @@ class AccountPageUtilites {
     );
   }
 
-  Widget btnContainer({required Function onPress, required String btnText, String? imgIcon, Color? btnBgColor}) {
+  Widget btnContainer(
+      {required Function onPress, required String btnText, String? imgIcon, Color? btnBgColor, Color? btnTextColor}) {
     return MainBtn(
       onPress: () async {
         onPress();
@@ -86,7 +87,7 @@ class AccountPageUtilites {
             Text(
               btnText,
               style: TextStyle(
-                color: AppColors.whiteColor,
+                color: btnTextColor ?? AppColors.whiteColor,
                 fontSize: ScreenSize.fontSize18,
                 fontWeight: FontWeight.w600,
               ),

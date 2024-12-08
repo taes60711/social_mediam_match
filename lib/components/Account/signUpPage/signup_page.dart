@@ -65,8 +65,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 }
               },
               imgIcon: 'assets/google_w_Logo.png',
-              btnBgColor: AppColors.blueColor,
-              btnText: "註冊",
+              btnBgColor: AppColors.whiteColor,
+              btnTextColor: AppColors.greyColor98,
+              btnText: "Google註冊",
             ),
           ],
         ),

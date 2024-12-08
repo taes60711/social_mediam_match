@@ -74,11 +74,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ///　Google登入
             AccountPageUtilites().btnContainer(
               imgIcon: 'assets/google_w_Logo.png',
-              btnBgColor: AppColors.blueColor,
               onPress: () {
                 viewModel.googleLogin();
               },
-              btnText: "登入",
+              btnBgColor: AppColors.whiteColor,
+              btnTextColor: AppColors.greyColor98,
+              btnText: "Google登入",
             ),
           ],
         ),
