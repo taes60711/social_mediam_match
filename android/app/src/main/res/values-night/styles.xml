@@ -3,16 +3,16 @@
    
     <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
 
-        <item name="android:windowBackground">#000000</item>
+        <item name="android:windowBackground">#1D1C1C</item>
     </style>
 
 
     <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
-        <item name="android:windowBackground">#000000</item>
+        <item name="android:windowBackground">#1D1C1C</item>
     </style>
 </resources>
-
-<!-- <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
    
     <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
