@@ -9,12 +9,12 @@ class AccountPageUtilites {
     return Container(
       width: ScreenSize.fitPxWidth(200),
       height: ScreenSize.fitPxWidth(200),
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(
-          ScreenSize.fitPxWidth(30),
-        ),
-      ),
+      // decoration: BoxDecoration(
+      //   color: AppColors.whiteColor,
+      //   borderRadius: BorderRadius.circular(
+      //     ScreenSize.fitPxWidth(30),
+      //   ),
+      // ),
       child: Image.asset('assets/Logo.png'),
     );
   }
