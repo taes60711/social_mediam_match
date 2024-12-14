@@ -43,7 +43,7 @@ class PostEditorPage extends BaseFadeScalePage {
           (e) => e.id == ref.read(choicedPostProvider.notifier).state.type,
           orElse: () => PostBoard(),
         )
-        .name;
+        .chineseName;
     viewModel = PostViewModel(ref: ref, context: context, render: render);
     render();
   }

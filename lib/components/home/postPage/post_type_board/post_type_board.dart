@@ -54,7 +54,7 @@ class _PostTypeBoardState extends ConsumerState<PostTypeBoard> {
                             ),
                             SizedBox(width: ScreenSize.fitPxHeight(10)),
                             Text(
-                              e.name,
+                              e.chineseName,
                               style: TextStyle(
                                 color: AppColors.whiteColor.withOpacity(0.8),
                                 fontSize: ScreenSize.fontSize16,

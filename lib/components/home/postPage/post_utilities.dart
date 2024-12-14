@@ -75,7 +75,7 @@ class PostViewUtilities {
           (e) => e.id == data.type,
           orElse: () => PostBoard(),
         )
-        .name;
+        .chineseName;
     return MainBtn(
       onPress: () {
         ///詳細ページに遷移

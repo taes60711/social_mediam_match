@@ -36,7 +36,7 @@ class PostPageByType extends BaseEndDrawer {
           (e) => e.id == boardData.type,
           orElse: () => PostBoard(name: '', id: 0),
         )
-        .name;
+        .chineseName;
     return isInit
         ? Container()
         : Column(

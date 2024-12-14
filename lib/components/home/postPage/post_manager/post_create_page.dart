@@ -153,7 +153,7 @@ class _PostBoardChoicedLabelState extends ConsumerState<PostBoardChoicedLabel> {
         SizedBox(width: ScreenSize.fitPxWidth(10)),
         widget.postBoard != null
             ? Text(
-                widget.postBoard!.name,
+                widget.postBoard!.chineseName,
                 style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize18),
               )
             : MainBtn(
@@ -164,7 +164,7 @@ class _PostBoardChoicedLabelState extends ConsumerState<PostBoardChoicedLabel> {
                   Row(
                     children: [
                       Text(
-                        ref.watch(postCreateChoiceBoard).name,
+                        ref.watch(postCreateChoiceBoard).chineseName,
                         style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
                       ),
                       SizedBox(width: ScreenSize.fitPxWidth(5)),
@@ -228,7 +228,7 @@ class PostBoardChoiceBottomSheet extends BaseBottomSheet {
           .map(
             (e) => Center(
               child: Text(
-                e.name,
+                e.chineseName,
                 style: TextStyle(
                   color: AppColors.whiteColor,
                   fontSize: ScreenSize.fontSize14,
