@@ -39,7 +39,7 @@ class UserLoginStatusController {
   }
 
   bool isLogin() {
-    return ref.watch(loginedUserUID) != "";
+    return ref.read(loginUserData.notifier).state.uid != "-1"; //ref.watch(loginedUserUID) != "";
   }
 
   Future<void> loginedCheck() async {
