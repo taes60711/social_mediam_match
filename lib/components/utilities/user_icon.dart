@@ -34,17 +34,19 @@ class UserIcon extends StatelessWidget {
               ),
             )
           : Container(
-              width: iconSize,
-              height: iconSize,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(borderRadius)),
                 color: AppColors.greyColor130,
               ),
-              child: Center(
-                  child: Text(
-                "None",
-                style: TextStyle(color: AppColors.whiteColor),
-              )),
+              child: Padding(
+                padding: EdgeInsets.all(iconSize * .2),
+                child: Image.asset(
+                  'assets/normalUserIcon.png',
+                  fit: BoxFit.cover,
+                  gaplessPlayback: true,
+                  color: Colors.white,
+                ),
+              ),
             ),
     );
   }
