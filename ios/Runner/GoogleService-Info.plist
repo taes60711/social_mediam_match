@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>921286210624-ggc14mr0m9ev2iue5o6ormbfsnq57pvl.apps.googleusercontent.com</string>
+	<string>921286210624-nssebu7nkugfjtncfhq0jtp52at1knqk.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.921286210624-ggc14mr0m9ev2iue5o6ormbfsnq57pvl</string>
+	<string>com.googleusercontent.apps.921286210624-nssebu7nkugfjtncfhq0jtp52at1knqk</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>921286210624-arkrh24d2tp5s6o1u90rkfauk2oj3uan.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.socialMediamMatch</string>
+	<string>com.directsenses.skillstorm</string>
 	<key>PROJECT_ID</key>
 	<string>socialmediammatch</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:921286210624:ios:13d96e45fa398f64c7dba5</string>
+	<string>1:921286210624:ios:45ea2279eb380db9c7dba5</string>
 </dict>
 </plist>

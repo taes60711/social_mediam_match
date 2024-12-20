@@ -4,8 +4,6 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This app requires microphone access to support related features.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -45,12 +43,18 @@
 	<string>921286210624-ggc14mr0m9ev2iue5o6ormbfsnq57pvl.apps.googleusercontent.com</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app requires microphone access to support related features.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Your app needs access to the photo library to save photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Access to pick a photo</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

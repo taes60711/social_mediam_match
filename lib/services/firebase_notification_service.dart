@@ -64,7 +64,7 @@ class FirebaseNotificationService {
       print('通知权限已拒绝');
     } else if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print('Got a message whilst in the foreground:');
+        print('Got a message whilst in the foreground: ${message.data['notifiactionInfo']}');
         inspect(message);
 
         if (message.notification != null) {
@@ -128,14 +128,14 @@ class FirebaseNotificationService {
   }
 
   Future<void> sendNotification({
-    String title = "Social Medaiam Match",
+    String title = "SkillStorm",
     String message = "",
     required String sendto,
     required NotificationModel notifiactionInfo,
   }) async {
     String fcmUrl = 'https://fcm.googleapis.com/v1/projects/socialmediammatch/messages:send';
 
-    print(notifiactionInfo.sendNotificationuserInfo.token);
+    print(sendto);
     String body = jsonEncode(
       {
         'message': {
@@ -159,10 +159,9 @@ class FirebaseNotificationService {
       'Authorization': 'Bearer $serverToken',
     };
 
-    /// 暫時關
-    // await http.post(uri, headers: headers, body: body).then((value) {
-    //   print("sendNotification :${value.body}");
-    // });
+    await http.post(uri, headers: headers, body: body).then((value) {
+      print("sendNotification :${value.body}");
+    });
   }
 
   static Future<String> getServerAccessToken() async {
@@ -196,22 +195,23 @@ class FirebaseNotificationService {
     auth.AccessCredentials credentials = await auth.obtainAccessCredentialsViaServiceAccount(
         auth.ServiceAccountCredentials.fromJson(serviceAccountJson), scopes, client);
     client.close();
-    print("log server access token: ${credentials.accessToken.data}");
+
     return credentials.accessToken.data;
   }
 
   Future showNotification({int id = 0, String? title, String? body, String payload = "payload"}) async {
     return notificationsPlugin.show(
-        id,
-        title,
-        body,
-        const NotificationDetails(
-          android: AndroidNotificationDetails(
-            "channel.id",
-            "channel.name",
-            importance: Importance.high,
-          ),
+      id,
+      title,
+      body,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          "channel.id",
+          "channel.name",
+          importance: Importance.high,
         ),
-        payload: payload);
+      ),
+      payload: payload,
+    );
   }
 }
