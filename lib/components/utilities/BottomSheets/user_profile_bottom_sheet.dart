@@ -8,6 +8,7 @@ import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
 
 import 'package:social_mediam_match/services/friend_service.dart';
+import 'package:social_mediam_match/services/notification_service.dart';
 
 import '../../../models/friend_model.dart';
 import '../../../models/notification_model.dart';
@@ -130,6 +131,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                           notification.title = message;
                           notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
 
+                          NotificationService().createNotification(notification: notification);
                           FirebaseNotificationService().sendNotification(
                             message: message,
                             sendto: userData.token ?? "",
