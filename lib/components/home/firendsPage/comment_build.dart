@@ -25,7 +25,13 @@ class CommentBuild extends ConsumerStatefulWidget {
   final ChatRoomWSModel chatRoomWSModel;
   final int dataIndex;
   final ScrollController scrollController;
-  const CommentBuild({super.key, required this.chatRoomWSModel, required this.dataIndex, required this.scrollController});
+  final FriendListModel roomData;
+  const CommentBuild(
+      {super.key,
+      required this.chatRoomWSModel,
+      required this.dataIndex,
+      required this.scrollController,
+      required this.roomData});
 
   @override
   ConsumerState<CommentBuild> createState() => _CommentBuildState();
@@ -177,7 +183,7 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
     commentController.text = "";
     widget.scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.linear);
 
-    // sendChatRoomNotification(message: message);
+    sendChatRoomNotification(message: message);
   }
 
   void sendChatRoomNotification({required String message}) {
@@ -188,7 +194,7 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
     FirebaseNotificationService().sendNotification(
       title: ref.read(loginUserData.notifier).state.name ?? "",
       message: message,
-      sendto: ref.read(loginUserData.notifier).state.token ?? "",
+      sendto: widget.roomData.userData.token ?? "",
       notifiactionInfo: notification,
     );
   }

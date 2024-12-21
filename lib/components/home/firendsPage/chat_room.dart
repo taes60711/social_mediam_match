@@ -115,6 +115,7 @@ class ChatRoom extends BaseEndDrawer {
           Positioned(
             bottom: 0,
             child: CommentBuild(
+              roomData: roomData,
               chatRoomWSModel: chatRoomWSModel,
               dataIndex: dataIndex,
               scrollController: _scrollController,
