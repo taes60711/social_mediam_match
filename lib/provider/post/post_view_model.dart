@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:social_mediam_match/models/post_model.dart';
+import 'package:social_mediam_match/services/notification_service.dart';
 import '../../components/home/postPage/post_detail_page.dart';
 import '../../components/home/postPage/post_type_board/post_page_by_type.dart';
 import '../../components/utilities/apiListView/api_list_controller.dart';
 import '../../components/utilities/dialog/confirm_dialog.dart';
 import '../../global.dart';
+import '../../models/notification_model.dart';
 import '../../models/rich_text_format.dart';
 import '../../models/user_model.dart';
+import '../../services/firebase_notification_service.dart';
 import '../../services/post_service.dart';
 import '../account/user_provider.dart';
 import 'post_provider.dart';
@@ -118,6 +121,21 @@ class PostViewModel {
       ///いいねひく
       choiceData.good++;
       await PostService().updatePostGood(choiceData.id, userUID: userData.uid);
+      String message = '"${ref.read(loginUserData.notifier).state.name}"對文章"${choiceData.title}"按讚';
+      NotificationModel notification = NotificationModel.empty();
+      notification.userUid = ref.read(loginUserData.notifier).state.uid;
+      notification.otherUserUid = choiceData.postUserInfo.uid;
+      notification.type = 0;
+      notification.title = message;
+      notification.postId = choiceData.id;
+      notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
+
+      NotificationService().createNotification(notification: notification);
+      FirebaseNotificationService().sendNotification(
+        message: message,
+        sendto: choiceData.postUserInfo.token ?? "",
+        notifiactionInfo: notification,
+      );
     }
     ref.read(choicedPostIsGoodProvider.notifier).update((state) => !isGooded);
 

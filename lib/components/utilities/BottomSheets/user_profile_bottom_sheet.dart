@@ -132,7 +132,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
 
                           FirebaseNotificationService().sendNotification(
                             message: message,
-                            sendto: ref.read(loginUserData.notifier).state.token ?? "",
+                            sendto: userData.token ?? "",
                             notifiactionInfo: notification,
                           );
                           Toast().showBottom(msg: "添加成功");

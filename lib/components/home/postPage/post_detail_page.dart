@@ -8,12 +8,10 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../enum/date_format_utilities.dart';
-import '../../../models/notification_model.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
-import '../../../services/firebase_notification_service.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
@@ -119,22 +117,10 @@ class PostDetailPage extends BaseEndDrawer {
                         ///いいね数
                         GestureDetector(
                           onTap: () {
-                            viewModel.lookingPostGoodOnChange(ref.read(choicedPostIsGoodProvider.notifier).state,
-                                dataIndex: dataIndex, postListController: postListController);
-
-                            String message = '"${ref.read(loginUserData.notifier).state.name}"對文章"${choiceData.title}"按讚';
-                            NotificationModel notification = NotificationModel.empty();
-                            notification.userUid = ref.read(loginUserData.notifier).state.uid;
-                            notification.otherUserUid = choiceData.postUserInfo.uid;
-                            notification.type = 0;
-                            notification.title = message;
-                            notification.postId = choiceData.id;
-                            notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
-
-                            FirebaseNotificationService().sendNotification(
-                              message: message,
-                              sendto: ref.read(loginUserData.notifier).state.token ?? "",
-                              notifiactionInfo: notification,
+                            viewModel.lookingPostGoodOnChange(
+                              ref.read(choicedPostIsGoodProvider.notifier).state,
+                              dataIndex: dataIndex,
+                              postListController: postListController,
                             );
                           },
                           child: PostViewUtilities().iconWithText(
