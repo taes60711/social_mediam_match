@@ -9,15 +9,10 @@ import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-
 import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/global/user_login_status_controller.dart';
 import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
-
-import '../../../models/notification_model.dart';
-import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
-import '../../../services/firebase_notification_service.dart';
 import '../../utilities/style/style_config.dart';
 import '../firendsPage/my_friends.dart';
 
@@ -70,77 +65,77 @@ class PrivacySettingPage extends BaseEndDrawer {
           ),
         ),
         SizedBox(height: ScreenSize.fitPxWidth(50)),
-        MainBtn(
-          onPress: () {
-            String message = '"12135"對文章"Dreamcatcher2RingsLive4KAtlantaGA"按讚';
-            NotificationModel notification = NotificationModel(
-              id: -1,
-              userUid: 'tzLaMcP3V9XOAMOcD0FAY5Nf4tE2',
-              otherUserUid: 'ACqYscxtd2VSdPlkv1G8OgSTKxd2',
-              type: 0,
-              title: message,
-              isRead: false,
-              message: '',
-              postId: 16,
-              postTime: DateTime.now(),
-              sendNotificationuserInfo: ProfileData(),
-            );
-            FirebaseNotificationService().sendNotification(
-              message: message,
-              sendto: ref.read(loginUserData.notifier).state.token ?? "",
-              notifiactionInfo: notification,
-            );
-          },
-          title: "send Post Good Notification",
-        ),
-        SizedBox(height: ScreenSize.fitPxWidth(20)),
-        MainBtn(
-          onPress: () {
-            String message = '"金門胖胖"將你加為好友';
-            NotificationModel notification = NotificationModel(
-              id: -1,
-              userUid: ref.read(loginUserData.notifier).state.uid,
-              otherUserUid: 'ACqYscxtd2VSdPlkv1G8OgSTKxd2',
-              type: 2,
-              title: message,
-              roomId: 1,
-              isRead: false,
-              message: '',
-              postTime: DateTime.now(),
-              sendNotificationuserInfo: ProfileData(),
-            );
-            FirebaseNotificationService().sendNotification(
-              message: message,
-              sendto: ref.read(loginUserData.notifier).state.token ?? "",
-              notifiactionInfo: notification,
-            );
-          },
-          title: "send AddFriend Notification",
-        ),
-        SizedBox(height: ScreenSize.fitPxWidth(20)),
-        MainBtn(
-          onPress: () {
-            String message = '"20240324@gmail.com"申請想要觀看課程"123456"';
-            NotificationModel notification = NotificationModel(
-              id: -1,
-              userUid: ref.read(loginUserData.notifier).state.uid,
-              otherUserUid: 'Fx0NZUwhLGNuDhaz1ZdyT2vyq3z1',
-              type: 1,
-              title: message,
-              isRead: false,
-              message: '',
-              courseId: 2,
-              postTime: DateTime.now(),
-              sendNotificationuserInfo: ProfileData(),
-            );
-            FirebaseNotificationService().sendNotification(
-              message: message,
-              sendto: ref.read(loginUserData.notifier).state.token ?? "",
-              notifiactionInfo: notification,
-            );
-          },
-          title: "send CourseSignUp Notification",
-        ),
+        // MainBtn(
+        //   onPress: () {
+        //     String message = '"12135"對文章"Dreamcatcher2RingsLive4KAtlantaGA"按讚';
+        //     NotificationModel notification = NotificationModel(
+        //       id: -1,
+        //       userUid: 'tzLaMcP3V9XOAMOcD0FAY5Nf4tE2',
+        //       otherUserUid: 'ACqYscxtd2VSdPlkv1G8OgSTKxd2',
+        //       type: 0,
+        //       title: message,
+        //       isRead: false,
+        //       message: '',
+        //       postId: 16,
+        //       postTime: DateTime.now(),
+        //       sendNotificationuserInfo: ProfileData(),
+        //     );
+        //     FirebaseNotificationService().sendNotification(
+        //       message: message,
+        //       sendto: ref.read(loginUserData.notifier).state.token ?? "",
+        //       notifiactionInfo: notification,
+        //     );
+        //   },
+        //   title: "send Post Good Notification",
+        // // ),
+        // SizedBox(height: ScreenSize.fitPxWidth(20)),
+        // MainBtn(
+        //   onPress: () {
+        //     String message = '"金門胖胖"將你加為好友';
+        //     NotificationModel notification = NotificationModel(
+        //       id: -1,
+        //       userUid: ref.read(loginUserData.notifier).state.uid,
+        //       otherUserUid: 'ACqYscxtd2VSdPlkv1G8OgSTKxd2',
+        //       type: 2,
+        //       title: message,
+        //       roomId: 1,
+        //       isRead: false,
+        //       message: '',
+        //       postTime: DateTime.now(),
+        //       sendNotificationuserInfo: ProfileData(),
+        //     );
+        //     FirebaseNotificationService().sendNotification(
+        //       message: message,
+        //       sendto: ref.read(loginUserData.notifier).state.token ?? "",
+        //       notifiactionInfo: notification,
+        //     );
+        //   },
+        //   title: "send AddFriend Notification",
+        // ),
+        // SizedBox(height: ScreenSize.fitPxWidth(20)),
+        // MainBtn(
+        //   onPress: () {
+        //     String message = '"20240324@gmail.com"申請想要觀看課程"123456"';
+        //     NotificationModel notification = NotificationModel(
+        //       id: -1,
+        //       userUid: ref.read(loginUserData.notifier).state.uid,
+        //       otherUserUid: 'Fx0NZUwhLGNuDhaz1ZdyT2vyq3z1',
+        //       type: 1,
+        //       title: message,
+        //       isRead: false,
+        //       message: '',
+        //       courseId: 2,
+        //       postTime: DateTime.now(),
+        //       sendNotificationuserInfo: ProfileData(),
+        //     );
+        //     FirebaseNotificationService().sendNotification(
+        //       message: message,
+        //       sendto: ref.read(loginUserData.notifier).state.token ?? "",
+        //       notifiactionInfo: notification,
+        //     );
+        //   },
+        //   title: "send CourseSignUp Notification",
+        // ),
       ],
     );
   }

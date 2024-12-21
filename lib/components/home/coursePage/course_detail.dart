@@ -14,6 +14,7 @@ import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/course/course_provider.dart';
 import '../../../services/firebase_notification_service.dart';
+import '../../../services/notification_service.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/appBar/basic_top_bar.dart';
 import '../../utilities/app_common_tools.dart';
@@ -98,9 +99,10 @@ class CourseDetailPage extends BaseEndDrawer {
                                   notification.courseId = choiceData.id;
                                   notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
 
+                                  NotificationService().createNotification(notification: notification);
                                   FirebaseNotificationService().sendNotification(
                                     message: message,
-                                    sendto: ref.read(loginUserData.notifier).state.token ?? "",
+                                    sendto: choiceData.courseCreateduserInfo.token ?? "",
                                     notifiactionInfo: notification,
                                   );
                                   render();

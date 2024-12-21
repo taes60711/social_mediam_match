@@ -10,8 +10,13 @@ final loginUserData = StateProvider<ProfileData>((ref) {
   return ProfileData();
 });
 
-/// ログイン中のユーザデータ
+/// ログイン中のユーザの読んでない数
 final loginUserNotReadNotificationCount = StateProvider<int>((ref) {
+  return -1;
+});
+
+/// ログイン中のユーザ
+final loginUserInChatRoomId = StateProvider<int>((ref) {
   return -1;
 });
 

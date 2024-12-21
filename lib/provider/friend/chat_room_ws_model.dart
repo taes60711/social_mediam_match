@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/home/firendsPage/chat_room.dart';
 import 'package:social_mediam_match/global.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
 import 'package:social_mediam_match/provider/friend/chat_ws_model.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -32,7 +33,7 @@ class ChatRoomWSModel {
     this.ref = ref;
     this.render = render;
     enterRoomID = roomId;
-
+    ref.read(loginUserInChatRoomId.notifier).update((state) => enterRoomID);
     _chatroomListChannel = IOWebSocketChannel.connect(channelRoomUrl);
     print("chatRoom connect");
     await _chatroomListChannel.ready;
@@ -137,6 +138,7 @@ class ChatRoomWSModel {
     _broadcastStream = null;
     roomAllPage = -1;
     enterRoomID = -1;
+    ref.read(loginUserInChatRoomId.notifier).update((state) => enterRoomID);
     pageNum = 0;
     ref.read(roomMessageProvider.notifier).update((state) => ChatRoomModel(chatRoomMsg: []));
     _chatroomListChannel.sink.close();

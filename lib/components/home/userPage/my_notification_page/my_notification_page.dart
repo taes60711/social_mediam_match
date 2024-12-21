@@ -49,6 +49,7 @@ class MyNotificationPage extends BaseEndDrawer {
                 return NotificationService().requestNotificationList(page, size, userUId: userData.uid);
               },
               listControllerProvider: notificationListControllerProvider,
+              size: 20,
               itemChild: (data, index) {
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(20)),
@@ -183,10 +184,10 @@ class MyNotificationPage extends BaseEndDrawer {
                       return;
                     }
 
-                    // await NotificationService().updateReadNotificationCount(userUid: userData.uid);
+                    await NotificationService().updateReadNotificationCount(userUid: ref.watch(loginUserData).uid);
                     for (int i = 0; i < ref.read(notificationListControllerProvider).listData.length; i++) {
                       NotificationModel updateData = ref.read(notificationListControllerProvider).listData[i];
-                      updateData.isRead = !updateData.isRead;
+                      updateData.isRead = true;
                       ref.read(notificationListControllerProvider.notifier).editData(i, updateData);
                     }
                     ref.read(loginUserNotReadNotificationCount.notifier).update((e) => 0);
@@ -203,7 +204,12 @@ class MyNotificationPage extends BaseEndDrawer {
 
   Future<void> notificationDelete(NotificationModel data, int index) async {
     await NotificationService().deleteNotification(id: data.id);
-    ref.read(notificationListControllerProvider.notifier).removeData(index);
+    if (!data.isRead) {
+      int notReadCount = ref.read(loginUserNotReadNotificationCount.notifier).state;
+      notReadCount--;
+      ref.read(loginUserNotReadNotificationCount.notifier).update((e) => notReadCount);
+    }
+
     render();
   }
 
@@ -211,7 +217,7 @@ class MyNotificationPage extends BaseEndDrawer {
     NotificationModel updateData = data;
     if (!updateData.isRead) {
       updateData.isRead = !updateData.isRead;
-      // await NotificationService().updateReadNotificationCount(id: data.id);
+      await NotificationService().updateReadNotificationCount(id: data.id);
       ref.read(notificationListControllerProvider.notifier).editData(index, updateData);
       int notReadCount = ref.read(loginUserNotReadNotificationCount.notifier).state;
       notReadCount--;

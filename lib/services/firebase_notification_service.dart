@@ -47,7 +47,7 @@ class FirebaseNotificationService {
 
   final FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  Future<void> notificationListen() async {
+  Future<void> notificationListen({required BuildContext context, required WidgetRef ref}) async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
     NotificationSettings settings = await messaging.requestPermission(
@@ -63,11 +63,26 @@ class FirebaseNotificationService {
     if (settings.authorizationStatus == AuthorizationStatus.denied) {
       print('通知权限已拒绝');
     } else if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print('Got a message whilst in the foreground: ${message.data['notifiactionInfo']}');
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+        print('Got a message whilst in the foreground: ${message.data['notifiactionInfo']}  ');
+        NotificationModel receviceNotificaionData = NotificationModel.receviceDatatoModel(message.data['notifiactionInfo'] ?? "");
+
+        print(receviceNotificaionData);
         inspect(message);
 
         if (message.notification != null) {
+          if (receviceNotificaionData.type == 3) {
+            ///チャットルーム
+            if (ref.read(loginUserInChatRoomId.notifier).state == receviceNotificaionData.roomId) {
+              return;
+            }
+          } else {
+            await Future.delayed(Duration.zero);
+            int notReadCount = ref.read(loginUserNotReadNotificationCount.notifier).state;
+            notReadCount++;
+            ref.read(loginUserNotReadNotificationCount.notifier).update((e) => notReadCount);
+          }
+
           showNotification(
             title: message.notification?.title,
             body: message.notification?.body,
@@ -82,6 +97,7 @@ class FirebaseNotificationService {
 
   Future<void> initNotification({required BuildContext context, required WidgetRef ref}) async {
     print("initNotification 通知初始化");
+
     AndroidInitializationSettings initializationSettingsAndroid = const AndroidInitializationSettings('flutter_logo');
     var initializationSettingsIOS = DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -115,6 +131,13 @@ class FirebaseNotificationService {
           );
           MyNotificationCourseDetailPage(data: openedCourse).show(context);
         } else if (receviceNotificaionData.type == 2 || receviceNotificaionData.type == 3) {
+          ///チャットルーム
+          if (receviceNotificaionData.type == 3) {
+            if (ref.read(loginUserInChatRoomId.notifier).state == receviceNotificaionData.roomId) {
+              return;
+            }
+          }
+
           ///友達追加 / チャットルーム
           HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
           int index = ref.watch(frinedListProvider).indexWhere((e) => e.roomId == receviceNotificaionData.roomId);

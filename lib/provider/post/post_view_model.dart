@@ -120,8 +120,10 @@ class PostViewModel {
     } else {
       ///いいねひく
       choiceData.good++;
+
       await PostService().updatePostGood(choiceData.id, userUID: userData.uid);
       String message = '"${ref.read(loginUserData.notifier).state.name}"對文章"${choiceData.title}"按讚';
+
       NotificationModel notification = NotificationModel.empty();
       notification.userUid = ref.read(loginUserData.notifier).state.uid;
       notification.otherUserUid = choiceData.postUserInfo.uid;

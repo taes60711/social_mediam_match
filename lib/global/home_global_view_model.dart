@@ -46,7 +46,7 @@ class HomeGlobalViewModel {
     await UserService().updateUserToken(ref.read(loginUserData).uid, fcmToken ?? "");
 
     FirebaseNotificationService().initNotification(context: context, ref: ref);
-    FirebaseNotificationService().notificationListen();
+    FirebaseNotificationService().notificationListen(context: context, ref: ref);
     // }
   }
 
