@@ -40,14 +40,12 @@ class HomeGlobalViewModel {
 
     /// 通知システム起動
     /// 通知用のtoken取得
-    // if (Platform.isAndroid) {
     final fcmToken = await FirebaseMessaging.instance.getToken();
     print("通知用 fcmToken $fcmToken");
     await UserService().updateUserToken(ref.read(loginUserData).uid, fcmToken ?? "");
 
     FirebaseNotificationService().initNotification(context: context, ref: ref);
     FirebaseNotificationService().notificationListen(context: context, ref: ref);
-    // }
   }
 
   ///BottomNavigiatonbar隠れ/表示する
