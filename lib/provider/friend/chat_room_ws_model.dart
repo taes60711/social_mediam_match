@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/components/home/firendsPage/chat_room.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 import 'package:social_mediam_match/provider/friend/chat_ws_model.dart';
 import 'package:web_socket_channel/io.dart';
 
+import '../../components/home/firendsPage/chatRoomPage/chat_room.dart';
 import '../../models/friend_model.dart';
 import '../../services/friend_service.dart';
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
@@ -11,12 +12,14 @@ import '../style/style_config.dart';
 
 class ChatRoomBar extends StatelessWidget {
   final Function? backFunc;
+  final Function? rightFunc;
   final dynamic leftWidget;
   final ProfileData userData;
   final TextStyle? titleStyle;
   const ChatRoomBar({
     super.key,
     this.leftWidget,
+    this.rightFunc,
     required this.userData,
     this.backFunc,
     this.titleStyle,
@@ -43,19 +46,37 @@ class ChatRoomBar extends StatelessWidget {
             ),
           ),
         ),
-        MainBtn(
-          onPress: () {
-            UserProfileAllInfoBottomSheet(needToChatRoomBtn: false, userData: userData).show(context);
+        Expanded(
+          child: MainBtn(
+            onPress: () {
+              UserProfileAllInfoBottomSheet(needToChatRoomBtn: false, userData: userData).show(context);
+            },
+            child: Row(
+              children: [
+                UserIcon(iconSize: 40, image: userData.image),
+                SizedBox(width: ScreenSize.fitPxWidth(10)),
+                Text(
+                  userData.name ?? "",
+                  style: titleStyle ?? TextStyle(color: Colors.white, fontSize: ScreenSize.fontSize14),
+                ),
+              ],
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            if (rightFunc != null) {
+              rightFunc!();
+            }
           },
-          child: Row(
-            children: [
-              UserIcon(iconSize: 40, image: userData.image),
-              SizedBox(width: ScreenSize.fitPxWidth(10)),
-              Text(
-                userData.name ?? "",
-                style: titleStyle ?? TextStyle(color: Colors.white, fontSize: ScreenSize.fontSize14),
-              ),
-            ],
+          child: Container(
+            width: ScreenSize.fitPxWidth(40),
+            color: Colors.transparent,
+            child: Icon(
+              FontAwesomeIcons.ellipsis,
+              color: AppColors.greyColor130,
+              size: ScreenSize.fontSize16,
+            ),
           ),
         ),
       ],

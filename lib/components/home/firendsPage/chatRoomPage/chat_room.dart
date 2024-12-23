@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:social_mediam_match/components/home/firendsPage/comment_build.dart';
+import 'package:social_mediam_match/components/home/firendsPage/chatRoomPage/chat_room_manager_btm_sheet.dart';
+
 import 'package:social_mediam_match/components/utilities/FadeScalePage/image_view_page.dart';
 import 'package:social_mediam_match/components/utilities/appBar/chat_room_bar.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
@@ -15,14 +16,16 @@ import 'package:social_mediam_match/enum/date_format_utilities.dart';
 import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../models/friend_model.dart';
-import '../../../models/rich_text_format.dart';
-import '../../../provider/account/user_provider.dart';
-import '../../../provider/friend/chat_room_ws_model.dart';
-import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
-import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
+import '../../../../models/friend_model.dart';
+import '../../../../models/rich_text_format.dart';
+import '../../../../provider/account/user_provider.dart';
+import '../../../../provider/friend/chat_room_ws_model.dart';
+import '../../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
+import '../../../utilities/style/screen_size.dart';
+import '../../../utilities/style/style_config.dart';
 import 'package:any_link_preview/any_link_preview.dart';
+
+import 'comment_build.dart';
 
 class ChatRoom extends BaseEndDrawer {
   FriendListModel roomData;
@@ -353,7 +356,13 @@ class ChatRoom extends BaseEndDrawer {
           bottom: BorderSide(color: AppColors.greyColor98, width: 0.5),
         ),
       ),
-      child: ChatRoomBar(backFunc: () => closePage(), userData: roomData.userData),
+      child: ChatRoomBar(
+        backFunc: () => closePage(),
+        userData: roomData.userData,
+        rightFunc: () {
+          ChatRoomManagerBtmSheet(friendData: roomData.userData).show(context);
+        },
+      ),
     );
   }
 }

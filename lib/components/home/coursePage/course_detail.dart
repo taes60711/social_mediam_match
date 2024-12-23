@@ -79,36 +79,7 @@ class CourseDetailPage extends BaseEndDrawer {
                         child: MainBtn(
                           title: "申請",
                           onPress: () {
-                            ConfirmDilaog(
-                              title: '提示',
-                              content: '確定要申請？',
-                              conirmFunc: () async {
-                                bool isSucess =
-                                    await CourseService().signUpCourse(courseId: choiceData.id, userUID: userData.uid);
-                                if (isSucess) {
-                                  choiceData.signUpStatus = "signing";
-                                  ref.read(choicedCourseProvider.notifier).update((state) => choiceData);
-                                  ref.read(courseListController.notifier).editData(dataIndex, choiceData);
-
-                                  String message = '"${choiceData.courseCreateduserInfo.name}"申請想要觀看課程"${choiceData.title}"';
-                                  NotificationModel notification = NotificationModel.empty();
-                                  notification.userUid = ref.read(loginUserData.notifier).state.uid;
-                                  notification.otherUserUid = choiceData.courseCreateduserInfo.uid;
-                                  notification.type = 1;
-                                  notification.title = message;
-                                  notification.courseId = choiceData.id;
-                                  notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
-
-                                  NotificationService().createNotification(notification: notification);
-                                  FirebaseNotificationService().sendNotification(
-                                    message: message,
-                                    sendto: choiceData.courseCreateduserInfo.token ?? "",
-                                    notifiactionInfo: notification,
-                                  );
-                                  render();
-                                }
-                              },
-                            ).show(context);
+                            signUpCourse(choiceData: choiceData, userData: userData);
                           },
                         ),
                       ),
@@ -291,60 +262,101 @@ class CourseDetailPage extends BaseEndDrawer {
                   ),
 
                   ///チャプター
-                  Builder(builder: (context) {
-                    bool isVisible = true;
+                  Builder(
+                    builder: (context) {
+                      bool isVisible = true;
 
-                    /// added signing none
-                    if (!choiceData.isPublic && choiceData.signUpStatus != "added" && userData.uid != choiceData.createdBy) {
-                      isVisible = false;
-                    }
+                      /// added signing none
+                      if (!choiceData.isPublic && choiceData.signUpStatus != "added" && userData.uid != choiceData.createdBy) {
+                        isVisible = false;
+                      }
 
-                    return Visibility(
-                      visible: isVisible,
-                      child: Column(
-                        children: choiceData.chapterList.asMap().entries.map((e) {
-                          int index = e.key;
-                          CourseChapterInfo chapterInfo = e.value;
-                          return CustomExpansionTile(
-                            initiallyExpanded: true,
-                            title: Text(
-                              chapterInfo.chapterName == "" ? "chapter${index + 1}" : chapterInfo.chapterName,
-                              style: TextStyle(
-                                color: AppColors.whiteColor,
-                                fontSize: ScreenSize.fontSize16,
-                              ),
-                            ),
-                            collapsedTrailingWidget: Icon(
-                              Icons.keyboard_arrow_up,
-                              color: AppColors.whiteColor,
-                              size: ScreenSize.fontSize22,
-                            ),
-                            expandedTrailingWidget: Icon(
-                              Icons.keyboard_arrow_down,
-                              color: AppColors.whiteColor,
-                              size: ScreenSize.fontSize22,
-                            ),
-                            children: <Widget>[
-                              SizedBox(
-                                width: ScreenSize.width,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: choiceData.chapterList[index].content.map((e) {
-                                    String content = e;
+                      return isVisible
+                          ? Column(
+                              children: choiceData.chapterList.asMap().entries.map((e) {
+                                int index = e.key;
+                                CourseChapterInfo chapterInfo = e.value;
+                                return CustomExpansionTile(
+                                  initiallyExpanded: true,
+                                  title: Text(
+                                    chapterInfo.chapterName == "" ? "chapter${index + 1}" : chapterInfo.chapterName,
+                                    style: TextStyle(
+                                      color: AppColors.whiteColor,
+                                      fontSize: ScreenSize.fontSize16,
+                                    ),
+                                  ),
+                                  collapsedTrailingWidget: Icon(
+                                    Icons.keyboard_arrow_up,
+                                    color: AppColors.whiteColor,
+                                    size: ScreenSize.fontSize22,
+                                  ),
+                                  expandedTrailingWidget: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.whiteColor,
+                                    size: ScreenSize.fontSize22,
+                                  ),
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: ScreenSize.width,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: choiceData.chapterList[index].content.map((e) {
+                                          String content = e;
 
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 5),
-                                      child: RichTextView(content: content),
-                                    );
-                                  }).toList(),
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 5),
+                                            child: RichTextView(content: content),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }).toList(),
+                            )
+                          : Container(
+                              width: ScreenSize.width,
+                              margin: EdgeInsets.only(top: ScreenSize.fitPxWidth(20)),
+                              padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(10)),
+                              decoration: BoxDecoration(
+                                color: AppColors.black37,
+                                borderRadius: BorderRadius.circular(
+                                  ScreenSize.fitPxWidth(8),
                                 ),
                               ),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                    );
-                  }),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "還有更多內容, 請按“申請”按鈕\n等待作者審核通過後即可觀看",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: AppColors.whiteColor,
+                                      fontSize: ScreenSize.fontSize14,
+                                    ),
+                                  ),
+
+                                  SizedBox(height: ScreenSize.fitPxWidth(8)),
+
+                                  ///申請ボタン
+                                  Visibility(
+                                    /// added signing none
+                                    visible: userData.uid != choiceData.createdBy &&
+                                        choiceData.signUpStatus == "none" &&
+                                        !choiceData.isPublic,
+                                    child: MainBtn(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: ScreenSize.fitPxWidth(50), vertical: ScreenSize.fitPxWidth(10)),
+                                      title: "申請",
+                                      onPress: () {
+                                        signUpCourse(choiceData: choiceData, userData: userData);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                    },
+                  ),
 
                   SizedBox(height: ScreenSize.fitPxHeight(20))
                 ],
@@ -354,5 +366,37 @@ class CourseDetailPage extends BaseEndDrawer {
         ),
       ],
     );
+  }
+
+  void signUpCourse({required CourseModel choiceData, required ProfileData userData}) {
+    ConfirmDilaog(
+      title: '提示',
+      content: '確定要申請？',
+      conirmFunc: () async {
+        bool isSucess = await CourseService().signUpCourse(courseId: choiceData.id, userUID: userData.uid);
+        if (isSucess) {
+          choiceData.signUpStatus = "signing";
+          ref.read(choicedCourseProvider.notifier).update((state) => choiceData);
+          ref.read(courseListController.notifier).editData(dataIndex, choiceData);
+
+          String message = '"${choiceData.courseCreateduserInfo.name}"申請想要觀看課程"${choiceData.title}"';
+          NotificationModel notification = NotificationModel.empty();
+          notification.userUid = ref.read(loginUserData.notifier).state.uid;
+          notification.otherUserUid = choiceData.courseCreateduserInfo.uid;
+          notification.type = 1;
+          notification.title = message;
+          notification.courseId = choiceData.id;
+          notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
+
+          NotificationService().createNotification(notification: notification);
+          FirebaseNotificationService().sendNotification(
+            message: message,
+            sendto: choiceData.courseCreateduserInfo.token ?? "",
+            notifiactionInfo: notification,
+          );
+          render();
+        }
+      },
+    ).show(context);
   }
 }

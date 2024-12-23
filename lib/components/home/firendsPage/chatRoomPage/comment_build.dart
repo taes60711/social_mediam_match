@@ -8,17 +8,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../models/friend_model.dart';
-import '../../../models/notification_model.dart';
-import '../../../models/user_model.dart';
-import '../../../provider/account/user_provider.dart';
-import '../../../provider/friend/chat_room_ws_model.dart';
-import '../../../services/firebase_notification_service.dart';
-import '../../../services/image_service.dart';
-import '../../utilities/inputField/base_input.dart';
-import '../../utilities/main_button.dart';
-import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
+import '../../../../models/friend_model.dart';
+import '../../../../models/notification_model.dart';
+import '../../../../models/user_model.dart';
+import '../../../../provider/account/user_provider.dart';
+import '../../../../provider/friend/chat_room_ws_model.dart';
+import '../../../../services/firebase_notification_service.dart';
+import '../../../../services/image_service.dart';
+import '../../../utilities/inputField/base_input.dart';
+import '../../../utilities/main_button.dart';
+import '../../../utilities/style/screen_size.dart';
+import '../../../utilities/style/style_config.dart';
 
 ///コメント欄
 class CommentBuild extends ConsumerStatefulWidget {

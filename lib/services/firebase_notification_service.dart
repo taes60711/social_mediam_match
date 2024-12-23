@@ -2,22 +2,18 @@
 
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:googleapis_auth/auth_io.dart' as auth;
-import 'package:social_mediam_match/components/home/firendsPage/chat_room.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
-
 import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/models/notification_model.dart';
 import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
-
+import '../components/home/firendsPage/chatRoomPage/chat_room.dart';
 import '../components/home/userPage/my_notification_page/course/my_notification_course_page.dart';
 import '../components/home/userPage/my_notification_page/my_notification_post_page.dart';
 import '../models/course_model.dart';

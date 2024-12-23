@@ -16,12 +16,14 @@ import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/inputField/base_input.dart';
 
 import '../../utilities/main_button.dart';
-import 'chat_room.dart';
+import 'chatRoomPage/chat_room.dart';
 import 'search_user_page.dart';
 
 final frinedListProvider = StateProvider<List<FriendListModel>>((ref) => []);
 
 final suggestUserProvider = StateProvider<List<ProfileData>>((ref) => []);
+
+final friendPageRender = StateProvider<Function>((ref) => () {});
 
 class FriendPage extends ConsumerStatefulWidget {
   const FriendPage({super.key});
@@ -40,6 +42,10 @@ class _FriendPageState extends ConsumerState<FriendPage> {
           ref.read(suggestUserProvider.notifier).update((state) => suggestUserDataList);
           setState(() {});
         }
+
+        ref.read(friendPageRender.notifier).update((state) => () {
+              setState(() {});
+            });
       },
     );
     super.initState();

@@ -17,7 +17,7 @@ import '../../../provider/account/user_provider.dart';
 import '../../../provider/friend/chat_ws_model.dart';
 import '../../../provider/friend/friend_provider.dart';
 import '../../../services/firebase_notification_service.dart';
-import '../../home/firendsPage/chat_room.dart';
+import '../../home/firendsPage/chatRoomPage/chat_room.dart';
 import '../../home/firendsPage/firends_page.dart';
 import '../../home/skillExChangePage/skill_utilites.dart';
 import '../main_button.dart';
