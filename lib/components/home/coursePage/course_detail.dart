@@ -324,36 +324,7 @@ class CourseDetailPage extends BaseEndDrawer {
                                   ScreenSize.fitPxWidth(8),
                                 ),
                               ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "還有更多內容, 請按“申請”按鈕\n等待作者審核通過後即可觀看",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: AppColors.whiteColor,
-                                      fontSize: ScreenSize.fontSize14,
-                                    ),
-                                  ),
-
-                                  SizedBox(height: ScreenSize.fitPxWidth(8)),
-
-                                  ///申請ボタン
-                                  Visibility(
-                                    /// added signing none
-                                    visible: userData.uid != choiceData.createdBy &&
-                                        choiceData.signUpStatus == "none" &&
-                                        !choiceData.isPublic,
-                                    child: MainBtn(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: ScreenSize.fitPxWidth(50), vertical: ScreenSize.fitPxWidth(10)),
-                                      title: "申請",
-                                      onPress: () {
-                                        signUpCourse(choiceData: choiceData, userData: userData);
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              child: signUpStatus(choiceData),
                             );
                     },
                   ),
@@ -366,6 +337,45 @@ class CourseDetailPage extends BaseEndDrawer {
         ),
       ],
     );
+  }
+
+  Widget signUpStatus(CourseModel choiceData) {
+    ProfileData userData = ref.read(loginUserData);
+    if (choiceData.signUpStatus == "none") {
+      return Column(
+        children: [
+          Text(
+            "還有更多內容, 請按“申請”按鈕\n等待作者審核通過後即可觀看",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: AppColors.whiteColor,
+              fontSize: ScreenSize.fontSize14,
+            ),
+          ),
+
+          SizedBox(height: ScreenSize.fitPxWidth(8)),
+
+          ///申請ボタン
+          MainBtn(
+            padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(50), vertical: ScreenSize.fitPxWidth(10)),
+            title: "申請",
+            onPress: () {
+              signUpCourse(choiceData: choiceData, userData: userData);
+            },
+          ),
+        ],
+      );
+    } else if (choiceData.signUpStatus == "signing") {
+      return Text(
+        "正在等待對方審核中",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: AppColors.whiteColor,
+          fontSize: ScreenSize.fontSize14,
+        ),
+      );
+    }
+    return Container();
   }
 
   void signUpCourse({required CourseModel choiceData, required ProfileData userData}) {

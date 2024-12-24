@@ -60,6 +60,8 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   }
 
   Future<void> init() async {
+    await Future.delayed(Duration.zero);
+
     ///init前に
     if (ref.read(widget.listControllerProvider).listData.isEmpty) {
       initFunc();

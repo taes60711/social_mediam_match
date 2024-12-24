@@ -6,8 +6,8 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:skillstorm</string>
-		<string>applinks:skillstorm?mode=developer</string>
+		<string>applinks:directsense.tw</string>
+		<string>applinks:directsense.tw?mode=developer</string>
 	</array>
 </dict>
 </plist>

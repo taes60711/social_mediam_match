@@ -135,7 +135,7 @@ class PostCommentPage extends BaseBottomSheet {
                                       }
                                     },
                                     child: Text(
-                                      "編輯",
+                                      data.isEditor ? "儲存" : "編輯",
                                       style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                                     ),
                                   ),
