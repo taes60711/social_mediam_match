@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_manager/course_manager_bottom_sheet.dart';
 import 'package:social_mediam_match/enum/skill_type.dart';
 import '../../../enum/date_format_utilities.dart';
+import '../../../global.dart';
 import '../../../models/course_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/course/course_provider.dart';
@@ -262,10 +264,67 @@ class CourseUtilites {
                 fontWeight: FontWeight.w400,
               ),
             ),
+            SizedBox(height: ScreenSize.fitPxWidth(8)),
+
+            ///ボタン
+            Row(
+              children: [
+                ///メールボタン
+                MainBtn(
+                  onPress: () async {
+                    ///ユーザー詳細ページに遷移
+                    UserProfileAllInfoBottomSheet(userData: data.courseCreateduserInfo).show(context);
+                  },
+                  child: Container(
+                    height: ScreenSize.fitPxWidth(26),
+                    width: ScreenSize.fitPxWidth(35),
+                    decoration: BoxDecoration(
+                      color: AppColors.greyColor54,
+                      borderRadius: BorderRadius.circular(
+                        ScreenSize.fitPxWidth(6),
+                      ),
+                    ),
+                    child: Icon(
+                      FontAwesomeIcons.commentSms,
+                      color: AppColors.whiteColor,
+                      size: ScreenSize.fontSize14,
+                    ),
+                  ),
+                ),
+                SizedBox(width: ScreenSize.fitPxWidth(10)),
+
+                ///シャアボタン
+                MainBtn(
+                  onPress: () async {
+                    await shareCourse(courseId: data.id);
+                  },
+                  child: Container(
+                    height: ScreenSize.fitPxWidth(26),
+                    width: ScreenSize.fitPxWidth(35),
+                    decoration: BoxDecoration(
+                      color: AppColors.greyColor54,
+                      borderRadius: BorderRadius.circular(
+                        ScreenSize.fitPxWidth(6),
+                      ),
+                    ),
+                    child: Icon(
+                      FontAwesomeIcons.arrowUpRightFromSquare,
+                      color: AppColors.whiteColor,
+                      size: ScreenSize.fontSize14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> shareCourse({required int courseId}) async {
+    String sharePostUrl = "https://$domain/course/$courseId";
+    await Share.share(sharePostUrl);
   }
 
   String formattedTag(int type) {

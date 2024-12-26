@@ -71,16 +71,38 @@ class CourseDetailPage extends BaseEndDrawer {
                       ),
                       const Expanded(child: SizedBox(width: 1)),
 
+                      ///シャアボタン
+                      MainBtn(
+                        onPress: () async {
+                          await CourseUtilites().shareCourse(courseId: data.id);
+                        },
+                        child: Container(
+                          height: ScreenSize.fitPxWidth(30),
+                          width: ScreenSize.fitPxWidth(30),
+                          color: Colors.transparent,
+                          child: Icon(
+                            FontAwesomeIcons.arrowUpRightFromSquare,
+                            color: AppColors.whiteColor,
+                            size: ScreenSize.fontSize14,
+                          ),
+                        ),
+                      ),
+
                       ///申請ボタン
                       Visibility(
                         /// added signing none
                         visible:
                             userData.uid != choiceData.createdBy && choiceData.signUpStatus == "none" && !choiceData.isPublic,
-                        child: MainBtn(
-                          title: "申請",
-                          onPress: () {
-                            signUpCourse(choiceData: choiceData, userData: userData);
-                          },
+                        child: Row(
+                          children: [
+                            SizedBox(width: ScreenSize.fitPxWidth(10)),
+                            MainBtn(
+                              title: "申請",
+                              onPress: () {
+                                signUpCourse(choiceData: choiceData, userData: userData);
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ],

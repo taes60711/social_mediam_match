@@ -6,8 +6,9 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:directsense.tw</string>
-		<string>applinks:directsense.tw?mode=developer</string>
+		<string>applinks:universal-link.directsense.tw</string>
+		<string>applinks:universal-link.directsense.tw?mode=developer</string>
+		<string>applinks:0f7a-111-250-121-206.ngrok-free.app?mode=developer</string>
 	</array>
 </dict>
 </plist>

@@ -10,6 +10,7 @@ import 'package:social_mediam_match/provider/account/user_provider.dart';
 import '../components/utilities/style/screen_size.dart';
 import '../global.dart';
 import '../pageManager/enum/bottom_bar_path.dart';
+import '../services/app_links_service.dart';
 import '../services/firebase_notification_service.dart';
 import '../services/user_service.dart';
 
@@ -37,6 +38,10 @@ class HomeGlobalViewModel {
     this.context = context;
     this.ref = ref;
     this.render = render;
+
+    /// シャアシステム起動
+    /// appLink Init
+    AppLinkService().init();
 
     /// 通知システム起動
     /// 通知用のtoken取得

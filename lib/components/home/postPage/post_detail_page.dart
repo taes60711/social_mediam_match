@@ -191,7 +191,7 @@ class PostDetailPage extends BaseEndDrawer {
                         ///分享按鈕
                         GestureDetector(
                           onTap: () async {
-                            await PostViewUtilities().sharePost();
+                            await PostViewUtilities().sharePost(postId: choiceData.id);
                           },
                           child: PostViewUtilities().iconWithText(
                             iconData: FontAwesomeIcons.arrowUpRightFromSquare,

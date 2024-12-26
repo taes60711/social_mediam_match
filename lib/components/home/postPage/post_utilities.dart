@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
@@ -162,7 +163,7 @@ class PostViewUtilities {
                       ),
                     ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: ScreenSize.fitPxWidth(8)),
                   Row(
                     children: [
                       Row(
@@ -200,7 +201,7 @@ class PostViewUtilities {
                       ///ビュー数
                       PostViewUtilities().iconWithText(
                           iconData: FontAwesomeIcons.eye,
-                          iconColor: Color.fromARGB(255, 110, 124, 129),
+                          iconColor: const Color.fromARGB(255, 110, 124, 129),
                           text: "${data.viewed}",
                           style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
 
@@ -209,7 +210,7 @@ class PostViewUtilities {
                       ///シャアボタン
                       GestureDetector(
                         onTap: () async {
-                          await sharePost();
+                          await sharePost(postId: data.id);
                         },
                         child: Container(
                           width: 30,
@@ -286,7 +287,9 @@ class PostViewUtilities {
     );
   }
 
-  Future<void> sharePost() async {
-    await Share.share("https://www.youtube.com/watch?v=udGwca1HBM4&list=RDudGwca1HBM4&start_radio=1&ab_channel=1theK%28원더케이%29");
+  Future<void> sharePost({required int postId}) async {
+    String sharePostUrl = "https://$domain/post/$postId";
+
+    await Share.share(sharePostUrl);
   }
 }
