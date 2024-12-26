@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/skillExChangePage/skill_utilites.dart';
 import 'package:social_mediam_match/components/home/userPage/my_posts.dart';
 import 'package:social_mediam_match/components/home/userPage/user_profile_edit_page.dart';
+import 'package:social_mediam_match/components/home/userPage/user_profile_share_page.dart';
 import 'package:social_mediam_match/components/utilities/app_common_tools.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
@@ -117,17 +118,21 @@ class _UserPageState extends ConsumerState<UserPage> {
                             fontSize: ScreenSize.fontSize12,
                           ),
                         ),
-                        SizedBox(width: ScreenSize.fitPxWidth(5)),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
-                              color: userData.isEmailVerified ? const Color.fromARGB(255, 68, 197, 72) : AppColors.greyColor98),
-                          child: Text(
-                            userData.isEmailVerified ? "已認證" : "未認證",
-                            style: TextStyle(
-                              color: AppColors.whiteColor,
-                              fontSize: ScreenSize.fontSize12,
+                        SizedBox(width: ScreenSize.fitPxWidth(8)),
+
+                        ///シャアボタン
+                        GestureDetector(
+                          onTap: () async {
+                            UserProfileSharePage().show(context);
+                          },
+                          child: Container(
+                            width: 30,
+                            alignment: Alignment.centerLeft,
+                            color: Colors.transparent,
+                            child: Icon(
+                              FontAwesomeIcons.arrowUpRightFromSquare,
+                              color: const Color.fromARGB(221, 180, 179, 179),
+                              size: ScreenSize.fontSize14,
                             ),
                           ),
                         ),

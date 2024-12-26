@@ -41,7 +41,7 @@ class HomeGlobalViewModel {
 
     /// シャアシステム起動
     /// appLink Init
-    AppLinkService().init();
+    AppLinkService().init(context: context, ref: ref);
 
     /// 通知システム起動
     /// 通知用のtoken取得

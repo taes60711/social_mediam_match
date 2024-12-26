@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_manager/course_manager_bottom_sheet.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_manager/my_course_manager.bottom.sheet.dart';
 import 'package:social_mediam_match/enum/skill_type.dart';
 import '../../../enum/date_format_utilities.dart';
 import '../../../global.dart';
@@ -110,22 +111,22 @@ class CourseUtilites {
                     style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
                   ),
                   const Expanded(child: SizedBox(width: 1)),
-                  Visibility(
-                    visible: data.courseCreateduserInfo.uid == ref.read(loginUserData).uid,
-                    child: GestureDetector(
-                      onTap: () {
-                        ref.read(choicedCourseProvider.notifier).update((state) => data);
-                        CourseManagerBtmSheet(courseListController, dataIndex: dataIndex).show(context);
-                      },
-                      child: Container(
-                        width: 30,
-                        alignment: Alignment.centerRight,
-                        color: Colors.transparent,
-                        child: Icon(
-                          FontAwesomeIcons.ellipsis,
-                          color: AppColors.greyColor130,
-                          size: ScreenSize.fontSize16,
-                        ),
+                  GestureDetector(
+                    onTap: () {
+                      ref.read(choicedCourseProvider.notifier).update((state) => data);
+
+                      data.courseCreateduserInfo.uid == ref.read(loginUserData).uid
+                          ? CourseManagerBtmSheet(courseListController, dataIndex: dataIndex).show(context)
+                          : MyCourseManagerBtmSheet(courseListController, dataIndex: dataIndex).show(context);
+                    },
+                    child: Container(
+                      width: 30,
+                      alignment: Alignment.centerRight,
+                      color: Colors.transparent,
+                      child: Icon(
+                        FontAwesomeIcons.ellipsis,
+                        color: AppColors.greyColor130,
+                        size: ScreenSize.fontSize16,
                       ),
                     ),
                   ),
@@ -263,58 +264,6 @@ class CourseUtilites {
                 fontSize: ScreenSize.fontSize12,
                 fontWeight: FontWeight.w400,
               ),
-            ),
-            SizedBox(height: ScreenSize.fitPxWidth(8)),
-
-            ///ボタン
-            Row(
-              children: [
-                ///メールボタン
-                MainBtn(
-                  onPress: () async {
-                    ///ユーザー詳細ページに遷移
-                    UserProfileAllInfoBottomSheet(userData: data.courseCreateduserInfo).show(context);
-                  },
-                  child: Container(
-                    height: ScreenSize.fitPxWidth(26),
-                    width: ScreenSize.fitPxWidth(35),
-                    decoration: BoxDecoration(
-                      color: AppColors.greyColor54,
-                      borderRadius: BorderRadius.circular(
-                        ScreenSize.fitPxWidth(6),
-                      ),
-                    ),
-                    child: Icon(
-                      FontAwesomeIcons.commentSms,
-                      color: AppColors.whiteColor,
-                      size: ScreenSize.fontSize14,
-                    ),
-                  ),
-                ),
-                SizedBox(width: ScreenSize.fitPxWidth(10)),
-
-                ///シャアボタン
-                MainBtn(
-                  onPress: () async {
-                    await shareCourse(courseId: data.id);
-                  },
-                  child: Container(
-                    height: ScreenSize.fitPxWidth(26),
-                    width: ScreenSize.fitPxWidth(35),
-                    decoration: BoxDecoration(
-                      color: AppColors.greyColor54,
-                      borderRadius: BorderRadius.circular(
-                        ScreenSize.fitPxWidth(6),
-                      ),
-                    ),
-                    child: Icon(
-                      FontAwesomeIcons.arrowUpRightFromSquare,
-                      color: AppColors.whiteColor,
-                      size: ScreenSize.fontSize14,
-                    ),
-                  ),
-                ),
-              ],
             ),
           ],
         ),

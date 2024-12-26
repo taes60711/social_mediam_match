@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_manager/course_edit_page.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_utilites.dart';
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -21,30 +22,51 @@ class CourseManagerBtmSheet extends BaseBottomSheet {
 
   @override
   double buildHeight() {
-    return 0.3;
+    return 0.34;
   }
 
   @override
   Widget build(WidgetRef ref) {
+    CourseModel choiceCourse = ref.read(courseListController).listData[dataIndex];
     return SingleChildScrollView(
       child: Column(
         children: [
           SizedBox(height: ScreenSize.fitPxWidth(10)),
+          Container(
+            width: ScreenSize.width,
+            margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
+            child: Row(
+              children: [
+                Expanded(
+                  child: managernormalBtn(
+                      iconData: FontAwesomeIcons.penToSquare,
+                      text: "編輯課程",
+                      onPress: () {
+                        CourseEditPage(courseListController, dataIndex: dataIndex).show(context);
+                      }),
+                ),
+                SizedBox(width: ScreenSize.fitPxWidth(10)),
+                Expanded(
+                  child: managernormalBtn(
+                    iconData: FontAwesomeIcons.gears,
+                    text: "管理成員",
+                    onPress: () {
+                      CourseMemberManagerPage().show(context);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: ScreenSize.fitPxWidth(10)),
           managerPageMainBtn(
-              iconData: FontAwesomeIcons.penToSquare,
-              text: "編輯課程",
-              onPress: () {
-                CourseEditPage(courseListController, dataIndex: dataIndex).show(context);
-              }),
-          SizedBox(height: ScreenSize.fitPxWidth(15)),
-          managerPageMainBtn(
-            iconData: FontAwesomeIcons.gears,
-            text: "管理成員",
-            onPress: () {
-              CourseMemberManagerPage().show(context);
+            iconData: FontAwesomeIcons.share,
+            text: "分享",
+            onPress: () async {
+              await CourseUtilites().shareCourse(courseId: choiceCourse.id);
             },
           ),
-          SizedBox(height: ScreenSize.fitPxWidth(15)),
+          SizedBox(height: ScreenSize.fitPxWidth(10)),
           managerPageMainBtn(
             iconData: FontAwesomeIcons.trash,
             text: "刪除課程",
@@ -79,7 +101,7 @@ class CourseManagerBtmSheet extends BaseBottomSheet {
           horizontal: ScreenSize.fitPxWidth(16),
         ),
         decoration: BoxDecoration(
-          color: AppColors.greyColor130,
+          color: AppColors.greyColor54,
           borderRadius: BorderRadius.circular(
             ScreenSize.fitPxWidth(10),
           ),
@@ -92,6 +114,44 @@ class CourseManagerBtmSheet extends BaseBottomSheet {
               size: ScreenSize.fontSize14,
             ),
             SizedBox(width: ScreenSize.fitPxWidth(10)),
+            Text(
+              text,
+              style: TextStyle(
+                color: AppColors.whiteColor,
+                fontSize: ScreenSize.fontSize12,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget managernormalBtn({required IconData iconData, required String text, required Function onPress}) {
+    return MainBtn(
+      onPress: () {
+        onPress();
+      },
+      child: Container(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.symmetric(
+          horizontal: ScreenSize.fitPxWidth(58),
+          vertical: ScreenSize.fitPxWidth(13),
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.greyColor54,
+          borderRadius: BorderRadius.circular(
+            ScreenSize.fitPxWidth(10),
+          ),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              iconData,
+              color: AppColors.whiteColor,
+              size: ScreenSize.fontSize14,
+            ),
+            SizedBox(height: ScreenSize.fitPxWidth(10)),
             Text(
               text,
               style: TextStyle(

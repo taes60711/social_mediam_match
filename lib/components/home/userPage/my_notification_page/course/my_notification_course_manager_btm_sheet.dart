@@ -46,7 +46,7 @@ class MyNotificationCourseManagerBtmSheet extends BaseBottomSheet {
           horizontal: ScreenSize.fitPxWidth(16),
         ),
         decoration: BoxDecoration(
-          color: AppColors.greyColor130,
+          color: AppColors.greyColor54,
           borderRadius: BorderRadius.circular(
             ScreenSize.fitPxWidth(10),
           ),

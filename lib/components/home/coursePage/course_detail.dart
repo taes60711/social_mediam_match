@@ -47,7 +47,28 @@ class CourseDetailPage extends BaseEndDrawer {
             closePage();
           },
           title: choiceData.title,
-          rightWidget: AppCommonTools().levelSetsumeiBtn(context),
+          rightWidget: Row(
+            children: [
+              AppCommonTools().levelSetsumeiBtn(context),
+
+              ///シャアボタン
+              MainBtn(
+                onPress: () async {
+                  await CourseUtilites().shareCourse(courseId: data.id);
+                },
+                child: Container(
+                  height: ScreenSize.fitPxWidth(30),
+                  width: ScreenSize.fitPxWidth(30),
+                  color: Colors.transparent,
+                  child: Icon(
+                    FontAwesomeIcons.arrowUpRightFromSquare,
+                    color: AppColors.whiteColor,
+                    size: ScreenSize.fontSize20,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
         Expanded(
           child: Padding(
@@ -70,23 +91,6 @@ class CourseDetailPage extends BaseEndDrawer {
                         style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.greyColor176),
                       ),
                       const Expanded(child: SizedBox(width: 1)),
-
-                      ///シャアボタン
-                      MainBtn(
-                        onPress: () async {
-                          await CourseUtilites().shareCourse(courseId: data.id);
-                        },
-                        child: Container(
-                          height: ScreenSize.fitPxWidth(30),
-                          width: ScreenSize.fitPxWidth(30),
-                          color: Colors.transparent,
-                          child: Icon(
-                            FontAwesomeIcons.arrowUpRightFromSquare,
-                            color: AppColors.whiteColor,
-                            size: ScreenSize.fontSize14,
-                          ),
-                        ),
-                      ),
 
                       ///申請ボタン
                       Visibility(
