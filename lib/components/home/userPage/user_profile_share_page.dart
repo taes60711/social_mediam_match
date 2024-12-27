@@ -1,19 +1,26 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:social_mediam_match/components/utilities/dialog/base_dialog.dart';
+import 'package:social_mediam_match/components/utilities/toast.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 
 import '../../../global.dart';
+import '../../utilities/lodaing_dialog.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/style_config.dart';
 
 class UserProfileSharePage extends BaseDialog {
   String shareUrl = "";
-
+  ScreenshotController screenshotController = ScreenshotController();
   @override
   Future<void> initState(WidgetRef ref) async {
     ProfileData userData = ref.read(loginUserData.notifier).state;
@@ -41,10 +48,13 @@ class UserProfileSharePage extends BaseDialog {
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(30)),
-            child: Container(
-              height: ScreenSize.fitPxWidth(200),
-              width: ScreenSize.fitPxWidth(200),
-              color: Colors.black,
+            child: Screenshot(
+              controller: screenshotController,
+              child: QrImageView(
+                data: shareUrl,
+                backgroundColor: AppColors.whiteColor,
+                size: ScreenSize.fitPxWidth(200),
+              ),
             ),
           ),
           MainBtn(
@@ -53,6 +63,7 @@ class UserProfileSharePage extends BaseDialog {
             backgroundColor: AppColors.orangeColor,
             onPress: () async {
               Clipboard.setData(ClipboardData(text: shareUrl));
+              Toast().showBottom(msg: "已複製");
             },
             title: "複製連結",
           ),
@@ -64,7 +75,16 @@ class UserProfileSharePage extends BaseDialog {
             padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(10)),
             backgroundColor: AppColors.greyColor130,
             onPress: () async {
-              await Share.share(shareUrl);
+              await screenshotController.capture().then((Uint8List? image) async {
+                if (image != null) {
+                  final directory = await getApplicationDocumentsDirectory();
+                  final imagePath = await File('${directory.path}/image.png').create();
+                  await imagePath.writeAsBytes(image);
+                  LoadingDialog().show();
+                  await Share.shareFiles([imagePath.path]);
+                  LoadingDialog().close();
+                }
+              });
             },
             title: "QrCode 分享",
           ),

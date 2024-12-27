@@ -67,6 +67,9 @@ dependencies:
   image_gallery_saver: ^2.0.3
   share_plus: ^7.2.2
   app_links: ^6.2.0
+  qr_flutter: ^4.1.0
+  screenshot: ^2.5.0
+  path_provider: ^2.1.4
   
   
 

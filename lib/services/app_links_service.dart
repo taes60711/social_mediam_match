@@ -3,7 +3,8 @@
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/components/utilities/toast.dart';
+import 'package:social_mediam_match/components/utilities/BottomSheets/user_profile_bottom_sheet.dart';
+import 'package:social_mediam_match/services/user_service.dart';
 
 import '../components/home/userPage/my_notification_page/course/my_notification_course_page.dart';
 import '../components/home/userPage/my_notification_page/my_notification_post_page.dart';
@@ -11,6 +12,7 @@ import '../global/home_global_view_model.dart';
 import '../global/user_login_status_controller.dart';
 import '../models/course_model.dart';
 import '../models/post_model.dart';
+import '../models/user_model.dart';
 import '../pageManager/enum/bottom_bar_path.dart';
 import '../provider/account/user_provider.dart';
 import 'course_service.dart';
@@ -49,7 +51,6 @@ class AppLinkService {
   Future<void> runShareUrl(Uri url) async {
     Map<String, String>? mappedData = parseUrl("$url");
     if (mappedData != null) {
-      Toast().showCenter(msg: "type: ${mappedData["type"]} id: ${mappedData["content"]}");
       String type = mappedData["type"] ?? "";
       String content = mappedData["content"] ?? "";
 
@@ -74,13 +75,22 @@ class AppLinkService {
             MyNotificationCourseDetailPage(data: openedCourse).show(context);
           }
           break;
+        case "profile":
+          if (UserLoginStatusController().isLogin()) {
+            ///フレンド
+            await Future.delayed(Duration(seconds: 1));
+            ProfileData sharedUserData = await UserService().requestUserDataByUID(content);
+            UserProfileAllInfoBottomSheet(userData: sharedUserData).show(context);
+          }
+          break;
       }
     }
   }
 
   Map<String, String>? parseUrl(String url) {
-    final regExp = RegExp(r'^https://universal-link\.directsense\.tw/(\w+)/(\d+)$');
-    final match = regExp.firstMatch(url);
+    // 更新正則表達式以處理 Scheme 和路徑
+    final regex = RegExp(r'universal-link\.directsense\.tw[:\/]+([^\/]+)\/([^\/]+)');
+    final match = regex.firstMatch(url);
 
     if (match != null) {
       final type = match.group(1);

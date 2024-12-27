@@ -7,7 +7,6 @@ import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 
 import '../../../global/home_global_view_model.dart';
-
 import '../../../provider/post/post_provider.dart';
 
 import '../../../provider/post/post_view_model.dart';

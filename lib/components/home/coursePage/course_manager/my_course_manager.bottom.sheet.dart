@@ -30,7 +30,7 @@ class MyCourseManagerBtmSheet extends BaseBottomSheet {
         children: [
           SizedBox(height: ScreenSize.fitPxWidth(15)),
           managerPageMainBtn(
-            iconData: FontAwesomeIcons.share,
+            iconData: FontAwesomeIcons.arrowUpRightFromSquare,
             text: "分享",
             onPress: () async {
               await CourseUtilites().shareCourse(courseId: choiceCourse.id);

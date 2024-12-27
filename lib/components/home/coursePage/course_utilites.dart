@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_manager/course_manager_bottom_sheet.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_manager/my_course_manager.bottom.sheet.dart';
+import 'package:social_mediam_match/components/utilities/lodaing_dialog.dart';
 import 'package:social_mediam_match/enum/skill_type.dart';
 import '../../../enum/date_format_utilities.dart';
 import '../../../global.dart';
@@ -273,7 +274,9 @@ class CourseUtilites {
 
   Future<void> shareCourse({required int courseId}) async {
     String sharePostUrl = "https://$domain/course/$courseId";
+    LoadingDialog().show();
     await Share.share(sharePostUrl);
+    LoadingDialog().close();
   }
 
   String formattedTag(int type) {

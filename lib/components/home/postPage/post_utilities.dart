@@ -11,6 +11,7 @@ import '../../../models/post_model.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
+import '../../utilities/lodaing_dialog.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
@@ -289,7 +290,8 @@ class PostViewUtilities {
 
   Future<void> sharePost({required int postId}) async {
     String sharePostUrl = "https://$domain/post/$postId";
-
+    LoadingDialog().show();
     await Share.share(sharePostUrl);
+    LoadingDialog().close();
   }
 }
