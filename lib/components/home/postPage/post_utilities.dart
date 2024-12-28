@@ -71,13 +71,10 @@ class PostViewUtilities {
     WidgetRef ref = viewModel.ref;
     BuildContext context = viewModel.context;
 
-    String typeName = ref
-        .read(allPostBoardListData)
-        .firstWhere(
+    PostBoard typeData = ref.read(allPostBoardListData).firstWhere(
           (e) => e.id == data.type,
           orElse: () => PostBoard(),
-        )
-        .chineseName;
+        );
     return MainBtn(
       onPress: () {
         ///詳細ページに遷移
@@ -151,7 +148,7 @@ class PostViewUtilities {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(height: ScreenSize.fitPxWidth(5)),
 
                   ///文章ビュー
                   Padding(
@@ -169,14 +166,18 @@ class PostViewUtilities {
                     children: [
                       Row(
                         children: [
-                          Container(
-                            width: ScreenSize.fontSize14,
-                            height: ScreenSize.fontSize14,
-                            color: const Color.fromARGB(96, 175, 170, 170),
+                          SizedBox(
+                            width: ScreenSize.fitPxHeight(15),
+                            height: ScreenSize.fitPxHeight(15),
+                            child: Icon(
+                              typeData.iconData,
+                              color: AppColors.whiteColor.withOpacity(0.8),
+                              size: ScreenSize.fontSize14,
+                            ),
                           ),
                           SizedBox(width: ScreenSize.fitPxWidth(5)),
                           Text(
-                            typeName,
+                            typeData.chineseName,
                             style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor),
                           ),
                         ],

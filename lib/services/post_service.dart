@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/services/api_client.dart';
 
 import '../global.dart';
@@ -19,6 +21,21 @@ class PostService extends ApiClient {
         model: PostBoard.toMap,
         isList: true,
       );
+
+      List<IconData> boardIcon = [
+        FontAwesomeIcons.commentDots,
+        FontAwesomeIcons.wifi,
+        FontAwesomeIcons.globe,
+        FontAwesomeIcons.microchip,
+        FontAwesomeIcons.code,
+      ];
+
+      requestAllPostBoard = requestAllPostBoard.asMap().entries.map((e) {
+        int index = e.key;
+        PostBoard value = e.value;
+        value.iconData = boardIcon[index];
+        return value;
+      }).toList();
     } catch (e) {
       onRequestFailed();
     }

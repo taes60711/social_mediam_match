@@ -274,7 +274,7 @@ class _UserPageState extends ConsumerState<UserPage> {
               ),
               SizedBox(height: ScreenSize.fitPxHeight(10)),
               infoBtn(
-                icon: FontAwesomeIcons.school,
+                icon: FontAwesomeIcons.bookOpenReader,
                 text: "技術分享",
                 onPress: () => MyCoursePage().show(context),
               ),

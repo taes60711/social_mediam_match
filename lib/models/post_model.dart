@@ -8,11 +8,16 @@ class PostBoard {
   int type;
   String name;
   String chineseName;
+
+  /// サーバーからデータではない
+  IconData? iconData;
+
   PostBoard({
     this.id = 0,
     this.type = 0,
     this.name = "chat",
     this.chineseName = "聊天",
+    this.iconData,
   });
 
   factory PostBoard.toMap(dynamic json) {

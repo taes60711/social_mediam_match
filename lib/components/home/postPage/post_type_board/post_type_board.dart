@@ -23,6 +23,7 @@ class _PostTypeBoardState extends ConsumerState<PostTypeBoard> {
   @override
   Widget build(BuildContext context) {
     List<PostBoard> allBoard = ref.read(allPostBoardListData);
+
     return CommonScaffold(
       child: Column(
         children: [
@@ -47,10 +48,14 @@ class _PostTypeBoardState extends ConsumerState<PostTypeBoard> {
                         child: Row(
                           children: [
                             SizedBox(width: ScreenSize.fitPxHeight(20)),
-                            Container(
+                            SizedBox(
                               width: ScreenSize.fitPxHeight(25),
                               height: ScreenSize.fitPxHeight(25),
-                              color: const Color.fromARGB(96, 175, 170, 170),
+                              child: Icon(
+                                e.iconData,
+                                color: AppColors.whiteColor.withOpacity(0.8),
+                                size: ScreenSize.fitPxHeight(20),
+                              ),
                             ),
                             SizedBox(width: ScreenSize.fitPxHeight(10)),
                             Text(

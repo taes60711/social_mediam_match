@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:social_mediam_match/components/utilities/lodaing_dialog.dart';
 
 import 'package:social_mediam_match/global/user_login_status_controller.dart';
@@ -67,6 +68,7 @@ class _InitialpageState extends ConsumerState<Initialpage> {
 
     /// request All PostBoard
     List<PostBoard> allPostBoard = await PostService().getAllPostBoard();
+
     ref.read(allPostBoardListData.notifier).update((state) => allPostBoard);
 
     /// sharedPreference 初期化

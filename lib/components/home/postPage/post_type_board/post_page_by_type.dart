@@ -30,13 +30,11 @@ class PostPageByType extends BaseEndDrawer {
   @override
   Widget build(WidgetRef ref) {
     PostBoard boardData = ref.read(choicedPostBoardProvider);
-    String typeName = ref
-        .read(allPostBoardListData)
-        .firstWhere(
+
+    PostBoard typeData = ref.read(allPostBoardListData).firstWhere(
           (e) => e.id == boardData.type,
-          orElse: () => PostBoard(name: '', id: 0),
-        )
-        .chineseName;
+          orElse: () => PostBoard(),
+        );
     return isInit
         ? Container()
         : Column(
@@ -49,14 +47,18 @@ class PostPageByType extends BaseEndDrawer {
                 ),
                 child: Row(
                   children: [
-                    Container(
+                    SizedBox(
                       width: ScreenSize.fitPxHeight(30),
                       height: ScreenSize.fitPxHeight(30),
-                      color: const Color.fromARGB(96, 175, 170, 170),
+                      child: Icon(
+                        typeData.iconData,
+                        color: AppColors.whiteColor.withOpacity(0.8),
+                        size: ScreenSize.fitPxHeight(25),
+                      ),
                     ),
                     SizedBox(width: ScreenSize.fitPxHeight(10)),
                     Text(
-                      typeName,
+                      typeData.chineseName,
                       style: TextStyle(
                         color: AppColors.whiteColor.withOpacity(0.8),
                         fontSize: ScreenSize.fontSize18,
