@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
+import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 
 import '../../../../provider/post/post_provider.dart';
@@ -47,6 +48,23 @@ class PostPageByType extends BaseEndDrawer {
                 ),
                 child: Row(
                   children: [
+                    MainBtn(
+                      onPress: () {
+                        closePage();
+                      },
+                      child: Container(
+                        width: ScreenSize.fitPxWidth(40),
+                        height: ScreenSize.fitPxWidth(40),
+                        color: Colors.transparent,
+                        child: Center(
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            size: ScreenSize.fontSize14,
+                            color: AppColors.whiteColor,
+                          ),
+                        ),
+                      ),
+                    ),
                     SizedBox(
                       width: ScreenSize.fitPxHeight(30),
                       height: ScreenSize.fitPxHeight(30),

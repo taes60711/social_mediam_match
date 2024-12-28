@@ -77,9 +77,9 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   }
 
   void initFunc() {
-    ref.read(widget.listControllerProvider.notifier).create(widget.size);
-    setState(() {});
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      ref.read(widget.listControllerProvider.notifier).create(widget.size);
+      setState(() {});
       if (widget.initWidget == null) {
         ///実際的init
         await ref.read(widget.listControllerProvider.notifier).init(widget.apiFunc);

@@ -2,6 +2,7 @@
 
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import 'package:social_mediam_match/services/user_service.dart';
@@ -18,35 +19,11 @@ import '../provider/account/user_provider.dart';
 import 'course_service.dart';
 import 'post_service.dart';
 
-class AppLinkService {
-  final appLinks = AppLinks();
-  late BuildContext context;
-  late WidgetRef ref;
+class BaseShareUrlHandle {
+  final BuildContext context;
+  final WidgetRef ref;
 
-  Future<void> init({required BuildContext context, required WidgetRef ref}) async {
-    try {
-      this.context = context;
-      this.ref = ref;
-      Uri? uri = await appLinks.getInitialLink();
-
-      print("AppLinks Init");
-      if (uri != null) {
-        runShareUrl(uri);
-      }
-
-      applinkListen();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void applinkListen() {
-    appLinks.uriLinkStream.listen((event) {
-      runShareUrl(event);
-    });
-  }
-
-  void applinkStop() {}
+  BaseShareUrlHandle({required this.context, required this.ref});
 
   Future<void> runShareUrl(Uri url) async {
     Map<String, String>? mappedData = parseUrl("$url");
@@ -88,7 +65,6 @@ class AppLinkService {
   }
 
   Map<String, String>? parseUrl(String url) {
-    // 更新正則表達式以處理 Scheme 和路徑
     final regex = RegExp(r'universal-link\.directsense\.tw[:\/]+([^\/]+)\/([^\/]+)');
     final match = regex.firstMatch(url);
 
@@ -98,5 +74,73 @@ class AppLinkService {
       return {'type': type!, 'content': id!};
     }
     return null;
+  }
+}
+
+class IOSNativeSchemeUrlService {
+  late BuildContext context;
+  late WidgetRef ref;
+
+  late BaseShareUrlHandle baseShareUrlHandle;
+
+  Future<void> init({required BuildContext context, required WidgetRef ref}) async {
+    baseShareUrlHandle = BaseShareUrlHandle(context: context, ref: ref);
+    const platform = MethodChannel('iosNativeSchemeUrlHandle');
+
+    try {
+      this.context = context;
+      this.ref = ref;
+
+      platform.setMethodCallHandler(_handleMethod);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _handleMethod(MethodCall call) async {
+    if (call.method == "handleUrl") {
+      String url = call.arguments;
+
+      if (url != "") {
+        Uri uri = Uri.parse(url);
+        baseShareUrlHandle.runShareUrl(uri);
+      }
+    }
+  }
+}
+
+class AppLinkService {
+  late BuildContext context;
+  late WidgetRef ref;
+
+  final appLinks = AppLinks();
+  late BaseShareUrlHandle baseShareUrlHandle;
+
+  Future<void> init({required BuildContext context, required WidgetRef ref}) async {
+    baseShareUrlHandle = BaseShareUrlHandle(context: context, ref: ref);
+
+    try {
+      this.context = context;
+      this.ref = ref;
+
+      IOSNativeSchemeUrlService().init(context: context, ref: ref);
+
+      Uri? uri = await appLinks.getInitialLink();
+
+      print("AppLinks Init");
+      if (uri != null) {
+        baseShareUrlHandle.runShareUrl(uri);
+      }
+
+      applinkListen();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void applinkListen() {
+    appLinks.uriLinkStream.listen((event) {
+      baseShareUrlHandle.runShareUrl(event);
+    });
   }
 }

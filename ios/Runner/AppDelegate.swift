@@ -23,10 +23,15 @@ import UserNotifications
 
     // 處理 URL Scheme 跳轉
     override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        // 檢查 URL Scheme 是否匹配 skillstorm
-        if url.scheme == "skillstorm" {
+        // 檢查 URL Scheme 是否匹配 universal-link.directsense.tw
+        if url.scheme == "universal-link.directsense.tw" {
             print("Received SkillStorm URL: \(url.absoluteString)")
-            // 在這裡處理跳轉邏輯，例如進行頁面導航
+       
+            // 發送到 Flutter 端
+            if let flutterViewController = window?.rootViewController as? FlutterViewController {
+                    let channel = FlutterMethodChannel(name: "iosNativeSchemeUrlHandle", binaryMessenger: flutterViewController.binaryMessenger)
+                    channel.invokeMethod("handleUrl", arguments: url.absoluteString)
+                }
             return true
         }
         // 檢查 Google OAuth URL Scheme

@@ -35,7 +35,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>skillstorm</string>
+				<string>universal-link.directsense.tw</string>
 			</array>
 		</dict>
 		<dict>
@@ -46,7 +46,6 @@
 				<string>com.googleusercontent.apps.921286210624-ggc14mr0m9ev2iue5o6ormbfsnq57pvl</string>
 			</array>
 		</dict>
-
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
