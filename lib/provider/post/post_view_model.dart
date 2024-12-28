@@ -9,6 +9,7 @@ import '../../components/home/postPage/post_detail_page.dart';
 import '../../components/home/postPage/post_type_board/post_page_by_type.dart';
 import '../../components/utilities/apiListView/api_list_controller.dart';
 import '../../components/utilities/dialog/confirm_dialog.dart';
+import '../../components/utilities/lodaing_dialog.dart';
 import '../../global.dart';
 import '../../models/notification_model.dart';
 import '../../models/rich_text_format.dart';
@@ -53,6 +54,8 @@ class PostViewModel {
 
     String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
     print("Title $postTitle Board: $postType   Message : $fomattedContent  Type: ${ref.watch(postCreateChoiceBoard).id}");
+
+    LoadingDialog().show();
     int postIndex = await PostService().createPost(userData.uid, postTitle, fomattedContent, ref.watch(postCreateChoiceBoard).id);
     print("Create PostIndex ${postIndex}");
     PostModel post = PostModel(
@@ -75,6 +78,7 @@ class PostViewModel {
       ref.read(typelistControllerProvider.notifier).addDataTofirst(post);
       render();
     }
+    LoadingDialog().close();
   }
 
   ///文章詳細ページ開く

@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 enum BottomBarPath {
   home("主頁", FontAwesomeIcons.home, 0),
-  skillExChange("技能交換", FontAwesomeIcons.handshakeAngle, 1), //FontAwesomeIcons.handshakeAngle,
+  skillExChange("技能交換", FontAwesomeIcons.handshakeAngle, 1),
   course("技術分享", FontAwesomeIcons.bookOpenReader, 2), //FontAwesomeIcons.bookOpenReader
   chatRoom("聊天室", FontAwesomeIcons.solidComments, 3),
   my("我的", FontAwesomeIcons.solidUser, 4);

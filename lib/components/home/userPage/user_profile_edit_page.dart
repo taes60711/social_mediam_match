@@ -15,6 +15,7 @@ import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../utilities/appBar/basic_top_bar.dart';
+import '../../utilities/lodaing_dialog.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/endDrawers/user_skill_choice_page.dart';
 import '../../utilities/inputField/mutl_input.dart';
@@ -93,10 +94,13 @@ class UserProfileEditPage extends BaseBottomSheet {
                   mainSkills: updateData.mainSkills,
                   wantSkills: updateData.wantSkills,
                 );
+
+                LoadingDialog().show();
                 await UserService().updateUserData(updateData.uid, sqlUpdateData);
 
                 ref.read(loginUserData.notifier).update((state) => updateData);
                 render();
+                LoadingDialog().close();
                 closePage();
                 Toast().showCenter(msg: "更新成功");
               }

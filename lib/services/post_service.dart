@@ -24,10 +24,10 @@ class PostService extends ApiClient {
 
       List<IconData> boardIcon = [
         FontAwesomeIcons.commentDots,
-        FontAwesomeIcons.wifi,
+        FontAwesomeIcons.code,
         FontAwesomeIcons.globe,
         FontAwesomeIcons.microchip,
-        FontAwesomeIcons.code,
+        FontAwesomeIcons.headSideVirus
       ];
 
       requestAllPostBoard = requestAllPostBoard.asMap().entries.map((e) {

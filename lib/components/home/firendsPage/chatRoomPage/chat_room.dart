@@ -325,7 +325,23 @@ class ChatRoom extends BaseEndDrawer {
 
             ImageViewPage(imgUrl: imgUrl).show(context);
           },
-          child: ClipRRect(borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(10)), child: Image.network(imgUrl)),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(10)),
+            child: Image.network(
+              imgUrl,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return Container(
+                  width: ScreenSize.width * .7,
+                  height: ScreenSize.fitPxWidth(200),
+                  color: AppColors.black37,
+                  child: const Loading(),
+                );
+              },
+            ),
+          ),
         ),
       );
     }

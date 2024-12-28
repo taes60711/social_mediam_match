@@ -5,8 +5,8 @@ String googleIcon = 'assets/google_w_Logo.png';
 String twitterIcon = 'assets/twitter_w_Logo.png';
 
 class AppColors {
-  static Color whiteColor = Colors.white;
-  static Color redColor = Colors.red;
+  static Color whiteColor = const Color.fromARGB(255, 255, 255, 255);
+  static Color redColor = const Color.fromARGB(255, 244, 67, 54);
   static Color greenColor = const Color.fromARGB(255, 143, 206, 146);
   static Color orangeColor = const Color.fromARGB(255, 247, 147, 100);
   static Color purpleColor = const Color.fromARGB(255, 81, 96, 144);
@@ -28,6 +28,4 @@ class AppColors {
   static Color greyColor130 = const Color.fromARGB(255, 136, 130, 130);
 
   static Color greyColor176 = const Color.fromARGB(255, 177, 176, 176);
-
-  static Color normalblackColor = const Color.fromRGBO(66, 82, 95, 1);
 }

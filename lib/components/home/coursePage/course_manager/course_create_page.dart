@@ -12,6 +12,7 @@ import '../../../../services/course_service.dart';
 import '../../../utilities/common_scaffold.dart';
 import '../../../utilities/appBar/basic_top_bar.dart';
 import '../../../utilities/dialog/confirm_dialog.dart';
+import '../../../utilities/lodaing_dialog.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/custom_expansion_title.dart';
 import '../../../utilities/inputField/base_input.dart';
@@ -81,7 +82,7 @@ class CourseCreatePage extends BaseFadeScalePage {
                   CourseEditingModel courseEditingData = viewModel.editingData;
 
                   List<String> learningSkillList = courseEditingData.courseEditSkillList.map((e) => e.name).toList();
-
+                  LoadingDialog().show();
                   int index = await CourseService().createOrUpdateCourse(
                     createdBy: userData.uid,
                     title: courseEditingData.title,
@@ -94,6 +95,7 @@ class CourseCreatePage extends BaseFadeScalePage {
                     type: courseEditingData.courseChoiceType,
                     isPublic: courseEditingData.isPublic,
                   );
+                  LoadingDialog().close();
                   CourseModel createdCourse = CourseModel(
                     id: index,
                     createdBy: userData.uid,

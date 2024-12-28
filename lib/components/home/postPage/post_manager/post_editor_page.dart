@@ -14,6 +14,7 @@ import '../../../../provider/post/post_view_model.dart';
 import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
 import '../../../utilities/apiListView/api_list_controller.dart';
 import '../../../utilities/dialog/confirm_dialog.dart';
+import '../../../utilities/lodaing_dialog.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/rich_text_editor.dart';
 import '../../../utilities/style/screen_size.dart';
@@ -85,11 +86,13 @@ class PostEditorPage extends BaseFadeScalePage {
             rightWidget: MainBtn(
               onPress: () async {
                 String postTitle = titleController.text;
+
                 String postContent = await quillEditorController.getText();
                 String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
 
                 if (viewModel.postCreateBeforCheck(postTitle: postTitle, postContent: postContent)) {
                   PostModel post = ref.read(choicedPostProvider.notifier).state;
+                  LoadingDialog().show();
                   bool isSucess = await PostService().updatePost(
                     postId: post.id,
                     title: postTitle,
@@ -104,6 +107,7 @@ class PostEditorPage extends BaseFadeScalePage {
                     render();
                     closePage();
                   }
+                  LoadingDialog().close();
                 }
               },
               title: "更新",
