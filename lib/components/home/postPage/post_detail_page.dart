@@ -33,6 +33,8 @@ class PostDetailPage extends BaseEndDrawer {
   @override
   Future<void> initState(WidgetRef ref) async {
     viewModel = PostViewModel(ref: ref, context: context, render: render);
+
+    viewModel.init();
   }
 
   @override

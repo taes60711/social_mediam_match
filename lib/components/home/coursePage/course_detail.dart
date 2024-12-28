@@ -6,6 +6,7 @@ import 'package:social_mediam_match/components/home/coursePage/course_utilites.d
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/services/course_service.dart';
+import 'package:social_mediam_match/services/user_service.dart';
 
 import '../../../enum/date_format_utilities.dart';
 import '../../../models/course_model.dart';
@@ -34,6 +35,14 @@ class CourseDetailPage extends BaseEndDrawer {
   @override
   bool needWaitOpenPage() {
     return true;
+  }
+
+  String notifaicationToken = "";
+
+  @override
+  Future<void> initState(WidgetRef ref) async {
+    notifaicationToken =
+        await UserService().requestUserNotificationTokenByUID(ref.read(choicedCourseProvider).courseCreateduserInfo.uid);
   }
 
   @override
@@ -425,11 +434,15 @@ class CourseDetailPage extends BaseEndDrawer {
           notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
 
           NotificationService().createNotification(notification: notification);
-          FirebaseNotificationService().sendNotification(
-            message: message,
-            sendto: choiceData.courseCreateduserInfo.token ?? "",
-            notifiactionInfo: notification,
-          );
+
+          if (notifaicationToken != "") {
+            FirebaseNotificationService().sendNotification(
+              message: message,
+              sendto: notifaicationToken,
+              notifiactionInfo: notification,
+            );
+          }
+
           render();
         }
       },

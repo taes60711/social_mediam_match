@@ -9,6 +9,7 @@ import 'package:web_socket_channel/io.dart';
 import '../../components/home/firendsPage/chatRoomPage/chat_room.dart';
 import '../../models/friend_model.dart';
 import '../../services/friend_service.dart';
+import '../../services/user_service.dart';
 
 class ChatRoomWSModel {
   static ChatRoomWSModel? _instance;
@@ -26,13 +27,15 @@ class ChatRoomWSModel {
   int pageNum = 0;
   int insendMsgCount = 0;
 
+  String notificationToken = "";
+
   late IOWebSocketChannel _chatroomListChannel;
   Stream<dynamic>? _broadcastStream;
 
-  Future<void> init(WidgetRef ref, Function render, {required String userId, required int roomId}) async {
+  Future<void> init(WidgetRef ref, Function render, {required String userId, required FriendListModel roomData}) async {
     this.ref = ref;
     this.render = render;
-    enterRoomID = roomId;
+    enterRoomID = roomData.roomId;
     ref.read(loginUserInChatRoomId.notifier).update((state) => enterRoomID);
     _chatroomListChannel = IOWebSocketChannel.connect(channelRoomUrl);
     print("chatRoom connect");
@@ -42,12 +45,14 @@ class ChatRoomWSModel {
       "method": "connect",
       "ip": "$ip:$port",
       "userid": userId,
-      "roomid": roomId,
+      "roomid": roomData.roomId,
       "pageNumber": pageNum,
     };
 
     _chatroomListChannel.sink.add(jsonEncode(map));
     stream();
+
+    notificationToken = await UserService().requestUserNotificationTokenByUID(roomData.userData.uid);
   }
 
   Stream<dynamic>? stream() {

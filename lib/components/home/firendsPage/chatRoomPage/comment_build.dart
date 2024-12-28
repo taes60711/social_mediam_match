@@ -191,11 +191,13 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
     notification.type = 3;
     notification.roomId = widget.chatRoomWSModel.enterRoomID;
 
-    FirebaseNotificationService().sendNotification(
-      title: ref.read(loginUserData.notifier).state.name ?? "",
-      message: message,
-      sendto: widget.roomData.userData.token ?? "",
-      notifiactionInfo: notification,
-    );
+    if (widget.chatRoomWSModel.notificationToken != "") {
+      FirebaseNotificationService().sendNotification(
+        title: ref.read(loginUserData.notifier).state.name ?? "",
+        message: message,
+        sendto: widget.chatRoomWSModel.notificationToken,
+        notifiactionInfo: notification,
+      );
+    }
   }
 }

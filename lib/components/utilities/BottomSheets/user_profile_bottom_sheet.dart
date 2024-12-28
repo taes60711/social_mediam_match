@@ -9,6 +9,7 @@ import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
 
 import 'package:social_mediam_match/services/friend_service.dart';
 import 'package:social_mediam_match/services/notification_service.dart';
+import 'package:social_mediam_match/services/user_service.dart';
 
 import '../../../models/friend_model.dart';
 import '../../../models/notification_model.dart';
@@ -32,12 +33,14 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
   bool needToChatRoomBtn;
   UserProfileAllInfoBottomSheet({required this.userData, this.needToChatRoomBtn = true});
 
+  String notifaicationToken = "";
+
   @override
   Future<void> initState(WidgetRef ref) async {
     ProfileData myUserData = ref.watch(loginUserData);
     if (myUserData.uid != userData.uid) {
       bool isFriend = await FriendService().getIsFrined(userUID: myUserData.uid, ohterUserUID: userData.uid);
-
+      notifaicationToken = await UserService().requestUserNotificationTokenByUID(userData.uid);
       ref.read(isFriendProvider.notifier).update((state) => isFriend);
       render();
     }
@@ -132,11 +135,15 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                           notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
 
                           NotificationService().createNotification(notification: notification);
-                          FirebaseNotificationService().sendNotification(
-                            message: message,
-                            sendto: userData.token ?? "",
-                            notifiactionInfo: notification,
-                          );
+
+                          if (notifaicationToken != "") {
+                            FirebaseNotificationService().sendNotification(
+                              message: message,
+                              sendto: notifaicationToken,
+                              notifiactionInfo: notification,
+                            );
+                          }
+
                           Toast().showBottom(msg: "添加成功");
                           render();
                         } else {

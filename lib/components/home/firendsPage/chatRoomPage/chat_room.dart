@@ -41,7 +41,7 @@ class ChatRoom extends BaseEndDrawer {
   @override
   Future<void> initState(WidgetRef ref) async {
     ProfileData myUserData = ref.watch(loginUserData);
-    chatRoomWSModel.init(ref, () => render(), userId: myUserData.uid, roomId: roomData.roomId);
+    chatRoomWSModel.init(ref, () => render(), userId: myUserData.uid, roomData: roomData);
     HomeGlobalViewModel().bottomBarHideStateChage(false);
   }
 

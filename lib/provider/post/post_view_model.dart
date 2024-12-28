@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:social_mediam_match/models/post_model.dart';
 import 'package:social_mediam_match/services/notification_service.dart';
+import 'package:social_mediam_match/services/user_service.dart';
 import '../../components/home/postPage/post_detail_page.dart';
 import '../../components/home/postPage/post_type_board/post_page_by_type.dart';
 import '../../components/utilities/apiListView/api_list_controller.dart';
@@ -24,6 +25,13 @@ class PostViewModel {
   final Function render;
   final BuildContext context;
   PostViewModel({required this.ref, required this.context, required this.render});
+
+  String notificationToken = "";
+
+  Future<void> init() async {
+    PostModel choiceData = ref.watch(choicedPostProvider);
+    notificationToken = await UserService().requestUserNotificationTokenByUID(choiceData.postUserInfo.uid);
+  }
 
   ///文章作る前チェック
   bool postCreateBeforCheck({required String postTitle, required String postContent}) {
@@ -139,7 +147,7 @@ class PostViewModel {
       NotificationService().createNotification(notification: notification);
       FirebaseNotificationService().sendNotification(
         message: message,
-        sendto: choiceData.postUserInfo.token ?? "",
+        sendto: notificationToken,
         notifiactionInfo: notification,
       );
     }

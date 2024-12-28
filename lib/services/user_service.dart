@@ -110,6 +110,21 @@ class UserService extends ApiClient {
     return userdata;
   }
 
+  ///MARK: ユーザの通知Token取得 ByUID
+  Future<String> requestUserNotificationTokenByUID(String userUID) async {
+    String userToken = "";
+    try {
+      String responseData = await apiGet('/getUserNotificationToken/$userUID');
+
+      print("userNotificationToken: $responseData");
+      userToken = responseData;
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return userToken;
+  }
+
   ///MARK: ユーザのデータ取得 By メール
   ///loginType = normalSign , googleSign
   Future<ProfileData> requestUserDataByEmail(String email, String password, {String loginType = "normalSign"}) async {
