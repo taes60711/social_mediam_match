@@ -32,7 +32,6 @@ class UserProfileSharePage extends BaseDialog {
   Widget build(WidgetRef ref) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: ScreenSize.fitPxWidth(25),
         vertical: ScreenSize.fitPxHeight(15),
       ),
       margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(30)),
@@ -42,10 +41,41 @@ class UserProfileSharePage extends BaseDialog {
       ),
       child: Column(
         children: [
-          Text(
-            "分享",
-            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize22),
+          /// Title
+          Row(
+            children: [
+              const Expanded(child: SizedBox(width: 1)),
+              Expanded(
+                child: Text(
+                  "分享",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize22),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  child: MainBtn(
+                    onPress: () {
+                      closePage();
+                    },
+                    child: Container(
+                      width: ScreenSize.fitPxWidth(40),
+                      height: ScreenSize.fitPxWidth(40),
+                      color: Colors.transparent,
+                      child: Icon(
+                        Icons.close,
+                        color: AppColors.whiteColor,
+                        size: ScreenSize.fontSize22,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
+
+          /// QrCode
           Padding(
             padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(30)),
             child: Screenshot(
@@ -57,36 +87,47 @@ class UserProfileSharePage extends BaseDialog {
               ),
             ),
           ),
-          MainBtn(
-            isFullWidth: true,
-            padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(10)),
-            backgroundColor: AppColors.orangeColor,
-            onPress: () async {
-              Clipboard.setData(ClipboardData(text: shareUrl));
-              Toast().showBottom(msg: "已複製");
-            },
-            title: "複製連結",
-          ),
-          SizedBox(
-            height: ScreenSize.fitPxWidth(10),
-          ),
-          MainBtn(
-            isFullWidth: true,
-            padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(10)),
-            backgroundColor: AppColors.greyColor130,
-            onPress: () async {
-              await screenshotController.capture().then((Uint8List? image) async {
-                if (image != null) {
-                  final directory = await getApplicationDocumentsDirectory();
-                  final imagePath = await File('${directory.path}/image.png').create();
-                  await imagePath.writeAsBytes(image);
-                  LoadingDialog().show();
-                  await Share.shareFiles([imagePath.path]);
-                  LoadingDialog().close();
-                }
-              });
-            },
-            title: "QrCode 分享",
+
+          /// Btn
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: ScreenSize.fitPxWidth(25),
+            ),
+            child: Column(
+              children: [
+                MainBtn(
+                  isFullWidth: true,
+                  padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(10)),
+                  backgroundColor: AppColors.orangeColor,
+                  onPress: () async {
+                    Clipboard.setData(ClipboardData(text: shareUrl));
+                    Toast().showBottom(msg: "已複製");
+                  },
+                  title: "複製連結",
+                ),
+                SizedBox(
+                  height: ScreenSize.fitPxWidth(10),
+                ),
+                MainBtn(
+                  isFullWidth: true,
+                  padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(10)),
+                  backgroundColor: AppColors.greyColor130,
+                  onPress: () async {
+                    await screenshotController.capture().then((Uint8List? image) async {
+                      if (image != null) {
+                        final directory = await getApplicationDocumentsDirectory();
+                        final imagePath = await File('${directory.path}/image.png').create();
+                        await imagePath.writeAsBytes(image);
+                        LoadingDialog().show();
+                        await Share.shareFiles([imagePath.path]);
+                        LoadingDialog().close();
+                      }
+                    });
+                  },
+                  title: "QrCode 分享",
+                ),
+              ],
+            ),
           ),
         ],
       ),

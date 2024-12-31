@@ -11,6 +11,7 @@ import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
+import 'package:social_mediam_match/components/utilities/toast.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/enum/date_format_utilities.dart';
 import 'package:social_mediam_match/global/home_global_view_model.dart';
@@ -229,6 +230,7 @@ class ChatRoom extends BaseEndDrawer {
         child: GestureDetector(
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(text: msg));
+            Toast().showBottom(msg: "已複製文字");
           },
           child: SelectableText.rich(
             textAlign: TextAlign.left,
@@ -259,6 +261,7 @@ class ChatRoom extends BaseEndDrawer {
               child: GestureDetector(
                 onDoubleTap: () {
                   Clipboard.setData(ClipboardData(text: msg));
+                  Toast().showBottom(msg: "已複製文字");
                 },
                 child: SelectableText.rich(
                   TextSpan(
