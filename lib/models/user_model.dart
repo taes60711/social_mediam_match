@@ -5,7 +5,6 @@ import 'package:social_mediam_match/models/skill_model.dart';
 class UserModel {
   String uid;
   String? image;
-  String? token;
   String? name;
   String? job;
   String? introduction;
@@ -14,7 +13,6 @@ class UserModel {
   UserModel({
     required this.uid,
     this.image,
-    this.token,
     this.name = "",
     this.job,
     this.introduction,
@@ -45,7 +43,6 @@ class ProfileData extends UserModel {
   }) : super(
           uid: uid,
           image: image,
-          token: token,
           name: name,
           job: job,
           introduction: introduction,
@@ -57,7 +54,6 @@ class ProfileData extends UserModel {
     return {
       "uid": uid,
       "image": image,
-      "token": token,
       "name": name,
       "job": job,
       "introduction": introduction,
@@ -74,7 +70,6 @@ class ProfileData extends UserModel {
     return ProfileData(
       uid: data?.uid ?? uid,
       image: data?.image ?? image,
-      token: data?.token ?? token,
       name: data?.name ?? name,
       job: data?.job ?? job,
       introduction: data?.introduction ?? introduction,
