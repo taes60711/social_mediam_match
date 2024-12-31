@@ -26,7 +26,7 @@ class Toast {
 
   void showCenter({String msg = "please insert msg", int duration = 2}) {
     if (_isToastShowing) {
-      close();
+      return;
     }
 
     _overlayEntry = OverlayEntry(
@@ -65,7 +65,7 @@ class Toast {
 
   void showBottom({String msg = "please insert msg", int duration = 2}) {
     if (_isToastShowing) {
-      close();
+      return;
     }
 
     _overlayEntry = OverlayEntry(

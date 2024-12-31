@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/image_view_page.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
@@ -140,9 +141,23 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
               component = Image.network(
                 resultString,
                 width: ScreenSize.width,
-                height: 120,
+                height: ScreenSize.fitPxWidth(120),
                 fit: BoxFit.cover,
                 gaplessPlayback: true,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  }
+                  return Shimmer.fromColors(
+                    baseColor: AppColors.greyColor98,
+                    highlightColor: AppColors.greyColor98.withOpacity(.7),
+                    child: Container(
+                      width: ScreenSize.width,
+                      height: ScreenSize.fitPxWidth(120),
+                      decoration: BoxDecoration(color: AppColors.greyColor98),
+                    ),
+                  );
+                },
               );
             } else {
               component = HtmlWidget(
