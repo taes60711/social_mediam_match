@@ -7,12 +7,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/image_view_page.dart';
+import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../models/rich_text_format.dart';
+import 'FadeScalePage/video_view_page.dart';
 
 class RichTextView extends StatefulWidget {
   final String content;
@@ -92,9 +94,6 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                       controller: ytController[index],
                       onReady: () => {},
                       bottomActions: [
-                        CurrentPosition(),
-                        ProgressBar(isExpanded: true),
-                        RemainingDuration(),
                         PlaybackSpeedButton(
                           icon: Icon(
                             FontAwesomeIcons.gear,
@@ -102,6 +101,8 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                             color: AppColors.whiteColor,
                           ),
                         ),
+                        ProgressBar(isExpanded: true),
+                        RemainingDuration(),
                         GestureDetector(
                           onTap: () {
                             final Uri _url = Uri.parse("https://www.youtube.com/watch?v=$ytId");
@@ -115,7 +116,16 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                               color: AppColors.whiteColor,
                             ),
                           ),
-                        )
+                        ),
+                        MainBtn(
+                          onPress: () {
+                            VideoViewPage(ytId: ytId).show(context);
+                          },
+                          child: Icon(
+                            Icons.fullscreen,
+                            color: AppColors.whiteColor,
+                          ),
+                        ),
                       ],
                     ),
                   );

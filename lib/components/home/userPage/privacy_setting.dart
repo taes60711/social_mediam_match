@@ -87,7 +87,7 @@ class PrivacySettingPage extends BaseEndDrawer {
         //     );
         //   },
         //   title: "send Post Good Notification",
-        // // ),
+        // ),
         // SizedBox(height: ScreenSize.fitPxWidth(20)),
         // MainBtn(
         //   onPress: () {

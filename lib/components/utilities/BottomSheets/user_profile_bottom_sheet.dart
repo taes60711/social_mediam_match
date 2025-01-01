@@ -285,35 +285,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
 
                 ///弱いスキル
                 SkillUtilites().skillBar(skills: userData.wantSkills!),
-                SizedBox(height: ScreenSize.fitPxHeight(15)),
 
-                Row(
-                  children: [
-                    Text(
-                      "信箱認證",
-                      style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: ScreenSize.fontSize14,
-                      ),
-                    ),
-                    SizedBox(width: ScreenSize.fitPxWidth(10)),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            ScreenSize.fitPxWidth(5),
-                          ),
-                          color: userData.isEmailVerified ? Color.fromARGB(255, 68, 197, 72) : AppColors.greyColor98),
-                      child: Text(
-                        userData.isEmailVerified ? "已認證" : "未認證",
-                        style: TextStyle(
-                          color: AppColors.whiteColor,
-                          fontSize: ScreenSize.fontSize14,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 SizedBox(height: ScreenSize.fitPxHeight(5)),
               ],
             ),
@@ -457,33 +429,6 @@ class UserProfileBottomSheet extends BaseBottomSheet {
                     color: AppColors.whiteColor,
                     fontSize: ScreenSize.fontSize12,
                   ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "信箱認證",
-                      style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: ScreenSize.fontSize14,
-                      ),
-                    ),
-                    SizedBox(width: ScreenSize.fitPxWidth(10)),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            ScreenSize.fitPxWidth(5),
-                          ),
-                          color: userData.isEmailVerified ? Color.fromARGB(255, 68, 197, 72) : AppColors.greyColor98),
-                      child: Text(
-                        userData.isEmailVerified ? "已認證" : "未認證",
-                        style: TextStyle(
-                          color: AppColors.whiteColor,
-                          fontSize: ScreenSize.fontSize14,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
                 SizedBox(height: ScreenSize.fitPxHeight(5)),
               ],
