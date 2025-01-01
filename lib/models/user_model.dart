@@ -30,7 +30,6 @@ class ProfileData extends UserModel {
   ProfileData({
     String uid = "-1",
     String? image,
-    String? token,
     String? name,
     String? job,
     String? introduction,
@@ -96,7 +95,6 @@ class ProfileData extends UserModel {
     return ProfileData(
       uid: json["uid"],
       image: json["image"],
-      token: json["token"],
       email: json["email"],
       name: json["name"],
       job: json["job"],

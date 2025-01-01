@@ -73,7 +73,6 @@ class UserProfileEditPage extends BaseBottomSheet {
                   data: ProfileData(
                     uid: updateData.uid,
                     email: updateData.email,
-                    token: updateData.token,
                     image: viewModel.editImg,
                     name: viewModel.nameController.text,
                     mainSkills: List.from(viewModel.mainSkillList),
