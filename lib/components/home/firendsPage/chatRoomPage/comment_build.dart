@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
+import 'package:social_mediam_match/components/utilities/lodaing_dialog.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../models/friend_model.dart';
@@ -15,6 +19,7 @@ import '../../../../provider/account/user_provider.dart';
 import '../../../../provider/friend/chat_room_ws_model.dart';
 import '../../../../services/firebase_notification_service.dart';
 import '../../../../services/image_service.dart';
+import '../../../utilities/FadeScalePage/chat_room_image_send_check.dart';
 import '../../../utilities/inputField/base_input.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/style/screen_size.dart';
@@ -143,26 +148,37 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
     String result = "";
     String imgPickerResult = "";
 
+    Completer<String> completer = Completer();
     if (image != null) {
       File imgPath = File(image.path);
-      String base64String = base64Encode(imgPath.readAsBytesSync());
-      imgPickerResult = base64String;
+
+      ChatRoomImageSendCheck(
+          imgFile: imgPath,
+          onPress: () async {
+            String base64String = base64Encode(imgPath.readAsBytesSync());
+            imgPickerResult = base64String;
+
+            if (imgPickerResult != "") {
+              LoadingDialog().show();
+              String uid = const Uuid().v1();
+              if (await ImageService().imageIsExist(imgPickerResult) != "-1") {
+                uid = await ImageService().imageIsExist(imgPickerResult);
+              } else {
+                await ImageService().saveImg(uid, imgPickerResult);
+              }
+              String sendImgString = "http://\$ip:\$port/images/$uid";
+              result = sendImgString;
+              print("sendImgString $sendImgString");
+              LoadingDialog().close();
+              completer.complete(result);
+            } else {
+              print("no Image");
+              completer.complete("");
+            }
+          }).show(context);
     }
 
-    if (imgPickerResult != "") {
-      String uid = const Uuid().v1();
-      if (await ImageService().imageIsExist(imgPickerResult) != "-1") {
-        uid = await ImageService().imageIsExist(imgPickerResult);
-      } else {
-        await ImageService().saveImg(uid, imgPickerResult);
-      }
-      String sendImgString = "http://\$ip:\$port/images/$uid";
-      result = sendImgString;
-      print("sendImgString $sendImgString");
-    } else {
-      print("no Image");
-    }
-    return result;
+    return completer.future;
   }
 
   void sendMsg(ChatRoomWSModel chatRoomWSModel, {required String userId, required String message}) {
