@@ -105,10 +105,10 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
                       child: BaseInputField(
                         hintText: "輸入訊息",
                         controller: commentController,
+                        textInputAction: TextInputAction.newline,
                         autoFocus: true,
-                        onFieldSubmitted: (value) {
-                          sendMsg(widget.chatRoomWSModel, userId: userData.uid, message: commentController.text);
-                        },
+                        maxLines: 50,
+                        minLines: 1,
                       ),
                     ),
                     GestureDetector(
@@ -144,7 +144,9 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
 
   Future<String> imageChoice() async {
     final ImagePicker picker = ImagePicker();
+    LoadingDialog().show();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    LoadingDialog().close();
     String result = "";
     String imgPickerResult = "";
 
