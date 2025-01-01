@@ -17,6 +17,18 @@ class ChatRoomModel {
       chatRoomMsg: (json["Message"] as List<dynamic>).map((e) => ChatRoomMsg.toModel(e)).toList(),
     );
   }
+
+  ChatRoomModel copyWith({
+    int? pageCount,
+    List<String>? members,
+    List<ChatRoomMsg>? chatRoomMsg,
+  }) {
+    return ChatRoomModel(
+      pageCount: pageCount ?? this.pageCount,
+      members: members ?? this.members,
+      chatRoomMsg: chatRoomMsg ?? this.chatRoomMsg,
+    );
+  }
 }
 
 class ChatRoomMsg {

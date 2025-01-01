@@ -1,10 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:social_mediam_match/components/home/firendsPage/chatRoomPage/chat_room_manager_btm_sheet.dart';
-
 import 'package:social_mediam_match/components/utilities/FadeScalePage/image_view_page.dart';
 import 'package:social_mediam_match/components/utilities/appBar/chat_room_bar.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
@@ -78,7 +78,9 @@ class ChatRoom extends BaseEndDrawer {
                           render();
                         }
                       }
-                    } else if (scrollNotification is ScrollEndNotification) {
+                    }
+
+                    if (scrollNotification is ScrollEndNotification) {
                       if (addData) {
                         ProfileData userData = ref.watch(loginUserData);
                         chatRoomWSModel.loadRoomData(loginUserUID: userData.uid);
@@ -330,12 +332,9 @@ class ChatRoom extends BaseEndDrawer {
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(10)),
-            child: Image.network(
-              imgUrl,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) {
-                  return child;
-                }
+            child: CachedNetworkImage(
+              imageUrl: imgUrl,
+              placeholder: (context, url) {
                 return Container(
                   width: ScreenSize.width * .7,
                   height: ScreenSize.fitPxWidth(200),

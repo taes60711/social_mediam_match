@@ -75,14 +75,13 @@ class ChatRoomWSModel {
           render();
         case "load":
           String searchUrl = requestMapData['apiUrl'];
+
           ChatRoomModel chatRoomModel = await FriendService().getChatRoomMsg(searchUrl);
 
-          List<ChatRoomMsg> chatRoomMesaage = ref.read(roomMessageProvider.notifier).state.chatRoomMsg;
-
-          chatRoomMesaage = [...chatRoomMesaage, ...chatRoomModel.chatRoomMsg];
-          chatRoomModel.chatRoomMsg = chatRoomMesaage;
-
-          ref.read(roomMessageProvider.notifier).update((state) => chatRoomModel);
+          ref.read(roomMessageProvider.notifier).update((state) {
+            final updatedMessages = [...state.chatRoomMsg, ...chatRoomModel.chatRoomMsg];
+            return state.copyWith(chatRoomMsg: updatedMessages);
+          });
 
           render();
         case "sendMessage":

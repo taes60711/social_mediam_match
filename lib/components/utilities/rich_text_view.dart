@@ -1,5 +1,6 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -138,16 +139,12 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
 
             Widget component;
             if (haveImage) {
-              component = Image.network(
-                resultString,
+              component = CachedNetworkImage(
+                imageUrl: resultString,
                 width: ScreenSize.width,
                 height: ScreenSize.fitPxWidth(120),
                 fit: BoxFit.cover,
-                gaplessPlayback: true,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  }
+                placeholder: (context, url) {
                   return Shimmer.fromColors(
                     baseColor: AppColors.greyColor98,
                     highlightColor: AppColors.greyColor98.withOpacity(.7),

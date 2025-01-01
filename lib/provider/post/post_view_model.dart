@@ -167,6 +167,9 @@ class PostViewModel {
     required int dataIndex,
     required StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController,
   }) async {
+    if (message.replaceAll(" ", "") == "") {
+      return;
+    }
     PostModel choiceData = ref.read(choicedPostProvider);
     ProfileData userData = ref.watch(loginUserData);
     int uid = await PostService().createPostComment(postUID: choiceData.id, userUID: userData.uid, message: message);
