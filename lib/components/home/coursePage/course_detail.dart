@@ -356,7 +356,7 @@ class CourseDetailPage extends BaseEndDrawer {
                                             padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(5)),
                                             child: Column(
                                               children: [
-                                                SizedBox(height: ScreenSize.fitPxWidth(10)),
+                                                SizedBox(height: ScreenSize.fitPxWidth(5)),
                                                 RichTextView(content: content),
                                                 SizedBox(height: ScreenSize.fitPxWidth(10)),
                                               ],

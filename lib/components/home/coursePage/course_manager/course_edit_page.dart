@@ -260,7 +260,7 @@ class CourseEditPage extends BaseFadeScalePage {
                             ],
                           ),
                           children: [
-                            SizedBox(height: ScreenSize.fitPxHeight(10)),
+                            SizedBox(height: ScreenSize.fitPxHeight(5)),
                             RichTextView(content: value.content[0]),
                             SizedBox(height: ScreenSize.fitPxHeight(10)),
                           ],
