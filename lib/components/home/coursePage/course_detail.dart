@@ -313,12 +313,26 @@ class CourseDetailPage extends BaseEndDrawer {
                                 CourseChapterInfo chapterInfo = e.value;
                                 return CustomExpansionTile(
                                   initiallyExpanded: true,
-                                  title: Text(
-                                    chapterInfo.chapterName == "" ? "chapter${index + 1}" : chapterInfo.chapterName,
-                                    style: TextStyle(
-                                      color: AppColors.whiteColor,
-                                      fontSize: ScreenSize.fontSize16,
-                                    ),
+                                  title: Row(
+                                    children: [
+                                      Icon(
+                                        FontAwesomeIcons.book,
+                                        color: Colors.white,
+                                        size: ScreenSize.fontSize14,
+                                      ),
+                                      SizedBox(width: ScreenSize.fitPxWidth(5)),
+                                      Expanded(
+                                        child: Text(
+                                          chapterInfo.chapterName == "" ? "chapter${index + 1}" : chapterInfo.chapterName,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: AppColors.whiteColor,
+                                            fontSize: ScreenSize.fontSize16,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   collapsedTrailingWidget: Icon(
                                     Icons.keyboard_arrow_up,
@@ -339,8 +353,14 @@ class CourseDetailPage extends BaseEndDrawer {
                                           String content = e;
 
                                           return Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 5),
-                                            child: RichTextView(content: content),
+                                            padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(5)),
+                                            child: Column(
+                                              children: [
+                                                SizedBox(height: ScreenSize.fitPxWidth(10)),
+                                                RichTextView(content: content),
+                                                SizedBox(height: ScreenSize.fitPxWidth(10)),
+                                              ],
+                                            ),
                                           );
                                         }).toList(),
                                       ),

@@ -179,6 +179,12 @@ class CourseCreatePage extends BaseFadeScalePage {
                           isNeedLoadingWidget: false,
                           title: Row(
                             children: [
+                              Icon(
+                                FontAwesomeIcons.book,
+                                color: Colors.white,
+                                size: ScreenSize.fontSize14,
+                              ),
+                              SizedBox(width: ScreenSize.fitPxWidth(5)),
                               Expanded(
                                 child: Text(
                                   value.chapterName == "" ? "chapter ${value.chapter}" : value.chapterName,
@@ -236,7 +242,7 @@ class CourseCreatePage extends BaseFadeScalePage {
                                       },
                                       child: Icon(
                                         FontAwesomeIcons.arrowTurnDown,
-                                        size: ScreenSize.fontSize20,
+                                        size: ScreenSize.fontSize16,
                                         color: AppColors.orangeColor,
                                       ),
                                     ),
@@ -246,7 +252,9 @@ class CourseCreatePage extends BaseFadeScalePage {
                             ],
                           ),
                           children: [
+                            SizedBox(height: ScreenSize.fitPxWidth(10)),
                             RichTextView(content: value.content[0]),
+                            SizedBox(height: ScreenSize.fitPxWidth(10)),
                           ],
                         );
                       }).toList(),

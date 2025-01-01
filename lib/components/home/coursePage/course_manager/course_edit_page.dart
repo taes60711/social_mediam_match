@@ -187,6 +187,12 @@ class CourseEditPage extends BaseFadeScalePage {
                           isNeedLoadingWidget: false,
                           title: Row(
                             children: [
+                              Icon(
+                                FontAwesomeIcons.book,
+                                color: Colors.white,
+                                size: ScreenSize.fontSize14,
+                              ),
+                              SizedBox(width: ScreenSize.fitPxWidth(5)),
                               Expanded(
                                 child: Text(
                                   value.chapterName == "" ? "chapter ${value.chapter}" : value.chapterName,
@@ -238,15 +244,13 @@ class CourseEditPage extends BaseFadeScalePage {
                                           var temp = chapterList[index];
                                           chapterList[index] = chapterList[index + 1];
                                           chapterList[index + 1] = temp;
-
                                           ref.read(courseEditChapterList.notifier).update((state) => chapterList);
-
                                           render();
                                         }
                                       },
                                       child: Icon(
-                                        Icons.keyboard_arrow_down,
-                                        size: ScreenSize.fontSize20,
+                                        FontAwesomeIcons.arrowTurnDown,
+                                        size: ScreenSize.fontSize16,
                                         color: AppColors.orangeColor,
                                       ),
                                     ),
@@ -256,7 +260,9 @@ class CourseEditPage extends BaseFadeScalePage {
                             ],
                           ),
                           children: [
+                            SizedBox(height: ScreenSize.fitPxHeight(10)),
                             RichTextView(content: value.content[0]),
+                            SizedBox(height: ScreenSize.fitPxHeight(10)),
                           ],
                         );
                       }).toList(),
