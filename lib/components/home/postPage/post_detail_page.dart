@@ -119,6 +119,10 @@ class PostDetailPage extends BaseEndDrawer {
                         ///いいね数
                         GestureDetector(
                           onTap: () {
+                            ProfileData userData = ref.read(loginUserData);
+                            if (choiceData.postUserInfo.uid == userData.uid) {
+                              return;
+                            }
                             viewModel.lookingPostGoodOnChange(
                               ref.read(choicedPostIsGoodProvider.notifier).state,
                               dataIndex: dataIndex,
@@ -197,7 +201,7 @@ class PostDetailPage extends BaseEndDrawer {
                           },
                           child: PostViewUtilities().iconWithText(
                             iconData: FontAwesomeIcons.arrowUpRightFromSquare,
-                            iconColor: Color.fromARGB(221, 180, 179, 179),
+                            iconColor: const Color.fromARGB(221, 180, 179, 179),
                             text: "分享",
                             style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor),
                           ),

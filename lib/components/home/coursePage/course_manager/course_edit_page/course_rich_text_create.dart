@@ -6,10 +6,12 @@ import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade_scale_page.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/lodaing_dialog.dart';
 
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import '../../../../../models/course_model.dart';
+import '../../../../../models/rich_text_format.dart';
 import '../../../../../provider/course/corse_edit_view_model.dart';
 
 import '../../../../utilities/dialog/confirm_dialog.dart';
@@ -60,24 +62,29 @@ class CourseRichTextCreate extends BaseFadeScalePage {
               rightWidget: MainBtn(
                 title: "保存",
                 onPress: () async {
+                  LoadingDialog().show();
                   String richTextContent = await courserController.getText();
 
                   if (sendBeforeCheck(richTextContent)) {
                     if (ediType == CreateEdiType.chapter) {
                       String title = titleController.text;
                       print("titleController: $title  richTextContent $richTextContent");
+                      String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
                       List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
                       CourseChapterInfo createChapter =
-                          CourseChapterInfo(chapter: chapterList.length + 1, chapterName: title, content: [richTextContent]);
+                          CourseChapterInfo(chapter: chapterList.length + 1, chapterName: title, content: [fomattedContent]);
 
                       chapterList.add(createChapter);
                       ref.read(courseEditChapterList.notifier).update((state) => chapterList);
                     } else {
                       print("richTextContent $richTextContent");
-                      ref.read(courseDetailContent.notifier).update((state) => richTextContent);
+                      String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
+
+                      ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
                     }
                     courseEditPageRender();
                     closePage();
+                    LoadingDialog().close();
                   }
                 },
               ),
