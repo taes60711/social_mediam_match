@@ -10,7 +10,6 @@ import '../../../../models/friend_model.dart';
 import '../../../../models/user_model.dart';
 import '../../../../services/friend_service.dart';
 import '../../../utilities/BottomSheets/base_bottom_sheet.dart';
-import '../../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../../utilities/dialog/await_confirm_dialog.dart';
 import '../firends_page.dart';
 
@@ -21,7 +20,7 @@ class ChatRoomManagerBtmSheet extends BaseBottomSheet {
 
   @override
   double buildHeight() {
-    return 0.3;
+    return 0.15;
   }
 
   @override
@@ -29,14 +28,6 @@ class ChatRoomManagerBtmSheet extends BaseBottomSheet {
     return Column(
       children: [
         SizedBox(height: ScreenSize.fitPxWidth(10)),
-        managerPageMainBtn(
-            iconData: FontAwesomeIcons.userLarge,
-            text: "詳細資訊",
-            onPress: () async {
-              ///ユーザー詳細ページに遷移
-              UserProfileAllInfoBottomSheet(needToChatRoomBtn: false, userData: friendData).show(context);
-            }),
-        SizedBox(height: ScreenSize.fitPxWidth(15)),
         managerPageMainBtn(
             iconData: FontAwesomeIcons.trash,
             text: "刪除好友",

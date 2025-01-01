@@ -81,25 +81,35 @@ class SkillUtilites {
                     children: [
                       Row(
                         children: [
-                          Text(
-                            data.name ?? "",
-                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                          Expanded(
+                            child: Text(
+                              data.name ?? "",
+                              maxLines: 2,
+                              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                            ),
                           ),
-                          SizedBox(width: ScreenSize.fitPxWidth(5)),
-                          Visibility(
-                            visible: data.job != null,
-                            child: Icon(
+                          Text(
+                            DateFormatUtilities().noYYYYMMDDformat(data.lastLogin),
+                            style: TextStyle(color: AppColors.greyColor176, fontSize: ScreenSize.fontSize10),
+                          ),
+                        ],
+                      ),
+                      Visibility(
+                        visible: data.job != null,
+                        child: Row(
+                          children: [
+                            Icon(
                               FontAwesomeIcons.briefcase,
                               color: AppColors.greyColor130,
                               size: ScreenSize.fontSize12,
                             ),
-                          ),
-                          SizedBox(width: ScreenSize.fitPxWidth(2)),
-                          Text(
-                            data.job ?? "",
-                            style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                          ),
-                        ],
+                            SizedBox(width: ScreenSize.fitPxWidth(2)),
+                            Text(
+                              data.job ?? "",
+                              style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                            ),
+                          ],
+                        ),
                       ),
                       Text(
                         data.introduction ?? "",
@@ -109,10 +119,6 @@ class SkillUtilites {
                       ),
                     ],
                   ),
-                ),
-                Text(
-                  DateFormatUtilities().noYYYYMMDDformat(data.lastLogin),
-                  style: TextStyle(color: AppColors.greyColor176, fontSize: ScreenSize.fontSize10),
                 ),
               ],
             ),

@@ -27,8 +27,8 @@ class UserSkillChoicePage extends BaseEndDrawer {
 
   Map<SkillType, List<RequestUserSkillData>> mapedSkillList = {
     SkillType.frontend: [],
-    SkillType.iot: [],
     SkillType.backend: [],
+    SkillType.iot: [],
     SkillType.other: [],
   };
 

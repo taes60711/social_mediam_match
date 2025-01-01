@@ -86,6 +86,37 @@ class CourseDetailPage extends BaseEndDrawer {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  /// ユーザデータ
+                  MainBtn(
+                    onPress: () {
+                      ///ユーザー詳細ページに遷移
+                      UserProfileAllInfoBottomSheet(userData: choiceData.courseCreateduserInfo).show(context);
+                    },
+                    child: Row(
+                      children: [
+                        UserIcon(
+                          iconSize: ScreenSize.fitPxWidth(30),
+                          image: choiceData.courseCreateduserInfo.image,
+                        ),
+                        SizedBox(width: ScreenSize.fitPxWidth(5)),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              choiceData.courseCreateduserInfo.name ?? "",
+                              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                            ),
+                            Text(
+                              "最終更新日 : ${DateFormatUtilities().format(choiceData.postTime)}",
+                              style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: ScreenSize.fitPxHeight(8)),
+
                   ///タグ
                   Row(
                     children: [
@@ -236,35 +267,35 @@ class CourseDetailPage extends BaseEndDrawer {
                   ),
                   SizedBox(height: ScreenSize.fitPxHeight(10)),
 
-                  /// ユーザデータ
-                  MainBtn(
-                    onPress: () {
-                      ///ユーザー詳細ページに遷移
-                      UserProfileAllInfoBottomSheet(userData: choiceData.courseCreateduserInfo).show(context);
-                    },
-                    child: Row(
-                      children: [
-                        UserIcon(
-                          iconSize: ScreenSize.fitPxWidth(30),
-                          image: choiceData.courseCreateduserInfo.image,
-                        ),
-                        SizedBox(width: ScreenSize.fitPxWidth(5)),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              choiceData.courseCreateduserInfo.name ?? "",
-                              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
-                            ),
-                            Text(
-                              "最終更新日 : ${DateFormatUtilities().format(choiceData.postTime)}",
-                              style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
+                  // /// ユーザデータ
+                  // MainBtn(
+                  //   onPress: () {
+                  //     ///ユーザー詳細ページに遷移
+                  //     UserProfileAllInfoBottomSheet(userData: choiceData.courseCreateduserInfo).show(context);
+                  //   },
+                  //   child: Row(
+                  //     children: [
+                  //       UserIcon(
+                  //         iconSize: ScreenSize.fitPxWidth(30),
+                  //         image: choiceData.courseCreateduserInfo.image,
+                  //       ),
+                  //       SizedBox(width: ScreenSize.fitPxWidth(5)),
+                  //       Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Text(
+                  //             choiceData.courseCreateduserInfo.name ?? "",
+                  //             style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                  //           ),
+                  //           Text(
+                  //             "最終更新日 : ${DateFormatUtilities().format(choiceData.postTime)}",
+                  //             style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                  //           ),
+                  //         ],
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
 
                   SizedBox(height: ScreenSize.fitPxHeight(10)),
 

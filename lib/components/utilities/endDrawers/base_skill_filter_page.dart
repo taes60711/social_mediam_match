@@ -21,8 +21,8 @@ class BaseSkillFilterPage extends BaseEndDrawer {
 
   Map<SkillType, List<RequestSkillListData>> mapedSkillList = {
     SkillType.frontend: [],
-    SkillType.iot: [],
     SkillType.backend: [],
+    SkillType.iot: [],
     SkillType.other: [],
   };
 

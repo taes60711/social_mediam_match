@@ -70,12 +70,13 @@ class ChatRoomBar extends StatelessWidget {
             }
           },
           child: Container(
+            height: ScreenSize.fitPxWidth(40),
             width: ScreenSize.fitPxWidth(40),
             color: Colors.transparent,
             child: Icon(
-              FontAwesomeIcons.ellipsis,
+              FontAwesomeIcons.bars,
               color: AppColors.greyColor130,
-              size: ScreenSize.fontSize16,
+              size: ScreenSize.fontSize18,
             ),
           ),
         ),
