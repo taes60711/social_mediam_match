@@ -153,6 +153,7 @@ class _FadeScaleState extends State<FadeScale> with SingleTickerProviderStateMix
           height: MediaQuery.of(context).size.height,
           color: AppColors.bgColor,
           child: CommonScaffold(
+            type: PageType.window,
             child: component,
           ),
         ),

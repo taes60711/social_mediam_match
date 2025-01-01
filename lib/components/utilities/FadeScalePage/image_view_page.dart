@@ -21,6 +21,7 @@ class ImageViewPage extends BaseFadeScalePage {
 
   bool canUseScaleClosePage = false;
   bool isZooming = true;
+  bool isMaskAppear = true;
   Timer timer = Timer(Duration.zero, () {});
 
   @override
@@ -33,20 +34,23 @@ class ImageViewPage extends BaseFadeScalePage {
   @override
   Widget build(WidgetRef ref) {
     return CommonScaffold(
+      type: PageType.window,
       child: Stack(
         alignment: Alignment.center,
         children: [
           PhotoView.customChild(
             onTapUp: (context, details, controllerValue) {
-              if (controllerValue.scale! > 1) {
-                /// 當大小為大於１時單擊變回１的大小
-                if (!isZooming) {
-                  zoomImageFunc(zoomType: "toMin");
-                }
-              } else if (photoViewController.scale! <= 1 && canUseScaleClosePage) {
-                /// 當大小為１時單擊關閉圖片視窗
-                closeView();
-              }
+              isMaskAppear = !isMaskAppear;
+              render();
+              // if (controllerValue.scale! > 1) {
+              //   /// 當大小為大於１時單擊變回１的大小
+              //   if (!isZooming) {
+              //     zoomImageFunc(zoomType: "toMin");
+              //   }
+              // } else if (photoViewController.scale! <= 1 && canUseScaleClosePage) {
+              //   /// 當大小為１時單擊關閉圖片視窗
+              //   closeView();
+              // }
             },
             onScaleEnd: (context, details, controllerValue) {
               if (controllerValue.scale! < 1 && details.pointerCount != 0) {
@@ -83,44 +87,58 @@ class ImageViewPage extends BaseFadeScalePage {
               ),
             ),
           ),
-          Positioned(
-            top: 0,
-            child: BaseTopBar(
-              backFunc: () => closeView(),
+          Visibility(
+            visible: isMaskAppear,
+            child: Positioned(
+              top: 0,
+              child: Container(
+                padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(35)),
+                color: Colors.black.withOpacity(.6),
+                child: BaseTopBar(
+                  backFunc: () => closeView(),
+                ),
+              ),
             ),
           ),
-          Positioned(
-            bottom: ScreenSize.fitPxWidth(40),
-            child: SizedBox(
-              width: ScreenSize.width,
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: SizedBox(width: 1),
-                  ),
-                  Expanded(
-                    child: iconBtnWidget(
-                      onPress: () {
-                        ///　画像シェアする
-                        ImageService().shareImage(imgUrl);
-                      },
-                      icon: FontAwesomeIcons.arrowUpFromBracket,
+          Visibility(
+            visible: isMaskAppear,
+            child: Positioned(
+              bottom: 0,
+              child: Container(
+                height: ScreenSize.fitPxWidth(90),
+                padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(10)),
+                width: ScreenSize.width,
+                color: Colors.black.withOpacity(.6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Expanded(
+                      child: SizedBox(width: 1),
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(20)),
-                      alignment: Alignment.centerRight,
+                    Expanded(
                       child: iconBtnWidget(
                         onPress: () {
-                          ///　画像ダウンロードする
-                          ImageService().saveImageToLocal(imgUrl);
+                          ///　画像シェアする
+                          ImageService().shareImage(imgUrl);
                         },
-                        icon: FontAwesomeIcons.download,
+                        icon: FontAwesomeIcons.arrowUpFromBracket,
                       ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(20)),
+                        alignment: Alignment.topRight,
+                        child: iconBtnWidget(
+                          onPress: () {
+                            ///　画像ダウンロードする
+                            ImageService().saveImageToLocal(imgUrl);
+                          },
+                          icon: FontAwesomeIcons.download,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -173,6 +191,7 @@ class ImageViewPage extends BaseFadeScalePage {
       photoViewController.scale = 1;
       timer.cancel();
     }
+
     closePage();
   }
 
@@ -184,12 +203,7 @@ class ImageViewPage extends BaseFadeScalePage {
       child: Container(
         width: ScreenSize.fitPxWidth(40),
         height: ScreenSize.fitPxWidth(40),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(
-            ScreenSize.fitPxWidth(40),
-          ),
-          color: AppColors.greyColor54,
-        ),
+        color: Colors.transparent,
         child: Icon(
           icon,
           size: ScreenSize.fitPxWidth(20),
