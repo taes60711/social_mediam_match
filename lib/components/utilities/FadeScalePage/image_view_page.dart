@@ -38,6 +38,7 @@ class ImageViewPage extends BaseFadeScalePage {
       child: Stack(
         alignment: Alignment.center,
         children: [
+          /// 画像ビュー
           PhotoView.customChild(
             onTapUp: (context, details, controllerValue) {
               isMaskAppear = !isMaskAppear;
@@ -87,10 +88,13 @@ class ImageViewPage extends BaseFadeScalePage {
               ),
             ),
           ),
-          Visibility(
-            visible: isMaskAppear,
-            child: Positioned(
-              top: 0,
+
+          /// topBar
+          Positioned(
+            top: 0,
+            child: AnimatedOpacity(
+              opacity: isMaskAppear ? 1 : 0,
+              duration: const Duration(milliseconds: 300),
               child: Container(
                 padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(35)),
                 color: Colors.black.withOpacity(.6),
@@ -100,10 +104,13 @@ class ImageViewPage extends BaseFadeScalePage {
               ),
             ),
           ),
-          Visibility(
-            visible: isMaskAppear,
-            child: Positioned(
-              bottom: 0,
+
+          /// bottomBar
+          Positioned(
+            bottom: 0,
+            child: AnimatedOpacity(
+              opacity: isMaskAppear ? 1 : 0,
+              duration: const Duration(milliseconds: 300),
               child: Container(
                 height: ScreenSize.fitPxWidth(90),
                 padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(10)),

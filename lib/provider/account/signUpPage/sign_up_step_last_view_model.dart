@@ -4,11 +4,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../components/account/account_main_page.dart';
 import '../../../components/utilities/lodaing_dialog.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
+import '../../../services/image_service.dart';
 import '../../../services/user_service.dart';
 
 class SignUpStepLastViewModel {
@@ -26,10 +28,22 @@ class SignUpStepLastViewModel {
     LoadingDialog().show(loadingMsg: "上傳資料中...");
     String uid = ref!.read(viewModelProvider.notifier).state.signUpedUserUID;
 
+    String httpImg = "";
+
+    if (editImg != "") {
+      String uid = const Uuid().v1();
+      if (await ImageService().imageIsExist(editImg ?? "") != "-1") {
+        uid = await ImageService().imageIsExist(editImg ?? "");
+      } else {
+        await ImageService().saveImg(uid, editImg ?? "");
+      }
+      httpImg = "http://\$ip:\$port/images/$uid";
+    }
+
     UpdateUser sqlUpdateData = UpdateUser.update(
       uid: uid,
       job: jobController.text,
-      image: editImg,
+      image: httpImg, // editImg,
       introduction: introductionController.text,
       mainSkills: mainSkillList,
       wantSkills: wantSkillList,
@@ -49,6 +63,7 @@ class SignUpStepLastViewModel {
 
       String base64String = base64Encode(image.readAsBytesSync());
       editImg = base64String;
+
       print("editImg");
     }
   }

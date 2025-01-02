@@ -358,7 +358,9 @@ class CourseDetailPage extends BaseEndDrawer {
               style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
             ),
           ),
-        )
+        ),
+
+        SizedBox(height: ScreenSize.fitPxHeight(18)),
       ],
     );
   }

@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 
+import '../../global.dart';
 import 'style/screen_size.dart';
 
 ///MARK: NormalUserIcon
@@ -20,6 +22,11 @@ class UserIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     String userIcon = image ?? "";
 
+    if (userIcon.contains("http")) {
+      userIcon = userIcon.replaceAll("\$ip", ip);
+      userIcon = userIcon.replaceAll("\$port", port);
+    }
+
     return userIcon != ""
         ? Stack(
             children: [
@@ -29,11 +36,16 @@ class UserIcon extends StatelessWidget {
                 height: iconSize,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(borderRadius)),
-                  child: Image.memory(
-                    const Base64Decoder().convert(userIcon),
-                    gaplessPlayback: true,
-                    fit: BoxFit.cover,
-                  ),
+                  child: userIcon.contains("http")
+                      ? CachedNetworkImage(
+                          imageUrl: userIcon,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.memory(
+                          const Base64Decoder().convert(userIcon),
+                          gaplessPlayback: true,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ],

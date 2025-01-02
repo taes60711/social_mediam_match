@@ -45,6 +45,13 @@ class VideoViewPage extends BaseFadeScalePage {
             children: [
               YoutubePlayerBuilder(
                 player: YoutubePlayer(
+                  topActions: [
+                    BaseTopBar(
+                      backFunc: () {
+                        closeView();
+                      },
+                    ),
+                  ],
                   controller: ytController,
                   bottomActions: [
                     PlaybackSpeedButton(
@@ -78,14 +85,6 @@ class VideoViewPage extends BaseFadeScalePage {
                 builder: (context, player) {
                   return Center(child: player);
                 },
-              ),
-              Positioned(
-                top: 0,
-                child: BaseTopBar(
-                  backFunc: () {
-                    closeView();
-                  },
-                ),
               ),
             ],
           )

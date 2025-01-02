@@ -10,10 +10,12 @@ import 'package:social_mediam_match/components/utilities/style/style_config.dart
 import 'package:social_mediam_match/components/utilities/toast.dart';
 import 'package:social_mediam_match/provider/account/user_profile_edit_view_model.dart';
 import 'package:social_mediam_match/services/user_service.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../../provider/account/user_provider.dart';
+import '../../../services/image_service.dart';
 import '../../utilities/appBar/basic_top_bar.dart';
 import '../../utilities/lodaing_dialog.dart';
 import '../../utilities/main_button.dart';
@@ -68,12 +70,23 @@ class UserProfileEditPage extends BaseBottomSheet {
             onPress: () async {
               if (viewModel.sendBeforeCheck()) {
                 ProfileData updateData = ref.read(loginUserData);
+                String httpImg = "";
+
+                if (viewModel.editImg != "") {
+                  String uid = const Uuid().v1();
+                  if (await ImageService().imageIsExist(viewModel.editImg ?? "") != "-1") {
+                    uid = await ImageService().imageIsExist(viewModel.editImg ?? "");
+                  } else {
+                    await ImageService().saveImg(uid, viewModel.editImg ?? "");
+                  }
+                  httpImg = "http://\$ip:\$port/images/$uid";
+                }
 
                 updateData = updateData.copyWith(
                   data: ProfileData(
                     uid: updateData.uid,
                     email: updateData.email,
-                    image: viewModel.editImg,
+                    image: httpImg,
                     name: viewModel.nameController.text,
                     mainSkills: List.from(viewModel.mainSkillList),
                     wantSkills: List.from(viewModel.wantSkillList),
@@ -87,7 +100,7 @@ class UserProfileEditPage extends BaseBottomSheet {
                 UpdateUser sqlUpdateData = UpdateUser.update(
                   uid: updateData.uid,
                   name: updateData.name,
-                  image: viewModel.editImg,
+                  image: httpImg,
                   job: updateData.job,
                   introduction: updateData.introduction,
                   mainSkills: updateData.mainSkills,
