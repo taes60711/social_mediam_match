@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/userPage/my_notification_page/course/my_notification_course_manager_btm_sheet.dart';
-import 'package:social_mediam_match/provider/course/course_provider.dart';
-
 import '../../../../../enum/date_format_utilities.dart';
 import '../../../../../models/course_model.dart';
 import '../../../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../../../utilities/appBar/basic_top_bar.dart';
 
+import '../../../../utilities/app_common_tools.dart';
 import '../../../../utilities/custom_expansion_title.dart';
 import '../../../../utilities/endDrawers/base_end_drawer.dart';
 import '../../../../utilities/main_button.dart';
@@ -27,261 +26,352 @@ class MyNotificationCourseDetailPage extends BaseEndDrawer {
     return true;
   }
 
+  PageController pageController = PageController();
+  int pageIndex = 0;
+
   @override
   Widget build(WidgetRef ref) {
-    CourseModel choiceData = data;
-
     return Column(
       children: [
         BaseTopBar(
           backFunc: () {
             closePage();
           },
-          title: choiceData.title,
+          title: data.title,
           rightWidget: Row(
             children: [
-              GestureDetector(
-                onTap: () {
-                  ref.read(choicedCourseProvider.notifier).update((e) => data);
-                  MyNotificationCourseManagerBtmSheet().show(context);
+              AppCommonTools().levelSetsumeiBtn(context),
+
+              ///シャアボタン
+              MainBtn(
+                onPress: () async {
+                  MyNotificationCourseManagerBtmSheet(data: data).show(context);
                 },
                 child: Container(
-                  width: 30,
-                  alignment: Alignment.centerRight,
+                  height: ScreenSize.fitPxWidth(30),
+                  width: ScreenSize.fitPxWidth(30),
                   color: Colors.transparent,
                   child: Icon(
                     FontAwesomeIcons.ellipsis,
-                    color: AppColors.greyColor130,
-                    size: ScreenSize.fontSize16,
+                    color: AppColors.whiteColor,
+                    size: ScreenSize.fontSize20,
                   ),
                 ),
               ),
             ],
           ),
         ),
+
+        /// ユーザデータ
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
+          child: MainBtn(
+            onPress: () {
+              ///ユーザー詳細ページに遷移
+              UserProfileAllInfoBottomSheet(userData: data.courseCreateduserInfo).show(context);
+            },
+            child: Row(
+              children: [
+                UserIcon(
+                  iconSize: ScreenSize.fitPxWidth(30),
+                  image: data.courseCreateduserInfo.image,
+                ),
+                SizedBox(width: ScreenSize.fitPxWidth(5)),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data.courseCreateduserInfo.name ?? "",
+                      style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                    ),
+                    Text(
+                      "最終更新日 : ${DateFormatUtilities().format(data.postTime)}",
+                      style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: ScreenSize.fitPxHeight(8)),
+
+        /// Tabバー　＆　ページ内容
         Expanded(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ///タグ
-                  Row(
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.tag,
-                        color: AppColors.whiteColor.withOpacity(.6),
-                        size: ScreenSize.fontSize16,
-                      ),
-                      SizedBox(width: ScreenSize.fitPxWidth(5)),
-                      Text(
-                        "類別 : ${CourseUtilites().formattedTag(choiceData.type)}",
-                        style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.greyColor176),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: ScreenSize.fitPxHeight(8)),
-
-                  ///勉強するスキルバー
-                  Wrap(
-                    children: choiceData.courseLearningSkills.map((e) {
-                      return Container(
-                        margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3), bottom: ScreenSize.fitPxWidth(8)),
-                        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: AppColors.greyColor98,
-                        ),
-                        child: Text(
-                          e,
-                          style: TextStyle(
-                            color: AppColors.whiteColor,
-                            fontSize: ScreenSize.fontSize12,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(height: ScreenSize.fitPxHeight(5)),
-
-                  ///内容
-                  Row(
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.book,
-                        color: AppColors.whiteColor,
-                        size: ScreenSize.fontSize14,
-                      ),
-                      SizedBox(width: ScreenSize.fitPxWidth(5)),
-                      Text(
-                        "大綱",
-                        style: TextStyle(color: AppColors.whiteColor),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: ScreenSize.fitPxHeight(5)),
-
-                  Container(
-                    width: ScreenSize.width,
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: AppColors.greyColor176.withAlpha(50),
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                    child: Text(
-                      choiceData.content,
-                      style: TextStyle(color: AppColors.whiteColor),
-                    ),
-                  ),
-                  SizedBox(height: ScreenSize.fitPxHeight(8)),
-
-                  Row(
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.wrench,
-                        color: AppColors.whiteColor,
-                        size: ScreenSize.fontSize14,
-                      ),
-                      SizedBox(width: ScreenSize.fitPxWidth(5)),
-                      Text(
-                        "前置需求",
-                        style: TextStyle(color: AppColors.whiteColor),
-                      ),
-                      SizedBox(width: ScreenSize.fitPxWidth(5)),
-                      Padding(
-                        padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(3)),
-                        child: Text(
-                          "程度 ${choiceData.needLevel}",
-                          style: TextStyle(
-                            color: AppColors.greyColor130,
-                            fontSize: ScreenSize.fontSize12,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: ScreenSize.fitPxHeight(5)),
-
-                  ///勉強前必要な知識
-                  Container(
-                    width: ScreenSize.width,
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: AppColors.greyColor176.withAlpha(50),
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                    child: Text(
-                      choiceData.beforeNeed,
-                      style: TextStyle(color: AppColors.whiteColor),
-                    ),
-                  ),
-                  SizedBox(height: ScreenSize.fitPxHeight(10)),
-
-                  /// ユーザデータ
-                  MainBtn(
-                    onPress: () {
-                      ///ユーザー詳細ページに遷移
-                      UserProfileAllInfoBottomSheet(userData: choiceData.courseCreateduserInfo).show(context);
-                    },
-                    child: Row(
-                      children: [
-                        UserIcon(
-                          iconSize: ScreenSize.fitPxWidth(30),
-                          image: choiceData.courseCreateduserInfo.image,
-                        ),
-                        SizedBox(width: ScreenSize.fitPxWidth(5)),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              choiceData.courseCreateduserInfo.name ?? "",
-                              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
-                            ),
-                            Text(
-                              "最終更新日 : ${DateFormatUtilities().format(choiceData.postTime)}",
-                              style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: ScreenSize.fitPxHeight(10)),
-
-                  ///詳細内容
-                  Visibility(
-                    visible: choiceData.prStory != "",
-                    child: CustomExpansionTile(
-                      initiallyExpanded: choiceData.signUpStatus != "added",
-                      title: Text(
-                        "詳細內容",
-                        style: TextStyle(color: AppColors.whiteColor),
-                      ),
-                      collapsedTrailingWidget: Icon(
-                        Icons.keyboard_arrow_up,
-                        color: AppColors.whiteColor,
-                        size: ScreenSize.fontSize22,
-                      ),
-                      expandedTrailingWidget: Icon(
-                        Icons.keyboard_arrow_down,
-                        color: AppColors.whiteColor,
-                        size: ScreenSize.fontSize22,
-                      ),
-                      children: <Widget>[
-                        RichTextView(content: choiceData.prStory),
-                      ],
-                    ),
-                  ),
-
-                  ///チャプター
-                  Column(
-                    children: choiceData.chapterList.asMap().entries.map((e) {
-                      int index = e.key;
-                      CourseChapterInfo chapterInfo = e.value;
-                      return CustomExpansionTile(
-                        initiallyExpanded: true,
-                        title: Text(
-                          chapterInfo.chapterName == "" ? "chapter${index + 1}" : chapterInfo.chapterName,
-                          style: TextStyle(color: AppColors.whiteColor),
-                        ),
-                        collapsedTrailingWidget: Icon(
-                          Icons.keyboard_arrow_up,
-                          color: AppColors.whiteColor,
-                        ),
-                        expandedTrailingWidget: Icon(
-                          Icons.keyboard_arrow_down,
-                          color: AppColors.whiteColor,
-                        ),
-                        children: <Widget>[
-                          SizedBox(
-                            width: ScreenSize.width,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: choiceData.chapterList[index].content.map((e) {
-                                String content = e;
-
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 5),
-                                  child: RichTextView(content: content),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ],
-                      );
-                    }).toList(),
-                  ),
-
-                  SizedBox(height: ScreenSize.fitPxHeight(20))
-                ],
+          child: Column(
+            children: [
+              /// Tabバー
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(5)),
+                child: Row(
+                  children: [
+                    _buildTabBtn(context, tabText: "概要", index: 0),
+                    _buildTabBtn(context, tabText: "章節", index: 1),
+                  ],
+                ),
               ),
+
+              /// ページ内容
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
+                  child: PageView(
+                    controller: pageController,
+                    physics: const ClampingScrollPhysics(),
+                    children: [
+                      SingleChildScrollView(child: mainBody()),
+                      SingleChildScrollView(child: chapterPage()),
+                    ],
+                    onPageChanged: (value) {
+                      pageIndex = value;
+                      render();
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget mainBody() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ///タグ
+        Row(
+          children: [
+            Icon(
+              FontAwesomeIcons.tag,
+              color: AppColors.whiteColor.withOpacity(.6),
+              size: ScreenSize.fontSize16,
+            ),
+            SizedBox(width: ScreenSize.fitPxWidth(5)),
+            Text(
+              "類別 : ${CourseUtilites().formattedTag(data.type)}",
+              style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.greyColor176),
+            ),
+          ],
+        ),
+        SizedBox(height: ScreenSize.fitPxHeight(8)),
+
+        ///勉強するスキルバー
+        Wrap(
+          children: data.courseLearningSkills.map((e) {
+            return Container(
+              margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(3), bottom: ScreenSize.fitPxWidth(8)),
+              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(5)),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: AppColors.greyColor98,
+              ),
+              child: Text(
+                e,
+                style: TextStyle(
+                  color: AppColors.whiteColor,
+                  fontSize: ScreenSize.fontSize12,
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+        SizedBox(height: ScreenSize.fitPxHeight(5)),
+
+        ///内容
+        Row(
+          children: [
+            Icon(
+              FontAwesomeIcons.book,
+              color: AppColors.whiteColor,
+              size: ScreenSize.fontSize14,
+            ),
+            SizedBox(width: ScreenSize.fitPxWidth(5)),
+            Text(
+              "大綱",
+              style: TextStyle(color: AppColors.whiteColor),
+            ),
+          ],
+        ),
+        SizedBox(height: ScreenSize.fitPxHeight(5)),
+
+        Container(
+          width: ScreenSize.width,
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+          decoration: BoxDecoration(
+            color: AppColors.greyColor176.withAlpha(50),
+            borderRadius: BorderRadius.circular(3),
+          ),
+          child: Text(
+            data.content,
+            style: TextStyle(color: AppColors.whiteColor),
+          ),
+        ),
+        SizedBox(height: ScreenSize.fitPxHeight(8)),
+
+        Row(
+          children: [
+            Icon(
+              FontAwesomeIcons.wrench,
+              color: AppColors.whiteColor,
+              size: ScreenSize.fontSize14,
+            ),
+            SizedBox(width: ScreenSize.fitPxWidth(5)),
+            Text(
+              "前置需求",
+              style: TextStyle(color: AppColors.whiteColor),
+            ),
+            SizedBox(width: ScreenSize.fitPxWidth(5)),
+            Padding(
+              padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(3)),
+              child: Text(
+                "程度 ${data.needLevel}",
+                style: TextStyle(
+                  color: AppColors.greyColor130,
+                  fontSize: ScreenSize.fontSize12,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: ScreenSize.fitPxHeight(5)),
+
+        ///勉強前必要な知識
+        Container(
+          width: ScreenSize.width,
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+          decoration: BoxDecoration(
+            color: AppColors.greyColor176.withAlpha(50),
+            borderRadius: BorderRadius.circular(3),
+          ),
+          child: Text(
+            data.beforeNeed,
+            style: TextStyle(color: AppColors.whiteColor),
+          ),
+        ),
+        SizedBox(height: ScreenSize.fitPxHeight(10)),
+
+        ///詳細内容
+        Visibility(
+          visible: data.prStory != "",
+          child: CustomExpansionTile(
+            initiallyExpanded: data.signUpStatus != "added",
+            title: Text(
+              "詳細內容",
+              style: TextStyle(color: AppColors.whiteColor),
+            ),
+            collapsedTrailingWidget: Icon(
+              Icons.keyboard_arrow_up,
+              color: AppColors.whiteColor,
+              size: ScreenSize.fontSize22,
+            ),
+            expandedTrailingWidget: Icon(
+              Icons.keyboard_arrow_down,
+              color: AppColors.whiteColor,
+              size: ScreenSize.fontSize22,
+            ),
+            children: <Widget>[
+              RichTextView(content: data.prStory),
+            ],
+          ),
+        ),
+        SizedBox(height: ScreenSize.fitPxHeight(10)),
+        Container(
+          width: ScreenSize.width,
+          color: Colors.transparent,
+          alignment: Alignment.centerRight,
+          child: MainBtn(
+            onPress: () {
+              pageController.animateToPage(
+                1,
+                duration: const Duration(milliseconds: 150),
+                curve: Curves.easeIn,
+              );
+            },
+            child: Text(
+              "章節內容 >>",
+              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget chapterPage() {
+    return Column(
+      children: data.chapterList.asMap().entries.map((e) {
+        int index = e.key;
+        CourseChapterInfo chapterInfo = e.value;
+        return CustomExpansionTile(
+          initiallyExpanded: true,
+          title: Text(
+            chapterInfo.chapterName == "" ? "chapter${index + 1}" : chapterInfo.chapterName,
+            style: TextStyle(color: AppColors.whiteColor),
+          ),
+          collapsedTrailingWidget: Icon(
+            Icons.keyboard_arrow_up,
+            color: AppColors.whiteColor,
+          ),
+          expandedTrailingWidget: Icon(
+            Icons.keyboard_arrow_down,
+            color: AppColors.whiteColor,
+          ),
+          children: <Widget>[
+            SizedBox(
+              width: ScreenSize.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: data.chapterList[index].content.map((e) {
+                  String content = e;
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: RichTextView(content: content),
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildTabBtn(BuildContext context, {required String tabText, required int index}) {
+    return MainBtn(
+      onPress: () async {
+        pageController.animateToPage(
+          index,
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeIn,
+        );
+      },
+      child: Container(
+        width: ScreenSize.width / 2,
+        height: ScreenSize.fitPxHeight(30),
+        alignment: Alignment.center,
+        color: Colors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              tabText,
+              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+            ),
+            Visibility(
+              visible: pageIndex == index,
+              child: Container(
+                width: ScreenSize.fitPxWidth(15),
+                height: ScreenSize.fitPxWidth(1),
+                color: AppColors.whiteColor,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

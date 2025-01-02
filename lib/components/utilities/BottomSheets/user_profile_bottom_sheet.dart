@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/utilities/FadeScalePage/image_view_page.dart';
 import 'package:social_mediam_match/components/utilities/bottomSheets/base_bottom_sheet.dart';
 import 'package:social_mediam_match/enum/date_format_utilities.dart';
 
@@ -11,6 +12,7 @@ import 'package:social_mediam_match/services/friend_service.dart';
 import 'package:social_mediam_match/services/notification_service.dart';
 import 'package:social_mediam_match/services/user_service.dart';
 
+import '../../../global.dart';
 import '../../../models/friend_model.dart';
 import '../../../models/notification_model.dart';
 import '../../../models/user_model.dart';
@@ -52,9 +54,20 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
       child: Column(
         children: [
           SizedBox(height: ScreenSize.fitPxHeight(10)),
-          UserIcon(
-            image: userData.image,
-            iconSize: ScreenSize.fitPxHeight(80),
+          MainBtn(
+            onPress: () {
+              String userIcon = userData.image ?? "";
+              if (userIcon.contains("http")) {
+                userIcon = userIcon.replaceAll("\$ip", ip);
+                userIcon = userIcon.replaceAll("\$port", port);
+              }
+
+              ImageViewPage(imgUrl: userIcon).show(HomeGlobalViewModel().context);
+            },
+            child: UserIcon(
+              image: userData.image,
+              iconSize: ScreenSize.fitPxHeight(80),
+            ),
           ),
           SizedBox(height: ScreenSize.fitPxHeight(10)),
           Container(
@@ -318,9 +331,20 @@ class UserProfileBottomSheet extends BaseBottomSheet {
       child: Column(
         children: [
           SizedBox(height: ScreenSize.fitPxHeight(10)),
-          UserIcon(
-            image: userData.image,
-            iconSize: ScreenSize.fitPxHeight(80),
+          MainBtn(
+            onPress: () {
+              String userIcon = userData.image ?? "";
+              if (userIcon.contains("http")) {
+                userIcon = userIcon.replaceAll("\$ip", ip);
+                userIcon = userIcon.replaceAll("\$port", port);
+              }
+
+              ImageViewPage(imgUrl: userIcon).show(HomeGlobalViewModel().context);
+            },
+            child: UserIcon(
+              image: userData.image,
+              iconSize: ScreenSize.fitPxHeight(80),
+            ),
           ),
           SizedBox(height: ScreenSize.fitPxHeight(10)),
           Container(

@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../../../models/course_model.dart';
 import '../../../../utilities/bottomSheets/base_bottom_sheet.dart';
 import '../../../../utilities/main_button.dart';
 import '../../../../utilities/style/screen_size.dart';
 import '../../../../utilities/style/style_config.dart';
 import '../../../coursePage/course_manager/course_member_manager/course_member_manager_page.dart';
+import '../../../coursePage/course_utilites.dart';
 
 class MyNotificationCourseManagerBtmSheet extends BaseBottomSheet {
-  MyNotificationCourseManagerBtmSheet();
+  CourseModel data;
+
+  MyNotificationCourseManagerBtmSheet({required this.data});
 
   @override
   double buildHeight() {
@@ -26,6 +30,14 @@ class MyNotificationCourseManagerBtmSheet extends BaseBottomSheet {
           text: "管理成員",
           onPress: () {
             CourseMemberManagerPage().show(context);
+          },
+        ),
+        SizedBox(height: ScreenSize.fitPxWidth(10)),
+        managerPageMainBtn(
+          iconData: FontAwesomeIcons.arrowUpRightFromSquare,
+          text: "分享",
+          onPress: () async {
+            await CourseUtilites().shareCourse(courseId: data.id);
           },
         ),
       ],

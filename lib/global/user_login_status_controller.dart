@@ -53,7 +53,9 @@ class UserLoginStatusController {
       ProfileData requestUserData = await UserService().requestUserDataByUID(userUID);
 
       /// ログイン処理
-      await commonLoginFunc(requestUserData: requestUserData);
+      if (requestUserData.uid != "-1") {
+        await commonLoginFunc(requestUserData: requestUserData);
+      }
     }
   }
 

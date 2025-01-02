@@ -71,7 +71,7 @@ class UserProfileEditPage extends BaseBottomSheet {
               if (viewModel.sendBeforeCheck()) {
                 ProfileData updateData = ref.read(loginUserData);
                 String httpImg = "";
-
+                LoadingDialog().show();
                 if (viewModel.editImg != "") {
                   String uid = const Uuid().v1();
                   if (await ImageService().imageIsExist(viewModel.editImg ?? "") != "-1") {
@@ -107,7 +107,6 @@ class UserProfileEditPage extends BaseBottomSheet {
                   wantSkills: updateData.wantSkills,
                 );
 
-                LoadingDialog().show();
                 await UserService().updateUserData(updateData.uid, sqlUpdateData);
 
                 ref.read(loginUserData.notifier).update((state) => updateData);

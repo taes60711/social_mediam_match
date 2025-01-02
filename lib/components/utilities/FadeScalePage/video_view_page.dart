@@ -83,7 +83,9 @@ class VideoViewPage extends BaseFadeScalePage {
                   ],
                 ),
                 builder: (context, player) {
-                  return player;
+                  return Center(
+                    child: player,
+                  );
                 },
               ),
             ],
