@@ -316,7 +316,7 @@ class CourseDetailPage extends BaseEndDrawer {
         Visibility(
           visible: choiceData.prStory != "",
           child: CustomExpansionTile(
-            initiallyExpanded: choiceData.signUpStatus != "added",
+            initiallyExpanded: true,
             title: Text(
               "詳細內容",
               style: TextStyle(
