@@ -58,19 +58,23 @@ class PostViewModel {
   Future<void> postCreate({required String postTitle, required String postContent, PostBoard? postBoard}) async {
     ProfileData userData = ref.watch(loginUserData);
 
-    int postType = ref.read(postCreateChoiceBoard).type;
+    PostBoard postTypeBoard = ref.read(postCreateChoiceBoard);
+
+    if (postBoard != null) {
+      postTypeBoard = postBoard;
+    }
 
     String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
-    print("Title $postTitle Board: $postType   Message : $fomattedContent  Type: ${ref.watch(postCreateChoiceBoard).id}");
+    print("Title $postTitle Board: ${postTypeBoard.type}   Message : $fomattedContent  Type: ${postTypeBoard.id}");
 
     LoadingDialog().show();
-    int postIndex = await PostService().createPost(userData.uid, postTitle, fomattedContent, ref.watch(postCreateChoiceBoard).id);
-    print("Create PostIndex ${postIndex}");
+    int postIndex = await PostService().createPost(userData.uid, postTitle, fomattedContent, postTypeBoard.type);
+
     PostModel post = PostModel(
       id: postIndex,
       createdBy: userData.uid,
       title: postTitle,
-      type: postType,
+      type: postTypeBoard.type,
       mainMessage: fomattedContent,
       commentCount: 0,
       postTime: DateTime.now().toUtc().toString(),

@@ -35,6 +35,11 @@ class ChatRoomWSModel {
   Future<void> init(WidgetRef ref, Function render, {required String userId, required FriendListModel roomData}) async {
     this.ref = ref;
     this.render = render;
+
+    if (enterRoomID != -1) {
+      closeRoom();
+    }
+
     enterRoomID = roomData.roomId;
     ref.read(loginUserInChatRoomId.notifier).update((state) => enterRoomID);
     _chatroomListChannel = IOWebSocketChannel.connect(channelRoomUrl);

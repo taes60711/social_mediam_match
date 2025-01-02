@@ -23,7 +23,7 @@ import UserNotifications
 
     // 處理 URL Scheme 跳轉
     override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        // 檢查 URL Scheme 是否匹配 universal-link.directsense.tw
+        // 檢查 URL Scheme 是否匹配 universal-link.directsense.tw 
         if url.scheme == "universal-link.directsense.tw" {
             print("Received SkillStorm URL: \(url.absoluteString)")
        
