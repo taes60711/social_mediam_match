@@ -148,7 +148,7 @@ class CourseService extends ApiClient {
         model: CourseModel.toMap,
       );
     } catch (e) {
-      onRequestFailed();
+      onRequestFailed(content: "該分享已被刪除");
     }
 
     return requestAddedCourseData;

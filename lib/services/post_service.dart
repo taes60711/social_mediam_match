@@ -183,7 +183,7 @@ class PostService extends ApiClient {
         model: PostModel.toMap,
       );
     } catch (e) {
-      onRequestFailed();
+      onRequestFailed(content: "該文章已被刪除");
     }
 
     return requestPostDataByUID;

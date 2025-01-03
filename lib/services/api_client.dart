@@ -120,12 +120,12 @@ class ApiClient {
   }
 
   bool _isDialogShowing = false;
-  void onRequestFailed({Function? onFailedFunc}) {
+  void onRequestFailed({Function? onFailedFunc, String? content}) {
     if (!_isDialogShowing) {
       _isDialogShowing = true;
       ConfirmDilaog(
         title: "警告",
-        content: tr("serverErrorContent"),
+        content: content ?? tr("serverErrorContent"),
         btnAmount: 1,
         conirmFunc: () {
           if (onFailedFunc != null) {
