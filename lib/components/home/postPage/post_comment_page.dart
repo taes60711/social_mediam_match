@@ -269,8 +269,8 @@ class PostCommentPage extends BaseBottomSheet {
                               },
                             ),
                           ),
-                          MainBtn(
-                            onPress: () {
+                          GestureDetector(
+                            onTap: () {
                               viewModel.postCommentCreate(
                                 message: commentController.text,
                                 dataIndex: dataIndex,

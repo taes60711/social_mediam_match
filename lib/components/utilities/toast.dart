@@ -36,7 +36,7 @@ class Toast {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8), vertical: ScreenSize.fitPxWidth(3)),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 144, 143, 142),
+              color: const Color.fromARGB(255, 44, 44, 42), //const Color.fromARGB(255, 144, 143, 142),
               borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(6)),
             ),
             child: GestureDetector(
