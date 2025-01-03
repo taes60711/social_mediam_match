@@ -138,9 +138,9 @@ class _FriendPageState extends ConsumerState<FriendPage> {
                         return MainBtn(
                           onPress: () async {
                             ChatRoom(roomData: data, dataIndex: index).show(context);
+                            await FriendService().updateUnreadCount(data.roomId, ref.watch(loginUserData).uid, 0);
                             data.unreadCount = 0;
                             setState(() {});
-                            FriendService().updateUnreadCount(data.roomId, ref.watch(loginUserData).uid, 0);
                           },
                           child: Padding(
                             padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(10)),

@@ -144,6 +144,7 @@ class ChatRoomWSModel {
 
   void closeRoom() {
     print("chatRoom close enterRoomID : ${enterRoomID}");
+
     _broadcastStream = null;
     roomAllPage = -1;
     enterRoomID = -1;

@@ -24,16 +24,19 @@ import '../../../../models/rich_text_format.dart';
 import '../../../../provider/account/user_provider.dart';
 import '../../../../provider/friend/chat_room_ws_model.dart';
 import '../../../../services/app_links_service.dart';
+import '../../../../services/friend_service.dart';
 import '../../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/style_config.dart';
 import 'package:any_link_preview/any_link_preview.dart';
 
+import '../firends_page.dart';
 import 'comment_build.dart';
 
 class ChatRoom extends BaseEndDrawer {
   FriendListModel roomData;
   int dataIndex;
+
   ChatRoom({required this.roomData, required this.dataIndex});
 
   ChatRoomWSModel chatRoomWSModel = ChatRoomWSModel();
@@ -51,6 +54,12 @@ class ChatRoom extends BaseEndDrawer {
 
   @override
   Future<void> dispose(WidgetRef ref) async {
+    FriendService().updateUnreadCount(roomData.roomId, ref.watch(loginUserData).uid, 0);
+    ref.read(frinedListProvider.notifier).state[dataIndex].unreadCount = 0;
+    List<FriendListModel> friendList = ref.read(frinedListProvider.notifier).state.map((e) => e.copyWith()).toList();
+    friendList[dataIndex].unreadCount = 0;
+    ref.read(frinedListProvider.notifier).update((state) => friendList);
+
     chatRoomWSModel.closeRoom();
   }
 

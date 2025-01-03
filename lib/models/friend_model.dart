@@ -86,4 +86,17 @@ class FriendListModel {
       userData: userData ?? ProfileData.toModel(json['user']),
     );
   }
+
+  FriendListModel copyWith() {
+    return FriendListModel(
+      roomId: roomId,
+      createdBy: createdBy,
+      memberId: memberId,
+      lastMessage: lastMessage,
+      sentAt: sentAt,
+      unreadCount: unreadCount,
+      roomType: roomType,
+      userData: userData,
+    );
+  }
 }
