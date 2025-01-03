@@ -59,6 +59,7 @@ class FriendListModel {
   String memberId;
   String? lastMessage;
   String? sentAt;
+  int unreadCount;
   int roomType;
   ProfileData userData;
 
@@ -68,6 +69,7 @@ class FriendListModel {
     required this.memberId,
     this.lastMessage,
     required this.sentAt,
+    required this.unreadCount,
     required this.roomType,
     required this.userData,
   });
@@ -78,6 +80,7 @@ class FriendListModel {
       memberId: json['memberId'],
       createdBy: json['createdBy'],
       lastMessage: json['lastMessage'],
+      unreadCount: json["unreadCount"],
       sentAt: json['sentAt'],
       roomType: json['roomType'],
       userData: userData ?? ProfileData.toModel(json['user']),

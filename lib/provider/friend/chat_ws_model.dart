@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
+import 'package:social_mediam_match/provider/friend/chat_room_ws_model.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../../components/home/firendsPage/firends_page.dart';
@@ -54,12 +55,18 @@ class ChatWSModel {
 
     _friendListChannel.stream.listen((event) async {
       print("_friendListChannel $event");
-
+      String method = jsonDecode((event))['method'];
       String searchUrl = jsonDecode((event))['apiUrl'];
 
       ///監聽會有added 為被加的使用者資訊
       String? realApiUrl = searchUrl.contains(ref.watch(loginUserData).uid) ? searchUrl : null;
       if (realApiUrl != null) {
+        if (method == "sendMessage") {
+          int messageRoomId = jsonDecode((event))['roomId'];
+          if (messageRoomId != ChatRoomWSModel().enterRoomID) {
+            FriendService().updateUnreadCount(messageRoomId, ref.watch(loginUserData).uid, 1);
+          }
+        }
         List<FriendListModel> tempfriendList = await FriendService().getFriendList(searchUrl);
 
         String initDate = "1997-01-01T00:00:00.000+00:00";
@@ -74,11 +81,12 @@ class ChatWSModel {
     return _broadcastStream = _friendListChannel.stream.asBroadcastStream();
   }
 
-  void sendMsg(List<String> usersList) {
+  void sendMsg(List<String> usersList, int roomId) {
     Map<String, dynamic> map = {
       "method": "sendMessage",
       "ip": "$ip:$port",
       "members": usersList,
+      "roomid": roomId,
     };
 
     _friendListChannel.sink.add(jsonEncode(map));

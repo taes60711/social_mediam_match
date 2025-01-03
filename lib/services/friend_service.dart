@@ -57,7 +57,7 @@ class FriendService extends ApiClient {
   }
 
   ///メッセージ送る
-  ///roomid: チャットルームのID roomid: ログインユーザID　message:打ったメッセージ
+  ///roomid: チャットルームのID userId: ログインユーザID　message:打ったメッセージ
   Future<bool> sendMessage(int roomId, String userId, String message) async {
     Map<String, dynamic> body = {"userId": userId, "message": message};
 
@@ -74,6 +74,15 @@ class FriendService extends ApiClient {
     String responseData = await apiPush("/chat/deleteFriend/$roomId/$userId", body: body);
 
     print("deleteFriend : $responseData");
+
+    return responseData != "null" ? true : false;
+  }
+
+  ///roomid: チャットルームのID userId: ログインユーザID　message:打ったメッセージ
+  Future<bool> updateUnreadCount(int roomId, String userId, int unreadCount) async {
+    String responseData = await apiPush("/chat/updateRoomListUnreadCount/$roomId/$userId/$unreadCount", body: {});
+
+    print("updateRoomListUnreadCount : $responseData");
 
     return responseData != "null" ? true : false;
   }

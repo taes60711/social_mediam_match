@@ -100,7 +100,7 @@ class ChatRoomWSModel {
 
           List<String> userIds = chatRoomModel.members.map((e) => e.replaceAll("\"", "")).toList();
 
-          ChatWSModel().sendMsg(userIds);
+          ChatWSModel().sendMsg(userIds, enterRoomID);
           if (insendMsgCount < 20) {
             insendMsgCount++;
           } else {

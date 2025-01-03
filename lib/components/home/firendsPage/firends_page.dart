@@ -12,6 +12,7 @@ import 'package:social_mediam_match/services/user_service.dart';
 import '../../../models/friend_model.dart';
 import '../../../provider/account/user_provider.dart';
 
+import '../../../services/friend_service.dart';
 import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/inputField/base_input.dart';
 
@@ -135,14 +136,17 @@ class _FriendPageState extends ConsumerState<FriendPage> {
                       itemBuilder: (context, index) {
                         FriendListModel data = ref.watch(frinedListProvider)[index];
                         return MainBtn(
-                          onPress: () {
+                          onPress: () async {
                             ChatRoom(roomData: data, dataIndex: index).show(context);
+                            data.unreadCount = 0;
+                            setState(() {});
+                            FriendService().updateUnreadCount(data.roomId, ref.watch(loginUserData).uid, 0);
                           },
                           child: Padding(
                             padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(10)),
                             child: Row(
                               children: [
-                                UserIcon(iconSize: ScreenSize.fitPxWidth(40), image: data.userData.image),
+                                UserIcon(iconSize: ScreenSize.fitPxWidth(45), image: data.userData.image),
                                 SizedBox(width: ScreenSize.fitPxWidth(10)),
                                 Expanded(
                                   child: Column(
@@ -165,17 +169,45 @@ class _FriendPageState extends ConsumerState<FriendPage> {
                                           ),
                                         ],
                                       ),
-                                      data.lastMessage != null
-                                          ? Text(
-                                              data.lastMessage!.contains("http://\$ip") ? "傳送了圖像" : "${data.lastMessage}",
-                                              style: TextStyle(fontSize: ScreenSize.fontSize14, color: AppColors.greyColor98),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                            )
-                                          : Text(
-                                              "沒有任何訊息",
-                                              style: TextStyle(fontSize: ScreenSize.fontSize14, color: AppColors.greyColor98),
+                                      SizedBox(height: ScreenSize.fitPxWidth(4)),
+                                      Row(
+                                        children: [
+                                          /// 最新メッセージ
+                                          data.lastMessage != null
+                                              ? Expanded(
+                                                  child: Text(
+                                                    data.lastMessage!.contains("http://\$ip") ? "傳送了圖像" : "${data.lastMessage}",
+                                                    style:
+                                                        TextStyle(fontSize: ScreenSize.fontSize14, color: AppColors.greyColor98),
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                )
+                                              : Expanded(
+                                                  child: Text(
+                                                    "沒有任何訊息",
+                                                    style:
+                                                        TextStyle(fontSize: ScreenSize.fontSize14, color: AppColors.greyColor98),
+                                                  ),
+                                                ),
+
+                                          ///読んでないドット
+                                          Visibility(
+                                            visible: data.unreadCount > 0,
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(6)),
+                                              height: ScreenSize.fitPxWidth(10),
+                                              width: ScreenSize.fitPxWidth(10),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.orangeColor,
+                                                borderRadius: BorderRadius.circular(
+                                                  ScreenSize.fitPxWidth(1000),
+                                                ),
+                                              ),
                                             ),
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 )
