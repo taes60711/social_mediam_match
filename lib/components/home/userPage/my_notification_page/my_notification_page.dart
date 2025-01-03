@@ -92,11 +92,15 @@ class MyNotificationPage extends BaseEndDrawer {
                         onPress: () async {
                           if (data.type == 0) {
                             PostModel choicedPost = await PostService().getPostDataByPostId(data.postId ?? -1);
-                            MyNotificationPostPage(data: choicedPost).show(context);
+                            if (choicedPost.id != -1) {
+                              MyNotificationPostPage(data: choicedPost).show(context);
+                            }
                           } else if (data.type == 1) {
                             CourseModel openedCourse =
                                 await CourseService().getCourseBycourseId(userData.uid, data.courseId ?? -1);
-                            MyNotificationCourseDetailPage(data: openedCourse).show(context);
+                            if (openedCourse.id != -1) {
+                              MyNotificationCourseDetailPage(data: openedCourse).show(context);
+                            }
                           } else if (data.type == 2) {
                             ProfileData otherUserData = data.sendNotificationuserInfo;
 

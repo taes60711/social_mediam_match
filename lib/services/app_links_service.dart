@@ -37,7 +37,10 @@ class BaseShareUrlHandle {
             ///文章
             HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.home);
             PostModel choicedPost = await PostService().getPostDataByPostId(int.parse(content));
-            MyNotificationPostPage(data: choicedPost).show(context);
+
+            if (choicedPost.id != -1) {
+              MyNotificationPostPage(data: choicedPost).show(context);
+            }
           }
           break;
         case "course":
@@ -49,7 +52,10 @@ class BaseShareUrlHandle {
               ref.read(loginUserData).uid,
               int.parse(content),
             );
-            MyNotificationCourseDetailPage(data: openedCourse).show(context);
+
+            if (openedCourse.id != -1) {
+              MyNotificationCourseDetailPage(data: openedCourse).show(context);
+            }
           }
           break;
         case "profile":
