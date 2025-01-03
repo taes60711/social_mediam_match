@@ -45,6 +45,13 @@ class CustomServicePage extends BaseBottomSheet {
           title: "問題回報",
           rightWidget: MainBtn(
             onPress: () async {
+              if (titleController.text.replaceAll(" ", "") == "" ||
+                  mailController.text.replaceAll(" ", "") == "" ||
+                  contentController.text.replaceAll(" ", "") == "") {
+                ConfirmDilaog(title: '警告', content: "任一項目都不可為空").show(context);
+                return;
+              }
+
               print("send title ${titleController.text} email ${mailController.text} content ${contentController.text}");
               FeedBackModel feedBack =
                   FeedBackModel(title: titleController.text, email: mailController.text, content: contentController.text);
