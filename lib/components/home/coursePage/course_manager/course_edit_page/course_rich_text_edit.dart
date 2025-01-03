@@ -103,9 +103,9 @@ class CourseRichTextEdit extends BaseFadeScalePage {
                       String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
                       ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
                     }
+                    LoadingDialog().close();
                     courseEditPageRender();
                     closePage();
-                    LoadingDialog().close();
                   }
                 },
               ),

@@ -189,7 +189,7 @@ class SearchUserPage extends BaseBottomSheet {
               autoFocus: true,
               controller: controller,
               onFieldSubmitted: (value) async {
-                if (value == "") {
+                if (value.replaceAll(" ", "") == "") {
                   return;
                 }
                 if (firstSearch) {

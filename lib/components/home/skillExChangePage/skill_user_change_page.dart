@@ -107,7 +107,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
         children: [
           MainBtn(
             onPress: () {
-              if (searchController.text == "") {
+              if (searchController.text.replaceAll(" ", "") == "") {
                 return;
               }
               SkillUserChangeByTextFilter(searchText: searchController.text).show(context);
@@ -129,7 +129,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
               textInputAction: TextInputAction.search,
               controller: searchController,
               onFieldSubmitted: (value) {
-                if (value == "") {
+                if (value.replaceAll(" ", "") == "") {
                   return;
                 }
                 SkillUserChangeByTextFilter(searchText: value).show(context);

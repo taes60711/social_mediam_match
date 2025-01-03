@@ -226,8 +226,8 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onVerticalDragUpdate: _onVerticalDragUpdate,
-      onVerticalDragEnd: _onVerticalDragEnd,
+      onVerticalDragUpdate: BottomSheetPageType.edit == widget.pageType ? null : _onVerticalDragUpdate,
+      onVerticalDragEnd: BottomSheetPageType.edit == widget.pageType ? null : _onVerticalDragEnd,
       child: SlideTransition(
         position: _offsetAnimation,
         child: Container(

@@ -82,9 +82,9 @@ class CourseRichTextCreate extends BaseFadeScalePage {
 
                       ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
                     }
+                    LoadingDialog().close();
                     courseEditPageRender();
                     closePage();
-                    LoadingDialog().close();
                   }
                 },
               ),
@@ -141,6 +141,7 @@ class CourseRichTextCreate extends BaseFadeScalePage {
     }
 
     if (!isOK) {
+      LoadingDialog().close();
       ConfirmDilaog(title: '警告', content: errMsg).show(context);
     }
 

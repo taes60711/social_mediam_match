@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
 
 import '../../../../../models/course_model.dart';
 import '../../../../utilities/bottomSheets/base_bottom_sheet.dart';
@@ -25,12 +26,15 @@ class MyNotificationCourseManagerBtmSheet extends BaseBottomSheet {
     return Column(
       children: [
         SizedBox(height: ScreenSize.fitPxWidth(10)),
-        managerPageMainBtn(
-          iconData: FontAwesomeIcons.gears,
-          text: "管理成員",
-          onPress: () {
-            CourseMemberManagerPage().show(context);
-          },
+        Visibility(
+          visible: data.courseCreateduserInfo.uid == ref.read(loginUserData).uid,
+          child: managerPageMainBtn(
+            iconData: FontAwesomeIcons.gears,
+            text: "管理成員",
+            onPress: () {
+              CourseMemberManagerPage().show(context);
+            },
+          ),
         ),
         SizedBox(height: ScreenSize.fitPxWidth(10)),
         managerPageMainBtn(

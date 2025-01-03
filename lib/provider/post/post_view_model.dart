@@ -63,11 +63,11 @@ class PostViewModel {
     if (postBoard != null) {
       postTypeBoard = postBoard;
     }
+    LoadingDialog().show();
 
     String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
     print("Title $postTitle Board: ${postTypeBoard.type}   Message : $fomattedContent  Type: ${postTypeBoard.id}");
 
-    LoadingDialog().show();
     int postIndex = await PostService().createPost(userData.uid, postTitle, fomattedContent, postTypeBoard.type);
 
     PostModel post = PostModel(
@@ -209,8 +209,10 @@ class PostViewModel {
     String newMessage = data.textEditingController.text;
     data.isEditor = !data.isEditor;
     if (data.message != newMessage) {
-      await PostService().updatePostComment(id: data.uid, mainMessage: newMessage);
-      data.message = newMessage;
+      if (data.textEditingController.text.replaceAll(" ", "") != "") {
+        await PostService().updatePostComment(id: data.uid, mainMessage: newMessage);
+        data.message = newMessage;
+      }
     }
     render();
   }

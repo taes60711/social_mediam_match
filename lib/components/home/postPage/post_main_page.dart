@@ -214,7 +214,7 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
             controller: searchController,
             hintText: "搜尋",
             onFieldSubmitted: (value) {
-              if (searchController.text == "") {
+              if (searchController.text.replaceAll(" ", "") == "") {
                 return;
               }
 
@@ -224,7 +224,7 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
         ),
         MainBtn(
           onPress: () {
-            if (searchController.text == "") {
+            if (searchController.text.replaceAll(" ", "") == "") {
               return;
             }
             FocusScope.of(context).requestFocus(FocusNode());

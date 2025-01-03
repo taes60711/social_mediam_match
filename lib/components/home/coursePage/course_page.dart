@@ -99,7 +99,7 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
       children: [
         MainBtn(
           onPress: () {
-            if (searchController.text == "") {
+            if (searchController.text.replaceAll(" ", "") == "") {
               return;
             }
             CoursePageByTextFilter(searchText: searchController.text).show(context);
@@ -121,7 +121,7 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
             textInputAction: TextInputAction.search,
             controller: searchController,
             onFieldSubmitted: (value) {
-              if (value == "") {
+              if (value.replaceAll(" ", "") == "") {
                 return;
               }
               CoursePageByTextFilter(searchText: value).show(context);

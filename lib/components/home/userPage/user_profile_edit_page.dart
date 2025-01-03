@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -28,7 +29,7 @@ class UserProfileEditPage extends BaseBottomSheet {
   bool isInit = true;
   @override
   double buildHeight() {
-    return 0.92;
+    return 0.9;
   }
 
   @override
@@ -52,27 +53,36 @@ class UserProfileEditPage extends BaseBottomSheet {
   Widget build(WidgetRef ref) {
     return Column(
       children: [
+        SizedBox(height: ScreenSize.fitPxWidth(10)),
         BaseTopBar(
-          leftWidget: downCloseBtn(onPress: () {
-            if (viewModel.closePageCheck()) {
-              closePage();
-            } else {
-              ConfirmDilaog(
-                  title: '提示',
-                  content: '正在編輯中, 確定要離開嗎？',
-                  conirmFunc: () {
-                    closePage();
-                  }).show(context);
-            }
-          }),
+          leftWidget: Row(
+            children: [
+              MainBtn(
+                  title: "關閉",
+                  backgroundColor: Colors.transparent,
+                  onPress: () {
+                    if (viewModel.closePageCheck()) {
+                      closePage();
+                    } else {
+                      ConfirmDilaog(
+                          title: '提示',
+                          content: '正在編輯中, 確定要離開嗎？',
+                          conirmFunc: () {
+                            closePage();
+                          }).show(context);
+                    }
+                  }),
+            ],
+          ),
           title: "個人資料",
           rightWidget: MainBtn(
             onPress: () async {
               if (viewModel.sendBeforeCheck()) {
                 ProfileData updateData = ref.read(loginUserData);
-                String httpImg = "";
+                String httpImg = viewModel.editImg ?? "";
+
                 LoadingDialog().show();
-                if (viewModel.editImg != "") {
+                if (!viewModel.editImg!.contains("http") && viewModel.editImg != "") {
                   String uid = const Uuid().v1();
                   if (await ImageService().imageIsExist(viewModel.editImg ?? "") != "-1") {
                     uid = await ImageService().imageIsExist(viewModel.editImg ?? "");
@@ -100,7 +110,7 @@ class UserProfileEditPage extends BaseBottomSheet {
                 UpdateUser sqlUpdateData = UpdateUser.update(
                   uid: updateData.uid,
                   name: updateData.name,
-                  image: httpImg,
+                  image: updateData.image,
                   job: updateData.job,
                   introduction: updateData.introduction,
                   mainSkills: updateData.mainSkills,

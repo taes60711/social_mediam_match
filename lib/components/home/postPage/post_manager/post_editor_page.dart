@@ -86,13 +86,13 @@ class PostEditorPage extends BaseFadeScalePage {
             rightWidget: MainBtn(
               onPress: () async {
                 String postTitle = titleController.text;
-
+                LoadingDialog().show();
                 String postContent = await quillEditorController.getText();
                 String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
 
                 if (viewModel.postCreateBeforCheck(postTitle: postTitle, postContent: postContent)) {
                   PostModel post = ref.read(choicedPostProvider.notifier).state;
-                  LoadingDialog().show();
+
                   bool isSucess = await PostService().updatePost(
                     postId: post.id,
                     title: postTitle,
@@ -107,8 +107,8 @@ class PostEditorPage extends BaseFadeScalePage {
                     render();
                     closePage();
                   }
-                  LoadingDialog().close();
                 }
+                LoadingDialog().close();
               },
               title: "更新",
             ),

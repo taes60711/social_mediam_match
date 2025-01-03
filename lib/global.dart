@@ -6,9 +6,8 @@ String appVer = "1.0.0";
 
 String domain = "universal-link.directsense.tw";
 
-String ip = "119.77.173.122";
+String ip = "192.168.2.62";
 
-///"192.168.1.160";
 String port = '80';
 String webSocketPort = "123";
 String wsIp = "$ip:$webSocketPort";
@@ -19,5 +18,7 @@ String channelRoomUrl = 'ws://$wsIp/$branch/chatroom';
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 BuildContext globalContext = navigatorKey.currentState!.context;
 
-//"10.6.9.129"
-//"119.77.173.122"
+
+///"192.168.1.160";
+
+//"119.77.173.122";
