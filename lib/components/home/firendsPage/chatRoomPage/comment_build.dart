@@ -48,95 +48,106 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
   @override
   Widget build(BuildContext context) {
     ProfileData userData = ref.watch(loginUserData);
-    return Container(
-      width: ScreenSize.width,
-      decoration: BoxDecoration(
-        color: AppColors.bgColor,
-        border: Border(
-          top: BorderSide(
-            color: AppColors.greyColor54,
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        width: ScreenSize.width,
+        decoration: BoxDecoration(
+          color: AppColors.black37,
+          border: Border(
+            top: BorderSide(
+              color: AppColors.greyColor54,
+            ),
           ),
         ),
-      ),
-      height: ScreenSize.fitPxHeight(70),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(15)),
-        child: Row(
-          children: [
-            ///画像ボタン
-            MainBtn(
-              onPress: () async {
-                String imageString = await imageChoice();
-                if (imageString != "") {
-                  sendMsg(widget.chatRoomWSModel, userId: userData.uid, message: imageString);
-                }
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(8), horizontal: ScreenSize.fitPxHeight(8)),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(8)),
-                  color: AppColors.greyColor57,
-                ),
-                margin: EdgeInsets.only(right: ScreenSize.fitPxHeight(10)),
-                child: Center(
-                  child: Icon(
-                    FontAwesomeIcons.fileImage,
-                    size: ScreenSize.fontSize16,
-                    color: AppColors.whiteColor,
+        height: ScreenSize.fitPxHeight(70),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(15)),
+          child: Row(
+            children: [
+              ///画像ボタン
+              MainBtn(
+                onPress: () async {
+                  String imageString = await imageChoice();
+                  if (imageString != "") {
+                    sendMsg(widget.chatRoomWSModel, userId: userData.uid, message: imageString);
+                  }
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(8), horizontal: ScreenSize.fitPxHeight(8)),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(8)),
+                    color: AppColors.greyColor57,
+                  ),
+                  margin: EdgeInsets.only(right: ScreenSize.fitPxHeight(10)),
+                  child: Center(
+                    child: Icon(
+                      FontAwesomeIcons.fileImage,
+                      size: ScreenSize.fontSize16,
+                      color: AppColors.whiteColor,
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            ///コメント
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ScreenSize.fitPxHeight(8),
-                  vertical: ScreenSize.fitPxHeight(6),
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.greyColor57,
-                  borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(13)),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: BaseInputField(
-                        hintText: "輸入訊息",
-                        controller: commentController,
-                        textInputAction: TextInputAction.newline,
-                        autoFocus: true,
-                        maxLines: 50,
-                        minLines: 1,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        sendMsg(widget.chatRoomWSModel, userId: userData.uid, message: commentController.text);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: ScreenSize.fitPxWidth(8),
-                          vertical: ScreenSize.fitPxWidth(3),
+              ///コメント
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: ScreenSize.fitPxHeight(8),
+                    top: ScreenSize.fitPxHeight(6),
+                    bottom: ScreenSize.fitPxHeight(6),
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.greyColor57,
+                    borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(13)),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: BaseInputField(
+                          hintText: "輸入訊息",
+                          controller: commentController,
+                          textInputAction: TextInputAction.newline,
+                          autoFocus: true,
+                          maxLines: 50,
+                          minLines: 1,
                         ),
-                        decoration: BoxDecoration(
-                          color: AppColors.orangeColor,
-                          borderRadius: BorderRadius.circular(
-                            ScreenSize.fitPxWidth(10),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          sendMsg(widget.chatRoomWSModel, userId: userData.uid, message: commentController.text);
+                        },
+                        child: Container(
+                          color: Colors.transparent,
+                          padding: EdgeInsets.only(
+                            left: ScreenSize.fitPxWidth(10),
+                            right: ScreenSize.fitPxWidth(8),
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: ScreenSize.fitPxWidth(8),
+                              vertical: ScreenSize.fitPxWidth(3),
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.orangeColor,
+                              borderRadius: BorderRadius.circular(
+                                ScreenSize.fitPxWidth(10),
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.eco_sharp,
+                              color: AppColors.whiteColor,
+                            ),
                           ),
                         ),
-                        child: Icon(
-                          Icons.eco_sharp,
-                          color: AppColors.whiteColor,
-                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -217,87 +217,90 @@ class PostCommentPage extends BaseBottomSheet {
   Widget commentCntainerBuild(WidgetRef ref) {
     ProfileData userData = ref.watch(loginUserData);
     TextEditingController commentController = TextEditingController();
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: AppColors.greyColor54,
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: AppColors.greyColor54,
+            ),
           ),
         ),
-      ),
-      height: ScreenSize.fitPxHeight(70),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(12)),
-        child: Column(
-          children: [
-            SizedBox(height: ScreenSize.fitPxHeight(10)),
-            Row(
-              children: [
-                SizedBox(width: ScreenSize.fitPxHeight(10)),
-                UserIcon(
-                  iconSize: ScreenSize.fitPxHeight(25),
-                  image: userData.image,
-                ),
-                SizedBox(width: ScreenSize.fitPxHeight(10)),
+        height: ScreenSize.fitPxHeight(70),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(12)),
+          child: Column(
+            children: [
+              SizedBox(height: ScreenSize.fitPxHeight(10)),
+              Row(
+                children: [
+                  SizedBox(width: ScreenSize.fitPxHeight(10)),
+                  UserIcon(
+                    iconSize: ScreenSize.fitPxHeight(25),
+                    image: userData.image,
+                  ),
+                  SizedBox(width: ScreenSize.fitPxHeight(10)),
 
-                /// コメント欄
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: ScreenSize.fitPxHeight(8),
-                      vertical: ScreenSize.fitPxHeight(6),
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.greyColor57,
-                      borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(13)),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: BaseInputField(
-                            hintText: "留言",
-                            controller: commentController,
-                            autoFocus: true,
-                            onFieldSubmitted: (value) {
+                  /// コメント欄
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ScreenSize.fitPxHeight(8),
+                        vertical: ScreenSize.fitPxHeight(6),
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.greyColor57,
+                        borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(13)),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: BaseInputField(
+                              hintText: "留言",
+                              controller: commentController,
+                              autoFocus: true,
+                              onFieldSubmitted: (value) {
+                                viewModel.postCommentCreate(
+                                  message: commentController.text,
+                                  dataIndex: dataIndex,
+                                  postListController: postListController,
+                                );
+                              },
+                            ),
+                          ),
+                          MainBtn(
+                            onPress: () {
                               viewModel.postCommentCreate(
                                 message: commentController.text,
                                 dataIndex: dataIndex,
                                 postListController: postListController,
                               );
                             },
-                          ),
-                        ),
-                        MainBtn(
-                          onPress: () {
-                            viewModel.postCommentCreate(
-                              message: commentController.text,
-                              dataIndex: dataIndex,
-                              postListController: postListController,
-                            );
-                          },
-                          child: Container(
-                            padding:
-                                EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8), vertical: ScreenSize.fitPxWidth(3)),
-                            decoration: BoxDecoration(
-                              color: AppColors.orangeColor,
-                              borderRadius: BorderRadius.circular(
-                                ScreenSize.fitPxWidth(10),
+                            child: Container(
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8), vertical: ScreenSize.fitPxWidth(3)),
+                              decoration: BoxDecoration(
+                                color: AppColors.orangeColor,
+                                borderRadius: BorderRadius.circular(
+                                  ScreenSize.fitPxWidth(10),
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.eco_sharp,
+                                color: AppColors.whiteColor,
                               ),
                             ),
-                            child: Icon(
-                              Icons.eco_sharp,
-                              color: AppColors.whiteColor,
-                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(width: ScreenSize.fitPxWidth(12)),
-              ],
-            )
-          ],
+                  SizedBox(width: ScreenSize.fitPxWidth(12)),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
