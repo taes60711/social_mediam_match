@@ -144,7 +144,7 @@ class SkillUtilites {
                 ),
 
                 ///スキル
-                SkillUtilites().skillBar(skills: data.mainSkills!),
+                Expanded(child: skillBar(skills: data.mainSkills!)),
               ],
             ),
 
@@ -169,7 +169,7 @@ class SkillUtilites {
                 ),
 
                 ///スキル
-                SkillUtilites().skillBar(skills: data.wantSkills!),
+                Expanded(child: skillBar(skills: data.wantSkills!)),
               ],
             ),
           ],
