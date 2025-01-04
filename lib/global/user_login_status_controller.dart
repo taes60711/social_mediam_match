@@ -39,7 +39,7 @@ class UserLoginStatusController {
   }
 
   bool isLogin() {
-    return ref.read(loginUserData.notifier).state.uid != "-1"; //ref.watch(loginedUserUID) != "";
+    return ref.read(loginUserData.notifier).state.uid != "-1";
   }
 
   Future<void> loginedCheck() async {
@@ -116,8 +116,5 @@ class UserLoginStatusController {
       userUId: requestUserData.uid,
     );
     ref.read(loginUserNotReadNotificationCount.notifier).update((state) => int.parse(notReadNotificationCount));
-
-    /// チャットルームリストWS初始化
-    ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
   }
 }

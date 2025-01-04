@@ -39,14 +39,19 @@ class CourseDetailPage extends BaseEndDrawer {
 
   String notifaicationToken = "";
 
+  PageController pageController = PageController();
+  int pageIndex = 0;
+
+  bool chapterInit = false;
+  bool mainBodyInit = false;
+
   @override
   Future<void> initState(WidgetRef ref) async {
     notifaicationToken =
         await UserService().requestUserNotificationTokenByUID(ref.read(choicedCourseProvider).courseCreateduserInfo.uid);
+    mainBodyInit = true;
+    render();
   }
-
-  PageController pageController = PageController();
-  int pageIndex = 0;
 
   @override
   Widget build(WidgetRef ref) {
@@ -140,12 +145,23 @@ class CourseDetailPage extends BaseEndDrawer {
                     controller: pageController,
                     physics: const ClampingScrollPhysics(),
                     children: [
-                      SingleChildScrollView(child: mainBody()),
-                      SingleChildScrollView(child: chapterPage()),
+                      mainBodyInit ? SingleChildScrollView(child: mainBody()) : Container(),
+                      chapterInit ? SingleChildScrollView(child: chapterPage()) : Container(),
                     ],
-                    onPageChanged: (value) {
+                    onPageChanged: (value) async {
                       pageIndex = value;
                       render();
+                      if (pageIndex == 1) {
+                        mainBodyInit = false;
+                        await Future.delayed(const Duration(milliseconds: 20));
+                        chapterInit = true;
+                        render();
+                      } else {
+                        chapterInit = false;
+                        await Future.delayed(const Duration(milliseconds: 20));
+                        mainBodyInit = true;
+                        render();
+                      }
                     },
                   ),
                 ),
@@ -160,6 +176,7 @@ class CourseDetailPage extends BaseEndDrawer {
   Widget mainBody() {
     CourseModel choiceData = ref.read(choicedCourseProvider);
     ProfileData userData = ref.read(loginUserData);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -365,13 +382,11 @@ class CourseDetailPage extends BaseEndDrawer {
     );
   }
 
+  ///チャプター
   Widget chapterPage() {
     CourseModel choiceData = ref.read(choicedCourseProvider);
     ProfileData userData = ref.read(loginUserData);
-    return
-
-        ///チャプター
-        Builder(
+    return Builder(
       builder: (context) {
         bool isVisible = true;
 

@@ -10,6 +10,7 @@ import 'package:social_mediam_match/provider/account/user_provider.dart';
 import '../components/utilities/style/screen_size.dart';
 import '../global.dart';
 import '../pageManager/enum/bottom_bar_path.dart';
+import '../provider/friend/chat_ws_model.dart';
 import '../services/app_links_service.dart';
 import '../services/firebase_notification_service.dart';
 import '../services/user_service.dart';
@@ -51,6 +52,9 @@ class HomeGlobalViewModel {
 
     FirebaseNotificationService().initNotification(context: context, ref: ref);
     FirebaseNotificationService().notificationListen(context: context, ref: ref);
+
+    /// チャットルームリストWS初始化
+    ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
   }
 
   ///BottomNavigiatonbar隠れ/表示する

@@ -28,6 +28,11 @@ class ChatWSModel {
   Future<void> init(WidgetRef ref, Function render, {required String userId}) async {
     this.ref = ref;
     this.render = render;
+
+    if (_broadcastStream != null) {
+      closeStream();
+    }
+
     _friendListChannel = IOWebSocketChannel.connect(channelListUrl);
     print("friendList connect");
     await _friendListChannel.ready;
@@ -43,6 +48,7 @@ class ChatWSModel {
   }
 
   void closeStream() {
+    print("friendList close");
     _broadcastStream = null;
     _friendListChannel.sink.close();
   }

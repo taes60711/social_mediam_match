@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../appBar/basic_top_bar.dart';
+import '../main_button.dart';
 import '../style/screen_size.dart';
 import '../style/style_config.dart';
 
@@ -28,6 +29,7 @@ class VideoViewPage extends BaseFadeScalePage {
     ytController = YoutubePlayerController(
       initialVideoId: ytId,
       flags: const YoutubePlayerFlags(
+        controlsVisibleAtStart: true,
         disableDragSeek: true,
         autoPlay: true,
         mute: false,
@@ -77,15 +79,19 @@ class VideoViewPage extends BaseFadeScalePage {
                         ),
                       ),
                     ),
-                    FullScreenButton(
-                      controller: ytController,
+                    MainBtn(
+                      onPress: () {
+                        closeView();
+                      },
+                      child: Icon(
+                        Icons.fullscreen,
+                        color: AppColors.whiteColor,
+                      ),
                     ),
                   ],
                 ),
                 builder: (context, player) {
-                  return Center(
-                    child: player,
-                  );
+                  return player;
                 },
               ),
             ],

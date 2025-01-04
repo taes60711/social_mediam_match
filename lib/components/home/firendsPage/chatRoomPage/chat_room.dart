@@ -33,7 +33,7 @@ import 'package:any_link_preview/any_link_preview.dart';
 import '../firends_page.dart';
 import 'comment_build.dart';
 
-class ChatRoom extends BaseEndDrawer {
+class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
   FriendListModel roomData;
   int dataIndex;
 
@@ -50,17 +50,30 @@ class ChatRoom extends BaseEndDrawer {
     ProfileData myUserData = ref.watch(loginUserData);
     chatRoomWSModel.init(ref, () => render(), userId: myUserData.uid, roomData: roomData);
     HomeGlobalViewModel().bottomBarHideStateChage(false);
+
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   Future<void> dispose(WidgetRef ref) async {
-    FriendService().updateUnreadCount(roomData.roomId, ref.watch(loginUserData).uid, 0);
-    ref.read(frinedListProvider.notifier).state[dataIndex].unreadCount = 0;
-    List<FriendListModel> friendList = ref.read(frinedListProvider.notifier).state.map((e) => e.copyWith()).toList();
-    friendList[dataIndex].unreadCount = 0;
-    ref.read(frinedListProvider.notifier).update((state) => friendList);
+    WidgetsBinding.instance.removeObserver(this);
+
+    /// 未読数リセット
+    unreadReset();
 
     chatRoomWSModel.closeRoom();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    /// app クローズ
+    if (state == AppLifecycleState.detached) {
+      /// 未読数リセット
+      unreadReset();
+      print("Component cahtRoom : app close");
+    }
   }
 
   @override
@@ -401,6 +414,16 @@ class ChatRoom extends BaseEndDrawer {
         },
       ),
     );
+  }
+
+  /// 未読数リセット
+  void unreadReset() {
+    /// 未読数リセット
+    FriendService().updateUnreadCount(roomData.roomId, ref.watch(loginUserData).uid, 0);
+    ref.read(frinedListProvider.notifier).state[dataIndex].unreadCount = 0;
+    List<FriendListModel> friendList = ref.read(frinedListProvider.notifier).state.map((e) => e.copyWith()).toList();
+    friendList[dataIndex].unreadCount = 0;
+    ref.read(frinedListProvider.notifier).update((state) => friendList);
   }
 }
 

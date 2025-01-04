@@ -224,6 +224,7 @@ class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTi
   @override
   void initState() {
     super.initState();
+
     if (widget.needWaitPageOpen) {
       isInit = false;
     }
