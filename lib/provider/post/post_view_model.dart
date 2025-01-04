@@ -163,13 +163,32 @@ class PostViewModel {
   }
 
   ///コメント作成
-  Future<void> postCommentCreate({
+  Future<bool> postCommentUpdate({
+    required String message,
+    required int dataIndex,
+  }) async {
+    PostCommentTextEditorModel data = ref.read(postCommentListControllerProvider).listData[dataIndex].copyWith();
+
+    if (message.replaceAll(" ", "") == "" || data.message == message) {
+      return false;
+    }
+
+    ///編集
+    await PostService().updatePostComment(id: data.uid, mainMessage: message);
+    ref.read(postCommentListControllerProvider).listData[dataIndex].message = message;
+    render();
+
+    return true;
+  }
+
+  ///コメント作成
+  Future<bool> postCommentCreate({
     required String message,
     required int dataIndex,
     required StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController,
   }) async {
     if (message.replaceAll(" ", "") == "") {
-      return;
+      return false;
     }
     PostModel choiceData = ref.read(choicedPostProvider);
     ProfileData userData = ref.watch(loginUserData);
@@ -182,8 +201,6 @@ class PostViewModel {
       message: message,
       postTime: DateTime.now().toUtc().toString(),
       commentUserInfo: userData,
-      isEditor: false,
-      textEditingController: TextEditingController(text: message),
     );
 
     ///コメントListにコメント追加する
@@ -199,18 +216,12 @@ class PostViewModel {
     }
 
     render();
+
+    return true;
   }
 
   ///コメント編集
   Future<void> postCommentEdit({required PostCommentTextEditorModel data}) async {
-    String newMessage = data.textEditingController.text;
-    data.isEditor = !data.isEditor;
-    if (data.message != newMessage) {
-      if (data.textEditingController.text.replaceAll(" ", "") != "") {
-        await PostService().updatePostComment(id: data.uid, mainMessage: newMessage);
-        data.message = newMessage;
-      }
-    }
     render();
   }
 

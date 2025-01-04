@@ -145,24 +145,17 @@ class PostCommentTextEditorModel {
   String message;
   String postTime;
   ProfileData commentUserInfo;
-  bool isEditor;
-  TextEditingController textEditingController;
 
   PostCommentTextEditorModel({
-    required this.uid,
-    required this.postId,
-    required this.userUid,
-    required this.message,
-    required this.postTime,
-    required this.commentUserInfo,
-    required this.isEditor,
-    required this.textEditingController,
-  });
+    this.uid = 0,
+    this.postId = 0,
+    this.userUid = "",
+    this.message = "",
+    this.postTime = "",
+    ProfileData? commentUserInfo,
+  }) : commentUserInfo = commentUserInfo ?? ProfileData();
 
   factory PostCommentTextEditorModel.toMap(dynamic json) {
-    TextEditingController controller = TextEditingController();
-    controller.text = json['message'];
-
     return PostCommentTextEditorModel(
       uid: json['id'],
       postId: json['postId'],
@@ -170,8 +163,18 @@ class PostCommentTextEditorModel {
       message: json['message'],
       postTime: json['postTime'] ?? "",
       commentUserInfo: ProfileData.toModel(json['user']),
-      isEditor: false,
-      textEditingController: controller,
+    );
+  }
+
+  // 添加copyWith方法
+  PostCommentTextEditorModel copyWith() {
+    return PostCommentTextEditorModel(
+      uid: this.uid,
+      postId: this.postId,
+      userUid: this.userUid,
+      message: this.message,
+      postTime: this.postTime,
+      commentUserInfo: this.commentUserInfo,
     );
   }
 }

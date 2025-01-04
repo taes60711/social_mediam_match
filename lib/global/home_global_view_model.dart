@@ -39,6 +39,10 @@ class HomeGlobalViewModel {
     this.context = context;
     this.ref = ref;
     this.render = render;
+    await Future.delayed(Duration.zero);
+
+    /// チャットルームリストWS初始化
+    ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
 
     /// シャアシステム起動
     /// appLink Init
@@ -52,9 +56,6 @@ class HomeGlobalViewModel {
 
     FirebaseNotificationService().initNotification(context: context, ref: ref);
     FirebaseNotificationService().notificationListen(context: context, ref: ref);
-
-    /// チャットルームリストWS初始化
-    ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
   }
 
   ///BottomNavigiatonbar隠れ/表示する

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/bottomSheets/base_bottom_sheet.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
@@ -25,7 +26,11 @@ class PostCommentPage extends BaseBottomSheet {
   final int dataIndex;
 
   PostCommentPage({required this.dataIndex, this.postListController});
+
   bool isEditStart = false;
+  TextEditingController commentController = TextEditingController();
+  int choicedCommentEditDataIndex = -1;
+
   @override
   double buildHeight() {
     return 0.5;
@@ -114,28 +119,32 @@ class PostCommentPage extends BaseBottomSheet {
                               ],
                             ),
 
-                            ///コメント：メッセージ/テキストフィールド
-                            commentEditBuild(ref, data),
+                            ///コメント：メッセージ
+                            SizedBox(
+                              width: ScreenSize.width - ScreenSize.fitPxWidth(70),
+                              child: Text(
+                                data.message,
+                                style: TextStyle(color: AppColors.whiteColor),
+                              ),
+                            ),
 
                             SizedBox(height: ScreenSize.fitPxWidth(5)),
+
                             Visibility(
-                              visible: data.commentUserInfo.uid == userData.uid,
+                              visible: data.commentUserInfo.uid == userData.uid && !isEditStart,
                               child: Row(
                                 children: [
                                   ///コメント編集ボタン
                                   GestureDetector(
                                     onTap: () {
-                                      if (!data.isEditor) {
-                                        data.isEditor = !data.isEditor;
-                                        isEditStart = true;
-                                        render();
-                                      } else {
-                                        ///編集
-                                        viewModel.postCommentEdit(data: data);
-                                      }
+                                      isEditStart = true;
+                                      choicedCommentEditDataIndex = index;
+                                      commentController.text =
+                                          ref.read(postCommentListControllerProvider).listData[index].message;
+                                      render();
                                     },
                                     child: Text(
-                                      data.isEditor ? "儲存" : "編輯",
+                                      "編輯",
                                       style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                                     ),
                                   ),
@@ -166,143 +175,156 @@ class PostCommentPage extends BaseBottomSheet {
           ),
 
           ///コメント欄
-          commentCntainerBuild(ref),
+          commentContainerBuild(ref),
         ],
       ),
     );
   }
 
-  ///コメント：メッセージ/テキストフィールド
-  Widget commentEditBuild(WidgetRef ref, PostCommentTextEditorModel data) {
-    return data.isEditor
-
-        ///テキストフィールド
-        ? Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: ScreenSize.fitPxWidth(8),
-              vertical: ScreenSize.fitPxWidth(5),
-            ),
-            width: ScreenSize.width - ScreenSize.fitPxWidth(70),
-            decoration: BoxDecoration(
-              color: AppColors.greyColor57,
-              borderRadius: BorderRadius.circular(
-                ScreenSize.fitPxWidth(8),
-              ),
-            ),
-            child: BaseInputField(
-              controller: data.textEditingController,
-              autoFocus: true,
-              onFocusChanged: (va) async {
-                if (isEditStart) {
-                  await Future.delayed(Duration.zero);
-                  isEditStart = false;
-                } else {
-                  viewModel.postCommentEdit(data: data);
-                }
-              },
-            ),
-          )
-
-        ///メッセージ
-        : SizedBox(
-            width: ScreenSize.width - ScreenSize.fitPxWidth(70),
-            child: Text(
-              data.message,
-              style: TextStyle(color: AppColors.whiteColor),
-            ),
-          );
-  }
-
   ///コメント欄
-  Widget commentCntainerBuild(WidgetRef ref) {
+  Widget commentContainerBuild(WidgetRef ref) {
     ProfileData userData = ref.watch(loginUserData);
-    TextEditingController commentController = TextEditingController();
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: AppColors.greyColor54,
-            ),
-          ),
-        ),
-        height: ScreenSize.fitPxHeight(70),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(12)),
-          child: Column(
-            children: [
-              SizedBox(height: ScreenSize.fitPxHeight(10)),
-              Row(
-                children: [
-                  SizedBox(width: ScreenSize.fitPxHeight(10)),
-                  UserIcon(
-                    iconSize: ScreenSize.fitPxHeight(25),
-                    image: userData.image,
+    return Column(
+      children: [
+        Visibility(
+          visible: isEditStart,
+          child: Container(
+            width: ScreenSize.width,
+            height: ScreenSize.fitPxWidth(50),
+            padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
+            color: AppColors.bgColor,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    "正在編輯",
+                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                   ),
-                  SizedBox(width: ScreenSize.fitPxHeight(10)),
-
-                  /// コメント欄
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: ScreenSize.fitPxHeight(8),
-                        vertical: ScreenSize.fitPxHeight(6),
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.greyColor57,
-                        borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(13)),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: BaseInputField(
-                              hintText: "留言",
-                              controller: commentController,
-                              autoFocus: true,
-                              onFieldSubmitted: (value) {
-                                viewModel.postCommentCreate(
-                                  message: commentController.text,
-                                  dataIndex: dataIndex,
-                                  postListController: postListController,
-                                );
-                              },
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              viewModel.postCommentCreate(
-                                message: commentController.text,
-                                dataIndex: dataIndex,
-                                postListController: postListController,
-                              );
-                            },
-                            child: Container(
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8), vertical: ScreenSize.fitPxWidth(3)),
-                              decoration: BoxDecoration(
-                                color: AppColors.orangeColor,
-                                borderRadius: BorderRadius.circular(
-                                  ScreenSize.fitPxWidth(10),
-                                ),
-                              ),
-                              child: Icon(
-                                Icons.eco_sharp,
-                                color: AppColors.whiteColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                ),
+                MainBtn(
+                  onPress: () {
+                    isEditStart = false;
+                    commentController.text = "";
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    render();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(ScreenSize.fitPxWidth(8)),
+                    decoration: BoxDecoration(color: AppColors.greyColor57, shape: BoxShape.circle),
+                    child: Icon(
+                      FontAwesomeIcons.close,
+                      color: AppColors.whiteColor,
+                      size: ScreenSize.fontSize14,
                     ),
                   ),
-                  SizedBox(width: ScreenSize.fitPxWidth(12)),
-                ],
-              )
-            ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+        GestureDetector(
+          onTap: () {},
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: AppColors.greyColor54,
+                ),
+              ),
+            ),
+            height: ScreenSize.fitPxHeight(70),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(12)),
+              child: Column(
+                children: [
+                  SizedBox(height: ScreenSize.fitPxHeight(10)),
+                  Row(
+                    children: [
+                      SizedBox(width: ScreenSize.fitPxHeight(10)),
+                      UserIcon(
+                        iconSize: ScreenSize.fitPxHeight(25),
+                        image: userData.image,
+                      ),
+                      SizedBox(width: ScreenSize.fitPxHeight(10)),
+
+                      /// コメント欄
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ScreenSize.fitPxHeight(8),
+                            vertical: ScreenSize.fitPxHeight(6),
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.greyColor57,
+                            borderRadius: BorderRadius.circular(ScreenSize.fitPxHeight(13)),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: BaseInputField(
+                                  hintText: "留言",
+                                  controller: commentController,
+                                  autoFocus: true,
+                                  onFieldSubmitted: (value) {
+                                    viewModel.postCommentCreate(
+                                      message: commentController.text,
+                                      dataIndex: dataIndex,
+                                      postListController: postListController,
+                                    );
+                                  },
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  bool isSuccess = false;
+                                  if (isEditStart) {
+                                    ///編集
+                                    isSuccess = await viewModel.postCommentUpdate(
+                                        message: commentController.text, dataIndex: choicedCommentEditDataIndex);
+                                  } else {
+                                    /// 作成
+                                    isSuccess = await viewModel.postCommentCreate(
+                                      message: commentController.text,
+                                      dataIndex: dataIndex,
+                                      postListController: postListController,
+                                    );
+                                  }
+
+                                  if (isSuccess) {
+                                    isEditStart = false;
+                                    commentController.text = "";
+                                    // ignore: use_build_context_synchronously
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                  }
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: ScreenSize.fitPxWidth(8), vertical: ScreenSize.fitPxWidth(3)),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.orangeColor,
+                                    borderRadius: BorderRadius.circular(
+                                      ScreenSize.fitPxWidth(10),
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.eco_sharp,
+                                    color: AppColors.whiteColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: ScreenSize.fitPxWidth(12)),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
