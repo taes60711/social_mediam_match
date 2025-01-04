@@ -45,6 +45,9 @@ class CourseRichTextEdit extends BaseFadeScalePage {
   TextEditingController titleController = TextEditingController();
   QuillEditorController courserController = QuillEditorController();
   String realContent = "";
+
+  bool isSend = false;
+
   @override
   Future<void> initState(WidgetRef ref) async {
     if (courseChapterInfo != null && ediType == EdiType.chapter) {
@@ -80,34 +83,38 @@ class CourseRichTextEdit extends BaseFadeScalePage {
                   closePage();
                 }
               },
-              rightWidget: MainBtn(
-                title: "保存",
-                onPress: () async {
-                  LoadingDialog().show();
-                  String richTextContent = await courserController.getText();
+              rightWidget: IgnorePointer(
+                ignoring: isSend,
+                child: MainBtn(
+                  title: "保存",
+                  onPress: () async {
+                    LoadingDialog().show();
+                    String richTextContent = await courserController.getText();
 
-                  if (sendBeforeCheck(richTextContent)) {
-                    if (ediType == EdiType.chapter) {
-                      String title = titleController.text;
-                      print("titleController: $title  richTextContent $richTextContent");
-                      String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
-                      List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
+                    if (sendBeforeCheck(richTextContent)) {
+                      isSend = true;
+                      if (ediType == EdiType.chapter) {
+                        String title = titleController.text;
+                        print("titleController: $title  richTextContent $richTextContent");
+                        String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
+                        List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
 
-                      courseChapterInfo!.chapterName = title;
-                      courseChapterInfo!.content = [fomattedContent];
-                      chapterList[courseChaterIndex ?? -1] = courseChapterInfo!;
+                        courseChapterInfo!.chapterName = title;
+                        courseChapterInfo!.content = [fomattedContent];
+                        chapterList[courseChaterIndex ?? -1] = courseChapterInfo!;
 
-                      ref.read(courseEditChapterList.notifier).update((state) => chapterList);
-                    } else {
-                      print("richTextContent $richTextContent");
-                      String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
-                      ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
+                        ref.read(courseEditChapterList.notifier).update((state) => chapterList);
+                      } else {
+                        print("richTextContent $richTextContent");
+                        String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
+                        ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
+                      }
+                      LoadingDialog().close();
+                      courseEditPageRender();
+                      closePage();
                     }
-                    LoadingDialog().close();
-                    courseEditPageRender();
-                    closePage();
-                  }
-                },
+                  },
+                ),
               ),
             ),
             Visibility(

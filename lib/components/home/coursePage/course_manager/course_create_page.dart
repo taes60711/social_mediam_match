@@ -27,6 +27,7 @@ import 'course_edit_page/course_type_choiced_label.dart';
 
 class CourseCreatePage extends BaseFadeScalePage {
   late CourseEditViewModel viewModel = CourseEditViewModel();
+  bool isSend = false;
 
   @override
   Future<void> initState(WidgetRef ref) async {
@@ -71,54 +72,58 @@ class CourseCreatePage extends BaseFadeScalePage {
                   ),
                 ),
               ),
-              rightWidget: MainBtn(
-                onPress: () async {
-                  if (!viewModel.sendBeforeCheck()) {
-                    return;
-                  }
-                  LoadingDialog().show();
-                  ProfileData userData = ref.read(loginUserData);
+              rightWidget: IgnorePointer(
+                ignoring: isSend,
+                child: MainBtn(
+                  onPress: () async {
+                    if (!viewModel.sendBeforeCheck()) {
+                      return;
+                    }
+                    LoadingDialog().show();
+                    isSend = true;
+                    ProfileData userData = ref.read(loginUserData);
 
-                  CourseEditingModel courseEditingData = viewModel.editingData;
+                    CourseEditingModel courseEditingData = viewModel.editingData;
 
-                  List<String> learningSkillList = courseEditingData.courseEditSkillList.map((e) => e.name).toList();
+                    List<String> learningSkillList = courseEditingData.courseEditSkillList.map((e) => e.name).toList();
 
-                  int index = await CourseService().createOrUpdateCourse(
-                    createdBy: userData.uid,
-                    title: courseEditingData.title,
-                    needLevel: courseEditingData.courseChoiceLevel,
-                    content: courseEditingData.content,
-                    beforeNeed: courseEditingData.beforeNeed,
-                    prStory: courseEditingData.courseDetailContent,
-                    chapterList: courseEditingData.courseEditChapterList,
-                    courseLearningSkills: learningSkillList,
-                    type: courseEditingData.courseChoiceType,
-                    isPublic: courseEditingData.isPublic,
-                  );
-                  LoadingDialog().close();
-                  CourseModel createdCourse = CourseModel(
-                    id: index,
-                    createdBy: userData.uid,
-                    title: courseEditingData.title,
-                    needLevel: int.parse(courseEditingData.courseChoiceLevel),
-                    content: courseEditingData.content,
-                    beforeNeed: courseEditingData.beforeNeed,
-                    prStory: courseEditingData.courseDetailContent,
-                    chapterList: courseEditingData.courseEditChapterList,
-                    courseLearningSkills: learningSkillList,
-                    type: int.parse(courseEditingData.courseChoiceType),
-                    postTime: DateTime.now().toUtc().toString(),
-                    isPublic: courseEditingData.isPublic,
-                    signUpStatus: "none",
-                    courseCreateduserInfo: userData,
-                  );
-                  ref.read(courseMainPageListPorver.notifier).addDataTofirst(createdCourse);
-                  await Future.delayed(const Duration(milliseconds: 100));
-                  ref.read(courseMainPageListPorver).scrollController.jumpTo(0);
-                  viewModel.resetAllData();
-                  closePage();
-                },
-                title: "投稿",
+                    int index = await CourseService().createOrUpdateCourse(
+                      createdBy: userData.uid,
+                      title: courseEditingData.title,
+                      needLevel: courseEditingData.courseChoiceLevel,
+                      content: courseEditingData.content,
+                      beforeNeed: courseEditingData.beforeNeed,
+                      prStory: courseEditingData.courseDetailContent,
+                      chapterList: courseEditingData.courseEditChapterList,
+                      courseLearningSkills: learningSkillList,
+                      type: courseEditingData.courseChoiceType,
+                      isPublic: courseEditingData.isPublic,
+                    );
+                    LoadingDialog().close();
+                    CourseModel createdCourse = CourseModel(
+                      id: index,
+                      createdBy: userData.uid,
+                      title: courseEditingData.title,
+                      needLevel: int.parse(courseEditingData.courseChoiceLevel),
+                      content: courseEditingData.content,
+                      beforeNeed: courseEditingData.beforeNeed,
+                      prStory: courseEditingData.courseDetailContent,
+                      chapterList: courseEditingData.courseEditChapterList,
+                      courseLearningSkills: learningSkillList,
+                      type: int.parse(courseEditingData.courseChoiceType),
+                      postTime: DateTime.now().toUtc().toString(),
+                      isPublic: courseEditingData.isPublic,
+                      signUpStatus: "none",
+                      courseCreateduserInfo: userData,
+                    );
+                    ref.read(courseMainPageListPorver.notifier).addDataTofirst(createdCourse);
+                    await Future.delayed(const Duration(milliseconds: 100));
+                    ref.read(courseMainPageListPorver).scrollController.jumpTo(0);
+                    viewModel.resetAllData();
+                    closePage();
+                  },
+                  title: "投稿",
+                ),
               ),
             ),
             Expanded(

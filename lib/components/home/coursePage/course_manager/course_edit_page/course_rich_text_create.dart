@@ -34,7 +34,7 @@ class CourseRichTextCreate extends BaseFadeScalePage {
   });
   TextEditingController titleController = TextEditingController();
   QuillEditorController courserController = QuillEditorController();
-
+  bool isSend = false;
   @override
   Future<void> initState(WidgetRef ref) async {}
 
@@ -59,38 +59,44 @@ class CourseRichTextCreate extends BaseFadeScalePage {
                   closePage();
                 }
               },
-              rightWidget: MainBtn(
-                title: "保存",
-                onPress: () async {
-                  String richTextContent = await courserController.getText();
-
-                  if (ediType == CreateEdiType.chapter) {
-                    if (sendBeforeCheck(richTextContent)) {
+              rightWidget: IgnorePointer(
+                ignoring: isSend,
+                child: MainBtn(
+                  title: "保存",
+                  onPress: () async {
+                    if (ediType == CreateEdiType.chapter) {
                       LoadingDialog().show();
-                      String title = titleController.text;
-                      print("titleController: $title  richTextContent $richTextContent");
-                      String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
-                      List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
-                      CourseChapterInfo createChapter =
-                          CourseChapterInfo(chapter: chapterList.length + 1, chapterName: title, content: [fomattedContent]);
+                      String richTextContent = await courserController.getText();
+                      if (sendBeforeCheck(richTextContent)) {
+                        isSend = true;
+                        String title = titleController.text;
+                        print("titleController: $title  richTextContent $richTextContent");
+                        String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
+                        List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
+                        CourseChapterInfo createChapter =
+                            CourseChapterInfo(chapter: chapterList.length + 1, chapterName: title, content: [fomattedContent]);
 
-                      chapterList.add(createChapter);
-                      ref.read(courseEditChapterList.notifier).update((state) => chapterList);
+                        chapterList.add(createChapter);
+                        ref.read(courseEditChapterList.notifier).update((state) => chapterList);
+                        LoadingDialog().close();
+                        courseEditPageRender();
+                        closePage();
+                      }
+                    } else {
+                      LoadingDialog().show();
+                      String richTextContent = await courserController.getText();
+
+                      isSend = true;
+                      print("richTextContent $richTextContent");
+                      String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
+
+                      ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
                       LoadingDialog().close();
                       courseEditPageRender();
                       closePage();
                     }
-                  } else {
-                    LoadingDialog().show();
-                    print("richTextContent $richTextContent");
-                    String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
-
-                    ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
-                    LoadingDialog().close();
-                    courseEditPageRender();
-                    closePage();
-                  }
-                },
+                  },
+                ),
               ),
             ),
             Visibility(

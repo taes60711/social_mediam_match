@@ -34,6 +34,7 @@ class PostEditorPage extends BaseFadeScalePage {
   }
 
   late PostViewModel viewModel;
+  bool isSend = false;
 
   @override
   Future<void> initState(WidgetRef ref) async {
@@ -83,34 +84,39 @@ class PostEditorPage extends BaseFadeScalePage {
                 ),
               ),
             ),
-            rightWidget: MainBtn(
-              onPress: () async {
-                String postTitle = titleController.text;
-                LoadingDialog().show();
-                String postContent = await quillEditorController.getText();
-                String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
+            rightWidget: IgnorePointer(
+              ignoring: isSend,
+              child: MainBtn(
+                onPress: () async {
+                  String postTitle = titleController.text;
+                  LoadingDialog().show();
+                  isSend = true;
+                  String postContent = await quillEditorController.getText();
+                  String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
 
-                if (viewModel.postCreateBeforCheck(postTitle: postTitle, postContent: postContent)) {
-                  PostModel post = ref.read(choicedPostProvider.notifier).state;
+                  if (viewModel.postCreateBeforCheck(postTitle: postTitle, postContent: postContent)) {
+                    PostModel post = ref.read(choicedPostProvider.notifier).state;
 
-                  bool isSucess = await PostService().updatePost(
-                    postId: post.id,
-                    title: postTitle,
-                    mainMessage: fomattedContent,
-                  );
+                    bool isSucess = await PostService().updatePost(
+                      postId: post.id,
+                      title: postTitle,
+                      mainMessage: fomattedContent,
+                    );
 
-                  if (isSucess) {
-                    post.title = postTitle;
-                    post.mainMessage = fomattedContent;
-                    ref.read(postListController.notifier).editData(dataIndex, post);
+                    if (isSucess) {
+                      post.title = postTitle;
+                      post.mainMessage = fomattedContent;
+                      ref.read(postListController.notifier).editData(dataIndex, post);
 
-                    render();
-                    closePage();
+                      render();
+                      closePage();
+                    }
                   }
-                }
-                LoadingDialog().close();
-              },
-              title: "更新",
+                  isSend = false;
+                  LoadingDialog().close();
+                },
+                title: "更新",
+              ),
             ),
           ),
           Expanded(

@@ -35,6 +35,7 @@ class PostCreatePage extends BaseFadeScalePage {
   }
 
   late PostViewModel viewModel;
+  bool isSend = false;
 
   @override
   Future<void> initState(WidgetRef ref) async {
@@ -75,23 +76,28 @@ class PostCreatePage extends BaseFadeScalePage {
                 ),
               ),
             ),
-            rightWidget: MainBtn(
-              onPress: () async {
-                LoadingDialog().show();
-                String postTitle = titleController.text;
-                String postContent = await quillEditorController.getText();
+            rightWidget: IgnorePointer(
+              ignoring: isSend,
+              child: MainBtn(
+                onPress: () async {
+                  isSend = true;
+                  LoadingDialog().show();
+                  String postTitle = titleController.text;
+                  String postContent = await quillEditorController.getText();
 
-                ///　文章作る
-                if (viewModel.postCreateBeforCheck(postTitle: postTitle, postContent: postContent)) {
-                  viewModel.postCreate(
-                    postTitle: titleController.text,
-                    postContent: postContent,
-                    postBoard: postBoard,
-                  );
-                }
-                LoadingDialog().close();
-              },
-              title: "投稿",
+                  ///　文章作る
+                  if (viewModel.postCreateBeforCheck(postTitle: postTitle, postContent: postContent)) {
+                    viewModel.postCreate(
+                      postTitle: titleController.text,
+                      postContent: postContent,
+                      postBoard: postBoard,
+                    );
+                  }
+                  isSend = false;
+                  LoadingDialog().close();
+                },
+                title: "投稿",
+              ),
             ),
           ),
           Expanded(
