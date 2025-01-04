@@ -60,7 +60,6 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
 
     /// 未読数リセット
     unreadReset();
-
     chatRoomWSModel.closeRoom();
   }
 
