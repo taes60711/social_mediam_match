@@ -204,7 +204,6 @@ class ChatRoomWSModel {
     _chatroomListChannel.sink.add(jsonEncode(map));
     stream();
     scrollController.jumpTo(0);
-    isOffScreen = false;
   }
 
   /// App最小化 > 戻る > WSもう一度繋がる > 画面のメッセージを更新する

@@ -93,6 +93,10 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
 
       if (chatRoomWSModel.isOffScreen) {
         chatRoomWSModel.offScreenRetrun(userId: myUserData.uid, roomData: roomData, scrollController: _scrollController);
+        Future.delayed(const Duration(seconds: 1)).then((value) {
+          chatRoomWSModel.isOffScreen = false;
+          render();
+        });
       } else if (chatRoomWSModel.inBackground) {
         chatRoomWSModel.appRetrun(userId: myUserData.uid, roomData: roomData);
       }
@@ -121,69 +125,81 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
           Column(
             children: [
               userBar(),
-              Visibility(visible: addData, child: const Loading()),
               Expanded(
-                child: NotificationListener<ScrollNotification>(
-                  onNotification: (ScrollNotification scrollNotification) {
-                    if (scrollNotification is ScrollUpdateNotification) {
-                      final scrollPosition = scrollNotification.metrics.pixels;
-                      final max = scrollNotification.metrics.maxScrollExtent;
+                child: chatRoomWSModel.isOffScreen
+                    ? const Center(
+                        child: Loading(),
+                      )
+                    : Column(
+                        children: [
+                          Visibility(visible: addData, child: const Loading()),
+                          Expanded(
+                            child: NotificationListener<ScrollNotification>(
+                              onNotification: (ScrollNotification scrollNotification) {
+                                if (scrollNotification is ScrollUpdateNotification) {
+                                  final scrollPosition = scrollNotification.metrics.pixels;
+                                  final max = scrollNotification.metrics.maxScrollExtent;
 
-                      if (chatRoomWSModel.roomAllPage >= chatRoomWSModel.pageNum) {
-                        if (scrollPosition >= max && !addData) {
-                          addData = true;
-                          render();
-                        }
-                      }
-                    }
+                                  if (chatRoomWSModel.roomAllPage >= chatRoomWSModel.pageNum) {
+                                    if (scrollPosition >= max && !addData) {
+                                      addData = true;
+                                      render();
+                                    }
+                                  }
+                                }
 
-                    if (scrollNotification is ScrollEndNotification) {
-                      if (addData) {
-                        ProfileData userData = ref.watch(loginUserData);
-                        chatRoomWSModel.loadRoomData(loginUserUID: userData.uid);
-                        addData = false;
-                      }
-                    }
+                                if (scrollNotification is ScrollEndNotification) {
+                                  if (addData) {
+                                    ProfileData userData = ref.watch(loginUserData);
+                                    chatRoomWSModel.loadRoomData(loginUserUID: userData.uid);
+                                    addData = false;
+                                  }
+                                }
 
-                    return false;
-                  },
-                  child: SingleChildScrollView(
-                    reverse: true,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    controller: _scrollController,
-                    child: Column(
-                      children: formattedRoomMsg.map(
-                        (e) {
-                          Widget component = Container();
+                                return false;
+                              },
+                              child: SingleChildScrollView(
+                                reverse: true,
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                controller: _scrollController,
+                                child: Column(
+                                  children: formattedRoomMsg.map(
+                                    (e) {
+                                      Widget component = Container();
 
-                          if (e.runtimeType == ChatRoomMsg) {
-                            if (e.userId == ref.read(loginUserData).uid) {
-                              component = myMessagebuild(ref.read(loginUserData), e);
-                            } else {
-                              component = otherMessagebuild(roomData.userData, e);
-                            }
-                          } else if (e.runtimeType == String) {
-                            component = chatRoomInfobuild(e);
-                          }
-                          return component;
-                        },
-                      ).toList(),
-                    ),
-                  ),
-                ),
+                                      if (e.runtimeType == ChatRoomMsg) {
+                                        if (e.userId == ref.read(loginUserData).uid) {
+                                          component = myMessagebuild(ref.read(loginUserData), e);
+                                        } else {
+                                          component = otherMessagebuild(roomData.userData, e);
+                                        }
+                                      } else if (e.runtimeType == String) {
+                                        component = chatRoomInfobuild(e);
+                                      }
+                                      return component;
+                                    },
+                                  ).toList(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: ScreenSize.fitPxHeight(70)),
+                        ],
+                      ),
               ),
-              SizedBox(height: ScreenSize.fitPxHeight(70)),
             ],
           ),
-          Positioned(
-            bottom: 0,
-            child: CommentBuild(
-              roomData: roomData,
-              chatRoomWSModel: chatRoomWSModel,
-              dataIndex: dataIndex,
-              scrollController: _scrollController,
-            ),
-          ),
+          chatRoomWSModel.isOffScreen
+              ? Container()
+              : Positioned(
+                  bottom: 0,
+                  child: CommentBuild(
+                    roomData: roomData,
+                    chatRoomWSModel: chatRoomWSModel,
+                    dataIndex: dataIndex,
+                    scrollController: _scrollController,
+                  ),
+                ),
         ],
       ),
     );
