@@ -68,6 +68,19 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
+    /// App最小化
+    if (state == AppLifecycleState.paused) {
+      chatRoomWSModel.appToBackground();
+      print("Component cahtRoom : app paused");
+    }
+
+    /// App最小化 > 戻る > WSもう一度繋がる > 画面のメッセージを更新する
+    if (state == AppLifecycleState.resumed) {
+      ProfileData myUserData = ref.watch(loginUserData);
+      chatRoomWSModel.appRetrun(userId: myUserData.uid, roomData: roomData);
+      print("Component cahtRoom : app resumed");
+    }
+
     /// app クローズ
     if (state == AppLifecycleState.detached) {
       /// 未読数リセット

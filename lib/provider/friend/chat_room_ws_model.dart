@@ -29,6 +29,8 @@ class ChatRoomWSModel {
 
   String notificationToken = "";
 
+  bool inBackground = false;
+
   late IOWebSocketChannel _chatroomListChannel;
   Stream<dynamic>? _broadcastStream;
 
@@ -93,21 +95,13 @@ class ChatRoomWSModel {
           var loadedData = event;
           ChatRoomMsg tempchatRoomMessage = ChatRoomMsg.toModel(jsonDecode(loadedData)['Message']);
           ChatRoomModel chatRoomModel = ref.read(roomMessageProvider.notifier).state;
-
           chatRoomModel.chatRoomMsg.insert(0, tempchatRoomMessage);
 
-          ref.read(roomMessageProvider.notifier).update((state) => chatRoomModel);
-
-          List<String> userIds = chatRoomModel.members.map((e) => e.replaceAll("\"", "")).toList();
-
-          ChatWSModel().sendMsg(userIds, enterRoomID);
-          if (insendMsgCount < 20) {
-            insendMsgCount++;
-          } else {
-            pageNum++;
-            insendMsgCount = 0;
+          /// App最小化場合直接画面を更新する
+          if (!inBackground) {
+            updatePageMsg();
           }
-          render();
+
         default:
           break;
       }
@@ -142,6 +136,7 @@ class ChatRoomWSModel {
     }
   }
 
+  /// チャットルーム離れる
   void closeRoom() {
     print("chatRoom close enterRoomID : ${enterRoomID}");
 
@@ -152,5 +147,52 @@ class ChatRoomWSModel {
     pageNum = 0;
     ref.read(roomMessageProvider.notifier).update((state) => ChatRoomModel(chatRoomMsg: []));
     _chatroomListChannel.sink.close();
+  }
+
+  ///画面のメッセージ更新する
+  void updatePageMsg() {
+    ChatRoomModel chatRoomModel = ref.read(roomMessageProvider.notifier).state;
+    ref.read(roomMessageProvider.notifier).update((state) => chatRoomModel);
+
+    List<String> userIds = chatRoomModel.members.map((e) => e.replaceAll("\"", "")).toList();
+
+    ChatWSModel().sendMsg(userIds, enterRoomID);
+    if (insendMsgCount < 20) {
+      insendMsgCount++;
+    } else {
+      pageNum++;
+      insendMsgCount = 0;
+    }
+    render();
+  }
+
+  /// App最小化
+  void appToBackground() {
+    inBackground = true;
+  }
+
+  /// App最小化 > 戻る > WSもう一度繋がる > 画面のメッセージを更新する
+  Future<void> appRetrun({required String userId, required FriendListModel roomData}) async {
+    print("chatRoom reConnect");
+
+    /// WS クローズ
+    _chatroomListChannel.sink.close();
+    _broadcastStream = null;
+    _chatroomListChannel = IOWebSocketChannel.connect(channelRoomUrl);
+    await _chatroomListChannel.ready;
+
+    Map<String, dynamic> map = {
+      "method": "reConnect",
+      "userid": userId,
+      "roomid": roomData.roomId,
+    };
+
+    /// WSもう一度繋がる
+    _chatroomListChannel.sink.add(jsonEncode(map));
+    stream();
+
+    ///  画面のメッセージを更新する
+    inBackground = false;
+    updatePageMsg();
   }
 }
