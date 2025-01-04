@@ -76,13 +76,13 @@ class CourseCreatePage extends BaseFadeScalePage {
                   if (!viewModel.sendBeforeCheck()) {
                     return;
                   }
-
+                  LoadingDialog().show();
                   ProfileData userData = ref.read(loginUserData);
 
                   CourseEditingModel courseEditingData = viewModel.editingData;
 
                   List<String> learningSkillList = courseEditingData.courseEditSkillList.map((e) => e.name).toList();
-                  LoadingDialog().show();
+
                   int index = await CourseService().createOrUpdateCourse(
                     createdBy: userData.uid,
                     title: courseEditingData.title,

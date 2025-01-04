@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:screen_state/screen_state.dart';
 import 'package:social_mediam_match/components/home/firendsPage/chatRoomPage/chat_room_manager_btm_sheet.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/image_view_page.dart';
 import 'package:social_mediam_match/components/utilities/appBar/chat_room_bar.dart';
@@ -44,7 +47,9 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
   List formattedRoomMsg = [];
   final _scrollController = ScrollController();
   bool addData = false;
+  Screen screen = Screen();
 
+  StreamSubscription<ScreenStateEvent>? _subscription;
   @override
   Future<void> initState(WidgetRef ref) async {
     ProfileData myUserData = ref.watch(loginUserData);
@@ -52,15 +57,24 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
     HomeGlobalViewModel().bottomBarHideStateChage(false);
 
     WidgetsBinding.instance.addObserver(this);
+    _subscription = screen.screenStateStream.listen(didChangeScreenState);
   }
 
   @override
   Future<void> dispose(WidgetRef ref) async {
     WidgetsBinding.instance.removeObserver(this);
+    _subscription!.cancel();
 
     /// 未読数リセット
     unreadReset();
     chatRoomWSModel.closeRoom();
+  }
+
+  void didChangeScreenState(ScreenStateEvent event) {
+    if (event == ScreenStateEvent.SCREEN_OFF) {
+      chatRoomWSModel.screenOFF();
+      print("Component cahtRoom : SCREEN_OFF");
+    }
   }
 
   @override
@@ -76,7 +90,13 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
     /// App最小化 > 戻る > WSもう一度繋がる > 画面のメッセージを更新する
     if (state == AppLifecycleState.resumed) {
       ProfileData myUserData = ref.watch(loginUserData);
-      chatRoomWSModel.appRetrun(userId: myUserData.uid, roomData: roomData);
+
+      if (chatRoomWSModel.isOffScreen) {
+        chatRoomWSModel.offScreenRetrun(userId: myUserData.uid, roomData: roomData, scrollController: _scrollController);
+      } else if (chatRoomWSModel.inBackground) {
+        chatRoomWSModel.appRetrun(userId: myUserData.uid, roomData: roomData);
+      }
+
       print("Component cahtRoom : app resumed");
     }
 

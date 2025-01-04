@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
@@ -30,6 +32,7 @@ class ChatRoomWSModel {
   String notificationToken = "";
 
   bool inBackground = false;
+  bool isOffScreen = false;
 
   late IOWebSocketChannel _chatroomListChannel;
   Stream<dynamic>? _broadcastStream;
@@ -166,14 +169,47 @@ class ChatRoomWSModel {
     render();
   }
 
+  /// App
+  void screenOFF() {
+    if (!isOffScreen) {
+      closeRoom();
+      isOffScreen = true;
+    }
+  }
+
   /// App最小化
   void appToBackground() {
-    inBackground = true;
+    if (!isOffScreen) {
+      inBackground = true;
+    }
+  }
+
+  Future<void> offScreenRetrun(
+      {required String userId, required FriendListModel roomData, required ScrollController scrollController}) async {
+    _chatroomListChannel = IOWebSocketChannel.connect(channelRoomUrl);
+    print("chatRoom isOffScreen reConnect");
+    await _chatroomListChannel.ready;
+
+    enterRoomID = roomData.roomId;
+    ref.read(loginUserInChatRoomId.notifier).update((state) => enterRoomID);
+
+    Map<String, dynamic> map = {
+      "method": "connect",
+      "ip": "$ip:$port",
+      "userid": userId,
+      "roomid": enterRoomID,
+      "pageNumber": pageNum,
+    };
+
+    _chatroomListChannel.sink.add(jsonEncode(map));
+    stream();
+    scrollController.jumpTo(0);
+    isOffScreen = false;
   }
 
   /// App最小化 > 戻る > WSもう一度繋がる > 画面のメッセージを更新する
   Future<void> appRetrun({required String userId, required FriendListModel roomData}) async {
-    print("chatRoom reConnect");
+    print("chatRoom inBackground reConnect");
 
     /// WS クローズ
     _chatroomListChannel.sink.close();

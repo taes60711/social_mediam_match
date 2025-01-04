@@ -16,6 +16,7 @@ import '../../../../provider/post/post_view_model.dart';
 import '../../../utilities/bottomSheets/base_bottom_sheet.dart';
 import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
 import '../../../utilities/dialog/confirm_dialog.dart';
+import '../../../utilities/lodaing_dialog.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/rich_text_editor.dart';
 import '../../../utilities/style/screen_size.dart';
@@ -76,6 +77,7 @@ class PostCreatePage extends BaseFadeScalePage {
             ),
             rightWidget: MainBtn(
               onPress: () async {
+                LoadingDialog().show();
                 String postTitle = titleController.text;
                 String postContent = await quillEditorController.getText();
 
@@ -87,6 +89,7 @@ class PostCreatePage extends BaseFadeScalePage {
                     postBoard: postBoard,
                   );
                 }
+                LoadingDialog().close();
               },
               title: "投稿",
             ),
