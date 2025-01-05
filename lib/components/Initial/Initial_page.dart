@@ -18,6 +18,7 @@ import '../../services/post_service.dart';
 
 import '../account/account_main_page.dart';
 
+import '../utilities/dialog/cant_touch_loading_dialog.dart';
 import '../utilities/style/theme_style.dart';
 import '../utilities/toast.dart';
 import 'splash_screen.dart';
@@ -56,6 +57,7 @@ class _InitialpageState extends ConsumerState<Initialpage> {
     await Future.delayed(Duration.zero);
 
     LoadingDialog().init(context);
+    CanTouchScreenLoadingDialog().init(context);
     Toast().init(context);
 
     /// request All Skill

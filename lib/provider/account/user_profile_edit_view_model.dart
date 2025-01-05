@@ -112,12 +112,15 @@ class UserProfileEditViewModel {
   ///　クロース前に編集したことあるのチェック
   bool closePageCheck() {
     bool canClose = false;
+
     updateEditData();
 
     bool isEdited = editData.toJsonString() != beforeEditData.toJsonString();
+
     if (!isEdited) {
       canClose = true;
     }
+
     return canClose;
   }
 

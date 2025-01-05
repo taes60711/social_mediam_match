@@ -7,16 +7,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
-
+import 'package:social_mediam_match/components/utilities/dialog/cant_touch_loading_dialog.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
-
 import '../../../../models/post_model.dart';
 import '../../../../provider/post/post_provider.dart';
 import '../../../../provider/post/post_view_model.dart';
 import '../../../utilities/bottomSheets/base_bottom_sheet.dart';
 import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
 import '../../../utilities/dialog/confirm_dialog.dart';
-import '../../../utilities/lodaing_dialog.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/rich_text_editor.dart';
 import '../../../utilities/style/screen_size.dart';
@@ -35,7 +33,6 @@ class PostCreatePage extends BaseFadeScalePage {
   }
 
   late PostViewModel viewModel;
-  bool isSend = false;
 
   @override
   Future<void> initState(WidgetRef ref) async {
@@ -76,28 +73,25 @@ class PostCreatePage extends BaseFadeScalePage {
                 ),
               ),
             ),
-            rightWidget: IgnorePointer(
-              ignoring: isSend,
-              child: MainBtn(
-                onPress: () async {
-                  isSend = true;
-                  LoadingDialog().show();
-                  String postTitle = titleController.text;
-                  String postContent = await quillEditorController.getText();
+            rightWidget: MainBtn(
+              onPress: () async {
+                String postTitle = titleController.text;
+                CanTouchScreenLoadingDialog().show();
+                String postContent = await quillEditorController.getText();
 
-                  ///　文章作る
-                  if (viewModel.postCreateBeforCheck(postTitle: postTitle, postContent: postContent)) {
-                    viewModel.postCreate(
-                      postTitle: titleController.text,
-                      postContent: postContent,
-                      postBoard: postBoard,
-                    );
-                  }
-                  isSend = false;
-                  LoadingDialog().close();
-                },
-                title: "投稿",
-              ),
+                ///　文章作る
+                if (viewModel.postCreateBeforCheck(postTitle: postTitle, postContent: postContent)) {
+                  await viewModel.postCreate(
+                    postTitle: titleController.text,
+                    postContent: postContent,
+                    postBoard: postBoard,
+                  );
+                  CanTouchScreenLoadingDialog().close();
+                } else {
+                  CanTouchScreenLoadingDialog().close();
+                }
+              },
+              title: "投稿",
             ),
           ),
           Expanded(

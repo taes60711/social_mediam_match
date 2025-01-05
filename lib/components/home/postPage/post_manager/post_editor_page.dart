@@ -14,7 +14,6 @@ import '../../../../provider/post/post_view_model.dart';
 import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
 import '../../../utilities/apiListView/api_list_controller.dart';
 import '../../../utilities/dialog/confirm_dialog.dart';
-import '../../../utilities/lodaing_dialog.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/rich_text_editor.dart';
 import '../../../utilities/style/screen_size.dart';
@@ -34,7 +33,6 @@ class PostEditorPage extends BaseFadeScalePage {
   }
 
   late PostViewModel viewModel;
-  bool isSend = false;
 
   @override
   Future<void> initState(WidgetRef ref) async {
@@ -84,39 +82,34 @@ class PostEditorPage extends BaseFadeScalePage {
                 ),
               ),
             ),
-            rightWidget: IgnorePointer(
-              ignoring: isSend,
-              child: MainBtn(
-                onPress: () async {
-                  String postTitle = titleController.text;
-                  LoadingDialog().show();
-                  isSend = true;
-                  String postContent = await quillEditorController.getText();
-                  String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
+            rightWidget: MainBtn(
+              onPress: () async {
+                String postTitle = titleController.text;
 
-                  if (viewModel.postCreateBeforCheck(postTitle: postTitle, postContent: postContent)) {
-                    PostModel post = ref.read(choicedPostProvider.notifier).state;
+                String postContent = await quillEditorController.getText();
+                String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
 
-                    bool isSucess = await PostService().updatePost(
-                      postId: post.id,
-                      title: postTitle,
-                      mainMessage: fomattedContent,
-                    );
+                if (viewModel.postCreateBeforCheck(postTitle: postTitle, postContent: postContent)) {
+                  PostModel post = ref.read(choicedPostProvider.notifier).state;
 
-                    if (isSucess) {
-                      post.title = postTitle;
-                      post.mainMessage = fomattedContent;
-                      ref.read(postListController.notifier).editData(dataIndex, post);
+                  bool isSucess = await PostService().updatePost(
+                    postId: post.id,
+                    title: postTitle,
+                    mainMessage: fomattedContent,
+                  );
 
-                      render();
-                      closePage();
-                    }
+                  if (isSucess) {
+                    post.title = postTitle;
+                    post.mainMessage = fomattedContent;
+                    ref.read(postListController.notifier).editData(dataIndex, post);
+
+                    render();
+
+                    closePage();
                   }
-                  isSend = false;
-                  LoadingDialog().close();
-                },
-                title: "更新",
-              ),
+                }
+              },
+              title: "更新",
             ),
           ),
           Expanded(
