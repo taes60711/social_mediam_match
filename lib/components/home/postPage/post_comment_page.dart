@@ -190,14 +190,14 @@ class PostCommentPage extends BaseBottomSheet {
           visible: isEditStart,
           child: Container(
             width: ScreenSize.width,
-            height: ScreenSize.fitPxWidth(50),
+            height: ScreenSize.fitPxWidth(48),
             padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
             color: AppColors.bgColor,
             child: Row(
               children: [
                 Expanded(
                   child: Text(
-                    "正在編輯",
+                    "正在編輯訊息",
                     style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                   ),
                 ),
@@ -209,12 +209,13 @@ class PostCommentPage extends BaseBottomSheet {
                     render();
                   },
                   child: Container(
-                    padding: EdgeInsets.all(ScreenSize.fitPxWidth(8)),
-                    decoration: BoxDecoration(color: AppColors.greyColor57, shape: BoxShape.circle),
+                    padding: EdgeInsets.all(ScreenSize.fitPxWidth(10)),
+                    decoration: BoxDecoration(
+                        color: AppColors.greyColor57, borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(10))),
                     child: Icon(
                       FontAwesomeIcons.close,
                       color: AppColors.whiteColor,
-                      size: ScreenSize.fontSize14,
+                      size: ScreenSize.fontSize12,
                     ),
                   ),
                 ),
