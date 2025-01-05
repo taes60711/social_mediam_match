@@ -11,8 +11,8 @@ import '../../../../provider/course/course_provider.dart';
 import '../../../../services/course_service.dart';
 import '../../../utilities/common_scaffold.dart';
 import '../../../utilities/appBar/basic_top_bar.dart';
+import '../../../utilities/dialog/cant_touch_loading_dialog.dart';
 import '../../../utilities/dialog/confirm_dialog.dart';
-import '../../../utilities/lodaing_dialog.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/custom_expansion_title.dart';
 import '../../../utilities/inputField/base_input.dart';
@@ -76,10 +76,11 @@ class CourseCreatePage extends BaseFadeScalePage {
                 ignoring: isSend,
                 child: MainBtn(
                   onPress: () async {
+                    CanTouchScreenLoadingDialog().show();
                     if (!viewModel.sendBeforeCheck()) {
                       return;
                     }
-                    LoadingDialog().show();
+
                     isSend = true;
                     ProfileData userData = ref.read(loginUserData);
 
@@ -99,7 +100,7 @@ class CourseCreatePage extends BaseFadeScalePage {
                       type: courseEditingData.courseChoiceType,
                       isPublic: courseEditingData.isPublic,
                     );
-                    LoadingDialog().close();
+
                     CourseModel createdCourse = CourseModel(
                       id: index,
                       createdBy: userData.uid,
@@ -116,6 +117,8 @@ class CourseCreatePage extends BaseFadeScalePage {
                       signUpStatus: "none",
                       courseCreateduserInfo: userData,
                     );
+
+                    CanTouchScreenLoadingDialog().close();
                     ref.read(courseMainPageListPorver.notifier).addDataTofirst(createdCourse);
                     await Future.delayed(const Duration(milliseconds: 100));
                     ref.read(courseMainPageListPorver).scrollController.jumpTo(0);

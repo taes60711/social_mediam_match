@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade_scale_page.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_skill_filter_page.dart';
-import 'package:social_mediam_match/components/utilities/lodaing_dialog.dart';
 import '../../../../models/course_model.dart';
 import '../../../../provider/course/corse_edit_view_model.dart';
 import '../../../../provider/course/course_provider.dart';
@@ -11,6 +10,7 @@ import '../../../../services/course_service.dart';
 import '../../../utilities/apiListView/api_list_controller.dart';
 import '../../../utilities/common_scaffold.dart';
 import '../../../utilities/appBar/basic_top_bar.dart';
+import '../../../utilities/dialog/cant_touch_loading_dialog.dart';
 import '../../../utilities/dialog/confirm_dialog.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/custom_expansion_title.dart';
@@ -83,7 +83,7 @@ class CourseEditPage extends BaseFadeScalePage {
                     if (!viewModel.sendBeforeCheck()) {
                       return;
                     }
-                    LoadingDialog().show();
+                    CanTouchScreenLoadingDialog().show();
                     isSend = true;
                     CourseEditingModel courseEditingData = viewModel.editingData;
 
@@ -127,7 +127,7 @@ class CourseEditPage extends BaseFadeScalePage {
                       ref.read(choicedCourseProvider.notifier).update((state) => updateCourse);
                       closePage();
                     }
-                    LoadingDialog().close();
+                    CanTouchScreenLoadingDialog().close();
                   },
                   title: "修改",
                 ),

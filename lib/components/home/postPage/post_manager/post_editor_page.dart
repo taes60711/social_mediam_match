@@ -13,6 +13,7 @@ import '../../../../provider/post/post_provider.dart';
 import '../../../../provider/post/post_view_model.dart';
 import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
 import '../../../utilities/apiListView/api_list_controller.dart';
+import '../../../utilities/dialog/cant_touch_loading_dialog.dart';
 import '../../../utilities/dialog/confirm_dialog.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/rich_text_editor.dart';
@@ -85,7 +86,7 @@ class PostEditorPage extends BaseFadeScalePage {
             rightWidget: MainBtn(
               onPress: () async {
                 String postTitle = titleController.text;
-
+                CanTouchScreenLoadingDialog().show();
                 String postContent = await quillEditorController.getText();
                 String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
 
@@ -108,6 +109,7 @@ class PostEditorPage extends BaseFadeScalePage {
                     closePage();
                   }
                 }
+                CanTouchScreenLoadingDialog().close();
               },
               title: "更新",
             ),

@@ -6,7 +6,6 @@ import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade_scale_page.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
-import 'package:social_mediam_match/components/utilities/lodaing_dialog.dart';
 
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
@@ -14,6 +13,7 @@ import '../../../../../models/course_model.dart';
 import '../../../../../models/rich_text_format.dart';
 import '../../../../../provider/course/corse_edit_view_model.dart';
 
+import '../../../../utilities/dialog/cant_touch_loading_dialog.dart';
 import '../../../../utilities/dialog/confirm_dialog.dart';
 import '../../../../utilities/inputField/base_input.dart';
 import '../../../../utilities/main_button.dart';
@@ -65,7 +65,7 @@ class CourseRichTextCreate extends BaseFadeScalePage {
                   title: "保存",
                   onPress: () async {
                     if (ediType == CreateEdiType.chapter) {
-                      LoadingDialog().show();
+                      CanTouchScreenLoadingDialog().show();
                       String richTextContent = await courserController.getText();
                       if (sendBeforeCheck(richTextContent)) {
                         isSend = true;
@@ -78,12 +78,12 @@ class CourseRichTextCreate extends BaseFadeScalePage {
 
                         chapterList.add(createChapter);
                         ref.read(courseEditChapterList.notifier).update((state) => chapterList);
-                        LoadingDialog().close();
+                        CanTouchScreenLoadingDialog().close();
                         courseEditPageRender();
                         closePage();
                       }
                     } else {
-                      LoadingDialog().show();
+                      CanTouchScreenLoadingDialog().show();
                       String richTextContent = await courserController.getText();
 
                       isSend = true;
@@ -91,7 +91,7 @@ class CourseRichTextCreate extends BaseFadeScalePage {
                       String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
 
                       ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
-                      LoadingDialog().close();
+                      CanTouchScreenLoadingDialog().close();
                       courseEditPageRender();
                       closePage();
                     }

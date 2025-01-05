@@ -13,9 +13,9 @@ import '../../../../../models/course_model.dart';
 import '../../../../../models/rich_text_format.dart';
 import '../../../../../provider/course/corse_edit_view_model.dart';
 
+import '../../../../utilities/dialog/cant_touch_loading_dialog.dart';
 import '../../../../utilities/dialog/confirm_dialog.dart';
 import '../../../../utilities/inputField/base_input.dart';
-import '../../../../utilities/lodaing_dialog.dart';
 import '../../../../utilities/main_button.dart';
 import '../../../../utilities/style/screen_size.dart';
 
@@ -83,38 +83,34 @@ class CourseRichTextEdit extends BaseFadeScalePage {
                   closePage();
                 }
               },
-              rightWidget: IgnorePointer(
-                ignoring: isSend,
-                child: MainBtn(
-                  title: "保存",
-                  onPress: () async {
-                    LoadingDialog().show();
-                    String richTextContent = await courserController.getText();
+              rightWidget: MainBtn(
+                title: "保存",
+                onPress: () async {
+                  CanTouchScreenLoadingDialog().show();
+                  String richTextContent = await courserController.getText();
 
-                    if (sendBeforeCheck(richTextContent)) {
-                      isSend = true;
-                      if (ediType == EdiType.chapter) {
-                        String title = titleController.text;
-                        print("titleController: $title  richTextContent $richTextContent");
-                        String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
-                        List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
+                  if (sendBeforeCheck(richTextContent)) {
+                    if (ediType == EdiType.chapter) {
+                      String title = titleController.text;
+                      print("titleController: $title  richTextContent $richTextContent");
+                      String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
+                      List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
 
-                        courseChapterInfo!.chapterName = title;
-                        courseChapterInfo!.content = [fomattedContent];
-                        chapterList[courseChaterIndex ?? -1] = courseChapterInfo!;
+                      courseChapterInfo!.chapterName = title;
+                      courseChapterInfo!.content = [fomattedContent];
+                      chapterList[courseChaterIndex ?? -1] = courseChapterInfo!;
 
-                        ref.read(courseEditChapterList.notifier).update((state) => chapterList);
-                      } else {
-                        print("richTextContent $richTextContent");
-                        String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
-                        ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
-                      }
-                      LoadingDialog().close();
-                      courseEditPageRender();
-                      closePage();
+                      ref.read(courseEditChapterList.notifier).update((state) => chapterList);
+                    } else {
+                      print("richTextContent $richTextContent");
+                      String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
+                      ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
                     }
-                  },
-                ),
+                    CanTouchScreenLoadingDialog().close();
+                    courseEditPageRender();
+                    closePage();
+                  }
+                },
               ),
             ),
             Visibility(
