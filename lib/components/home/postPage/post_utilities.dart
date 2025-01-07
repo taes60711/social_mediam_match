@@ -275,7 +275,13 @@ class PostViewUtilities {
   }
 
   ///アイコン＆文字
-  Widget iconWithText({required IconData iconData, Color? iconColor, required String text, TextStyle? style, double? iconSize}) {
+  Widget iconWithText({
+    required IconData iconData,
+    Color? iconColor,
+    required String text,
+    TextStyle? style,
+    double? iconSize,
+  }) {
     return Container(
       color: Colors.transparent,
       padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(3), vertical: ScreenSize.fitPxWidth(3)),

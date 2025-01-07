@@ -103,20 +103,23 @@ class PostDetailPage extends BaseEndDrawer {
                             text: "${choiceData.viewed}",
                             iconSize: ScreenSize.fitPxWidth(20),
                             style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
-                        SizedBox(width: ScreenSize.fitPxWidth(10)),
+
                         GestureDetector(
                           onTap: () {
                             ///コメントページに遷移する
                             PostCommentPage(dataIndex: dataIndex, postListController: postListController).show(context);
                           },
-                          child: PostViewUtilities().iconWithText(
-                              iconData: FontAwesomeIcons.commentDots,
-                              iconColor: AppColors.greyColor130,
-                              text: "${choiceData.commentCount}",
-                              iconSize: ScreenSize.fitPxWidth(20),
-                              style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                          child: Container(
+                            color: Colors.transparent,
+                            padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(7)),
+                            child: PostViewUtilities().iconWithText(
+                                iconData: FontAwesomeIcons.commentDots,
+                                iconColor: AppColors.greyColor130,
+                                text: "${choiceData.commentCount}",
+                                iconSize: ScreenSize.fitPxWidth(20),
+                                style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                          ),
                         ),
-                        SizedBox(width: ScreenSize.fitPxWidth(12)),
 
                         ///いいね数
                         GestureDetector(
@@ -133,6 +136,7 @@ class PostDetailPage extends BaseEndDrawer {
                           },
                           child: Container(
                             color: Colors.transparent,
+                            padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10)),
                             child: Row(
                               children: [
                                 Image.asset(
@@ -148,13 +152,7 @@ class PostDetailPage extends BaseEndDrawer {
                               ],
                             ),
                           ),
-                          // child: PostViewUtilities().iconWithText(
-                          //     iconData: FontAwesomeIcons.heart,
-                          //     iconColor: ref.read(choicedPostIsGoodProvider.notifier).state ? Colors.red : AppColors.greyColor130,
-                          //     text: "${choiceData.good}",
-                          //     style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
                         ),
-                        SizedBox(width: ScreenSize.fitPxWidth(12)),
                       ],
                     ),
                   ),
