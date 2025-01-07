@@ -192,7 +192,7 @@ class PostCommentPage extends BaseBottomSheet {
             width: ScreenSize.width,
             height: ScreenSize.fitPxWidth(48),
             padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
-            color: AppColors.bgColor,
+            color: AppColors.bgColor.withOpacity(.8),
             child: Row(
               children: [
                 Expanded(

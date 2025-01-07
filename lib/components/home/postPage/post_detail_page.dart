@@ -101,6 +101,7 @@ class PostDetailPage extends BaseEndDrawer {
                             iconData: FontAwesomeIcons.eye,
                             iconColor: AppColors.greyColor130,
                             text: "${choiceData.viewed}",
+                            iconSize: ScreenSize.fitPxWidth(20),
                             style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
                         SizedBox(width: ScreenSize.fitPxWidth(10)),
                         GestureDetector(
@@ -112,6 +113,7 @@ class PostDetailPage extends BaseEndDrawer {
                               iconData: FontAwesomeIcons.commentDots,
                               iconColor: AppColors.greyColor130,
                               text: "${choiceData.commentCount}",
+                              iconSize: ScreenSize.fitPxWidth(20),
                               style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
                         ),
                         SizedBox(width: ScreenSize.fitPxWidth(12)),
@@ -129,11 +131,28 @@ class PostDetailPage extends BaseEndDrawer {
                               postListController: postListController,
                             );
                           },
-                          child: PostViewUtilities().iconWithText(
-                              iconData: FontAwesomeIcons.heart,
-                              iconColor: ref.read(choicedPostIsGoodProvider.notifier).state ? Colors.red : AppColors.greyColor130,
-                              text: "${choiceData.good}",
-                              style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                          child: Container(
+                            color: Colors.transparent,
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  ref.read(choicedPostIsGoodProvider.notifier).state
+                                      ? "assets/ic-heart-fill.png"
+                                      : "assets/ic-heart-liner.png",
+                                  color: ref.read(choicedPostIsGoodProvider.notifier).state ? Colors.red : AppColors.greyColor130,
+                                  width: ScreenSize.fitPxWidth(20),
+                                ),
+                                SizedBox(width: ScreenSize.fitPxWidth(5)),
+                                Text("${choiceData.good}",
+                                    style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                              ],
+                            ),
+                          ),
+                          // child: PostViewUtilities().iconWithText(
+                          //     iconData: FontAwesomeIcons.heart,
+                          //     iconColor: ref.read(choicedPostIsGoodProvider.notifier).state ? Colors.red : AppColors.greyColor130,
+                          //     text: "${choiceData.good}",
+                          //     style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
                         ),
                         SizedBox(width: ScreenSize.fitPxWidth(12)),
                       ],

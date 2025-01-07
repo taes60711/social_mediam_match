@@ -91,6 +91,8 @@ flutter:
     - assets/Logo.png
     - assets/google_w_Logo.png
     - assets/normalUserIcon.png
+    - assets/ic-heart-fill.png
+    - assets/ic-heart-liner.png
     - assets/langs/
   fonts:
     - family: GenJyu

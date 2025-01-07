@@ -185,11 +185,18 @@ class PostViewUtilities {
                       SizedBox(width: ScreenSize.fitPxWidth(5)),
 
                       ///いいね数
-                      PostViewUtilities().iconWithText(
-                          iconData: FontAwesomeIcons.heart,
-                          iconColor: const Color.fromARGB(255, 248, 110, 110),
-                          text: "${data.good}",
-                          style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                      ///
+                      Row(
+                        children: [
+                          Image.asset(
+                            "assets/ic-heart-fill.png",
+                            color: Colors.red,
+                            width: ScreenSize.fitPxWidth(14),
+                          ),
+                          SizedBox(width: ScreenSize.fitPxWidth(5)),
+                          Text("${data.good}", style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                        ],
+                      ),
                       SizedBox(width: ScreenSize.fitPxWidth(5)),
 
                       ///コメント数
@@ -268,7 +275,7 @@ class PostViewUtilities {
   }
 
   ///アイコン＆文字
-  Widget iconWithText({required IconData iconData, Color? iconColor, required String text, TextStyle? style}) {
+  Widget iconWithText({required IconData iconData, Color? iconColor, required String text, TextStyle? style, double? iconSize}) {
     return Container(
       color: Colors.transparent,
       padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(3), vertical: ScreenSize.fitPxWidth(3)),
@@ -276,7 +283,7 @@ class PostViewUtilities {
         children: [
           Icon(
             iconData,
-            size: ScreenSize.fontSize14,
+            size: iconSize ?? ScreenSize.fontSize14,
             color: iconColor,
           ),
           SizedBox(width: ScreenSize.fitPxWidth(5)),
