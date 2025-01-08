@@ -152,7 +152,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
               component = CachedNetworkImage(
                 imageUrl: resultString,
                 width: ScreenSize.width,
-                height: ScreenSize.fitPxWidth(120),
+                height: ScreenSize.fitPxWidth(190),
                 fit: BoxFit.cover,
                 placeholder: (context, url) {
                   return Shimmer.fromColors(

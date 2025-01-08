@@ -183,7 +183,7 @@ class RichTextFormat {
     if (node!.nodeType == Node.ELEMENT_NODE) {
       var allElements = node.querySelectorAll('*');
 
-      allElements.forEach((element) {
+      for (var element in allElements) {
         if (!isImage) {
           if (element.innerHtml.contains("img")) {
             isImage = true;
@@ -194,7 +194,7 @@ class RichTextFormat {
             resultString = "https://img.youtube.com/vi/$ytId/hqdefault.jpg";
           }
         }
-      });
+      }
     }
 
     return {
