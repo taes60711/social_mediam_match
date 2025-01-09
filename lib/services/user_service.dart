@@ -230,6 +230,7 @@ class UserService extends ApiClient {
       "email": email,
       "password": "$sha256Password",
     };
+
     String responseData = await apiPush('/updateUserPwdByEmail/$captchaCode', body: body);
 
     print("updateUserPwdByEmail : $responseData");

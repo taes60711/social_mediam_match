@@ -1,78 +1,57 @@
 List<String> frontType = [
-  "javascript",
-  "typescript",
-  "css",
-  "html",
-  "Vue.js",
   "React",
-  "AndroidStudio",
-  "Flutter",
-  "objective-c",
+  "Vue",
   "Angular",
-  "Gatsby.js",
-  "Svelte",
-  "Next.js",
-  "Nuxt.js",
-  "Ember.js",
-  "Preact",
-  "Backbone.js",
-  "jQuery",
+  "Next",
+  "Nuxt",
+  "Qwik",
   "Bootstrap",
-  "Tailwind CSS",
-  "Material-UI",
-  "Ant Design",
-  "Foundation",
-  "Bulma",
-  "Electron",
-  "Ionic",
-  "Lit",
-];
-List<String> iotType = [
-  "Arduino",
-  "C",
-  "C++",
-  "FreeRTOS",
-  "Embedded Linux",
-  "MicroPython",
-  "Raspberry pi",
-  "PlatformIO",
-  "CMSIS",
-  "ESP-IDF",
-  "Nordic SDK",
-  "QEMU",
+  "Html",
+  "Css",
+  "Svelte",
+  "WordPress",
+  "ReactNative",
+  "Flutter",
+  "Swift",
+  "Android studio",
+  "Firebase"
 ];
 List<String> backendType = [
-  "Java",
-  "Python",
-  "MySQL",
-  "Node.js",
-  "Express.js",
-  "Django",
   "Flask",
-  "Ruby on Rails",
-  "Spring Boot",
-  "Laravel",
-  "ASP.NET",
-  "Koa.js",
+  "Django",
   "FastAPI",
-  "GraphQL",
-  "Phoenix",
-  "NestJS",
-  "Sails.js",
-  "Hapi.js",
-  "Symfony",
-  "CakePHP",
-  "Golang",
-  "Rust",
-  "Firebase",
+  "ASP .NET Core",
+  "Laravel",
+  "Ruby on Rails",
+  "ExpressJS",
+  "Spring Boot"
 ];
+List<String> iotType = ["STM", "Arduino", "Raspberry Pi", "8051", "ARM"];
+List<String> programLanguageType = [
+  "C",
+  "C++",
+  "C#",
+  "Java",
+  "TypeScript",
+  "JavaScript",
+  "PHP",
+  "Node.js",
+  "Python",
+  "Swift",
+  "Matlab",
+  "Shell Script"
+];
+
+List<String> cloudType = ["GCP", "AWS", "Azure"];
 
 ///dataType
 enum SkillType {
   frontend("前端", 0),
   backend("後端", 1),
   iot("韌體", 2),
-  other("語言", 3);
+  cloud("雲端", 3),
+  programLanguage("程式語言", 4),
+  other("語言", 5);
 
   final String value;
   final int type;

@@ -23,6 +23,8 @@ class BaseSkillFilterPage extends BaseEndDrawer {
     SkillType.frontend: [],
     SkillType.backend: [],
     SkillType.iot: [],
+    SkillType.cloud: [],
+    SkillType.programLanguage: [],
     SkillType.other: [],
   };
 
@@ -285,6 +287,12 @@ class BaseSkillFilterPage extends BaseEndDrawer {
       } else if (iotType.contains(skillName)) {
         ///iot
         mapedSkillList[SkillType.iot]!.add(skillInfo);
+      } else if (cloudType.contains(skillName)) {
+        ///cloud
+        mapedSkillList[SkillType.cloud]!.add(skillInfo);
+      } else if (programLanguageType.contains(skillName)) {
+        ///programLanguage
+        mapedSkillList[SkillType.programLanguage]!.add(skillInfo);
       } else {
         ///other
         mapedSkillList[SkillType.other]!.add(skillInfo);
