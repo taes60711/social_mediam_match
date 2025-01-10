@@ -82,14 +82,17 @@ class UserProfileEditPage extends BaseBottomSheet {
                 String httpImg = viewModel.editImg ?? "";
 
                 LoadingDialog().show();
-                if (!viewModel.editImg!.contains("http") && viewModel.editImg != "") {
-                  String uid = const Uuid().v1();
-                  if (await ImageService().imageIsExist(viewModel.editImg ?? "") != "-1") {
-                    uid = await ImageService().imageIsExist(viewModel.editImg ?? "");
-                  } else {
-                    await ImageService().saveImg(uid, viewModel.editImg ?? "");
+
+                if (viewModel.editImg != null) {
+                  if (!viewModel.editImg!.contains("http") && viewModel.editImg != "") {
+                    String uid = const Uuid().v1();
+                    if (await ImageService().imageIsExist(viewModel.editImg ?? "") != "-1") {
+                      uid = await ImageService().imageIsExist(viewModel.editImg ?? "");
+                    } else {
+                      await ImageService().saveImg(uid, viewModel.editImg ?? "");
+                    }
+                    httpImg = "http://\$ip:\$port/images/$uid";
                   }
-                  httpImg = "http://\$ip:\$port/images/$uid";
                 }
 
                 updateData = updateData.copyWith(
