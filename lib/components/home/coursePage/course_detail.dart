@@ -238,25 +238,6 @@ class CourseDetailPage extends BaseEndDrawer {
         SizedBox(height: ScreenSize.fitPxHeight(5)),
 
         ///内容
-        Row(
-          children: [
-            Icon(
-              FontAwesomeIcons.book,
-              color: AppColors.whiteColor,
-              size: ScreenSize.fontSize14,
-            ),
-            SizedBox(width: ScreenSize.fitPxWidth(5)),
-            Text(
-              "大綱",
-              style: TextStyle(
-                color: AppColors.whiteColor,
-                fontSize: ScreenSize.fontSize14,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: ScreenSize.fitPxHeight(5)),
-
         Container(
           width: ScreenSize.width,
           padding: EdgeInsets.symmetric(
@@ -277,34 +258,13 @@ class CourseDetailPage extends BaseEndDrawer {
         ),
         SizedBox(height: ScreenSize.fitPxHeight(8)),
 
-        Row(
-          children: [
-            Icon(
-              FontAwesomeIcons.wrench,
-              color: AppColors.whiteColor,
-              size: ScreenSize.fontSize14,
-            ),
-            SizedBox(width: ScreenSize.fitPxWidth(5)),
-            Text(
-              "前置需求",
-              style: TextStyle(
-                color: AppColors.whiteColor,
-                fontSize: ScreenSize.fontSize14,
-              ),
-            ),
-            SizedBox(width: ScreenSize.fitPxWidth(5)),
-            Padding(
-              padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(3)),
-              child: Text(
-                "程度 ${choiceData.needLevel}",
-                style: TextStyle(
-                  color: AppColors.greyColor130,
-                  fontSize: ScreenSize.fontSize12,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ],
+        Text(
+          "程度 ${choiceData.needLevel}",
+          style: TextStyle(
+            color: AppColors.greyColor130,
+            fontSize: ScreenSize.fontSize12,
+            fontWeight: FontWeight.w400,
+          ),
         ),
         SizedBox(height: ScreenSize.fitPxHeight(5)),
 

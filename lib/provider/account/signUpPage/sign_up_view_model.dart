@@ -66,6 +66,7 @@ class SignUpViewModel {
       );
 
       if (apiReturn == "success") {
+        signUpedUserUID = googleUser.id;
         return true;
       } else {
         return false;

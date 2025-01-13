@@ -79,21 +79,15 @@ class SkillUtilites {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              data.name ?? "",
-                              maxLines: 2,
-                              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
-                            ),
-                          ),
-                          Text(
-                            DateFormatUtilities().noYYYYMMDDformat(data.lastLogin),
-                            style: TextStyle(color: AppColors.greyColor176, fontSize: ScreenSize.fontSize10),
-                          ),
-                        ],
+                      /// 名前
+                      Text(
+                        data.name ?? "",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                       ),
+
+                      ///職業
                       Visibility(
                         visible: data.job != null,
                         child: Row(
@@ -111,6 +105,8 @@ class SkillUtilites {
                           ],
                         ),
                       ),
+
+                      ///自己紹介
                       Text(
                         data.introduction ?? "",
                         maxLines: 2,
@@ -171,6 +167,13 @@ class SkillUtilites {
                 ///スキル
                 Expanded(child: skillBar(skills: data.wantSkills!)),
               ],
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                DateFormatUtilities().noYYYYMMDDformat(data.lastLogin),
+                style: TextStyle(color: AppColors.greyColor176, fontSize: ScreenSize.fontSize10),
+              ),
             ),
           ],
         ),

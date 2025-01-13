@@ -10,6 +10,7 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import '../../../global/home_global_view_model.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
+import '../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../services/user_service.dart';
 
@@ -57,7 +58,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
           Column(
             children: [
               Container(
-                height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? ScreenSize.fitPxWidth(40) : 0,
+                height: ref.watch(bottomNavationBarPosProvider) != ScreenSize.fitPxHeight(-60) ? ScreenSize.fitPxWidth(45) : 0,
               ),
               Expanded(
                 child: APIListWidget<ProfileData>(
@@ -85,7 +86,20 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
             duration: const Duration(milliseconds: 300),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10)),
-              child: _buildSearchBar(ref, () => setState(() {}), context),
+              child: Row(
+                children: [
+                  /// ページタイトル
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10)),
+                    child: Text(
+                      BottomBarPath.skillExChange.label,
+                      style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize20, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  _buildSearchBar(ref, () => setState(() {}), context),
+                ],
+              ),
             ),
           ),
         ],
@@ -95,73 +109,75 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
 
   Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
     TextEditingController searchController = TextEditingController();
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(5)),
-      decoration: BoxDecoration(
-        color: AppColors.greyColor57,
-        borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
-      ),
-      width: ScreenSize.width,
-      height: ScreenSize.fitPxWidth(36),
-      child: Row(
-        children: [
-          MainBtn(
-            onPress: () {
-              if (searchController.text.replaceAll(" ", "") == "") {
-                return;
-              }
-              SkillUserChangeByTextFilter(searchText: searchController.text).show(context);
-            },
-            child: Container(
-              width: ScreenSize.fitPxWidth(30),
-              height: ScreenSize.fitPxWidth(36),
-              color: Colors.transparent,
-              child: Icon(
-                Icons.search,
-                color: AppColors.whiteColor,
-                size: ScreenSize.fontSize16,
-              ),
-            ),
-          ),
-          Expanded(
-            child: BaseInputField(
-              hintText: "搜尋",
-              textInputAction: TextInputAction.search,
-              controller: searchController,
-              onFieldSubmitted: (value) {
-                if (value.replaceAll(" ", "") == "") {
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(5)),
+        decoration: BoxDecoration(
+          color: AppColors.greyColor57,
+          borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(5)),
+        ),
+        // width: ScreenSize.width,
+        height: ScreenSize.fitPxWidth(36),
+        child: Row(
+          children: [
+            MainBtn(
+              onPress: () {
+                if (searchController.text.replaceAll(" ", "") == "") {
                   return;
                 }
-                SkillUserChangeByTextFilter(searchText: value).show(context);
+                SkillUserChangeByTextFilter(searchText: searchController.text).show(context);
               },
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              BaseSkillFilterPage(
-                viewRender: () {
-                  setState(() {});
-                },
-                filteredSkillList: filteredSkillList,
-                searchFunc: (choicedFilterSkillList) async {
-                  List<String> filteredSkillIdList = choicedFilterSkillList.map((e) => e.id.toString()).toList();
-                  SkillUserChangeBySkillFilter(filterSkill: filteredSkillIdList).show(context);
-                  ref.read(filteredSkillList.notifier).update((state) => choicedFilterSkillList);
-                },
-              ).show(context);
-            },
-            child: Container(
-              width: ScreenSize.fitPxWidth(30),
-              height: ScreenSize.fitPxWidth(40),
-              color: Colors.transparent,
-              child: Icon(
-                FontAwesomeIcons.sliders,
-                size: ScreenSize.fontSize14,
-                color: AppColors.whiteColor.withOpacity(.8),
+              child: Container(
+                width: ScreenSize.fitPxWidth(30),
+                height: ScreenSize.fitPxWidth(36),
+                color: Colors.transparent,
+                child: Icon(
+                  Icons.search,
+                  color: AppColors.whiteColor,
+                  size: ScreenSize.fontSize16,
+                ),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: BaseInputField(
+                hintText: "輸入名稱",
+                textInputAction: TextInputAction.search,
+                controller: searchController,
+                onFieldSubmitted: (value) {
+                  if (value.replaceAll(" ", "") == "") {
+                    return;
+                  }
+                  SkillUserChangeByTextFilter(searchText: value).show(context);
+                },
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                BaseSkillFilterPage(
+                  viewRender: () {
+                    setState(() {});
+                  },
+                  filteredSkillList: filteredSkillList,
+                  searchFunc: (choicedFilterSkillList) async {
+                    List<String> filteredSkillIdList = choicedFilterSkillList.map((e) => e.id.toString()).toList();
+                    SkillUserChangeBySkillFilter(filterSkill: filteredSkillIdList).show(context);
+                    ref.read(filteredSkillList.notifier).update((state) => choicedFilterSkillList);
+                  },
+                ).show(context);
+              },
+              child: Container(
+                width: ScreenSize.fitPxWidth(30),
+                height: ScreenSize.fitPxWidth(40),
+                color: Colors.transparent,
+                child: Icon(
+                  FontAwesomeIcons.sliders,
+                  size: ScreenSize.fontSize14,
+                  color: AppColors.whiteColor.withOpacity(.8),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

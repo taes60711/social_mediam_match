@@ -77,7 +77,18 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
             duration: const Duration(milliseconds: 300),
             child: Column(
               children: [
-                _buildSearchBar(ref, () => setState(() {}), context),
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(10)),
+                      child: Image.asset(
+                        'assets/NoTextLogo.png',
+                        width: ScreenSize.fitPxWidth(40),
+                      ),
+                    ),
+                    _buildSearchBar(ref, () => setState(() {}), context),
+                  ],
+                ),
                 Row(
                   children: [
                     _buildTabBtn(context, tabText: "人氣", index: 0),
@@ -195,51 +206,53 @@ Widget _buildTabBtn(BuildContext context, {required String tabText, required int
 Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
   TextEditingController searchController = TextEditingController();
 
-  return Container(
-    margin: EdgeInsets.symmetric(
-      horizontal: ScreenSize.fitPxWidth(10),
-    ),
-    decoration: BoxDecoration(
-      color: AppColors.greyColor57,
-      borderRadius: BorderRadius.circular(5),
-    ),
-    width: ScreenSize.width,
-    height: ScreenSize.fitPxHeight(35),
-    child: Row(
-      children: [
-        SizedBox(width: ScreenSize.fitPxHeight(13)),
-        Expanded(
-          child: BaseInputField(
-            textInputAction: TextInputAction.search,
-            controller: searchController,
-            hintText: "搜尋",
-            onFieldSubmitted: (value) {
+  return Expanded(
+    child: Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: ScreenSize.fitPxWidth(10),
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.greyColor57,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      width: ScreenSize.width,
+      height: ScreenSize.fitPxHeight(35),
+      child: Row(
+        children: [
+          SizedBox(width: ScreenSize.fitPxHeight(13)),
+          Expanded(
+            child: BaseInputField(
+              textInputAction: TextInputAction.search,
+              controller: searchController,
+              hintText: "輸入標題",
+              onFieldSubmitted: (value) {
+                if (searchController.text.replaceAll(" ", "") == "") {
+                  return;
+                }
+
+                PostPageByTextFilter(searchText: searchController.text).show(context);
+              },
+            ),
+          ),
+          MainBtn(
+            onPress: () {
               if (searchController.text.replaceAll(" ", "") == "") {
                 return;
               }
-
+              FocusScope.of(context).requestFocus(FocusNode());
               PostPageByTextFilter(searchText: searchController.text).show(context);
             },
-          ),
-        ),
-        MainBtn(
-          onPress: () {
-            if (searchController.text.replaceAll(" ", "") == "") {
-              return;
-            }
-            FocusScope.of(context).requestFocus(FocusNode());
-            PostPageByTextFilter(searchText: searchController.text).show(context);
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Icon(
-              Icons.search,
-              color: AppColors.whiteColor,
-              size: ScreenSize.fontSize16,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Icon(
+                Icons.search,
+                color: AppColors.whiteColor,
+                size: ScreenSize.fontSize16,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

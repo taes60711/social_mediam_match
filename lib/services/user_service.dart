@@ -12,33 +12,6 @@ import '../models/user_model.dart';
 class UserService extends ApiClient {
   UserService() : super(overrideIp: "$ip:$port/user");
 
-  Future<List<ProfileData>> getADUserData(
-    int size, {
-    required String userUid,
-  }) async {
-    List<ProfileData> users = [];
-
-    try {
-      Map<String, dynamic> params = {
-        'size': '$size',
-        'userUid': userUid,
-      };
-
-      String responseData = await apiGet('/getADUserData', paramters: params);
-
-      print("getADUserData usersData: $responseData");
-
-      users = await handleResponse<ProfileData>(
-        responseData,
-        isList: true,
-        model: ProfileData.toModel,
-      );
-    } catch (e) {
-      onRequestFailed();
-    }
-    return users;
-  }
-
   Future<List<ProfileData>> getAllUserData(int page, int size,
       {required String userUid, required List<String> filterSkill}) async {
     List<ProfileData> users = [];

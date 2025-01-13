@@ -51,12 +51,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             pwdBuild(),
             SizedBox(height: ScreenSize.fitPxWidth(16)),
 
-            ///　忘記密碼
-            Align(
-              alignment: Alignment.centerRight,
-              child: pwdForgotBuild(),
-            ),
-
             ///　錯誤資訊
             errMsgBuild(),
             SizedBox(height: ScreenSize.fitPxWidth(16)),
@@ -132,9 +126,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           children: [
             AccountPageUtilites().textCheckBuild(condition: viewModel.pwdleastSix, text: "六碼以上"),
             SizedBox(width: ScreenSize.fitPxWidth(5)),
-            AccountPageUtilites().textCheckBuild(condition: viewModel.pwdNeedEnglish, text: "含有英文"),
+            AccountPageUtilites().textCheckBuild(condition: viewModel.pwdNeedEnglish, text: "英文"),
             SizedBox(width: ScreenSize.fitPxWidth(5)),
-            AccountPageUtilites().textCheckBuild(condition: viewModel.pwdNeedNum, text: "含有數字"),
+            AccountPageUtilites().textCheckBuild(condition: viewModel.pwdNeedNum, text: "數字"),
+            const Expanded(child: SizedBox(width: 1)),
+            pwdForgotBuild(),
           ],
         ),
       ],

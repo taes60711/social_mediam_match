@@ -6,7 +6,7 @@ String appVer = "1.0.0";
 
 String domain = "universal-link.directsense.tw";
 
-String ip = "119.77.173.122"; //"192.168.1.160";
+String ip = "192.168.1.158";
 
 String port = '80';
 String webSocketPort = "123";
@@ -19,6 +19,6 @@ GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 BuildContext globalContext = navigatorKey.currentState!.context;
 
 //10.6.9.129;
-///"192.168.1.160";
+///"192.168.1.158";
 
 //"119.77.173.122";

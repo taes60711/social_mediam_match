@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_mediam_match/components/home/userPage/about_page.dart';
-import 'package:social_mediam_match/components/home/userPage/my_notification_page/my_notification_page.dart';
+import 'package:social_mediam_match/components/home/userPage/custom_service_page.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/app_common_tools.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
@@ -14,7 +13,6 @@ import 'package:social_mediam_match/global/user_login_status_controller.dart';
 import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../utilities/style/style_config.dart';
-import '../firendsPage/my_friends.dart';
 
 class PrivacySettingPage extends BaseEndDrawer {
   @override
@@ -26,26 +24,14 @@ class PrivacySettingPage extends BaseEndDrawer {
           backFunc: () {
             closePage();
           },
-          title: "一般",
+          title: "設定",
         ),
         SizedBox(height: ScreenSize.fitPxHeight(15)),
         MainBtn(
           onPress: () {
-            AboutPage().show(context);
+            CustomServicePage().show(context);
           },
-          child: _buildButtonContainer(iconData: FontAwesomeIcons.splotch, text: "關於"),
-        ),
-        MainBtn(
-          onPress: () {
-            MyNotificationPage().show(context);
-          },
-          child: _buildButtonContainer(iconData: Icons.notifications, text: "通知", needNotificationDot: true),
-        ),
-        MainBtn(
-          onPress: () {
-            MyFriendPage().show(context);
-          },
-          child: _buildButtonContainer(iconData: FontAwesomeIcons.userGroup, text: "好友管理"),
+          child: _buildButtonContainer(iconData: Icons.question_answer, text: "問題回報"),
         ),
         MainBtn(
           onPress: () {
@@ -64,78 +50,6 @@ class PrivacySettingPage extends BaseEndDrawer {
             needEnterIcon: false,
           ),
         ),
-        SizedBox(height: ScreenSize.fitPxWidth(50)),
-        // MainBtn(
-        //   onPress: () {
-        //     String message = '"12135"對文章"Dreamcatcher2RingsLive4KAtlantaGA"按讚';
-        //     NotificationModel notification = NotificationModel(
-        //       id: -1,
-        //       userUid: 'tzLaMcP3V9XOAMOcD0FAY5Nf4tE2',
-        //       otherUserUid: 'ACqYscxtd2VSdPlkv1G8OgSTKxd2',
-        //       type: 0,
-        //       title: message,
-        //       isRead: false,
-        //       message: '',
-        //       postId: 16,
-        //       postTime: DateTime.now(),
-        //       sendNotificationuserInfo: ProfileData(),
-        //     );
-        //     FirebaseNotificationService().sendNotification(
-        //       message: message,
-        //       sendto: ref.read(loginUserData.notifier).state.token ?? "",
-        //       notifiactionInfo: notification,
-        //     );
-        //   },
-        //   title: "send Post Good Notification",
-        // ),
-        // SizedBox(height: ScreenSize.fitPxWidth(20)),
-        // MainBtn(
-        //   onPress: () {
-        //     String message = '"金門胖胖"將你加為好友';
-        //     NotificationModel notification = NotificationModel(
-        //       id: -1,
-        //       userUid: ref.read(loginUserData.notifier).state.uid,
-        //       otherUserUid: 'ACqYscxtd2VSdPlkv1G8OgSTKxd2',
-        //       type: 2,
-        //       title: message,
-        //       roomId: 1,
-        //       isRead: false,
-        //       message: '',
-        //       postTime: DateTime.now(),
-        //       sendNotificationuserInfo: ProfileData(),
-        //     );
-        //     FirebaseNotificationService().sendNotification(
-        //       message: message,
-        //       sendto: ref.read(loginUserData.notifier).state.token ?? "",
-        //       notifiactionInfo: notification,
-        //     );
-        //   },
-        //   title: "send AddFriend Notification",
-        // ),
-        // SizedBox(height: ScreenSize.fitPxWidth(20)),
-        // MainBtn(
-        //   onPress: () {
-        //     String message = '"20240324@gmail.com"申請想要觀看課程"123456"';
-        //     NotificationModel notification = NotificationModel(
-        //       id: -1,
-        //       userUid: ref.read(loginUserData.notifier).state.uid,
-        //       otherUserUid: 'Fx0NZUwhLGNuDhaz1ZdyT2vyq3z1',
-        //       type: 1,
-        //       title: message,
-        //       isRead: false,
-        //       message: '',
-        //       courseId: 2,
-        //       postTime: DateTime.now(),
-        //       sendNotificationuserInfo: ProfileData(),
-        //     );
-        //     FirebaseNotificationService().sendNotification(
-        //       message: message,
-        //       sendto: ref.read(loginUserData.notifier).state.token ?? "",
-        //       notifiactionInfo: notification,
-        //     );
-        //   },
-        //   title: "send CourseSignUp Notification",
-        // ),
       ],
     );
   }

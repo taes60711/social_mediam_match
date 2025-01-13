@@ -6,23 +6,18 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/enum/date_format_utilities.dart';
-import 'package:social_mediam_match/models/user_model.dart';
-import 'package:social_mediam_match/services/user_service.dart';
 
 import '../../../models/friend_model.dart';
+import '../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../provider/account/user_provider.dart';
 
 import '../../../services/friend_service.dart';
-import '../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/inputField/base_input.dart';
 
 import '../../utilities/main_button.dart';
 import 'chatRoomPage/chat_room.dart';
-import 'search_user_page.dart';
 
 final frinedListProvider = StateProvider<List<FriendListModel>>((ref) => []);
-
-final suggestUserProvider = StateProvider<List<ProfileData>>((ref) => []);
 
 final friendPageRender = StateProvider<Function>((ref) => () {});
 
@@ -38,12 +33,6 @@ class _FriendPageState extends ConsumerState<FriendPage> {
   void initState() {
     Future.delayed(Duration.zero).then(
       (value) async {
-        if (ref.read(suggestUserProvider).isEmpty) {
-          List<ProfileData> suggestUserDataList = await UserService().getADUserData(8, userUid: ref.watch(loginUserData).uid);
-          ref.read(suggestUserProvider.notifier).update((state) => suggestUserDataList);
-          setState(() {});
-        }
-
         ref.read(friendPageRender.notifier).update((state) => () {
               setState(() {});
             });
@@ -67,64 +56,7 @@ class _FriendPageState extends ConsumerState<FriendPage> {
             _buildSearchBar(ref, () => setState(() {}), context),
             SizedBox(height: ScreenSize.fitPxHeight(15)),
             Text(
-              "推薦",
-              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize20, fontWeight: FontWeight.w600),
-            ),
-            Row(
-              children: [
-                SizedBox(width: ScreenSize.fitPxWidth(10)),
-                MainBtn(
-                  onPress: () {
-                    SearchUserPage().show(context);
-                  },
-                  child: Container(
-                    color: Colors.transparent,
-                    child: Column(
-                      children: [
-                        Icon(
-                          FontAwesomeIcons.plus,
-                          color: AppColors.greyColor98,
-                          size: ScreenSize.fontSize14,
-                        ),
-                        SizedBox(height: ScreenSize.fitPxHeight(5)),
-                        Text(
-                          "新增好友",
-                          style: TextStyle(
-                            fontSize: ScreenSize.fontSize12,
-                            color: AppColors.greyColor130,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(width: ScreenSize.fitPxWidth(15)),
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: ref.read(suggestUserProvider).map((e) {
-                        return Padding(
-                          padding: EdgeInsets.only(right: ScreenSize.fontSize12),
-                          child: GestureDetector(
-                            onTap: () {
-                              UserProfileAllInfoBottomSheet(userData: e).show(context);
-                            },
-                            child: UserIcon(
-                              iconSize: ScreenSize.fitPxWidth(40),
-                              image: e.image,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: ScreenSize.fitPxHeight(15)),
-            Text(
-              "訊息",
+              BottomBarPath.chatRoom.label,
               style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize20, fontWeight: FontWeight.w600),
             ),
             SizedBox(height: ScreenSize.fitPxHeight(5)),
@@ -224,6 +156,8 @@ class _FriendPageState extends ConsumerState<FriendPage> {
   }
 
   Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
+    TextEditingController friendFilterController = TextEditingController();
+
     return GestureDetector(
       onTap: () async {},
       child: Container(
@@ -244,8 +178,8 @@ class _FriendPageState extends ConsumerState<FriendPage> {
             ),
             Expanded(
               child: BaseInputField(
-                hintText: "搜尋",
-                controller: TextEditingController(),
+                hintText: "輸入名稱",
+                controller: friendFilterController,
               ),
             ),
           ],

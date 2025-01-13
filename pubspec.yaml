@@ -89,6 +89,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/Logo.png
+    - assets/NoTextLogo.png
     - assets/google_w_Logo.png
     - assets/normalUserIcon.png
     - assets/ic-heart-fill.png

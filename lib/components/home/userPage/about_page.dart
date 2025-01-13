@@ -15,7 +15,7 @@ class AboutPage extends BaseEndDrawer {
     return Column(
       children: [
         BaseTopBar(
-          title: "關於",
+          title: "程度劃分",
           backFunc: () {
             closePage();
           },
@@ -29,6 +29,7 @@ class AboutPage extends BaseEndDrawer {
                     horizontal: ScreenSize.fitPxWidth(16),
                   ),
                   child: CustomExpansionTile(
+                    initiallyExpanded: true,
                     isNeedLoadingWidget: false,
                     title: Text(
                       "程度分級",

@@ -190,24 +190,6 @@ class CourseUtilites {
               ],
             ),
             SizedBox(height: ScreenSize.fitPxHeight(5)),
-            Row(
-              children: [
-                Icon(
-                  FontAwesomeIcons.book,
-                  color: AppColors.whiteColor,
-                  size: ScreenSize.fontSize14,
-                ),
-                SizedBox(width: ScreenSize.fitPxWidth(5)),
-                Text(
-                  "大綱",
-                  style: TextStyle(
-                    color: AppColors.whiteColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: ScreenSize.fontSize14,
-                  ),
-                ),
-              ],
-            ),
             Text(
               data.content,
               maxLines: 3,
@@ -220,34 +202,18 @@ class CourseUtilites {
             SizedBox(height: ScreenSize.fitPxHeight(5)),
             Row(
               children: [
-                Icon(
-                  FontAwesomeIcons.wrench,
-                  color: AppColors.whiteColor,
-                  size: ScreenSize.fontSize14,
-                ),
-                SizedBox(width: ScreenSize.fitPxWidth(5)),
                 Text(
-                  "前置需求",
+                  "程度 ",
                   style: TextStyle(
-                    color: AppColors.whiteColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: ScreenSize.fontSize14,
+                    color: AppColors.greyColor130,
+                    fontSize: ScreenSize.fontSize12,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
-                SizedBox(width: ScreenSize.fitPxWidth(5)),
-                Padding(
-                  padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(3)),
-                  child: Text(
-                    "程度 ${data.needLevel}",
-                    style: TextStyle(
-                      color: AppColors.greyColor130,
-                      fontSize: ScreenSize.fontSize12,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
+                levelWidget(data.needLevel),
               ],
             ),
+            SizedBox(height: ScreenSize.fitPxHeight(5)),
             Text(
               data.beforeNeed,
               maxLines: 2,
@@ -258,17 +224,41 @@ class CourseUtilites {
               ),
             ),
             SizedBox(height: ScreenSize.fitPxHeight(5)),
-            Text(
-              "最終更新日: ${DateFormatUtilities().format(data.postTime)}",
-              style: TextStyle(
-                color: AppColors.whiteColor.withOpacity(.6),
-                fontSize: ScreenSize.fontSize12,
-                fontWeight: FontWeight.w400,
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "最終更新日: ${DateFormatUtilities().format(data.postTime)}",
+                style: TextStyle(
+                  color: AppColors.whiteColor.withOpacity(.6),
+                  fontSize: ScreenSize.fontSize12,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget levelWidget(int level) {
+    List<IconData> icons = [];
+
+    for (int i = 0; i < level; i++) {
+      icons.add(FontAwesomeIcons.splotch);
+    }
+
+    return Row(
+      children: icons.map((e) {
+        return Padding(
+          padding: EdgeInsets.only(right: ScreenSize.fitPxWidth(5)),
+          child: Icon(
+            e,
+            size: ScreenSize.fontSize12,
+            color: AppColors.greyColor130,
+          ),
+        );
+      }).toList(),
     );
   }
 
