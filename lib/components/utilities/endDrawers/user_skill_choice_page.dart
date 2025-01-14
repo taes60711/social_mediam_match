@@ -66,7 +66,7 @@ class UserSkillChoicePage extends BaseEndDrawer {
                   tempFilteredSkillList.clear();
                   render();
                 },
-                title: "清空", //"保存",
+                title: "清空",
               ),
             ),
             SizedBox(height: ScreenSize.fitPxWidth(8)),

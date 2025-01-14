@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/account/complete_profile_step.dart';
 import 'package:social_mediam_match/global/shared_preference.dart';
 
 import '../models/user_model.dart';
@@ -61,7 +64,7 @@ class UserLoginStatusController {
 
   ///loginType = normalSign , googleSign
   Future<bool> login({required LoginDataModel loginInputData, String loginType = "normalSign"}) async {
-    bool loginSuccess = false;
+    bool loginDataGetSuccess = false;
 
     /// ユーザデータ取得
     ///loginType = normalSign , googleSign
@@ -73,18 +76,44 @@ class UserLoginStatusController {
 
     print("LoginUserUID: ${requestUserData.uid}");
     if (requestUserData.uid != "-1") {
-      /// ＳＤにユーザUID保存
-      await sharedPreference.loginSetUserUID(requestUserData.uid);
-      ref.read(loginedUserUID.notifier).update((state) => requestUserData.uid);
+      loginDataGetSuccess = true;
 
-      /// ログイン処理
-      await commonLoginFunc(requestUserData: requestUserData);
+      /// ログイン前にスキルを選択したこと確認
+      if (requestUserData.mainSkills!.isEmpty || requestUserData.wantSkills!.isEmpty) {
+        /// スキルを選択してない場合
+        CompleteProfileStepPage(
+          choicedSkillData: (skills, wantSkills) async {
+            UpdateUser sqlUpdateData = UpdateUser.update(
+              uid: requestUserData.uid,
+              name: requestUserData.name,
+              image: requestUserData.image,
+              job: requestUserData.job,
+              introduction: requestUserData.introduction,
+              mainSkills: skills,
+              wantSkills: wantSkills,
+            );
 
-      loginSuccess = true;
+            await UserService().updateUserData(requestUserData.uid, sqlUpdateData);
+
+            requestUserData.mainSkills = skills;
+            requestUserData.wantSkills = wantSkills;
+
+            await loginSaveUIDToPhone(requestUserData);
+            render();
+          },
+        ).show(context);
+
+        return loginDataGetSuccess;
+      } else {
+        /// スキルを選択した場合
+        await loginSaveUIDToPhone(requestUserData);
+        render();
+
+        return loginDataGetSuccess;
+      }
+    } else {
+      return loginDataGetSuccess;
     }
-
-    render();
-    return loginSuccess;
   }
 
   Future<void> logOut() async {
@@ -105,6 +134,17 @@ class UserLoginStatusController {
     render();
   }
 
+  /// ＳＤにユーザUID保存 & ログイン処理
+  Future<void> loginSaveUIDToPhone(ProfileData requestUserData) async {
+    /// ＳＤにユーザUID保存
+    await sharedPreference.loginSetUserUID(requestUserData.uid);
+    ref.read(loginedUserUID.notifier).update((state) => requestUserData.uid);
+
+    /// ログイン処理
+    await commonLoginFunc(requestUserData: requestUserData);
+  }
+
+  /// ログイン処理
   Future<void> commonLoginFunc({required ProfileData requestUserData}) async {
     ref.read(loginUserData.notifier).update((state) => requestUserData);
 

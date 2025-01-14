@@ -9,7 +9,6 @@ import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_view_model.dart';
-
 import 'account_page_utilites.dart';
 
 class LoginPage extends ConsumerStatefulWidget {

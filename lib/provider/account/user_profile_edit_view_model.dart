@@ -78,11 +78,13 @@ class UserProfileEditViewModel {
 
   String? editImg;
   TextEditingController nameController = TextEditingController();
-  String errMsg = "";
+  String nameErrMsg = "";
   TextEditingController jobController = TextEditingController();
   TextEditingController introductionController = TextEditingController();
   List<RequestUserSkillData> mainSkillList = [];
+  String skillErrMsg = "";
   List<RequestUserSkillData> wantSkillList = [];
+  String wantSkillErrMsg = "";
 
   ///ユーザデータ　insert
   void initData() {
@@ -153,9 +155,18 @@ class UserProfileEditViewModel {
   /// 投稿前の空欄チェック
   bool sendBeforeCheck() {
     bool isOk = true;
-    errMsg = "";
+    nameErrMsg = "";
     if (nameController.text.replaceAll(" ", "") == "") {
-      errMsg = "名稱不得為空";
+      nameErrMsg = "名稱不得為空";
+      isOk = false;
+    }
+
+    if (mainSkillList.isEmpty) {
+      skillErrMsg = "請至少選擇一種技能";
+      isOk = false;
+    }
+    if (wantSkillList.isEmpty) {
+      wantSkillErrMsg = "請至少選擇一種技能";
       isOk = false;
     }
 

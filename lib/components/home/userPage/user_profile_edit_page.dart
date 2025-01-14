@@ -149,16 +149,7 @@ class UserProfileEditPage extends BaseBottomSheet {
                     title: "選擇圖像",
                   ),
                   inputField(hintText: "名稱", editingController: viewModel.nameController),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Visibility(
-                      visible: viewModel.errMsg != "",
-                      child: Text(
-                        viewModel.errMsg,
-                        style: TextStyle(color: AppColors.redColor),
-                      ),
-                    ),
-                  ),
+                  errMsg(errMsg: viewModel.nameErrMsg),
                   inputField(hintText: "職業", editingController: viewModel.jobController),
                   SizedBox(height: ScreenSize.fitPxWidth(8)),
                   SizedBox(height: ScreenSize.fitPxWidth(8)),
@@ -186,6 +177,7 @@ class UserProfileEditPage extends BaseBottomSheet {
                       ],
                     ),
                   ),
+                  errMsg(errMsg: viewModel.skillErrMsg),
                   SizedBox(height: ScreenSize.fitPxWidth(8)),
                   //弱いスキル設定
                   MainBtn(
@@ -211,6 +203,7 @@ class UserProfileEditPage extends BaseBottomSheet {
                       ],
                     ),
                   ),
+                  errMsg(errMsg: viewModel.wantSkillErrMsg),
 
                   SizedBox(height: ScreenSize.fitPxWidth(8)),
                   // 自己紹介
@@ -250,6 +243,19 @@ class UserProfileEditPage extends BaseBottomSheet {
           ),
         ),
       ],
+    );
+  }
+
+  Widget errMsg({required String errMsg}) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Visibility(
+        visible: errMsg != "",
+        child: Text(
+          errMsg,
+          style: TextStyle(color: AppColors.redColor),
+        ),
+      ),
     );
   }
 
