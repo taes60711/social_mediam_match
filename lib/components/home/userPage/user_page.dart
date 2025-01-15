@@ -191,7 +191,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                       children: [
                         Expanded(
                           child: Text(
-                            userData.introduction ?? "",
+                            userData.introduction == "" ? "目前沒有填寫自我介紹" : userData.introduction ?? "",
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -243,7 +243,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                       ],
                     ),
                     Text(
-                      userData.job ?? "",
+                      userData.job == "" ? "目前沒有填寫職業" : userData.job ?? "",
                       style: TextStyle(
                         color: AppColors.whiteColor,
                         fontSize: ScreenSize.fontSize12,
