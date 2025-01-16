@@ -57,7 +57,7 @@ class PwdForgotPage extends BaseEndDrawer {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          // crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
               child: LabelInput(
@@ -67,7 +67,7 @@ class PwdForgotPage extends BaseEndDrawer {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(16), bottom: ScreenSize.fitPxWidth(6)),
+              margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(10), top: ScreenSize.fitPxWidth(25)),
               child: IgnorePointer(
                 ignoring: viewModel.emailCantChange,
                 child: MainBtn(
@@ -122,12 +122,12 @@ class PwdForgotPage extends BaseEndDrawer {
             SizedBox(width: ScreenSize.fitPxWidth(5)),
             AccountPageUtilites().textCheckBuild(
               condition: viewModel.pwdNeedEnglish,
-              text: "含有英文",
+              text: "英文",
             ),
             SizedBox(width: ScreenSize.fitPxWidth(5)),
             AccountPageUtilites().textCheckBuild(
               condition: viewModel.pwdNeedNum,
-              text: "含有數字",
+              text: "數字",
             ),
           ],
         ),

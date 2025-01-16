@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/account/account_main_page.dart';
 
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
-
+import 'package:social_mediam_match/global/user_login_status_controller.dart';
+import '../utilities/main_button.dart';
 import '../utilities/style/screen_size.dart';
 import '../utilities/style/style_config.dart';
 import 'account_page_utilites.dart';
@@ -55,6 +56,35 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
                   );
             },
             btnText: "註冊",
+          ),
+
+          SizedBox(height: ScreenSize.fitPxWidth(16)),
+
+          /// ゲストでログイン
+          MainBtn(
+            onPress: () async {
+              UserLoginStatusController().useGuestLogin();
+            },
+            child: Container(
+              width: ScreenSize.width,
+              padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(10)),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.greyColor98),
+                borderRadius: BorderRadius.circular(
+                  ScreenSize.fitPxWidth(10),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  "以訪客身份進入",
+                  style: TextStyle(
+                    color: AppColors.whiteColor,
+                    fontSize: ScreenSize.fontSize18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
           ),
 
           SizedBox(height: ScreenSize.fitPxWidth(120)),

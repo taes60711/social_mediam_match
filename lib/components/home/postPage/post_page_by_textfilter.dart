@@ -42,7 +42,7 @@ class PostPageByTextFilter extends BaseEndDrawer {
                     size: 7,
                     listControllerProvider: textFilterControllerProvider,
                     noDataWidget: PostViewUtilities.noPostData(),
-                    customFloatBtn: PostViewUtilities.postCreateButton(context),
+                    customFloatBtn: PostViewUtilities.postCreateButton(context, ref),
                     loadingWidget: const PostLoading(),
                     itemChild: (data, index) {
                       return PostViewUtilities()

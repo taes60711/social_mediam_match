@@ -10,8 +10,11 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import '../../../enum/date_format_utilities.dart';
+import '../../../global/home_global_view_model.dart';
+import '../../../global/user_login_status_controller.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
+import '../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../../provider/post/post_view_model.dart';
@@ -20,6 +23,7 @@ import '../../../services/post_service.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/apiListView/api_list_view.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
+import '../../utilities/dialog/confirm_dialog.dart';
 
 class PostCommentPage extends BaseBottomSheet {
   final StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController;
@@ -277,6 +281,20 @@ class PostCommentPage extends BaseBottomSheet {
                               ),
                               GestureDetector(
                                 onTap: () async {
+                                  if (UserLoginStatusController().isGuest()) {
+                                    ConfirmDilaog(
+                                        title: "提示",
+                                        content: "請先登入",
+                                        conirmFunc: () {
+                                          UserLoginStatusController().guestLogOut(
+                                            attachFunc: () {
+                                              closePage();
+                                              HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
+                                            },
+                                          );
+                                        }).show(context);
+                                    return;
+                                  }
                                   bool isSuccess = false;
                                   if (isEditStart) {
                                     ///編集

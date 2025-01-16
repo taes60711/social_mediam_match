@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/global/user_login_status_controller.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 
 import '../components/utilities/style/screen_size.dart';
@@ -34,26 +35,34 @@ class HomeGlobalViewModel {
   late BuildContext context;
   late WidgetRef ref;
   late Function render;
+  late Function initalPageRender;
 
-  Future<void> init({required BuildContext context, required WidgetRef ref, required Function render}) async {
+  Future<void> init({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Function render,
+  }) async {
     this.context = context;
     this.ref = ref;
     this.render = render;
+
     await Future.delayed(Duration.zero);
 
-    /// チャットルームリストWS初始化
-    ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
+    /// ゲスト場合　chatRoom 繋いでない　＆　Token上がってない
+    if (!UserLoginStatusController().isGuest()) {
+      /// チャットルームリストWS初始化
+      ChatWSModel().init(ref, () => render(), userId: ref.watch(loginUserData).uid);
+
+      /// 通知システム起動
+      /// 通知用のtoken取得
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      print("通知用 fcmToken $fcmToken");
+      await UserService().updateUserToken(ref.read(loginUserData).uid, fcmToken ?? "");
+    }
 
     /// シャアシステム起動
     /// appLink Init
     AppLinkService().init(context: context, ref: ref);
-
-    /// 通知システム起動
-    /// 通知用のtoken取得
-    final fcmToken = await FirebaseMessaging.instance.getToken();
-    print("通知用 fcmToken $fcmToken");
-    await UserService().updateUserToken(ref.read(loginUserData).uid, fcmToken ?? "");
-
     FirebaseNotificationService().initNotification(context: context, ref: ref);
     FirebaseNotificationService().notificationListen(context: context, ref: ref);
   }

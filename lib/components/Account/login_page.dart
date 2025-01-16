@@ -55,7 +55,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             SizedBox(height: ScreenSize.fitPxWidth(16)),
 
             ///　一般登入
-
             AccountPageUtilites().btnContainer(
               onPress: () {
                 viewModel.login();
@@ -87,6 +86,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         PwdForgotPage().show(context);
       },
       title: "忘記密碼?",
+      titleStyle: TextStyle(
+        color: Colors.white,
+        fontSize: ScreenSize.fontSize14,
+      ),
     );
   }
 
@@ -112,13 +115,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget pwdBuild() {
     return Column(
       children: [
-        LabelInput(
-          controller: viewModel.pwdController,
-          label: "密碼",
-          type: InputType.pwd,
-          onChanged: (value) {
-            viewModel.pwdCheck();
-          },
+        SizedBox(
+          height: ScreenSize.fitPxWidth(75),
+          child: Row(
+            children: [
+              Expanded(
+                child: LabelInput(
+                  controller: viewModel.pwdController,
+                  label: "密碼",
+                  type: InputType.pwd,
+                  onChanged: (value) {
+                    viewModel.pwdCheck();
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(25)),
+                child: pwdForgotBuild(),
+              ),
+            ],
+          ),
         ),
         SizedBox(height: ScreenSize.fitPxWidth(8)),
         Row(
@@ -128,8 +144,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             AccountPageUtilites().textCheckBuild(condition: viewModel.pwdNeedEnglish, text: "英文"),
             SizedBox(width: ScreenSize.fitPxWidth(5)),
             AccountPageUtilites().textCheckBuild(condition: viewModel.pwdNeedNum, text: "數字"),
-            const Expanded(child: SizedBox(width: 1)),
-            pwdForgotBuild(),
           ],
         ),
       ],

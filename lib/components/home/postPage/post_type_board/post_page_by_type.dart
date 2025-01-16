@@ -95,7 +95,7 @@ class PostPageByType extends BaseEndDrawer {
                     listControllerProvider: typelistControllerProvider,
                     loadingWidget: const PostLoading(),
                     noDataWidget: PostViewUtilities.noPostData(),
-                    customFloatBtn: PostViewUtilities.postCreateButton(context, postBoard: boardData),
+                    customFloatBtn: PostViewUtilities.postCreateButton(context, ref, postBoard: boardData),
                     itemChild: (data, index) {
                       return PostViewUtilities()
                           .postItemContent(viewModel, typelistControllerProvider, data: data, dataIndex: index);

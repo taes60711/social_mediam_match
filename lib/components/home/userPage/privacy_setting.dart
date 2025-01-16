@@ -92,7 +92,7 @@ class PrivacySettingPage extends BaseEndDrawer {
                   Visibility(
                     visible: needNotificationDot,
                     child: AppCommonTools().notificationDotWidget(
-                      ref.watch(loginUserNotReadNotificationCount) != 0,
+                      ref.watch(loginUserNotReadNotificationCount) <= 0,
                       notReadCount: ref.watch(loginUserNotReadNotificationCount),
                     ),
                   ),

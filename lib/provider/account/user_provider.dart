@@ -6,13 +6,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
 /// ログイン中のユーザデータ
-final loginUserData = StateProvider<ProfileData>((ref) {
-  return ProfileData();
-});
+final loginUserData = StateProvider<ProfileData>(
+  (ref) {
+    return ProfileData(
+      uid: "guest",
+      name: "未登入",
+      mainSkills: [],
+      wantSkills: [],
+      status: 999,
+    );
+  },
+);
 
 /// ログイン中のユーザの読んでない数
 final loginUserNotReadNotificationCount = StateProvider<int>((ref) {
-  return -1;
+  return 0;
 });
 
 /// ログイン中のユーザ

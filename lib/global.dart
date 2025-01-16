@@ -6,7 +6,7 @@ String appVer = "1.0.0";
 
 String domain = "universal-link.directsense.tw";
 
-String ip = "119.77.173.122";
+String ip = "119.77.173.122"; //"10.6.9.129";
 
 String port = '80';
 String webSocketPort = "123";

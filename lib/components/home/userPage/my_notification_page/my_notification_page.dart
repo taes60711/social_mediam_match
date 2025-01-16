@@ -184,7 +184,7 @@ class MyNotificationPage extends BaseEndDrawer {
                   padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
                   margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(40)),
                   onPress: () async {
-                    if (ref.read(loginUserNotReadNotificationCount.notifier).state <= 0) {
+                    if (ref.read(loginUserNotReadNotificationCount.notifier).state > 0) {
                       return;
                     }
 

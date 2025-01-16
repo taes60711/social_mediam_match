@@ -45,6 +45,34 @@ class UserLoginStatusController {
     return ref.read(loginUserData.notifier).state.uid != "-1";
   }
 
+  bool isGuest() {
+    return ref.read(loginUserData.notifier).state.uid == "guest";
+  }
+
+  /// ゲストでログイン
+  void useGuestLogin() {
+    ref.read(loginUserData.notifier).update(
+          (state) => ProfileData(
+            uid: "guest",
+            name: "未登入",
+            mainSkills: [],
+            wantSkills: [],
+            status: 999,
+          ),
+        );
+    render();
+  }
+
+  /// ゲスト場合でログアウト
+  void guestLogOut({Function? attachFunc}) {
+    ref.read(loginedUserUID.notifier).update((state) => "");
+    ref.read(loginUserData.notifier).update((state) => ProfileData());
+    render();
+    if (attachFunc != null) {
+      attachFunc();
+    }
+  }
+
   Future<void> loginedCheck() async {
     /// ＳＤからユーザUID取得
     String userUID = SharedPreference().loginCheckGetuserUID();

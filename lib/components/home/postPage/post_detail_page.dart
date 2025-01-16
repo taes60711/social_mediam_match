@@ -3,13 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/style_config.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../enum/date_format_utilities.dart';
+import '../../../global/home_global_view_model.dart';
+import '../../../global/user_login_status_controller.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
+import '../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
@@ -106,6 +110,21 @@ class PostDetailPage extends BaseEndDrawer {
 
                         GestureDetector(
                           onTap: () {
+                            if (UserLoginStatusController().isGuest()) {
+                              ConfirmDilaog(
+                                  title: "提示",
+                                  content: "請先登入",
+                                  conirmFunc: () {
+                                    UserLoginStatusController().guestLogOut(
+                                      attachFunc: () {
+                                        closePage();
+                                        HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
+                                      },
+                                    );
+                                  }).show(context);
+                              return;
+                            }
+
                             ///コメントページに遷移する
                             PostCommentPage(dataIndex: dataIndex, postListController: postListController).show(context);
                           },
@@ -124,6 +143,20 @@ class PostDetailPage extends BaseEndDrawer {
                         ///いいね数
                         GestureDetector(
                           onTap: () {
+                            if (UserLoginStatusController().isGuest()) {
+                              ConfirmDilaog(
+                                  title: "提示",
+                                  content: "請先登入",
+                                  conirmFunc: () {
+                                    UserLoginStatusController().guestLogOut(
+                                      attachFunc: () {
+                                        closePage();
+                                        HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
+                                      },
+                                    );
+                                  }).show(context);
+                              return;
+                            }
                             ProfileData userData = ref.read(loginUserData);
                             if (choiceData.postUserInfo.uid == userData.uid) {
                               return;

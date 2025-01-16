@@ -7,10 +7,14 @@ import 'package:social_mediam_match/provider/account/user_provider.dart';
 
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../enum/date_format_utilities.dart';
+import '../../../global/home_global_view_model.dart';
+import '../../../global/user_login_status_controller.dart';
 import '../../../models/post_model.dart';
+import '../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
+import '../../utilities/dialog/confirm_dialog.dart';
 import '../../utilities/lodaing_dialog.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/rich_text_view.dart';
@@ -253,9 +257,22 @@ class PostViewUtilities {
   }
 
   ///文章作るボタン
-  static Widget postCreateButton(BuildContext context, {PostBoard? postBoard}) {
+  static Widget postCreateButton(BuildContext context, WidgetRef ref, {PostBoard? postBoard}) {
     return MainBtn(
       onPress: () {
+        if (UserLoginStatusController().isGuest()) {
+          ConfirmDilaog(
+              title: "提示",
+              content: "請先登入",
+              conirmFunc: () {
+                UserLoginStatusController().guestLogOut(
+                  attachFunc: () {
+                    HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
+                  },
+                );
+              }).show(context);
+          return;
+        }
         PostCreatePage(postBoard: postBoard).show(context);
       },
       child: Container(

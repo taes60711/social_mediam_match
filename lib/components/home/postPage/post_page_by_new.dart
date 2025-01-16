@@ -42,7 +42,7 @@ class _PostByViewState extends ConsumerState<PostByNew> {
               needReloadCheck: true,
               loadingWidget: const PostLoading(),
               noDataWidget: PostViewUtilities.noPostData(),
-              customFloatBtn: PostViewUtilities.postCreateButton(context),
+              customFloatBtn: PostViewUtilities.postCreateButton(context, ref),
               itemChild: (data, index) {
                 return PostViewUtilities().postItemContent(viewModel, newlistControllerProvider, data: data, dataIndex: index);
               }),

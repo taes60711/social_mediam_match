@@ -10,6 +10,7 @@ import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
 import 'package:social_mediam_match/services/friend_service.dart';
 import 'package:social_mediam_match/services/notification_service.dart';
 import 'package:social_mediam_match/services/user_service.dart';
+import '../../../global/user_login_status_controller.dart';
 import '../../../models/friend_model.dart';
 import '../../../models/notification_model.dart';
 import '../../../models/user_model.dart';
@@ -20,6 +21,7 @@ import '../../../services/firebase_notification_service.dart';
 import '../../home/firendsPage/chatRoomPage/chat_room.dart';
 import '../../home/firendsPage/firends_page.dart';
 import '../../home/skillExChangePage/skill_utilites.dart';
+import '../dialog/confirm_dialog.dart';
 import '../main_button.dart';
 import '../style/screen_size.dart';
 import '../style/style_config.dart';
@@ -212,6 +214,21 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
             child: Center(
               child: MainBtn(
                 onPress: () {
+                  if (UserLoginStatusController().isGuest()) {
+                    ConfirmDilaog(
+                        title: "提示",
+                        content: "請先登入",
+                        conirmFunc: () {
+                          UserLoginStatusController().guestLogOut(
+                            attachFunc: () {
+                              closePage();
+                              HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
+                            },
+                          );
+                        }).show(context);
+                    return;
+                  }
+
                   if (ref.read(isFriendProvider.notifier).state == false) {
                     ChatWSModel().addFriend([ref.watch(loginUserData).uid, userData.uid]);
                     ref.read(isFriendProvider.notifier).update((state) => true);

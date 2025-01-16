@@ -60,24 +60,24 @@ class _UserPageState extends ConsumerState<UserPage> {
                               image: userData.image,
                               iconSize: ScreenSize.fitPxHeight(60),
                             ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                padding: EdgeInsets.all(ScreenSize.fitPxHeight(5)),
-                                decoration: BoxDecoration(
-                                  color: AppColors.greyColor98,
-                                  borderRadius: BorderRadius.circular(
-                                    ScreenSize.fitPxHeight(20),
-                                  ),
-                                ),
-                                child: Icon(
-                                  FontAwesomeIcons.pen,
-                                  color: AppColors.whiteColor,
-                                  size: ScreenSize.fontSize10,
-                                ),
-                              ),
-                            ),
+                            // Positioned(
+                            //   bottom: 0,
+                            //   right: 0,
+                            //   child: Container(
+                            //     padding: EdgeInsets.all(ScreenSize.fitPxHeight(5)),
+                            //     decoration: BoxDecoration(
+                            //       color: AppColors.greyColor98,
+                            //       borderRadius: BorderRadius.circular(
+                            //         ScreenSize.fitPxHeight(20),
+                            //       ),
+                            //     ),
+                            //     child: Icon(
+                            //       FontAwesomeIcons.pen,
+                            //       color: AppColors.whiteColor,
+                            //       size: ScreenSize.fontSize10,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -186,43 +186,14 @@ class _UserPageState extends ConsumerState<UserPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            userData.introduction == "" ? "目前沒有填寫自我介紹" : userData.introduction ?? "",
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: AppColors.whiteColor,
-                              fontSize: ScreenSize.fontSize12,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: ScreenSize.fitPxWidth(10),
-                        ),
-                        MainBtn(
-                          onPress: () {
-                            UserProfileEditPage().show(context);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(ScreenSize.fitPxHeight(5)),
-                            decoration: BoxDecoration(
-                              color: AppColors.greyColor98,
-                              borderRadius: BorderRadius.circular(
-                                ScreenSize.fitPxHeight(20),
-                              ),
-                            ),
-                            child: Icon(
-                              FontAwesomeIcons.pen,
-                              color: AppColors.whiteColor,
-                              size: ScreenSize.fontSize10,
-                            ),
-                          ),
-                        ),
-                      ],
+                    Text(
+                      userData.introduction == "" ? "目前沒有填寫自我介紹" : userData.introduction ?? "",
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: AppColors.whiteColor,
+                        fontSize: ScreenSize.fontSize12,
+                      ),
                     ),
                     SizedBox(height: ScreenSize.fitPxWidth(5)),
                     Row(
@@ -405,7 +376,7 @@ Widget infoBtn({IconData? icon, String text = "", Function? onPress, WidgetRef? 
           ref != null
               ? Padding(
                   padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(8), left: ScreenSize.fitPxWidth(4)),
-                  child: AppCommonTools().notificationDotWidget(ref.watch(loginUserNotReadNotificationCount) != 0),
+                  child: AppCommonTools().notificationDotWidget(ref.watch(loginUserNotReadNotificationCount) > 0),
                 )
               : Container()
         ],
