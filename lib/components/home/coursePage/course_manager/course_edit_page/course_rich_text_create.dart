@@ -34,7 +34,6 @@ class CourseRichTextCreate extends BaseFadeScalePage {
   });
   TextEditingController titleController = TextEditingController();
   QuillEditorController courserController = QuillEditorController();
-  bool isSend = false;
   @override
   Future<void> initState(WidgetRef ref) async {}
 
@@ -59,44 +58,39 @@ class CourseRichTextCreate extends BaseFadeScalePage {
                   closePage();
                 }
               },
-              rightWidget: IgnorePointer(
-                ignoring: isSend,
-                child: MainBtn(
-                  title: "保存",
-                  onPress: () async {
-                    if (ediType == CreateEdiType.chapter) {
-                      CanTouchScreenLoadingDialog().show();
-                      String richTextContent = await courserController.getText();
-                      if (sendBeforeCheck(richTextContent)) {
-                        isSend = true;
-                        String title = titleController.text;
-                        print("titleController: $title  richTextContent $richTextContent");
-                        String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
-                        List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
-                        CourseChapterInfo createChapter =
-                            CourseChapterInfo(chapter: chapterList.length + 1, chapterName: title, content: [fomattedContent]);
-
-                        chapterList.add(createChapter);
-                        ref.read(courseEditChapterList.notifier).update((state) => chapterList);
-                        CanTouchScreenLoadingDialog().close();
-                        courseEditPageRender();
-                        closePage();
-                      }
-                    } else {
-                      CanTouchScreenLoadingDialog().show();
-                      String richTextContent = await courserController.getText();
-
-                      isSend = true;
-                      print("richTextContent $richTextContent");
+              rightWidget: MainBtn(
+                title: "保存",
+                onPress: () async {
+                  if (ediType == CreateEdiType.chapter) {
+                    CanTouchScreenLoadingDialog().show();
+                    String richTextContent = await courserController.getText();
+                    if (sendBeforeCheck(richTextContent)) {
+                      String title = titleController.text;
+                      print("titleController: $title  richTextContent $richTextContent");
                       String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
+                      List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
+                      CourseChapterInfo createChapter =
+                          CourseChapterInfo(chapter: chapterList.length + 1, chapterName: title, content: [fomattedContent]);
 
-                      ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
+                      chapterList.add(createChapter);
+                      ref.read(courseEditChapterList.notifier).update((state) => chapterList);
                       CanTouchScreenLoadingDialog().close();
                       courseEditPageRender();
                       closePage();
                     }
-                  },
-                ),
+                  } else {
+                    CanTouchScreenLoadingDialog().show();
+                    String richTextContent = await courserController.getText();
+
+                    print("richTextContent $richTextContent");
+                    String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
+
+                    ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
+                    CanTouchScreenLoadingDialog().close();
+                    courseEditPageRender();
+                    closePage();
+                  }
+                },
               ),
             ),
             Visibility(

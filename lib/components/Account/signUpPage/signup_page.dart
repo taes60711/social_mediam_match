@@ -40,6 +40,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             accountBuild(),
             SizedBox(height: ScreenSize.fitPxWidth(16)),
 
+            const Expanded(child: SizedBox(height: 1)),
+
             ///　普通登録
             AccountPageUtilites().btnContainer(
               onPress: () async {
@@ -68,6 +70,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               btnTextColor: AppColors.greyColor98,
               btnText: "Google註冊",
             ),
+
+            SizedBox(height: ScreenSize.fitPxWidth(120)),
           ],
         ),
       ),

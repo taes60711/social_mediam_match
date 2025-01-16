@@ -73,6 +73,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               btnTextColor: AppColors.greyColor98,
               btnText: "Google登入",
             ),
+
+            SizedBox(height: ScreenSize.fitPxWidth(120)),
           ],
         ),
       ),
@@ -116,7 +118,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     return Column(
       children: [
         SizedBox(
-          height: ScreenSize.fitPxWidth(75),
+          height: ScreenSize.fitPxWidth(80),
           child: Row(
             children: [
               Expanded(

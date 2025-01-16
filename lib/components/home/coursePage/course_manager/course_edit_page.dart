@@ -31,7 +31,6 @@ class CourseEditPage extends BaseFadeScalePage {
   CourseEditPage(this.courseListController, {required this.dataIndex});
 
   late CourseEditViewModel viewModel = CourseEditViewModel();
-  bool isSend = false;
   @override
   Future<void> initState(WidgetRef ref) async {
     viewModel.init(context, ref, () => render());
@@ -76,61 +75,57 @@ class CourseEditPage extends BaseFadeScalePage {
                   ),
                 ),
               ),
-              rightWidget: IgnorePointer(
-                ignoring: isSend,
-                child: MainBtn(
-                  onPress: () async {
-                    if (!viewModel.sendBeforeCheck()) {
-                      return;
-                    }
-                    CanTouchScreenLoadingDialog().show();
-                    isSend = true;
-                    CourseEditingModel courseEditingData = viewModel.editingData;
+              rightWidget: MainBtn(
+                onPress: () async {
+                  if (!viewModel.sendBeforeCheck()) {
+                    return;
+                  }
+                  CanTouchScreenLoadingDialog().show();
+                  CourseEditingModel courseEditingData = viewModel.editingData;
 
-                    List<String> learningSkillList = ref.read(courseEditSkillList).map((e) => e.name).toList();
+                  List<String> learningSkillList = ref.read(courseEditSkillList).map((e) => e.name).toList();
 
-                    CourseModel updateCourse = CourseModel(
-                      id: ref.read(choicedCourseProvider).id,
-                      createdBy: ref.read(choicedCourseProvider).courseCreateduserInfo.uid,
-                      title: courseEditingData.title,
-                      needLevel: int.parse(courseEditingData.courseChoiceLevel),
-                      content: courseEditingData.content,
-                      beforeNeed: courseEditingData.beforeNeed,
-                      prStory: courseEditingData.courseDetailContent,
-                      chapterList: courseEditingData.courseEditChapterList,
-                      courseLearningSkills: learningSkillList,
-                      type: int.parse(courseEditingData.courseChoiceType),
-                      isPublic: courseEditingData.isPublic,
-                      signUpStatus: ref.read(choicedCourseProvider).signUpStatus,
-                      courseCreateduserInfo: ref.read(choicedCourseProvider).courseCreateduserInfo,
-                      postTime: ref.read(choicedCourseProvider).postTime,
-                    );
+                  CourseModel updateCourse = CourseModel(
+                    id: ref.read(choicedCourseProvider).id,
+                    createdBy: ref.read(choicedCourseProvider).courseCreateduserInfo.uid,
+                    title: courseEditingData.title,
+                    needLevel: int.parse(courseEditingData.courseChoiceLevel),
+                    content: courseEditingData.content,
+                    beforeNeed: courseEditingData.beforeNeed,
+                    prStory: courseEditingData.courseDetailContent,
+                    chapterList: courseEditingData.courseEditChapterList,
+                    courseLearningSkills: learningSkillList,
+                    type: int.parse(courseEditingData.courseChoiceType),
+                    isPublic: courseEditingData.isPublic,
+                    signUpStatus: ref.read(choicedCourseProvider).signUpStatus,
+                    courseCreateduserInfo: ref.read(choicedCourseProvider).courseCreateduserInfo,
+                    postTime: ref.read(choicedCourseProvider).postTime,
+                  );
 
-                    int result = await CourseService().createOrUpdateCourse(
-                      createdBy: updateCourse.createdBy,
-                      title: updateCourse.title,
-                      needLevel: updateCourse.needLevel.toString(),
-                      content: updateCourse.content,
-                      beforeNeed: updateCourse.beforeNeed,
-                      prStory: updateCourse.prStory,
-                      chapterList: updateCourse.chapterList,
-                      courseLearningSkills: updateCourse.courseLearningSkills,
-                      type: updateCourse.type.toString(),
-                      isPublic: updateCourse.isPublic,
-                      courseId: updateCourse.id,
-                    );
+                  int result = await CourseService().createOrUpdateCourse(
+                    createdBy: updateCourse.createdBy,
+                    title: updateCourse.title,
+                    needLevel: updateCourse.needLevel.toString(),
+                    content: updateCourse.content,
+                    beforeNeed: updateCourse.beforeNeed,
+                    prStory: updateCourse.prStory,
+                    chapterList: updateCourse.chapterList,
+                    courseLearningSkills: updateCourse.courseLearningSkills,
+                    type: updateCourse.type.toString(),
+                    isPublic: updateCourse.isPublic,
+                    courseId: updateCourse.id,
+                  );
 
-                    /// -100 = success ; -101 = fail
-                    if (result == -100) {
-                      ref.read(courseListController.notifier).editData(dataIndex, updateCourse);
-                      viewModel.resetAllData();
-                      ref.read(choicedCourseProvider.notifier).update((state) => updateCourse);
-                      closePage();
-                    }
-                    CanTouchScreenLoadingDialog().close();
-                  },
-                  title: "修改",
-                ),
+                  /// -100 = success ; -101 = fail
+                  if (result == -100) {
+                    ref.read(courseListController.notifier).editData(dataIndex, updateCourse);
+                    viewModel.resetAllData();
+                    ref.read(choicedCourseProvider.notifier).update((state) => updateCourse);
+                    closePage();
+                  }
+                  CanTouchScreenLoadingDialog().close();
+                },
+                title: "修改",
               ),
             ),
             Expanded(
