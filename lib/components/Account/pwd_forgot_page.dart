@@ -57,7 +57,6 @@ class PwdForgotPage extends BaseEndDrawer {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          // crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
               child: LabelInput(
@@ -67,7 +66,7 @@ class PwdForgotPage extends BaseEndDrawer {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(10), top: ScreenSize.fitPxWidth(25)),
+              margin: EdgeInsets.only(left: ScreenSize.fitPxWidth(8), top: ScreenSize.fitPxWidth(25)),
               child: IgnorePointer(
                 ignoring: viewModel.emailCantChange,
                 child: MainBtn(
@@ -76,6 +75,7 @@ class PwdForgotPage extends BaseEndDrawer {
                   },
                   titleStyle: viewModel.emailCantChange ? TextStyle(color: AppColors.greyColor130) : null,
                   title: viewModel.emailCantChange ? "驗證碼已寄送" : "寄送驗證碼",
+                  height: ScreenSize.fitPxWidth(38),
                 ),
               ),
             )

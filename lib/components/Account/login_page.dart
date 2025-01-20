@@ -132,7 +132,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(25)),
+                padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(20)),
                 child: pwdForgotBuild(),
               ),
             ],
