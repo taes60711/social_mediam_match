@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../main_button.dart';
 import '../style/screen_size.dart';
-import '../style/style_config.dart';
+import '../style/app_colors.dart';
 import 'base_dialog.dart';
 
 class ConfirmDilaog extends BaseDialog {

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/enum/date_format_utilities.dart';
 

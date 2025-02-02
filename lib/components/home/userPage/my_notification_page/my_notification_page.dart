@@ -23,7 +23,7 @@ import '../../../../services/course_service.dart';
 import '../../../../services/notification_service.dart';
 import '../../../../services/post_service.dart';
 import '../../../utilities/apiListView/api_list_controller.dart';
-import '../../../utilities/style/style_config.dart';
+import '../../../utilities/style/app_colors.dart';
 import 'my_notification_post_page.dart';
 
 final notificationListControllerProvider = StateNotifierProvider<APIListControllerNotifier, APIListController>(

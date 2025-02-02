@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'style_config.dart';
+import 'app_colors.dart';
 
 // App 主題樣式
 class ThemeStyle {

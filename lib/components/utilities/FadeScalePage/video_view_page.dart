@@ -9,7 +9,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../appBar/basic_top_bar.dart';
 import '../main_button.dart';
 import '../style/screen_size.dart';
-import '../style/style_config.dart';
+import '../style/app_colors.dart';
 
 class VideoViewPage extends BaseFadeScalePage {
   String ytId;

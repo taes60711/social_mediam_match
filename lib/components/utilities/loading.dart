@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 
 import 'style/screen_size.dart';
 

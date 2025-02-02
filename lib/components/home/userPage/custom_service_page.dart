@@ -12,7 +12,7 @@ import '../../../models/feed_back_model.dart';
 import '../../../services/feed_back_service.dart';
 import '../../utilities/appBar/basic_top_bar.dart';
 import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/style/app_colors.dart';
 
 class CustomServicePage extends BaseBottomSheet {
   @override

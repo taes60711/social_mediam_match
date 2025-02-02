@@ -9,7 +9,7 @@ import '../appBar/basic_top_bar.dart';
 import '../main_button.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/style/app_colors.dart';
 
 class BaseSkillFilterPage extends BaseEndDrawer {
   final Function viewRender;

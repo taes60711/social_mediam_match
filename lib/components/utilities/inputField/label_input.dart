@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../style/screen_size.dart';
-import '../style/style_config.dart';
+import '../style/app_colors.dart';
 import 'base_input.dart';
 
 class LabelInput extends StatefulWidget {

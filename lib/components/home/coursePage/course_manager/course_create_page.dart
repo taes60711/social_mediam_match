@@ -19,7 +19,7 @@ import '../../../utilities/inputField/base_input.dart';
 import '../../../utilities/inputField/mutl_input.dart';
 import '../../../utilities/rich_text_view.dart';
 import '../../../utilities/style/screen_size.dart';
-import '../../../utilities/style/style_config.dart';
+import '../../../utilities/style/app_colors.dart';
 import 'course_edit_page/course_level_choice_label.dart';
 import 'course_edit_page/course_rich_text_create.dart';
 import 'course_edit_page/course_rich_text_edit.dart';

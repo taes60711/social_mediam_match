@@ -4,7 +4,7 @@ import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 
 ///MARK: Base EndDrawer
 class EndDrawer extends StatefulWidget {

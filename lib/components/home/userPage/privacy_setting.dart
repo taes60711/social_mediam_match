@@ -12,7 +12,7 @@ import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/global/user_login_status_controller.dart';
 import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
 import '../../../provider/account/user_provider.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/style/app_colors.dart';
 
 class PrivacySettingPage extends BaseEndDrawer {
   @override

@@ -10,7 +10,7 @@
 // import '../../utilities/appBar/basic_top_bar.dart';
 // import '../../utilities/dialog/await_confirm_dialog.dart';
 // import '../../utilities/style/screen_size.dart';
-// import '../../utilities/style/style_config.dart';
+// import '../../utilities/style/app_colors.dart';
 // import '../../utilities/user_icon.dart';
 // import 'my_friend_edit_bottom_sheet.dart';
 

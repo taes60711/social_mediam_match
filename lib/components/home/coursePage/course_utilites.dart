@@ -19,7 +19,7 @@ import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/dialog/confirm_dialog.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/style/app_colors.dart';
 import '../../utilities/user_icon.dart';
 import 'course_detail.dart';
 import 'course_manager/course_create_page.dart';

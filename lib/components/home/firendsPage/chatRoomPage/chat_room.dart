@@ -30,7 +30,7 @@ import '../../../../services/app_links_service.dart';
 import '../../../../services/friend_service.dart';
 import '../../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../../utilities/style/screen_size.dart';
-import '../../../utilities/style/style_config.dart';
+import '../../../utilities/style/app_colors.dart';
 import 'package:any_link_preview/any_link_preview.dart';
 
 import '../firends_page.dart';

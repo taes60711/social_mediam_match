@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:social_mediam_match/components/utilities/style/app_image.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 
@@ -19,7 +20,7 @@ import '../../utilities/lodaing_dialog.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/style/app_colors.dart';
 import '../../utilities/user_icon.dart';
 import 'post_manager/post_create_page.dart';
 import 'post_manager/post_manager_bottom_sheet.dart';
@@ -193,7 +194,7 @@ class PostViewUtilities {
                       Row(
                         children: [
                           Image.asset(
-                            "assets/ic-heart-fill.png",
+                            AppImage.heartFillIcon,
                             color: Colors.red,
                             width: ScreenSize.fitPxWidth(14),
                           ),

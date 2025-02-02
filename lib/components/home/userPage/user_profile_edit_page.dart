@@ -6,7 +6,7 @@ import 'package:social_mediam_match/components/utilities/bottomSheets/base_botto
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/inputField/label_input.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/components/utilities/toast.dart';
 import 'package:social_mediam_match/provider/account/user_profile_edit_view_model.dart';
 import 'package:social_mediam_match/services/user_service.dart';

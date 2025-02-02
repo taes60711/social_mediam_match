@@ -4,7 +4,7 @@
 
 // import 'package:social_mediam_match/components/utilities/main_button.dart';
 // import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-// import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+// import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 
 // import '../../../models/friend_model.dart';
 // import '../../../models/user_model.dart';

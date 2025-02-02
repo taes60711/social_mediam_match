@@ -5,7 +5,7 @@ import 'package:social_mediam_match/components/utilities/app_common_tools.dart';
 import 'package:social_mediam_match/components/utilities/custom_expansion_title.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 
 import '../../utilities/appBar/basic_top_bar.dart';
 

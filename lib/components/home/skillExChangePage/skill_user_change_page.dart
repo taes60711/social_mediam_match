@@ -21,7 +21,7 @@ import '../../utilities/endDrawers/base_skill_filter_page.dart';
 import '../../utilities/inputField/base_input.dart';
 import '../../utilities/loading.dart';
 import '../../utilities/main_button.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/style/app_colors.dart';
 import 'skill_utilites.dart';
 
 final filteredSkillList = StateProvider<List<RequestSkillListData>>((ref) {

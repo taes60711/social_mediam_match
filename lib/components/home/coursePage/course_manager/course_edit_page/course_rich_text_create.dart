@@ -8,7 +8,7 @@ import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 
 import 'package:social_mediam_match/components/utilities/rich_text_editor.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import '../../../../../models/course_model.dart';
 import '../../../../../models/rich_text_format.dart';
 import '../../../../../provider/course/corse_edit_view_model.dart';

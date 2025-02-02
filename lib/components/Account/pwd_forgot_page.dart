@@ -7,7 +7,7 @@ import '../../provider/account/LoginPage/pwd_forgot_view_model.dart';
 import '../utilities/inputField/base_input.dart';
 import '../utilities/inputField/label_input.dart';
 import '../utilities/style/screen_size.dart';
-import '../utilities/style/style_config.dart';
+import '../utilities/style/app_colors.dart';
 import 'account_page_utilites.dart';
 
 class PwdForgotPage extends BaseEndDrawer {

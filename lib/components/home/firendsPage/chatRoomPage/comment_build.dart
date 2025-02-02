@@ -23,7 +23,7 @@ import '../../../utilities/FadeScalePage/chat_room_image_send_check.dart';
 import '../../../utilities/inputField/base_input.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/style/screen_size.dart';
-import '../../../utilities/style/style_config.dart';
+import '../../../utilities/style/app_colors.dart';
 
 ///コメント欄
 class CommentBuild extends ConsumerStatefulWidget {

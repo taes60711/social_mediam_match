@@ -13,7 +13,7 @@ import '../../../utilities/apiListView/api_list_view.dart';
 
 import '../../../utilities/loading.dart';
 import '../../../utilities/style/screen_size.dart';
-import '../../../utilities/style/style_config.dart';
+import '../../../utilities/style/app_colors.dart';
 
 import '../post_utilities.dart';
 

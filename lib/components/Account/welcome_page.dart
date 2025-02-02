@@ -6,7 +6,7 @@ import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/global/user_login_status_controller.dart';
 import '../utilities/main_button.dart';
 import '../utilities/style/screen_size.dart';
-import '../utilities/style/style_config.dart';
+import '../utilities/style/app_colors.dart';
 import 'account_page_utilites.dart';
 
 class WelcomePage extends ConsumerStatefulWidget {

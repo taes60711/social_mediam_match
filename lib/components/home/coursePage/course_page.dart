@@ -7,7 +7,7 @@ import 'package:social_mediam_match/components/home/coursePage/course_utilites.d
 
 import 'package:social_mediam_match/components/utilities/endDrawers/base_skill_filter_page.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 import '../../../global/home_global_view_model.dart';
 

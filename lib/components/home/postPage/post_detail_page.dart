@@ -5,8 +5,9 @@ import 'package:social_mediam_match/components/home/postPage/post_utilities.dart
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
+import 'package:social_mediam_match/components/utilities/style/app_image.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../enum/date_format_utilities.dart';
 import '../../../global/home_global_view_model.dart';
@@ -174,8 +175,8 @@ class PostDetailPage extends BaseEndDrawer {
                               children: [
                                 Image.asset(
                                   ref.read(choicedPostIsGoodProvider.notifier).state
-                                      ? "assets/ic-heart-fill.png"
-                                      : "assets/ic-heart-liner.png",
+                                      ? AppImage.heartFillIcon
+                                      : AppImage.heartLinerIcon,
                                   color: ref.read(choicedPostIsGoodProvider.notifier).state ? Colors.red : AppColors.greyColor130,
                                   width: ScreenSize.fitPxWidth(20),
                                 ),

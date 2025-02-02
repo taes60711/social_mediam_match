@@ -5,6 +5,7 @@ import 'package:social_mediam_match/components/home/postPage/post_page_by_textfi
 import 'package:social_mediam_match/components/home/postPage/post_type_board/post_type_board.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
+import 'package:social_mediam_match/components/utilities/style/app_image.dart';
 
 import '../../../global/home_global_view_model.dart';
 import '../../../provider/post/post_provider.dart';
@@ -13,7 +14,7 @@ import '../../../provider/post/post_view_model.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/common_scaffold.dart';
 import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/style/app_colors.dart';
 import '../../utilities/user_icon.dart';
 import 'post_detail_page.dart';
 import 'post_page_by_new.dart';
@@ -82,7 +83,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                     Padding(
                       padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(10)),
                       child: Image.asset(
-                        'assets/NoTextLogo.png',
+                        AppImage.noTextlogo,
                         width: ScreenSize.fitPxWidth(40),
                       ),
                     ),

@@ -7,8 +7,9 @@ import 'package:social_mediam_match/components/utilities/inputField/base_input.d
 import 'package:social_mediam_match/components/utilities/inputField/label_input.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/provider/account/LoginPage/login_view_model.dart';
+import '../utilities/style/app_image.dart';
 import 'account_page_utilites.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -65,7 +66,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
             ///　Google登入
             AccountPageUtilites().btnContainer(
-              imgIcon: 'assets/google_w_Logo.png',
+              imgIcon: AppImage.googleIcon,
               onPress: () {
                 viewModel.googleLogin();
               },

@@ -16,7 +16,7 @@ import '../../../global.dart';
 import '../../utilities/lodaing_dialog.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/style/app_colors.dart';
 
 class UserProfileSharePage extends BaseDialog {
   String shareUrl = "";

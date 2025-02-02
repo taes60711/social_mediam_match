@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../main_button.dart';
 import '../style/screen_size.dart';
-import '../style/style_config.dart';
+import '../style/app_colors.dart';
 
 Future<bool> awaitConfirmDialog(BuildContext context, {required String title, required String content}) async {
   return await showDialog<bool>(

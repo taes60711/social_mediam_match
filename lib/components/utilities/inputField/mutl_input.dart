@@ -5,7 +5,7 @@ import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import '../bottomSheets/base_bottom_sheet.dart';
 import '../appBar/basic_top_bar.dart';
 import '../style/screen_size.dart';
-import '../style/style_config.dart';
+import '../style/app_colors.dart';
 import 'base_input.dart';
 
 class MultInput extends ConsumerStatefulWidget {

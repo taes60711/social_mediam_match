@@ -15,7 +15,7 @@ import '../../utilities/endDrawers/user_skill_choice_page.dart';
 import '../../utilities/inputField/label_input.dart';
 import '../../utilities/inputField/mutl_input.dart';
 import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/style/app_colors.dart';
 import '../../utilities/user_icon.dart';
 import '../account_main_page.dart';
 import '../account_page_utilites.dart';

@@ -11,7 +11,7 @@ import '../utilities/endDrawers/base_end_drawer.dart';
 import '../utilities/endDrawers/user_skill_choice_page.dart';
 import '../utilities/main_button.dart';
 import '../utilities/style/screen_size.dart';
-import '../utilities/style/style_config.dart';
+import '../utilities/style/app_colors.dart';
 
 /// スキル選択ページ
 class CompleteProfileStepPage extends BaseEndDrawer {

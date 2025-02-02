@@ -27,7 +27,7 @@ import '../../utilities/custom_expansion_title.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/style/app_colors.dart';
 import '../../utilities/user_icon.dart';
 
 class CourseDetailPage extends BaseEndDrawer {

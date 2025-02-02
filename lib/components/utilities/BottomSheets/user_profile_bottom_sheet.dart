@@ -24,7 +24,7 @@ import '../../home/skillExChangePage/skill_utilites.dart';
 import '../dialog/confirm_dialog.dart';
 import '../main_button.dart';
 import '../style/screen_size.dart';
-import '../style/style_config.dart';
+import '../style/app_colors.dart';
 import '../toast.dart';
 import '../user_icon.dart';
 

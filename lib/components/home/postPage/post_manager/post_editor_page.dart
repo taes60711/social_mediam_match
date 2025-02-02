@@ -18,7 +18,7 @@ import '../../../utilities/dialog/confirm_dialog.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/rich_text_editor.dart';
 import '../../../utilities/style/screen_size.dart';
-import '../../../utilities/style/style_config.dart';
+import '../../../utilities/style/app_colors.dart';
 
 class PostEditorPage extends BaseFadeScalePage {
   StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>> postListController;

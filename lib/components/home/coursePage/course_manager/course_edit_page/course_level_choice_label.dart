@@ -10,7 +10,7 @@ import '../../../../utilities/bottomSheets/base_bottom_sheet.dart';
 
 import '../../../../utilities/main_button.dart';
 import '../../../../utilities/style/screen_size.dart';
-import '../../../../utilities/style/style_config.dart';
+import '../../../../utilities/style/app_colors.dart';
 
 class CourseLevelChoicedLabel extends ConsumerStatefulWidget {
   const CourseLevelChoicedLabel({super.key});

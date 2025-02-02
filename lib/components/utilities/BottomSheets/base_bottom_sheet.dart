@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
-import '../style/style_config.dart';
+import '../style/app_colors.dart';
 
 enum BottomSheetPageType {
   normal,

@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
+import 'package:social_mediam_match/components/utilities/style/app_image.dart';
 
 import '../../global.dart';
 import 'style/screen_size.dart';
@@ -64,7 +65,7 @@ class UserIcon extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(iconSize * .2),
         child: Image.asset(
-          'assets/normalUserIcon.png',
+          AppImage.normalUserIcon,
           fit: BoxFit.cover,
           gaplessPlayback: true,
           color: Colors.white,

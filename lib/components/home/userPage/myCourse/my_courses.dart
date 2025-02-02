@@ -4,7 +4,7 @@ import 'package:social_mediam_match/components/utilities/endDrawers/base_end_dra
 
 import '../../../utilities/appBar/basic_top_bar.dart';
 import '../../../utilities/style/screen_size.dart';
-import '../../../utilities/style/style_config.dart';
+import '../../../utilities/style/app_colors.dart';
 import 'added_courses_page.dart';
 import 'created_courses_page.dart';
 

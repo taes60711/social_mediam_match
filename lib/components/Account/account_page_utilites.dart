@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-
+import 'package:social_mediam_match/components/utilities/style/app_image.dart';
 import '../utilities/main_button.dart';
 import '../utilities/style/screen_size.dart';
-import '../utilities/style/style_config.dart';
+import '../utilities/style/app_colors.dart';
 
 class AccountPageUtilites {
   Widget logo() {
-    return Container(
+    return SizedBox(
       width: ScreenSize.fitPxWidth(200),
       height: ScreenSize.fitPxWidth(200),
-      child: Image.asset('assets/Logo.png'),
+      child: Image.asset(AppImage.logo),
     );
   }
 

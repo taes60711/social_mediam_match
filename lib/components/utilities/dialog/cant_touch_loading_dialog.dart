@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
-import '../style/style_config.dart';
+import '../style/app_colors.dart';
 
 class CanTouchScreenLoadingDialog {
   static final CanTouchScreenLoadingDialog _singleton = CanTouchScreenLoadingDialog._internal();

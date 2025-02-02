@@ -8,7 +8,7 @@ import '../../../global.dart';
 import '../../../models/user_model.dart';
 import '../BottomSheets/user_profile_bottom_sheet.dart';
 import '../style/screen_size.dart';
-import '../style/style_config.dart';
+import '../style/app_colors.dart';
 
 class ChatRoomBar extends StatelessWidget {
   final Function? backFunc;

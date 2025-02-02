@@ -8,7 +8,7 @@ import 'package:social_mediam_match/components/home/userPage/user_profile_share_
 import 'package:social_mediam_match/components/utilities/app_common_tools.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 

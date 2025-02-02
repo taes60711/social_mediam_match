@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-String logoImg = 'assets/Logo.png';
-String googleIcon = 'assets/google_w_Logo.png';
-String twitterIcon = 'assets/twitter_w_Logo.png';
-
 class AppColors {
   static Color whiteColor = const Color.fromARGB(255, 255, 255, 255);
   static Color redColor = const Color.fromARGB(255, 244, 67, 54);

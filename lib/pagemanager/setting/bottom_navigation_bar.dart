@@ -6,7 +6,7 @@ import 'package:social_mediam_match/provider/account/user_provider.dart';
 import '../../components/utilities/dialog/confirm_dialog.dart';
 import '../../components/utilities/main_button.dart';
 import '../../components/utilities/style/screen_size.dart';
-import '../../components/utilities/style/style_config.dart';
+import '../../components/utilities/style/app_colors.dart';
 import '../../global/home_global_view_model.dart';
 import '../../global/user_login_status_controller.dart';
 

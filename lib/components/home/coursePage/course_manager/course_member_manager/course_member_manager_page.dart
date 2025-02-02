@@ -11,7 +11,7 @@ import '../../../../utilities/apiListView/api_list_view.dart';
 import '../../../../utilities/common_scaffold.dart';
 import '../../../../utilities/main_button.dart';
 import '../../../../utilities/style/screen_size.dart';
-import '../../../../utilities/style/style_config.dart';
+import '../../../../utilities/style/app_colors.dart';
 import '../../../../utilities/user_icon.dart';
 import '../../../skillExChangePage/skill_utilites.dart';
 import 'course_member_edit_bottom_sheet.dart';

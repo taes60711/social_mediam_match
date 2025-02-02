@@ -7,7 +7,7 @@ import 'package:social_mediam_match/components/utilities/main_button.dart';
 
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import '../../../enum/date_format_utilities.dart';
 import '../../../global/home_global_view_model.dart';

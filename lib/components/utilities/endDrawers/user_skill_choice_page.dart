@@ -13,7 +13,7 @@ import '../../utilities/style/screen_size.dart';
 import '../bottomSheets/base_bottom_sheet.dart';
 
 import '../main_button.dart';
-import '../style/style_config.dart';
+import '../style/app_colors.dart';
 
 class UserSkillChoicePage extends BaseEndDrawer {
   List<RequestUserSkillData> initSkillData;

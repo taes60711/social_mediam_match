@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:social_mediam_match/components/utilities/style/style_config.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 
 import '../../../global.dart';
 import '../main_button.dart';

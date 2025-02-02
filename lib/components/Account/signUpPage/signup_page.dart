@@ -3,9 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
+import 'package:social_mediam_match/components/utilities/style/app_image.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import '../../utilities/inputField/label_input.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/style/app_colors.dart';
 import '../account_main_page.dart';
 import '../account_page_utilites.dart';
 import 'signup_step_last.dart';
@@ -65,7 +66,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   SignUpStepLastPage().show(context);
                 }
               },
-              imgIcon: 'assets/google_w_Logo.png',
+              imgIcon: AppImage.googleIcon,
               btnBgColor: AppColors.whiteColor,
               btnTextColor: AppColors.greyColor98,
               btnText: "Google註冊",

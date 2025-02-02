@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'endDrawers/level_setsumei_end_drawer.dart';
 import 'main_button.dart';
 import 'style/screen_size.dart';
-import 'style/style_config.dart';
+import 'style/app_colors.dart';
 
 class AppCommonTools {
   Widget levelsetsumeiBuild() {

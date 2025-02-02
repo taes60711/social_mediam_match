@@ -16,7 +16,7 @@ import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/inputField/base_input.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/style_config.dart';
+import '../../utilities/style/app_colors.dart';
 
 final searchedUserControllerProvider =
     StateNotifierProvider<APIListControllerNotifier<ProfileData>, APIListController<ProfileData>>(
