@@ -119,10 +119,9 @@ class ApiClient {
     return result;
   }
 
-  bool _isDialogShowing = false;
   void onRequestFailed({Function? onFailedFunc, String? content}) {
-    if (!_isDialogShowing) {
-      _isDialogShowing = true;
+    if (!apiFailDialogIsShow) {
+      apiFailDialogIsShow = true;
       ConfirmDilaog(
         title: "警告",
         content: content ?? tr("serverErrorContent"),
@@ -132,7 +131,7 @@ class ApiClient {
             onFailedFunc();
           }
 
-          _isDialogShowing = false;
+          apiFailDialogIsShow = false;
         },
       ).show(globalContext);
     }

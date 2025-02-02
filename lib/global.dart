@@ -17,6 +17,8 @@ String channelRoomUrl = 'ws://$wsIp/$branch/chatroom';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 BuildContext globalContext = navigatorKey.currentState!.context;
+bool apiFailDialogIsShow = false;
+
 
 /// "10.6.9.129";
 ///"192.168.1.158";
