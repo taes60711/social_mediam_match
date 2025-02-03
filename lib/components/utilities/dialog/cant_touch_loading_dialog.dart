@@ -28,7 +28,7 @@ class CanTouchScreenLoadingDialog {
   void show({String loadingMsg = "Loading..."}) {
     _overlayEntry = OverlayEntry(
       builder: (context) => Material(
-        color: Colors.transparent,
+        color: AppColors.transparent,
         child: Container(
           width: ScreenSize.width,
           height: ScreenSize.height,
@@ -48,7 +48,7 @@ class CanTouchScreenLoadingDialog {
                   SizedBox(height: ScreenSize.fitPxWidth(16)),
                   Text(
                     loadingMsg,
-                    style: TextStyle(color: Colors.white, fontSize: ScreenSize.fontSize14),
+                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                   ),
                 ],
               ),

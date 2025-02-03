@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../style/app_colors.dart';
 import '../style/screen_size.dart';
 
 abstract class BaseDialog {
@@ -59,7 +60,7 @@ abstract class BaseDialog {
                         }
                       },
                       child: Scaffold(
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: AppColors.transparent,
                         body: Container(
                           height: ScreenSize.height,
                           width: ScreenSize.width,

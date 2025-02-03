@@ -169,7 +169,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> with SingleTicker
       duration: const Duration(milliseconds: 150),
       height: contianerHeight,
       child: Material(
-        color: Colors.transparent,
+        color: AppColors.transparent,
         child: GestureDetector(
           onVerticalDragStart: _onVerticalDragStart,
           onVerticalDragUpdate: _onVerticalDragUpdate,

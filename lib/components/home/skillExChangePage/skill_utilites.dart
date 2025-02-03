@@ -128,8 +128,8 @@ class SkillUtilites {
                 Container(
                   padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
                   margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 138, 138, 138),
+                  decoration: BoxDecoration(
+                    color: AppColors.greyColor138,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -153,8 +153,8 @@ class SkillUtilites {
                 Container(
                   padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
                   margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 240, 123, 77),
+                  decoration: BoxDecoration(
+                    color: AppColors.oragneColor123,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(

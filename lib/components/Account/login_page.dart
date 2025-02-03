@@ -84,13 +84,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   Widget pwdForgotBuild() {
     return MainBtn(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       onPress: () {
         PwdForgotPage().show(context);
       },
       title: "忘記密碼?",
       titleStyle: TextStyle(
-        color: Colors.white,
+        color: AppColors.whiteColor,
         fontSize: ScreenSize.fontSize14,
       ),
     );

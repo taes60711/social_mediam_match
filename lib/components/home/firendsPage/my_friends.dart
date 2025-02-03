@@ -100,7 +100,7 @@
 //                               Container(
 //                                 width: 30,
 //                                 alignment: Alignment.centerRight,
-//                                 color: Colors.transparent,
+//                                 color: AppColors.transparent,
 //                                 child: Icon(
 //                                   FontAwesomeIcons.ellipsis,
 //                                   color: AppColors.greyColor130,

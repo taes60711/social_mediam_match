@@ -36,7 +36,7 @@ class ChatRoomBar extends StatelessWidget {
           child: Container(
             width: ScreenSize.fitPxWidth(40),
             height: ScreenSize.fitPxWidth(40),
-            color: Colors.transparent,
+            color: AppColors.transparent,
             child: Center(
               child: Icon(
                 Icons.arrow_back_ios,
@@ -57,7 +57,7 @@ class ChatRoomBar extends StatelessWidget {
                 SizedBox(width: ScreenSize.fitPxWidth(10)),
                 Text(
                   userData.name ?? "",
-                  style: titleStyle ?? TextStyle(color: Colors.white, fontSize: ScreenSize.fontSize14),
+                  style: titleStyle ?? TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                 ),
               ],
             ),
@@ -72,7 +72,7 @@ class ChatRoomBar extends StatelessWidget {
           child: Container(
             height: ScreenSize.fitPxWidth(40),
             width: ScreenSize.fitPxWidth(40),
-            color: Colors.transparent,
+            color: AppColors.transparent,
             child: Icon(
               FontAwesomeIcons.bars,
               color: AppColors.greyColor130,

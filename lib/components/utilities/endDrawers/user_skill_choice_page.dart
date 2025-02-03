@@ -120,7 +120,7 @@ class UserSkillChoicePage extends BaseEndDrawer {
                                   vertical: ScreenSize.fitPxHeight(10),
                                   horizontal: ScreenSize.fitPxHeight(20),
                                 ),
-                                color: choicedData != null ? AppColors.black37 : Colors.transparent,
+                                color: choicedData != null ? AppColors.black37 : AppColors.transparent,
                                 width: ScreenSize.width,
                                 child: Row(
                                   children: [

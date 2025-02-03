@@ -58,7 +58,7 @@ class UserProfileEditPage extends BaseBottomSheet {
             children: [
               MainBtn(
                   title: "關閉",
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: AppColors.transparent,
                   onPress: () {
                     if (viewModel.closePageCheck()) {
                       closePage();
@@ -169,7 +169,7 @@ class UserProfileEditPage extends BaseBottomSheet {
                         skillTitle(
                           titile: "能教的技能",
                           iconData: FontAwesomeIcons.reply,
-                          iconBgColor: const Color.fromARGB(255, 138, 138, 138),
+                          iconBgColor: AppColors.greyColor138,
                         ),
                         SizedBox(height: ScreenSize.fitPxWidth(5)),
                         SkillUtilites().skillBar(skills: viewModel.mainSkillList),
@@ -195,7 +195,7 @@ class UserProfileEditPage extends BaseBottomSheet {
                         skillTitle(
                           titile: "想學的技能",
                           iconData: FontAwesomeIcons.share,
-                          iconBgColor: const Color.fromARGB(255, 240, 123, 77),
+                          iconBgColor: AppColors.oragneColor123,
                         ),
                         SizedBox(height: ScreenSize.fitPxWidth(5)),
                         SkillUtilites().skillBar(skills: viewModel.wantSkillList),

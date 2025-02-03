@@ -40,7 +40,7 @@ class ThemeStyle {
   static late Color bgColor;
   // 更新顏色樣式
   void _getStyles() {
-    bgColor = _colorManager(whiteColor: AppColors.whiteColor, blackColor: AppColors.bgColor);
+    bgColor = _colorManager(whiteColor: AppColors.whiteColor, blackColor: AppColors.black28);
   }
 
   /// MARK: 主題顏色值 End

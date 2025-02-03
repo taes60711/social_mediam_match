@@ -121,7 +121,7 @@ class CourseMemberManagerPage extends BaseEndDrawer {
                               padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
                               margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
                               decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 138, 138, 138),
+                                color: AppColors.greyColor138,
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Icon(
@@ -146,7 +146,7 @@ class CourseMemberManagerPage extends BaseEndDrawer {
                               padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
                               margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
                               decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 240, 123, 77),
+                                color: AppColors.oragneColor123,
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Icon(
@@ -162,7 +162,7 @@ class CourseMemberManagerPage extends BaseEndDrawer {
                             Container(
                               padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxHeight(3)),
                               decoration: BoxDecoration(
-                                color: data.status == 0 ? AppColors.orangeColor : Colors.green,
+                                color: data.status == 0 ? AppColors.orangeColor : AppColors.greenColor,
                                 borderRadius: BorderRadius.circular(
                                   ScreenSize.fitPxWidth(5),
                                 ),

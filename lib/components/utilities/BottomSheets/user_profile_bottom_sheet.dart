@@ -69,7 +69,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
               vertical: ScreenSize.fitPxHeight(10),
             ),
             decoration: BoxDecoration(
-              color: AppColors.bgColor,
+              color: AppColors.black28,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -148,7 +148,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                       padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
                       margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 138, 138, 138),
+                        color: AppColors.greyColor138,
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Icon(
@@ -179,7 +179,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                       padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
                       margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 240, 123, 77),
+                        color: AppColors.oragneColor123,
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Icon(
@@ -329,7 +329,7 @@ class UserProfileBottomSheet extends BaseBottomSheet {
               vertical: ScreenSize.fitPxHeight(10),
             ),
             decoration: BoxDecoration(
-              color: AppColors.bgColor,
+              color: AppColors.black28,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(

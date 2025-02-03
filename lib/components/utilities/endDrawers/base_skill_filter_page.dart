@@ -93,7 +93,7 @@ class BaseSkillFilterPage extends BaseEndDrawer {
                                 vertical: ScreenSize.fitPxHeight(10),
                                 horizontal: ScreenSize.fitPxHeight(20),
                               ),
-                              color: isChoiced ? AppColors.black37 : Colors.transparent,
+                              color: isChoiced ? AppColors.black37 : AppColors.transparent,
                               width: ScreenSize.width,
                               child: Row(
                                 children: [

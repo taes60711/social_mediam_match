@@ -132,7 +132,7 @@ class PostViewUtilities {
                           child: Container(
                             width: 30,
                             alignment: Alignment.centerRight,
-                            color: Colors.transparent,
+                            color: AppColors.transparent,
                             child: Icon(
                               FontAwesomeIcons.ellipsis,
                               color: AppColors.greyColor130,
@@ -195,7 +195,7 @@ class PostViewUtilities {
                         children: [
                           Image.asset(
                             AppImage.heartFillIcon,
-                            color: Colors.red,
+                            color: AppColors.redColor,
                             width: ScreenSize.fitPxWidth(14),
                           ),
                           SizedBox(width: ScreenSize.fitPxWidth(5)),
@@ -229,10 +229,10 @@ class PostViewUtilities {
                         child: Container(
                           width: 30,
                           alignment: Alignment.centerLeft,
-                          color: Colors.transparent,
+                          color: AppColors.transparent,
                           child: Icon(
                             FontAwesomeIcons.arrowUpRightFromSquare,
-                            color: const Color.fromARGB(221, 180, 179, 179),
+                            color: AppColors.greyColor180A221,
                             size: ScreenSize.fontSize14,
                           ),
                         ),
@@ -301,7 +301,7 @@ class PostViewUtilities {
     double? iconSize,
   }) {
     return Container(
-      color: Colors.transparent,
+      color: AppColors.transparent,
       padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(3), vertical: ScreenSize.fitPxWidth(3)),
       child: Row(
         children: [

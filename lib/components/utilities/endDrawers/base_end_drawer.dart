@@ -69,7 +69,7 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
         );
       },
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.transparent,
         body: Dismissible(
           direction: DismissDirection.startToEnd,
           resizeDuration: const Duration(milliseconds: 1),
@@ -82,12 +82,12 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
               Container(
                 width: ScreenSize.width,
                 height: MediaQuery.of(context).viewPadding.top,
-                color: Colors.white,
+                color: AppColors.whiteColor,
               ),
               Visibility(
                 visible: widget.isNeedTopbar,
                 child: Container(
-                  color: Colors.white,
+                  color: AppColors.whiteColor,
                   child: BaseTopBar(
                     title: widget.title,
                     backFunc: () async {
@@ -107,7 +107,7 @@ class _EndDrawerState extends State<EndDrawer> with SingleTickerProviderStateMix
               Container(
                 width: ScreenSize.width,
                 height: MediaQuery.of(context).viewPadding.bottom,
-                color: Colors.white,
+                color: AppColors.whiteColor,
               ),
             ],
           ),
@@ -151,7 +151,7 @@ abstract class BaseEndDrawer {
         transitionDuration: Duration.zero,
         pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
           return Scaffold(
-            backgroundColor: Colors.transparent,
+            backgroundColor: AppColors.transparent,
             body: EndDrawerWidget(
               callBackAnimationController: (AnimationController animationController) => controller = animationController,
               needWaitPageOpen: needWaitOpenPage(),
@@ -314,7 +314,7 @@ class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTi
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  color: AppColors.bgColor,
+                  color: AppColors.black28,
                   child: CommonScaffold(
                     child: component,
                   ),
@@ -330,7 +330,7 @@ class _EndDrawerWidgetState extends ConsumerState<EndDrawerWidget> with SingleTi
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  color: AppColors.bgColor,
+                  color: AppColors.black28,
                   child: CommonScaffold(
                     child: component,
                   ),

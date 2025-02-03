@@ -48,16 +48,16 @@ class RichTextEditor extends StatelessWidget {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (snapshot.hasData) {
                     return QuillHtmlEditor(
-                      backgroundColor: AppColors.bgColor,
+                      backgroundColor: AppColors.black28,
                       text: snapshot.data,
                       controller: controller,
                       minHeight: ScreenSize.height / 2 - 100,
                       hintText: "請輸入文字",
-                      hintTextStyle: TextStyle(color: Colors.grey, fontSize: ScreenSize.fontSize14),
+                      hintTextStyle: TextStyle(color: AppColors.greyColor, fontSize: ScreenSize.fontSize14),
                       textStyle: TextStyle(fontSize: fontSize, color: AppColors.whiteColor),
                       loadingBuilder: (context) {
                         return Container(
-                          color: AppColors.bgColor,
+                          color: AppColors.black28,
                           height: ScreenSize.height / 2 - 100,
                           child: const Loading(),
                         );
@@ -89,7 +89,7 @@ class RichTextEditor extends StatelessWidget {
 
           /// ToolBar
           ToolBar.scroll(
-            toolBarColor: Colors.transparent,
+            toolBarColor: AppColors.transparent,
             controller: controller,
             direction: Axis.horizontal,
             toolBarConfig: customToolBarList,

@@ -79,7 +79,7 @@ class _AccountMainPageState extends ConsumerState<AccountMainPage> {
                   child: Container(
                     width: ScreenSize.fitPxWidth(40),
                     height: ScreenSize.fitPxWidth(35),
-                    color: Colors.transparent,
+                    color: AppColors.transparent,
                     child: Center(
                       child: isInPage
                           ? Container(

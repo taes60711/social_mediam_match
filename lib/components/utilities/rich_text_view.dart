@@ -169,7 +169,10 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
             } else {
               component = HtmlWidget(
                 resultString,
-                textStyle: TextStyle(fontSize: fontSize, color: Colors.grey),
+                textStyle: TextStyle(
+                  fontSize: fontSize,
+                  color: AppColors.greyColor,
+                ),
               );
             }
             return component;

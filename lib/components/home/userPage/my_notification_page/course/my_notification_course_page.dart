@@ -50,7 +50,7 @@ class MyNotificationCourseDetailPage extends BaseEndDrawer {
                 child: Container(
                   height: ScreenSize.fitPxWidth(30),
                   width: ScreenSize.fitPxWidth(30),
-                  color: Colors.transparent,
+                  color: AppColors.transparent,
                   child: Icon(
                     FontAwesomeIcons.ellipsis,
                     color: AppColors.whiteColor,
@@ -280,7 +280,7 @@ class MyNotificationCourseDetailPage extends BaseEndDrawer {
         SizedBox(height: ScreenSize.fitPxHeight(10)),
         Container(
           width: ScreenSize.width,
-          color: Colors.transparent,
+          color: AppColors.transparent,
           alignment: Alignment.centerRight,
           child: MainBtn(
             onPress: () {
@@ -353,7 +353,7 @@ class MyNotificationCourseDetailPage extends BaseEndDrawer {
         width: ScreenSize.width / 2,
         height: ScreenSize.fitPxHeight(30),
         alignment: Alignment.center,
-        color: Colors.transparent,
+        color: AppColors.transparent,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

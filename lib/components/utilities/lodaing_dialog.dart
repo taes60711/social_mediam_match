@@ -27,7 +27,7 @@ class LoadingDialog {
   void show({String loadingMsg = "Loading..."}) {
     _overlayEntry = OverlayEntry(
       builder: (context) => Material(
-        color: Colors.transparent,
+        color: AppColors.transparent,
         child: Container(
           color: Colors.black.withOpacity(0.4),
           child: Center(
@@ -45,7 +45,7 @@ class LoadingDialog {
                   SizedBox(height: ScreenSize.fitPxWidth(16)),
                   Text(
                     loadingMsg,
-                    style: TextStyle(color: Colors.white, fontSize: ScreenSize.fontSize14),
+                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                   ),
                 ],
               ),

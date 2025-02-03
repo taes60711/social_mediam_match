@@ -68,7 +68,7 @@ class UserIcon extends StatelessWidget {
           AppImage.normalUserIcon,
           fit: BoxFit.cover,
           gaplessPlayback: true,
-          color: Colors.white,
+          color: AppColors.whiteColor,
         ),
       ),
     );

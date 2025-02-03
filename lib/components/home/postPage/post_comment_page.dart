@@ -54,7 +54,7 @@ class PostCommentPage extends BaseBottomSheet {
     ProfileData userData = ref.watch(loginUserData);
     return CommonScaffold(
       type: PageType.window,
-      bgColor: Colors.transparent,
+      bgColor: AppColors.transparent,
       child: Column(
         children: [
           ///タイトル
@@ -196,7 +196,7 @@ class PostCommentPage extends BaseBottomSheet {
             width: ScreenSize.width,
             height: ScreenSize.fitPxWidth(48),
             padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
-            color: AppColors.bgColor.withOpacity(.8),
+            color: AppColors.black28.withOpacity(.8),
             child: Row(
               children: [
                 Expanded(

@@ -119,7 +119,7 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                           PostDetailPage(dataIndex: pageIndex).show(context);
                         },
                         child: Container(
-                          color: Colors.transparent,
+                          color: AppColors.transparent,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -182,7 +182,7 @@ Widget _buildTabBtn(BuildContext context, {required String tabText, required int
       width: ScreenSize.width / 3,
       height: ScreenSize.fitPxHeight(30),
       alignment: Alignment.center,
-      color: Colors.transparent,
+      color: AppColors.transparent,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

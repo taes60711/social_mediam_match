@@ -65,7 +65,7 @@ class CourseEditPage extends BaseFadeScalePage {
                 child: Container(
                   width: ScreenSize.fitPxWidth(40),
                   height: ScreenSize.fitPxWidth(40),
-                  color: Colors.transparent,
+                  color: AppColors.transparent,
                   child: Center(
                     child: Icon(
                       Icons.close,
@@ -188,7 +188,7 @@ class CourseEditPage extends BaseFadeScalePage {
                             children: [
                               Icon(
                                 FontAwesomeIcons.book,
-                                color: Colors.white,
+                                color: AppColors.whiteColor,
                                 size: ScreenSize.fontSize14,
                               ),
                               SizedBox(width: ScreenSize.fitPxWidth(5)),
@@ -304,7 +304,7 @@ class CourseEditPage extends BaseFadeScalePage {
           },
           child: Container(
             width: ScreenSize.width,
-            color: Colors.transparent,
+            color: AppColors.transparent,
             child: Row(
               children: [
                 Text(
@@ -494,7 +494,7 @@ class CourseEditPage extends BaseFadeScalePage {
               Container(
                 width: 30,
                 height: 30,
-                color: Colors.transparent,
+                color: AppColors.transparent,
                 child: Icon(
                   FontAwesomeIcons.plus,
                   color: AppColors.greyColor130,

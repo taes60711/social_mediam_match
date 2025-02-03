@@ -55,7 +55,7 @@ class PostPageByType extends BaseEndDrawer {
                       child: Container(
                         width: ScreenSize.fitPxWidth(40),
                         height: ScreenSize.fitPxWidth(40),
-                        color: Colors.transparent,
+                        color: AppColors.transparent,
                         child: Center(
                           child: Icon(
                             Icons.arrow_back_ios,

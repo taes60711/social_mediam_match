@@ -79,7 +79,7 @@ class CourseDetailPage extends BaseEndDrawer {
                 child: Container(
                   height: ScreenSize.fitPxWidth(30),
                   width: ScreenSize.fitPxWidth(30),
-                  color: Colors.transparent,
+                  color: AppColors.transparent,
                   child: Icon(
                     FontAwesomeIcons.arrowUpRightFromSquare,
                     color: AppColors.whiteColor,
@@ -323,7 +323,7 @@ class CourseDetailPage extends BaseEndDrawer {
 
         Container(
           width: ScreenSize.width,
-          color: Colors.transparent,
+          color: AppColors.transparent,
           alignment: Alignment.centerRight,
           child: MainBtn(
             onPress: () {
@@ -369,7 +369,7 @@ class CourseDetailPage extends BaseEndDrawer {
                       children: [
                         Icon(
                           FontAwesomeIcons.book,
-                          color: Colors.white,
+                          color: AppColors.whiteColor,
                           size: ScreenSize.fontSize14,
                         ),
                         SizedBox(width: ScreenSize.fitPxWidth(5)),
@@ -449,7 +449,7 @@ class CourseDetailPage extends BaseEndDrawer {
         width: ScreenSize.width / 2,
         height: ScreenSize.fitPxHeight(30),
         alignment: Alignment.center,
-        color: Colors.transparent,
+        color: AppColors.transparent,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

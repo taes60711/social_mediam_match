@@ -61,7 +61,7 @@ class ChatRoomImageSendCheck extends BaseFadeScalePage {
                 canUseScaleClosePage = false;
               }
             },
-            backgroundDecoration: const BoxDecoration(color: Colors.transparent),
+            backgroundDecoration: BoxDecoration(color: AppColors.transparent),
             controller: photoViewController,
             child: GestureDetector(
               onDoubleTap: () {

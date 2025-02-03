@@ -62,7 +62,7 @@ class UserProfileSharePage extends BaseDialog {
                     child: Container(
                       width: ScreenSize.fitPxWidth(40),
                       height: ScreenSize.fitPxWidth(40),
-                      color: Colors.transparent,
+                      color: AppColors.transparent,
                       child: Icon(
                         Icons.close,
                         color: AppColors.whiteColor,

@@ -107,7 +107,7 @@ class MultInputBottomSheet extends BaseBottomSheet {
   Widget build(WidgetRef ref) {
     return CommonScaffold(
       type: PageType.window,
-      bgColor: Colors.transparent,
+      bgColor: AppColors.transparent,
       child: Column(
         children: [
           BaseTopBar(

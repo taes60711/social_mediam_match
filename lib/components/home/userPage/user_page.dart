@@ -53,7 +53,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                       child: Container(
                         height: ScreenSize.fitPxHeight(63),
                         width: ScreenSize.fitPxHeight(63),
-                        color: Colors.transparent,
+                        color: AppColors.transparent,
                         child: Stack(
                           children: [
                             UserIcon(
@@ -139,7 +139,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                                 Text(
                                   userData.email,
                                   style: TextStyle(
-                                    color: Colors.grey,
+                                    color: AppColors.greyColor,
                                     fontSize: ScreenSize.fontSize12,
                                   ),
                                 ),
@@ -153,10 +153,10 @@ class _UserPageState extends ConsumerState<UserPage> {
                                   child: Container(
                                     width: 30,
                                     alignment: Alignment.centerLeft,
-                                    color: Colors.transparent,
+                                    color: AppColors.transparent,
                                     child: Icon(
                                       FontAwesomeIcons.arrowUpRightFromSquare,
-                                      color: const Color.fromARGB(221, 180, 179, 179),
+                                      color: AppColors.greyColor180A221,
                                       size: ScreenSize.fontSize14,
                                     ),
                                   ),
@@ -228,7 +228,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                           padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
                           margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
                           decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 138, 138, 138),
+                            color: AppColors.greyColor138,
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Icon(
@@ -259,7 +259,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                           padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
                           margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 240, 123, 77),
+                            color: AppColors.oragneColor123,
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Icon(

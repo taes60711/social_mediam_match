@@ -119,7 +119,7 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
                           sendMsg(widget.chatRoomWSModel, userId: userData.uid, message: commentController.text);
                         },
                         child: Container(
-                          color: Colors.transparent,
+                          color: AppColors.transparent,
                           padding: EdgeInsets.only(
                             left: ScreenSize.fitPxWidth(10),
                             right: ScreenSize.fitPxWidth(8),

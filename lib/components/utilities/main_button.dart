@@ -55,7 +55,7 @@ class _MainBtnState extends State<MainBtn> {
       padding = EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10), vertical: ScreenSize.fitPxHeight(5));
     }
 
-    Color btnBackgroundColor = Colors.transparent;
+    Color btnBackgroundColor = AppColors.transparent;
     if (widget.title != null) {
       btnBackgroundColor = widget.backgroundColor ?? AppColors.greyColor57;
     }
@@ -110,7 +110,7 @@ class _MainBtnState extends State<MainBtn> {
                     widget.title ?? "please use title or child ",
                     style: widget.titleStyle ??
                         TextStyle(
-                          color: Colors.white,
+                          color: AppColors.whiteColor,
                           fontSize: ScreenSize.fontSize12,
                         ),
                   ),

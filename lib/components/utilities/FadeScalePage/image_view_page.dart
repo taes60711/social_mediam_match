@@ -67,7 +67,7 @@ class ImageViewPage extends BaseFadeScalePage {
                 canUseScaleClosePage = false;
               }
             },
-            backgroundDecoration: const BoxDecoration(color: Colors.transparent),
+            backgroundDecoration: BoxDecoration(color: AppColors.transparent),
             controller: photoViewController,
             child: GestureDetector(
               onDoubleTap: () {
@@ -210,7 +210,7 @@ class ImageViewPage extends BaseFadeScalePage {
       child: Container(
         width: ScreenSize.fitPxWidth(40),
         height: ScreenSize.fitPxWidth(40),
-        color: Colors.transparent,
+        color: AppColors.transparent,
         child: Icon(
           icon,
           size: ScreenSize.fitPxWidth(20),

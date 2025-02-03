@@ -73,7 +73,7 @@ class PostEditorPage extends BaseFadeScalePage {
               child: Container(
                 width: ScreenSize.fitPxWidth(40),
                 height: ScreenSize.fitPxWidth(40),
-                color: Colors.transparent,
+                color: AppColors.transparent,
                 child: Center(
                   child: Icon(
                     Icons.close,

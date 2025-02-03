@@ -130,7 +130,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
               child: Container(
                 width: ScreenSize.fitPxWidth(30),
                 height: ScreenSize.fitPxWidth(36),
-                color: Colors.transparent,
+                color: AppColors.transparent,
                 child: Icon(
                   Icons.search,
                   color: AppColors.whiteColor,
@@ -168,7 +168,7 @@ class _SkillUserChangePageState extends ConsumerState<SkillUserChangePage> {
               child: Container(
                 width: ScreenSize.fitPxWidth(30),
                 height: ScreenSize.fitPxWidth(40),
-                color: Colors.transparent,
+                color: AppColors.transparent,
                 child: Icon(
                   FontAwesomeIcons.sliders,
                   size: ScreenSize.fontSize14,

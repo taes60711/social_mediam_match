@@ -120,7 +120,7 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
             child: Container(
               width: ScreenSize.fitPxWidth(30),
               height: ScreenSize.fitPxWidth(36),
-              color: Colors.transparent,
+              color: AppColors.transparent,
               child: Icon(
                 Icons.search,
                 color: AppColors.whiteColor,
@@ -157,7 +157,7 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
             child: Container(
               width: ScreenSize.fitPxWidth(30),
               height: ScreenSize.fitPxWidth(40),
-              color: Colors.transparent,
+              color: AppColors.transparent,
               child: Icon(
                 FontAwesomeIcons.sliders,
                 size: ScreenSize.fontSize14,

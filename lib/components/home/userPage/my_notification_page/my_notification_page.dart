@@ -66,7 +66,7 @@ class MyNotificationPage extends BaseEndDrawer {
                         return isConfirm;
                       },
                       background: Container(
-                        color: Colors.red,
+                        color: AppColors.redColor,
                         child: Padding(
                           padding: EdgeInsets.only(right: ScreenSize.fitPxWidth(20)),
                           child: Row(
@@ -116,7 +116,7 @@ class MyNotificationPage extends BaseEndDrawer {
                               child: Icon(
                                 numberTypeIcon(data.type),
                                 size: ScreenSize.fontSize20,
-                                color: Colors.white,
+                                color: AppColors.whiteColor,
                               ),
                             ),
                             SizedBox(width: ScreenSize.fitPxWidth(10)),
@@ -136,7 +136,7 @@ class MyNotificationPage extends BaseEndDrawer {
                                           data.title,
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                          style: TextStyle(fontSize: 12, color: AppColors.greyColor),
                                         ),
                                       ),
                                     ],
@@ -144,16 +144,22 @@ class MyNotificationPage extends BaseEndDrawer {
                                   SizedBox(height: ScreenSize.fitPxWidth(5)),
                                   Text(
                                     DateFormatUtilities().format(data.postTime.toString()),
-                                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: AppColors.greyColor,
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
                             Visibility(
                               visible: !data.isRead,
-                              child: const Text(
+                              child: Text(
                                 "未讀",
-                                style: TextStyle(fontSize: 10, color: Colors.grey),
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: AppColors.greyColor,
+                                ),
                               ),
                             )
                           ],

@@ -386,8 +386,8 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
                   child: AnyLinkPreview(
                     link: urlLink,
                     titleStyle: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
-                    backgroundColor: Colors.transparent,
-                    boxShadow: const [BoxShadow(color: Colors.transparent)],
+                    backgroundColor: AppColors.transparent,
+                    boxShadow: [BoxShadow(color: AppColors.transparent)],
                     bodyStyle: TextStyle(color: AppColors.greyColor130, fontSize: 12),
                     borderRadius: 0,
                     bodyMaxLines: 2,

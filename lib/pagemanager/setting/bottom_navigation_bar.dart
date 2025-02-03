@@ -30,7 +30,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: AppColors.transparent,
       child: SizedBox(
         width: ScreenSize.width,
         height: ScreenSize.fitPxHeight(60),
@@ -77,7 +77,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
                     HomeGlobalViewModel().changeMainPage(e);
                   },
                   child: Container(
-                    color: Colors.transparent,
+                    color: AppColors.transparent,
                     width: (ScreenSize.width - ScreenSize.fitPxHeight(40)) / 5,
                     child: Stack(
                       children: [

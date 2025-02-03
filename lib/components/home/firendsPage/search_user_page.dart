@@ -30,7 +30,7 @@ class SearchUserPage extends BaseBottomSheet {
   Widget build(WidgetRef ref) {
     return CommonScaffold(
       type: PageType.window,
-      bgColor: Colors.transparent,
+      bgColor: AppColors.transparent,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
         child: Column(
@@ -116,7 +116,7 @@ class SearchUserPage extends BaseBottomSheet {
 
   Widget _buildNoData() {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       body: SizedBox(
         width: ScreenSize.width,
         child: Column(
@@ -143,7 +143,7 @@ class SearchUserPage extends BaseBottomSheet {
 
   Widget _buildInit() {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       body: SizedBox(
         width: ScreenSize.width,
         child: Column(

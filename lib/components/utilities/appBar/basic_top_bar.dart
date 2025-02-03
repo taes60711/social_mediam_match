@@ -35,7 +35,7 @@ class BaseTopBar extends StatelessWidget {
             child: Container(
               width: ScreenSize.fitPxWidth(40),
               height: ScreenSize.fitPxWidth(40),
-              color: Colors.transparent,
+              color: AppColors.transparent,
               child: Center(
                 child: Icon(
                   Icons.arrow_back_ios,
@@ -60,7 +60,7 @@ class BaseTopBar extends StatelessWidget {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Container(
-        color: Colors.transparent,
+        color: AppColors.transparent,
         width: ScreenSize.width,
         child: Padding(
           padding: padding,
@@ -110,7 +110,7 @@ Widget downCloseBtn({Function? onPress}) {
     child: Container(
       width: ScreenSize.fitPxWidth(40),
       height: ScreenSize.fitPxWidth(40),
-      color: Colors.transparent,
+      color: AppColors.transparent,
       child: Center(
         child: Icon(
           Icons.keyboard_arrow_down,

@@ -63,7 +63,7 @@ abstract class BaseBottomSheet {
                     onTap: () {
                       if (buildneedbarrerierClose()) {
                         closePage();
-                        barrerierColor = Colors.transparent;
+                        barrerierColor = AppColors.transparent;
                         render();
                       }
                     },
@@ -71,7 +71,7 @@ abstract class BaseBottomSheet {
                       height: ScreenSize.height,
                       color: barrerierColor,
                       child: Scaffold(
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: AppColors.transparent,
                         body: GestureDetector(
                           onTap: () {},
                           child: buildHeight() > 0.6

@@ -76,7 +76,7 @@ class MyCoursePage extends BaseEndDrawer {
                 borderRadius: BorderRadius.circular(10),
                 color: AppColors.orangeColor,
               )
-            : const BoxDecoration(color: Colors.transparent),
+            : BoxDecoration(color: AppColors.transparent),
         child: Text(
           tabText,
           style: TextStyle(

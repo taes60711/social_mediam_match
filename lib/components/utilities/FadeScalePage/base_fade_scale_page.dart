@@ -46,7 +46,7 @@ abstract class BaseFadeScalePage {
               dispose(ref);
             },
             child: Scaffold(
-              backgroundColor: Colors.transparent,
+              backgroundColor: AppColors.transparent,
               body: Consumer(
                 builder: ((context, consumerRef, _) {
                   return StatefulBuilder(
@@ -151,7 +151,7 @@ class _FadeScaleState extends State<FadeScale> with SingleTickerProviderStateMix
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: AppColors.bgColor,
+          color: AppColors.black28,
           child: CommonScaffold(
             type: PageType.window,
             child: component,

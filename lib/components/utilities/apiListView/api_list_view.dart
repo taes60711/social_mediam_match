@@ -98,7 +98,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     if (loadDataStatus != LoadDataStatus.initial) {
       if (ref.watch(widget.listControllerProvider).listData.isEmpty) {
         return Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: AppColors.transparent,
           body: Stack(
             children: [
               widget.noDataWidget ??
@@ -131,7 +131,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
 
       ///データロード終わり場合
       child = Material(
-        color: Colors.transparent,
+        color: AppColors.transparent,
         child: SizedBox(
           ///データ不足場合は高さ画面合うよう
           height: ScreenSize.height,

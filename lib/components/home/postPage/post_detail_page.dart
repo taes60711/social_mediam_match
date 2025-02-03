@@ -130,7 +130,7 @@ class PostDetailPage extends BaseEndDrawer {
                             PostCommentPage(dataIndex: dataIndex, postListController: postListController).show(context);
                           },
                           child: Container(
-                            color: Colors.transparent,
+                            color: AppColors.transparent,
                             padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(7)),
                             child: PostViewUtilities().iconWithText(
                                 iconData: FontAwesomeIcons.commentDots,
@@ -169,7 +169,7 @@ class PostDetailPage extends BaseEndDrawer {
                             );
                           },
                           child: Container(
-                            color: Colors.transparent,
+                            color: AppColors.transparent,
                             padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(10)),
                             child: Row(
                               children: [
@@ -177,7 +177,9 @@ class PostDetailPage extends BaseEndDrawer {
                                   ref.read(choicedPostIsGoodProvider.notifier).state
                                       ? AppImage.heartFillIcon
                                       : AppImage.heartLinerIcon,
-                                  color: ref.read(choicedPostIsGoodProvider.notifier).state ? Colors.red : AppColors.greyColor130,
+                                  color: ref.read(choicedPostIsGoodProvider.notifier).state
+                                      ? AppColors.redColor
+                                      : AppColors.greyColor130,
                                   width: ScreenSize.fitPxWidth(20),
                                 ),
                                 SizedBox(width: ScreenSize.fitPxWidth(5)),
@@ -252,7 +254,7 @@ class PostDetailPage extends BaseEndDrawer {
                           },
                           child: PostViewUtilities().iconWithText(
                             iconData: FontAwesomeIcons.arrowUpRightFromSquare,
-                            iconColor: const Color.fromARGB(221, 180, 179, 179),
+                            iconColor: AppColors.greyColor180A221,
                             text: "分享",
                             style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor),
                           ),

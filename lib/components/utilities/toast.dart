@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 
+import 'style/app_colors.dart';
+
 class Toast {
   static final Toast _singleton = Toast._internal();
 
@@ -32,11 +34,11 @@ class Toast {
     _overlayEntry = OverlayEntry(
       builder: (context) => Center(
         child: Material(
-          color: Colors.transparent,
+          color: AppColors.transparent,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8), vertical: ScreenSize.fitPxWidth(3)),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 44, 44, 42), //const Color.fromARGB(255, 144, 143, 142),
+              color: AppColors.greyColor44,
               borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(6)),
             ),
             child: GestureDetector(
@@ -45,7 +47,7 @@ class Toast {
               },
               child: Text(
                 msg,
-                style: TextStyle(color: Colors.white, fontSize: ScreenSize.fontSize14),
+                style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
               ),
             ),
           ),
@@ -72,7 +74,7 @@ class Toast {
       builder: (context) => Container(
         alignment: Alignment.bottomCenter,
         child: Material(
-          color: Colors.transparent,
+          color: AppColors.transparent,
           child: Padding(
             padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(100)),
             child: Container(
@@ -81,7 +83,7 @@ class Toast {
                 vertical: ScreenSize.fitPxWidth(3),
               ),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 44, 44, 42), //const Color.fromARGB(255, 144, 143, 142),
+                color: AppColors.greyColor44,
                 borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(6)),
               ),
               child: GestureDetector(
@@ -90,7 +92,7 @@ class Toast {
                 },
                 child: Text(
                   msg,
-                  style: TextStyle(color: Colors.white, fontSize: ScreenSize.fontSize14),
+                  style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                 ),
               ),
             ),
