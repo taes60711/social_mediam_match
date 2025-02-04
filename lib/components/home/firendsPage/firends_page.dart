@@ -196,15 +196,15 @@ class _FriendPageState extends ConsumerState<FriendPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: 25, bottom: 10),
+            padding: const EdgeInsets.only(right: 20, bottom: 10),
             child: Icon(
               FontAwesomeIcons.usersSlash,
-              color: AppColors.greyColor98,
+              color: AppColors.whiteColor,
               size: 50,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 15, bottom: 15),
+            padding: const EdgeInsets.only(bottom: 15),
             child: Text(
               "目前還沒有任何訊息",
               style: TextStyle(
