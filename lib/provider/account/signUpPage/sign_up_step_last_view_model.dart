@@ -32,11 +32,15 @@ class SignUpStepLastViewModel {
 
     if (editImg != "" && editImg != null) {
       String uid = const Uuid().v1();
-      if (await ImageService().imageIsExist(editImg ?? "") != "-1") {
-        uid = await ImageService().imageIsExist(editImg ?? "");
+
+      String imageIsExistId = await ImageService().imageIsExist(editImg ?? "");
+
+      if (imageIsExistId != "-1") {
+        uid = imageIsExistId;
       } else {
         await ImageService().saveImg(uid, editImg ?? "");
       }
+
       httpImg = "http://\$ip:\$port/images/$uid";
     }
 

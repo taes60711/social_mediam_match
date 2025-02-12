@@ -174,11 +174,15 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
             if (imgPickerResult != "") {
               LoadingDialog().show();
               String uid = const Uuid().v1();
-              if (await ImageService().imageIsExist(imgPickerResult) != "-1") {
-                uid = await ImageService().imageIsExist(imgPickerResult);
+
+              String imageIsExistId = await ImageService().imageIsExist(imgPickerResult);
+
+              if (imageIsExistId != "-1") {
+                uid = imageIsExistId;
               } else {
                 await ImageService().saveImg(uid, imgPickerResult);
               }
+
               String sendImgString = "http://\$ip:\$port/images/$uid";
               result = sendImgString;
               print("sendImgString $sendImgString");

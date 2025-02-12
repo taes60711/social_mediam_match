@@ -40,8 +40,11 @@ class RichTextFormat {
                   String resultString = _getImage(e.outerHtml);
 
                   String uid = const Uuid().v1();
-                  if (await ImageService().imageIsExist(resultString) != "-1") {
-                    uid = await ImageService().imageIsExist(resultString);
+
+                  String imageIsExistId = await ImageService().imageIsExist(resultString);
+
+                  if (imageIsExistId != "-1") {
+                    uid = imageIsExistId;
                   } else {
                     await ImageService().saveImg(uid, resultString);
                   }
