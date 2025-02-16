@@ -24,8 +24,10 @@ class UserIcon extends StatelessWidget {
     String userIcon = image ?? "";
 
     if (userIcon.contains("http")) {
-      userIcon = userIcon.replaceAll("\$ip", ip);
-      userIcon = userIcon.replaceAll("\$port", port);
+      // userIcon = userIcon.replaceAll("\$ip", ip);
+      // userIcon = userIcon.replaceAll("\$port", port);
+      userIcon = userIcon.replaceAll('\$ip:\$port', APIHttpController.domainUrl);
+      userIcon = userIcon.replaceAll('\$domain', APIHttpController.domainUrl);
     }
 
     return userIcon != ""

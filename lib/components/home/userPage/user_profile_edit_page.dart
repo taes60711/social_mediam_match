@@ -8,6 +8,7 @@ import 'package:social_mediam_match/components/utilities/inputField/label_input.
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/components/utilities/toast.dart';
+import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/provider/account/user_profile_edit_view_model.dart';
 import 'package:social_mediam_match/services/user_service.dart';
 import 'package:uuid/uuid.dart';
@@ -94,7 +95,7 @@ class UserProfileEditPage extends BaseBottomSheet {
                       await ImageService().saveImg(uid, viewModel.editImg ?? "");
                     }
 
-                    httpImg = "http://\$ip:\$port/images/$uid";
+                    httpImg = "${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/$uid";
                   }
                 }
 

@@ -1,0 +1,4 @@
+enum DevType {
+  debug,
+  release;
+}

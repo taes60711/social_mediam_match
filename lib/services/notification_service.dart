@@ -1,10 +1,8 @@
 import 'package:social_mediam_match/models/notification_model.dart';
 import 'package:social_mediam_match/services/api_client.dart';
 
-import '../global.dart';
-
 class NotificationService extends ApiClient {
-  NotificationService() : super(overrideIp: "$ip:$port/notification");
+  NotificationService() : super(overrideBranch: "/notification");
 
   ///ログインユーザの通知リストデータ取得する
   Future<List<NotificationModel>> requestNotificationList(int page, int size, {required String userUId}) async {

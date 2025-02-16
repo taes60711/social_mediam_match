@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/services/api_client.dart';
 
-import '../global.dart';
 import '../models/post_model.dart';
 import '../models/user_model.dart';
 
 class PostService extends ApiClient {
-  PostService() : super(overrideIp: "$ip:$port/posts");
+  PostService() : super(overrideBranch: "/posts");
 
   ///MARK: 全て掲示板種類取得する
   Future<List<PostBoard>> getAllPostBoard() async {

@@ -12,6 +12,7 @@ import 'package:social_mediam_match/components/home/firendsPage/firends_page.dar
 import 'package:social_mediam_match/components/utilities/lodaing_dialog.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../global.dart';
 import '../../../../models/friend_model.dart';
 import '../../../../models/notification_model.dart';
 import '../../../../models/user_model.dart';
@@ -183,7 +184,7 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
                 await ImageService().saveImg(uid, imgPickerResult);
               }
 
-              String sendImgString = "http://\$ip:\$port/images/$uid";
+              String sendImgString = "${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/$uid";
               result = sendImgString;
               print("sendImgString $sendImgString");
               LoadingDialog().close();
@@ -205,7 +206,7 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
 
     chatRoomWSModel.sendMessage(loginUserUID: userId, message: message);
 
-    if (message.contains('http://\$ip:\$port')) {
+    if (message.contains("${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}")) {
       message = "傳送了圖像";
     }
 

@@ -50,6 +50,32 @@ class MyNotificationPage extends BaseEndDrawer {
               },
               listControllerProvider: notificationListControllerProvider,
               size: 20,
+              noDataWidget: SizedBox(
+                width: ScreenSize.width,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 0, bottom: 10),
+                      child: Icon(
+                        Icons.notifications,
+                        color: AppColors.whiteColor,
+                        size: 50,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 15),
+                      child: Text(
+                        "沒有通知",
+                        style: TextStyle(
+                          color: AppColors.greyColor98,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               itemChild: (data, index) {
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(20)),

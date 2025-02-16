@@ -321,7 +321,7 @@ class PostViewUtilities {
   }
 
   Future<void> sharePost({required int postId}) async {
-    String sharePostUrl = "https://$domain/post/$postId";
+    String sharePostUrl = "https://${APIHttpController.shareDomain}/post/$postId";
     LoadingDialog().show();
     await Share.share(sharePostUrl);
     LoadingDialog().close();

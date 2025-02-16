@@ -8,6 +8,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../components/account/account_main_page.dart';
 import '../../../components/utilities/lodaing_dialog.dart';
+import '../../../global.dart';
 import '../../../models/skill_model.dart';
 import '../../../models/user_model.dart';
 import '../../../services/image_service.dart';
@@ -41,7 +42,7 @@ class SignUpStepLastViewModel {
         await ImageService().saveImg(uid, editImg ?? "");
       }
 
-      httpImg = "http://\$ip:\$port/images/$uid";
+      httpImg = "${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/$uid";
     }
 
     UpdateUser sqlUpdateData = UpdateUser.update(

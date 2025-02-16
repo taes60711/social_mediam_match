@@ -280,7 +280,7 @@ class CourseUtilites {
   }
 
   Future<void> shareCourse({required int courseId}) async {
-    String sharePostUrl = "https://$domain/course/$courseId";
+    String sharePostUrl = "https://${APIHttpController.shareDomain}/course/$courseId";
     LoadingDialog().show();
     await Share.share(sharePostUrl);
     LoadingDialog().close();

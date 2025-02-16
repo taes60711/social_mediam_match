@@ -25,6 +25,8 @@ class ChatWSModel {
   late IOWebSocketChannel _friendListChannel;
   Stream<dynamic>? _broadcastStream;
 
+  final String _channelListUrl = APIHttpController.wsPreFixUrl;
+
   Future<void> init(WidgetRef ref, Function render, {required String userId}) async {
     this.ref = ref;
     this.render = render;
@@ -33,13 +35,13 @@ class ChatWSModel {
       closeStream();
     }
 
-    _friendListChannel = IOWebSocketChannel.connect(channelListUrl);
-    print("friendList connect");
+    _friendListChannel = IOWebSocketChannel.connect(_channelListUrl);
+    print("friendList connect $_channelListUrl");
     await _friendListChannel.ready;
 
     Map<String, dynamic> map = {
       "method": "connect",
-      "ip": "$ip:$port",
+      "ip": APIHttpController.domainUrl,
       "userid": userId,
     };
 
@@ -83,7 +85,7 @@ class ChatWSModel {
   void sendMsg(List<String> usersList, int roomId) {
     Map<String, dynamic> map = {
       "method": "sendMessage",
-      "ip": "$ip:$port",
+      "ip": APIHttpController.domainUrl,
       "members": usersList,
       "roomid": roomId,
     };
@@ -104,7 +106,7 @@ class ChatWSModel {
 
     Map<String, dynamic> map = {
       "method": "addFriend",
-      "ip": "$ip:$port",
+      "ip": APIHttpController.domainUrl,
       "members": usersListTemp,
     };
 

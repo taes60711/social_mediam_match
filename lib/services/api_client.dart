@@ -8,17 +8,20 @@ import '../components/utilities/dialog/confirm_dialog.dart';
 
 class ApiClient {
   final String _ip;
+  final String branch;
 
-  ApiClient({String? overrideIp}) : _ip = overrideIp ?? "$ip:$port";
+  ApiClient({String? overrideIp, String? overrideBranch})
+      : _ip = overrideIp ?? APIHttpController.domainUrl,
+        branch = overrideBranch ?? "";
 
   ///MARK: API Get Func
   Future<String> apiGet(
     String url, {
     Map<String, dynamic>? paramters,
-    bool needReturnPrint = false,
+    bool needReturnPrint = true,
   }) async {
-    final uri = Uri.parse("http://$_ip$url").replace(queryParameters: paramters);
-    print("Get API  Url : $_ip$url");
+    final uri = Uri.parse("${APIHttpController.prefixUrl}://$_ip$branch$url").replace(queryParameters: paramters);
+    print("Get API  Url : ${APIHttpController.prefixUrl}://$_ip$branch$url");
     print("paramters : $paramters");
     Response response = await http.get(uri);
     try {
@@ -42,7 +45,7 @@ class ApiClient {
     String url, {
     Map<String, dynamic>? paramters,
   }) async {
-    final uri = Uri.parse("http://$_ip$url").replace(queryParameters: paramters);
+    final uri = Uri.parse("${APIHttpController.prefixUrl}://$_ip$branch$url").replace(queryParameters: paramters);
     print("Get API  Img Url : $url");
     Response response = await http.get(uri);
 
@@ -64,7 +67,7 @@ class ApiClient {
     Map<String, String> headers = const {'content-type': 'application/json'},
     required Map<String, dynamic> body,
   }) async {
-    final uri = Uri.parse("http://$_ip$url");
+    final uri = Uri.parse("${APIHttpController.prefixUrl}://$_ip$branch$url");
     print("Push API Url : $url body : ${jsonEncode(body)}");
     Response response = await http.put(
       uri,

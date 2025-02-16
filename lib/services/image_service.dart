@@ -2,13 +2,12 @@ import 'dart:typed_data';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:social_mediam_match/services/api_client.dart';
-import '../../global.dart';
 import 'package:http/http.dart' as http;
 
 import '../components/utilities/lodaing_dialog.dart';
 
 class ImageService extends ApiClient {
-  ImageService() : super(overrideIp: "$ip:$port/images");
+  ImageService() : super(overrideBranch: "/images");
 
   ///base64画像string取得する
   Future<String> getBase64Img(String image) async {

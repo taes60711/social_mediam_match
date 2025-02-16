@@ -1,11 +1,9 @@
 import 'package:social_mediam_match/models/user_model.dart';
-
-import '../global.dart';
 import '../models/course_model.dart';
 import 'api_client.dart';
 
 class CourseService extends ApiClient {
-  CourseService() : super(overrideIp: "$ip:$port/courses");
+  CourseService() : super(overrideBranch: "/courses");
 
   ///コース作成・更新
   Future<int> createOrUpdateCourse({

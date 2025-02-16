@@ -24,7 +24,7 @@ class UserProfileSharePage extends BaseDialog {
   @override
   Future<void> initState(WidgetRef ref) async {
     ProfileData userData = ref.read(loginUserData.notifier).state;
-    shareUrl = "https://$domain/profile/${userData.uid}";
+    shareUrl = "https://${APIHttpController.shareDomain}/profile/${userData.uid}";
     render();
   }
 

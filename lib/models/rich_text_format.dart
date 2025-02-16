@@ -49,7 +49,8 @@ class RichTextFormat {
                     await ImageService().saveImg(uid, resultString);
                   }
 
-                  String imgStringToHttp = '<img src="http://\$ip:\$port/images/$uid">';
+                  String imgStringToHttp =
+                      '<img src="${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/$uid">';
                   _htmlString = _htmlString.replaceAll(e.outerHtml, imgStringToHttp);
                 }
               }
@@ -129,9 +130,9 @@ class RichTextFormat {
               String pwithSpanString = element.innerHtml.replaceAll(" ", "&nbsp;");
               _htmlString = _htmlString.replaceAll(element.innerHtml, pwithSpanString);
             }
-            if (element.innerHtml.contains("http://$ip:$port/images/")) {
+            if (element.innerHtml.contains("${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/")) {
               String imgURL = _getImage(element.innerHtml);
-              String imgUId = imgURL.substring('http://$ip:$port/images/'.length);
+              String imgUId = imgURL.substring('${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/'.length);
               String base64Str = await ImageService().getBase64Img(imgUId);
               String base64ImgHtmlStr = element.innerHtml.replaceAll(imgURL, "data:image/jpeg;base64,$base64Str");
               _htmlString = _htmlString.replaceAll(mappingIPAndPort(element.innerHtml), base64ImgHtmlStr);
@@ -228,8 +229,8 @@ class RichTextFormat {
   }
 
   String mappingIPAndPort(String htmlString) {
-    String changedHtmlString = htmlString.replaceAll('\$ip', ip);
-    changedHtmlString = changedHtmlString.replaceAll('\$port', port);
+    String changedHtmlString = htmlString.replaceAll(APIHttpController.databaseDomainStr, APIHttpController.domainUrl);
+    // changedHtmlString = changedHtmlString.replaceAll('\$domain', APIHttpController.domainUrl);
     return changedHtmlString;
   }
 

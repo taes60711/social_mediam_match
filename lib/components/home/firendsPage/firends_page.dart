@@ -7,6 +7,7 @@ import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/enum/date_format_utilities.dart';
 
+import '../../../global.dart';
 import '../../../models/friend_model.dart';
 import '../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../provider/account/user_provider.dart';
@@ -108,7 +109,10 @@ class _FriendPageState extends ConsumerState<FriendPage> {
                                           data.lastMessage != null
                                               ? Expanded(
                                                   child: Text(
-                                                    data.lastMessage!.contains("http://\$ip") ? "傳送了圖像" : "${data.lastMessage}",
+                                                    data.lastMessage!.contains(
+                                                            "${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}")
+                                                        ? "傳送了圖像"
+                                                        : "${data.lastMessage}",
                                                     style:
                                                         TextStyle(fontSize: ScreenSize.fontSize14, color: AppColors.greyColor98),
                                                     maxLines: 2,
@@ -196,9 +200,9 @@ class _FriendPageState extends ConsumerState<FriendPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: 20, bottom: 10),
+            padding: const EdgeInsets.only(right: 0, bottom: 10),
             child: Icon(
-              FontAwesomeIcons.usersSlash,
+              FontAwesomeIcons.message,
               color: AppColors.whiteColor,
               size: 50,
             ),

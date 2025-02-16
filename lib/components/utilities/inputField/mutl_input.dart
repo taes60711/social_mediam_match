@@ -18,16 +18,17 @@ class MultInput extends ConsumerStatefulWidget {
   final int? editPageMinLines;
   final int? editPageMaxLines;
 
-  const MultInput(
-      {super.key,
-      required this.controller,
-      required this.hintText,
-      this.hintStyle,
-      this.inputStyle,
-      required this.minLines,
-      required this.maxLines,
-      this.editPageMinLines,
-      this.editPageMaxLines});
+  const MultInput({
+    super.key,
+    required this.controller,
+    required this.hintText,
+    this.hintStyle,
+    this.inputStyle,
+    required this.minLines,
+    required this.maxLines,
+    this.editPageMinLines,
+    this.editPageMaxLines,
+  });
 
   @override
   ConsumerState<MultInput> createState() => _MultLableInputState();

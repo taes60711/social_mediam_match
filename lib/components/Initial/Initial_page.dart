@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:social_mediam_match/components/utilities/lodaing_dialog.dart';
+import 'package:social_mediam_match/enum/dev_type.dart';
+import 'package:social_mediam_match/global.dart';
 
 import 'package:social_mediam_match/global/user_login_status_controller.dart';
 import 'package:social_mediam_match/global/shared_preference.dart';
@@ -54,6 +56,12 @@ class _InitialpageState extends ConsumerState<Initialpage> {
   }
 
   Future<void> allFuncinit() async {
+    ///MARK: 開發用Class（上架跟本地端開發的網址不同）
+    //
+    await APIHttpController().init(devType: DevType.release);
+    //
+    ///
+
     await Future.delayed(Duration.zero);
 
     LoadingDialog().init(context);

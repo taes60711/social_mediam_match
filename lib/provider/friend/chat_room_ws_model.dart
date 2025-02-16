@@ -22,6 +22,8 @@ class ChatRoomWSModel {
     return _instance ??= ChatRoomWSModel._();
   }
 
+  final String _channelRoomUrl = "${APIHttpController.wsPreFixUrl}/chatroom";
+
   late WidgetRef ref;
   late Function render;
   int enterRoomID = -1;
@@ -47,13 +49,13 @@ class ChatRoomWSModel {
 
     enterRoomID = roomData.roomId;
     ref.read(loginUserInChatRoomId.notifier).update((state) => enterRoomID);
-    _chatroomListChannel = IOWebSocketChannel.connect(channelRoomUrl);
-    print("chatRoom connect");
+    _chatroomListChannel = IOWebSocketChannel.connect(_channelRoomUrl);
+    print("chatRoom connect $_channelRoomUrl");
     await _chatroomListChannel.ready;
 
     Map<String, dynamic> map = {
       "method": "connect",
-      "ip": "$ip:$port",
+      "ip": APIHttpController.domainUrl,
       "userid": userId,
       "roomid": roomData.roomId,
       "pageNumber": pageNum,
@@ -117,7 +119,7 @@ class ChatRoomWSModel {
     pageNum = pageNum + 1;
     Map<String, dynamic> map = {
       "method": "loadRoomMessage",
-      "ip": "$ip:$port",
+      "ip": APIHttpController.domainUrl,
       "roomid": enterRoomID,
       "userid": loginUserUID,
       "pageNumber": pageNum,
@@ -186,8 +188,8 @@ class ChatRoomWSModel {
 
   Future<void> offScreenRetrun(
       {required String userId, required FriendListModel roomData, required ScrollController scrollController}) async {
-    _chatroomListChannel = IOWebSocketChannel.connect(channelRoomUrl);
-    print("chatRoom isOffScreen reConnect");
+    _chatroomListChannel = IOWebSocketChannel.connect(_channelRoomUrl);
+    print("chatRoom isOffScreen reConnect $_channelRoomUrl");
     await _chatroomListChannel.ready;
 
     enterRoomID = roomData.roomId;
@@ -195,7 +197,7 @@ class ChatRoomWSModel {
 
     Map<String, dynamic> map = {
       "method": "connect",
-      "ip": "$ip:$port",
+      "ip": APIHttpController.domainUrl,
       "userid": userId,
       "roomid": enterRoomID,
       "pageNumber": pageNum,
@@ -208,12 +210,12 @@ class ChatRoomWSModel {
 
   /// App最小化 > 戻る > WSもう一度繋がる > 画面のメッセージを更新する
   Future<void> appRetrun({required String userId, required FriendListModel roomData}) async {
-    print("chatRoom inBackground reConnect");
+    print("chatRoom inBackground reConnect $_channelRoomUrl");
 
     /// WS クローズ
     _chatroomListChannel.sink.close();
     _broadcastStream = null;
-    _chatroomListChannel = IOWebSocketChannel.connect(channelRoomUrl);
+    _chatroomListChannel = IOWebSocketChannel.connect(_channelRoomUrl);
     await _chatroomListChannel.ready;
 
     Map<String, dynamic> map = {

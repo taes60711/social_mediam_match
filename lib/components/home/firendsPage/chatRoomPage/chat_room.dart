@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -325,8 +324,38 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
       return element.contains('https');
     }, orElse: () => "-1");
 
-    /// Link
-    if (urlLink != "-1") {
+    bool isDataBaseImg = msg.contains('${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}') ? true : false;
+
+    /// 画像
+    if (isDataBaseImg) {
+      String imgUrl = RichTextFormat(htmlString: msg).mappingIPAndPort(msg);
+      component = ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: ScreenSize.width * .7),
+        child: GestureDetector(
+          onTap: () async {
+            print(imgUrl);
+
+            ImageViewPage(imgUrl: imgUrl).show(context);
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(10)),
+            child: CachedNetworkImage(
+              imageUrl: imgUrl,
+              placeholder: (context, url) {
+                return Container(
+                  width: ScreenSize.width * .7,
+                  height: ScreenSize.fitPxWidth(200),
+                  color: AppColors.black37,
+                  child: const Loading(),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      /// Link
+    } else if (urlLink != "-1") {
       component = Column(
         crossAxisAlignment: whoMsg == "my" ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
@@ -352,7 +381,9 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () async {
                                 Uri url = Uri.parse(e);
-                                if (e.contains("$domain/profile") || e.contains("$domain/post") || e.contains("$domain/course")) {
+                                if (e.contains("${APIHttpController.shareDomain}/profile") ||
+                                    e.contains("${APIHttpController.shareDomain}/post") ||
+                                    e.contains("${APIHttpController.shareDomain}/course")) {
                                   LoadingDialog().show();
                                   await BaseShareUrlHandle(context: HomeGlobalViewModel().context, ref: HomeGlobalViewModel().ref)
                                       .runShareUrl(url);
@@ -377,54 +408,26 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
             ),
           ),
           Container(
-              margin: EdgeInsets.only(top: ScreenSize.fitPxWidth(5)),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColors.greyColor57),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: ScreenSize.width * 0.7, maxHeight: 160),
-                  child: AnyLinkPreview(
-                    link: urlLink,
-                    titleStyle: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
-                    backgroundColor: AppColors.transparent,
-                    boxShadow: [BoxShadow(color: AppColors.transparent)],
-                    bodyStyle: TextStyle(color: AppColors.greyColor130, fontSize: 12),
-                    borderRadius: 0,
-                    bodyMaxLines: 2,
-                    placeholderWidget: const Loading(),
-                  ),
+            margin: EdgeInsets.only(top: ScreenSize.fitPxWidth(5)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColors.greyColor57),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: ScreenSize.width * 0.7, maxHeight: 160),
+                child: AnyLinkPreview(
+                  link: urlLink,
+                  titleStyle: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                  backgroundColor: AppColors.transparent,
+                  boxShadow: [BoxShadow(color: AppColors.transparent)],
+                  bodyStyle: TextStyle(color: AppColors.greyColor130, fontSize: 12),
+                  borderRadius: 0,
+                  bodyMaxLines: 2,
+                  placeholderWidget: const Loading(),
                 ),
-              ))
-        ],
-      );
-    }
-
-    /// 画像
-    else if (msg.contains('http://\$ip:\$port')) {
-      String imgUrl = RichTextFormat(htmlString: msg).mappingIPAndPort(msg);
-      component = ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: ScreenSize.width * .7),
-        child: GestureDetector(
-          onTap: () async {
-            print(imgUrl);
-
-            ImageViewPage(imgUrl: imgUrl).show(context);
-          },
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(ScreenSize.fitPxWidth(10)),
-            child: CachedNetworkImage(
-              imageUrl: imgUrl,
-              placeholder: (context, url) {
-                return Container(
-                  width: ScreenSize.width * .7,
-                  height: ScreenSize.fitPxWidth(200),
-                  color: AppColors.black37,
-                  child: const Loading(),
-                );
-              },
+              ),
             ),
-          ),
-        ),
+          )
+        ],
       );
     }
 

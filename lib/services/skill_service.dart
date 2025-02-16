@@ -1,10 +1,9 @@
 import 'package:social_mediam_match/models/skill_model.dart';
 
-import '../../global.dart';
 import 'api_client.dart';
 
 class SkillService extends ApiClient {
-  SkillService() : super(overrideIp: "$ip:$port/skill");
+  SkillService() : super(overrideBranch: "/skill");
 
   ///MARK:  App全てのスキル種類
   Future<List<RequestSkillListData>> requestSkillList() async {

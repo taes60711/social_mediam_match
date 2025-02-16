@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
-import 'package:social_mediam_match/global.dart';
 
 import 'package:social_mediam_match/services/api_client.dart';
 
@@ -10,7 +9,7 @@ import '../models/user_model.dart';
 
 ///ユーザAPIサービス
 class UserService extends ApiClient {
-  UserService() : super(overrideIp: "$ip:$port/user");
+  UserService() : super(overrideBranch: "/user");
 
   Future<List<ProfileData>> getAllUserData(int page, int size,
       {required String userUid, required List<String> filterSkill}) async {

@@ -1,9 +1,8 @@
-import '../global.dart';
 import '../models/feed_back_model.dart';
 import 'api_client.dart';
 
 class UserFeedBackService extends ApiClient {
-  UserFeedBackService() : super(overrideIp: "$ip:$port/feedback");
+  UserFeedBackService() : super(overrideBranch: "/feedback");
 
   ///フィードバック作成
   Future<bool> createFeedBack(FeedBackModel feedBack) async {

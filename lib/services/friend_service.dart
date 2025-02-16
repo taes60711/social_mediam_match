@@ -9,7 +9,7 @@ class FriendService extends ApiClient {
     List<FriendListModel> friendList = [];
 
     try {
-      String url = apiUrl.substring("http://$ip:$port".length);
+      String url = apiUrl.substring("http://${APIHttpController.domainUrl}".length);
       String responseData = await apiGet(url);
 
       friendList = await handleResponse<FriendListModel>(
@@ -28,7 +28,7 @@ class FriendService extends ApiClient {
     ChatRoomModel roomMsg = ChatRoomModel(chatRoomMsg: []);
 
     try {
-      String url = apiUrl.substring("http://$ip:$port".length);
+      String url = apiUrl.substring("http://${APIHttpController.domainUrl}".length);
       String responseData = await apiGet(url);
 
       roomMsg = await handleResponse<ChatRoomModel>(
