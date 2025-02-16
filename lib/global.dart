@@ -18,7 +18,7 @@ class APIHttpController {
   }
 
   static String shareDomain = "universal-link.directsense.tw"; //暫時
-  final String _domain = "test-skillstorm.directsense.tw";
+  final String _domain = "skillstorm.directsense.tw";
   final String _ip = "10.6.9.129";
 
   ///"192.168.1.158";
