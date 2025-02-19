@@ -43,45 +43,47 @@ class MyNotificationPostPage extends BaseEndDrawer {
             BaseTopBar(
               backFunc: () => closePage(),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
+            Expanded(
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    /// ユーザデータ
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            ///ユーザー詳細ページに遷移
-                            UserProfileAllInfoBottomSheet(userData: data.postUserInfo).show(context);
-                          },
-                          child: UserIcon(
-                            iconSize: ScreenSize.fitPxWidth(30),
-                            image: data.postUserInfo.image,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
+                  child: Column(
+                    children: [
+                      /// ユーザデータ
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              ///ユーザー詳細ページに遷移
+                              UserProfileAllInfoBottomSheet(userData: data.postUserInfo).show(context);
+                            },
+                            child: UserIcon(
+                              iconSize: ScreenSize.fitPxWidth(30),
+                              image: data.postUserInfo.image,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: ScreenSize.fitPxWidth(5)),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              data.postUserInfo.name ?? "",
-                              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
-                            ),
-                            Text(
-                              DateFormatUtilities().format(data.postTime),
-                              style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                          SizedBox(width: ScreenSize.fitPxWidth(5)),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                data.postUserInfo.name ?? "",
+                                style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                              ),
+                              Text(
+                                DateFormatUtilities().format(data.postTime),
+                                style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
 
-                    /// MainMessage
-                    RichTextView(content: data.mainMessage),
-                    SizedBox(height: ScreenSize.fitPxWidth(10)),
-                  ],
+                      /// MainMessage
+                      RichTextView(content: data.mainMessage),
+                      SizedBox(height: ScreenSize.fitPxWidth(10)),
+                    ],
+                  ),
                 ),
               ),
             ),

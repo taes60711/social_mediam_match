@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/bottomSheets/base_bottom_sheet.dart';
+import 'package:social_mediam_match/components/utilities/loading.dart';
 import 'package:social_mediam_match/enum/date_format_utilities.dart';
 
 import 'package:social_mediam_match/global/home_global_view_model.dart';
@@ -35,6 +36,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
   UserProfileAllInfoBottomSheet({required this.userData, this.needToChatRoomBtn = true});
 
   String notifaicationToken = "";
+  bool isInit = false;
 
   @override
   Future<void> initState(WidgetRef ref) async {
@@ -43,6 +45,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
       bool isFriend = await FriendService().getIsFrined(userUID: myUserData.uid, ohterUserUID: userData.uid);
       notifaicationToken = await UserService().requestUserNotificationTokenByUID(userData.uid);
       ref.read(isFriendProvider.notifier).update((state) => isFriend);
+      isInit = true;
       render();
     }
   }
@@ -209,86 +212,89 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
           SizedBox(height: ScreenSize.fitPxHeight(15)),
 
           /// チャットルーム遷移/フレンド追加ボタン
-          Visibility(
-            visible: needToChatRoomBtn && ref.watch(loginUserData).uid != userData.uid,
-            child: Center(
-              child: MainBtn(
-                onPress: () {
-                  if (UserLoginStatusController().isGuest()) {
-                    ConfirmDilaog(
-                        title: "提示",
-                        content: "請先登入",
-                        conirmFunc: () {
-                          UserLoginStatusController().guestLogOut(
-                            attachFunc: () {
-                              closePage();
-                              HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
-                            },
-                          );
-                        }).show(context);
-                    return;
-                  }
+          ///
+          !isInit
+              ? const Loading()
+              : Visibility(
+                  visible: needToChatRoomBtn && ref.watch(loginUserData).uid != userData.uid,
+                  child: Center(
+                    child: MainBtn(
+                      onPress: () {
+                        if (UserLoginStatusController().isGuest()) {
+                          ConfirmDilaog(
+                              title: "提示",
+                              content: "請先登入",
+                              conirmFunc: () {
+                                UserLoginStatusController().guestLogOut(
+                                  attachFunc: () {
+                                    closePage();
+                                    HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
+                                  },
+                                );
+                              }).show(context);
+                          return;
+                        }
 
-                  if (ref.read(isFriendProvider.notifier).state == false) {
-                    ChatWSModel().addFriend([ref.watch(loginUserData).uid, userData.uid]);
-                    ref.read(isFriendProvider.notifier).update((state) => true);
+                        if (ref.read(isFriendProvider.notifier).state == false) {
+                          ChatWSModel().addFriend([ref.watch(loginUserData).uid, userData.uid]);
+                          ref.read(isFriendProvider.notifier).update((state) => true);
 
-                    String message = '"${ref.watch(loginUserData).name}"將你加為好友';
+                          String message = '"${ref.watch(loginUserData).name}"將你加為好友';
 
-                    NotificationModel notification = NotificationModel.empty();
-                    notification.userUid = ref.read(loginUserData.notifier).state.uid;
-                    notification.otherUserUid = userData.uid;
-                    notification.type = 2;
-                    notification.title = message;
-                    notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
+                          NotificationModel notification = NotificationModel.empty();
+                          notification.userUid = ref.read(loginUserData.notifier).state.uid;
+                          notification.otherUserUid = userData.uid;
+                          notification.type = 2;
+                          notification.title = message;
+                          notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
 
-                    NotificationService().createNotification(notification: notification);
+                          NotificationService().createNotification(notification: notification);
 
-                    if (notifaicationToken != "") {
-                      FirebaseNotificationService().sendNotification(
-                        message: message,
-                        sendto: notifaicationToken,
-                        notifiactionInfo: notification,
-                      );
-                    }
+                          if (notifaicationToken != "") {
+                            FirebaseNotificationService().sendNotification(
+                              message: message,
+                              sendto: notifaicationToken,
+                              notifiactionInfo: notification,
+                            );
+                          }
 
-                    Toast().showBottom(msg: "添加成功");
-                    render();
-                  } else {
-                    closePage();
-                    HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
+                          Toast().showBottom(msg: "添加成功");
+                          render();
+                        } else {
+                          closePage();
+                          HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
 
-                    /// メンバーIdでRoomId探す
-                    int index = ref.watch(frinedListProvider).indexWhere((e) => e.memberId == userData.uid);
+                          /// メンバーIdでRoomId探す
+                          int index = ref.watch(frinedListProvider).indexWhere((e) => e.memberId == userData.uid);
 
-                    /// 探したとルームIdない場合ルーム作成者IDでRoomId探す
-                    if (index == -1) {
-                      index = ref.watch(frinedListProvider).indexWhere((e) => e.createdBy == userData.uid);
-                    }
+                          /// 探したとルームIdない場合ルーム作成者IDでRoomId探す
+                          if (index == -1) {
+                            index = ref.watch(frinedListProvider).indexWhere((e) => e.createdBy == userData.uid);
+                          }
 
-                    if (index != -1) {
-                      FriendListModel data = ref.watch(frinedListProvider)[index];
-                      ChatRoom(roomData: data, dataIndex: index).show(context);
-                    }
-                  }
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ScreenSize.fitPxHeight(15),
-                    vertical: ScreenSize.fitPxHeight(5),
+                          if (index != -1) {
+                            FriendListModel data = ref.watch(frinedListProvider)[index];
+                            ChatRoom(roomData: data, dataIndex: index).show(context);
+                          }
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ScreenSize.fitPxHeight(15),
+                          vertical: ScreenSize.fitPxHeight(5),
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: ref.watch(isFriendProvider) ? AppColors.orangeColor : AppColors.greyColor54,
+                        ),
+                        child: Text(
+                          ref.watch(isFriendProvider) ? "聊天室" : "新增好友",
+                          style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                        ),
+                      ),
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: ref.watch(isFriendProvider) ? AppColors.orangeColor : AppColors.greyColor54,
-                  ),
-                  child: Text(
-                    ref.watch(isFriendProvider) ? "聊天室" : "新增好友",
-                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
-                  ),
-                ),
-              ),
-            ),
-          )
+                )
         ],
       ),
     );
