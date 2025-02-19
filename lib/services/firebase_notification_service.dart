@@ -16,11 +16,7 @@ import 'package:social_mediam_match/provider/account/user_provider.dart';
 import '../components/home/firendsPage/chatRoomPage/chat_room.dart';
 import '../components/home/userPage/my_notification_page/course/my_notification_course_page.dart';
 import '../components/home/userPage/my_notification_page/my_notification_post_page.dart';
-import '../models/course_model.dart';
 import '../models/friend_model.dart';
-import '../models/post_model.dart';
-import 'course_service.dart';
-import 'post_service.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -115,17 +111,13 @@ class FirebaseNotificationService {
         if (receviceNotificaionData.type == 0) {
           ///文章
           HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.home);
-          PostModel choicedPost = await PostService().getPostDataByPostId(receviceNotificaionData.postId ?? -1);
-          MyNotificationPostPage(data: choicedPost).show(context);
+
+          MyNotificationPostPage(postId: "${receviceNotificaionData.postId}").show(context);
         } else if (receviceNotificaionData.type == 1) {
           ///コース
           HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.course);
 
-          CourseModel openedCourse = await CourseService().getCourseBycourseId(
-            ref.read(loginUserData).uid,
-            receviceNotificaionData.courseId ?? -1,
-          );
-          MyNotificationCourseDetailPage(data: openedCourse).show(context);
+          MyNotificationCourseDetailPage(courseId: "${receviceNotificaionData.courseId}").show(context);
         } else if (receviceNotificaionData.type == 2 || receviceNotificaionData.type == 3) {
           ///チャットルーム
           if (receviceNotificaionData.type == 3) {

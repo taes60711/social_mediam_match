@@ -18,7 +18,7 @@ class ApiClient {
   Future<String> apiGet(
     String url, {
     Map<String, dynamic>? paramters,
-    bool needReturnPrint = true,
+    bool needReturnPrint = false,
   }) async {
     final uri = Uri.parse("${APIHttpController.prefixUrl}://$_ip$branch$url").replace(queryParameters: paramters);
     print("Get API  Url : ${APIHttpController.prefixUrl}://$_ip$branch$url");

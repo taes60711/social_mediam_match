@@ -14,14 +14,10 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 
 import '../../../../enum/date_format_utilities.dart';
-import '../../../../models/course_model.dart';
 import '../../../../models/notification_model.dart';
-import '../../../../models/post_model.dart';
 import '../../../../models/user_model.dart';
 import '../../../../provider/account/user_provider.dart';
-import '../../../../services/course_service.dart';
 import '../../../../services/notification_service.dart';
-import '../../../../services/post_service.dart';
 import '../../../utilities/apiListView/api_list_controller.dart';
 import '../../../utilities/style/app_colors.dart';
 import 'my_notification_post_page.dart';
@@ -117,19 +113,11 @@ class MyNotificationPage extends BaseEndDrawer {
                       child: MainBtn(
                         onPress: () async {
                           if (data.type == 0) {
-                            PostModel choicedPost = await PostService().getPostDataByPostId(data.postId ?? -1);
-                            if (choicedPost.id != -1) {
-                              MyNotificationPostPage(data: choicedPost).show(context);
-                            }
+                            MyNotificationPostPage(postId: "${data.postId}").show(context);
                           } else if (data.type == 1) {
-                            CourseModel openedCourse =
-                                await CourseService().getCourseBycourseId(userData.uid, data.courseId ?? -1);
-                            if (openedCourse.id != -1) {
-                              MyNotificationCourseDetailPage(data: openedCourse).show(context);
-                            }
+                            MyNotificationCourseDetailPage(courseId: "${data.courseId}").show(context);
                           } else if (data.type == 2) {
                             ProfileData otherUserData = data.sendNotificationuserInfo;
-
                             UserProfileAllInfoBottomSheet(userData: otherUserData).show(context);
                           }
                           await notificationRead(data, index);
@@ -216,7 +204,7 @@ class MyNotificationPage extends BaseEndDrawer {
                   padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
                   margin: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(40)),
                   onPress: () async {
-                    if (ref.read(loginUserNotReadNotificationCount.notifier).state > 0) {
+                    if (ref.read(loginUserNotReadNotificationCount.notifier).state <= 0) {
                       return;
                     }
 

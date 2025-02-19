@@ -17,17 +17,17 @@ class APIHttpController {
     return _instance ??= APIHttpController._();
   }
 
-  static String shareDomain = "universal-link.directsense.tw"; //暫時
   final String _domain = "skillstorm.directsense.tw";
   final String _ip = "10.6.9.129";
 
-  ///"192.168.1.158";
+  ///"192.168.1.158"; //119.77.173.122
 
   final String _port = '80';
   final String _webSocketDebugPort = "123";
   final String _webSocketReleasePort = "4433";
   final String _wsBranchUrl = "ws";
 
+  static String shareDomain = "";
   static String databaseDomainStr = "";
   static String prefixUrl = "";
   static String domainUrl = "";
@@ -40,12 +40,14 @@ class APIHttpController {
         domainUrl = "$_ip:$_port";
         wsPreFixUrl = "ws://$_ip:$_webSocketDebugPort/$_wsBranchUrl";
         databaseDomainStr = "\$ip:\$port";
+        shareDomain = "cant_use";
         break;
       case DevType.release:
         prefixUrl = "https";
         domainUrl = _domain;
         wsPreFixUrl = "wss://$_domain:$_webSocketReleasePort/$_wsBranchUrl";
         databaseDomainStr = "\$domain";
+        shareDomain = _domain;
         break;
     }
   }

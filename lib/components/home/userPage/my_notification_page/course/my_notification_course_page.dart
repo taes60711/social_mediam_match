@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/userPage/my_notification_page/course/my_notification_course_manager_btm_sheet.dart';
+import 'package:social_mediam_match/components/utilities/api_page.dart';
 import '../../../../../enum/date_format_utilities.dart';
 import '../../../../../models/course_model.dart';
+import '../../../../../provider/account/user_provider.dart';
+import '../../../../../services/course_service.dart';
 import '../../../../utilities/BottomSheets/user_profile_bottom_sheet.dart';
 import '../../../../utilities/appBar/basic_top_bar.dart';
 
@@ -18,9 +21,9 @@ import '../../../../utilities/user_icon.dart';
 import '../../../coursePage/course_utilites.dart';
 
 class MyNotificationCourseDetailPage extends BaseEndDrawer {
-  CourseModel data;
+  String courseId;
 
-  MyNotificationCourseDetailPage({required this.data});
+  MyNotificationCourseDetailPage({required this.courseId});
   @override
   bool needWaitOpenPage() {
     return true;
@@ -31,112 +34,150 @@ class MyNotificationCourseDetailPage extends BaseEndDrawer {
 
   @override
   Widget build(WidgetRef ref) {
-    return Column(
-      children: [
-        BaseTopBar(
-          backFunc: () {
-            closePage();
-          },
-          title: data.title,
-          rightWidget: Row(
-            children: [
-              AppCommonTools().levelSetsumeiBtn(context),
+    return APIPage<CourseModel>(
+      apiFunc: () async {
+        return await CourseService().getCourseBycourseId(ref.read(loginUserData).uid, int.parse(courseId));
+      },
+      child: (CourseModel data) {
+        return Column(
+          children: [
+            BaseTopBar(
+              backFunc: () {
+                closePage();
+              },
+              title: data.title,
+              rightWidget: Row(
+                children: [
+                  AppCommonTools().levelSetsumeiBtn(context),
 
-              ///シャアボタン
-              MainBtn(
-                onPress: () async {
-                  MyNotificationCourseManagerBtmSheet(data: data).show(context);
-                },
-                child: Container(
-                  height: ScreenSize.fitPxWidth(30),
-                  width: ScreenSize.fitPxWidth(30),
-                  color: AppColors.transparent,
-                  child: Icon(
-                    FontAwesomeIcons.ellipsis,
-                    color: AppColors.whiteColor,
-                    size: ScreenSize.fontSize20,
+                  ///シャアボタン
+                  MainBtn(
+                    onPress: () async {
+                      MyNotificationCourseManagerBtmSheet(data: data).show(context);
+                    },
+                    child: Container(
+                      height: ScreenSize.fitPxWidth(30),
+                      width: ScreenSize.fitPxWidth(30),
+                      color: AppColors.transparent,
+                      child: Icon(
+                        FontAwesomeIcons.ellipsis,
+                        color: AppColors.whiteColor,
+                        size: ScreenSize.fontSize20,
+                      ),
+                    ),
                   ),
+                ],
+              ),
+            ),
+
+            /// ユーザデータ
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
+              child: MainBtn(
+                onPress: () {
+                  ///ユーザー詳細ページに遷移
+                  UserProfileAllInfoBottomSheet(userData: data.courseCreateduserInfo).show(context);
+                },
+                child: Row(
+                  children: [
+                    UserIcon(
+                      iconSize: ScreenSize.fitPxWidth(30),
+                      image: data.courseCreateduserInfo.image,
+                    ),
+                    SizedBox(width: ScreenSize.fitPxWidth(5)),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          data.courseCreateduserInfo.name ?? "",
+                          style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                        ),
+                        Text(
+                          "最終更新日 : ${DateFormatUtilities().format(data.postTime)}",
+                          style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+            SizedBox(height: ScreenSize.fitPxHeight(8)),
 
-        /// ユーザデータ
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
-          child: MainBtn(
-            onPress: () {
-              ///ユーザー詳細ページに遷移
-              UserProfileAllInfoBottomSheet(userData: data.courseCreateduserInfo).show(context);
-            },
-            child: Row(
+            /// Tabバー　＆　ページ内容
+            Expanded(
+              child: Column(
+                children: [
+                  /// Tabバー
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(5)),
+                    child: Row(
+                      children: [
+                        _buildTabBtn(context, tabText: "概要", index: 0),
+                        _buildTabBtn(context, tabText: "章節", index: 1),
+                      ],
+                    ),
+                  ),
+
+                  /// ページ内容
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
+                      child: PageView(
+                        controller: pageController,
+                        physics: const ClampingScrollPhysics(),
+                        children: [
+                          SingleChildScrollView(child: mainBody(data)),
+                          SingleChildScrollView(child: chapterPage(data)),
+                        ],
+                        onPageChanged: (value) {
+                          pageIndex = value;
+                          render();
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+      nodataWidget: Column(
+        children: [
+          ///タイトルバー
+          BaseTopBar(
+            backFunc: () => closePage(),
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                UserIcon(
-                  iconSize: ScreenSize.fitPxWidth(30),
-                  image: data.courseCreateduserInfo.image,
+                Padding(
+                  padding: EdgeInsets.only(right: ScreenSize.fitPxHeight(8)),
+                  child: Icon(
+                    FontAwesomeIcons.commentSlash,
+                    size: 50,
+                    color: AppColors.whiteColor,
+                  ),
                 ),
-                SizedBox(width: ScreenSize.fitPxWidth(5)),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      data.courseCreateduserInfo.name ?? "",
-                      style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
-                    ),
-                    Text(
-                      "最終更新日 : ${DateFormatUtilities().format(data.postTime)}",
-                      style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                    ),
-                  ],
+                SizedBox(height: ScreenSize.fitPxHeight(10)),
+                Text(
+                  "沒有文章",
+                  style: TextStyle(
+                    fontSize: ScreenSize.fontSize20,
+                    color: AppColors.greyColor130,
+                  ),
                 )
               ],
             ),
           ),
-        ),
-        SizedBox(height: ScreenSize.fitPxHeight(8)),
-
-        /// Tabバー　＆　ページ内容
-        Expanded(
-          child: Column(
-            children: [
-              /// Tabバー
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(5)),
-                child: Row(
-                  children: [
-                    _buildTabBtn(context, tabText: "概要", index: 0),
-                    _buildTabBtn(context, tabText: "章節", index: 1),
-                  ],
-                ),
-              ),
-
-              /// ページ内容
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
-                  child: PageView(
-                    controller: pageController,
-                    physics: const ClampingScrollPhysics(),
-                    children: [
-                      SingleChildScrollView(child: mainBody()),
-                      SingleChildScrollView(child: chapterPage()),
-                    ],
-                    onPageChanged: (value) {
-                      pageIndex = value;
-                      render();
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget mainBody() {
+  Widget mainBody(CourseModel data) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -239,16 +280,19 @@ class MyNotificationCourseDetailPage extends BaseEndDrawer {
         SizedBox(height: ScreenSize.fitPxHeight(5)),
 
         ///勉強前必要な知識
-        Container(
-          width: ScreenSize.width,
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-          decoration: BoxDecoration(
-            color: AppColors.greyColor176.withAlpha(50),
-            borderRadius: BorderRadius.circular(3),
-          ),
-          child: Text(
-            data.beforeNeed,
-            style: TextStyle(color: AppColors.whiteColor),
+        Visibility(
+          visible: data.beforeNeed != "",
+          child: Container(
+            width: ScreenSize.width,
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+            decoration: BoxDecoration(
+              color: AppColors.greyColor176.withAlpha(50),
+              borderRadius: BorderRadius.circular(3),
+            ),
+            child: Text(
+              data.beforeNeed,
+              style: TextStyle(color: AppColors.whiteColor),
+            ),
           ),
         ),
         SizedBox(height: ScreenSize.fitPxHeight(10)),
@@ -300,7 +344,7 @@ class MyNotificationCourseDetailPage extends BaseEndDrawer {
     );
   }
 
-  Widget chapterPage() {
+  Widget chapterPage(CourseModel data) {
     return Column(
       children: data.chapterList.asMap().entries.map((e) {
         int index = e.key;

@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_mediam_match/components/home/skillExChangePage/skill_utilites.dart';
-import 'package:social_mediam_match/components/home/userPage/my_posts.dart';
-import 'package:social_mediam_match/components/home/userPage/user_profile_edit_page.dart';
-import 'package:social_mediam_match/components/home/userPage/user_profile_share_page.dart';
-import 'package:social_mediam_match/components/utilities/app_common_tools.dart';
-import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
-import 'package:social_mediam_match/components/utilities/main_button.dart';
-import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
-import 'package:social_mediam_match/components/utilities/user_icon.dart';
-import 'package:social_mediam_match/provider/account/user_provider.dart';
-
 import '../../../models/user_model.dart';
-
+import '../../../provider/account/user_provider.dart';
+import '../../utilities/app_common_tools.dart';
+import '../../utilities/common_scaffold.dart';
+import '../../utilities/main_button.dart';
+import '../../utilities/style/app_colors.dart';
 import '../../utilities/style/screen_size.dart';
+import '../../utilities/user_icon.dart';
+import '../skillExChangePage/skill_utilites.dart';
 import 'about_page.dart';
 import 'myCourse/my_courses.dart';
-
 import 'my_notification_page/my_notification_page.dart';
+import 'my_posts.dart';
 import 'privacy_setting.dart';
+import 'user_profile_edit_page.dart';
+import 'user_profile_share_page.dart';
 
 class UserPage extends ConsumerStatefulWidget {
   const UserPage({super.key});
@@ -60,24 +57,6 @@ class _UserPageState extends ConsumerState<UserPage> {
                               image: userData.image,
                               iconSize: ScreenSize.fitPxHeight(60),
                             ),
-                            // Positioned(
-                            //   bottom: 0,
-                            //   right: 0,
-                            //   child: Container(
-                            //     padding: EdgeInsets.all(ScreenSize.fitPxHeight(5)),
-                            //     decoration: BoxDecoration(
-                            //       color: AppColors.greyColor98,
-                            //       borderRadius: BorderRadius.circular(
-                            //         ScreenSize.fitPxHeight(20),
-                            //       ),
-                            //     ),
-                            //     child: Icon(
-                            //       FontAwesomeIcons.pen,
-                            //       color: AppColors.whiteColor,
-                            //       size: ScreenSize.fontSize10,
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),

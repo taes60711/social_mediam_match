@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:universal-link.directsense.tw</string>
+		<string>applinks:skillstorm.directsense.tw</string>
 	</array>
 </dict>
 </plist>

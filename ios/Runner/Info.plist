@@ -35,7 +35,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>universal-link.directsense.tw</string>
+				<string>skillstorm.directsense.tw</string>
 			</array>
 		</dict>
 		<dict>

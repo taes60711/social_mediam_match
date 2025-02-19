@@ -74,7 +74,9 @@ class ChatRoomWSModel {
 
     _chatroomListChannel.stream.listen((event) async {
       print("_chatroomListChannel $event");
+
       Map<String, dynamic> requestMapData = jsonDecode((event as String));
+
       String listendMethod = requestMapData['method'];
 
       switch (listendMethod) {
@@ -162,6 +164,7 @@ class ChatRoomWSModel {
     List<String> userIds = chatRoomModel.members.map((e) => e.replaceAll("\"", "")).toList();
 
     ChatWSModel().sendMsg(userIds, enterRoomID);
+
     if (insendMsgCount < 20) {
       insendMsgCount++;
     } else {

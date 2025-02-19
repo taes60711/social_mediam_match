@@ -157,7 +157,7 @@ class PostViewUtilities {
 
                   ///文章ビュー
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    padding: EdgeInsets.only(right: ScreenSize.fitPxWidth(15)),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(13),
                       child: RichTextView(

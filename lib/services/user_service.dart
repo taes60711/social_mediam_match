@@ -78,7 +78,6 @@ class UserService extends ApiClient {
     } catch (e) {
       onRequestFailed();
     }
-
     return userdata;
   }
 

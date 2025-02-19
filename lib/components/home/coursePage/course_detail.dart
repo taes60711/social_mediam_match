@@ -272,21 +272,24 @@ class CourseDetailPage extends BaseEndDrawer {
         SizedBox(height: ScreenSize.fitPxHeight(5)),
 
         ///勉強前必要な知識
-        Container(
-          width: ScreenSize.width,
-          padding: EdgeInsets.symmetric(
-            vertical: ScreenSize.fitPxHeight(5),
-            horizontal: ScreenSize.fitPxHeight(8),
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.greyColor176.withAlpha(50),
-            borderRadius: BorderRadius.circular(3),
-          ),
-          child: Text(
-            choiceData.beforeNeed,
-            style: TextStyle(
-              color: AppColors.whiteColor,
-              fontSize: ScreenSize.fontSize14,
+        Visibility(
+          visible: choiceData.beforeNeed != "",
+          child: Container(
+            width: ScreenSize.width,
+            padding: EdgeInsets.symmetric(
+              vertical: ScreenSize.fitPxHeight(5),
+              horizontal: ScreenSize.fitPxHeight(8),
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.greyColor176.withAlpha(50),
+              borderRadius: BorderRadius.circular(3),
+            ),
+            child: Text(
+              choiceData.beforeNeed,
+              style: TextStyle(
+                color: AppColors.whiteColor,
+                fontSize: ScreenSize.fontSize14,
+              ),
             ),
           ),
         ),

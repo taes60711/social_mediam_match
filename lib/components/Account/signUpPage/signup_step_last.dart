@@ -55,92 +55,96 @@ class SignUpStepLastPage extends BaseEndDrawer {
             title: "略過",
           ),
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
-          child: Column(
-            children: [
-              UserIcon(iconSize: 100, image: viewModel.editImg),
-              SizedBox(height: ScreenSize.fitPxWidth(15)),
-              //アイコン選択
-              MainBtn(
-                padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(20), vertical: ScreenSize.fitPxWidth(8)),
-                onPress: () async {
-                  await viewModel.imageChange();
-                  render();
-                },
-                title: "選擇圖像",
-              ),
-              inputField(hintText: "職業", editingController: viewModel.jobController),
-              SizedBox(height: ScreenSize.fitPxWidth(16)),
-              //強いスキル設定
-              MainBtn(
-                onPress: () {
-                  UserSkillChoicePage(
-                    initSkillData: viewModel.mainSkillList,
-                    updateSkillDate: (List<RequestUserSkillData> value) {
-                      viewModel.mainSkillList = value;
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
+              child: Column(
+                children: [
+                  UserIcon(iconSize: 100, image: viewModel.editImg),
+                  SizedBox(height: ScreenSize.fitPxWidth(15)),
+                  //アイコン選択
+                  MainBtn(
+                    padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(20), vertical: ScreenSize.fitPxWidth(8)),
+                    onPress: () async {
+                      await viewModel.imageChange();
                       render();
                     },
-                  ).show(context);
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    skillTitle(
-                      titile: "能教的技能",
-                      iconData: FontAwesomeIcons.reply,
-                      iconBgColor: AppColors.greyColor138,
-                    ),
-                    SizedBox(height: ScreenSize.fitPxWidth(5)),
-                    SkillUtilites().skillBar(skills: viewModel.mainSkillList),
-                  ],
-                ),
-              ),
-              SizedBox(height: ScreenSize.fitPxWidth(16)),
-
-              //弱いスキル設定
-              MainBtn(
-                onPress: () {
-                  UserSkillChoicePage(
-                    initSkillData: viewModel.wantSkillList,
-                    updateSkillDate: (List<RequestUserSkillData> value) {
-                      viewModel.wantSkillList = value;
-                      render();
+                    title: "選擇圖像",
+                  ),
+                  inputField(hintText: "職業", editingController: viewModel.jobController),
+                  SizedBox(height: ScreenSize.fitPxWidth(16)),
+                  //強いスキル設定
+                  MainBtn(
+                    onPress: () {
+                      UserSkillChoicePage(
+                        initSkillData: viewModel.mainSkillList,
+                        updateSkillDate: (List<RequestUserSkillData> value) {
+                          viewModel.mainSkillList = value;
+                          render();
+                        },
+                      ).show(context);
                     },
-                  ).show(context);
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    skillTitle(
-                      titile: "想學的技能",
-                      iconData: FontAwesomeIcons.share,
-                      iconBgColor: AppColors.oragneColor123,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        skillTitle(
+                          titile: "能教的技能",
+                          iconData: FontAwesomeIcons.reply,
+                          iconBgColor: AppColors.greyColor138,
+                        ),
+                        SizedBox(height: ScreenSize.fitPxWidth(5)),
+                        SkillUtilites().skillBar(skills: viewModel.mainSkillList),
+                      ],
                     ),
-                    SizedBox(height: ScreenSize.fitPxWidth(5)),
-                    SkillUtilites().skillBar(skills: viewModel.wantSkillList),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: ScreenSize.fitPxWidth(16)),
+
+                  //弱いスキル設定
+                  MainBtn(
+                    onPress: () {
+                      UserSkillChoicePage(
+                        initSkillData: viewModel.wantSkillList,
+                        updateSkillDate: (List<RequestUserSkillData> value) {
+                          viewModel.wantSkillList = value;
+                          render();
+                        },
+                      ).show(context);
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        skillTitle(
+                          titile: "想學的技能",
+                          iconData: FontAwesomeIcons.share,
+                          iconBgColor: AppColors.oragneColor123,
+                        ),
+                        SizedBox(height: ScreenSize.fitPxWidth(5)),
+                        SkillUtilites().skillBar(skills: viewModel.wantSkillList),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: ScreenSize.fitPxWidth(16)),
+
+                  // 自己紹介
+                  multiInputField(hintText: "自我介紹", editingController: viewModel.jobController),
+
+                  SizedBox(height: ScreenSize.fitPxWidth(25)),
+
+                  AccountPageUtilites().btnContainer(
+                    onPress: () async {
+                      await viewModel.uploadProfileData();
+                      ref.read(viewModelProvider.notifier).state.resetAllData();
+
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      ref.read(pageControllerProvider).jumpToPage(2);
+                    },
+                    btnText: "完成",
+                  ),
+                ],
               ),
-
-              SizedBox(height: ScreenSize.fitPxWidth(16)),
-
-              // 自己紹介
-              multiInputField(hintText: "自我介紹", editingController: viewModel.jobController),
-
-              SizedBox(height: ScreenSize.fitPxWidth(25)),
-
-              AccountPageUtilites().btnContainer(
-                onPress: () async {
-                  await viewModel.uploadProfileData();
-                  ref.read(viewModelProvider.notifier).state.resetAllData();
-
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                  ref.read(pageControllerProvider).jumpToPage(2);
-                },
-                btnText: "完成",
-              ),
-            ],
+            ),
           ),
         ),
       ],

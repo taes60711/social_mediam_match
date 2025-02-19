@@ -231,13 +231,16 @@ class CourseUtilites {
               ],
             ),
             SizedBox(height: ScreenSize.fitPxHeight(5)),
-            Text(
-              data.beforeNeed,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: AppColors.greyColor130,
-                fontSize: ScreenSize.fontSize12,
+            Visibility(
+              visible: data.beforeNeed != "",
+              child: Text(
+                data.beforeNeed,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: AppColors.greyColor130,
+                  fontSize: ScreenSize.fontSize12,
+                ),
               ),
             ),
             SizedBox(height: ScreenSize.fitPxHeight(5)),
