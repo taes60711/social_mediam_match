@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/api_page.dart';
 
 import '../../../../enum/date_format_utilities.dart';
+import '../../../../global.dart';
 import '../../../../global/home_global_view_model.dart';
 import '../../../../global/user_login_status_controller.dart';
 import '../../../../models/friend_model.dart';
@@ -35,6 +36,12 @@ class MyNotificationProfilePage extends BaseBottomSheet {
   MyNotificationProfilePage({required this.userUId, this.needToChatRoomBtn = true});
 
   String notifaicationToken = "";
+
+  @override
+  Future<void> dispose(WidgetRef ref) async {
+    ref.read(notifiProfilePageIsOpen.notifier).update((state) => false);
+  }
+
   @override
   Widget build(WidgetRef ref) {
     return APIPage<ProfileData>(

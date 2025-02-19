@@ -1,12 +1,20 @@
 // ip
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/enum/dev_type.dart';
 
 String appVer = "1.0.0";
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 BuildContext globalContext = navigatorKey.currentState!.context;
+
+/// API錯誤訊息已經跳出
 bool apiFailDialogIsShow = false;
+
+/// 分享頁面是否已經跳出
+final notifiProfilePageIsOpen = StateProvider<bool>((ref) {
+  return false;
+});
 
 class APIHttpController {
   static APIHttpController? _instance;

@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../components/home/userPage/my_notification_page/course/my_notification_course_page.dart';
 import '../components/home/userPage/my_notification_page/my_notification_post_page.dart';
 import '../components/home/userPage/my_notification_page/my_notification_proflie_page.dart';
+import '../global.dart';
 import '../global/home_global_view_model.dart';
 import '../global/user_login_status_controller.dart';
 import '../pageManager/enum/bottom_bar_path.dart';
@@ -19,7 +20,8 @@ class BaseShareUrlHandle {
 
   Future<void> runShareUrl(Uri url) async {
     Map<String, String>? mappedData = parseUrl("$url");
-    if (mappedData != null) {
+
+    if (mappedData != null && !ref.read(notifiProfilePageIsOpen.notifier).state) {
       String type = mappedData["type"] ?? "";
       String content = mappedData["content"] ?? "";
 
@@ -47,6 +49,7 @@ class BaseShareUrlHandle {
           }
           break;
       }
+      ref.read(notifiProfilePageIsOpen.notifier).update((state) => true);
     }
   }
 

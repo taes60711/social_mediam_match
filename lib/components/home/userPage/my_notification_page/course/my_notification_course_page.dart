@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/userPage/my_notification_page/course/my_notification_course_manager_btm_sheet.dart';
 import 'package:social_mediam_match/components/utilities/api_page.dart';
 import '../../../../../enum/date_format_utilities.dart';
+import '../../../../../global.dart';
 import '../../../../../models/course_model.dart';
 import '../../../../../provider/account/user_provider.dart';
 import '../../../../../services/course_service.dart';
@@ -27,6 +28,11 @@ class MyNotificationCourseDetailPage extends BaseEndDrawer {
   @override
   bool needWaitOpenPage() {
     return true;
+  }
+
+  @override
+  Future<void> dispose(WidgetRef ref) async {
+    ref.read(notifiProfilePageIsOpen.notifier).update((state) => false);
   }
 
   PageController pageController = PageController();

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/api_page.dart';
 import '../../../../enum/date_format_utilities.dart';
+import '../../../../global.dart';
 import '../../../../models/post_model.dart';
 import '../../../../provider/post/post_view_model.dart';
 import '../../../../services/post_service.dart';
@@ -20,6 +22,11 @@ class MyNotificationPostPage extends BaseEndDrawer {
   @override
   bool needWaitOpenPage() {
     return true;
+  }
+
+  @override
+  Future<void> dispose(WidgetRef ref) async {
+    ref.read(notifiProfilePageIsOpen.notifier).update((state) => false);
   }
 
   late PostViewModel viewModel;

@@ -12,7 +12,6 @@ import 'package:social_mediam_match/components/utilities/endDrawers/base_end_dra
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
-
 import '../../../../enum/date_format_utilities.dart';
 import '../../../../models/notification_model.dart';
 import '../../../../models/user_model.dart';
