@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade_scale_page.dart';
+import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -16,6 +17,8 @@ class VideoViewPage extends BaseFadeScalePage {
   VideoViewPage({required this.ytId});
   late YoutubePlayerController ytController;
   bool init = false;
+
+  bool isFull = false;
 
   @override
   Future<void> initState(WidgetRef ref) async {
@@ -34,7 +37,7 @@ class VideoViewPage extends BaseFadeScalePage {
         autoPlay: true,
         mute: false,
       ),
-    )..toggleFullScreenMode();
+    );
 
     init = true;
     render();
@@ -43,58 +46,69 @@ class VideoViewPage extends BaseFadeScalePage {
   @override
   Widget build(WidgetRef ref) {
     return init
-        ? Stack(
-            children: [
-              YoutubePlayerBuilder(
-                player: YoutubePlayer(
-                  topActions: [
-                    BaseTopBar(
-                      backFunc: () {
-                        closeView();
-                      },
-                    ),
-                  ],
-                  controller: ytController,
-                  bottomActions: [
-                    PlaybackSpeedButton(
-                      icon: Icon(
-                        FontAwesomeIcons.gear,
-                        size: ScreenSize.fontSize18,
-                        color: AppColors.whiteColor,
-                      ),
-                    ),
-                    ProgressBar(isExpanded: true),
-                    RemainingDuration(),
-                    GestureDetector(
-                      onTap: () {
-                        final Uri _url = Uri.parse("https://www.youtube.com/watch?v=$ytId");
-                        launchUrl(_url);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Icon(
-                          FontAwesomeIcons.windowRestore,
-                          size: ScreenSize.fontSize18,
-                          color: AppColors.whiteColor,
-                        ),
-                      ),
-                    ),
-                    MainBtn(
-                      onPress: () {
-                        closeView();
-                      },
-                      child: Icon(
-                        Icons.fullscreen,
-                        color: AppColors.whiteColor,
-                      ),
-                    ),
-                  ],
+        ? CommonScaffold(
+            bgColor: Colors.black,
+            child: Column(
+              children: [
+                Visibility(
+                  visible: !isFull,
+                  child: BaseTopBar(
+                    backFunc: () {
+                      closeView();
+                    },
+                  ),
                 ),
-                builder: (context, player) {
-                  return player;
-                },
-              ),
-            ],
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(isFull ? 0 : 50)),
+                    child: YoutubePlayerBuilder(
+                      player: YoutubePlayer(
+                        controller: ytController,
+                        bottomActions: [
+                          PlaybackSpeedButton(
+                            icon: Icon(
+                              FontAwesomeIcons.gear,
+                              size: ScreenSize.fontSize18,
+                              color: AppColors.whiteColor,
+                            ),
+                          ),
+                          ProgressBar(isExpanded: true),
+                          RemainingDuration(),
+                          GestureDetector(
+                            onTap: () {
+                              final Uri _url = Uri.parse("https://www.youtube.com/watch?v=$ytId");
+                              launchUrl(_url);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              child: Icon(
+                                FontAwesomeIcons.windowRestore,
+                                size: ScreenSize.fontSize18,
+                                color: AppColors.whiteColor,
+                              ),
+                            ),
+                          ),
+                          MainBtn(
+                            onPress: () {
+                              isFull = !isFull;
+                              render();
+                              ytController.toggleFullScreenMode();
+                            },
+                            child: Icon(
+                              Icons.fullscreen,
+                              color: AppColors.whiteColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      builder: (context, player) {
+                        return player;
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
           )
         : Container();
   }
