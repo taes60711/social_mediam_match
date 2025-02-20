@@ -12,7 +12,6 @@ import '../../components/utilities/apiListView/api_list_controller.dart';
 import '../../components/utilities/dialog/confirm_dialog.dart';
 import '../../global.dart';
 import '../../models/notification_model.dart';
-import '../../models/rich_text_format.dart';
 import '../../models/user_model.dart';
 import '../../services/firebase_notification_service.dart';
 import '../../services/post_service.dart';
@@ -54,7 +53,8 @@ class PostViewModel {
   }
 
   ///文章作る
-  Future<void> postCreate({required String postTitle, required String postContent, PostBoard? postBoard}) async {
+  Future<void> postCreate(
+      {required String postTitle, required String mainMessage, required List<String> fileMessage, PostBoard? postBoard}) async {
     ProfileData userData = ref.watch(loginUserData);
 
     PostBoard postTypeBoard = ref.read(postCreateChoiceBoard);
@@ -63,17 +63,22 @@ class PostViewModel {
       postTypeBoard = postBoard;
     }
 
-    String fomattedContent = await RichTextFormat(htmlString: postContent).sendPostImgFormat();
-    print("Title $postTitle Board: ${postTypeBoard.type}   Message : $fomattedContent  Type: ${postTypeBoard.id}");
+    print("Title $postTitle Board: ${postTypeBoard.type} Message : $mainMessage File : $fileMessage  Type: ${postTypeBoard.id}");
 
-    int postIndex = await PostService().createPost(userData.uid, postTitle, fomattedContent, postTypeBoard.type);
+    String fileMessageStr = "[]";
+    if (fileMessage.isNotEmpty) {
+      fileMessageStr = listToListStr(fileMessage);
+    }
+
+    int postIndex = await PostService().createPost(userData.uid, postTitle, mainMessage, fileMessageStr, postTypeBoard.type);
 
     PostModel post = PostModel(
       id: postIndex,
       createdBy: userData.uid,
       title: postTitle,
       type: postTypeBoard.type,
-      mainMessage: fomattedContent,
+      mainMessage: mainMessage,
+      fileMessage: fileMessage,
       commentCount: 0,
       postTime: DateTime.now().toUtc().toString(),
       postUserInfo: userData,
@@ -256,5 +261,20 @@ class PostViewModel {
         render();
       },
     ).show(context);
+  }
+
+  String listToListStr(List<String> list) {
+    StringBuffer result = StringBuffer();
+    result.write('[');
+
+    for (int i = 0; i < list.length; i++) {
+      result.write('"${list[i]}"');
+      if (i < list.length - 1) {
+        result.write(', ');
+      }
+    }
+
+    result.write(']');
+    return result.toString();
   }
 }

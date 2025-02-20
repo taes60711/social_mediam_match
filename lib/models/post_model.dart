@@ -35,6 +35,7 @@ class PostModel {
   String createdBy;
   String title;
   String mainMessage;
+  List<String> fileMessage;
   String postTime;
   int viewed;
   int good;
@@ -46,6 +47,7 @@ class PostModel {
     this.createdBy = "",
     this.title = "",
     this.mainMessage = "",
+    this.fileMessage = const [],
     this.postTime = "",
     this.viewed = 0,
     this.good = 0,
@@ -60,6 +62,7 @@ class PostModel {
       createdBy: json['createdBy'],
       title: json['title'],
       mainMessage: json['mainMessage'],
+      fileMessage: (json['fileMessage'] as List<dynamic>).map((e) => e as String).toList(),
       viewed: json['viewed'],
       good: json['good'],
       type: json['type'],
@@ -75,6 +78,7 @@ class PostModel {
       createdBy: json['createdBy'],
       title: json['title'],
       mainMessage: json['mainMessage'],
+      fileMessage: (json['fileMessage'] as List<dynamic>).map((e) => e as String).toList(),
       viewed: json['viewed'],
       good: json['good'],
       type: json['type'],
@@ -96,6 +100,7 @@ class PostModel {
       createdBy: data?.createdBy ?? createdBy,
       title: data?.title ?? title,
       mainMessage: data?.mainMessage ?? mainMessage,
+      fileMessage: data?.fileMessage ?? fileMessage,
       postTime: data?.postTime ?? postTime,
       viewed: data?.viewed ?? viewed,
       good: data?.good ?? good,
@@ -111,6 +116,7 @@ class PostModel {
       'createdBy': createdBy,
       'title': title,
       'mainMessage': mainMessage,
+      'fileMessage': fileMessage,
       'postTime': postTime,
       'viewed': viewed,
       'good': good,
@@ -125,14 +131,21 @@ class CreatePostModel {
   String createdByUId;
   String title;
   String mainMessage;
+  List<String> fileMessage;
   int type;
-  CreatePostModel({required this.createdByUId, required this.title, required this.mainMessage, required this.type});
+  CreatePostModel(
+      {required this.createdByUId,
+      required this.title,
+      required this.mainMessage,
+      required this.fileMessage,
+      required this.type});
 
   String createPost() {
     return jsonEncode({
       "createdBy": createdByUId,
       "title": title,
       "mainMessage": mainMessage,
+      "fileMessage": fileMessage,
       "type": type,
     });
   }

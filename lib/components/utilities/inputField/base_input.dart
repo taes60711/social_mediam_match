@@ -19,6 +19,7 @@ class BaseInputField extends StatefulWidget {
   final TextStyle? inputStyle;
   final InputType type;
   final bool isHidePwd;
+  final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final Function(String value)? onFieldSubmitted;
 
@@ -35,6 +36,7 @@ class BaseInputField extends StatefulWidget {
     this.hintStyle,
     this.inputStyle,
     this.type = InputType.normal,
+    this.keyboardType,
     required this.controller,
     this.onFocusChanged,
     this.textInputAction,
@@ -82,10 +84,11 @@ class _BaseInputFieldState extends State<BaseInputField> {
         focusNode: _focusNode,
         obscureText: widget.type == InputType.pwd, //&& widget.isHidePwd,
         cursorColor: AppColors.whiteColor,
+        keyboardType: widget.keyboardType,
         textInputAction: widget.textInputAction,
         maxLength: widget.maxLength,
         minLines: widget.minLines ?? 1,
-        maxLines: widget.maxLines ?? 1,
+        maxLines: widget.maxLines,
         readOnly: widget.readOnly,
         onChanged: (value) {
           if (widget.onChanged != null) {

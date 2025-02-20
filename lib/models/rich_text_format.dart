@@ -230,7 +230,6 @@ class RichTextFormat {
 
   String mappingIPAndPort(String htmlString) {
     String changedHtmlString = htmlString.replaceAll(APIHttpController.databaseDomainStr, APIHttpController.domainUrl);
-    // changedHtmlString = changedHtmlString.replaceAll('\$domain', APIHttpController.domainUrl);
     return changedHtmlString;
   }
 
@@ -252,6 +251,8 @@ class RichTextFormat {
       start = url.indexOf('/youtu.be/') + '/youtu.be/'.length;
     } else if (url.contains('src=')) {
       start = url.indexOf('src=') + 'src="https://www.youtube.com/embed/'.length;
+    } else if (url.contains('https://www.youtube.com/embed/')) {
+      start = 'https://www.youtube.com/embed/'.length;
     } else {
       start = url.indexOf('?v=') + '?v='.length;
     }

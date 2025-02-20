@@ -4,22 +4,26 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
-import 'package:social_mediam_match/components/utilities/rich_text_view.dart';
 import 'package:social_mediam_match/components/utilities/style/app_image.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../enum/date_format_utilities.dart';
 import '../../../global/home_global_view_model.dart';
 import '../../../global/user_login_status_controller.dart';
 import '../../../models/post_model.dart';
+import '../../../models/rich_text_format.dart';
 import '../../../models/user_model.dart';
 import '../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
+import '../../utilities/FadeScalePage/video_view_page.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
+import '../../utilities/main_button.dart';
 import '../../utilities/user_icon.dart';
 import 'post_comment_page.dart';
 
@@ -60,6 +64,7 @@ class PostDetailPage extends BaseEndDrawer {
             padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// ユーザデータ
                   Row(
@@ -93,8 +98,70 @@ class PostDetailPage extends BaseEndDrawer {
                   SizedBox(height: ScreenSize.fitPxWidth(8)),
 
                   /// MainMessage
-                  RichTextView(content: choiceData.mainMessage),
+                  Text(
+                    choiceData.mainMessage,
+                    style: TextStyle(fontSize: ScreenSize.fontSize16, color: AppColors.whiteColor),
+                  ),
+
                   SizedBox(height: ScreenSize.fitPxWidth(10)),
+
+                  /// ファイルメッセージ
+                  PostViewUtilities().fileMessageItem(
+                    context,
+                    fileMessage: choiceData.fileMessage,
+                    videoComponent: (String data) {
+                      String ytId = RichTextFormat().getYtvideoID(data);
+                      return PostViewUtilities().messageContainer(
+                        child: YoutubePlayer(
+                          controller: YoutubePlayerController(
+                            initialVideoId: ytId,
+                            flags: const YoutubePlayerFlags(
+                              disableDragSeek: true,
+                              autoPlay: false,
+                              mute: false,
+                            ),
+                          ),
+                          onReady: () => {},
+                          bottomActions: [
+                            PlaybackSpeedButton(
+                              icon: Icon(
+                                FontAwesomeIcons.gear,
+                                size: ScreenSize.fontSize18,
+                                color: AppColors.whiteColor,
+                              ),
+                            ),
+                            ProgressBar(isExpanded: true),
+                            RemainingDuration(),
+                            GestureDetector(
+                              onTap: () {
+                                final Uri _url = Uri.parse("https://www.youtube.com/watch?v=$ytId");
+                                launchUrl(_url);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: Icon(
+                                  FontAwesomeIcons.windowRestore,
+                                  size: ScreenSize.fontSize18,
+                                  color: AppColors.whiteColor,
+                                ),
+                              ),
+                            ),
+                            MainBtn(
+                              onPress: () {
+                                VideoViewPage(ytId: ytId).show(context);
+                              },
+                              child: Icon(
+                                Icons.fullscreen,
+                                color: AppColors.whiteColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+
+                  SizedBox(height: ScreenSize.fitPxHeight(10)),
 
                   ///文章インフォ
                   Padding(
@@ -271,4 +338,22 @@ class PostDetailPage extends BaseEndDrawer {
       ],
     );
   }
+
+  // Widget _messageContainer({required Widget child}) {
+  //   return Padding(
+  //     padding: EdgeInsets.only(right: ScreenSize.fitPxWidth(10)),
+  //     child: ClipRRect(
+  //       borderRadius: BorderRadius.circular(13),
+  //       child: Container(
+  //         decoration: BoxDecoration(
+  //           borderRadius: BorderRadius.circular(13),
+  //           border: Border.all(color: AppColors.greyColor57),
+  //         ),
+  //         width: ScreenSize.fitPxWidth(250),
+  //         height: ScreenSize.fitPxWidth(150),
+  //         child: child,
+  //       ),
+  //     ),
+  //   );
+  // }
 }

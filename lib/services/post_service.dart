@@ -198,11 +198,12 @@ class PostService extends ApiClient {
   }
 
   ///MARK: 文章作成
-  Future<int> createPost(String uid, String title, String message, int type) async {
+  Future<int> createPost(String uid, String title, String message, String fileMessage, int type) async {
     Map<String, dynamic> body = {
       "createdBy": uid,
       "title": title,
       "mainMessage": message,
+      "fileMessage": fileMessage,
       "type": type,
     };
 
@@ -213,11 +214,17 @@ class PostService extends ApiClient {
   }
 
   /// 文章編集
-  Future<bool> updatePost({required int postId, required String title, required String mainMessage}) async {
+  Future<bool> updatePost({
+    required int postId,
+    required String title,
+    required String mainMessage,
+    required String fileMessage,
+  }) async {
     Map<String, dynamic> body = {
       "id": postId,
       "title": title,
       "mainMessage": mainMessage,
+      "fileMessage": fileMessage,
     };
 
     String responseData = await apiPush("/update/$postId", body: body);
