@@ -66,32 +66,7 @@ class PostService extends ApiClient {
     return requestPostDataByUID;
   }
 
-  /// フィルターした文章取得する
-  Future<List<PostModel>> getPostByTextFilter(int page, int size, String inputedText) async {
-    List<PostModel> requestPostDataByNew = [];
-
-    Map<String, dynamic> paramters = {
-      'page': '$page',
-      'size': '$size',
-      'inputedText': inputedText,
-    };
-
-    try {
-      String responseData = await apiGet('/getPostByTextFilter', paramters: paramters);
-
-      requestPostDataByNew = await handleResponse<PostModel>(
-        responseData,
-        model: PostModel.toMap,
-        isList: true,
-      );
-    } catch (e) {
-      onRequestFailed();
-    }
-
-    return requestPostDataByNew;
-  }
-
-  /// 看板文章取得する
+  /// 類別文章取得する
   Future<List<PostModel>> getPostByType(int page, int size, int type) async {
     List<PostModel> requestPostDataByNew = [];
 
@@ -198,10 +173,10 @@ class PostService extends ApiClient {
   }
 
   ///MARK: 文章作成
-  Future<int> createPost(String uid, String title, String message, String fileMessage, int type) async {
+  Future<int> createPost(String uid, String message, String fileMessage, int type) async {
     Map<String, dynamic> body = {
       "createdBy": uid,
-      "title": title,
+      "title": "",
       "mainMessage": message,
       "fileMessage": fileMessage,
       "type": type,
@@ -216,13 +191,12 @@ class PostService extends ApiClient {
   /// 文章編集
   Future<bool> updatePost({
     required int postId,
-    required String title,
     required String mainMessage,
     required String fileMessage,
   }) async {
     Map<String, dynamic> body = {
       "id": postId,
-      "title": title,
+      "title": "",
       "mainMessage": mainMessage,
       "fileMessage": fileMessage,
     };

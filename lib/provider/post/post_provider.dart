@@ -19,10 +19,6 @@ final typelistControllerProvider = StateNotifierProvider<APIListControllerNotifi
   (ref) => APIListControllerNotifier(APIListController<PostModel>()),
 );
 
-final textFilterControllerProvider = StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>(
-  (ref) => APIListControllerNotifier(APIListController<PostModel>()),
-);
-
 final topPostProvider = StateProvider<List<PostModel>>((ref) {
   return [];
 });

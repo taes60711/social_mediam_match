@@ -32,20 +32,13 @@ class PostViewModel {
   }
 
   ///文章作る前チェック
-  bool postCreateBeforCheck({required String postTitle, required String postContent}) {
+  bool postCreateBeforCheck({required String postContent}) {
     bool isOk = true;
 
-    postTitle = postTitle.replaceAll(" ", "");
     postContent = postContent..replaceAll(" ", "");
-    if (postTitle == "" || postContent == "") {
+    if (postContent == "") {
       String content = "";
-      if (postTitle == "" && postContent == "") {
-        content = "\"標題\"不得為空\n\"內文\"不得為空";
-      } else if (postTitle == "") {
-        content = "\"標題\"不得為空";
-      } else if (postContent == "") {
-        content = "\"內文\"不得為空";
-      }
+      content = "\"內文\"不得為空";
       isOk = false;
       ConfirmDilaog(title: '警告', content: content).show(context);
     }
@@ -53,8 +46,7 @@ class PostViewModel {
   }
 
   ///文章作る
-  Future<void> postCreate(
-      {required String postTitle, required String mainMessage, required List<String> fileMessage, PostBoard? postBoard}) async {
+  Future<void> postCreate({required String mainMessage, required List<String> fileMessage, PostBoard? postBoard}) async {
     ProfileData userData = ref.watch(loginUserData);
 
     PostBoard postTypeBoard = ref.read(postCreateChoiceBoard);
@@ -63,19 +55,18 @@ class PostViewModel {
       postTypeBoard = postBoard;
     }
 
-    print("Title $postTitle Board: ${postTypeBoard.type} Message : $mainMessage File : $fileMessage  Type: ${postTypeBoard.id}");
+    print(" Board: ${postTypeBoard.type} Message : $mainMessage File : $fileMessage  Type: ${postTypeBoard.id}");
 
     String fileMessageStr = "[]";
     if (fileMessage.isNotEmpty) {
       fileMessageStr = listToListStr(fileMessage);
     }
 
-    int postIndex = await PostService().createPost(userData.uid, postTitle, mainMessage, fileMessageStr, postTypeBoard.type);
+    int postIndex = await PostService().createPost(userData.uid, mainMessage, fileMessageStr, postTypeBoard.type);
 
     PostModel post = PostModel(
       id: postIndex,
       createdBy: userData.uid,
-      title: postTitle,
       type: postTypeBoard.type,
       mainMessage: mainMessage,
       fileMessage: fileMessage,

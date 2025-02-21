@@ -109,8 +109,8 @@ class PostDetailPage extends BaseEndDrawer {
                   PostViewUtilities().fileMessageItem(
                     context,
                     fileMessage: choiceData.fileMessage,
-                    videoComponent: (String data) {
-                      String ytId = RichTextFormat().getYtvideoID(data);
+                    videoComponent: (List<String> data, index) {
+                      String ytId = RichTextFormat().getYtvideoID(data[index]);
                       return PostViewUtilities().messageContainer(
                         child: YoutubePlayer(
                           controller: YoutubePlayerController(

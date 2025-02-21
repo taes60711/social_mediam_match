@@ -1,10 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/components/home/postPage/post_page_by_textfilter.dart';
 import 'package:social_mediam_match/components/home/postPage/post_type_board/post_type_board.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
-import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 import 'package:social_mediam_match/components/utilities/style/app_image.dart';
 
 import '../../../global/home_global_view_model.dart';
@@ -45,7 +43,6 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
     List<Widget> postsWidget = [
       const PostByView(),
       const PostByNew(),
-      const PostTypeBoard(),
     ];
     return CommonScaffold(
       type: PageType.main,
@@ -94,7 +91,6 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                   children: [
                     _buildTabBtn(context, tabText: "人氣", index: 0),
                     _buildTabBtn(context, tabText: "最新", index: 1),
-                    _buildTabBtn(context, tabText: "看板", index: 2),
                   ],
                 )
               ],
@@ -179,7 +175,7 @@ Widget _buildTabBtn(BuildContext context, {required String tabText, required int
       }
     },
     child: Container(
-      width: ScreenSize.width / 3,
+      width: ScreenSize.width / 2,
       height: ScreenSize.fitPxHeight(30),
       alignment: Alignment.center,
       color: AppColors.transparent,
@@ -205,8 +201,6 @@ Widget _buildTabBtn(BuildContext context, {required String tabText, required int
 }
 
 Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
-  TextEditingController searchController = TextEditingController();
-
   return Expanded(
     child: Container(
       margin: EdgeInsets.symmetric(
@@ -218,41 +212,29 @@ Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
       ),
       width: ScreenSize.width,
       height: ScreenSize.fitPxHeight(35),
-      child: Row(
-        children: [
-          SizedBox(width: ScreenSize.fitPxHeight(13)),
-          Expanded(
-            child: BaseInputField(
-              textInputAction: TextInputAction.search,
-              controller: searchController,
-              hintText: "輸入標題",
-              onFieldSubmitted: (value) {
-                if (searchController.text.replaceAll(" ", "") == "") {
-                  return;
-                }
-
-                PostPageByTextFilter(searchText: searchController.text).show(context);
-              },
-            ),
-          ),
-          MainBtn(
-            onPress: () {
-              if (searchController.text.replaceAll(" ", "") == "") {
-                return;
-              }
-              FocusScope.of(context).requestFocus(FocusNode());
-              PostPageByTextFilter(searchText: searchController.text).show(context);
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: MainBtn(
+        onPress: () {
+          PostTypeMainPage().show(context);
+        },
+        child: Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(8)),
               child: Icon(
                 Icons.search,
                 color: AppColors.whiteColor,
-                size: ScreenSize.fontSize16,
+                size: ScreenSize.fontSize18,
               ),
             ),
-          ),
-        ],
+            Text(
+              "類別搜尋",
+              style: TextStyle(
+                color: AppColors.greyColor130,
+                fontSize: ScreenSize.fontSize14,
+              ),
+            ),
+          ],
+        ),
       ),
     ),
   );

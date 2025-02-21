@@ -34,8 +34,6 @@ class CourseRichTextCreate extends BaseFadeScalePage {
   });
   TextEditingController titleController = TextEditingController();
   QuillEditorController courserController = QuillEditorController();
-  @override
-  Future<void> initState(WidgetRef ref) async {}
 
   @override
   Widget build(WidgetRef ref) {

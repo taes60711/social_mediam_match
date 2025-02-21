@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
+
 import 'package:social_mediam_match/components/utilities/style/app_image.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/models/rich_text_format.dart';
@@ -84,22 +85,22 @@ class PostViewUtilities {
           (e) => e.id == data.type,
           orElse: () => PostBoard(),
         );
-    return Container(
-      width: ScreenSize.width,
-      padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(12)),
-      margin: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(12)),
-      color: AppColors.black37,
-      child: Column(
-        children: [
-          SizedBox(height: ScreenSize.fitPxWidth(8)),
+    return MainBtn(
+      onPress: () {
+        ///詳細ページに遷移
+        viewModel.postDetailPageInit(postListController, data, dataIndex);
+      },
+      child: Container(
+        width: ScreenSize.width,
+        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(12)),
+        margin: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(12)),
+        color: AppColors.black37,
+        child: Column(
+          children: [
+            SizedBox(height: ScreenSize.fitPxWidth(8)),
 
-          /// 文章タイトル＆メッセージ
-          MainBtn(
-            onPress: () {
-              ///詳細ページに遷移
-              viewModel.postDetailPageInit(postListController, data, dataIndex);
-            },
-            child: Container(
+            /// 文章タイトル＆メッセージ
+            Container(
               color: AppColors.transparent,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,16 +155,7 @@ class PostViewUtilities {
                             ),
                           ],
                         ),
-                        Text(
-                          data.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: AppColors.whiteColor,
-                            fontSize: ScreenSize.fontSize16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+
                         SizedBox(height: ScreenSize.fitPxWidth(5)),
 
                         ///文章ビュー
@@ -180,157 +172,158 @@ class PostViewUtilities {
                 ],
               ),
             ),
-          ),
-          SizedBox(height: ScreenSize.fitPxWidth(10)),
+            SizedBox(height: ScreenSize.fitPxWidth(10)),
 
-          /// ファイルメッセージ
-          fileMessageItem(
-            context,
-            padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(28)),
-            fileMessage: data.fileMessage,
-            videoComponent: (e) {
-              String ytId = RichTextFormat().getYtvideoID(e);
-              String ytImag = "https://img.youtube.com/vi/${ytId}/maxresdefault.jpg";
-              return messageContainer(
-                width: data.fileMessage.length == 1 ? ScreenSize.fitPxWidth(320) : null,
-                height: data.fileMessage.length == 1 ? ScreenSize.fitPxWidth(180) : null,
-                child: GestureDetector(
-                  onTap: () {
-                    VideoViewPage(ytId: ytId).show(context);
-                  },
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      CachedNetworkImage(
-                        imageUrl: ytImag,
-                        width: ScreenSize.width,
-                        height: ScreenSize.fitPxWidth(190),
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) {
-                          return Shimmer.fromColors(
-                            baseColor: AppColors.greyColor98,
-                            highlightColor: AppColors.greyColor98.withOpacity(.7),
-                            child: Container(
-                              width: ScreenSize.width,
-                              height: ScreenSize.fitPxWidth(120),
-                              decoration: BoxDecoration(color: AppColors.greyColor98),
+            /// ファイルメッセージ
+            fileMessageItem(
+              context,
+              padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(28)),
+              fileMessage: data.fileMessage,
+              videoComponent: (fileMessage, index) {
+                String ytId = RichTextFormat().getYtvideoID(fileMessage[index]);
+                String ytImag = "https://img.youtube.com/vi/${ytId}/maxresdefault.jpg";
+                return messageContainer(
+                  width: data.fileMessage.length == 1 ? ScreenSize.fitPxWidth(320) : null,
+                  height: data.fileMessage.length == 1 ? ScreenSize.fitPxWidth(180) : null,
+                  child: GestureDetector(
+                    onTap: () {
+                      VideoViewPage(ytId: ytId).show(context);
+                      // VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
+                    },
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: ytImag,
+                          width: ScreenSize.width,
+                          height: ScreenSize.fitPxWidth(190),
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) {
+                            return Shimmer.fromColors(
+                              baseColor: AppColors.greyColor98,
+                              highlightColor: AppColors.greyColor98.withOpacity(.7),
+                              child: Container(
+                                width: ScreenSize.width,
+                                height: ScreenSize.fitPxWidth(120),
+                                decoration: BoxDecoration(color: AppColors.greyColor98),
+                              ),
+                            );
+                          },
+                        ),
+                        Opacity(
+                          opacity: .7,
+                          child: Container(
+                            width: ScreenSize.fitPxWidth(50),
+                            height: ScreenSize.fitPxWidth(50),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.black28,
                             ),
-                          );
-                        },
-                      ),
-                      Opacity(
-                        opacity: .7,
-                        child: Container(
-                          width: ScreenSize.fitPxWidth(50),
-                          height: ScreenSize.fitPxWidth(50),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.black28,
-                          ),
-                          child: Center(
-                            child: Icon(
-                              FontAwesomeIcons.play,
-                              size: ScreenSize.fitPxWidth(20),
-                              color: AppColors.whiteColor,
+                            child: Center(
+                              child: Icon(
+                                FontAwesomeIcons.play,
+                                size: ScreenSize.fitPxWidth(20),
+                                color: AppColors.whiteColor,
+                              ),
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+
+            SizedBox(height: ScreenSize.fitPxWidth(12)),
+
+            ///BottomBar
+            Padding(
+              padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(28)),
+              child: Row(
+                children: [
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: ScreenSize.fitPxHeight(15),
+                        height: ScreenSize.fitPxHeight(15),
+                        child: Icon(
+                          typeData.iconData,
+                          color: AppColors.whiteColor.withOpacity(0.8),
+                          size: ScreenSize.fontSize14,
+                        ),
+                      ),
+                      SizedBox(width: ScreenSize.fitPxWidth(5)),
+                      Text(
+                        typeData.chineseName,
+                        style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor),
                       ),
                     ],
                   ),
-                ),
-              );
-            },
-          ),
+                  SizedBox(width: ScreenSize.fitPxWidth(5)),
 
-          SizedBox(height: ScreenSize.fitPxWidth(12)),
+                  ///いいね数
+                  ///
+                  Row(
+                    children: [
+                      Image.asset(
+                        AppImage.heartFillIcon,
+                        color: AppColors.redColor,
+                        width: ScreenSize.fitPxWidth(14),
+                      ),
+                      SizedBox(width: ScreenSize.fitPxWidth(5)),
+                      Text("${data.good}", style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                    ],
+                  ),
+                  SizedBox(width: ScreenSize.fitPxWidth(5)),
 
-          ///BottomBar
-          Padding(
-            padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(28)),
-            child: Row(
-              children: [
-                Row(
-                  children: [
-                    SizedBox(
-                      width: ScreenSize.fitPxHeight(15),
-                      height: ScreenSize.fitPxHeight(15),
+                  ///コメント数
+                  PostViewUtilities().iconWithText(
+                      iconData: FontAwesomeIcons.commentDots,
+                      iconColor: Colors.blueAccent,
+                      text: "${data.commentCount}",
+                      style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+                  SizedBox(width: ScreenSize.fitPxWidth(5)),
+
+                  ///ビュー数
+                  PostViewUtilities().iconWithText(
+                      iconData: FontAwesomeIcons.eye,
+                      iconColor: const Color.fromARGB(255, 110, 124, 129),
+                      text: "${data.viewed}",
+                      style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
+
+                  SizedBox(width: ScreenSize.fitPxWidth(13)),
+
+                  ///シャアボタン
+                  GestureDetector(
+                    onTap: () async {
+                      await sharePost(postId: data.id);
+                    },
+                    child: Container(
+                      width: 30,
+                      alignment: Alignment.centerLeft,
+                      color: AppColors.transparent,
                       child: Icon(
-                        typeData.iconData,
-                        color: AppColors.whiteColor.withOpacity(0.8),
+                        FontAwesomeIcons.arrowUpRightFromSquare,
+                        color: AppColors.greyColor180A221,
                         size: ScreenSize.fontSize14,
                       ),
                     ),
-                    SizedBox(width: ScreenSize.fitPxWidth(5)),
-                    Text(
-                      typeData.chineseName,
-                      style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor),
-                    ),
-                  ],
-                ),
-                SizedBox(width: ScreenSize.fitPxWidth(5)),
-
-                ///いいね数
-                ///
-                Row(
-                  children: [
-                    Image.asset(
-                      AppImage.heartFillIcon,
-                      color: AppColors.redColor,
-                      width: ScreenSize.fitPxWidth(14),
-                    ),
-                    SizedBox(width: ScreenSize.fitPxWidth(5)),
-                    Text("${data.good}", style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
-                  ],
-                ),
-                SizedBox(width: ScreenSize.fitPxWidth(5)),
-
-                ///コメント数
-                PostViewUtilities().iconWithText(
-                    iconData: FontAwesomeIcons.commentDots,
-                    iconColor: Colors.blueAccent,
-                    text: "${data.commentCount}",
-                    style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
-                SizedBox(width: ScreenSize.fitPxWidth(5)),
-
-                ///ビュー数
-                PostViewUtilities().iconWithText(
-                    iconData: FontAwesomeIcons.eye,
-                    iconColor: const Color.fromARGB(255, 110, 124, 129),
-                    text: "${data.viewed}",
-                    style: TextStyle(fontSize: ScreenSize.fontSize12, color: AppColors.whiteColor)),
-
-                SizedBox(width: ScreenSize.fitPxWidth(13)),
-
-                ///シャアボタン
-                GestureDetector(
-                  onTap: () async {
-                    await sharePost(postId: data.id);
-                  },
-                  child: Container(
-                    width: 30,
-                    alignment: Alignment.centerLeft,
-                    color: AppColors.transparent,
-                    child: Icon(
-                      FontAwesomeIcons.arrowUpRightFromSquare,
-                      color: AppColors.greyColor180A221,
-                      size: ScreenSize.fontSize14,
-                    ),
                   ),
-                ),
 
-                const Expanded(child: SizedBox(width: 1)),
+                  const Expanded(child: SizedBox(width: 1)),
 
-                ///期日
-                Text(
-                  DateFormatUtilities().format(data.postTime),
-                  style: TextStyle(fontSize: ScreenSize.fontSize10, color: AppColors.greyColor130),
-                ),
-              ],
+                  ///期日
+                  Text(
+                    DateFormatUtilities().format(data.postTime),
+                    style: TextStyle(fontSize: ScreenSize.fontSize10, color: AppColors.greyColor130),
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: ScreenSize.fitPxWidth(8)),
-        ],
+            SizedBox(height: ScreenSize.fitPxWidth(8)),
+          ],
+        ),
       ),
     );
   }
@@ -340,17 +333,20 @@ class PostViewUtilities {
     BuildContext context, {
     EdgeInsetsGeometry? padding,
     required List<String> fileMessage,
-    required Widget Function(String data) videoComponent,
+    required Widget Function(List<String> fileMessage, int index) videoComponent,
   }) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: padding,
       child: Row(
-        children: fileMessage.map((e) {
+        children: fileMessage.asMap().entries.map((e) {
+          int index = e.key;
+
+          String value = e.value;
           String messageType = "null";
 
-          if (e == "") {
-          } else if (e.contains("youtube")) {
+          if (value == "") {
+          } else if (value.contains("youtube")) {
             messageType = "ytVideo";
           } else {
             messageType = "img";
@@ -358,11 +354,11 @@ class PostViewUtilities {
 
           switch (messageType) {
             case "ytVideo":
-              return videoComponent(e);
+              return videoComponent(fileMessage, index);
             case "img":
-              String realImg = e;
-              if (e.contains(APIHttpController.databaseDomainStr)) {
-                realImg = RichTextFormat().mappingIPAndPort(e);
+              String realImg = value;
+              if (value.contains(APIHttpController.databaseDomainStr)) {
+                realImg = RichTextFormat().mappingIPAndPort(value);
               }
 
               return messageContainer(
@@ -370,6 +366,7 @@ class PostViewUtilities {
                 height: fileMessage.length == 1 ? ScreenSize.fitPxWidth(180) : null,
                 child: GestureDetector(
                   onTap: () {
+                    // VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
                     ImageViewPage(imgUrl: realImg).show(context);
                   },
                   child: CachedNetworkImage(

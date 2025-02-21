@@ -33,6 +33,7 @@ import '../../../utilities/main_button.dart';
 import '../../../utilities/rich_text_editor.dart';
 import '../../../utilities/style/screen_size.dart';
 import '../../../utilities/style/app_colors.dart';
+import '../../../utilities/toast.dart';
 
 class PostEditorPage extends BaseFadeScalePage {
   StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>> postListController;
@@ -40,8 +41,6 @@ class PostEditorPage extends BaseFadeScalePage {
   int dataIndex;
   PostEditorPage(this.postListController, {required this.dataIndex});
   TextEditingController mainMessageController = TextEditingController();
-  TextEditingController titleController = TextEditingController();
-
   List<String> fileMessage = [];
 
   String typeName = "";
@@ -54,7 +53,6 @@ class PostEditorPage extends BaseFadeScalePage {
 
   @override
   Future<void> initState(WidgetRef ref) async {
-    titleController.text = ref.read(choicedPostProvider.notifier).state.title;
     typeName = ref
         .read(allPostBoardListData)
         .firstWhere(
@@ -105,10 +103,9 @@ class PostEditorPage extends BaseFadeScalePage {
             ),
             rightWidget: MainBtn(
               onPress: () async {
-                String postTitle = titleController.text;
                 CanTouchScreenLoadingDialog().show();
 
-                if (viewModel.postCreateBeforCheck(postTitle: postTitle, postContent: mainMessageController.text)) {
+                if (viewModel.postCreateBeforCheck(postContent: mainMessageController.text)) {
                   PostModel post = ref.read(choicedPostProvider.notifier).state;
 
                   String fileMessageStr = "[]";
@@ -118,15 +115,13 @@ class PostEditorPage extends BaseFadeScalePage {
 
                   bool isSucess = await PostService().updatePost(
                     postId: post.id,
-                    title: postTitle,
                     mainMessage: mainMessageController.text,
                     fileMessage: fileMessageStr,
                   );
 
                   if (isSucess) {
-                    post.title = postTitle;
                     post.mainMessage = mainMessageController.text;
-                    post.fileMessage = fileMessage;
+                    post.fileMessage = fileMessage.where((e) => e.isNotEmpty).toList();
                     ref.read(postListController.notifier).editData(dataIndex, post);
 
                     render();
@@ -145,18 +140,14 @@ class PostEditorPage extends BaseFadeScalePage {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BaseInputField(
-                    hintText: "標題",
-                    hintStyle: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize24),
-                    inputStyle: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize24),
-                    controller: titleController,
-                  ),
-                  SizedBox(height: ScreenSize.fitPxHeight(10)),
+                  ///Tag
                   Text(
-                    "看板 $typeName",
+                    "類別 $typeName",
                     style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize18),
                   ),
                   SizedBox(height: ScreenSize.fitPxHeight(15)),
+
+                  ///Main Message
                   BaseInputField(
                     textInputAction: TextInputAction.newline,
                     keyboardType: TextInputType.multiline,
@@ -165,8 +156,12 @@ class PostEditorPage extends BaseFadeScalePage {
                     controller: mainMessageController,
                   ),
                   SizedBox(height: ScreenSize.fitPxHeight(10)),
+
+                  ///file Message
                   fileMessageEditor(),
                   SizedBox(height: ScreenSize.fitPxHeight(10)),
+
+                  ///file MessageEditor
                   Container(
                     padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(6)),
                     decoration: BoxDecoration(
@@ -179,25 +174,27 @@ class PostEditorPage extends BaseFadeScalePage {
                         ///相簿Image
                         GestureDetector(
                           onTap: () async {
-                            String bas64img = await imageChoice();
-                            if (bas64img != "") {
-                              CanTouchScreenLoadingDialog().show();
-                              String uid = const Uuid().v1();
+                            if (fileMessageLengthCheck()) {
+                              String bas64img = await imageChoice();
+                              if (bas64img != "") {
+                                CanTouchScreenLoadingDialog().show();
+                                String uid = const Uuid().v1();
 
-                              String imageIsExistId = await ImageService().imageIsExist(bas64img);
+                                String imageIsExistId = await ImageService().imageIsExist(bas64img);
 
-                              if (imageIsExistId != "-1") {
-                                uid = imageIsExistId;
-                              } else {
-                                await ImageService().saveImg(uid, bas64img);
+                                if (imageIsExistId != "-1") {
+                                  uid = imageIsExistId;
+                                } else {
+                                  await ImageService().saveImg(uid, bas64img);
+                                }
+
+                                String httpImg =
+                                    "${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/$uid";
+
+                                fileMessage.add(httpImg);
+                                CanTouchScreenLoadingDialog().close();
+                                render();
                               }
-
-                              String httpImg =
-                                  "${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/$uid";
-
-                              fileMessage.add(httpImg);
-                              CanTouchScreenLoadingDialog().close();
-                              render();
                             }
                           },
                           child: SizedBox(
@@ -224,15 +221,18 @@ class PostEditorPage extends BaseFadeScalePage {
                                 label: '圖片網址',
                               ),
                               conirmFunc: () async {
-                                String imgUrl = imageLinkController.text;
+                                if (fileMessageLengthCheck()) {
+                                  String imgUrl = imageLinkController.text;
 
-                                if (!RichTextFormat().imgUrlCheck(imgUrl)) {
-                                  ConfirmDilaog(title: "警告", content: "請輸入有效的圖片網址", btnAmount: 1).show(context);
-                                  return false;
+                                  if (!RichTextFormat().imgUrlCheck(imgUrl)) {
+                                    ConfirmDilaog(title: "警告", content: "請輸入有效的圖片網址", btnAmount: 1).show(context);
+                                    return false;
+                                  }
+                                  print(imgUrl);
+                                  fileMessage.add(imgUrl);
+                                  render();
                                 }
-                                print(imgUrl);
-                                fileMessage.add(imgUrl);
-                                render();
+
                                 return true;
                               },
                             ).show(context);
@@ -276,15 +276,18 @@ class PostEditorPage extends BaseFadeScalePage {
                                 label: 'Youtube網址',
                               ),
                               conirmFunc: () async {
-                                String ytId = RichTextFormat().getYtvideoID(linkController.text);
+                                if (fileMessageLengthCheck()) {
+                                  String ytId = RichTextFormat().getYtvideoID(linkController.text);
 
-                                if (ytId == "err") {
-                                  ConfirmDilaog(title: "警告", content: "請輸入有效的Youtube網址", btnAmount: 1).show(context);
-                                  return false;
+                                  if (ytId == "err") {
+                                    ConfirmDilaog(title: "警告", content: "請輸入有效的Youtube網址", btnAmount: 1).show(context);
+                                    return false;
+                                  }
+                                  String ytURL = 'https://www.youtube.com/embed/$ytId';
+                                  fileMessage.add(ytURL);
+                                  render();
                                 }
-                                String ytURL = 'https://www.youtube.com/embed/$ytId';
-                                fileMessage.add(ytURL);
-                                render();
+
                                 return true;
                               },
                             ).show(context);
@@ -478,6 +481,14 @@ class PostEditorPage extends BaseFadeScalePage {
     return result;
   }
 
+  bool fileMessageLengthCheck() {
+    if (fileMessage.length >= 7) {
+      Toast().showCenter(msg: "不得超過7個檔案");
+      return false;
+    }
+    return true;
+  }
+
   String listToListStr(List<String> list) {
     List<String> editedList = [];
 
@@ -503,9 +514,8 @@ class PostEditorPage extends BaseFadeScalePage {
 
   Future<bool> postExitCheck() async {
     bool isEdit = false;
-    String postTitle = titleController.text;
-    if (postTitle != ref.read(choicedPostProvider.notifier).state.title ||
-        mainMessageController.text != ref.read(choicedPostProvider.notifier).state.mainMessage ||
+
+    if (mainMessageController.text != ref.read(choicedPostProvider.notifier).state.mainMessage ||
         fileMessage != ref.read(choicedPostProvider.notifier).state.fileMessage) {
       isEdit = true;
     }

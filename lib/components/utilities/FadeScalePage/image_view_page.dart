@@ -43,15 +43,6 @@ class ImageViewPage extends BaseFadeScalePage {
             onTapUp: (context, details, controllerValue) {
               isMaskAppear = !isMaskAppear;
               render();
-              // if (controllerValue.scale! > 1) {
-              //   /// 當大小為大於１時單擊變回１的大小
-              //   if (!isZooming) {
-              //     zoomImageFunc(zoomType: "toMin");
-              //   }
-              // } else if (photoViewController.scale! <= 1 && canUseScaleClosePage) {
-              //   /// 當大小為１時單擊關閉圖片視窗
-              //   closeView();
-              // }
             },
             onScaleEnd: (context, details, controllerValue) {
               if (controllerValue.scale! < 1 && details.pointerCount != 0) {

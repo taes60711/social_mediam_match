@@ -1,35 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
+
+import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
+import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/provider/post/post_provider.dart';
 
-import '../../../../global/home_global_view_model.dart';
 import '../../../../models/post_model.dart';
 import '../../../utilities/common_scaffold.dart';
 import '../../../utilities/main_button.dart';
 import 'post_page_by_type.dart';
 
-class PostTypeBoard extends ConsumerStatefulWidget {
-  const PostTypeBoard({super.key});
-
+class PostTypeMainPage extends BaseEndDrawer {
   @override
-  ConsumerState<PostTypeBoard> createState() => _PostTypeBoardState();
-}
-
-class _PostTypeBoardState extends ConsumerState<PostTypeBoard> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(WidgetRef ref) {
     List<PostBoard> allBoard = ref.read(allPostBoardListData);
 
     return CommonScaffold(
       child: Column(
         children: [
-          PostViewUtilities().topPadding(
-            ref.watch(bottomNavationBarPosProvider),
-            ref.watch(topPostProvider).isNotEmpty,
+          BaseTopBar(
+            backFunc: () => closePage(),
+            title: "類別",
           ),
           Expanded(
             child: Column(

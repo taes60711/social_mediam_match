@@ -13,6 +13,7 @@ import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/dialog/cant_touch_loading_dialog.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
+import 'package:social_mediam_match/components/utilities/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -37,7 +38,6 @@ class PostCreatePage extends BaseFadeScalePage {
   PostBoard? postBoard;
   PostCreatePage({this.postBoard});
 
-  TextEditingController titleController = TextEditingController();
   TextEditingController mainMessageController = TextEditingController();
   List<String> fileMessage = [];
 
@@ -93,11 +93,9 @@ class PostCreatePage extends BaseFadeScalePage {
 
                 ///　文章作る
                 if (viewModel.postCreateBeforCheck(
-                  postTitle: titleController.text,
                   postContent: mainMessageController.text,
                 )) {
                   await viewModel.postCreate(
-                    postTitle: titleController.text,
                     mainMessage: mainMessageController.text,
                     fileMessage: fileMessage,
                     postBoard: postBoard,
@@ -117,15 +115,11 @@ class PostCreatePage extends BaseFadeScalePage {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    BaseInputField(
-                      hintText: "標題",
-                      hintStyle: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize24),
-                      inputStyle: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize24),
-                      controller: titleController,
-                    ),
-                    SizedBox(height: ScreenSize.fitPxHeight(10)),
+                    ///Tag
                     PostBoardChoicedLabel(postBoard: postBoard),
                     SizedBox(height: ScreenSize.fitPxHeight(15)),
+
+                    ///Main Message
                     BaseInputField(
                       textInputAction: TextInputAction.newline,
                       keyboardType: TextInputType.multiline,
@@ -134,8 +128,12 @@ class PostCreatePage extends BaseFadeScalePage {
                       controller: mainMessageController,
                     ),
                     SizedBox(height: ScreenSize.fitPxHeight(10)),
+
+                    ///file Message
                     fileMessageEditor(),
                     SizedBox(height: ScreenSize.fitPxHeight(10)),
+
+                    ///file MessageEditor
                     Container(
                       padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxWidth(6)),
                       decoration: BoxDecoration(
@@ -148,25 +146,27 @@ class PostCreatePage extends BaseFadeScalePage {
                           ///相簿Image
                           GestureDetector(
                             onTap: () async {
-                              String bas64img = await imageChoice();
-                              if (bas64img != "") {
-                                CanTouchScreenLoadingDialog().show();
-                                String uid = const Uuid().v1();
+                              if (fileMessageLengthCheck()) {
+                                String bas64img = await imageChoice();
+                                if (bas64img != "") {
+                                  CanTouchScreenLoadingDialog().show();
+                                  String uid = const Uuid().v1();
 
-                                String imageIsExistId = await ImageService().imageIsExist(bas64img);
+                                  String imageIsExistId = await ImageService().imageIsExist(bas64img);
 
-                                if (imageIsExistId != "-1") {
-                                  uid = imageIsExistId;
-                                } else {
-                                  await ImageService().saveImg(uid, bas64img);
+                                  if (imageIsExistId != "-1") {
+                                    uid = imageIsExistId;
+                                  } else {
+                                    await ImageService().saveImg(uid, bas64img);
+                                  }
+
+                                  String httpImg =
+                                      "${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/$uid";
+
+                                  fileMessage.add(httpImg);
+                                  CanTouchScreenLoadingDialog().close();
+                                  render();
                                 }
-
-                                String httpImg =
-                                    "${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/$uid";
-
-                                fileMessage.add(httpImg);
-                                CanTouchScreenLoadingDialog().close();
-                                render();
                               }
                             },
                             child: SizedBox(
@@ -193,15 +193,17 @@ class PostCreatePage extends BaseFadeScalePage {
                                   label: '圖片網址',
                                 ),
                                 conirmFunc: () async {
-                                  String imgUrl = imageLinkController.text;
+                                  if (fileMessageLengthCheck()) {
+                                    String imgUrl = imageLinkController.text;
 
-                                  if (!RichTextFormat().imgUrlCheck(imgUrl)) {
-                                    ConfirmDilaog(title: "警告", content: "請輸入有效的圖片網址", btnAmount: 1).show(context);
-                                    return false;
+                                    if (!RichTextFormat().imgUrlCheck(imgUrl)) {
+                                      ConfirmDilaog(title: "警告", content: "請輸入有效的圖片網址", btnAmount: 1).show(context);
+                                      return false;
+                                    }
+                                    fileMessage.add(imgUrl);
+                                    render();
                                   }
-                                  print(imgUrl);
-                                  fileMessage.add(imgUrl);
-                                  render();
+
                                   return true;
                                 },
                               ).show(context);
@@ -245,15 +247,18 @@ class PostCreatePage extends BaseFadeScalePage {
                                   label: 'Youtube網址',
                                 ),
                                 conirmFunc: () async {
-                                  String ytId = RichTextFormat().getYtvideoID(linkController.text);
+                                  if (fileMessageLengthCheck()) {
+                                    String ytId = RichTextFormat().getYtvideoID(linkController.text);
 
-                                  if (ytId == "err") {
-                                    ConfirmDilaog(title: "警告", content: "請輸入有效的Youtube網址", btnAmount: 1).show(context);
-                                    return false;
+                                    if (ytId == "err") {
+                                      ConfirmDilaog(title: "警告", content: "請輸入有效的Youtube網址", btnAmount: 1).show(context);
+                                      return false;
+                                    }
+                                    String ytURL = 'https://www.youtube.com/embed/$ytId';
+                                    fileMessage.add(ytURL);
+                                    render();
                                   }
-                                  String ytURL = 'https://www.youtube.com/embed/$ytId';
-                                  fileMessage.add(ytURL);
-                                  render();
+
                                   return true;
                                 },
                               ).show(context);
@@ -432,6 +437,14 @@ class PostCreatePage extends BaseFadeScalePage {
     );
   }
 
+  bool fileMessageLengthCheck() {
+    if (fileMessage.length >= 7) {
+      Toast().showCenter(msg: "不得超過7個檔案");
+      return false;
+    }
+    return true;
+  }
+
   Future<String> imageChoice() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -450,9 +463,8 @@ class PostCreatePage extends BaseFadeScalePage {
 
   Future<bool> postExitCheck() async {
     bool isEdit = false;
-    String postTitle = titleController.text;
 
-    if (postTitle != "" || mainMessageController.text != "" || fileMessage.isNotEmpty) {
+    if (mainMessageController.text != "" || fileMessage.isNotEmpty) {
       isEdit = true;
     }
     return isEdit;
@@ -474,7 +486,7 @@ class _PostBoardChoicedLabelState extends ConsumerState<PostBoardChoicedLabel> {
     return Row(
       children: [
         Text(
-          "看板",
+          "類別",
           style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
         ),
         SizedBox(width: ScreenSize.fitPxWidth(10)),
