@@ -69,6 +69,8 @@ class _LabelInputState extends State<LabelInput> {
                   inputStyle: widget.inputStyle ?? TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
                   controller: widget.controller,
                   type: widget.type,
+                  maxLines: 1,
+                  minLines: 1,
                   readOnly: widget.readOnly,
                   onChanged: (value) {
                     if (widget.onChanged != null) {
