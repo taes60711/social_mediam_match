@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -263,7 +261,7 @@ class PostViewModel {
     for (int i = 0; i < list.length; i++) {
       result.write('"${list[i]}"');
       if (i < list.length - 1) {
-        result.write(', ');
+        result.write(',');
       }
     }
 

@@ -504,7 +504,7 @@ class PostEditorPage extends BaseFadeScalePage {
     for (int i = 0; i < editedList.length; i++) {
       result.write('"${editedList[i]}"');
       if (i < editedList.length - 1) {
-        result.write(', ');
+        result.write(',');
       }
     }
 
