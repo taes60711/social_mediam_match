@@ -32,6 +32,7 @@ Future<bool> awaitConfirmDialog(BuildContext context, {required String title, re
                   SizedBox(height: ScreenSize.fitPxWidth(10)),
                   Text(
                     content,
+                    textAlign: TextAlign.center,
                     style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize18),
                   ),
                   SizedBox(height: ScreenSize.fitPxWidth(20)),

@@ -125,7 +125,7 @@ class CourseUtilites {
                   ),
                   SizedBox(width: ScreenSize.fitPxWidth(5)),
                   Text(
-                    data.courseCreateduserInfo.name ?? "",
+                    data.courseCreateduserInfo.name ?? "用戶已不存在",
                     style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
                   ),
                   const Expanded(child: SizedBox(width: 1)),

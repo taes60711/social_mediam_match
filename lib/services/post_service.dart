@@ -101,7 +101,6 @@ class PostService extends ApiClient {
 
     try {
       String responseData = await apiGet('/getNewPosts', paramters: paramters);
-
       requestPostDataByNew = await handleResponse<PostModel>(
         responseData,
         model: PostModel.toMap,

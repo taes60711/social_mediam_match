@@ -5,6 +5,7 @@ import 'package:social_mediam_match/components/home/coursePage/course_utilites.d
 
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
+import 'package:social_mediam_match/components/utilities/toast.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 import 'package:social_mediam_match/services/user_service.dart';
 
@@ -110,7 +111,7 @@ class CourseDetailPage extends BaseEndDrawer {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      choiceData.courseCreateduserInfo.name ?? "",
+                      choiceData.courseCreateduserInfo.name ?? "用戶已不存在",
                       style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                     ),
                     Text(
@@ -532,6 +533,10 @@ class CourseDetailPage extends BaseEndDrawer {
       title: '提示',
       content: '確定要申請？',
       conirmFunc: () async {
+        if (choiceData.courseCreateduserInfo.uid == "-1") {
+          Toast().showCenter(msg: "該用戶已不存在, 無法申請");
+          return;
+        }
         bool isSucess = await CourseService().signUpCourse(courseId: choiceData.id, userUID: userData.uid);
         if (isSucess) {
           choiceData.signUpStatus = "signing";

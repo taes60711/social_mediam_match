@@ -113,7 +113,7 @@ class CourseModel {
       type: json['type'],
       isPublic: json['isPublic'],
       signUpStatus: json['signUpStatus'],
-      courseCreateduserInfo: ProfileData.toModel(json['user']),
+      courseCreateduserInfo: json['user'] == null ? ProfileData() : ProfileData.toModel(json['user']),
     );
   }
 
@@ -154,7 +154,7 @@ class AddedCourseMemberModel {
     return AddedCourseMemberModel(
       courseId: json['courseId'],
       memberUid: json['memberUid'],
-      userData: ProfileData.toModel(json['userDTO']),
+      userData: json['userDTO'] == null ? ProfileData() : ProfileData.toModel(json['userDTO']),
       status: json['status'],
     );
   }

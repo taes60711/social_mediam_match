@@ -36,12 +36,27 @@ class PrivacySettingPage extends BaseEndDrawer {
         MainBtn(
           onPress: () {
             ConfirmDilaog(
+                title: "警告",
+                content: "刪除帳號後, 資料將無法再回復\n\n確定要刪除該帳號？",
+                conirmFunc: () async {
+                  await UserLoginStatusController().deleteAccount();
+                  logoutAllFunc();
+                }).show(context);
+          },
+          child: _buildButtonContainer(
+            iconData: FontAwesomeIcons.userSlash,
+            text: "刪除帳號",
+            needEnterIcon: false,
+          ),
+        ),
+        MainBtn(
+          onPress: () {
+            ConfirmDilaog(
                 title: "提示",
                 content: "確定要登出？",
                 conirmFunc: () async {
-                  UserLoginStatusController().logOut();
-                  closePage();
-                  HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
+                  await UserLoginStatusController().logOut();
+                  logoutAllFunc();
                 }).show(context);
           },
           child: _buildButtonContainer(
@@ -52,6 +67,11 @@ class PrivacySettingPage extends BaseEndDrawer {
         ),
       ],
     );
+  }
+
+  void logoutAllFunc() {
+    closePage();
+    HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
   }
 
   Widget _buildButtonContainer({

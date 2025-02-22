@@ -37,21 +37,30 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
 
   String notifaicationToken = "";
   bool isInit = false;
+  bool isUserDeleted = true;
 
   @override
   Future<void> initState(WidgetRef ref) async {
-    ProfileData myUserData = ref.watch(loginUserData);
-    if (myUserData.uid != userData.uid) {
-      bool isFriend = await FriendService().getIsFrined(userUID: myUserData.uid, ohterUserUID: userData.uid);
-      notifaicationToken = await UserService().requestUserNotificationTokenByUID(userData.uid);
-      ref.read(isFriendProvider.notifier).update((state) => isFriend);
-      isInit = true;
+    isUserDeleted = userData.uid == "-1" ? true : false;
+
+    if (!isUserDeleted) {
+      ProfileData myUserData = ref.watch(loginUserData);
+
+      if (myUserData.uid != userData.uid) {
+        bool isFriend = await FriendService().getIsFrined(userUID: myUserData.uid, ohterUserUID: userData.uid);
+        notifaicationToken = await UserService().requestUserNotificationTokenByUID(userData.uid);
+        ref.read(isFriendProvider.notifier).update((state) => isFriend);
+        isInit = true;
+      }
       render();
     }
   }
 
   @override
   Widget build(WidgetRef ref) {
+    if (isUserDeleted) {
+      return _noUserDataWidget();
+    }
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -308,19 +317,30 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
 class UserProfileBottomSheet extends BaseBottomSheet {
   final ProfileData userData;
   UserProfileBottomSheet({required this.userData});
+
+  bool isUserDeleted = true;
+
   @override
   Future<void> initState(WidgetRef ref) async {
-    ProfileData myUserData = ref.watch(loginUserData);
-    if (myUserData.uid != userData.uid) {
-      bool isFriend = await FriendService().getIsFrined(userUID: myUserData.uid, ohterUserUID: userData.uid);
+    isUserDeleted = userData.uid == "-1" ? true : false;
 
-      ref.read(isFriendProvider.notifier).update((state) => isFriend);
-      render();
+    if (!isUserDeleted) {
+      ProfileData myUserData = ref.watch(loginUserData);
+      if (myUserData.uid != userData.uid) {
+        bool isFriend = await FriendService().getIsFrined(userUID: myUserData.uid, ohterUserUID: userData.uid);
+
+        ref.read(isFriendProvider.notifier).update((state) => isFriend);
+        render();
+      }
     }
   }
 
   @override
   Widget build(WidgetRef ref) {
+    if (isUserDeleted) {
+      return _noUserDataWidget();
+    }
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -422,4 +442,26 @@ class UserProfileBottomSheet extends BaseBottomSheet {
       ),
     );
   }
+}
+
+Widget _noUserDataWidget() {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Icon(
+        FontAwesomeIcons.userSlash,
+        size: ScreenSize.fitPxWidth(40),
+        color: AppColors.whiteColor,
+      ),
+      SizedBox(height: ScreenSize.fitPxWidth(10)),
+      Text(
+        "用戶已不存在",
+        style: TextStyle(
+          fontSize: ScreenSize.fontSize16,
+          color: AppColors.whiteColor,
+        ),
+      )
+    ],
+  );
 }

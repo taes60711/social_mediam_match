@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/style/app_image.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
@@ -70,6 +70,25 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               btnBgColor: AppColors.whiteColor,
               btnTextColor: AppColors.greyColor98,
               btnText: "Google註冊",
+            ),
+
+            SizedBox(height: ScreenSize.fitPxWidth(16)),
+
+            ///　Apple登録
+            AccountPageUtilites().btnContainer(
+              onPress: () async {
+                final credential = await SignInWithApple.getAppleIDCredential(
+                  scopes: [
+                    AppleIDAuthorizationScopes.email,
+                  ],
+                );
+                print(credential);
+                print("credential.email : ${credential.email} credential.authorizationCode : ${credential.authorizationCode}");
+              },
+              imgIcon: AppImage.appleIcon,
+              btnBgColor: AppColors.whiteColor,
+              btnTextColor: AppColors.greyColor98,
+              btnText: "Apple註冊",
             ),
 
             SizedBox(height: ScreenSize.fitPxWidth(120)),

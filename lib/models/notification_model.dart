@@ -60,7 +60,7 @@ class NotificationModel {
       postId: json['postId'],
       courseId: json['courseId'],
       postTime: DateTime.parse(json['postTime']),
-      sendNotificationuserInfo: ProfileData.toModel(json['user']),
+      sendNotificationuserInfo: json['user'] == null ? ProfileData() : ProfileData.toModel(json['user']),
     );
   }
 

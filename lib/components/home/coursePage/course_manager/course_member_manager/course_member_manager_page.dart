@@ -37,18 +37,66 @@ class CourseMemberManagerPage extends BaseEndDrawer {
               listControllerProvider: courseMemberManagerListPorver,
               itemChild: (data, index) {
                 ProfileData signingUserData = data.userData;
+
+                if (signingUserData.uid == "-1") {
+                  return MainBtn(
+                    onPress: () {
+                      ref.read(choicedCourseMemberProvider.notifier).update((e) => data);
+                      CourseMemberEditBtmSheet(courseMemberManagerListPorver, userIsDeleted: true, dataIndex: index)
+                          .show(context);
+                    },
+                    child: Container(
+                      width: ScreenSize.width,
+                      decoration: BoxDecoration(
+                        color: AppColors.black37,
+                        borderRadius: BorderRadius.circular(
+                          ScreenSize.fitPxWidth(15),
+                        ),
+                      ),
+                      margin: EdgeInsets.only(
+                        left: ScreenSize.fitPxHeight(10),
+                        right: ScreenSize.fitPxHeight(10),
+                        top: ScreenSize.fitPxHeight(10),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        vertical: ScreenSize.fitPxHeight(8),
+                        horizontal: ScreenSize.fitPxHeight(15),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              UserIcon(
+                                iconSize: ScreenSize.fitPxWidth(55),
+                                image: signingUserData.image,
+                                borderRadius: 15,
+                              ),
+                              SizedBox(width: ScreenSize.fitPxWidth(10)),
+                              Text(
+                                "用戶已不存在",
+                                style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
                 return MainBtn(
                   onPress: () {
                     ref.read(choicedCourseMemberProvider.notifier).update((e) => data);
-                    CourseMemberEditBtmSheet(courseMemberManagerListPorver, dataIndex: index).show(context);
+                    CourseMemberEditBtmSheet(courseMemberManagerListPorver, userIsDeleted: false, dataIndex: index).show(context);
                   },
                   child: Container(
                     width: ScreenSize.width,
                     decoration: BoxDecoration(
-                        color: AppColors.black37,
-                        borderRadius: BorderRadius.circular(
-                          ScreenSize.fitPxWidth(15),
-                        )),
+                      color: AppColors.black37,
+                      borderRadius: BorderRadius.circular(
+                        ScreenSize.fitPxWidth(15),
+                      ),
+                    ),
                     margin: EdgeInsets.only(
                       left: ScreenSize.fitPxHeight(10),
                       right: ScreenSize.fitPxHeight(10),

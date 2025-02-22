@@ -16,8 +16,9 @@ class CourseMemberEditBtmSheet extends BaseBottomSheet {
   StateNotifierProvider<APIListControllerNotifier<AddedCourseMemberModel>, APIListController<AddedCourseMemberModel>>
       courseMemberListController;
 
+  bool userIsDeleted;
   int dataIndex;
-  CourseMemberEditBtmSheet(this.courseMemberListController, {required this.dataIndex});
+  CourseMemberEditBtmSheet(this.courseMemberListController, {required this.userIsDeleted, required this.dataIndex});
 
   @override
   double buildHeight() {
@@ -30,7 +31,7 @@ class CourseMemberEditBtmSheet extends BaseBottomSheet {
       children: [
         SizedBox(height: ScreenSize.fitPxWidth(10)),
         Visibility(
-          visible: ref.read(choicedCourseMemberProvider).status == 0,
+          visible: !userIsDeleted && ref.read(choicedCourseMemberProvider).status == 0,
           child: managerPageMainBtn(
               iconData: FontAwesomeIcons.check,
               text: "審核通過",

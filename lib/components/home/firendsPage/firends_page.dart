@@ -89,7 +89,7 @@ class _FriendPageState extends ConsumerState<FriendPage> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            data.userData.name ?? "",
+                                            data.userData.name ?? "用戶已不存在",
                                             style: TextStyle(
                                               fontSize: ScreenSize.fontSize14,
                                               color: AppColors.whiteColor,

@@ -16,7 +16,8 @@ import '../firends_page.dart';
 /// チャットルーム内の編集ページ
 class ChatRoomManagerBtmSheet extends BaseBottomSheet {
   ProfileData friendData;
-  ChatRoomManagerBtmSheet({required this.friendData});
+  int roomId;
+  ChatRoomManagerBtmSheet({required this.roomId, required this.friendData});
 
   @override
   double buildHeight() {
@@ -29,14 +30,33 @@ class ChatRoomManagerBtmSheet extends BaseBottomSheet {
       children: [
         SizedBox(height: ScreenSize.fitPxWidth(10)),
         managerPageMainBtn(
-            iconData: FontAwesomeIcons.trash,
-            text: "刪除好友",
-            onPress: () async {
-              bool isConfirm = await awaitConfirmDialog(context, title: "提示", content: "您確定要刪除好友嗎？");
-              if (isConfirm) {
-                List<FriendListModel> frinedList = ref.read(frinedListProvider.notifier).state;
+          iconData: FontAwesomeIcons.trash,
+          text: "刪除好友",
+          onPress: () async {
+            bool isConfirm = false;
+            List<FriendListModel> frinedList = ref.read(frinedListProvider.notifier).state;
+            int deleteFriendDataIndex = -1;
 
-                int deleteFriendDataIndex = frinedList.indexWhere((e) {
+            /// ユーザ存在しない場合
+            if (friendData.uid == "-1") {
+              isConfirm = await awaitConfirmDialog(context, title: "提示", content: "因為用戶已不存在, 如果刪除的話, 會將所有對話也一併清除\n\n您確定要刪除好友嗎？");
+              if (isConfirm) {
+                deleteFriendDataIndex = frinedList.indexWhere((element) => element.roomId == roomId);
+                await FriendService().deleteRoom(roomId);
+
+                frinedList.removeAt(deleteFriendDataIndex);
+                ref.read(frinedListProvider.notifier).update((state) => frinedList);
+                ref.read(friendPageRender.notifier).state();
+                HomeGlobalViewModel().popUntiltFirst();
+              }
+              return;
+            }
+
+            /// ユーザ存在場合
+            if (friendData.uid != "-1") {
+              isConfirm = await awaitConfirmDialog(context, title: "提示", content: "您確定要刪除好友嗎？");
+              if (isConfirm) {
+                deleteFriendDataIndex = frinedList.indexWhere((e) {
                   String memberId = e.createdBy;
                   if (ref.read(loginUserData.notifier).state.uid == e.createdBy) {
                     memberId = e.memberId;
@@ -44,7 +64,6 @@ class ChatRoomManagerBtmSheet extends BaseBottomSheet {
 
                   return memberId == friendData.uid;
                 });
-
                 FriendListModel deleteFriend = frinedList[deleteFriendDataIndex];
                 await FriendService().deleteFriend(deleteFriend.roomId, deleteFriend.memberId);
 
@@ -53,7 +72,11 @@ class ChatRoomManagerBtmSheet extends BaseBottomSheet {
                 ref.read(friendPageRender.notifier).state();
                 HomeGlobalViewModel().popUntiltFirst();
               }
-            }),
+
+              return;
+            }
+          },
+        ),
         SizedBox(height: ScreenSize.fitPxWidth(15)),
       ],
     );

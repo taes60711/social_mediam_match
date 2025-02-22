@@ -17,8 +17,7 @@ import '../../../global/user_login_status_controller.dart';
 import '../../../models/post_model.dart';
 import '../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../provider/post/post_provider.dart';
-import '../../utilities/FadeScalePage/image_view_page.dart';
-import '../../utilities/FadeScalePage/video_view_page.dart';
+import '../../utilities/FadeScalePage/video_image_view_page.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/dialog/confirm_dialog.dart';
@@ -126,7 +125,7 @@ class PostViewUtilities {
                           children: [
                             ///名前
                             Text(
-                              data.postUserInfo.name ?? "",
+                              data.postUserInfo.name ?? "用戶已不存在",
                               style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
                             ),
                             SizedBox(width: ScreenSize.fitPxWidth(4)),
@@ -187,8 +186,7 @@ class PostViewUtilities {
                   height: data.fileMessage.length == 1 ? ScreenSize.fitPxWidth(180) : null,
                   child: GestureDetector(
                     onTap: () {
-                      VideoViewPage(ytId: ytId).show(context);
-                      // VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
+                      VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
                     },
                     child: Stack(
                       alignment: Alignment.center,
@@ -366,8 +364,7 @@ class PostViewUtilities {
                 height: fileMessage.length == 1 ? ScreenSize.fitPxWidth(180) : null,
                 child: GestureDetector(
                   onTap: () {
-                    // VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
-                    ImageViewPage(imgUrl: realImg).show(context);
+                    VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
                   },
                   child: CachedNetworkImage(
                     imageUrl: realImg,

@@ -74,6 +74,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               btnTextColor: AppColors.greyColor98,
               btnText: "Google登入",
             ),
+            SizedBox(height: ScreenSize.fitPxWidth(16)),
+
+            ///　Apple登入
+            AccountPageUtilites().btnContainer(
+              imgIcon: AppImage.appleIcon,
+              onPress: () {},
+              btnBgColor: AppColors.whiteColor,
+              btnTextColor: AppColors.greyColor98,
+              btnText: "Apple登入",
+            ),
 
             SizedBox(height: ScreenSize.fitPxWidth(120)),
           ],

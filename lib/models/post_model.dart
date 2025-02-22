@@ -68,7 +68,7 @@ class PostModel {
       type: json['type'],
       commentCount: json['count'],
       postTime: json['postTime'],
-      postUserInfo: ProfileData.toModel(json['user']),
+      postUserInfo: json['user'] == null ? ProfileData() : ProfileData.toModel(json['user']),
     );
   }
 

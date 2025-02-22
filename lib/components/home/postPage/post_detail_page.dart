@@ -84,7 +84,7 @@ class PostDetailPage extends BaseEndDrawer {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            choiceData.postUserInfo.name ?? "",
+                            choiceData.postUserInfo.name ?? "用戶已不存在",
                             style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
                           ),
                           Text(

@@ -157,6 +157,9 @@ class UserService extends ApiClient {
     print("updateUserToken : $responseData");
   }
 
+  /// Google登録
+  //param
+  //email：メールアドレス，password：パスワード
   Future<String> googleSignUp({required String email, required String password, required String name}) async {
     Map<String, dynamic> body = {
       "email": email,
@@ -171,6 +174,7 @@ class UserService extends ApiClient {
     return responseData;
   }
 
+  /// 普通登録
   //param
   //email：メールアドレス，password：パスワード
   /// success, emailExist , captchaCodeErr
@@ -190,6 +194,17 @@ class UserService extends ApiClient {
     print("signUpUser : $responseData");
 
     return responseData;
+  }
+
+  /// ユーザ削除
+  //param
+  //uid: userUId
+  Future<bool> deleteUser({required String userUID}) async {
+    String responseData = await apiPush('/deleteUser/$userUID', body: {});
+
+    print("deleteUser : $responseData");
+
+    return responseData == "true" ? true : false;
   }
 
   ///　パスワード変更

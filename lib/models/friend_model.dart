@@ -75,6 +75,12 @@ class FriendListModel {
   });
 
   factory FriendListModel.toModel(dynamic json, {ProfileData? userData}) {
+    ProfileData friendUserData = ProfileData();
+    if (userData != null) {
+      friendUserData = userData;
+    } else if (json['user'] != null) {
+      friendUserData = ProfileData.toModel(json['user']);
+    }
     return FriendListModel(
       roomId: json['roomId'],
       memberId: json['memberId'],
@@ -83,7 +89,7 @@ class FriendListModel {
       unreadCount: json["unreadCount"],
       sentAt: json['sentAt'],
       roomType: json['roomType'],
-      userData: userData ?? ProfileData.toModel(json['user']),
+      userData: friendUserData,
     );
   }
 

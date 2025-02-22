@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -41,11 +42,13 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
 
   ChatRoom({required this.roomData, required this.dataIndex});
 
+  bool isInit = false;
   ChatRoomWSModel chatRoomWSModel = ChatRoomWSModel();
 
   List formattedRoomMsg = [];
   final _scrollController = ScrollController();
   bool addData = false;
+
   Screen screen = Screen();
 
   StreamSubscription<ScreenStateEvent>? _subscription;
@@ -461,7 +464,7 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
         backFunc: () => closePage(),
         userData: roomData.userData,
         rightFunc: () {
-          ChatRoomManagerBtmSheet(friendData: roomData.userData).show(context);
+          ChatRoomManagerBtmSheet(roomId: roomData.roomId, friendData: roomData.userData).show(context);
         },
       ),
     );

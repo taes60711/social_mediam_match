@@ -144,9 +144,22 @@ class UserLoginStatusController {
     }
   }
 
-  Future<void> logOut() async {
-    /// 通知用のtoken削除
-    await UserService().updateUserToken(ref.read(loginUserData).uid, '');
+  /// アカウント削除
+  Future<void> deleteAccount() async {
+    /// アカウント削除
+    bool isSuccess = await UserService().deleteUser(userUID: ref.read(loginUserData).uid);
+    if (isSuccess) {
+      await logOut();
+    } else {
+      print("deleteAccount  Failed");
+    }
+  }
+
+  Future<void> logOut({bool needUpdateToken = true}) async {
+    if (needUpdateToken) {
+      /// 通知用のtoken削除
+      await UserService().updateUserToken(ref.read(loginUserData).uid, '');
+    }
 
     /// SDのユーザUID削除
     await sharedPreference.loginOutRemoveUserUID();

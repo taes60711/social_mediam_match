@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:uuid/uuid.dart';
 import '../../../components/utilities/lodaing_dialog.dart';
 import '../../../models/user_model.dart';
 import '../../../services/google_sign_in_service.dart';
@@ -59,10 +60,11 @@ class SignUpViewModel {
     _resetAllErrMsg();
     GoogleSignInAccount? googleUser = await GoogleSinginService().signInWithGoogle();
     if (googleUser != null) {
+      String randomName = const Uuid().v4();
       String apiReturn = await UserService().googleSignUp(
         email: googleUser.email,
         password: googleUser.id,
-        name: googleUser.email,
+        name: randomName,
       );
 
       if (apiReturn == "success") {

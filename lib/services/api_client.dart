@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
 import '../../global.dart';
 import 'package:http/http.dart';
@@ -106,6 +107,7 @@ class ApiClient {
       if (model != null) {
         if (isList) {
           List<dynamic> listData = json.decode(responseData);
+
           result = <T>[];
           for (var e in listData) {
             result.add(model(e) as T);
