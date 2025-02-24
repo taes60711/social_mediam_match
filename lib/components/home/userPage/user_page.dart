@@ -14,7 +14,7 @@ import 'about_page.dart';
 import 'myCourse/my_courses.dart';
 import 'my_notification_page/my_notification_page.dart';
 import 'my_posts.dart';
-import 'privacy_setting.dart';
+import 'setting/privacy_setting.dart';
 import 'user_profile_edit_page.dart';
 import 'user_profile_share_page.dart';
 
@@ -170,7 +170,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: AppColors.whiteColor,
+                        color: userData.introduction == "" ? AppColors.greyColor : AppColors.whiteColor,
                         fontSize: ScreenSize.fontSize12,
                       ),
                     ),
@@ -195,7 +195,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                     Text(
                       userData.job == "" ? "目前沒有填寫職業" : userData.job ?? "",
                       style: TextStyle(
-                        color: AppColors.whiteColor,
+                        color: userData.job == "" ? AppColors.greyColor : AppColors.whiteColor,
                         fontSize: ScreenSize.fontSize12,
                       ),
                     ),
@@ -205,7 +205,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                         ///タイトル
                         Container(
                           padding: EdgeInsets.all(ScreenSize.fitPxWidth(4)),
-                          margin: EdgeInsets.only(top: 5, bottom: 5, right: 5),
+                          margin: const EdgeInsets.only(top: 5, bottom: 5, right: 5),
                           decoration: BoxDecoration(
                             color: AppColors.greyColor138,
                             borderRadius: BorderRadius.circular(15),
@@ -305,7 +305,7 @@ class _UserPageState extends ConsumerState<UserPage> {
               SizedBox(height: ScreenSize.fitPxHeight(10)),
               infoBtn(
                 icon: FontAwesomeIcons.gear,
-                text: "設定",
+                text: "一般／設定",
                 onPress: () => PrivacySettingPage().show(context),
               ),
               SizedBox(height: ScreenSize.fitPxHeight(65))

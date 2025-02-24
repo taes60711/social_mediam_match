@@ -5,6 +5,7 @@ import 'package:social_mediam_match/components/utilities/endDrawers/base_end_dra
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/models/post_model.dart';
 
+import '../../../../provider/account/user_provider.dart';
 import '../../../../provider/post/post_provider.dart';
 import '../../../../provider/post/post_view_model.dart';
 import '../../../../services/post_service.dart';
@@ -88,7 +89,7 @@ class PostPageByType extends BaseEndDrawer {
               Expanded(
                 child: APIListWidget(
                     apiFunc: (page, size) {
-                      return PostService().getPostByType(page, size, boardData.type);
+                      return PostService().getPostByType(page, size, boardData.type, userId: ref.read(loginUserData).uid);
                     },
                     size: 7,
                     needReloadCheck: true,

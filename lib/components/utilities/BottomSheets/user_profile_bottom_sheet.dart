@@ -11,6 +11,7 @@ import 'package:social_mediam_match/pageManager/enum/bottom_bar_path.dart';
 import 'package:social_mediam_match/services/friend_service.dart';
 import 'package:social_mediam_match/services/notification_service.dart';
 import 'package:social_mediam_match/services/user_service.dart';
+import '../../../enum/user_block_status_type.dart';
 import '../../../global/user_login_status_controller.dart';
 import '../../../models/friend_model.dart';
 import '../../../models/notification_model.dart';
@@ -231,7 +232,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
             visible: needToChatRoomBtn && ref.watch(loginUserData).uid != userData.uid,
             child: Center(
               child: MainBtn(
-                onPress: () {
+                onPress: () async {
                   if (UserLoginStatusController().isGuest()) {
                     ConfirmDilaog(
                         title: "提示",
@@ -244,6 +245,13 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                             },
                           );
                         }).show(context);
+                    return;
+                  }
+
+                  UserBlockStatusType blockStatusType = await HomeGlobalViewModel().getUserBlockStatus(userData: userData);
+
+                  if (blockStatusType != UserBlockStatusType.none) {
+                    Toast().showCenter(msg: "該用戶已經封鎖/被封鎖");
                     return;
                   }
 

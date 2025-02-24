@@ -4,11 +4,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/global.dart';
+import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 import 'package:social_mediam_match/provider/friend/chat_ws_model.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../../components/home/firendsPage/chatRoomPage/chat_room.dart';
+import '../../enum/user_block_status_type.dart';
 import '../../models/friend_model.dart';
 import '../../services/friend_service.dart';
 import '../../services/user_service.dart';
@@ -36,6 +38,8 @@ class ChatRoomWSModel {
   bool inBackground = false;
   bool isOffScreen = false;
 
+  bool isBlocked = false;
+
   late IOWebSocketChannel _chatroomListChannel;
   Stream<dynamic>? _broadcastStream;
 
@@ -50,6 +54,10 @@ class ChatRoomWSModel {
     enterRoomID = roomData.roomId;
     ref.read(loginUserInChatRoomId.notifier).update((state) => enterRoomID);
     _chatroomListChannel = IOWebSocketChannel.connect(_channelRoomUrl);
+
+    UserBlockStatusType userBlockStatusType = await HomeGlobalViewModel().getUserBlockStatus(userData: roomData.userData);
+    isBlocked = userBlockStatusType == UserBlockStatusType.blocked;
+
     print("chatRoom connect $_channelRoomUrl");
     await _chatroomListChannel.ready;
 
@@ -192,6 +200,10 @@ class ChatRoomWSModel {
   Future<void> offScreenRetrun(
       {required String userId, required FriendListModel roomData, required ScrollController scrollController}) async {
     _chatroomListChannel = IOWebSocketChannel.connect(_channelRoomUrl);
+
+    UserBlockStatusType userBlockStatusType = await HomeGlobalViewModel().getUserBlockStatus(userData: roomData.userData);
+    isBlocked = userBlockStatusType == UserBlockStatusType.blocked;
+
     print("chatRoom isOffScreen reConnect $_channelRoomUrl");
     await _chatroomListChannel.ready;
 
@@ -213,6 +225,9 @@ class ChatRoomWSModel {
 
   /// App最小化 > 戻る > WSもう一度繋がる > 画面のメッセージを更新する
   Future<void> appRetrun({required String userId, required FriendListModel roomData}) async {
+    UserBlockStatusType userBlockStatusType = await HomeGlobalViewModel().getUserBlockStatus(userData: roomData.userData);
+    isBlocked = userBlockStatusType == UserBlockStatusType.blocked;
+
     print("chatRoom inBackground reConnect $_channelRoomUrl");
 
     /// WS クローズ

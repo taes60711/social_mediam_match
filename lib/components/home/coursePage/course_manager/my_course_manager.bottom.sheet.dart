@@ -6,6 +6,7 @@ import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 
+import '../../../../global/home_global_view_model.dart';
 import '../../../../models/course_model.dart';
 
 import '../../../utilities/apiListView/api_list_controller.dart';
@@ -19,7 +20,7 @@ class MyCourseManagerBtmSheet extends BaseBottomSheet {
 
   @override
   double buildHeight() {
-    return 0.16;
+    return 0.3;
   }
 
   @override
@@ -34,6 +35,14 @@ class MyCourseManagerBtmSheet extends BaseBottomSheet {
             text: "分享",
             onPress: () async {
               await CourseUtilites().shareCourse(courseId: choiceCourse.id);
+            },
+          ),
+          SizedBox(height: ScreenSize.fitPxWidth(15)),
+          managerPageMainBtn(
+            iconData: FontAwesomeIcons.userLock,
+            text: "封鎖用戶",
+            onPress: () async {
+              HomeGlobalViewModel().blockUser(userData: choiceCourse.courseCreateduserInfo);
             },
           ),
         ],

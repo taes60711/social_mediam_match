@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
+import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
+import 'package:social_mediam_match/components/utilities/main_button.dart';
+import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 
+import '../../home/userPage/setting/usage_terms_dialog.dart';
 import '../../utilities/inputField/label_input.dart';
 import '../../utilities/style/screen_size.dart';
 import '../account_main_page.dart';
@@ -14,6 +19,8 @@ import '../account_page_utilites.dart';
 import 'signup_step_last.dart';
 
 class SignUpStepTwoPage extends BaseEndDrawer {
+  bool isAgree = false;
+
   @override
   bool needGestureDetectorClosePage() {
     return false;
@@ -44,8 +51,50 @@ class SignUpStepTwoPage extends BaseEndDrawer {
               SizedBox(height: ScreenSize.fitPxWidth(16)),
               verifyBuild(),
               SizedBox(height: ScreenSize.fitPxWidth(25)),
+              Row(
+                children: [
+                  Theme(
+                    data: Theme.of(context).copyWith(
+                      unselectedWidgetColor: AppColors.whiteColor,
+                    ),
+                    child: Checkbox(
+                      activeColor: AppColors.transparent,
+                      value: isAgree,
+                      onChanged: (value) {
+                        isAgree = !isAgree;
+                        render();
+                      },
+                    ),
+                  ),
+                  MainBtn(
+                    onPress: () {
+                      UsageTermsDialog().show(context);
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          "我同意",
+                          style: TextStyle(fontSize: ScreenSize.fontSize14, color: AppColors.whiteColor),
+                        ),
+                        Text(
+                          "使用者條款",
+                          style: TextStyle(
+                            fontSize: ScreenSize.fontSize14,
+                            decoration: TextDecoration.underline,
+                            color: Colors.blueAccent,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
               AccountPageUtilites().btnContainer(
                 onPress: () async {
+                  if (!isAgree) {
+                    ConfirmDilaog(title: "提示", content: '請勾選"我同意使用者條款"', btnAmount: 1).show(context);
+                    return;
+                  }
                   if (await ref.read(viewModelProvider.notifier).state.signUp()) {
                     SignUpStepLastPage().show(context);
                   }

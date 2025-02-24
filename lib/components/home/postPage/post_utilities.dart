@@ -26,6 +26,7 @@ import '../../utilities/main_button.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/app_colors.dart';
 import '../../utilities/user_icon.dart';
+import 'post_manager/post_bottom_sheet.dart';
 import 'post_manager/post_create_page.dart';
 import 'post_manager/post_manager_bottom_sheet.dart';
 
@@ -131,24 +132,25 @@ class PostViewUtilities {
                             SizedBox(width: ScreenSize.fitPxWidth(4)),
 
                             const Expanded(child: SizedBox(width: 1)),
-                            Visibility(
-                              visible: data.postUserInfo.uid == ref.read(loginUserData).uid,
-                              child: GestureDetector(
-                                onTap: () {
-                                  ref.read(choicedPostProvider.notifier).update((state) => data);
+                            GestureDetector(
+                              onTap: () {
+                                ref.read(choicedPostProvider.notifier).update((state) => data);
 
+                                if (data.postUserInfo.uid == ref.read(loginUserData).uid) {
                                   ///右上のアイコンのボタン
                                   PostManagerBtmSheet(postListController, dataIndex: dataIndex).show(context);
-                                },
-                                child: Container(
-                                  width: 30,
-                                  alignment: Alignment.centerRight,
-                                  color: AppColors.transparent,
-                                  child: Icon(
-                                    FontAwesomeIcons.ellipsis,
-                                    color: AppColors.greyColor130,
-                                    size: ScreenSize.fontSize16,
-                                  ),
+                                } else {
+                                  PostBtmSheet(choicedData: ref.read(choicedPostProvider.notifier).state).show(context);
+                                }
+                              },
+                              child: Container(
+                                width: 30,
+                                alignment: Alignment.centerRight,
+                                color: AppColors.transparent,
+                                child: Icon(
+                                  FontAwesomeIcons.ellipsis,
+                                  color: AppColors.greyColor130,
+                                  size: ScreenSize.fontSize16,
                                 ),
                               ),
                             ),

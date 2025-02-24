@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/home/skillExChangePage/skill_user_change_manager_btm_sheet.dart';
 import 'package:social_mediam_match/enum/date_format_utilities.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 
@@ -51,10 +52,11 @@ class SkillUtilites {
       child: Container(
         width: ScreenSize.width,
         decoration: BoxDecoration(
-            color: AppColors.black37,
-            borderRadius: BorderRadius.circular(
-              ScreenSize.fitPxWidth(15),
-            )),
+          color: AppColors.black37,
+          borderRadius: BorderRadius.circular(
+            ScreenSize.fitPxWidth(15),
+          ),
+        ),
         margin: EdgeInsets.only(
           left: ScreenSize.fitPxHeight(10),
           right: ScreenSize.fitPxHeight(10),
@@ -80,11 +82,33 @@ class SkillUtilites {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       /// 名前
-                      Text(
-                        data.name ?? "",
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              data.name ?? "",
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                            ),
+                          ),
+                          MainBtn(
+                            onPress: () {
+                              SkillUserChangeManagerBtmSheet(userData: data).show(context);
+                            },
+                            child: Container(
+                              width: ScreenSize.fitPxWidth(50),
+                              height: ScreenSize.fitPxWidth(25),
+                              color: Colors.transparent,
+                              alignment: Alignment.centerRight,
+                              child: Icon(
+                                FontAwesomeIcons.ellipsis,
+                                color: AppColors.greyColor130,
+                                size: ScreenSize.fontSize16,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
 
                       ///職業

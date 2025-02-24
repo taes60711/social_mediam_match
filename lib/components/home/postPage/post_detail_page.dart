@@ -26,6 +26,7 @@ import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/user_icon.dart';
 import 'post_comment_page.dart';
+import 'post_manager/post_bottom_sheet.dart';
 
 class PostDetailPage extends BaseEndDrawer {
   final StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController;
@@ -80,19 +81,37 @@ class PostDetailPage extends BaseEndDrawer {
                         ),
                       ),
                       SizedBox(width: ScreenSize.fitPxWidth(5)),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            choiceData.postUserInfo.name ?? "用戶已不存在",
-                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              choiceData.postUserInfo.name ?? "用戶已不存在",
+                              style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                            ),
+                            Text(
+                              DateFormatUtilities().format(choiceData.postTime),
+                              style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
+                            ),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          PostBtmSheet(choicedData: ref.read(choicedPostProvider.notifier).state).show(context);
+                        },
+                        child: Container(
+                          width: ScreenSize.fitPxWidth(35),
+                          height: ScreenSize.fitPxWidth(35),
+                          alignment: Alignment.topRight,
+                          color: AppColors.transparent,
+                          child: Icon(
+                            FontAwesomeIcons.ellipsis,
+                            color: AppColors.greyColor130,
+                            size: ScreenSize.fontSize16,
                           ),
-                          Text(
-                            DateFormatUtilities().format(choiceData.postTime),
-                            style: TextStyle(color: AppColors.greyColor130, fontSize: ScreenSize.fontSize12),
-                          ),
-                        ],
-                      )
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: ScreenSize.fitPxWidth(8)),

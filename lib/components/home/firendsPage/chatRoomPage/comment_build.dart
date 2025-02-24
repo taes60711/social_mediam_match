@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
 import 'package:social_mediam_match/components/utilities/lodaing_dialog.dart';
+import 'package:social_mediam_match/components/utilities/toast.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../global.dart';
@@ -201,6 +202,11 @@ class _CommentBuildState extends ConsumerState<CommentBuild> {
 
   void sendMsg(ChatRoomWSModel chatRoomWSModel, {required String userId, required String message}) {
     if (message == "") {
+      return;
+    }
+
+    if (chatRoomWSModel.isBlocked) {
+      Toast().showCenter(msg: "對方已經將你封鎖");
       return;
     }
 

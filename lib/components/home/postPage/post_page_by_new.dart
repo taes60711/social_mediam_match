@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
 import '../../../global/home_global_view_model.dart';
+import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../../provider/post/post_view_model.dart';
 import '../../../services/post_service.dart';
@@ -35,7 +36,7 @@ class _PostByViewState extends ConsumerState<PostByNew> {
         Expanded(
           child: APIListWidget(
               apiFunc: (page, size) {
-                return PostService().getNewPosts(page, size);
+                return PostService().getNewPosts(page, size, userId: ref.read(loginUserData).uid);
               },
               listControllerProvider: newlistControllerProvider,
               haveBottomBar: true,

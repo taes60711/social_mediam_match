@@ -5,9 +5,9 @@ import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/global/home_global_view_model.dart';
-import 'package:social_mediam_match/provider/account/user_provider.dart';
 import '../../../../models/friend_model.dart';
 import '../../../../models/user_model.dart';
+import '../../../../provider/account/user_provider.dart';
 import '../../../../services/friend_service.dart';
 import '../../../utilities/BottomSheets/base_bottom_sheet.dart';
 import '../../../utilities/dialog/await_confirm_dialog.dart';
@@ -21,7 +21,7 @@ class ChatRoomManagerBtmSheet extends BaseBottomSheet {
 
   @override
   double buildHeight() {
-    return 0.15;
+    return 0.3;
   }
 
   @override
@@ -64,7 +64,9 @@ class ChatRoomManagerBtmSheet extends BaseBottomSheet {
 
                   return memberId == friendData.uid;
                 });
+
                 FriendListModel deleteFriend = frinedList[deleteFriendDataIndex];
+
                 await FriendService().deleteFriend(deleteFriend.roomId, deleteFriend.memberId);
 
                 frinedList.removeAt(deleteFriendDataIndex);
@@ -75,6 +77,14 @@ class ChatRoomManagerBtmSheet extends BaseBottomSheet {
 
               return;
             }
+          },
+        ),
+        SizedBox(height: ScreenSize.fitPxWidth(15)),
+        managerPageMainBtn(
+          iconData: FontAwesomeIcons.userLock,
+          text: "封鎖用戶",
+          onPress: () async {
+            HomeGlobalViewModel().blockUser(userData: friendData, chatRoomRender: ref.read(friendPageRender.notifier).state);
           },
         ),
         SizedBox(height: ScreenSize.fitPxWidth(15)),

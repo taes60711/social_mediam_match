@@ -8,11 +8,11 @@ import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.d
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 import 'package:social_mediam_match/components/utilities/inputField/mutl_input.dart';
 
-import '../../../models/feed_back_model.dart';
-import '../../../services/feed_back_service.dart';
-import '../../utilities/appBar/basic_top_bar.dart';
-import '../../utilities/style/screen_size.dart';
-import '../../utilities/style/app_colors.dart';
+import '../../../../models/feed_back_model.dart';
+import '../../../../services/feed_back_service.dart';
+import '../../../utilities/appBar/basic_top_bar.dart';
+import '../../../utilities/style/app_colors.dart';
+import '../../../utilities/style/screen_size.dart';
 
 class CustomServicePage extends BaseBottomSheet {
   @override

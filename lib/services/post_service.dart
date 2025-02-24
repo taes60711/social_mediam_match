@@ -43,12 +43,13 @@ class PostService extends ApiClient {
   }
 
   ///MARK: 人気文章取得する
-  Future<List<PostModel>> getPostDataByViewer(int page, int size) async {
+  Future<List<PostModel>> getPostDataByViewer(int page, int size, {required String userId}) async {
     List<PostModel> requestPostDataByUID = [];
 
     Map<String, dynamic> paramters = {
       'page': '$page',
       'size': '$size',
+      'uid': userId,
     };
 
     try {
@@ -67,12 +68,13 @@ class PostService extends ApiClient {
   }
 
   /// 類別文章取得する
-  Future<List<PostModel>> getPostByType(int page, int size, int type) async {
+  Future<List<PostModel>> getPostByType(int page, int size, int type, {String? userId}) async {
     List<PostModel> requestPostDataByNew = [];
 
     Map<String, dynamic> paramters = {
       'page': '$page',
       'size': '$size',
+      'uid': userId == "guest" ? "" : userId,
     };
 
     try {
@@ -91,12 +93,13 @@ class PostService extends ApiClient {
   }
 
   /// 最新文章取得する
-  Future<List<PostModel>> getNewPosts(int page, int size) async {
+  Future<List<PostModel>> getNewPosts(int page, int size, {required String userId}) async {
     List<PostModel> requestPostDataByNew = [];
 
     Map<String, dynamic> paramters = {
       'page': '$page',
       'size': '$size',
+      'uid': userId == "guest" ? "" : userId,
     };
 
     try {
