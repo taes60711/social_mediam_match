@@ -74,7 +74,8 @@ class HomeGlobalViewModel {
     FirebaseNotificationService().notificationListen(context: context, ref: ref);
   }
 
-  void blockUser({required ProfileData userData, Function? chatRoomRender}) {
+  /// ブロックユーザ
+  void blockUser({required ProfileData userData, bool isInChatRoom = false}) {
     if (userData.uid == "-1") {
       Toast().showCenter(msg: "該用戶已經不存在");
       return;
@@ -130,8 +131,9 @@ class HomeGlobalViewModel {
                 ref.read(frinedListProvider.notifier).update((state) => friendList);
 
                 ref.read(frinedListProvider.notifier).update((state) => friendList);
-                if (chatRoomRender != null) {
-                  chatRoomRender();
+
+                ref.read(friendPageRender.notifier).state();
+                if (isInChatRoom) {
                   popUntiltFirst();
                 }
               }
@@ -145,6 +147,7 @@ class HomeGlobalViewModel {
     ).show(context);
   }
 
+  /// ユーザのブロック状態取得する
   Future<UserBlockStatusType> getUserBlockStatus({required ProfileData userData}) async {
     String blockStatus = await BlackListService().isUserBlocked(
       uid: ref.read(loginedUserUID.notifier).state,

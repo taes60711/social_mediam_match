@@ -51,13 +51,9 @@ class _UserPageState extends ConsumerState<UserPage> {
                         height: ScreenSize.fitPxHeight(63),
                         width: ScreenSize.fitPxHeight(63),
                         color: AppColors.transparent,
-                        child: Stack(
-                          children: [
-                            UserIcon(
-                              image: userData.image,
-                              iconSize: ScreenSize.fitPxHeight(60),
-                            ),
-                          ],
+                        child: UserIcon(
+                          image: userData.image,
+                          iconSize: ScreenSize.fitPxHeight(60),
                         ),
                       ),
                     ),
@@ -74,7 +70,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -113,35 +109,54 @@ class _UserPageState extends ConsumerState<UserPage> {
                                 ),
                               ],
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  userData.email,
-                                  style: TextStyle(
-                                    color: AppColors.greyColor,
-                                    fontSize: ScreenSize.fontSize12,
-                                  ),
-                                ),
-                                SizedBox(width: ScreenSize.fitPxWidth(10)),
-
-                                ///シャアボタン
-                                GestureDetector(
-                                  onTap: () async {
-                                    UserProfileSharePage().show(context);
-                                  },
-                                  child: Container(
-                                    width: 30,
-                                    alignment: Alignment.centerLeft,
-                                    color: AppColors.transparent,
-                                    child: Icon(
-                                      FontAwesomeIcons.arrowUpRightFromSquare,
-                                      color: AppColors.greyColor180A221,
-                                      size: ScreenSize.fontSize14,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            SizedBox(
+                              height: ScreenSize.fitPxWidth(10),
                             ),
+                            GestureDetector(
+                              onTap: () async {
+                                UserProfileSharePage().show(context);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.only(right: ScreenSize.fitPxHeight(3)),
+                                width: ScreenSize.fitPxWidth(30),
+                                alignment: Alignment.centerRight,
+                                color: AppColors.transparent,
+                                child: Icon(
+                                  FontAwesomeIcons.arrowUpRightFromSquare,
+                                  color: AppColors.greyColor180A221,
+                                  size: ScreenSize.fontSize14,
+                                ),
+                              ),
+                            ),
+                            // Row(
+                            //   children: [
+                            //     // Text(
+                            //     //   userData.email,
+                            //     //   style: TextStyle(
+                            //     //     color: AppColors.greyColor,
+                            //     //     fontSize: ScreenSize.fontSize12,
+                            //     //   ),
+                            //     // ),
+                            //     SizedBox(width: ScreenSize.fitPxWidth(10)),
+
+                            //     ///シャアボタン
+                            //     GestureDetector(
+                            //       onTap: () async {
+                            //         UserProfileSharePage().show(context);
+                            //       },
+                            //       child: Container(
+                            //         width: 30,
+                            //         alignment: Alignment.centerLeft,
+                            //         color: AppColors.transparent,
+                            //         child: Icon(
+                            //           FontAwesomeIcons.arrowUpRightFromSquare,
+                            //           color: AppColors.greyColor180A221,
+                            //           size: ScreenSize.fontSize14,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                       ),

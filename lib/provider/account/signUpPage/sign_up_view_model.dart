@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
 import '../../../components/utilities/lodaing_dialog.dart';
 import '../../../models/user_model.dart';
@@ -69,6 +70,37 @@ class SignUpViewModel {
 
       if (apiReturn == "success") {
         signUpedUserUID = googleUser.id;
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    return false;
+  }
+
+  /// Apple註冊
+  /// success
+  Future<bool> appleSignUp() async {
+    _resetAllErrMsg();
+
+    final credential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+      ],
+    );
+    print(credential);
+    print("credential.email : ${credential.email} credential.userIdentifier : ${credential.userIdentifier}");
+    if (credential.userIdentifier != null) {
+      String randomName = const Uuid().v4();
+
+      bool apiReturn = await UserService().appleSignUp(
+        uid: credential.userIdentifier ?? "",
+        name: randomName,
+      );
+
+      if (apiReturn) {
+        signUpedUserUID = credential.userIdentifier ?? "";
         return true;
       } else {
         return false;

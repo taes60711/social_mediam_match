@@ -79,7 +79,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ///　Apple登入
             AccountPageUtilites().btnContainer(
               imgIcon: AppImage.appleIcon,
-              onPress: () {},
+              onPress: () {
+                viewModel.appleLogin();
+              },
               btnBgColor: AppColors.whiteColor,
               btnTextColor: AppColors.greyColor98,
               btnText: "Apple登入",

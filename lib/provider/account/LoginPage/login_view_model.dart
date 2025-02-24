@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:social_mediam_match/components/utilities/toast.dart';
 
 import '../../../global/user_login_status_controller.dart';
@@ -14,8 +15,8 @@ class LoginViewModel {
 
   LoginDataModel editData = LoginDataModel.emptyData();
 
-  TextEditingController accountController = TextEditingController(text: "taes60511@gmail.com");
-  TextEditingController pwdController = TextEditingController(text: "toto60511");
+  TextEditingController accountController = TextEditingController();
+  TextEditingController pwdController = TextEditingController();
   String errMsg = "";
 
   bool pwdleastSix = false;
@@ -85,6 +86,25 @@ class LoginViewModel {
 
       if (!success) {
         Toast().showCenter(msg: "請先至註冊頁面,進行Google註冊");
+      }
+    }
+  }
+
+  Future<void> appleLogin() async {
+    final credential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+      ],
+    );
+
+    print(credential.userIdentifier);
+
+    if (credential.userIdentifier != null) {
+      LoginDataModel loginDataModel =
+          LoginDataModel(account: credential.userIdentifier ?? "", pwd: credential.userIdentifier ?? "");
+      bool success = await UserLoginStatusController().login(loginInputData: loginDataModel, loginType: "appleSign");
+      if (!success) {
+        Toast().showCenter(msg: "請先至註冊頁面,進行Apple註冊");
       }
     }
   }

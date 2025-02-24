@@ -101,7 +101,7 @@ class UserService extends ApiClient {
   Future<ProfileData> requestUserDataByEmail(String email, String password, {String loginType = "normalSign"}) async {
     ProfileData userdata = ProfileData(uid: "-1");
     var sha256Password;
-    if (loginType == "googleSign") {
+    if (loginType == "googleSign" || loginType == "appleSign") {
       sha256Password = password;
     } else if (loginType == "normalSign") {
       sha256Password = sha256.convert(utf8.encode(password));
@@ -172,6 +172,22 @@ class UserService extends ApiClient {
     print("googleSignUpUser : $responseData");
 
     return responseData;
+  }
+
+  /// Apple登録
+  //param
+  Future<bool> appleSignUp({required String uid, required String name}) async {
+    Map<String, dynamic> body = {
+      "uid": uid,
+      "password": uid,
+      "name": name,
+      "isEmailVerified": true,
+    };
+    String responseData = await apiPush('/appleSignUpUser', body: body);
+
+    print("appleSignUp : $responseData");
+
+    return responseData == "true" ? true : false;
   }
 
   /// 普通登録

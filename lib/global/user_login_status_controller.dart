@@ -90,12 +90,12 @@ class UserLoginStatusController {
     }
   }
 
-  ///loginType = normalSign , googleSign
+  ///loginType = normalSign , googleSign, appleSign
   Future<bool> login({required LoginDataModel loginInputData, String loginType = "normalSign"}) async {
     bool loginDataGetSuccess = false;
 
     /// ユーザデータ取得
-    ///loginType = normalSign , googleSign
+    ///loginType = normalSign , googleSign, appleSign
     ProfileData requestUserData = await UserService().requestUserDataByEmail(
       loginInputData.account,
       loginInputData.pwd,

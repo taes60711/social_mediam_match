@@ -84,7 +84,7 @@ class ChatRoomManagerBtmSheet extends BaseBottomSheet {
           iconData: FontAwesomeIcons.userLock,
           text: "封鎖用戶",
           onPress: () async {
-            HomeGlobalViewModel().blockUser(userData: friendData, chatRoomRender: ref.read(friendPageRender.notifier).state);
+            HomeGlobalViewModel().blockUser(userData: friendData, isInChatRoom: true);
           },
         ),
         SizedBox(height: ScreenSize.fitPxWidth(15)),
