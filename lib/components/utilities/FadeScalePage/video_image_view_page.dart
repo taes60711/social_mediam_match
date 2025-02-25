@@ -11,6 +11,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../global.dart';
 import '../../../models/rich_text_format.dart';
+import '../../../services/image_service.dart';
 import '../appBar/basic_top_bar.dart';
 import '../common_scaffold.dart';
 import '../loading.dart';
@@ -39,70 +40,55 @@ class VideoImageViewPage extends BaseFadeScalePage {
     return CommonScaffold(
       type: PageType.window,
       child: isInit
-          ? Stack(
-              alignment: Alignment.center,
-              children: [
-                GestureDetector(
-                  onVerticalDragEnd: (details) {
-                    if (details.velocity.pixelsPerSecond.dy > 0) {
-                      closePage();
-                    }
-                  },
-                  onHorizontalDragEnd: (details) {
-                    if (details.velocity.pixelsPerSecond.dx < 0) {
-                      if (fileUrl.length - 1 > index) {
-                        index++;
-                      }
-                    } else {
-                      if (index > 0) {
-                        index--;
-                      }
-                    }
-
-                    render();
-                  },
-                  child: Builder(
-                    builder: (context) {
-                      return fileUrl[index].contains("youtube")
-                          ? YtVideoWidget(
-                              videoUrl: fileUrl[index],
-                            )
-                          : ImageWidget(
-                              img: fileUrl[index],
-                            );
-                    },
-                  ),
-                ),
-
-                /// topBar
-                Positioned(
-                  top: 0,
-                  child: AnimatedOpacity(
-                    opacity: isMaskAppear ? 1 : 0,
-                    duration: const Duration(milliseconds: 300),
-                    child: Container(
-                      padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(35)),
-                      color: Colors.black.withOpacity(.6),
-                      child: BaseTopBar(
-                        backFunc: () => closeView(),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+          ? Builder(
+              builder: (context) {
+                return fileUrl[index].contains("youtube")
+                    ? YtVideoWidget(
+                        videoUrl: fileUrl[index],
+                        closePage: () => closePage(),
+                        nextPage: (bool value) {
+                          if (fileUrl.length - 1 > index) {
+                            index++;
+                            render();
+                          }
+                        },
+                        backPage: (bool value) {
+                          print(index);
+                          if (index > 0) {
+                            index--;
+                            render();
+                          }
+                        },
+                      )
+                    : ImageWidget(
+                        img: fileUrl[index],
+                        closePage: () => closePage(),
+                        nextPage: (bool value) {
+                          if (fileUrl.length - 1 > index) {
+                            index++;
+                            render();
+                          }
+                        },
+                        backPage: (bool value) {
+                          if (index > 0) {
+                            index--;
+                            render();
+                          }
+                        },
+                      );
+              },
             )
           : Container(),
     );
   }
-
-  void closeView() {
-    closePage();
-  }
 }
 
 class ImageWidget extends StatefulWidget {
+  final Function closePage;
   final String img;
-  const ImageWidget({super.key, required this.img});
+  final Function(bool value) nextPage;
+  final Function(bool value) backPage;
+  const ImageWidget({super.key, required this.img, required this.closePage, required this.nextPage, required this.backPage});
 
   @override
   State<ImageWidget> createState() => _ImageWidgetState();
@@ -110,7 +96,10 @@ class ImageWidget extends StatefulWidget {
 
 class _ImageWidgetState extends State<ImageWidget> {
   PhotoViewController photoViewController = PhotoViewController();
+
+  bool canUseScaleClosePage = false;
   bool isZooming = true;
+  bool isMaskAppear = true;
   Timer timer = Timer(Duration.zero, () {});
   String imgUrl = "";
 
@@ -121,43 +110,122 @@ class _ImageWidgetState extends State<ImageWidget> {
   }
 
   @override
-  void dispose() {
-    closeView();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     startView();
 
     /// 画像ビュー
-    return PhotoView.customChild(
-      onScaleEnd: (context, details, controllerValue) {
-        if (controllerValue.scale! < 1 && details.pointerCount != 0) {
-          /// 當大小縮小至１&以下且雙指的情況自動變回１
-          scaleToNormal();
-        }
-      },
-      backgroundDecoration: BoxDecoration(color: AppColors.transparent),
-      controller: photoViewController,
-      child: GestureDetector(
-        onDoubleTap: () {
-          if (!isZooming) {
-            if (photoViewController.scale! >= 2) {
-              /// 當圖片大小大於２時 縮小回１
-              zoomImageFunc(zoomType: "toMin");
-            } else {
-              zoomImageFunc(zoomType: "toLarge");
-            }
-          }
-        },
-        child: CachedNetworkImage(
-          imageUrl: imgUrl,
-          placeholder: (context, url) {
-            return const Loading();
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        /// 画像ビュー
+        PhotoView.customChild(
+          onTapUp: (context, details, controllerValue) {
+            isMaskAppear = !isMaskAppear;
+            setState(() {});
           },
+          onScaleEnd: (context, details, controllerValue) {
+            print(details);
+            if (controllerValue.scale! < 1 && details.pointerCount != 0) {
+              /// 當大小縮小至１&以下且雙指的情況自動變回１
+              scaleToNormal();
+            } else if (photoViewController.scale! <= 1 && details.pointerCount == 0 && canUseScaleClosePage) {
+              if (details.velocity.pixelsPerSecond.dx < -800) {
+                widget.nextPage(true);
+                print("next file");
+              } else if (details.velocity.pixelsPerSecond.dx > 800) {
+                widget.backPage(true);
+                print("back file");
+              } else if (details.velocity.pixelsPerSecond.dy.abs() > 800) {
+                /// 上下滑動關閉圖片視窗
+                closeView();
+              }
+            } else if (controllerValue.scale! > 1) {
+              canUseScaleClosePage = false;
+            }
+          },
+          backgroundDecoration: BoxDecoration(color: AppColors.transparent),
+          controller: photoViewController,
+          child: GestureDetector(
+            onDoubleTap: () {
+              if (!isZooming) {
+                if (photoViewController.scale! >= 2) {
+                  /// 當圖片大小大於２時 縮小回１
+                  zoomImageFunc(zoomType: "toMin");
+                } else {
+                  zoomImageFunc(zoomType: "toLarge");
+                }
+              }
+            },
+            child: CachedNetworkImage(
+              imageUrl: imgUrl,
+              placeholder: (context, url) {
+                return const Loading();
+              },
+            ),
+          ),
         ),
-      ),
+
+        /// topBar
+        Positioned(
+          top: 0,
+          child: AnimatedOpacity(
+            opacity: isMaskAppear ? 1 : 0,
+            duration: const Duration(milliseconds: 300),
+            child: Container(
+              padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(35)),
+              color: Colors.black.withOpacity(.6),
+              child: BaseTopBar(
+                backFunc: () => closeView(),
+              ),
+            ),
+          ),
+        ),
+
+        /// bottomBar
+        Positioned(
+          bottom: 0,
+          child: AnimatedOpacity(
+            opacity: isMaskAppear ? 1 : 0,
+            duration: const Duration(milliseconds: 300),
+            child: Container(
+              height: ScreenSize.fitPxWidth(90),
+              padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(10)),
+              width: ScreenSize.width,
+              color: Colors.black.withOpacity(.6),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Expanded(
+                    child: SizedBox(width: 1),
+                  ),
+                  Expanded(
+                    child: iconBtnWidget(
+                      onPress: () {
+                        ///　画像シェアする
+                        ImageService().shareImage(imgUrl);
+                      },
+                      icon: FontAwesomeIcons.arrowUpFromBracket,
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(right: ScreenSize.fitPxWidth(20)),
+                      alignment: Alignment.topRight,
+                      child: iconBtnWidget(
+                        onPress: () {
+                          ///　画像ダウンロードする
+                          ImageService().saveImageToLocal(imgUrl);
+                        },
+                        icon: FontAwesomeIcons.download,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -168,17 +236,11 @@ class _ImageWidgetState extends State<ImageWidget> {
       imgUrl = widget.img;
     }
 
+    canUseScaleClosePage = true;
     print(imgUrl);
     setState(() {});
     await Future.delayed(const Duration(milliseconds: 300));
     isZooming = false;
-  }
-
-  void closeView() {
-    if (timer.isActive) {
-      photoViewController.scale = 1;
-      timer.cancel();
-    }
   }
 
   void zoomImageFunc({required String zoomType}) {
@@ -217,13 +279,45 @@ class _ImageWidgetState extends State<ImageWidget> {
 
   void scaleToNormal() {
     photoViewController.scale = 1;
+    Future.delayed(const Duration(milliseconds: 300)).then((value) => canUseScaleClosePage = true);
+  }
+
+  void closeView() {
+    if (timer.isActive) {
+      photoViewController.scale = 1;
+      timer.cancel();
+    }
+
+    widget.closePage();
+  }
+
+  Widget iconBtnWidget({required IconData icon, required Function onPress}) {
+    return MainBtn(
+      onPress: () {
+        onPress();
+      },
+      child: Container(
+        width: ScreenSize.fitPxWidth(40),
+        height: ScreenSize.fitPxWidth(40),
+        color: AppColors.transparent,
+        child: Icon(
+          icon,
+          size: ScreenSize.fitPxWidth(20),
+          color: AppColors.whiteColor,
+        ),
+      ),
+    );
   }
 }
 
 //Yt Video
 class YtVideoWidget extends StatefulWidget {
   final String videoUrl;
-  const YtVideoWidget({super.key, required this.videoUrl});
+  final Function closePage;
+  final Function(bool value) nextPage;
+  final Function(bool value) backPage;
+  const YtVideoWidget(
+      {super.key, required this.videoUrl, required this.closePage, required this.nextPage, required this.backPage});
 
   @override
   State<YtVideoWidget> createState() => _YtVideoWidgetState();
@@ -243,60 +337,92 @@ class _YtVideoWidgetState extends State<YtVideoWidget> {
   }
 
   @override
-  void dispose() {
-    closeView();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return init
-        ? CommonScaffold(
-            child: Center(
-              child: YoutubePlayerBuilder(
-                player: YoutubePlayer(
-                  controller: ytController,
-                  bottomActions: [
-                    PlaybackSpeedButton(
-                      icon: Icon(
-                        FontAwesomeIcons.gear,
-                        size: ScreenSize.fontSize18,
-                        color: AppColors.whiteColor,
+        ? GestureDetector(
+            onScaleEnd: (details) {
+              if (!isFull) {
+                if (details.velocity.pixelsPerSecond.dx < -800) {
+                  widget.nextPage(true);
+                  print("next file");
+                } else if (details.velocity.pixelsPerSecond.dx > 800) {
+                  widget.backPage(true);
+                  print("back file");
+                } else if (details.velocity.pixelsPerSecond.dy.abs() > 800) {
+                  /// 上下滑動關閉圖片視窗
+                  closeView();
+                }
+              }
+              print(details);
+            },
+            child: CommonScaffold(
+              type: PageType.window,
+              child: Stack(
+                children: [
+                  Center(
+                    child: YoutubePlayerBuilder(
+                      player: YoutubePlayer(
+                        controller: ytController,
+                        bottomActions: [
+                          PlaybackSpeedButton(
+                            icon: Icon(
+                              FontAwesomeIcons.gear,
+                              size: ScreenSize.fontSize18,
+                              color: AppColors.whiteColor,
+                            ),
+                          ),
+                          ProgressBar(isExpanded: true),
+                          RemainingDuration(),
+                          GestureDetector(
+                            onTap: () {
+                              final Uri _url = Uri.parse("https://www.youtube.com/watch?v=${ytId}");
+                              launchUrl(_url);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              child: Icon(
+                                FontAwesomeIcons.windowRestore,
+                                size: ScreenSize.fontSize18,
+                                color: AppColors.whiteColor,
+                              ),
+                            ),
+                          ),
+                          MainBtn(
+                            onPress: () {
+                              isFull = !isFull;
+                              setState(() {});
+
+                              ytController.toggleFullScreenMode();
+                            },
+                            child: Icon(
+                              Icons.fullscreen,
+                              color: AppColors.whiteColor,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    ProgressBar(isExpanded: true),
-                    RemainingDuration(),
-                    GestureDetector(
-                      onTap: () {
-                        final Uri _url = Uri.parse("https://www.youtube.com/watch?v=${ytId}");
-                        launchUrl(_url);
+                      builder: (context, player) {
+                        return player;
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Icon(
-                          FontAwesomeIcons.windowRestore,
-                          size: ScreenSize.fontSize18,
-                          color: AppColors.whiteColor,
+                    ),
+                  ),
+
+                  /// topBar
+                  Positioned(
+                    top: 0,
+                    child: AnimatedOpacity(
+                      opacity: !isFull ? 1 : 0,
+                      duration: const Duration(milliseconds: 300),
+                      child: Container(
+                        padding: EdgeInsets.only(top: ScreenSize.fitPxWidth(35)),
+                        color: Colors.black.withOpacity(.6),
+                        child: BaseTopBar(
+                          backFunc: () => closeView(),
                         ),
                       ),
                     ),
-                    MainBtn(
-                      onPress: () {
-                        isFull = !isFull;
-                        setState(() {});
-                        ();
-                        ytController.toggleFullScreenMode();
-                      },
-                      child: Icon(
-                        Icons.fullscreen,
-                        color: AppColors.whiteColor,
-                      ),
-                    ),
-                  ],
-                ),
-                builder: (context, player) {
-                  return player;
-                },
+                  ),
+                ],
               ),
             ),
           )
@@ -331,5 +457,6 @@ class _YtVideoWidgetState extends State<YtVideoWidget> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    widget.closePage();
   }
 }
