@@ -58,7 +58,7 @@ class _InitialpageState extends ConsumerState<Initialpage> {
   Future<void> allFuncinit() async {
     ///MARK: 開發用Class（上架跟本地端開發的網址不同）
     //
-    await APIHttpController().init(devType: DevType.debug);
+    await APIHttpController().init(devType: DevType.release);
     //
     ///
 
