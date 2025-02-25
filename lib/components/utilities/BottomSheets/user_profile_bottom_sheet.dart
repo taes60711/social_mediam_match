@@ -43,7 +43,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
   @override
   Future<void> initState(WidgetRef ref) async {
     isUserDeleted = userData.uid == "-1" ? true : false;
-
+    render();
     if (!isUserDeleted) {
       ProfileData myUserData = ref.watch(loginUserData);
 
@@ -62,6 +62,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
     if (isUserDeleted) {
       return _noUserDataWidget();
     }
+
     return SingleChildScrollView(
       child: Column(
         children: [

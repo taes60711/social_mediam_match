@@ -18,8 +18,10 @@ class PostByView extends ConsumerStatefulWidget {
 
 class _PostByViewState extends ConsumerState<PostByView> {
   late PostViewModel viewModel;
+
   @override
   void initState() {
+    print("PostByView init");
     viewModel = PostViewModel(ref: ref, context: context, render: () => setState(() {}));
     super.initState();
   }

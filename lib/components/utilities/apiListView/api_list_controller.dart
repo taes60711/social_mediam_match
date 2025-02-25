@@ -41,6 +41,7 @@ class APIListControllerNotifier<R> extends StateNotifier<APIListController<R>> {
   }
 
   Future<void> reload() async {
+    print(state);
     page = 0;
     state.listData = await state.apiFunc(page, size);
     page++;
@@ -74,8 +75,11 @@ class APIListControllerNotifier<R> extends StateNotifier<APIListController<R>> {
     }
   }
 
-  Future<void> init(Future<List<R>> Function(int page, int size) initApiFunc) async {
+  void initApIFunc(Future<List<R>> Function(int page, int size) initApiFunc) {
     state.apiFunc = initApiFunc;
+  }
+
+  Future<void> init() async {
     state.listData = await state.apiFunc(page, size);
     page++;
     await _preLoad();

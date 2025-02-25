@@ -60,7 +60,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Your app needs access to the photo library to save photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>讓你可發佈相機相簿內的圖像。</string>
+	<string>請允許存取您的相簿，以便發佈貼文。</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>NSUserActivityTypeBrowsingWeb</string>

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -453,21 +452,29 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
 
   ///TopBar
   Widget userBar() {
-    return Container(
-      padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(8)),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: AppColors.greyColor98, width: 0.5),
+    return Builder(builder: (context) {
+      return Container(
+        padding: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(8)),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: AppColors.greyColor98, width: 0.5),
+          ),
         ),
-      ),
-      child: ChatRoomBar(
-        backFunc: () => closePage(),
-        userData: roomData.userData,
-        rightFunc: () {
-          ChatRoomManagerBtmSheet(roomId: roomData.roomId, friendData: roomData.userData).show(context);
-        },
-      ),
-    );
+        child: Row(
+          children: [
+            Expanded(
+              child: ChatRoomBar(
+                backFunc: () => closePage(),
+                userData: roomData.userData,
+                rightFunc: () {
+                  ChatRoomManagerBtmSheet(roomId: roomData.roomId, friendData: roomData.userData).show(context);
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   /// 未読数リセット

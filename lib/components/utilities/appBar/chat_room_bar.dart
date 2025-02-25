@@ -12,14 +12,14 @@ import '../style/app_colors.dart';
 
 class ChatRoomBar extends StatelessWidget {
   final Function? backFunc;
-  final Function? rightFunc;
+  final Function rightFunc;
   final dynamic leftWidget;
   final ProfileData userData;
   final TextStyle? titleStyle;
   const ChatRoomBar({
     super.key,
     this.leftWidget,
-    this.rightFunc,
+    required this.rightFunc,
     required this.userData,
     this.backFunc,
     this.titleStyle,
@@ -65,9 +65,7 @@ class ChatRoomBar extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            if (rightFunc != null) {
-              rightFunc!();
-            }
+            rightFunc();
           },
           child: Container(
             height: ScreenSize.fitPxWidth(40),

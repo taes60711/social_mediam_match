@@ -60,6 +60,7 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
 
   Future<void> init() async {
     await Future.delayed(Duration.zero);
+    ref.read(widget.listControllerProvider.notifier).initApIFunc(widget.apiFunc);
 
     ///init前に
     if (ref.read(widget.listControllerProvider).listData.isEmpty) {
@@ -80,11 +81,8 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
       ref.read(widget.listControllerProvider.notifier).create(widget.size);
       setState(() {});
       if (widget.initWidget == null) {
-        ///実際的init
-        await ref.read(widget.listControllerProvider.notifier).init(widget.apiFunc);
-        if (mounted) {
-          setState(() {});
-        }
+        await ref.read(widget.listControllerProvider.notifier).init();
+        setState(() {});
       }
     });
   }
