@@ -92,7 +92,7 @@ class PostViewUtilities {
       },
       child: Container(
         width: ScreenSize.width,
-        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(12)),
+        padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(16)),
         margin: EdgeInsets.only(bottom: ScreenSize.fitPxWidth(12)),
         color: AppColors.black37,
         child: Column(

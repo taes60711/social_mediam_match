@@ -9,22 +9,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:social_mediam_match/components/utilities/FadeScalePage/video_image_view_page.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/dialog/cant_touch_loading_dialog.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 import 'package:social_mediam_match/components/utilities/toast.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../../global.dart';
 import '../../../../models/post_model.dart';
 import '../../../../models/rich_text_format.dart';
 import '../../../../provider/post/post_provider.dart';
 import '../../../../provider/post/post_view_model.dart';
 import '../../../../services/image_service.dart';
-import '../../../utilities/FadeScalePage/image_view_page.dart';
-import '../../../utilities/FadeScalePage/video_view_page.dart';
 import '../../../utilities/bottomSheets/base_bottom_sheet.dart';
 import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
 import '../../../utilities/dialog/confirm_dialog.dart';
@@ -40,6 +37,8 @@ class PostCreatePage extends BaseFadeScalePage {
 
   TextEditingController mainMessageController = TextEditingController();
   List<String> fileMessage = [];
+
+  ScrollController scrollController = ScrollController();
 
   @override
   bool needWaitOpenPage() {
@@ -165,7 +164,9 @@ class PostCreatePage extends BaseFadeScalePage {
 
                                   fileMessage.add(httpImg);
                                   CanTouchScreenLoadingDialog().close();
+
                                   render();
+                                  await scrollControllerMoveToLastPos(scrollController);
                                 }
                               }
                             },
@@ -201,7 +202,9 @@ class PostCreatePage extends BaseFadeScalePage {
                                       return false;
                                     }
                                     fileMessage.add(imgUrl);
+
                                     render();
+                                    await scrollControllerMoveToLastPos(scrollController);
                                   }
 
                                   return true;
@@ -256,7 +259,9 @@ class PostCreatePage extends BaseFadeScalePage {
                                     }
                                     String ytURL = 'https://www.youtube.com/embed/$ytId';
                                     fileMessage.add(ytURL);
+
                                     render();
+                                    await scrollControllerMoveToLastPos(scrollController);
                                   }
 
                                   return true;
@@ -281,15 +286,28 @@ class PostCreatePage extends BaseFadeScalePage {
     );
   }
 
+  Future<void> scrollControllerMoveToLastPos(ScrollController scrollController) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
   Widget fileMessageEditor() {
     return SingleChildScrollView(
+      controller: scrollController,
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: fileMessage.map((e) {
+        children: fileMessage.asMap().entries.map((e) {
+          int index = e.key;
+          String value = e.value;
+
           String messageType = "null";
 
-          if (e == "") {
-          } else if (e.contains("youtube")) {
+          if (value == "") {
+          } else if (value.contains("youtube")) {
             messageType = "ytVideo";
           } else {
             messageType = "img";
@@ -297,72 +315,73 @@ class PostCreatePage extends BaseFadeScalePage {
 
           switch (messageType) {
             case "ytVideo":
-              String ytId = RichTextFormat().getYtvideoID(e);
+              String ytId = RichTextFormat().getYtvideoID(value);
+              String ytImag = "https://img.youtube.com/vi/${ytId}/maxresdefault.jpg";
               return messageContainer(
                 deleteFunc: () {
-                  fileMessage.remove('https://www.youtube.com/embed/$ytId');
-                  render();
-                },
-                child: YoutubePlayer(
-                  controller: YoutubePlayerController(
-                    initialVideoId: ytId,
-                    flags: const YoutubePlayerFlags(
-                      disableDragSeek: true,
-                      autoPlay: false,
-                      mute: false,
-                    ),
-                  ),
-                  onReady: () => {},
-                  bottomActions: [
-                    PlaybackSpeedButton(
-                      icon: Icon(
-                        FontAwesomeIcons.gear,
-                        size: ScreenSize.fontSize18,
-                        color: AppColors.whiteColor,
-                      ),
-                    ),
-                    ProgressBar(isExpanded: true),
-                    RemainingDuration(),
-                    GestureDetector(
-                      onTap: () {
-                        final Uri _url = Uri.parse("https://www.youtube.com/watch?v=$ytId");
-                        launchUrl(_url);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Icon(
-                          FontAwesomeIcons.windowRestore,
-                          size: ScreenSize.fontSize18,
-                          color: AppColors.whiteColor,
-                        ),
-                      ),
-                    ),
-                    MainBtn(
-                      onPress: () {
-                        VideoViewPage(ytId: ytId).show(context);
-                      },
-                      child: Icon(
-                        Icons.fullscreen,
-                        color: AppColors.whiteColor,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            case "img":
-              String realImg = e;
-              if (e.contains(APIHttpController.databaseDomainStr)) {
-                realImg = RichTextFormat().mappingIPAndPort(e);
-              }
-
-              return messageContainer(
-                deleteFunc: () {
-                  fileMessage.remove(e);
+                  fileMessage.removeAt(index);
                   render();
                 },
                 child: GestureDetector(
                   onTap: () {
-                    ImageViewPage(imgUrl: realImg).show(context);
+                    VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      CachedNetworkImage(
+                        imageUrl: ytImag,
+                        width: ScreenSize.width,
+                        height: ScreenSize.fitPxWidth(190),
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) {
+                          return Shimmer.fromColors(
+                            baseColor: AppColors.greyColor98,
+                            highlightColor: AppColors.greyColor98.withOpacity(.7),
+                            child: Container(
+                              width: ScreenSize.width,
+                              height: ScreenSize.fitPxWidth(120),
+                              decoration: BoxDecoration(color: AppColors.greyColor98),
+                            ),
+                          );
+                        },
+                      ),
+                      Opacity(
+                        opacity: .7,
+                        child: Container(
+                          width: ScreenSize.fitPxWidth(50),
+                          height: ScreenSize.fitPxWidth(50),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.black28,
+                          ),
+                          child: Center(
+                            child: Icon(
+                              FontAwesomeIcons.play,
+                              size: ScreenSize.fitPxWidth(20),
+                              color: AppColors.whiteColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            case "img":
+              String realImg = value;
+              if (value.contains(APIHttpController.databaseDomainStr)) {
+                realImg = RichTextFormat().mappingIPAndPort(value);
+              }
+
+              return messageContainer(
+                deleteFunc: () {
+                  fileMessage.removeAt(index);
+                  render();
+                },
+                child: GestureDetector(
+                  onTap: () {
+                    VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
                   },
                   child: CachedNetworkImage(
                     imageUrl: realImg,
