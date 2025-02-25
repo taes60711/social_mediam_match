@@ -54,7 +54,7 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
   @override
   Future<void> initState(WidgetRef ref) async {
     ProfileData myUserData = ref.watch(loginUserData);
-    chatRoomWSModel.init(ref, () => render(), userId: myUserData.uid, roomData: roomData);
+    chatRoomWSModel.init(ref, () => render(), () => closePage(), userId: myUserData.uid, roomData: roomData);
     HomeGlobalViewModel().bottomBarHideStateChage(false);
 
     WidgetsBinding.instance.addObserver(this);
@@ -69,6 +69,8 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
     /// 未読数リセット
     unreadReset();
     chatRoomWSModel.closeRoom();
+
+    print("chatRoom dispose");
   }
 
   void didChangeScreenState(ScreenStateEvent event) {

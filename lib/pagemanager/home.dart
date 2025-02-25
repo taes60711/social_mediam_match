@@ -28,7 +28,6 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
       ref: ref,
       render: () => setState(() {}),
     );
-
     super.initState();
   }
 

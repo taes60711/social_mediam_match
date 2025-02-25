@@ -5,6 +5,7 @@ import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/global/home_global_view_model.dart';
+import 'package:social_mediam_match/provider/friend/chat_room_ws_model.dart';
 import '../../../../models/friend_model.dart';
 import '../../../../models/user_model.dart';
 import '../../../../provider/account/user_provider.dart';
@@ -47,7 +48,8 @@ class ChatRoomManagerBtmSheet extends BaseBottomSheet {
                 frinedList.removeAt(deleteFriendDataIndex);
                 ref.read(frinedListProvider.notifier).update((state) => frinedList);
                 ref.read(friendPageRender.notifier).state();
-                HomeGlobalViewModel().popUntiltFirst();
+
+                ChatRoomWSModel().deleteFriendClospage();
               }
               return;
             }
@@ -67,12 +69,12 @@ class ChatRoomManagerBtmSheet extends BaseBottomSheet {
 
                 FriendListModel deleteFriend = frinedList[deleteFriendDataIndex];
 
-                await FriendService().deleteFriend(deleteFriend.roomId, deleteFriend.memberId);
-
                 frinedList.removeAt(deleteFriendDataIndex);
                 ref.read(frinedListProvider.notifier).update((state) => frinedList);
                 ref.read(friendPageRender.notifier).state();
-                HomeGlobalViewModel().popUntiltFirst();
+                await FriendService().deleteFriend(deleteFriend.roomId, deleteFriend.memberId);
+
+                ChatRoomWSModel().deleteFriendClospage();
               }
 
               return;

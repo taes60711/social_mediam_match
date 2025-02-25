@@ -16,6 +16,7 @@ import '../enum/user_block_status_type.dart';
 import '../global.dart';
 import '../models/friend_model.dart';
 import '../pageManager/enum/bottom_bar_path.dart';
+import '../provider/friend/chat_room_ws_model.dart';
 import '../provider/friend/chat_ws_model.dart';
 import '../services/app_links_service.dart';
 import '../services/black_list_service.dart';
@@ -134,7 +135,7 @@ class HomeGlobalViewModel {
 
                 ref.read(friendPageRender.notifier).state();
                 if (isInChatRoom) {
-                  popUntiltFirst();
+                  ChatRoomWSModel().deleteFriendClospage();
                 }
               }
 
@@ -182,8 +183,9 @@ class HomeGlobalViewModel {
     render();
   }
 
-  void popUntiltFirst() {
+  void popUntiltFirst({WidgetRef? ref}) {
     Navigator.of(globalContext).popUntil((route) => route.isFirst);
+    this.ref = ref!;
   }
 
   void popUntiltFirstThentoPage(BottomBarPath page) {

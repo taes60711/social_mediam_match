@@ -28,6 +28,7 @@ class ChatRoomWSModel {
 
   late WidgetRef ref;
   late Function render;
+  late Function closePage;
   int enterRoomID = -1;
   int roomAllPage = -1;
   int pageNum = 0;
@@ -43,10 +44,11 @@ class ChatRoomWSModel {
   late IOWebSocketChannel _chatroomListChannel;
   Stream<dynamic>? _broadcastStream;
 
-  Future<void> init(WidgetRef ref, Function render, {required String userId, required FriendListModel roomData}) async {
+  Future<void> init(WidgetRef ref, Function render, Function closePage,
+      {required String userId, required FriendListModel roomData}) async {
     this.ref = ref;
     this.render = render;
-
+    this.closePage = closePage;
     if (enterRoomID != -1) {
       closeRoom();
     }
@@ -249,5 +251,11 @@ class ChatRoomWSModel {
     ///  画面のメッセージを更新する
     inBackground = false;
     updatePageMsg();
+  }
+
+  /// 正確的にクロスチャットルーム（chat_roomのdispose発生用に）
+  void deleteFriendClospage() {
+    closePage();
+    HomeGlobalViewModel().popUntiltFirst();
   }
 }
