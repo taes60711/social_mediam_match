@@ -101,6 +101,8 @@ class _ImageWidgetState extends State<ImageWidget> {
   bool isZooming = true;
   bool isMaskAppear = true;
   Timer timer = Timer(Duration.zero, () {});
+
+  Timer maskTimer = Timer(Duration.zero, () {});
   String imgUrl = "";
 
   @override
@@ -112,6 +114,7 @@ class _ImageWidgetState extends State<ImageWidget> {
   @override
   Widget build(BuildContext context) {
     startView();
+    autoCloseMask();
 
     /// 画像ビュー
     return Stack(
@@ -229,6 +232,16 @@ class _ImageWidgetState extends State<ImageWidget> {
     );
   }
 
+  autoCloseMask() async {
+    if (isMaskAppear) {
+      maskTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
+        isMaskAppear = false;
+        setState(() {});
+        maskTimer.cancel();
+      });
+    }
+  }
+
   Future<void> startView() async {
     if (widget.img.contains(APIHttpController.databaseDomainStr)) {
       imgUrl = RichTextFormat().mappingIPAndPort(widget.img);
@@ -237,7 +250,6 @@ class _ImageWidgetState extends State<ImageWidget> {
     }
 
     canUseScaleClosePage = true;
-    print(imgUrl);
     setState(() {});
     await Future.delayed(const Duration(milliseconds: 300));
     isZooming = false;
@@ -286,6 +298,10 @@ class _ImageWidgetState extends State<ImageWidget> {
     if (timer.isActive) {
       photoViewController.scale = 1;
       timer.cancel();
+    }
+    if (maskTimer.isActive) {
+      isMaskAppear = false;
+      maskTimer.cancel();
     }
 
     widget.closePage();
@@ -353,7 +369,6 @@ class _YtVideoWidgetState extends State<YtVideoWidget> {
                   closeView();
                 }
               }
-              print(details);
             },
             child: CommonScaffold(
               type: PageType.window,
