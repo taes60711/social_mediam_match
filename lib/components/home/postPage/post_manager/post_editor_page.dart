@@ -108,8 +108,29 @@ class PostEditorPage extends BaseFadeScalePage {
                   PostModel post = ref.read(choicedPostProvider.notifier).state;
 
                   String fileMessageStr = "[]";
+                  List<String> uploadedfileList = [];
                   if (fileMessage.isNotEmpty) {
-                    fileMessageStr = listToListStr(fileMessage);
+                    await Future.forEach(fileMessage, (file) async {
+                      if (file.contains("editingBase64,")) {
+                        String uid = const Uuid().v1();
+
+                        String imgStr = RichTextFormat().getImage(file);
+
+                        String imageIsExistId = await ImageService().imageIsExist(imgStr);
+
+                        if (imageIsExistId != "-1") {
+                          uid = imageIsExistId;
+                        } else {
+                          await ImageService().saveImg(uid, imgStr);
+                        }
+
+                        String httpImg = "${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/$uid";
+                        uploadedfileList.add(httpImg);
+                      } else {
+                        uploadedfileList.add(file);
+                      }
+                    });
+                    fileMessageStr = listToListStr(uploadedfileList);
                   }
 
                   bool isSucess = await PostService().updatePost(
@@ -120,7 +141,7 @@ class PostEditorPage extends BaseFadeScalePage {
 
                   if (isSucess) {
                     post.mainMessage = mainMessageController.text;
-                    post.fileMessage = fileMessage.where((e) => e.isNotEmpty).toList();
+                    post.fileMessage = uploadedfileList.where((e) => e.isNotEmpty).toList();
                     ref.read(postListController.notifier).editData(dataIndex, post);
 
                     render();
@@ -176,22 +197,7 @@ class PostEditorPage extends BaseFadeScalePage {
                             if (fileMessageLengthCheck()) {
                               String bas64img = await imageChoice();
                               if (bas64img != "") {
-                                CanTouchScreenLoadingDialog().show();
-                                String uid = const Uuid().v1();
-
-                                String imageIsExistId = await ImageService().imageIsExist(bas64img);
-
-                                if (imageIsExistId != "-1") {
-                                  uid = imageIsExistId;
-                                } else {
-                                  await ImageService().saveImg(uid, bas64img);
-                                }
-
-                                String httpImg =
-                                    "${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/$uid";
-
-                                fileMessage.add(httpImg);
-                                CanTouchScreenLoadingDialog().close();
+                                fileMessage.add(bas64img);
 
                                 render();
                                 await scrollControllerMoveToLastPos(scrollController);
@@ -352,7 +358,7 @@ class PostEditorPage extends BaseFadeScalePage {
                 },
                 child: GestureDetector(
                   onTap: () {
-                    VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
+                    VideoImageViewPage(fileStr: fileMessage, initIndex: index).show(context);
                   },
                   child: Stack(
                     alignment: Alignment.center,
@@ -409,25 +415,43 @@ class PostEditorPage extends BaseFadeScalePage {
                 },
                 child: GestureDetector(
                   onTap: () {
-                    VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
+                    VideoImageViewPage(fileStr: fileMessage, initIndex: index).show(context);
                   },
-                  child: CachedNetworkImage(
-                    imageUrl: realImg,
-                    width: ScreenSize.width,
-                    height: ScreenSize.fitPxWidth(190),
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) {
-                      return Shimmer.fromColors(
-                        baseColor: AppColors.greyColor98,
-                        highlightColor: AppColors.greyColor98.withOpacity(.7),
-                        child: Container(
-                          width: ScreenSize.width,
-                          height: ScreenSize.fitPxWidth(120),
-                          decoration: BoxDecoration(color: AppColors.greyColor98),
-                        ),
+                  child: Builder(builder: (context) {
+                    if (realImg.contains("editingBase64,")) {
+                      realImg = RichTextFormat().getImage(realImg);
+
+                      ///　base64画像
+                      return Image.memory(
+                        const Base64Decoder().convert(realImg),
+                        gaplessPlayback: true,
+                        fit: BoxFit.cover,
                       );
-                    },
-                  ),
+                    } else {
+                      if (value.contains(APIHttpController.databaseDomainStr)) {
+                        realImg = RichTextFormat().mappingIPAndPort(value);
+                      }
+
+                      ///　http画像
+                      return CachedNetworkImage(
+                        imageUrl: realImg,
+                        width: ScreenSize.width,
+                        height: ScreenSize.fitPxWidth(190),
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) {
+                          return Shimmer.fromColors(
+                            baseColor: AppColors.greyColor98,
+                            highlightColor: AppColors.greyColor98.withOpacity(.7),
+                            child: Container(
+                              width: ScreenSize.width,
+                              height: ScreenSize.fitPxWidth(120),
+                              decoration: BoxDecoration(color: AppColors.greyColor98),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  }),
                 ),
               );
             default:
@@ -497,7 +521,7 @@ class PostEditorPage extends BaseFadeScalePage {
       result = imgPickerResult;
     }
 
-    return result;
+    return "editingBase64,$result";
   }
 
   bool fileMessageLengthCheck() {

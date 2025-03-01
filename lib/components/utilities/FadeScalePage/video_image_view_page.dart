@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +22,14 @@ import '../style/screen_size.dart';
 import 'base_fade_scale_page.dart';
 
 class VideoImageViewPage extends BaseFadeScalePage {
-  List<String> fileUrl;
+  List<String> fileStr;
   int initIndex;
-  VideoImageViewPage({required this.fileUrl, required this.initIndex});
+  bool needBottomBar;
+  VideoImageViewPage({
+    required this.fileStr,
+    required this.initIndex,
+    this.needBottomBar = true,
+  });
   bool isMaskAppear = true;
   int index = 0;
 
@@ -42,12 +48,12 @@ class VideoImageViewPage extends BaseFadeScalePage {
       child: isInit
           ? Builder(
               builder: (context) {
-                return fileUrl[index].contains("youtube")
+                return fileStr[index].contains("youtube")
                     ? YtVideoWidget(
-                        videoUrl: fileUrl[index],
+                        videoUrl: fileStr[index],
                         closePage: () => closePage(),
                         nextPage: (bool value) {
-                          if (fileUrl.length - 1 > index) {
+                          if (fileStr.length - 1 > index) {
                             index++;
                             render();
                           }
@@ -61,10 +67,10 @@ class VideoImageViewPage extends BaseFadeScalePage {
                         },
                       )
                     : ImageWidget(
-                        img: fileUrl[index],
+                        img: fileStr[index],
                         closePage: () => closePage(),
                         nextPage: (bool value) {
-                          if (fileUrl.length - 1 > index) {
+                          if (fileStr.length - 1 > index) {
                             index++;
                             render();
                           }
@@ -86,9 +92,17 @@ class VideoImageViewPage extends BaseFadeScalePage {
 class ImageWidget extends StatefulWidget {
   final Function closePage;
   final String img;
+  final bool needBottomBar;
   final Function(bool value) nextPage;
   final Function(bool value) backPage;
-  const ImageWidget({super.key, required this.img, required this.closePage, required this.nextPage, required this.backPage});
+  const ImageWidget({
+    super.key,
+    required this.img,
+    required this.closePage,
+    required this.nextPage,
+    required this.backPage,
+    this.needBottomBar = true,
+  });
 
   @override
   State<ImageWidget> createState() => _ImageWidgetState();
@@ -159,12 +173,33 @@ class _ImageWidgetState extends State<ImageWidget> {
                 }
               }
             },
-            child: CachedNetworkImage(
-              imageUrl: imgUrl,
-              placeholder: (context, url) {
-                return const Loading();
-              },
-            ),
+            child: Builder(builder: (context) {
+              if (imgUrl.contains("editingBase64,")) {
+                imgUrl = RichTextFormat().getImage(imgUrl);
+
+                ///　base64画像
+                return Image.memory(
+                  const Base64Decoder().convert(imgUrl),
+                  gaplessPlayback: true,
+                  fit: BoxFit.contain,
+                );
+              } else {
+                if (imgUrl.contains(APIHttpController.databaseDomainStr)) {
+                  imgUrl = RichTextFormat().mappingIPAndPort(imgUrl);
+                }
+
+                ///　http画像
+                return CachedNetworkImage(
+                  imageUrl: imgUrl,
+                  width: ScreenSize.width,
+                  height: ScreenSize.fitPxWidth(190),
+                  fit: BoxFit.contain,
+                  placeholder: (context, url) {
+                    return const Loading();
+                  },
+                );
+              }
+            }),
           ),
         ),
 

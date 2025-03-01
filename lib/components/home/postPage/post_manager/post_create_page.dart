@@ -15,13 +15,11 @@ import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.da
 import 'package:social_mediam_match/components/utilities/dialog/cant_touch_loading_dialog.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
 import 'package:social_mediam_match/components/utilities/toast.dart';
-import 'package:uuid/uuid.dart';
 import '../../../../global.dart';
 import '../../../../models/post_model.dart';
 import '../../../../models/rich_text_format.dart';
 import '../../../../provider/post/post_provider.dart';
 import '../../../../provider/post/post_view_model.dart';
-import '../../../../services/image_service.dart';
 import '../../../utilities/bottomSheets/base_bottom_sheet.dart';
 import '../../../utilities/FadeScalePage/base_fade_scale_page.dart';
 import '../../../utilities/dialog/confirm_dialog.dart';
@@ -147,24 +145,9 @@ class PostCreatePage extends BaseFadeScalePage {
                             onTap: () async {
                               if (fileMessageLengthCheck()) {
                                 String bas64img = await imageChoice();
+
                                 if (bas64img != "") {
-                                  CanTouchScreenLoadingDialog().show();
-                                  String uid = const Uuid().v1();
-
-                                  String imageIsExistId = await ImageService().imageIsExist(bas64img);
-
-                                  if (imageIsExistId != "-1") {
-                                    uid = imageIsExistId;
-                                  } else {
-                                    await ImageService().saveImg(uid, bas64img);
-                                  }
-
-                                  String httpImg =
-                                      "${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/$uid";
-
-                                  fileMessage.add(httpImg);
-                                  CanTouchScreenLoadingDialog().close();
-
+                                  fileMessage.add(bas64img);
                                   render();
                                   await scrollControllerMoveToLastPos(scrollController);
                                 }
@@ -324,7 +307,7 @@ class PostCreatePage extends BaseFadeScalePage {
                 },
                 child: GestureDetector(
                   onTap: () {
-                    VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
+                    VideoImageViewPage(fileStr: fileMessage, initIndex: index).show(context);
                   },
                   child: Stack(
                     alignment: Alignment.center,
@@ -370,9 +353,6 @@ class PostCreatePage extends BaseFadeScalePage {
               );
             case "img":
               String realImg = value;
-              if (value.contains(APIHttpController.databaseDomainStr)) {
-                realImg = RichTextFormat().mappingIPAndPort(value);
-              }
 
               return messageContainer(
                 deleteFunc: () {
@@ -381,25 +361,43 @@ class PostCreatePage extends BaseFadeScalePage {
                 },
                 child: GestureDetector(
                   onTap: () {
-                    VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
+                    VideoImageViewPage(fileStr: fileMessage, initIndex: index).show(context);
                   },
-                  child: CachedNetworkImage(
-                    imageUrl: realImg,
-                    width: ScreenSize.width,
-                    height: ScreenSize.fitPxWidth(190),
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) {
-                      return Shimmer.fromColors(
-                        baseColor: AppColors.greyColor98,
-                        highlightColor: AppColors.greyColor98.withOpacity(.7),
-                        child: Container(
-                          width: ScreenSize.width,
-                          height: ScreenSize.fitPxWidth(120),
-                          decoration: BoxDecoration(color: AppColors.greyColor98),
-                        ),
+                  child: Builder(builder: (context) {
+                    if (realImg.contains("editingBase64,")) {
+                      realImg = RichTextFormat().getImage(realImg);
+
+                      ///　base64画像
+                      return Image.memory(
+                        const Base64Decoder().convert(realImg),
+                        gaplessPlayback: true,
+                        fit: BoxFit.cover,
                       );
-                    },
-                  ),
+                    } else {
+                      if (value.contains(APIHttpController.databaseDomainStr)) {
+                        realImg = RichTextFormat().mappingIPAndPort(value);
+                      }
+
+                      ///　http画像
+                      return CachedNetworkImage(
+                        imageUrl: realImg,
+                        width: ScreenSize.width,
+                        height: ScreenSize.fitPxWidth(190),
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) {
+                          return Shimmer.fromColors(
+                            baseColor: AppColors.greyColor98,
+                            highlightColor: AppColors.greyColor98.withOpacity(.7),
+                            child: Container(
+                              width: ScreenSize.width,
+                              height: ScreenSize.fitPxWidth(120),
+                              decoration: BoxDecoration(color: AppColors.greyColor98),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  }),
                 ),
               );
             default:
@@ -477,7 +475,7 @@ class PostCreatePage extends BaseFadeScalePage {
       result = imgPickerResult;
     }
 
-    return result;
+    return "editingBase64,$result";
   }
 
   Future<bool> postExitCheck() async {

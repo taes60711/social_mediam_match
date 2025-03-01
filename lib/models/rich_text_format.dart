@@ -37,7 +37,7 @@ class RichTextFormat {
             await Future.forEach(document.body?.querySelectorAll('*') ?? [], (e) async {
               if (e.localName == 'img') {
                 if (e.outerHtml.contains("base64,")) {
-                  String resultString = _getImage(e.outerHtml);
+                  String resultString = getImage(e.outerHtml);
 
                   String uid = const Uuid().v1();
 
@@ -131,7 +131,7 @@ class RichTextFormat {
               _htmlString = _htmlString.replaceAll(element.innerHtml, pwithSpanString);
             }
             if (element.innerHtml.contains("${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/")) {
-              String imgURL = _getImage(element.innerHtml);
+              String imgURL = getImage(element.innerHtml);
               String imgUId = imgURL.substring('${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/'.length);
               String base64Str = await ImageService().getBase64Img(imgUId);
               String base64ImgHtmlStr = element.innerHtml.replaceAll(imgURL, "data:image/jpeg;base64,$base64Str");
@@ -191,7 +191,7 @@ class RichTextFormat {
         if (!isImage) {
           if (element.innerHtml.contains("img")) {
             isImage = true;
-            resultString = _getImage(element.innerHtml);
+            resultString = getImage(element.innerHtml);
           } else if (element.localName == "iframe") {
             String ytId = RichTextFormat().getYtvideoID(element.outerHtml);
             isImage = true;
@@ -207,7 +207,7 @@ class RichTextFormat {
     };
   }
 
-  String _getImage(String htmlString) {
+  String getImage(String htmlString) {
     int startIndex = -1;
 
     if (htmlString.contains('src="data:image/')) {
@@ -217,14 +217,21 @@ class RichTextFormat {
       }
     } else if (htmlString.contains('src="')) {
       startIndex = htmlString.indexOf('src="') + 5;
+    } else if (htmlString.contains('editingBase64,')) {
+      startIndex = 'editingBase64,'.length;
     }
 
     if (startIndex != -1) {
       int endIndex = htmlString.indexOf('"', startIndex);
+      if (htmlString.contains('editingBase64,')) {
+        endIndex = htmlString.length;
+      }
+
       if (endIndex != -1) {
         return htmlString.substring(startIndex, endIndex);
       }
     }
+
     return '';
   }
 

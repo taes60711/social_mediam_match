@@ -188,7 +188,7 @@ class PostViewUtilities {
                   height: data.fileMessage.length == 1 ? ScreenSize.fitPxWidth(180) : null,
                   child: GestureDetector(
                     onTap: () {
-                      VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
+                      VideoImageViewPage(fileStr: fileMessage, initIndex: index).show(context);
                     },
                     child: Stack(
                       alignment: Alignment.center,
@@ -366,7 +366,7 @@ class PostViewUtilities {
                 height: fileMessage.length == 1 ? ScreenSize.fitPxWidth(180) : null,
                 child: GestureDetector(
                   onTap: () {
-                    VideoImageViewPage(fileUrl: fileMessage, initIndex: index).show(context);
+                    VideoImageViewPage(fileStr: fileMessage, initIndex: index).show(context);
                   },
                   child: CachedNetworkImage(
                     imageUrl: realImg,

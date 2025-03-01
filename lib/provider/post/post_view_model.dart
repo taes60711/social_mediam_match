@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:social_mediam_match/models/post_model.dart';
+import 'package:social_mediam_match/models/rich_text_format.dart';
 import 'package:social_mediam_match/services/notification_service.dart';
 import 'package:social_mediam_match/services/user_service.dart';
+import 'package:uuid/uuid.dart';
 import '../../components/home/postPage/post_detail_page.dart';
 import '../../components/home/postPage/post_type_board/post_page_by_type.dart';
 import '../../components/utilities/apiListView/api_list_controller.dart';
@@ -14,6 +16,7 @@ import '../../global.dart';
 import '../../models/notification_model.dart';
 import '../../models/user_model.dart';
 import '../../services/firebase_notification_service.dart';
+import '../../services/image_service.dart';
 import '../../services/post_service.dart';
 import '../account/user_provider.dart';
 import 'post_provider.dart';
@@ -58,8 +61,30 @@ class PostViewModel {
     print(" Board: ${postTypeBoard.type} Message : $mainMessage File : $fileMessage  Type: ${postTypeBoard.id}");
 
     String fileMessageStr = "[]";
+
+    List<String> uploadedfileList = [];
     if (fileMessage.isNotEmpty) {
-      fileMessageStr = listToListStr(fileMessage);
+      await Future.forEach(fileMessage, (file) async {
+        if (file.contains("editingBase64,")) {
+          String uid = const Uuid().v1();
+
+          String imgStr = RichTextFormat().getImage(file);
+
+          String imageIsExistId = await ImageService().imageIsExist(imgStr);
+
+          if (imageIsExistId != "-1") {
+            uid = imageIsExistId;
+          } else {
+            await ImageService().saveImg(uid, imgStr);
+          }
+
+          String httpImg = "${APIHttpController.prefixUrl}://${APIHttpController.databaseDomainStr}/images/$uid";
+          uploadedfileList.add(httpImg);
+        } else {
+          uploadedfileList.add(file);
+        }
+      });
+      fileMessageStr = listToListStr(uploadedfileList);
     }
 
     int postIndex = await PostService().createPost(userData.uid, mainMessage, fileMessageStr, postTypeBoard.type);
@@ -69,7 +94,7 @@ class PostViewModel {
       createdBy: userData.uid,
       type: postTypeBoard.type,
       mainMessage: mainMessage,
-      fileMessage: fileMessage,
+      fileMessage: uploadedfileList,
       commentCount: 0,
       postTime: DateTime.now().toUtc().toString(),
       postUserInfo: userData,

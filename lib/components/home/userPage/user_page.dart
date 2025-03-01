@@ -128,35 +128,6 @@ class _UserPageState extends ConsumerState<UserPage> {
                                 ),
                               ),
                             ),
-                            // Row(
-                            //   children: [
-                            //     // Text(
-                            //     //   userData.email,
-                            //     //   style: TextStyle(
-                            //     //     color: AppColors.greyColor,
-                            //     //     fontSize: ScreenSize.fontSize12,
-                            //     //   ),
-                            //     // ),
-                            //     SizedBox(width: ScreenSize.fitPxWidth(10)),
-
-                            //     ///シャアボタン
-                            //     GestureDetector(
-                            //       onTap: () async {
-                            //         UserProfileSharePage().show(context);
-                            //       },
-                            //       child: Container(
-                            //         width: 30,
-                            //         alignment: Alignment.centerLeft,
-                            //         color: AppColors.transparent,
-                            //         child: Icon(
-                            //           FontAwesomeIcons.arrowUpRightFromSquare,
-                            //           color: AppColors.greyColor180A221,
-                            //           size: ScreenSize.fontSize14,
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
                           ],
                         ),
                       ),
