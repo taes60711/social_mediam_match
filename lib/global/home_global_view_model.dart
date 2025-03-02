@@ -194,7 +194,7 @@ class HomeGlobalViewModel {
     render();
   }
 
-  static void pop() {
+  void pop() {
     Navigator.of(globalContext).pop();
   }
 }

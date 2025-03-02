@@ -13,6 +13,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
 import 'package:social_mediam_match/components/utilities/inputField/base_input.dart';
+import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/services/post_service.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../global.dart';
@@ -145,11 +146,14 @@ class PostEditorPage extends BaseFadeScalePage {
                     ref.read(postListController.notifier).editData(dataIndex, post);
 
                     render();
-
+                    CanTouchScreenLoadingDialog().close();
                     closePage();
+                    await Future.delayed(const Duration(milliseconds: 200));
+                    HomeGlobalViewModel().pop();
+                  } else {
+                    CanTouchScreenLoadingDialog().close();
                   }
                 }
-                CanTouchScreenLoadingDialog().close();
               },
               title: "更新",
             ),
