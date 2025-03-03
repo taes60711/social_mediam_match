@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_manager/course_edit_page.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_utilites.dart';
+import 'package:social_mediam_match/components/utilities/dialog/cant_touch_loading_dialog.dart';
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
+import 'package:social_mediam_match/services/course_service.dart';
 
 import '../../../../models/course_model.dart';
 
@@ -75,8 +77,11 @@ class CourseManagerBtmSheet extends BaseBottomSheet {
                 title: "警告",
                 content: "確定要刪除該課程?",
                 conirmFunc: () async {
+                  CanTouchScreenLoadingDialog().show();
+                  await CourseService().deleteCourse(courseId: choiceCourse.id);
+                  CanTouchScreenLoadingDialog().close();
+
                   ref.read(courseListController.notifier).removeData(dataIndex);
-                  render();
                   closePage();
                 },
               ).show(context);

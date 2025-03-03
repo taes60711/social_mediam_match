@@ -217,4 +217,15 @@ class CourseService extends ApiClient {
 
     return responseData != "null" ? true : false;
   }
+
+  ///コース削除
+  Future<bool> deleteCourse({required int courseId}) async {
+    Map<String, dynamic> body = {};
+
+    String responseData = await apiPush("/deleteCourse/$courseId", body: body);
+
+    print("deleteCourse $responseData");
+
+    return responseData != "null" ? true : false;
+  }
 }

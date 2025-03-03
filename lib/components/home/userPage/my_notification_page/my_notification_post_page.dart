@@ -60,6 +60,7 @@ class MyNotificationPostPage extends BaseEndDrawer {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: ScreenSize.fitPxWidth(15)),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       /// ユーザデータ
                       Row(
