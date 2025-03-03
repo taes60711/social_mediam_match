@@ -473,9 +473,10 @@ class PostCreatePage extends BaseFadeScalePage {
       String base64String = base64Encode(imgPath.readAsBytesSync());
       imgPickerResult = base64String;
       result = imgPickerResult;
+      return "editingBase64,$result";
+    } else {
+      return "";
     }
-
-    return "editingBase64,$result";
   }
 
   Future<bool> postExitCheck() async {

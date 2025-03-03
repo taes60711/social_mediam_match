@@ -75,6 +75,8 @@ class CourseRichTextCreate extends BaseFadeScalePage {
                       CanTouchScreenLoadingDialog().close();
                       courseEditPageRender();
                       closePage();
+                    } else {
+                      CanTouchScreenLoadingDialog().close();
                     }
                   } else {
                     CanTouchScreenLoadingDialog().show();

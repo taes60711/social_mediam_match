@@ -37,7 +37,6 @@ List<String> programLanguageType = [
   "PHP",
   "Node.js",
   "Python",
-  "Swift",
   "Matlab",
   "Shell Script"
 ];

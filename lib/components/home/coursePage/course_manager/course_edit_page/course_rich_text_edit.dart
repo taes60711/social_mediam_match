@@ -109,6 +109,8 @@ class CourseRichTextEdit extends BaseFadeScalePage {
                     CanTouchScreenLoadingDialog().close();
                     courseEditPageRender();
                     closePage();
+                  } else {
+                    CanTouchScreenLoadingDialog().close();
                   }
                 },
               ),
