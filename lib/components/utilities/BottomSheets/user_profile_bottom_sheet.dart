@@ -38,12 +38,11 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
 
   String notifaicationToken = "";
   bool isInit = false;
-  bool isUserDeleted = true;
 
   @override
   Future<void> initState(WidgetRef ref) async {
-    isUserDeleted = userData.uid == "-1" ? true : false;
-    render();
+    bool isUserDeleted = userData.uid == "-1" ? true : false;
+
     if (!isUserDeleted) {
       ProfileData myUserData = ref.watch(loginUserData);
 
@@ -59,6 +58,7 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
 
   @override
   Widget build(WidgetRef ref) {
+    bool isUserDeleted = userData.uid == "-1" ? true : false;
     if (isUserDeleted) {
       return _noUserDataWidget();
     }
@@ -223,99 +223,105 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
           SizedBox(height: ScreenSize.fitPxHeight(15)),
 
           /// チャットルーム遷移/フレンド追加ボタン
+          Builder(
+            builder: (context) {
+              if (ref.watch(loginUserData).uid != userData.uid) {
+                if (!isInit) {
+                  return const Loading();
+                } else {
+                  return Visibility(
+                    visible: needToChatRoomBtn,
+                    child: Center(
+                      child: MainBtn(
+                        onPress: () async {
+                          if (UserLoginStatusController().isGuest()) {
+                            ConfirmDilaog(
+                                title: "提示",
+                                content: "請先登入",
+                                conirmFunc: () {
+                                  UserLoginStatusController().guestLogOut(
+                                    attachFunc: () {
+                                      closePage();
+                                      HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
+                                    },
+                                  );
+                                }).show(context);
+                            return;
+                          }
 
-          Visibility(
-            visible: !isInit && ref.watch(loginUserData).uid != userData.uid,
-            child: const Loading(),
+                          UserBlockStatusType blockStatusType =
+                              await HomeGlobalViewModel().getUserBlockStatus(userData: userData);
+
+                          if (blockStatusType != UserBlockStatusType.none) {
+                            Toast().showCenter(msg: "該用戶已經封鎖/被封鎖");
+                            return;
+                          }
+
+                          if (ref.read(isFriendProvider.notifier).state == false) {
+                            ChatWSModel().addFriend([ref.watch(loginUserData).uid, userData.uid]);
+                            ref.read(isFriendProvider.notifier).update((state) => true);
+
+                            String message = '"${ref.watch(loginUserData).name}"將你加為好友';
+
+                            NotificationModel notification = NotificationModel.empty();
+                            notification.userUid = ref.read(loginUserData.notifier).state.uid;
+                            notification.otherUserUid = userData.uid;
+                            notification.type = 2;
+                            notification.title = message;
+                            notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
+
+                            NotificationService().createNotification(notification: notification);
+
+                            if (notifaicationToken != "") {
+                              FirebaseNotificationService().sendNotification(
+                                message: message,
+                                sendto: notifaicationToken,
+                                notifiactionInfo: notification,
+                              );
+                            }
+
+                            Toast().showBottom(msg: "添加成功");
+                            render();
+                          } else {
+                            closePage();
+                            HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
+
+                            /// メンバーIdでRoomId探す
+                            int index = ref.watch(frinedListProvider).indexWhere((e) => e.memberId == userData.uid);
+
+                            /// 探したとルームIdない場合ルーム作成者IDでRoomId探す
+                            if (index == -1) {
+                              index = ref.watch(frinedListProvider).indexWhere((e) => e.createdBy == userData.uid);
+                            }
+
+                            if (index != -1) {
+                              FriendListModel data = ref.watch(frinedListProvider)[index];
+                              ChatRoom(roomData: data, dataIndex: index).show(context);
+                            }
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ScreenSize.fitPxHeight(15),
+                            vertical: ScreenSize.fitPxHeight(5),
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: ref.watch(isFriendProvider) ? AppColors.orangeColor : AppColors.greyColor54,
+                          ),
+                          child: Text(
+                            ref.watch(isFriendProvider) ? "聊天室" : "新增好友",
+                            style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              }
+              return Container();
+            },
           ),
-
-          Visibility(
-            visible: needToChatRoomBtn && ref.watch(loginUserData).uid != userData.uid,
-            child: Center(
-              child: MainBtn(
-                onPress: () async {
-                  if (UserLoginStatusController().isGuest()) {
-                    ConfirmDilaog(
-                        title: "提示",
-                        content: "請先登入",
-                        conirmFunc: () {
-                          UserLoginStatusController().guestLogOut(
-                            attachFunc: () {
-                              closePage();
-                              HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
-                            },
-                          );
-                        }).show(context);
-                    return;
-                  }
-
-                  UserBlockStatusType blockStatusType = await HomeGlobalViewModel().getUserBlockStatus(userData: userData);
-
-                  if (blockStatusType != UserBlockStatusType.none) {
-                    Toast().showCenter(msg: "該用戶已經封鎖/被封鎖");
-                    return;
-                  }
-
-                  if (ref.read(isFriendProvider.notifier).state == false) {
-                    ChatWSModel().addFriend([ref.watch(loginUserData).uid, userData.uid]);
-                    ref.read(isFriendProvider.notifier).update((state) => true);
-
-                    String message = '"${ref.watch(loginUserData).name}"將你加為好友';
-
-                    NotificationModel notification = NotificationModel.empty();
-                    notification.userUid = ref.read(loginUserData.notifier).state.uid;
-                    notification.otherUserUid = userData.uid;
-                    notification.type = 2;
-                    notification.title = message;
-                    notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
-
-                    NotificationService().createNotification(notification: notification);
-
-                    if (notifaicationToken != "") {
-                      FirebaseNotificationService().sendNotification(
-                        message: message,
-                        sendto: notifaicationToken,
-                        notifiactionInfo: notification,
-                      );
-                    }
-
-                    Toast().showBottom(msg: "添加成功");
-                    render();
-                  } else {
-                    closePage();
-                    HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
-
-                    /// メンバーIdでRoomId探す
-                    int index = ref.watch(frinedListProvider).indexWhere((e) => e.memberId == userData.uid);
-
-                    /// 探したとルームIdない場合ルーム作成者IDでRoomId探す
-                    if (index == -1) {
-                      index = ref.watch(frinedListProvider).indexWhere((e) => e.createdBy == userData.uid);
-                    }
-
-                    if (index != -1) {
-                      FriendListModel data = ref.watch(frinedListProvider)[index];
-                      ChatRoom(roomData: data, dataIndex: index).show(context);
-                    }
-                  }
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ScreenSize.fitPxHeight(15),
-                    vertical: ScreenSize.fitPxHeight(5),
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: ref.watch(isFriendProvider) ? AppColors.orangeColor : AppColors.greyColor54,
-                  ),
-                  child: Text(
-                    ref.watch(isFriendProvider) ? "聊天室" : "新增好友",
-                    style: TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
-                  ),
-                ),
-              ),
-            ),
-          )
         ],
       ),
     );
@@ -327,11 +333,9 @@ class UserProfileBottomSheet extends BaseBottomSheet {
   final ProfileData userData;
   UserProfileBottomSheet({required this.userData});
 
-  bool isUserDeleted = true;
-
   @override
   Future<void> initState(WidgetRef ref) async {
-    isUserDeleted = userData.uid == "-1" ? true : false;
+    bool isUserDeleted = userData.uid == "-1" ? true : false;
 
     if (!isUserDeleted) {
       ProfileData myUserData = ref.watch(loginUserData);
@@ -346,6 +350,7 @@ class UserProfileBottomSheet extends BaseBottomSheet {
 
   @override
   Widget build(WidgetRef ref) {
+    bool isUserDeleted = userData.uid == "-1" ? true : false;
     if (isUserDeleted) {
       return _noUserDataWidget();
     }

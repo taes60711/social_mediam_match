@@ -1,4 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -75,19 +77,22 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             SizedBox(height: ScreenSize.fitPxWidth(16)),
 
             ///　Apple登録
-            AccountPageUtilites().btnContainer(
-              onPress: () async {
-                bool isSendOK = await ref.read(viewModelProvider.notifier).state.appleSignUp();
-                if (isSendOK) {
-                  SignUpStepLastPage().show(context);
-                }
-              },
-              imgIcon: AppImage.appleIcon,
-              btnBgColor: AppColors.whiteColor,
-              btnTextColor: AppColors.greyColor98,
-              btnText: "Apple註冊",
-            ),
 
+            Visibility(
+              visible: Platform.isIOS,
+              child: AccountPageUtilites().btnContainer(
+                onPress: () async {
+                  bool isSendOK = await ref.read(viewModelProvider.notifier).state.appleSignUp();
+                  if (isSendOK) {
+                    SignUpStepLastPage().show(context);
+                  }
+                },
+                imgIcon: AppImage.appleIcon,
+                btnBgColor: AppColors.whiteColor,
+                btnTextColor: AppColors.greyColor98,
+                btnText: "Apple註冊",
+              ),
+            ),
             SizedBox(height: ScreenSize.fitPxWidth(120)),
           ],
         ),

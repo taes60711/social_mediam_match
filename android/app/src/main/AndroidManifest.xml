@@ -31,9 +31,10 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data
-                    android:host="social_mediam_match.com"
-                    android:scheme="https"/>
+             
+                <data android:scheme="https" android:host="skillstorm.directsense.tw" android:pathPrefix="/post" />
+                <data android:scheme="https" android:host="skillstorm.directsense.tw" android:pathPrefix="/course" />
+                <data android:scheme="https" android:host="skillstorm.directsense.tw" android:pathPrefix="/profile" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

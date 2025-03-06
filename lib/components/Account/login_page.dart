@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -77,14 +79,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             SizedBox(height: ScreenSize.fitPxWidth(16)),
 
             ///　Apple登入
-            AccountPageUtilites().btnContainer(
-              imgIcon: AppImage.appleIcon,
-              onPress: () {
-                viewModel.appleLogin();
-              },
-              btnBgColor: AppColors.whiteColor,
-              btnTextColor: AppColors.greyColor98,
-              btnText: "Apple登入",
+            Visibility(
+              visible: Platform.isIOS,
+              child: AccountPageUtilites().btnContainer(
+                imgIcon: AppImage.appleIcon,
+                onPress: () {
+                  viewModel.appleLogin();
+                },
+                btnBgColor: AppColors.whiteColor,
+                btnTextColor: AppColors.greyColor98,
+                btnText: "Apple登入",
+              ),
             ),
 
             SizedBox(height: ScreenSize.fitPxWidth(120)),
