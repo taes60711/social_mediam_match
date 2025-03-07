@@ -58,42 +58,47 @@ class _InitialpageState extends ConsumerState<Initialpage> {
   Future<void> allFuncinit() async {
     ///MARK: 開發用Class（上架跟本地端開發的網址不同）
     //
-    await APIHttpController().init(devType: DevType.release);
+    await APIHttpController().init(devType: DevType.debug);
     //
     ///
 
-    await Future.delayed(Duration.zero);
+    /// Appバージョン確認
+    bool versionIsOk = await APPInfoController().checkAppVersion(context);
 
-    LoadingDialog().init(context);
-    CanTouchScreenLoadingDialog().init(context);
-    Toast().init(context);
+    if (versionIsOk) {
+      await Future.delayed(Duration.zero);
 
-    /// request All Skill
-    List<RequestSkillListData> requestListData = await SkillService().requestSkillList();
-    ref.read(allSkillListData.notifier).update((state) => requestListData);
+      LoadingDialog().init(context);
+      CanTouchScreenLoadingDialog().init(context);
+      Toast().init(context);
 
-    /// request TopPost
-    List<PostModel> topPosts = await PostService().getPostByType(0, 3, -1);
-    ref.read(topPostProvider.notifier).update((state) => topPosts);
+      /// request All Skill
+      List<RequestSkillListData> requestListData = await SkillService().requestSkillList();
+      ref.read(allSkillListData.notifier).update((state) => requestListData);
 
-    /// request All PostBoard
-    List<PostBoard> allPostBoard = await PostService().getAllPostBoard();
+      /// request TopPost
+      List<PostModel> topPosts = await PostService().getPostByType(0, 3, -1);
+      ref.read(topPostProvider.notifier).update((state) => topPosts);
 
-    ref.read(allPostBoardListData.notifier).update((state) => allPostBoard);
+      /// request All PostBoard
+      List<PostBoard> allPostBoard = await PostService().getAllPostBoard();
 
-    /// sharedPreference 初期化
-    await SharedPreference().init();
+      ref.read(allPostBoardListData.notifier).update((state) => allPostBoard);
 
-    ///ログインステータスチュック
-    await _loginCheck();
+      /// sharedPreference 初期化
+      await SharedPreference().init();
 
-    ///　テーマ初期化
-    ThemeStyle().init(ref);
+      ///ログインステータスチュック
+      await _loginCheck();
 
-    initFinish = true;
+      ///　テーマ初期化
+      ThemeStyle().init(ref);
 
-    print("allFuncinit Finish");
-    setState(() {});
+      initFinish = true;
+
+      print("allFuncinit Finish");
+      setState(() {});
+    }
   }
 
   ///ログインステータスチュック
