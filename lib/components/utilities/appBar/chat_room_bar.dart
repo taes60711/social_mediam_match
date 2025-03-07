@@ -55,9 +55,11 @@ class ChatRoomBar extends StatelessWidget {
               children: [
                 UserIcon(iconSize: 40, image: userData.image),
                 SizedBox(width: ScreenSize.fitPxWidth(10)),
-                Text(
-                  userData.name ?? "用戶已不存在",
-                  style: titleStyle ?? TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                Expanded(
+                  child: Text(
+                    userData.name ?? "用戶已不存在",
+                    style: titleStyle ?? TextStyle(color: AppColors.whiteColor, fontSize: ScreenSize.fontSize14),
+                  ),
                 ),
               ],
             ),

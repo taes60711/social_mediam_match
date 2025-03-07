@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 import 'package:web_socket_channel/io.dart';
@@ -26,6 +25,8 @@ class ChatWSModel {
   Stream<dynamic>? _broadcastStream;
 
   final String _channelListUrl = APIHttpController.wsPreFixUrl;
+
+  String? filteredText;
 
   Future<void> init(WidgetRef ref, Function render, {required String userId}) async {
     this.ref = ref;
@@ -75,7 +76,9 @@ class ChatWSModel {
         tempfriendList.sort((a, b) => DateTime.parse(b.sentAt ?? initDate).compareTo(DateTime.parse(a.sentAt ?? initDate)));
 
         ref.read(frinedListProvider.notifier).update((state) => tempfriendList);
-        render();
+
+        getFilterList(inputedName: filteredText);
+        // render();
       }
     });
 
@@ -111,5 +114,23 @@ class ChatWSModel {
     };
 
     _friendListChannel.sink.add(jsonEncode(map));
+  }
+
+  void getFilterList({String? inputedName}) {
+    List<FriendListModel> filteredList = [];
+
+    if (inputedName != null) {
+      filteredList = List.from(
+        ref.read(frinedListProvider.notifier).state.where(
+              (element) => element.userData.name!.contains(inputedName),
+            ),
+      );
+    } else {
+      filteredList = List.from(ref.read(frinedListProvider.notifier).state);
+    }
+
+    ref.read(filterFriendListProvider.notifier).update((state) => filteredList);
+
+    render();
   }
 }

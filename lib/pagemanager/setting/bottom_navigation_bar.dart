@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
 import 'package:social_mediam_match/components/utilities/app_common_tools.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
 
@@ -116,10 +117,21 @@ class _BottomBarState extends ConsumerState<BottomBar> {
                                   ),
                                 ),
                         ),
+
+                        ///My通知ある
                         Positioned(
                           right: ScreenSize.fitPxWidth(18),
                           child: AppCommonTools().notificationDotWidget(
                             e == BottomBarPath.my && ref.watch(loginUserNotReadNotificationCount) > 0,
+                          ),
+                        ),
+
+                        ///チャット通知ある
+                        Positioned(
+                          right: ScreenSize.fitPxWidth(8),
+                          child: AppCommonTools().notificationDotWidget(
+                            e == BottomBarPath.chatRoom &&
+                                ref.watch(frinedListProvider).where((element) => element.unreadCount > 0).isNotEmpty,
                           ),
                         ),
                       ],

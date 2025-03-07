@@ -6,6 +6,7 @@ import 'package:social_mediam_match/components/utilities/style/screen_size.dart'
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
 import 'package:social_mediam_match/enum/date_format_utilities.dart';
+import 'package:social_mediam_match/provider/friend/chat_ws_model.dart';
 
 import '../../../global.dart';
 import '../../../models/friend_model.dart';
@@ -41,7 +42,8 @@ class _FriendPageState extends ConsumerState<FriendPage> {
         ref.read(friendPageRender.notifier).update((state) => () {
               setState(() {});
             });
-        getFilterList();
+        ChatWSModel().filteredText = null;
+        ChatWSModel().getFilterList(inputedName: ChatWSModel().filteredText);
       },
     );
 
@@ -94,12 +96,16 @@ class _FriendPageState extends ConsumerState<FriendPage> {
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                            data.userData.name ?? "用戶已不存在",
-                                            style: TextStyle(
-                                              fontSize: ScreenSize.fontSize14,
-                                              color: AppColors.whiteColor,
-                                              fontWeight: FontWeight.w600,
+                                          Expanded(
+                                            child: Text(
+                                              data.userData.name ?? "用戶已不存在",
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontSize: ScreenSize.fontSize14,
+                                                color: AppColors.whiteColor,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                             ),
                                           ),
                                           Text(
@@ -190,8 +196,14 @@ class _FriendPageState extends ConsumerState<FriendPage> {
                 controller: friendFilterController,
                 maxLines: 1,
                 onChanged: (value) {
-                  getFilterList(
-                    inputedName: friendFilterController.text,
+                  if (friendFilterController.text.replaceAll(" ", "") == "") {
+                    ChatWSModel().filteredText = null;
+                  } else {
+                    ChatWSModel().filteredText = friendFilterController.text;
+                  }
+
+                  ChatWSModel().getFilterList(
+                    inputedName: ChatWSModel().filteredText,
                   );
                 },
               ),
@@ -200,24 +212,6 @@ class _FriendPageState extends ConsumerState<FriendPage> {
         ),
       ),
     );
-  }
-
-  void getFilterList({String? inputedName}) {
-    List<FriendListModel> filteredList = [];
-
-    if (inputedName != null) {
-      filteredList = List.from(
-        ref.read(frinedListProvider.notifier).state.where(
-              (element) => element.userData.name!.contains(inputedName),
-            ),
-      );
-    } else {
-      filteredList = List.from(ref.read(frinedListProvider.notifier).state);
-    }
-
-    ref.read(filterFriendListProvider.notifier).update((state) => filteredList);
-
-    ref.read(friendPageRender.notifier).state();
   }
 
   Widget noDataWidget() {
