@@ -20,6 +20,8 @@ import 'chatRoomPage/chat_room.dart';
 
 final frinedListProvider = StateProvider<List<FriendListModel>>((ref) => []);
 
+final filterFriendListProvider = StateProvider<List<FriendListModel>>((ref) => []);
+
 final friendPageRender = StateProvider<Function>((ref) => () {});
 
 class FriendPage extends ConsumerStatefulWidget {
@@ -30,6 +32,8 @@ class FriendPage extends ConsumerStatefulWidget {
 }
 
 class _FriendPageState extends ConsumerState<FriendPage> {
+  TextEditingController friendFilterController = TextEditingController();
+
   @override
   void initState() {
     Future.delayed(Duration.zero).then(
@@ -37,8 +41,10 @@ class _FriendPageState extends ConsumerState<FriendPage> {
         ref.read(friendPageRender.notifier).update((state) => () {
               setState(() {});
             });
+        getFilterList();
       },
     );
+
     super.initState();
   }
 
@@ -62,12 +68,12 @@ class _FriendPageState extends ConsumerState<FriendPage> {
             ),
             SizedBox(height: ScreenSize.fitPxHeight(5)),
             Expanded(
-              child: ref.watch(frinedListProvider).isEmpty
+              child: ref.watch(filterFriendListProvider).isEmpty
                   ? noDataWidget()
                   : ListView.builder(
-                      itemCount: ref.watch(frinedListProvider).length,
+                      itemCount: ref.watch(filterFriendListProvider).length,
                       itemBuilder: (context, index) {
-                        FriendListModel data = ref.watch(frinedListProvider)[index];
+                        FriendListModel data = ref.watch(filterFriendListProvider)[index];
                         return MainBtn(
                           onPress: () async {
                             ChatRoom(roomData: data, dataIndex: index).show(context);
@@ -160,8 +166,6 @@ class _FriendPageState extends ConsumerState<FriendPage> {
   }
 
   Widget _buildSearchBar(WidgetRef ref, Function render, BuildContext context) {
-    TextEditingController friendFilterController = TextEditingController();
-
     return GestureDetector(
       onTap: () async {},
       child: Container(
@@ -184,12 +188,36 @@ class _FriendPageState extends ConsumerState<FriendPage> {
               child: BaseInputField(
                 hintText: "輸入名稱",
                 controller: friendFilterController,
+                maxLines: 1,
+                onChanged: (value) {
+                  getFilterList(
+                    inputedName: friendFilterController.text,
+                  );
+                },
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void getFilterList({String? inputedName}) {
+    List<FriendListModel> filteredList = [];
+
+    if (inputedName != null) {
+      filteredList = List.from(
+        ref.read(frinedListProvider.notifier).state.where(
+              (element) => element.userData.name!.contains(inputedName),
+            ),
+      );
+    } else {
+      filteredList = List.from(ref.read(frinedListProvider.notifier).state);
+    }
+
+    ref.read(filterFriendListProvider.notifier).update((state) => filteredList);
+
+    ref.read(friendPageRender.notifier).state();
   }
 
   Widget noDataWidget() {

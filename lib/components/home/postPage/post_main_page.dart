@@ -135,11 +135,13 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                                 ),
                               ),
                               SizedBox(width: ScreenSize.fitPxWidth(8)),
-                              Text(
-                                e.title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: AppColors.whiteColor),
+                              Expanded(
+                                child: Text(
+                                  e.mainMessage,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: AppColors.whiteColor),
+                                ),
                               ),
                             ],
                           ),
