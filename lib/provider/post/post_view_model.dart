@@ -156,7 +156,7 @@ class PostViewModel {
       choiceData.good++;
 
       await PostService().updatePostGood(choiceData.id, userUID: userData.uid);
-      String message = '"${ref.read(loginUserData.notifier).state.name}"對文章"${choiceData.title}"按讚';
+      String message = '"${ref.read(loginUserData.notifier).state.name}"對您的文章按了讚';
 
       NotificationModel notification = NotificationModel.empty();
       notification.userUid = ref.read(loginUserData.notifier).state.uid;
