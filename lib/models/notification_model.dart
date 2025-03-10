@@ -75,16 +75,22 @@ class NotificationModel {
     return jsonEncode(returnData);
   }
 
-  static NotificationModel receviceDatatoModel(String data) {
-    Map<String, dynamic> mapData = jsonDecode(data);
+  static NotificationModel receviceDatatoModel({String? data, Map<String, dynamic>? mapData}) {
+    Map<String, dynamic> resultData = {};
+    if (data != null) {
+      resultData = jsonDecode(data);
+    } else if (mapData != null) {
+      resultData = mapData;
+    }
+
     return NotificationModel(
       id: -1,
       userUid: "",
-      otherUserUid: mapData['otherUser'],
-      type: mapData["type"],
-      postId: mapData['postId'],
-      courseId: mapData['courseId'],
-      roomId: mapData['roomId'],
+      otherUserUid: resultData['otherUser'],
+      type: resultData["type"],
+      postId: resultData['postId'],
+      courseId: resultData['courseId'],
+      roomId: resultData['roomId'],
       title: "",
       isRead: false,
       message: "",

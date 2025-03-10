@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/global.dart';
@@ -73,6 +72,12 @@ class ChatRoomWSModel {
 
     _chatroomListChannel.sink.add(jsonEncode(map));
     stream();
+
+    // FlutterAppBadger.isAppBadgeSupported().then((isSupport) {
+    //   if (isSupport) {
+    //     FlutterAppBadger.removeBadge();
+    //   }
+    // });
 
     notificationToken = await UserService().requestUserNotificationTokenByUID(roomData.userData.uid);
   }

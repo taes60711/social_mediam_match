@@ -21,14 +21,15 @@ import '../models/friend_model.dart';
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   FirebaseNotificationService notificationService = FirebaseNotificationService();
+
   if (message.notification != null) {
     notificationService.showNotification(
       title: message.notification?.title,
       body: message.notification?.body,
       payload: message.data['notifiactionInfo'],
     );
-    print("Handling a background message: ${message.messageId}");
 
+    print("Handling a background message: ${message.messageId}");
     inspect(message);
   }
 }
@@ -57,7 +58,8 @@ class FirebaseNotificationService {
     } else if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         print('Got a message whilst in the foreground: ${message.data['notifiactionInfo']}  ');
-        NotificationModel receviceNotificaionData = NotificationModel.receviceDatatoModel(message.data['notifiactionInfo'] ?? "");
+        NotificationModel receviceNotificaionData =
+            NotificationModel.receviceDatatoModel(data: message.data['notifiactionInfo'] ?? "");
 
         print(receviceNotificaionData);
         inspect(message);
@@ -82,7 +84,43 @@ class FirebaseNotificationService {
           );
         }
       });
+
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+        await Future.delayed(Duration.zero);
+        print("Notification clicked! Message: ${message.data["notifiactionInfo"]}");
+
+        NotificationModel receviceNotificaionData = NotificationModel.receviceDatatoModel(data: message.data["notifiactionInfo"]);
+
+        if (receviceNotificaionData.type == 0) {
+          ///文章
+          HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.home);
+
+          MyNotificationPostPage(postId: "${receviceNotificaionData.postId}").show(context);
+        } else if (receviceNotificaionData.type == 1) {
+          ///コース
+          HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.course);
+
+          MyNotificationCourseDetailPage(courseId: "${receviceNotificaionData.courseId}").show(context);
+        } else if (receviceNotificaionData.type == 2 || receviceNotificaionData.type == 3) {
+          ///チャットルーム
+          if (receviceNotificaionData.type == 3) {
+            if (ref.read(loginUserInChatRoomId.notifier).state == receviceNotificaionData.roomId) {
+              return;
+            }
+          }
+
+          ///友達追加 / チャットルーム
+          HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
+          int index = ref.watch(frinedListProvider).indexWhere((e) => e.roomId == receviceNotificaionData.roomId);
+          if (index != -1) {
+            FriendListModel data = ref.watch(frinedListProvider)[index];
+            ChatRoom(roomData: data, dataIndex: index).show(context);
+          }
+        }
+      });
+
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
       print('通知权限已授权');
     }
   }
@@ -91,6 +129,7 @@ class FirebaseNotificationService {
     print("initNotification 通知初始化");
 
     AndroidInitializationSettings initializationSettingsAndroid = const AndroidInitializationSettings('flutter_logo');
+
     var initializationSettingsIOS = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -102,12 +141,14 @@ class FirebaseNotificationService {
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
     );
+
     await notificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
-        NotificationModel receviceNotificaionData = NotificationModel.receviceDatatoModel(notificationResponse.payload ?? "");
-
         await Future.delayed(Duration.zero);
+        NotificationModel receviceNotificaionData =
+            NotificationModel.receviceDatatoModel(data: notificationResponse.payload ?? "");
+
         if (receviceNotificaionData.type == 0) {
           ///文章
           HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.home);
