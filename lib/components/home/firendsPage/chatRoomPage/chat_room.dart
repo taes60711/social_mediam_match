@@ -487,6 +487,8 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
     List<FriendListModel> friendList = ref.read(frinedListProvider.notifier).state.map((e) => e.copyWith()).toList();
     friendList[dataIndex].unreadCount = 0;
     ref.read(frinedListProvider.notifier).update((state) => friendList);
+
+    ref.read(friendPageRender.notifier).state();
   }
 }
 
