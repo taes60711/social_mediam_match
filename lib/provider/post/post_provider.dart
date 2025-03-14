@@ -35,10 +35,6 @@ final choicedPostProvider = StateProvider<PostModel>((ref) {
   return PostModel();
 });
 
-final choicedPostIsGoodProvider = StateProvider<bool>((ref) {
-  return false;
-});
-
 final postCommentListControllerProvider =
     StateNotifierProvider<APIListControllerNotifier<PostCommentTextEditorModel>, APIListController<PostCommentTextEditorModel>>(
   (ref) => APIListControllerNotifier(APIListController<PostCommentTextEditorModel>()),

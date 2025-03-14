@@ -115,8 +115,9 @@ class PostViewModel {
   Future<void> postDetailPageInit(
     StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>> postListController,
     PostModel data,
-    int dataIndex,
-  ) async {
+    int dataIndex, {
+    bool autoFocusKeyBoard = true,
+  }) async {
     ProfileData userData = ref.watch(loginUserData);
     if (data.createdBy != userData.uid) {
       /// ビュー”数”更新する
@@ -131,12 +132,12 @@ class PostViewModel {
 
     ref.read(choicedPostProvider.notifier).update((state) => data);
 
-    ///”いいねしたこと”どうか取得する
-    bool isGooded = await PostService().checkIsPostGood(postId: data.id, userUID: userData.uid);
-    ref.read(choicedPostIsGoodProvider.notifier).update((state) => isGooded);
-
     /// 詳細ページ開く
-    PostDetailPage(dataIndex: dataIndex, postListController: postListController).show(context);
+    PostDetailPage(
+      dataIndex: dataIndex,
+      postListController: postListController,
+      autoFocusKeyBoard: autoFocusKeyBoard,
+    ).show(context);
   }
 
   ///いいねする
@@ -150,11 +151,12 @@ class PostViewModel {
     if (isGooded) {
       ///いいねたす
       choiceData.good--;
+      choiceData.loginUserIsGood = false;
       await PostService().updatePostGood(choiceData.id);
     } else {
       ///いいねひく
       choiceData.good++;
-
+      choiceData.loginUserIsGood = true;
       await PostService().updatePostGood(choiceData.id, userUID: userData.uid);
       String message = '"${ref.read(loginUserData.notifier).state.name}"對您的文章按了讚';
 
@@ -173,11 +175,56 @@ class PostViewModel {
         notifiactionInfo: notification,
       );
     }
-    ref.read(choicedPostIsGoodProvider.notifier).update((state) => !isGooded);
 
     ///文章リストのいいね更新する
     if (postListController != null) {
       ref.read(postListController.notifier).editData(dataIndex, choiceData);
+    }
+
+    render();
+  }
+
+  ///リストいいねする
+  Future<void> listPostGoodOnChange(
+    bool isGooded, {
+    required int dataIndex,
+    required PostModel postData,
+    required StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>>? postListController,
+  }) async {
+    ProfileData userData = ref.watch(loginUserData);
+    notificationToken = await UserService().requestUserNotificationTokenByUID(postData.postUserInfo.uid);
+
+    if (isGooded) {
+      ///いいねたす
+      postData.good--;
+      postData.loginUserIsGood = false;
+      await PostService().updatePostGood(postData.id);
+    } else {
+      ///いいねひく
+      postData.good++;
+      postData.loginUserIsGood = true;
+      await PostService().updatePostGood(postData.id, userUID: userData.uid);
+      String message = '"${ref.read(loginUserData.notifier).state.name}"對您的文章按了讚';
+
+      NotificationModel notification = NotificationModel.empty();
+      notification.userUid = ref.read(loginUserData.notifier).state.uid;
+      notification.otherUserUid = postData.postUserInfo.uid;
+      notification.type = 0;
+      notification.title = message;
+      notification.postId = postData.id;
+      notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
+
+      NotificationService().createNotification(notification: notification);
+      FirebaseNotificationService().sendNotification(
+        message: message,
+        sendto: notificationToken,
+        notifiactionInfo: notification,
+      );
+    }
+
+    ///文章リストのいいね更新する
+    if (postListController != null) {
+      ref.read(postListController.notifier).editData(dataIndex, postData);
     }
 
     render();

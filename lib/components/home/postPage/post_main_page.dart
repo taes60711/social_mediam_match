@@ -4,10 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/home/postPage/post_type_board/post_type_board.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/app_image.dart';
-
 import '../../../global/home_global_view_model.dart';
 import '../../../provider/post/post_provider.dart';
-
 import '../../../provider/post/post_view_model.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/common_scaffold.dart';
@@ -41,8 +39,8 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> postsWidget = [
-      const PostByView(),
       const PostByNew(),
+      const PostByView(),
     ];
     return CommonScaffold(
       type: PageType.main,
@@ -89,8 +87,8 @@ class _PostMainPageState extends ConsumerState<PostMainPage> {
                 ),
                 Row(
                   children: [
-                    _buildTabBtn(context, tabText: "人氣", index: 0),
-                    _buildTabBtn(context, tabText: "最新", index: 1),
+                    _buildTabBtn(context, tabText: "最新", index: 0),
+                    _buildTabBtn(context, tabText: "人氣", index: 1),
                   ],
                 )
               ],

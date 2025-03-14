@@ -41,6 +41,7 @@ class PostModel {
   int good;
   int type;
   int commentCount;
+  bool loginUserIsGood;
   ProfileData postUserInfo;
   PostModel({
     this.id = -1,
@@ -53,6 +54,7 @@ class PostModel {
     this.good = 0,
     this.type = 0,
     this.commentCount = 0,
+    this.loginUserIsGood = false,
     ProfileData? postUserInfo,
   }) : postUserInfo = postUserInfo ?? ProfileData();
 
@@ -67,6 +69,7 @@ class PostModel {
       good: json['good'],
       type: json['type'],
       commentCount: json['count'],
+      loginUserIsGood: json['userIsGood'],
       postTime: json['postTime'],
       postUserInfo: json['user'] == null ? ProfileData() : ProfileData.toModel(json['user']),
     );
@@ -101,6 +104,7 @@ class PostModel {
       title: data?.title ?? title,
       mainMessage: data?.mainMessage ?? mainMessage,
       fileMessage: data?.fileMessage ?? fileMessage,
+      loginUserIsGood: data?.loginUserIsGood ?? loginUserIsGood,
       postTime: data?.postTime ?? postTime,
       viewed: data?.viewed ?? viewed,
       good: data?.good ?? good,
@@ -116,6 +120,7 @@ class PostModel {
       'createdBy': createdBy,
       'title': title,
       'mainMessage': mainMessage,
+      'userIsGood': loginUserIsGood,
       'fileMessage': fileMessage,
       'postTime': postTime,
       'viewed': viewed,
@@ -179,15 +184,25 @@ class PostCommentTextEditorModel {
     );
   }
 
-  // 添加copyWith方法
   PostCommentTextEditorModel copyWith() {
     return PostCommentTextEditorModel(
-      uid: this.uid,
-      postId: this.postId,
-      userUid: this.userUid,
-      message: this.message,
-      postTime: this.postTime,
-      commentUserInfo: this.commentUserInfo,
+      uid: uid,
+      postId: postId,
+      userUid: userUid,
+      message: message,
+      postTime: postTime,
+      commentUserInfo: commentUserInfo,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'uid': uid,
+      'postId': postId,
+      'userUid': userUid,
+      'message': message,
+      'postTime': postTime,
+      'user': commentUserInfo,
+    };
   }
 }

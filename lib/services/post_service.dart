@@ -219,23 +219,6 @@ class PostService extends ApiClient {
     return responseData != "null" ? true : false;
   }
 
-  /// 入っている文章”いいね”したことがあるチェック
-  Future<bool> checkIsPostGood({required int postId, required String userUID}) async {
-    bool ischeck = false;
-    try {
-      String responseData = await apiGet('/checkIsPostGood/$postId/$userUID');
-
-      print("checkIsPostGood $responseData");
-      if (responseData == "true") {
-        ischeck = true;
-      }
-    } catch (e) {
-      onRequestFailed();
-    }
-
-    return ischeck;
-  }
-
   /// 文章”いいね”更新
   Future<bool> updatePostGood(int postId, {String? userUID}) async {
     Map<String, dynamic> body = {};

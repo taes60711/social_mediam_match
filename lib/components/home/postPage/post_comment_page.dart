@@ -50,6 +50,11 @@ class PostCommentPage extends BaseBottomSheet {
   }
 
   @override
+  Future<void> dispose(WidgetRef ref) async {
+    ref.read(postCommentListControllerProvider).listData.clear();
+  }
+
+  @override
   Widget build(ref) {
     ProfileData userData = ref.watch(loginUserData);
     return CommonScaffold(

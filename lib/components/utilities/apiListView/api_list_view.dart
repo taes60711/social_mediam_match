@@ -20,6 +20,7 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
   final Widget? initWidget;
   final Widget? loadingWidget;
   final Widget? noDataWidget;
+  final Widget? headerWidget;
   final Widget? customFloatBtn;
   final Widget Function(R data, int index) itemChild;
 
@@ -34,6 +35,7 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
       this.initWidget,
       this.loadingWidget,
       this.noDataWidget,
+      this.headerWidget,
       this.customFloatBtn,
       required this.itemChild,
       this.needReloadCheck = false});
@@ -103,13 +105,20 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
           backgroundColor: AppColors.transparent,
           body: Stack(
             children: [
-              widget.noDataWidget ??
-                  Center(
-                    child: Text(
-                      "NoData",
-                      style: TextStyle(color: AppColors.whiteColor),
-                    ),
+              Column(
+                children: [
+                  widget.headerWidget ?? Container(),
+                  Expanded(
+                    child: widget.noDataWidget ??
+                        Center(
+                          child: Text(
+                            "NoData",
+                            style: TextStyle(color: AppColors.whiteColor),
+                          ),
+                        ),
                   ),
+                ],
+              ),
 
               ///　CustomFloatButton
               Builder(
@@ -147,6 +156,8 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                   controller: ref.watch(widget.listControllerProvider).scrollController,
                   child: Column(
                     children: [
+                      widget.headerWidget ?? Container(),
+
                       ///データリロード
                       Visibility(
                         visible: ref.watch(widget.listControllerProvider).loadDataStatus == LoadDataStatus.wantReload,
@@ -269,10 +280,30 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     } else if (loadDataStatus == LoadDataStatus.initial) {
       if (widget.initWidget == null) {
         ///ページに初めで遷移場合
-        child = widget.loadingWidget ?? const Center(child: Loading());
+        child = Column(
+          children: [
+            widget.headerWidget ?? Container(),
+            Expanded(
+              child: widget.loadingWidget ??
+                  const Center(
+                    child: Loading(),
+                  ),
+            )
+          ],
+        );
       } else {
         ///ページに初めで遷移場合
-        child = widget.initWidget ?? Container();
+        child = Column(
+          children: [
+            widget.headerWidget ?? Container(),
+            Expanded(
+              child: widget.initWidget ??
+                  const Center(
+                    child: Loading(),
+                  ),
+            )
+          ],
+        );
       }
     }
     return listenListView(context, child: child);
