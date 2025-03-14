@@ -153,6 +153,8 @@ class PostEditorPage extends BaseFadeScalePage {
                   } else {
                     CanTouchScreenLoadingDialog().close();
                   }
+                } else {
+                  CanTouchScreenLoadingDialog().close();
                 }
               },
               title: "更新",
