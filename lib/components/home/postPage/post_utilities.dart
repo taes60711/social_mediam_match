@@ -305,6 +305,7 @@ class PostViewUtilities {
           return messageContainer(
             width: ScreenSize.width,
             height: ScreenSize.fitPxWidth(180),
+            padding: EdgeInsets.zero,
             child: messageVideoItem(
               context,
               ytImag: ytImag,
@@ -317,6 +318,7 @@ class PostViewUtilities {
           return messageContainer(
             width: ScreenSize.width,
             height: ScreenSize.fitPxWidth(180),
+            padding: EdgeInsets.zero,
             child: messageImgItem(
               context,
               imgUrl: fileMessage.first,
@@ -370,9 +372,9 @@ class PostViewUtilities {
   }
 
   ///
-  Widget messageContainer({double? width, double? height, required Widget child}) {
+  Widget messageContainer({double? width, double? height, EdgeInsetsGeometry? padding, required Widget child}) {
     return Padding(
-      padding: EdgeInsets.only(right: ScreenSize.fitPxWidth(10)),
+      padding: padding ?? EdgeInsets.only(right: ScreenSize.fitPxWidth(10)),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(13),
         child: Container(
