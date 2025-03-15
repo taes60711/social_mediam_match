@@ -16,7 +16,11 @@ class MyCourseManagerBtmSheet extends BaseBottomSheet {
   StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>> courseListController;
 
   int dataIndex;
-  MyCourseManagerBtmSheet(this.courseListController, {required this.dataIndex});
+  MyCourseManagerBtmSheet(
+    this.courseListController, {
+    required this.dataIndex,
+    Function? anotherLikeFunc,
+  });
 
   @override
   double buildHeight() {
@@ -37,6 +41,40 @@ class MyCourseManagerBtmSheet extends BaseBottomSheet {
               await CourseUtilites().shareCourse(courseId: choiceCourse.id);
             },
           ),
+          SizedBox(height: ScreenSize.fitPxWidth(15)),
+          choiceCourse.isLike
+              ? managerPageMainBtn(
+                  iconData: FontAwesomeIcons.solidBookmark,
+                  text: "取消收藏",
+                  onPress: () async {
+                    bool isSuccess = await CourseUtilites().likeStatusOnChange(
+                      ref,
+                      context,
+                      courseListController: courseListController,
+                      dataIndex: dataIndex,
+                      data: choiceCourse,
+                    );
+                    if (isSuccess) {
+                      render();
+                    }
+                  },
+                )
+              : managerPageMainBtn(
+                  iconData: FontAwesomeIcons.bookmark,
+                  text: "收藏",
+                  onPress: () async {
+                    bool isSuccess = await CourseUtilites().likeStatusOnChange(
+                      ref,
+                      context,
+                      courseListController: courseListController,
+                      dataIndex: dataIndex,
+                      data: choiceCourse,
+                    );
+                    if (isSuccess) {
+                      render();
+                    }
+                  },
+                ),
           SizedBox(height: ScreenSize.fitPxWidth(15)),
           managerPageMainBtn(
             iconData: FontAwesomeIcons.userLock,

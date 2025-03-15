@@ -19,6 +19,10 @@ final courseByTextFilterListPorver =
   (ref) => APIListControllerNotifier<CourseModel>(APIListController()),
 );
 
+final likedCourserListPorver = StateNotifierProvider<APIListControllerNotifier<CourseModel>, APIListController<CourseModel>>(
+  (ref) => APIListControllerNotifier<CourseModel>(APIListController()),
+);
+
 final couseFilteredSkillList = StateProvider<List<RequestSkillListData>>((ref) {
   return [];
 });

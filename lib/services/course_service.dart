@@ -145,6 +145,7 @@ class CourseService extends ApiClient {
         responseData,
         model: CourseModel.toMap,
       );
+      print(requestAddedCourseData);
     } catch (e) {
       onRequestFailed(content: "該分享已被刪除");
     }
@@ -227,5 +228,52 @@ class CourseService extends ApiClient {
     print("deleteCourse $responseData");
 
     return responseData != "null" ? true : false;
+  }
+
+  /// 全てライクしたコース
+  Future<List<CourseModel>> getAllLikeCourses(String userUID, int page, int size) async {
+    List<LikeCourseModel> requestAllLikeCourseData = [];
+    List<CourseModel> retruAllLikeCourseData = [];
+    Map<String, dynamic> paramters = {
+      'userId': userUID,
+      'page': '$page',
+      'size': '$size',
+    };
+
+    try {
+      String responseData = await apiGet('/getAllLikeCourses', paramters: paramters);
+
+      print(responseData);
+
+      requestAllLikeCourseData = await handleResponse<LikeCourseModel>(
+        responseData,
+        model: LikeCourseModel.toMap,
+        isList: true,
+      );
+
+      retruAllLikeCourseData = requestAllLikeCourseData.map((e) => e.course).toList();
+    } catch (e) {
+      onRequestFailed();
+    }
+
+    return retruAllLikeCourseData;
+  }
+
+  /// コースをライクする
+  Future<bool> likeCourse({required int courseId, required String userUID}) async {
+    String responseData = await apiPush("/addLikeCourse/$userUID/$courseId", body: {});
+
+    print("likeCourse $responseData");
+
+    return responseData == "true" ? true : false;
+  }
+
+  /// コースをライクから削除する
+  Future<bool> deleteLikeCourse({required int courseId, required String userUID}) async {
+    String responseData = await apiPush("/deleteLikeCourse/$userUID/$courseId", body: {});
+
+    print("deleteLikeCourse $responseData");
+
+    return responseData == "true" ? true : false;
   }
 }

@@ -9,19 +9,15 @@ import 'package:social_mediam_match/components/utilities/style/app_image.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../enum/date_format_utilities.dart';
 import '../../../global/home_global_view_model.dart';
 import '../../../global/user_login_status_controller.dart';
 import '../../../models/post_model.dart';
-import '../../../models/rich_text_format.dart';
 import '../../../models/user_model.dart';
 import '../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../../services/post_service.dart';
-import '../../utilities/FadeScalePage/video_view_page.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/endDrawers/base_end_drawer.dart';
@@ -154,56 +150,6 @@ class PostDetailPage extends BaseEndDrawer {
                     PostViewUtilities().fileMessageItem(
                       context,
                       fileMessage: choiceData.fileMessage,
-                      videoComponent: (List<String> data, index) {
-                        String ytId = RichTextFormat().getYtvideoID(data[index]);
-                        return PostViewUtilities().messageContainer(
-                          child: YoutubePlayer(
-                            controller: YoutubePlayerController(
-                              initialVideoId: ytId,
-                              flags: const YoutubePlayerFlags(
-                                disableDragSeek: true,
-                                autoPlay: false,
-                                mute: false,
-                              ),
-                            ),
-                            onReady: () => {},
-                            bottomActions: [
-                              PlaybackSpeedButton(
-                                icon: Icon(
-                                  FontAwesomeIcons.gear,
-                                  size: ScreenSize.fontSize18,
-                                  color: AppColors.whiteColor,
-                                ),
-                              ),
-                              ProgressBar(isExpanded: true),
-                              RemainingDuration(),
-                              GestureDetector(
-                                onTap: () {
-                                  final Uri _url = Uri.parse("https://www.youtube.com/watch?v=$ytId");
-                                  launchUrl(_url);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                                  child: Icon(
-                                    FontAwesomeIcons.windowRestore,
-                                    size: ScreenSize.fontSize18,
-                                    color: AppColors.whiteColor,
-                                  ),
-                                ),
-                              ),
-                              MainBtn(
-                                onPress: () {
-                                  VideoViewPage(ytId: ytId).show(context);
-                                },
-                                child: Icon(
-                                  Icons.fullscreen,
-                                  color: AppColors.whiteColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
                     ),
 
                     SizedBox(height: ScreenSize.fitPxHeight(10)),
@@ -262,7 +208,7 @@ class PostDetailPage extends BaseEndDrawer {
 
                           PostViewUtilities().iconWithText(
                             iconData: FontAwesomeIcons.commentDots,
-                            iconColor: AppColors.greyColor130,
+                            iconColor: Colors.blueAccent,
                             text: "${choiceData.commentCount}",
                           ),
 

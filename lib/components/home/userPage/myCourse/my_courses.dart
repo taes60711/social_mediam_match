@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_mediam_match/components/home/userPage/myCourse/liked_courses_page.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 
 import '../../../utilities/appBar/basic_top_bar.dart';
@@ -14,6 +15,7 @@ class MyCoursePage extends BaseEndDrawer {
   List<Widget> coursePage = [
     const AddedCoursePage(),
     const CreatedCoursePage(),
+    const LikedCoursesPage(),
   ];
 
   @override
@@ -40,6 +42,7 @@ class MyCoursePage extends BaseEndDrawer {
             children: [
               Expanded(child: _buildTabBtn(context, tabText: "已加入", index: 0)),
               Expanded(child: _buildTabBtn(context, tabText: "我的", index: 1)),
+              Expanded(child: _buildTabBtn(context, tabText: "已收藏", index: 2)),
             ],
           ),
         ),

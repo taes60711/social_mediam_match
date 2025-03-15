@@ -182,16 +182,6 @@ class PostViewUtilities {
               context,
               padding: EdgeInsets.only(left: ScreenSize.fitPxWidth(28)),
               fileMessage: data.fileMessage,
-              videoComponent: (fileMessage, index) {
-                String ytId = RichTextFormat().getYtvideoID(fileMessage[index]);
-                String ytImag = "https://img.youtube.com/vi/${ytId}/maxresdefault.jpg";
-                return messageVideoItem(
-                  context,
-                  ytImag: ytImag,
-                  fileMessage: fileMessage,
-                  index: index,
-                );
-              },
             ),
 
             SizedBox(height: ScreenSize.fitPxWidth(12)),
@@ -305,17 +295,24 @@ class PostViewUtilities {
     BuildContext context, {
     EdgeInsetsGeometry? padding,
     required List<String> fileMessage,
-    required Widget Function(List<String> fileMessage, int index) videoComponent,
   }) {
     if (fileMessage.length == 1) {
       String messageType = getMessageType(fileMessage.first);
       switch (messageType) {
         case "ytVideo":
+          String ytId = RichTextFormat().getYtvideoID(fileMessage.first);
+          String ytImag = "https://img.youtube.com/vi/${ytId}/maxresdefault.jpg";
           return messageContainer(
             width: ScreenSize.width,
             height: ScreenSize.fitPxWidth(180),
-            child: videoComponent(fileMessage, 0),
+            child: messageVideoItem(
+              context,
+              ytImag: ytImag,
+              fileMessage: fileMessage,
+              index: 0,
+            ),
           );
+
         case "img":
           return messageContainer(
             width: ScreenSize.width,
@@ -343,8 +340,15 @@ class PostViewUtilities {
 
             switch (messageType) {
               case "ytVideo":
+                String ytId = RichTextFormat().getYtvideoID(value);
+                String ytImag = "https://img.youtube.com/vi/${ytId}/maxresdefault.jpg";
                 return messageContainer(
-                  child: videoComponent(fileMessage, index),
+                  child: messageVideoItem(
+                    context,
+                    ytImag: ytImag,
+                    fileMessage: fileMessage,
+                    index: index,
+                  ),
                 );
               case "img":
                 return messageContainer(

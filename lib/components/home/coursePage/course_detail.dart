@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/components/home/coursePage/course_manager/my_course_manager.bottom.sheet.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_utilites.dart';
 
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
@@ -30,6 +31,7 @@ import '../../utilities/rich_text_view.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/app_colors.dart';
 import '../../utilities/user_icon.dart';
+import 'course_manager/course_manager_bottom_sheet.dart';
 
 class CourseDetailPage extends BaseEndDrawer {
   int dataIndex;
@@ -72,17 +74,21 @@ class CourseDetailPage extends BaseEndDrawer {
             children: [
               AppCommonTools().levelSetsumeiBtn(context),
 
-              ///シャアボタン
+              ///ellipsisボタン
               MainBtn(
                 onPress: () async {
-                  await CourseUtilites().shareCourse(courseId: data.id);
+                  ref.read(choicedCourseProvider.notifier).update((state) => data);
+
+                  data.courseCreateduserInfo.uid == ref.read(loginUserData).uid
+                      ? CourseManagerBtmSheet(courseListController, dataIndex: dataIndex).show(context)
+                      : MyCourseManagerBtmSheet(courseListController, dataIndex: dataIndex).show(context);
                 },
                 child: Container(
                   height: ScreenSize.fitPxWidth(30),
                   width: ScreenSize.fitPxWidth(30),
                   color: AppColors.transparent,
                   child: Icon(
-                    FontAwesomeIcons.arrowUpRightFromSquare,
+                    FontAwesomeIcons.ellipsis,
                     color: AppColors.whiteColor,
                     size: ScreenSize.fontSize20,
                   ),

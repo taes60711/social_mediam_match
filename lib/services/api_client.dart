@@ -25,6 +25,7 @@ class ApiClient {
     print("Get API  Url : ${APIHttpController.prefixUrl}://$_ip$branch$url");
     print("paramters : $paramters");
     Response response = await http.get(uri);
+
     try {
       if (response.statusCode != 200) {
         throw ArgumentError("${response.statusCode}");
@@ -69,7 +70,7 @@ class ApiClient {
     required Map<String, dynamic> body,
   }) async {
     final uri = Uri.parse("${APIHttpController.prefixUrl}://$_ip$branch$url");
-    print("Push API Url : $url body : ${jsonEncode(body)}");
+    print("Push API uri: $uri Url : $url body : ${jsonEncode(body)}");
     Response response = await http.put(
       uri,
       headers: headers,

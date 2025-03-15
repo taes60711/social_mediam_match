@@ -52,6 +52,7 @@ class CourseModel {
   bool isPublic;
   String signUpStatus;
   ProfileData courseCreateduserInfo;
+  bool isLike;
 
   CourseModel({
     this.id = -1,
@@ -69,6 +70,7 @@ class CourseModel {
     //none added signing
     this.signUpStatus = "",
     required this.courseCreateduserInfo,
+    this.isLike = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -87,6 +89,7 @@ class CourseModel {
       'isPublic': isPublic,
       'signUpStatus': signUpStatus,
       'courseCreateduserInfo': courseCreateduserInfo.toJson(),
+      'like': isLike,
     };
   }
 
@@ -114,6 +117,7 @@ class CourseModel {
       isPublic: json['isPublic'],
       signUpStatus: json['signUpStatus'],
       courseCreateduserInfo: json['user'] == null ? ProfileData() : ProfileData.toModel(json['user']),
+      isLike: json['like'],
     );
   }
 
@@ -133,6 +137,7 @@ class CourseModel {
       isPublic: data?.isPublic ?? isPublic,
       signUpStatus: data?.signUpStatus ?? signUpStatus,
       courseCreateduserInfo: data?.courseCreateduserInfo ?? courseCreateduserInfo,
+      isLike: data?.isLike ?? isLike,
     );
   }
 }
@@ -156,6 +161,31 @@ class AddedCourseMemberModel {
       memberUid: json['memberUid'],
       userData: json['userDTO'] == null ? ProfileData() : ProfileData.toModel(json['userDTO']),
       status: json['status'],
+    );
+  }
+}
+
+class LikeCourseModel {
+  int id;
+  int courseId;
+  String memberUid;
+  CourseModel course;
+
+  LikeCourseModel({
+    required this.id,
+    required this.courseId,
+    required this.memberUid,
+    required this.course,
+  });
+
+  factory LikeCourseModel.toMap(dynamic json) {
+    return LikeCourseModel(
+      id: json['id'],
+      courseId: json['courseId'],
+      memberUid: json['memberUid'],
+      course: CourseModel.toMap(
+        json["courseDTO"],
+      ),
     );
   }
 }
