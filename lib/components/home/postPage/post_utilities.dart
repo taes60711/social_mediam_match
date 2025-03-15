@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:social_mediam_match/components/home/postPage/post_comment_page.dart';
 
 import 'package:social_mediam_match/components/utilities/style/app_image.dart';
 import 'package:social_mediam_match/global.dart';
@@ -242,10 +241,8 @@ class PostViewUtilities {
                   ///コメント数
                   MainBtn(
                     onPress: () {
-                      ref.read(choicedPostProvider.notifier).update((state) => data);
-
                       ///詳細ページに遷移
-                      PostCommentPage(dataIndex: dataIndex).show(context);
+                      viewModel.postDetailPageInit(postListController, data, dataIndex, autoFocusKeyBoard: true);
                     },
                     child: PostViewUtilities().iconWithText(
                       iconData: FontAwesomeIcons.commentDots,

@@ -158,7 +158,9 @@ class PostViewModel {
       choiceData.good++;
       choiceData.loginUserIsGood = true;
       await PostService().updatePostGood(choiceData.id, userUID: userData.uid);
-      String message = '"${ref.read(loginUserData.notifier).state.name}"對您的文章按了讚';
+
+      String postMsg = choiceData.mainMessage.length > 13 ? choiceData.mainMessage.substring(0, 13) : choiceData.mainMessage;
+      String message = '"${ref.read(loginUserData.notifier).state.name}"對$postMsg...按了讚';
 
       NotificationModel notification = NotificationModel.empty();
       notification.userUid = ref.read(loginUserData.notifier).state.uid;
@@ -204,7 +206,9 @@ class PostViewModel {
       postData.good++;
       postData.loginUserIsGood = true;
       await PostService().updatePostGood(postData.id, userUID: userData.uid);
-      String message = '"${ref.read(loginUserData.notifier).state.name}"對您的文章按了讚';
+
+      String postMsg = postData.mainMessage.length > 13 ? postData.mainMessage.substring(0, 13) : postData.mainMessage;
+      String message = '"${ref.read(loginUserData.notifier).state.name}"對$postMsg...按了讚';
 
       NotificationModel notification = NotificationModel.empty();
       notification.userUid = ref.read(loginUserData.notifier).state.uid;
@@ -283,6 +287,27 @@ class PostViewModel {
       ref.read(postListController.notifier).editData(dataIndex, choiceData);
     }
 
+    if (choiceData.postUserInfo.uid != userData.uid) {
+      String postMsg =
+          choiceData.mainMessage.length > 13 ? "${choiceData.mainMessage.substring(0, 13)}..." : choiceData.mainMessage;
+      String notificationMsg = '"${ref.read(loginUserData.notifier).state.name}"回覆了$postMsg';
+
+      NotificationModel notification = NotificationModel.empty();
+      notification.userUid = userData.uid;
+      notification.otherUserUid = choiceData.postUserInfo.uid;
+      notification.type = 0;
+      notification.title = notificationMsg;
+      notification.postId = choiceData.id;
+      notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
+
+      NotificationService().createNotification(notification: notification);
+      FirebaseNotificationService().sendNotification(
+        message: notificationMsg,
+        sendto: notificationToken,
+        notifiactionInfo: notification,
+      );
+    }
+
     render();
 
     return true;
@@ -309,18 +334,20 @@ class PostViewModel {
 
         PostModel choiceData = ref.read(choicedPostProvider);
 
-        PostModel c = choiceData;
-        c.commentCount--;
+        choiceData.commentCount--;
 
         /// 詳細ページのコメント”数”更新する
-        ref.read(choicedPostProvider.notifier).state = PostModel().copyWith(data: c);
+        ref.read(choicedPostProvider.notifier).state = PostModel().copyWith(data: choiceData);
 
         ///コメントListのコメント削除
         ref.read(postCommentListControllerProvider.notifier).removeData(dataIndex);
         if (postListController != null) {
+          int choicePostListIndex = ref.read(postListController).listData.indexWhere((e) => e.id == choiceData.id);
+
           /// Listページのコメント”数”更新する
-          ref.read(postListController.notifier).editData(dataIndex, c);
+          ref.read(postListController.notifier).editData(choicePostListIndex, choiceData);
         }
+
         render();
       },
     ).show(context);

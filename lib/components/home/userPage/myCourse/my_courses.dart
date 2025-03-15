@@ -65,11 +65,17 @@ class MyCoursePage extends BaseEndDrawer {
   Widget _buildTabBtn(BuildContext context, {required String tabText, required int index}) {
     return GestureDetector(
       onTap: () async {
-        pageController.animateToPage(
-          index,
-          duration: const Duration(milliseconds: 150),
-          curve: Curves.easeIn,
-        );
+        if ((pageController.page! - index).abs() > 1) {
+          pageController.jumpToPage(
+            index,
+          );
+        } else {
+          pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 150),
+            curve: Curves.easeIn,
+          );
+        }
       },
       child: Container(
         height: ScreenSize.fitPxHeight(30),
