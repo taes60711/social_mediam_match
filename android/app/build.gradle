@@ -29,7 +29,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.example.social_mediam_match"
+    namespace "com.directsenses.skillstorm"//"com.example.social_mediam_match"
     compileSdkVersion 34 //flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 

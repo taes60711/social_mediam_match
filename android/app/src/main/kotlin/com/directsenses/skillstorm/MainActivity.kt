@@ -1,4 +1,4 @@
-package com.example.social_mediam_match
+package com.directsenses.skillstorm
 
 import io.flutter.embedding.android.FlutterActivity
 

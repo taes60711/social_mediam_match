@@ -2,7 +2,7 @@ name: social_mediam_match
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -16,10 +16,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.3+1.0
+version: 1.0.4+1.0
 
 environment:
-  sdk: '>=3.2.5 <4.0.0'
+  sdk: ">=3.2.5 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -42,13 +42,13 @@ dependencies:
   firebase_messaging: ^14.7.19
   flutter_local_notifications: ^17.0.0
   image_picker: ^1.0.7
-  carousel_slider: ^4.2.1 
+  carousel_slider: ^4.2.1
   flutter_widget_from_html: ^0.14.11
   url_launcher: ^6.2.5
   photo_view: ^0.14.0
   html: ^0.15.4
   quill_html_editor: ^2.2.6
-  easy_localization: 
+  easy_localization:
   loading_animation_widget: ^1.2.1
   font_awesome_flutter: ^10.7.0
   shimmer: ^3.0.0
@@ -68,9 +68,6 @@ dependencies:
   cached_network_image: ^3.3.1
   screen_state: ^4.0.0
   sign_in_with_apple: ^5.0.0
-
-  
-  
 
 dev_dependencies:
   flutter_test:
