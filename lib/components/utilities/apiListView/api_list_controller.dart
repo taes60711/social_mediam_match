@@ -65,9 +65,8 @@ class APIListControllerNotifier<R> extends StateNotifier<APIListController<R>> {
     }
   }
 
-  Future<bool> reloadCheck(Future<List<R>> Function(int page, int size) initApiFunc) async {
-    List<R> firstData = await initApiFunc(checkPage, checkSize);
-
+  Future<bool> reloadCheck() async {
+    List<R> firstData = await state.apiFunc(checkPage, checkSize);
     if (firstData.isEmpty) {
       return true;
     } else {

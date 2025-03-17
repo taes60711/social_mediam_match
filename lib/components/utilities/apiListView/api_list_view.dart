@@ -63,13 +63,14 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
   Future<void> init() async {
     await Future.delayed(Duration.zero);
     ref.read(widget.listControllerProvider.notifier).initApIFunc(widget.apiFunc);
+    print(ref.read(widget.listControllerProvider).listData);
 
     ///init前に
     if (ref.read(widget.listControllerProvider).listData.isEmpty) {
       initFunc();
     } else {
       if (widget.needReloadCheck) {
-        if (await ref.read(widget.listControllerProvider.notifier).reloadCheck(widget.apiFunc)) {
+        if (await ref.read(widget.listControllerProvider.notifier).reloadCheck()) {
           initFunc();
         }
       } else {
@@ -78,15 +79,15 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     }
   }
 
-  void initFunc() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      ref.read(widget.listControllerProvider.notifier).create(widget.size);
+  Future<void> initFunc() async {
+    await Future.delayed(Duration.zero);
+    ref.read(widget.listControllerProvider.notifier).create(widget.size);
+    setState(() {});
+
+    if (widget.initWidget == null) {
+      await ref.read(widget.listControllerProvider.notifier).init();
       setState(() {});
-      if (widget.initWidget == null) {
-        await ref.read(widget.listControllerProvider.notifier).init();
-        setState(() {});
-      }
-    });
+    }
   }
 
   @override

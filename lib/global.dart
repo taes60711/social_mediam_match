@@ -23,7 +23,7 @@ final notifiProfilePageIsOpen = StateProvider<bool>((ref) {
 /// App Version
 class APPInfoController {
   AppInfoModel phoneVer = AppInfoModel(
-    iosVersion: "1.3",
+    iosVersion: "1.4",
     androidVersion: "1.0",
   );
 
