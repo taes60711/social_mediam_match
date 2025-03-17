@@ -67,14 +67,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             SizedBox(height: ScreenSize.fitPxWidth(16)),
 
             ///　Google登入
-            AccountPageUtilites().btnContainer(
-              imgIcon: AppImage.googleIcon,
-              onPress: () {
-                viewModel.googleLogin();
-              },
-              btnBgColor: AppColors.whiteColor,
-              btnTextColor: AppColors.greyColor98,
-              btnText: "Google登入",
+            Visibility(
+              visible: Platform.isIOS,
+              child: AccountPageUtilites().btnContainer(
+                imgIcon: AppImage.googleIcon,
+                onPress: () {
+                  viewModel.googleLogin();
+                },
+                btnBgColor: AppColors.whiteColor,
+                btnTextColor: AppColors.greyColor98,
+                btnText: "Google登入",
+              ),
             ),
             SizedBox(height: ScreenSize.fitPxWidth(16)),
 

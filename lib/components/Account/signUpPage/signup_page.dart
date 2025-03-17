@@ -61,17 +61,20 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             SizedBox(height: ScreenSize.fitPxWidth(16)),
 
             ///　Google登録
-            AccountPageUtilites().btnContainer(
-              onPress: () async {
-                bool isSendOK = await ref.read(viewModelProvider.notifier).state.googleSignUp();
-                if (isSendOK) {
-                  SignUpStepLastPage().show(context);
-                }
-              },
-              imgIcon: AppImage.googleIcon,
-              btnBgColor: AppColors.whiteColor,
-              btnTextColor: AppColors.greyColor98,
-              btnText: "Google註冊",
+            Visibility(
+              visible: Platform.isIOS,
+              child: AccountPageUtilites().btnContainer(
+                onPress: () async {
+                  bool isSendOK = await ref.read(viewModelProvider.notifier).state.googleSignUp();
+                  if (isSendOK) {
+                    SignUpStepLastPage().show(context);
+                  }
+                },
+                imgIcon: AppImage.googleIcon,
+                btnBgColor: AppColors.whiteColor,
+                btnTextColor: AppColors.greyColor98,
+                btnText: "Google註冊",
+              ),
             ),
 
             SizedBox(height: ScreenSize.fitPxWidth(16)),
