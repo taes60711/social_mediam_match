@@ -12,13 +12,14 @@ import '../../../../provider/post/post_view_model.dart';
 import '../../../../services/post_service.dart';
 import '../../../utilities/apiListView/api_list_controller.dart';
 import '../../../utilities/bottomSheets/base_bottom_sheet.dart';
+import '../post_utilities.dart';
 import 'post_editor_page.dart';
 
-class PostManagerBtmSheet extends BaseBottomSheet {
+class MyPostBtmSheet extends BaseBottomSheet {
   StateNotifierProvider<APIListControllerNotifier<PostModel>, APIListController<PostModel>> postListController;
 
   int dataIndex;
-  PostManagerBtmSheet(this.postListController, {required this.dataIndex});
+  MyPostBtmSheet(this.postListController, {required this.dataIndex});
 
   @override
   double buildHeight() {
@@ -38,6 +39,15 @@ class PostManagerBtmSheet extends BaseBottomSheet {
       child: Column(
         children: [
           SizedBox(height: ScreenSize.fitPxWidth(10)),
+          managerPageMainBtn(
+            iconData: FontAwesomeIcons.arrowUpRightFromSquare,
+            text: "分享",
+            onPress: () async {
+              PostModel choicedData = ref.read(postListController).listData[dataIndex];
+              await PostViewUtilities().sharePost(postId: choicedData.id);
+            },
+          ),
+          SizedBox(height: ScreenSize.fitPxWidth(15)),
           managerPageMainBtn(
               iconData: FontAwesomeIcons.penToSquare,
               text: "編輯文章",

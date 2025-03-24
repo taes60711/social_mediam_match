@@ -12,7 +12,6 @@ import 'package:social_mediam_match/services/friend_service.dart';
 import 'package:social_mediam_match/services/notification_service.dart';
 import 'package:social_mediam_match/services/user_service.dart';
 import '../../../enum/user_block_status_type.dart';
-import '../../../global/user_login_status_controller.dart';
 import '../../../models/friend_model.dart';
 import '../../../models/notification_model.dart';
 import '../../../models/user_model.dart';
@@ -23,7 +22,6 @@ import '../../../services/firebase_notification_service.dart';
 import '../../home/firendsPage/chatRoomPage/chat_room.dart';
 import '../../home/firendsPage/firends_page.dart';
 import '../../home/skillExChangePage/skill_utilites.dart';
-import '../dialog/confirm_dialog.dart';
 import '../main_button.dart';
 import '../style/screen_size.dart';
 import '../style/app_colors.dart';
@@ -234,71 +232,60 @@ class UserProfileAllInfoBottomSheet extends BaseBottomSheet {
                     child: Center(
                       child: MainBtn(
                         onPress: () async {
-                          if (UserLoginStatusController().isGuest()) {
-                            ConfirmDilaog(
-                                title: "提示",
-                                content: "請先登入",
-                                conirmFunc: () {
-                                  UserLoginStatusController().guestLogOut(
-                                    attachFunc: () {
-                                      closePage();
-                                      HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
-                                    },
-                                  );
-                                }).show(context);
-                            return;
-                          }
-
-                          UserBlockStatusType blockStatusType =
-                              await HomeGlobalViewModel().getUserBlockStatus(userData: userData);
-
-                          if (blockStatusType != UserBlockStatusType.none) {
-                            Toast().showCenter(msg: "該用戶已經封鎖/被封鎖");
-                            return;
-                          }
-
-                          if (ref.read(isFriendProvider.notifier).state == false) {
-                            ChatWSModel().addFriend([ref.watch(loginUserData).uid, userData.uid]);
-                            ref.read(isFriendProvider.notifier).update((state) => true);
-
-                            String message = '"${ref.watch(loginUserData).name}"將你加為好友';
-
-                            NotificationModel notification = NotificationModel.empty();
-                            notification.userUid = ref.read(loginUserData.notifier).state.uid;
-                            notification.otherUserUid = userData.uid;
-                            notification.type = 2;
-                            notification.title = message;
-                            notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
-
-                            NotificationService().createNotification(notification: notification);
-
-                            if (notifaicationToken != "") {
-                              FirebaseNotificationService().sendNotification(
-                                message: message,
-                                sendto: notifaicationToken,
-                                notifiactionInfo: notification,
-                              );
-                            }
-
-                            Toast().showBottom(msg: "添加成功");
-                            render();
-                          } else {
+                          HomeGlobalViewModel().needLoginCheckFunc(berforeCloseConfirmDialogFunc: () {
                             closePage();
-                            HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
+                          }, func: () async {
+                            UserBlockStatusType blockStatusType =
+                                await HomeGlobalViewModel().getUserBlockStatus(userData: userData);
 
-                            /// メンバーIdでRoomId探す
-                            int index = ref.watch(frinedListProvider).indexWhere((e) => e.memberId == userData.uid);
-
-                            /// 探したとルームIdない場合ルーム作成者IDでRoomId探す
-                            if (index == -1) {
-                              index = ref.watch(frinedListProvider).indexWhere((e) => e.createdBy == userData.uid);
+                            if (blockStatusType != UserBlockStatusType.none) {
+                              Toast().showCenter(msg: "該用戶已經封鎖/被封鎖");
+                              return;
                             }
 
-                            if (index != -1) {
-                              FriendListModel data = ref.watch(frinedListProvider)[index];
-                              ChatRoom(roomData: data, dataIndex: index).show(context);
+                            if (ref.read(isFriendProvider.notifier).state == false) {
+                              ChatWSModel().addFriend([ref.watch(loginUserData).uid, userData.uid]);
+                              ref.read(isFriendProvider.notifier).update((state) => true);
+
+                              String message = '"${ref.watch(loginUserData).name}"將你加為好友';
+
+                              NotificationModel notification = NotificationModel.empty();
+                              notification.userUid = ref.read(loginUserData.notifier).state.uid;
+                              notification.otherUserUid = userData.uid;
+                              notification.type = 2;
+                              notification.title = message;
+                              notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
+
+                              NotificationService().createNotification(notification: notification);
+
+                              if (notifaicationToken != "") {
+                                FirebaseNotificationService().sendNotification(
+                                  message: message,
+                                  sendto: notifaicationToken,
+                                  notifiactionInfo: notification,
+                                );
+                              }
+
+                              Toast().showBottom(msg: "添加成功");
+                              render();
+                            } else {
+                              closePage();
+                              HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
+
+                              /// メンバーIdでRoomId探す
+                              int index = ref.watch(frinedListProvider).indexWhere((e) => e.memberId == userData.uid);
+
+                              /// 探したとルームIdない場合ルーム作成者IDでRoomId探す
+                              if (index == -1) {
+                                index = ref.watch(frinedListProvider).indexWhere((e) => e.createdBy == userData.uid);
+                              }
+
+                              if (index != -1) {
+                                FriendListModel data = ref.watch(frinedListProvider)[index];
+                                ChatRoom(roomData: data, dataIndex: index).show(context);
+                              }
                             }
-                          }
+                          });
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(

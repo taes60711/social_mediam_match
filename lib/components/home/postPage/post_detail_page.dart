@@ -4,17 +4,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/postPage/post_utilities.dart';
 import 'package:social_mediam_match/components/utilities/apiListView/api_list_view.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
-import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/style/app_image.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../enum/date_format_utilities.dart';
 import '../../../global/home_global_view_model.dart';
-import '../../../global/user_login_status_controller.dart';
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
-import '../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/post/post_provider.dart';
 import '../../../services/post_service.dart';
@@ -24,6 +21,7 @@ import '../../utilities/endDrawers/base_end_drawer.dart';
 import '../../utilities/inputField/base_input.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/user_icon.dart';
+import 'post_manager/my_post_bottom_sheet.dart';
 import 'post_manager/post_bottom_sheet.dart';
 
 class PostDetailPage extends BaseEndDrawer {
@@ -120,7 +118,12 @@ class PostDetailPage extends BaseEndDrawer {
                         ),
                         GestureDetector(
                           onTap: () {
-                            PostBtmSheet(choicedData: ref.read(choicedPostProvider.notifier).state).show(context);
+                            if (choiceData.postUserInfo.uid == ref.read(loginUserData).uid && postListController != null) {
+                              ///右上のアイコンのボタン
+                              MyPostBtmSheet(postListController!, dataIndex: dataIndex).show(context);
+                            } else {
+                              PostBtmSheet(choicedData: ref.read(choicedPostProvider.notifier).state).show(context);
+                            }
                           },
                           child: Container(
                             width: ScreenSize.fitPxWidth(35),
@@ -175,29 +178,19 @@ class PostDetailPage extends BaseEndDrawer {
                           ///いいね数
                           GestureDetector(
                             onTap: () {
-                              if (UserLoginStatusController().isGuest()) {
-                                ConfirmDilaog(
-                                    title: "提示",
-                                    content: "請先登入",
-                                    conirmFunc: () {
-                                      UserLoginStatusController().guestLogOut(
-                                        attachFunc: () {
-                                          closePage();
-                                          HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
-                                        },
-                                      );
-                                    }).show(context);
-                                return;
-                              }
-                              ProfileData userData = ref.read(loginUserData);
-                              if (choiceData.postUserInfo.uid == userData.uid) {
-                                return;
-                              }
-                              viewModel.lookingPostGoodOnChange(
-                                choiceData.loginUserIsGood,
-                                dataIndex: dataIndex,
-                                postListController: postListController,
-                              );
+                              HomeGlobalViewModel().needLoginCheckFunc(berforeCloseConfirmDialogFunc: () {
+                                closePage();
+                              }, func: () {
+                                ProfileData userData = ref.read(loginUserData);
+                                if (choiceData.postUserInfo.uid == userData.uid) {
+                                  return;
+                                }
+                                viewModel.lookingPostGoodOnChange(
+                                  choiceData.loginUserIsGood,
+                                  dataIndex: dataIndex,
+                                  postListController: postListController,
+                                );
+                              });
                             },
                             child: PostViewUtilities().iconWithText(
                               image: choiceData.loginUserIsGood ? AppImage.heartFillIcon : AppImage.heartLinerIcon,
@@ -419,40 +412,30 @@ class PostDetailPage extends BaseEndDrawer {
                               ),
                               GestureDetector(
                                 onTap: () async {
-                                  if (UserLoginStatusController().isGuest()) {
-                                    ConfirmDilaog(
-                                        title: "提示",
-                                        content: "請先登入",
-                                        conirmFunc: () {
-                                          UserLoginStatusController().guestLogOut(
-                                            attachFunc: () {
-                                              closePage();
-                                              HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
-                                            },
-                                          );
-                                        }).show(context);
-                                    return;
-                                  }
-                                  bool isSuccess = false;
-                                  if (isEditStart) {
-                                    ///編集
-                                    isSuccess = await viewModel.postCommentUpdate(
-                                        message: commentController.text, dataIndex: choicedCommentEditDataIndex);
-                                  } else {
-                                    /// 作成
-                                    isSuccess = await viewModel.postCommentCreate(
-                                      message: commentController.text,
-                                      dataIndex: dataIndex,
-                                      postListController: postListController,
-                                    );
-                                  }
+                                  HomeGlobalViewModel().needLoginCheckFunc(berforeCloseConfirmDialogFunc: () {
+                                    closePage();
+                                  }, func: () async {
+                                    bool isSuccess = false;
+                                    if (isEditStart) {
+                                      ///編集
+                                      isSuccess = await viewModel.postCommentUpdate(
+                                          message: commentController.text, dataIndex: choicedCommentEditDataIndex);
+                                    } else {
+                                      /// 作成
+                                      isSuccess = await viewModel.postCommentCreate(
+                                        message: commentController.text,
+                                        dataIndex: dataIndex,
+                                        postListController: postListController,
+                                      );
+                                    }
 
-                                  if (isSuccess) {
-                                    isEditStart = false;
-                                    commentController.text = "";
-                                    // ignore: use_build_context_synchronously
-                                    FocusScope.of(context).requestFocus(FocusNode());
-                                  }
+                                    if (isSuccess) {
+                                      isEditStart = false;
+                                      commentController.text = "";
+                                      // ignore: use_build_context_synchronously
+                                      FocusScope.of(context).requestFocus(FocusNode());
+                                    }
+                                  });
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(

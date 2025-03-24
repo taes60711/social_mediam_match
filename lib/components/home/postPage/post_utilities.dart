@@ -13,15 +13,15 @@ import 'package:social_mediam_match/provider/account/user_provider.dart';
 import 'package:social_mediam_match/provider/post/post_view_model.dart';
 import '../../../enum/date_format_utilities.dart';
 import '../../../global/home_global_view_model.dart';
-import '../../../global/user_login_status_controller.dart';
+
 import '../../../models/post_model.dart';
 import '../../../models/user_model.dart';
-import '../../../pageManager/enum/bottom_bar_path.dart';
+
 import '../../../provider/post/post_provider.dart';
 import '../../utilities/FadeScalePage/video_image_view_page.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
-import '../../utilities/dialog/confirm_dialog.dart';
+
 import '../../utilities/lodaing_dialog.dart';
 import '../../utilities/main_button.dart';
 import '../../utilities/style/screen_size.dart';
@@ -29,7 +29,7 @@ import '../../utilities/style/app_colors.dart';
 import '../../utilities/user_icon.dart';
 import 'post_manager/post_bottom_sheet.dart';
 import 'post_manager/post_create_page.dart';
-import 'post_manager/post_manager_bottom_sheet.dart';
+import 'post_manager/my_post_bottom_sheet.dart';
 
 class PostViewUtilities {
   ///データなレイアウト
@@ -139,7 +139,7 @@ class PostViewUtilities {
 
                                 if (data.postUserInfo.uid == ref.read(loginUserData).uid) {
                                   ///右上のアイコンのボタン
-                                  PostManagerBtmSheet(postListController, dataIndex: dataIndex).show(context);
+                                  MyPostBtmSheet(postListController, dataIndex: dataIndex).show(context);
                                 } else {
                                   PostBtmSheet(choicedData: ref.read(choicedPostProvider.notifier).state).show(context);
                                 }
@@ -206,30 +206,19 @@ class PostViewUtilities {
                   ///いいね数
                   MainBtn(
                     onPress: () {
-                      if (UserLoginStatusController().isGuest()) {
-                        ConfirmDilaog(
-                            title: "提示",
-                            content: "請先登入",
-                            conirmFunc: () {
-                              UserLoginStatusController().guestLogOut(
-                                attachFunc: () {
-                                  HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
-                                },
-                              );
-                            }).show(context);
-                        return;
-                      }
-                      ProfileData userData = ref.read(loginUserData);
-                      if (data.postUserInfo.uid == userData.uid) {
-                        return;
-                      }
+                      HomeGlobalViewModel().needLoginCheckFunc(func: () {
+                        ProfileData userData = ref.read(loginUserData);
+                        if (data.postUserInfo.uid == userData.uid) {
+                          return;
+                        }
 
-                      viewModel.listPostGoodOnChange(
-                        data.loginUserIsGood,
-                        postData: data,
-                        dataIndex: dataIndex,
-                        postListController: postListController,
-                      );
+                        viewModel.listPostGoodOnChange(
+                          data.loginUserIsGood,
+                          postData: data,
+                          dataIndex: dataIndex,
+                          postListController: postListController,
+                        );
+                      });
                     },
                     child: PostViewUtilities().iconWithText(
                       image: data.loginUserIsGood ? AppImage.heartFillIcon : AppImage.heartLinerIcon,
@@ -479,20 +468,9 @@ class PostViewUtilities {
   static Widget postCreateButton(BuildContext context, WidgetRef ref, {PostBoard? postBoard}) {
     return MainBtn(
       onPress: () {
-        if (UserLoginStatusController().isGuest()) {
-          ConfirmDilaog(
-              title: "提示",
-              content: "請先登入",
-              conirmFunc: () {
-                UserLoginStatusController().guestLogOut(
-                  attachFunc: () {
-                    HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
-                  },
-                );
-              }).show(context);
-          return;
-        }
-        PostCreatePage(postBoard: postBoard).show(context);
+        HomeGlobalViewModel().needLoginCheckFunc(func: () {
+          PostCreatePage(postBoard: postBoard).show(context);
+        });
       },
       child: Container(
         width: ScreenSize.fitPxWidth(40),

@@ -12,7 +12,6 @@ import 'package:social_mediam_match/components/utilities/appBar/chat_room_bar.da
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/loading.dart';
-import 'package:social_mediam_match/components/utilities/lodaing_dialog.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/toast.dart';
 import 'package:social_mediam_match/components/utilities/user_icon.dart';
@@ -20,12 +19,10 @@ import 'package:social_mediam_match/enum/date_format_utilities.dart';
 import 'package:social_mediam_match/global.dart';
 import 'package:social_mediam_match/global/home_global_view_model.dart';
 import 'package:social_mediam_match/models/user_model.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../models/friend_model.dart';
 import '../../../../models/rich_text_format.dart';
 import '../../../../provider/account/user_provider.dart';
 import '../../../../provider/friend/chat_room_ws_model.dart';
-import '../../../../services/app_links_service.dart';
 import '../../../../services/friend_service.dart';
 import '../../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
 import '../../../utilities/style/screen_size.dart';
@@ -384,17 +381,7 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () async {
-                                Uri url = Uri.parse(e);
-                                if (e.contains("${APIHttpController.shareDomain}/profile") ||
-                                    e.contains("${APIHttpController.shareDomain}/post") ||
-                                    e.contains("${APIHttpController.shareDomain}/course")) {
-                                  LoadingDialog().show();
-                                  await BaseShareUrlHandle(context: HomeGlobalViewModel().context, ref: HomeGlobalViewModel().ref)
-                                      .runShareUrl(url);
-                                  LoadingDialog().close();
-                                } else {
-                                  launchUrl(url);
-                                }
+                                await HomeGlobalViewModel().launcherURL(strUrl: e);
                               });
                       } else {
                         return TextSpan(

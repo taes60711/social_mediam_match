@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/api_page.dart';
-
 import '../../../../enum/date_format_utilities.dart';
 import '../../../../global.dart';
 import '../../../../global/home_global_view_model.dart';
-import '../../../../global/user_login_status_controller.dart';
 import '../../../../models/friend_model.dart';
 import '../../../../models/notification_model.dart';
 import '../../../../models/user_model.dart';
-
 import '../../../../pageManager/enum/bottom_bar_path.dart';
 import '../../../../provider/account/user_provider.dart';
 import '../../../../provider/friend/chat_ws_model.dart';
@@ -20,7 +17,6 @@ import '../../../../services/friend_service.dart';
 import '../../../../services/notification_service.dart';
 import '../../../../services/user_service.dart';
 import '../../../utilities/BottomSheets/base_bottom_sheet.dart';
-import '../../../utilities/dialog/confirm_dialog.dart';
 import '../../../utilities/main_button.dart';
 import '../../../utilities/style/app_colors.dart';
 import '../../../utilities/style/screen_size.dart';
@@ -251,63 +247,52 @@ class MyNotificationProfilePage extends BaseBottomSheet {
                 child: Center(
                   child: MainBtn(
                     onPress: () {
-                      if (UserLoginStatusController().isGuest()) {
-                        ConfirmDilaog(
-                            title: "提示",
-                            content: "請先登入",
-                            conirmFunc: () {
-                              UserLoginStatusController().guestLogOut(
-                                attachFunc: () {
-                                  closePage();
-                                  HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
-                                },
-                              );
-                            }).show(context);
-                        return;
-                      }
-
-                      if (ref.read(isFriendProvider.notifier).state == false) {
-                        ChatWSModel().addFriend([ref.watch(loginUserData).uid, userData.uid]);
-                        ref.read(isFriendProvider.notifier).update((state) => true);
-
-                        String message = '"${ref.watch(loginUserData).name}"將你加為好友';
-
-                        NotificationModel notification = NotificationModel.empty();
-                        notification.userUid = ref.read(loginUserData.notifier).state.uid;
-                        notification.otherUserUid = userData.uid;
-                        notification.type = 2;
-                        notification.title = message;
-                        notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
-
-                        NotificationService().createNotification(notification: notification);
-
-                        if (notifaicationToken != "") {
-                          FirebaseNotificationService().sendNotification(
-                            message: message,
-                            sendto: notifaicationToken,
-                            notifiactionInfo: notification,
-                          );
-                        }
-
-                        Toast().showBottom(msg: "添加成功");
-                        render();
-                      } else {
+                      HomeGlobalViewModel().needLoginCheckFunc(berforeCloseConfirmDialogFunc: () {
                         closePage();
-                        HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
+                      }, func: () {
+                        if (ref.read(isFriendProvider.notifier).state == false) {
+                          ChatWSModel().addFriend([ref.watch(loginUserData).uid, userData.uid]);
+                          ref.read(isFriendProvider.notifier).update((state) => true);
 
-                        /// メンバーIdでRoomId探す
-                        int index = ref.watch(frinedListProvider).indexWhere((e) => e.memberId == userData.uid);
+                          String message = '"${ref.watch(loginUserData).name}"將你加為好友';
 
-                        /// 探したとルームIdない場合ルーム作成者IDでRoomId探す
-                        if (index == -1) {
-                          index = ref.watch(frinedListProvider).indexWhere((e) => e.createdBy == userData.uid);
+                          NotificationModel notification = NotificationModel.empty();
+                          notification.userUid = ref.read(loginUserData.notifier).state.uid;
+                          notification.otherUserUid = userData.uid;
+                          notification.type = 2;
+                          notification.title = message;
+                          notification.sendNotificationuserInfo = ref.read(loginUserData.notifier).state;
+
+                          NotificationService().createNotification(notification: notification);
+
+                          if (notifaicationToken != "") {
+                            FirebaseNotificationService().sendNotification(
+                              message: message,
+                              sendto: notifaicationToken,
+                              notifiactionInfo: notification,
+                            );
+                          }
+
+                          Toast().showBottom(msg: "添加成功");
+                          render();
+                        } else {
+                          closePage();
+                          HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.chatRoom);
+
+                          /// メンバーIdでRoomId探す
+                          int index = ref.watch(frinedListProvider).indexWhere((e) => e.memberId == userData.uid);
+
+                          /// 探したとルームIdない場合ルーム作成者IDでRoomId探す
+                          if (index == -1) {
+                            index = ref.watch(frinedListProvider).indexWhere((e) => e.createdBy == userData.uid);
+                          }
+
+                          if (index != -1) {
+                            FriendListModel data = ref.watch(frinedListProvider)[index];
+                            ChatRoom(roomData: data, dataIndex: index).show(context);
+                          }
                         }
-
-                        if (index != -1) {
-                          FriendListModel data = ref.watch(frinedListProvider)[index];
-                          ChatRoom(roomData: data, dataIndex: index).show(context);
-                        }
-                      }
+                      });
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(

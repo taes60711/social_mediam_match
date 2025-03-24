@@ -13,15 +13,15 @@ import 'package:social_mediam_match/services/course_service.dart';
 import '../../../enum/date_format_utilities.dart';
 import '../../../global.dart';
 import '../../../global/home_global_view_model.dart';
-import '../../../global/user_login_status_controller.dart';
+
 import '../../../models/course_model.dart';
 import '../../../models/user_model.dart';
-import '../../../pageManager/enum/bottom_bar_path.dart';
+
 import '../../../provider/account/user_provider.dart';
 import '../../../provider/course/course_provider.dart';
 import '../../utilities/apiListView/api_list_controller.dart';
 import '../../utilities/bottomSheets/user_profile_bottom_sheet.dart';
-import '../../utilities/dialog/confirm_dialog.dart';
+
 import '../../utilities/main_button.dart';
 import '../../utilities/style/screen_size.dart';
 import '../../utilities/style/app_colors.dart';
@@ -66,20 +66,9 @@ class CourseUtilites {
   static Widget courseCreateButton(BuildContext context, WidgetRef ref) {
     return MainBtn(
       onPress: () {
-        if (UserLoginStatusController().isGuest()) {
-          ConfirmDilaog(
-              title: "提示",
-              content: "請先登入",
-              conirmFunc: () {
-                UserLoginStatusController().guestLogOut(
-                  attachFunc: () {
-                    HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
-                  },
-                );
-              }).show(context);
-          return;
-        }
-        CourseCreatePage().show(context);
+        HomeGlobalViewModel().needLoginCheckFunc(func: () {
+          CourseCreatePage().show(context);
+        });
       },
       child: Container(
         width: ScreenSize.fitPxWidth(40),
@@ -343,20 +332,23 @@ class CourseUtilites {
     ProfileData userData = ref.watch(loginUserData);
     bool isSuccess = false;
 
-    if (!data.isLike) {
-      isSuccess = await CourseService().likeCourse(courseId: data.id, userUID: userData.uid);
-    } else {
-      isSuccess = await CourseService().deleteLikeCourse(courseId: data.id, userUID: userData.uid);
-    }
+    HomeGlobalViewModel().needLoginCheckFunc(func: () async {
+      if (!data.isLike) {
+        isSuccess = await CourseService().likeCourse(courseId: data.id, userUID: userData.uid);
+      } else {
+        isSuccess = await CourseService().deleteLikeCourse(courseId: data.id, userUID: userData.uid);
+      }
 
-    if (!isSuccess) {
-      Toast().showCenter(msg: "請至列表  重新整理一次列表, 再按收藏");
-      return isSuccess;
-    }
+      if (!isSuccess) {
+        Toast().showCenter(msg: "請至列表  重新整理一次列表, 再按收藏");
+        return isSuccess;
+      }
 
-    CourseModel editedData = data;
-    editedData.isLike = !editedData.isLike;
-    ref.read(courseListController.notifier).editData(dataIndex, editedData);
+      CourseModel editedData = data;
+      editedData.isLike = !editedData.isLike;
+      ref.read(courseListController.notifier).editData(dataIndex, editedData);
+    });
+
     return isSuccess;
   }
 

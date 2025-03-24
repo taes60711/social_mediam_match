@@ -1,6 +1,8 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
+
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,9 +12,9 @@ import 'package:social_mediam_match/components/utilities/FadeScalePage/image_vie
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../global/home_global_view_model.dart';
 import '../../models/rich_text_format.dart';
 import 'FadeScalePage/video_view_page.dart';
 
@@ -37,11 +39,10 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
 
     String choicedImg = "";
 
-    void tapedURL(String url) {
+    Future<void> tapedURL(String url) async {
       print("click: $url");
       if (Platform.isAndroid) {
-        final Uri _url = Uri.parse(url);
-        launchUrl(_url);
+        await HomeGlobalViewModel().launcherURL(strUrl: url);
       }
     }
 
@@ -52,27 +53,77 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
             child: HtmlWidget(
               RichTextFormat(htmlString: widget.content).editedTextToWidgetHtml(),
               textStyle: TextStyle(fontSize: fontSize, color: AppColors.whiteColor),
-              onTapUrl: (url) {
-                tapedURL(url);
-                return false;
-              },
               customWidgetBuilder: (element) {
                 if (element.localName == 'p') {
-                  return HtmlWidget(
-                    element.innerHtml,
-                    textStyle: TextStyle(fontSize: fontSize, color: AppColors.whiteColor),
-                    onTapUrl: (url) {
-                      tapedURL(url);
-                      return false;
-                    },
-                    onTapImage: (src) {
-                      print("onTapImage: ${src.sources.first.url}");
-                      setState(() {
-                        choicedImg = src.sources.first.url;
-                      });
-                      ImageViewPage(imgUrl: choicedImg).show(context);
-                    },
-                  );
+                  Map<String, String> extractLinkAndImage(String htmlString) {
+                    // 正則表達式匹配 <a> 標籤中的 href 和文本
+                    final linkPattern = RegExp(r'href="([^"]+)"');
+                    final textPattern = RegExp(r'>\s*(.*?)\s*<\/a>');
+
+                    // 正則表達式匹配 <img> 標籤中的 src URL
+                    final imgPattern = RegExp(r'src="([^"]+)"');
+
+                    // 提取 <a> 標籤中的 URL 和文本
+                    final linkMatch = linkPattern.firstMatch(htmlString);
+                    final textMatch = textPattern.firstMatch(htmlString);
+
+                    // 提取 <img> 標籤中的 src URL
+                    final imgMatch = imgPattern.firstMatch(htmlString);
+
+                    // 提取 URL 和文本，若無則返回空
+                    String url = linkMatch?.group(1) ?? '';
+                    String linkText = textMatch?.group(1) ?? '';
+                    String imageUrl = imgMatch?.group(1) ?? '';
+
+                    // 返回 URL、文本和圖片 URL
+                    return {
+                      'url': url,
+                      'text': linkText,
+                      'imageUrl': imageUrl,
+                    };
+                  }
+
+                  print(element.innerHtml);
+
+                  Map<String, String> extracted = extractLinkAndImage(element.innerHtml);
+                  String url = extracted['url'] ?? '';
+                  String linkText = extracted['text'] ?? '';
+                  String imageUrl = extracted['imageUrl'] ?? '';
+                  String plainText = element.innerHtml
+                      .replaceAll('<br>', '') // 將 <br> 換成換行符號
+                      .split('<a')[0] // 提取 <a> 標籤之前的文本
+                      .replaceAll('&nbsp;', ' ') // 將 &nbsp; 替換為空格
+                      .split('<img')[0]; // 提取 <img> 標籤之前的文本
+
+                  if (imageUrl.isNotEmpty) {
+                    return CachedNetworkImage(
+                      imageUrl: imageUrl,
+                    );
+                  } else {
+                    return RichText(
+                      text: TextSpan(
+                        style: TextStyle(color: AppColors.whiteColor, fontSize: fontSize),
+                        children: <TextSpan>[
+                          TextSpan(text: plainText),
+                          TextSpan(
+                            text: linkText,
+                            style: TextStyle(
+                              color: AppColors.blueColor,
+                              fontSize: fontSize,
+                              fontWeight: FontWeight.w600,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                if (url.isNotEmpty) {
+                                  await HomeGlobalViewModel().launcherURL(strUrl: url);
+                                }
+                              },
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                 } else if (element.localName == "iframe") {
                   String ytId = RichTextFormat().getYtvideoID(element.outerHtml);
                   index = ytController.length;
@@ -104,9 +155,9 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                         ProgressBar(isExpanded: true),
                         RemainingDuration(),
                         GestureDetector(
-                          onTap: () {
-                            final Uri _url = Uri.parse("https://www.youtube.com/watch?v=$ytId");
-                            launchUrl(_url);
+                          onTap: () async {
+                            String ytUrl = "https://www.youtube.com/watch?v=$ytId";
+                            await HomeGlobalViewModel().launcherURL(strUrl: ytUrl);
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),

@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade_scale_page.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../../global/home_global_view_model.dart';
 import '../appBar/basic_top_bar.dart';
 import '../main_button.dart';
 import '../style/screen_size.dart';
@@ -75,9 +75,9 @@ class VideoViewPage extends BaseFadeScalePage {
                           ProgressBar(isExpanded: true),
                           RemainingDuration(),
                           GestureDetector(
-                            onTap: () {
-                              final Uri _url = Uri.parse("https://www.youtube.com/watch?v=$ytId");
-                              launchUrl(_url);
+                            onTap: () async {
+                              String ytUrl = "https://www.youtube.com/watch?v=$ytId";
+                              await HomeGlobalViewModel().launcherURL(strUrl: ytUrl);
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),

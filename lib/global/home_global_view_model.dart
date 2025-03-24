@@ -7,9 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/global/user_login_status_controller.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../components/home/firendsPage/firends_page.dart';
 import '../components/utilities/dialog/confirm_dialog.dart';
+import '../components/utilities/lodaing_dialog.dart';
 import '../components/utilities/style/screen_size.dart';
 import '../components/utilities/toast.dart';
 import '../enum/user_block_status_type.dart';
@@ -82,70 +84,58 @@ class HomeGlobalViewModel {
       return;
     }
 
-    if (UserLoginStatusController().isGuest()) {
+    needLoginCheckFunc(func: () {
       ConfirmDilaog(
-          title: "提示",
-          content: "請先登入",
-          conirmFunc: () {
-            UserLoginStatusController().guestLogOut(
-              attachFunc: () {
-                changeMainPage(BottomBarPath.home);
-              },
-            );
-          }).show(context);
-      return;
-    }
+        title: "提示",
+        content: "封鎖該用戶後, 未來將不會看到該用戶的任何訊息\n\n確定要封鎖用戶嗎？",
+        conirmFunc: () async {
+          UserBlockStatusType blockStatus = await getUserBlockStatus(userData: userData);
 
-    ConfirmDilaog(
-      title: "提示",
-      content: "封鎖該用戶後, 未來將不會看到該用戶的任何訊息\n\n確定要封鎖用戶嗎？",
-      conirmFunc: () async {
-        UserBlockStatusType blockStatus = await getUserBlockStatus(userData: userData);
+          switch (blockStatus) {
+            case UserBlockStatusType.block:
+              Toast().showCenter(msg: "該用戶已經被封鎖");
+            case UserBlockStatusType.blocked:
+              Toast().showCenter(msg: "你已經被該用戶封鎖");
+            case UserBlockStatusType.none:
+              bool isSuccess = await BlackListService().addBlackUserToList(
+                uid: ref.read(loginedUserUID.notifier).state,
+                blockUID: userData.uid,
+              );
+              if (isSuccess) {
+                /// 如果為好友的話 移除好友列表
+                List<FriendListModel> friendList = ref.read(frinedListProvider.notifier).state;
 
-        switch (blockStatus) {
-          case UserBlockStatusType.block:
-            Toast().showCenter(msg: "該用戶已經被封鎖");
-          case UserBlockStatusType.blocked:
-            Toast().showCenter(msg: "你已經被該用戶封鎖");
-          case UserBlockStatusType.none:
-            bool isSuccess = await BlackListService().addBlackUserToList(
-              uid: ref.read(loginedUserUID.notifier).state,
-              blockUID: userData.uid,
-            );
-            if (isSuccess) {
-              /// 如果為好友的話 移除好友列表
-              List<FriendListModel> friendList = ref.read(frinedListProvider.notifier).state;
+                int index = friendList.indexWhere((e) {
+                  String memberId = e.createdBy;
+                  if (ref.read(loginUserData.notifier).state.uid == e.createdBy) {
+                    memberId = e.memberId;
+                  }
 
-              int index = friendList.indexWhere((e) {
-                String memberId = e.createdBy;
-                if (ref.read(loginUserData.notifier).state.uid == e.createdBy) {
-                  memberId = e.memberId;
+                  return memberId == userData.uid;
+                });
+
+                if (index != -1) {
+                  /// 如果為好友的話 移除好友
+                  await FriendService().deleteFriend(friendList[index].roomId, friendList[index].userData.uid);
+                  friendList.removeAt(index);
+                  ref.read(frinedListProvider.notifier).update((state) => friendList);
+
+                  ref.read(frinedListProvider.notifier).update((state) => friendList);
+
+                  ref.read(friendPageRender.notifier).state();
+                  if (isInChatRoom) {
+                    ChatRoomWSModel().deleteFriendClospage();
+                  }
                 }
 
-                return memberId == userData.uid;
-              });
-
-              if (index != -1) {
-                /// 如果為好友的話 移除好友
-                await FriendService().deleteFriend(friendList[index].roomId, friendList[index].userData.uid);
-                friendList.removeAt(index);
-                ref.read(frinedListProvider.notifier).update((state) => friendList);
-
-                ref.read(frinedListProvider.notifier).update((state) => friendList);
-
-                ref.read(friendPageRender.notifier).state();
-                if (isInChatRoom) {
-                  ChatRoomWSModel().deleteFriendClospage();
-                }
+                Toast().showCenter(msg: "已封鎖該用戶");
               }
-
-              Toast().showCenter(msg: "已封鎖該用戶");
-            }
-          case UserBlockStatusType.failed:
-            print("server Failed");
-        }
-      },
-    ).show(context);
+            case UserBlockStatusType.failed:
+              print("server Failed");
+          }
+        },
+      ).show(context);
+    });
   }
 
   /// ユーザのブロック状態取得する
@@ -164,6 +154,44 @@ class HomeGlobalViewModel {
         return UserBlockStatusType.none;
       default:
         return UserBlockStatusType.failed;
+    }
+  }
+
+  /// 関数実行前にログインチェック必要場合使う
+  void needLoginCheckFunc({Function? berforeCloseConfirmDialogFunc, Function? func}) {
+    if (UserLoginStatusController().isGuest()) {
+      ConfirmDilaog(
+          title: "提示",
+          content: "請先登入",
+          conirmFunc: () {
+            UserLoginStatusController().guestLogOut(
+              attachFunc: () {
+                if (berforeCloseConfirmDialogFunc != null) {
+                  berforeCloseConfirmDialogFunc();
+                }
+                changeMainPage(BottomBarPath.home);
+              },
+            );
+          }).show(context);
+    } else {
+      if (func != null) {
+        func();
+      }
+    }
+  }
+
+  ///外部Url遷移する
+  Future<void> launcherURL({required String strUrl}) async {
+    Uri url = Uri.parse(strUrl);
+
+    if (strUrl.contains("${APIHttpController.shareDomain}/profile") ||
+        strUrl.contains("${APIHttpController.shareDomain}/post") ||
+        strUrl.contains("${APIHttpController.shareDomain}/course")) {
+      LoadingDialog().show();
+      await BaseShareUrlHandle(context: HomeGlobalViewModel().context, ref: HomeGlobalViewModel().ref).runShareUrl(url);
+      LoadingDialog().close();
+    } else {
+      launchUrl(url);
     }
   }
 

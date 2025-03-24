@@ -3,14 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_mediam_match/components/home/firendsPage/firends_page.dart';
 import 'package:social_mediam_match/components/utilities/app_common_tools.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
-
-import '../../components/utilities/dialog/confirm_dialog.dart';
 import '../../components/utilities/main_button.dart';
 import '../../components/utilities/style/screen_size.dart';
 import '../../components/utilities/style/app_colors.dart';
 import '../../global/home_global_view_model.dart';
-import '../../global/user_login_status_controller.dart';
-
 import '../../pageManager/enum/bottom_bar_path.dart';
 
 class BottomBar extends ConsumerStatefulWidget {
@@ -61,21 +57,12 @@ class _BottomBarState extends ConsumerState<BottomBar> {
                 return MainBtn(
                   onPress: () {
                     if (e == BottomBarPath.chatRoom || e == BottomBarPath.my) {
-                      if (UserLoginStatusController().isGuest()) {
-                        ConfirmDilaog(
-                            title: "提示",
-                            content: "請先登入",
-                            conirmFunc: () {
-                              UserLoginStatusController().guestLogOut(
-                                attachFunc: () {
-                                  HomeGlobalViewModel().changeMainPage(BottomBarPath.home);
-                                },
-                              );
-                            }).show(context);
-                        return;
-                      }
+                      HomeGlobalViewModel().needLoginCheckFunc(func: () {
+                        HomeGlobalViewModel().changeMainPage(e);
+                      });
+                    } else {
+                      HomeGlobalViewModel().changeMainPage(e);
                     }
-                    HomeGlobalViewModel().changeMainPage(e);
                   },
                   child: Container(
                     color: AppColors.transparent,

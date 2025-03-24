@@ -7,7 +7,7 @@ import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.d
 import 'package:social_mediam_match/enum/dev_type.dart';
 import 'package:social_mediam_match/models/app_info_model.dart';
 import 'package:social_mediam_match/services/app_info_service.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'global/home_global_view_model.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 BuildContext globalContext = navigatorKey.currentState!.context;
@@ -57,9 +57,8 @@ class APPInfoController {
       title: "版本錯誤",
       content: "App已經更新了哦\n請至商店更新",
       btnAmount: 1,
-      conirmFunc: () {
-        Uri url = Uri.parse(storeUrl);
-        launchUrl(url);
+      conirmFunc: () async {
+        await HomeGlobalViewModel().launcherURL(strUrl: storeUrl);
       },
     ).show(context);
   }

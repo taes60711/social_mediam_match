@@ -7,10 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-
 import '../../../global.dart';
+import '../../../global/home_global_view_model.dart';
 import '../../../models/rich_text_format.dart';
 import '../../../services/image_service.dart';
 import '../appBar/basic_top_bar.dart';
@@ -424,9 +423,9 @@ class _YtVideoWidgetState extends State<YtVideoWidget> {
                           ProgressBar(isExpanded: true),
                           RemainingDuration(),
                           GestureDetector(
-                            onTap: () {
-                              final Uri _url = Uri.parse("https://www.youtube.com/watch?v=${ytId}");
-                              launchUrl(_url);
+                            onTap: () async {
+                              String ytUrl = "https://www.youtube.com/watch?v=$ytId";
+                              await HomeGlobalViewModel().launcherURL(strUrl: ytUrl);
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
