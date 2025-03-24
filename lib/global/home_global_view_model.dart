@@ -181,14 +181,17 @@ class HomeGlobalViewModel {
   }
 
   ///外部Url遷移する
-  Future<void> launcherURL({required String strUrl}) async {
+  Future<void> launcherURL({required String strUrl, bool needPopAllPage = true}) async {
     Uri url = Uri.parse(strUrl);
 
     if (strUrl.contains("${APIHttpController.shareDomain}/profile") ||
         strUrl.contains("${APIHttpController.shareDomain}/post") ||
         strUrl.contains("${APIHttpController.shareDomain}/course")) {
       LoadingDialog().show();
-      await BaseShareUrlHandle(context: HomeGlobalViewModel().context, ref: HomeGlobalViewModel().ref).runShareUrl(url);
+      await BaseShareUrlHandle(context: context, ref: ref).runShareUrl(
+        url,
+        needPopAllPage: needPopAllPage,
+      );
       LoadingDialog().close();
     } else {
       launchUrl(url);

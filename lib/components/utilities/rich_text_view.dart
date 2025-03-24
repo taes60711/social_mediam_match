@@ -1,6 +1,5 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
 
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -39,13 +38,6 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
 
     String choicedImg = "";
 
-    Future<void> tapedURL(String url) async {
-      print("click: $url");
-      if (Platform.isAndroid) {
-        await HomeGlobalViewModel().launcherURL(strUrl: url);
-      }
-    }
-
     return (widget.isPreView != true)
         //全文章
         ? SizedBox(
@@ -83,8 +75,6 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                     };
                   }
 
-                  print(element.innerHtml);
-
                   Map<String, String> extracted = extractLinkAndImage(element.innerHtml);
                   String url = extracted['url'] ?? '';
                   String linkText = extracted['text'] ?? '';
@@ -96,8 +86,16 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                       .split('<img')[0]; // 提取 <img> 標籤之前的文本
 
                   if (imageUrl.isNotEmpty) {
-                    return CachedNetworkImage(
-                      imageUrl: imageUrl,
+                    return MainBtn(
+                      onPress: () {
+                        setState(() {
+                          choicedImg = imageUrl;
+                        });
+                        ImageViewPage(imgUrl: choicedImg).show(context);
+                      },
+                      child: CachedNetworkImage(
+                        imageUrl: imageUrl,
+                      ),
                     );
                   } else {
                     return RichText(
@@ -116,7 +114,10 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                             recognizer: TapGestureRecognizer()
                               ..onTap = () async {
                                 if (url.isNotEmpty) {
-                                  await HomeGlobalViewModel().launcherURL(strUrl: url);
+                                  await HomeGlobalViewModel().launcherURL(
+                                    strUrl: url,
+                                    needPopAllPage: false,
+                                  );
                                 }
                               },
                           ),

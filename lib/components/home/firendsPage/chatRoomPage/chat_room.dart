@@ -381,7 +381,10 @@ class ChatRoom extends BaseEndDrawer with WidgetsBindingObserver {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () async {
-                                await HomeGlobalViewModel().launcherURL(strUrl: e);
+                                await HomeGlobalViewModel().launcherURL(
+                                  strUrl: e,
+                                  needPopAllPage: false,
+                                );
                               });
                       } else {
                         return TextSpan(

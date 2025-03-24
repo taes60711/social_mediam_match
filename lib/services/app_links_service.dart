@@ -1,5 +1,4 @@
 // ignore_for_file: avoid_print
-
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,7 +17,7 @@ class BaseShareUrlHandle {
 
   BaseShareUrlHandle({required this.context, required this.ref});
 
-  Future<void> runShareUrl(Uri url) async {
+  Future<void> runShareUrl(Uri url, {bool needPopAllPage = true}) async {
     Map<String, String>? mappedData = parseUrl("$url");
 
     if (mappedData != null && !ref.read(notifiProfilePageIsOpen.notifier).state) {
@@ -29,7 +28,10 @@ class BaseShareUrlHandle {
         case "post":
           if (UserLoginStatusController().isLogin()) {
             ///文章
-            HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.home);
+
+            if (needPopAllPage) {
+              HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.home);
+            }
 
             MyNotificationPostPage(postId: content).show(context);
           }
@@ -37,8 +39,10 @@ class BaseShareUrlHandle {
         case "course":
           if (UserLoginStatusController().isLogin()) {
             ///コース
-            HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.course);
 
+            if (needPopAllPage) {
+              HomeGlobalViewModel().popUntiltFirstThentoPage(BottomBarPath.course);
+            }
             MyNotificationCourseDetailPage(courseId: content).show(context);
           }
           break;
