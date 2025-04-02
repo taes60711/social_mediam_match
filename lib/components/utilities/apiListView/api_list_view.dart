@@ -17,7 +17,6 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
   final bool haveBottomBar;
   final Future<List<R>> Function(int page, int size) apiFunc;
   final StateNotifierProvider<APIListControllerNotifier, APIListController<dynamic>> listControllerProvider;
-  final Widget? initWidget;
   final Widget? loadingWidget;
   final Widget? noDataWidget;
   final Widget? headerWidget;
@@ -32,7 +31,6 @@ class APIListWidget<R> extends ConsumerStatefulWidget {
       this.haveBottomBar = false,
       required this.apiFunc,
       required this.listControllerProvider,
-      this.initWidget,
       this.loadingWidget,
       this.noDataWidget,
       this.headerWidget,
@@ -84,10 +82,8 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     ref.read(widget.listControllerProvider.notifier).create(widget.size);
     setState(() {});
 
-    if (widget.initWidget == null) {
-      await ref.read(widget.listControllerProvider.notifier).init();
-      setState(() {});
-    }
+    await ref.read(widget.listControllerProvider.notifier).init();
+    setState(() {});
   }
 
   @override
@@ -101,25 +97,40 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
     LoadDataStatus loadDataStatus = ref.read(widget.listControllerProvider).loadDataStatus;
 
     if (loadDataStatus != LoadDataStatus.initial) {
+      ///ロードおわたらデータない場合
       if (ref.watch(widget.listControllerProvider).listData.isEmpty) {
         return Scaffold(
           backgroundColor: AppColors.transparent,
           body: Stack(
             children: [
-              Column(
-                children: [
-                  widget.headerWidget ?? Container(),
-                  Expanded(
-                    child: widget.noDataWidget ??
-                        Center(
-                          child: Text(
-                            "NoData",
-                            style: TextStyle(color: AppColors.whiteColor),
-                          ),
+              Builder(builder: (context) {
+                if (widget.headerWidget == null) {
+                  return Center(
+                    child: Text(
+                      "NoData",
+                      style: TextStyle(color: AppColors.whiteColor),
+                    ),
+                  );
+                } else {
+                  return SizedBox(
+                    height: ScreenSize.height,
+                    child: SingleChildScrollView(
+                        child: Column(
+                      children: [
+                        widget.headerWidget ?? Container(),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
+                          child: widget.noDataWidget ??
+                              Text(
+                                "NoData",
+                                style: TextStyle(color: AppColors.whiteColor),
+                              ),
                         ),
-                  ),
-                ],
-              ),
+                      ],
+                    )),
+                  );
+                }
+              }),
 
               ///　CustomFloatButton
               Builder(
@@ -279,31 +290,22 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
         ),
       );
     } else if (loadDataStatus == LoadDataStatus.initial) {
-      if (widget.initWidget == null) {
-        ///ページに初めで遷移場合
-        child = Column(
-          children: [
-            widget.headerWidget ?? Container(),
-            Expanded(
-              child: widget.loadingWidget ??
-                  const Center(
-                    child: Loading(),
-                  ),
-            )
-          ],
-        );
+      ///ページに初めで遷移場合
+      if (widget.headerWidget == null) {
+        return widget.loadingWidget ?? const Loading();
       } else {
-        ///ページに初めで遷移場合
-        child = Column(
-          children: [
-            widget.headerWidget ?? Container(),
-            Expanded(
-              child: widget.initWidget ??
-                  const Center(
-                    child: Loading(),
-                  ),
-            )
-          ],
+        child = SizedBox(
+          height: ScreenSize.height,
+          child: SingleChildScrollView(
+              child: Column(
+            children: [
+              widget.headerWidget ?? Container(),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
+                child: widget.loadingWidget ?? const Loading(),
+              )
+            ],
+          )),
         );
       }
     }
