@@ -115,19 +115,20 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
                   return SizedBox(
                     height: ScreenSize.height,
                     child: SingleChildScrollView(
+                        physics: scrollPhysics(context),
                         child: Column(
-                      children: [
-                        widget.headerWidget ?? Container(),
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
-                          child: widget.noDataWidget ??
-                              Text(
-                                "NoData",
-                                style: TextStyle(color: AppColors.whiteColor),
-                              ),
-                        ),
-                      ],
-                    )),
+                          children: [
+                            widget.headerWidget ?? Container(),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
+                              child: widget.noDataWidget ??
+                                  Text(
+                                    "NoData",
+                                    style: TextStyle(color: AppColors.whiteColor),
+                                  ),
+                            ),
+                          ],
+                        )),
                   );
                 }
               }),
@@ -297,15 +298,16 @@ class _APIListWidgetState<R> extends ConsumerState<APIListWidget<R>> {
         child = SizedBox(
           height: ScreenSize.height,
           child: SingleChildScrollView(
+              physics: scrollPhysics(context),
               child: Column(
-            children: [
-              widget.headerWidget ?? Container(),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
-                child: widget.loadingWidget ?? const Loading(),
-              )
-            ],
-          )),
+                children: [
+                  widget.headerWidget ?? Container(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: ScreenSize.fitPxHeight(10)),
+                    child: widget.loadingWidget ?? const Loading(),
+                  )
+                ],
+              )),
         );
       }
     }
