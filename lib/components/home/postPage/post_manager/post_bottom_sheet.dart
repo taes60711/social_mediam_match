@@ -8,6 +8,7 @@ import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
 import '../../../../global/home_global_view_model.dart';
 import '../../../../models/post_model.dart';
 import '../../../utilities/BottomSheets/base_bottom_sheet.dart';
+import '../../../utilities/BottomSheets/report_bottom_sheet.dart';
 
 /// 文章編集のページ
 class PostBtmSheet extends BaseBottomSheet {
@@ -16,7 +17,7 @@ class PostBtmSheet extends BaseBottomSheet {
 
   @override
   double buildHeight() {
-    return 0.3;
+    return 0.25;
   }
 
   @override
@@ -39,6 +40,13 @@ class PostBtmSheet extends BaseBottomSheet {
           },
         ),
         SizedBox(height: ScreenSize.fitPxWidth(15)),
+        managerPageMainBtn(
+          iconData: FontAwesomeIcons.circleExclamation,
+          text: "檢舉",
+          onPress: () async {
+            ReportBtmSheet(reportTitle: '分享文章 : ${choicedData.id}').show(context);
+          },
+        ),
       ],
     );
   }

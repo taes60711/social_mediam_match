@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_utilites.dart';
+import 'package:social_mediam_match/components/utilities/BottomSheets/report_bottom_sheet.dart';
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
@@ -24,7 +25,7 @@ class MyCourseManagerBtmSheet extends BaseBottomSheet {
 
   @override
   double buildHeight() {
-    return 0.3;
+    return 0.35;
   }
 
   @override
@@ -83,6 +84,14 @@ class MyCourseManagerBtmSheet extends BaseBottomSheet {
               HomeGlobalViewModel().blockUser(userData: choiceCourse.courseCreateduserInfo);
             },
           ),
+          SizedBox(height: ScreenSize.fitPxWidth(15)),
+          managerPageMainBtn(
+            iconData: FontAwesomeIcons.circleExclamation,
+            text: "檢舉",
+            onPress: () async {
+              ReportBtmSheet(reportTitle: '技術文章 : ${choiceCourse.id}').show(context);
+            },
+          ),
         ],
       ),
     );
@@ -115,44 +124,6 @@ class MyCourseManagerBtmSheet extends BaseBottomSheet {
               size: ScreenSize.fontSize14,
             ),
             SizedBox(width: ScreenSize.fitPxWidth(10)),
-            Text(
-              text,
-              style: TextStyle(
-                color: AppColors.whiteColor,
-                fontSize: ScreenSize.fontSize12,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget managernormalBtn({required IconData iconData, required String text, required Function onPress}) {
-    return MainBtn(
-      onPress: () {
-        onPress();
-      },
-      child: Container(
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.symmetric(
-          horizontal: ScreenSize.fitPxWidth(58),
-          vertical: ScreenSize.fitPxWidth(13),
-        ),
-        decoration: BoxDecoration(
-          color: AppColors.greyColor54,
-          borderRadius: BorderRadius.circular(
-            ScreenSize.fitPxWidth(10),
-          ),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              iconData,
-              color: AppColors.whiteColor,
-              size: ScreenSize.fontSize14,
-            ),
-            SizedBox(height: ScreenSize.fitPxWidth(10)),
             Text(
               text,
               style: TextStyle(
