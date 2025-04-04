@@ -31,17 +31,18 @@ class APPInfoController {
     bool isOk = true;
     AppInfoModel serviceVer = await AppInfoService().getAppInfo();
     print("Phone Version IOS : ${phoneVer.iosVersion} Android : ${phoneVer.androidVersion}");
-    print("Service Version IOS : ${serviceVer.iosVersion} Android : ${serviceVer.androidVersion}");
+    print("Service Version IOS : ${serviceVer.iosVersion} Android : ${serviceVer.androidVersion} "
+        "test : ${serviceVer.testVersion} androidTest: ${serviceVer.androidTestVersion}");
 
     if (Platform.isIOS) {
-      if (phoneVer.iosVersion != serviceVer.iosVersion) {
+      if (phoneVer.iosVersion != serviceVer.iosVersion && phoneVer.iosVersion != serviceVer.testVersion) {
         String iosStoreUrl = "https://apps.apple.com/tw/app/skillstorm/id6739574450";
         toUpdatePage(context, storeUrl: iosStoreUrl);
         print("need Update");
         isOk = false;
       }
     } else if (Platform.isAndroid) {
-      if (phoneVer.androidVersion != serviceVer.androidVersion) {
+      if (phoneVer.androidVersion != serviceVer.androidVersion && phoneVer.iosVersion != serviceVer.androidTestVersion) {
         String androidStroeUrl = "https://apps.apple.com/tw/app/skillstorm/id6739574450";
         toUpdatePage(context, storeUrl: androidStroeUrl);
         print("need Update");
