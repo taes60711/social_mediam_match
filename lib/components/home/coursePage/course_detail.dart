@@ -3,13 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_manager/my_course_manager.bottom.sheet.dart';
 import 'package:social_mediam_match/components/home/coursePage/course_utilites.dart';
-
 import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.dart';
 import 'package:social_mediam_match/components/utilities/endDrawers/base_end_drawer.dart';
 import 'package:social_mediam_match/components/utilities/toast.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 import 'package:social_mediam_match/services/user_service.dart';
-
 import '../../../enum/date_format_utilities.dart';
 import '../../../global/home_global_view_model.dart';
 import '../../../models/course_model.dart';

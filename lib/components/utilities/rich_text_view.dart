@@ -48,29 +48,29 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
               customWidgetBuilder: (element) {
                 if (element.localName == 'p') {
                   Map<String, String> extractLinkAndImage(String htmlString) {
-                    // 正則表達式匹配 <a> 標籤中的 href 和文本
-                    final linkPattern = RegExp(r'href="([^"]+)"');
-                    final textPattern = RegExp(r'>\s*(.*?)\s*<\/a>');
+                    // 完整抓出 <a href="...">文字</a> 後的內容
+                    final aTagPattern = RegExp(
+                      r'<a\s+[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>([^<]*)',
+                      caseSensitive: false,
+                      dotAll: true,
+                    );
 
                     // 正則表達式匹配 <img> 標籤中的 src URL
                     final imgPattern = RegExp(r'src="([^"]+)"');
 
-                    // 提取 <a> 標籤中的 URL 和文本
-                    final linkMatch = linkPattern.firstMatch(htmlString);
-                    final textMatch = textPattern.firstMatch(htmlString);
-
-                    // 提取 <img> 標籤中的 src URL
+                    final aMatch = aTagPattern.firstMatch(htmlString);
                     final imgMatch = imgPattern.firstMatch(htmlString);
 
-                    // 提取 URL 和文本，若無則返回空
-                    String url = linkMatch?.group(1) ?? '';
-                    String linkText = textMatch?.group(1) ?? '';
-                    String imageUrl = imgMatch?.group(1) ?? '';
+                    String url = aMatch?.group(1) ?? ''; // href
+                    String linkText = aMatch?.group(2) ?? ''; // <a>文字</a>
+                    String afterText = aMatch?.group(3) ?? ''; // </a>後的純文字
+                    String imageUrl = imgMatch?.group(1) ?? ''; // <img src="">
 
                     // 返回 URL、文本和圖片 URL
                     return {
                       'url': url,
                       'text': linkText,
+                      'afterText': afterText,
                       'imageUrl': imageUrl,
                     };
                   }
@@ -78,6 +78,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                   Map<String, String> extracted = extractLinkAndImage(element.innerHtml);
                   String url = extracted['url'] ?? '';
                   String linkText = extracted['text'] ?? '';
+                  String linkafterText = (extracted['afterText'] as String).replaceAll('&nbsp;', ' ').replaceAll('<br>', '');
                   String imageUrl = extracted['imageUrl'] ?? '';
                   String plainText = element.innerHtml
                       .replaceAll('<br>', '') // 將 <br> 換成換行符號
@@ -121,6 +122,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                                 }
                               },
                           ),
+                          TextSpan(text: linkafterText),
                         ],
                       ),
                     );
