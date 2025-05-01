@@ -250,7 +250,7 @@ class PostService extends ApiClient {
       requestPostCommentData = await handleResponse<PostCommentTextEditorModel>(
         responseData,
         model: PostCommentTextEditorModel.toMap,
-        isList: true,
+        isList: true,  
       );
     } catch (e) {
       onRequestFailed();

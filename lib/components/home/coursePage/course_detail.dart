@@ -51,6 +51,7 @@ class CourseDetailPage extends BaseEndDrawer {
   Future<void> initState(WidgetRef ref) async {
     notifaicationToken =
         await UserService().requestUserNotificationTokenByUID(ref.read(choicedCourseProvider).courseCreateduserInfo.uid);
+
     mainBodyInit = true;
     render();
   }

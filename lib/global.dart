@@ -76,9 +76,8 @@ class APIHttpController {
   }
 
   final String _domain = "skillstorm.directsense.tw";
-  final String _ip = "192.168.1.158";
-
-  ///"192.168.1.158"; //119.77.173.122
+  final String _ip = "192.168.0.15";
+  //119.77.173.122
 
   final String _port = '80';
   final String _webSocketDebugPort = "123";

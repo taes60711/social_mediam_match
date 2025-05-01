@@ -47,6 +47,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
               textStyle: TextStyle(fontSize: fontSize, color: AppColors.whiteColor),
               customWidgetBuilder: (element) {
                 if (element.localName == 'p') {
+                  /// 對應文字情況
                   Map<String, String> extractLinkAndImage(String htmlString) {
                     // 完整抓出 <a href="...">文字</a> 後的內容
                     final aTagPattern = RegExp(
@@ -128,6 +129,7 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                     );
                   }
                 } else if (element.localName == "iframe") {
+                  /// 對應影片情況
                   String ytId = RichTextFormat().getYtvideoID(element.outerHtml);
                   index = ytController.length;
 
@@ -184,7 +186,11 @@ class _RichTextViewState extends State<RichTextView> with SingleTickerProviderSt
                     ),
                   );
                 } else {
-                  return Container();
+                  /// 對應其他情況
+                  return HtmlWidget(
+                    element.outerHtml,
+                    textStyle: TextStyle(color: AppColors.whiteColor, fontSize: fontSize),
+                  );
                 }
               },
               onTapImage: (src) {
