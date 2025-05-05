@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quill_html_editor/quill_html_editor.dart';
+// import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade_scale_page.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
 import 'package:social_mediam_match/components/utilities/appBar/basic_top_bar.dart';
@@ -33,7 +33,7 @@ class CourseRichTextCreate extends BaseFadeScalePage {
     required this.courseEditPageRender,
   });
   TextEditingController titleController = TextEditingController();
-  QuillEditorController courserController = QuillEditorController();
+  // QuillEditorController courserController = QuillEditorController();
 
   @override
   Widget build(WidgetRef ref) {
@@ -56,42 +56,42 @@ class CourseRichTextCreate extends BaseFadeScalePage {
                   closePage();
                 }
               },
-              rightWidget: MainBtn(
-                title: "保存",
-                onPress: () async {
-                  if (ediType == CreateEdiType.chapter) {
-                    CanTouchScreenLoadingDialog().show();
-                    String richTextContent = await courserController.getText();
-                    if (sendBeforeCheck(richTextContent)) {
-                      String title = titleController.text;
-                      print("titleController: $title  richTextContent $richTextContent");
-                      String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
-                      List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
-                      CourseChapterInfo createChapter =
-                          CourseChapterInfo(chapter: chapterList.length + 1, chapterName: title, content: [fomattedContent]);
+              // rightWidget: MainBtn(
+              //   title: "保存",
+              //   onPress: () async {
+              //     if (ediType == CreateEdiType.chapter) {
+              //       CanTouchScreenLoadingDialog().show();
+              //       String richTextContent = await courserController.getText();
+              //       if (sendBeforeCheck(richTextContent)) {
+              //         String title = titleController.text;
+              //         print("titleController: $title  richTextContent $richTextContent");
+              //         String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
+              //         List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
+              //         CourseChapterInfo createChapter =
+              //             CourseChapterInfo(chapter: chapterList.length + 1, chapterName: title, content: [fomattedContent]);
 
-                      chapterList.add(createChapter);
-                      ref.read(courseEditChapterList.notifier).update((state) => chapterList);
-                      CanTouchScreenLoadingDialog().close();
-                      courseEditPageRender();
-                      closePage();
-                    } else {
-                      CanTouchScreenLoadingDialog().close();
-                    }
-                  } else {
-                    CanTouchScreenLoadingDialog().show();
-                    String richTextContent = await courserController.getText();
+              //         chapterList.add(createChapter);
+              //         ref.read(courseEditChapterList.notifier).update((state) => chapterList);
+              //         CanTouchScreenLoadingDialog().close();
+              //         courseEditPageRender();
+              //         closePage();
+              //       } else {
+              //         CanTouchScreenLoadingDialog().close();
+              //       }
+              //     } else {
+              //       CanTouchScreenLoadingDialog().show();
+              //       String richTextContent = await courserController.getText();
 
-                    print("richTextContent $richTextContent");
-                    String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
+              //       print("richTextContent $richTextContent");
+              //       String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
 
-                    ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
-                    CanTouchScreenLoadingDialog().close();
-                    courseEditPageRender();
-                    closePage();
-                  }
-                },
-              ),
+              //       ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
+              //       CanTouchScreenLoadingDialog().close();
+              //       courseEditPageRender();
+              //       closePage();
+              //     }
+              //   },
+              // ),
             ),
             Visibility(
               visible: CreateEdiType.chapter == ediType,
@@ -102,9 +102,9 @@ class CourseRichTextCreate extends BaseFadeScalePage {
                 controller: titleController,
               ),
             ),
-            Expanded(
-              child: RichTextEditor(controller: courserController, content: ""),
-            ),
+            // Expanded(
+            //   child: RichTextEditor(controller: courserController, content: ""),
+            // ),
           ],
         ),
       ),
@@ -114,16 +114,16 @@ class CourseRichTextCreate extends BaseFadeScalePage {
   ///　クロース前に編集したことある確認
   Future<bool> closeIsEditEdCheck() async {
     bool isEdited = false;
-    String richTextContent = await courserController.getText();
-    if (ediType == CreateEdiType.chapter) {
-      if (titleController.text != "" || richTextContent != "") {
-        isEdited = true;
-      }
-    } else {
-      if (richTextContent != "") {
-        isEdited = true;
-      }
-    }
+    // String richTextContent = await courserController.getText();
+    // if (ediType == CreateEdiType.chapter) {
+    //   if (titleController.text != "" || richTextContent != "") {
+    //     isEdited = true;
+    //   }
+    // } else {
+    //   if (richTextContent != "") {
+    //     isEdited = true;
+    //   }
+    // }
 
     return isEdited;
   }
