@@ -52,8 +52,6 @@ class ThemeStyle {
         return blackColor;
       case AppThemeType.white:
         return whiteColor;
-      default:
-        return blackColor;
     }
   }
 }

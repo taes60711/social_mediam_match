@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quill_html_editor/quill_html_editor.dart';
 // import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:social_mediam_match/components/utilities/FadeScalePage/base_fade_scale_page.dart';
 import 'package:social_mediam_match/components/utilities/common_scaffold.dart';
@@ -43,7 +44,7 @@ class CourseRichTextEdit extends BaseFadeScalePage {
     this.content,
   });
   TextEditingController titleController = TextEditingController();
-  // QuillEditorController courserController = QuillEditorController();
+  QuillEditorController courserController = QuillEditorController();
   String realContent = "";
 
   bool isSend = false;
@@ -52,10 +53,10 @@ class CourseRichTextEdit extends BaseFadeScalePage {
   Future<void> initState(WidgetRef ref) async {
     if (courseChapterInfo != null && ediType == EdiType.chapter) {
       titleController.text = courseChapterInfo!.chapterName;
-      // courserController.setText(courseChapterInfo!.content[0]);
+      courserController.setText(courseChapterInfo!.content[0]);
       realContent = courseChapterInfo!.content[0];
     } else {
-      // courserController.setText(content ?? "");
+      courserController.setText(content ?? "");
       realContent = content ?? "";
     }
 
@@ -83,37 +84,37 @@ class CourseRichTextEdit extends BaseFadeScalePage {
                   closePage();
                 }
               },
-              // rightWidget: MainBtn(
-              //   title: "保存",
-              //   onPress: () async {
-              //     CanTouchScreenLoadingDialog().show();
-              //     String richTextContent = await courserController.getText();
+              rightWidget: MainBtn(
+                title: "保存",
+                onPress: () async {
+                  CanTouchScreenLoadingDialog().show();
+                  String richTextContent = await courserController.getText();
 
-              //     if (sendBeforeCheck(richTextContent)) {
-              //       if (ediType == EdiType.chapter) {
-              //         String title = titleController.text;
-              //         print("titleController: $title  richTextContent $richTextContent");
-              //         String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
-              //         List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
+                  if (sendBeforeCheck(richTextContent)) {
+                    if (ediType == EdiType.chapter) {
+                      String title = titleController.text;
+                      print("titleController: $title  richTextContent $richTextContent");
+                      String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
+                      List<CourseChapterInfo> chapterList = ref.read(courseEditChapterList.notifier).state;
 
-              //         courseChapterInfo!.chapterName = title;
-              //         courseChapterInfo!.content = [fomattedContent];
-              //         chapterList[courseChaterIndex ?? -1] = courseChapterInfo!;
+                      courseChapterInfo!.chapterName = title;
+                      courseChapterInfo!.content = [fomattedContent];
+                      chapterList[courseChaterIndex ?? -1] = courseChapterInfo!;
 
-              //         ref.read(courseEditChapterList.notifier).update((state) => chapterList);
-              //       } else {
-              //         print("richTextContent $richTextContent");
-              //         String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
-              //         ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
-              //       }
-              //       CanTouchScreenLoadingDialog().close();
-              //       courseEditPageRender();
-              //       closePage();
-              //     } else {
-              //       CanTouchScreenLoadingDialog().close();
-              //     }
-              //   },
-              // ),
+                      ref.read(courseEditChapterList.notifier).update((state) => chapterList);
+                    } else {
+                      print("richTextContent $richTextContent");
+                      String fomattedContent = await RichTextFormat(htmlString: richTextContent).sendPostImgFormat();
+                      ref.read(courseDetailContent.notifier).update((state) => fomattedContent);
+                    }
+                    CanTouchScreenLoadingDialog().close();
+                    courseEditPageRender();
+                    closePage();
+                  } else {
+                    CanTouchScreenLoadingDialog().close();
+                  }
+                },
+              ),
             ),
             Visibility(
               visible: EdiType.chapter == ediType,
@@ -124,9 +125,9 @@ class CourseRichTextEdit extends BaseFadeScalePage {
                 controller: titleController,
               ),
             ),
-            // Expanded(
-            //   child: RichTextEditor(controller: courserController, content: realContent),
-            // ),
+            Expanded(
+              child: RichTextEditor(controller: courserController, content: realContent),
+            ),
           ],
         ),
       ),
@@ -136,19 +137,19 @@ class CourseRichTextEdit extends BaseFadeScalePage {
   ///　クロース前に編集したことある確認
   Future<bool> closeIsEditEdCheck() async {
     bool isEdited = false;
-    // String richTextContent = await courserController.getText();
+    String richTextContent = await courserController.getText();
 
-    // if (ediType == EdiType.chapter) {
-    //   if (courseChapterInfo != null) {
-    //     if (titleController.text != courseChapterInfo!.chapterName || richTextContent != courseChapterInfo!.content[0]) {
-    //       isEdited = true;
-    //     }
-    //   }
-    // } else {
-    //   if (richTextContent != content) {
-    //     isEdited = true;
-    //   }
-    // }
+    if (ediType == EdiType.chapter) {
+      if (courseChapterInfo != null) {
+        if (titleController.text != courseChapterInfo!.chapterName || richTextContent != courseChapterInfo!.content[0]) {
+          isEdited = true;
+        }
+      }
+    } else {
+      if (richTextContent != content) {
+        isEdited = true;
+      }
+    }
 
     return isEdited;
   }
