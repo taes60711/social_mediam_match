@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
 import 'package:social_mediam_match/services/api_client.dart';
+import 'package:social_mediam_match/services/token_service.dart';
 
 import '../models/post_model.dart';
 import '../models/user_model.dart';
 
 class PostService extends ApiClient {
   PostService() : super(overrideBranch: "/posts");
+
+  TokenService tokenService = TokenService();
 
   ///MARK: 全て掲示板種類取得する
   Future<List<PostBoard>> getAllPostBoard() async {
@@ -165,76 +170,6 @@ class PostService extends ApiClient {
     return requestPostDataByUID;
   }
 
-  ///MARK: 文章View数更新
-  Future<bool> updatePostViewCount(int postId) async {
-    String responseData = await apiPush("/moveToPost/$postId", body: {});
-
-    print("updatePostViewCount $responseData");
-
-    return responseData != "null" ? true : false;
-  }
-
-  ///MARK: 文章作成
-  Future<int> createPost(String uid, String message, String fileMessage, int type) async {
-    Map<String, dynamic> body = {
-      "createdBy": uid,
-      "title": "",
-      "mainMessage": message,
-      "fileMessage": fileMessage,
-      "type": type,
-    };
-
-    String responseData = await apiPush("/createPost", body: body);
-
-    int index = int.parse(responseData);
-    return index;
-  }
-
-  /// 文章編集
-  Future<bool> updatePost({
-    required int postId,
-    required String mainMessage,
-    required String fileMessage,
-  }) async {
-    Map<String, dynamic> body = {
-      "id": postId,
-      "title": "",
-      "mainMessage": mainMessage,
-      "fileMessage": fileMessage,
-    };
-
-    String responseData = await apiPush("/update/$postId", body: body);
-
-    print("updatePost $responseData");
-
-    return responseData != "null" ? true : false;
-  }
-
-  /// 文章削除
-  Future<bool> deletePost(int postId) async {
-    String responseData = await apiPush("/delete/$postId", body: {});
-
-    print("deletePost $responseData");
-
-    return responseData != "null" ? true : false;
-  }
-
-  /// 文章”いいね”更新
-  Future<bool> updatePostGood(int postId, {String? userUID}) async {
-    Map<String, dynamic> body = {};
-
-    if (userUID != null) {
-      body = {"goodedUserUID": userUID};
-      print("Good");
-    }
-
-    String responseData = await apiPush("/updatePostGood/$postId", body: body);
-
-    print("updatePost $responseData");
-
-    return responseData != "null" ? true : false;
-  }
-
   ///MARK: 文章”コメント”取得する
   Future<List<PostCommentTextEditorModel>> getPostCommentData(int page, int size, int postId) async {
     List<PostCommentTextEditorModel> requestPostCommentData = [];
@@ -250,7 +185,7 @@ class PostService extends ApiClient {
       requestPostCommentData = await handleResponse<PostCommentTextEditorModel>(
         responseData,
         model: PostCommentTextEditorModel.toMap,
-        isList: true,  
+        isList: true,
       );
     } catch (e) {
       onRequestFailed();
@@ -259,20 +194,188 @@ class PostService extends ApiClient {
     return requestPostCommentData;
   }
 
-  ///MARK: 文章 ”コメント” 作成
-  Future<int> createPostComment({required int postUID, required String userUID, required String message}) async {
+  ///MARK: 文章View数更新
+  Future<bool> updatePostViewCount(int postId) async {
+    String responseData = await apiPush("/moveToPost/$postId", body: {});
+
+    print("updatePostViewCount $responseData");
+
+    return responseData != "null" ? true : false;
+  }
+
+  ///MARK: 文章作成
+  Future<int> createPost({
+    required String uid,
+    required String message,
+    required String fileMessage,
+    required int type,
+  }) async {
+    Map<String, dynamic> body = {
+      "createdBy": uid,
+      "mainMessage": message,
+      "fileMessage": fileMessage,
+      "type": type,
+    };
+
+    String token = await tokenService.getToken(userId: uid);
+
+    String responseData = await apiPush(
+      "/createPost",
+      headers: {
+        'content-type': 'application/json',
+        'X-OneTime-Token': token,
+      },
+      body: body,
+    );
+
+    ResponseData response = ResponseData.fromJson(responseData);
+
+    print("createPost ${response.statusCode}");
+
+    if (response.statusCode != "200") {
+      return -1;
+    }
+
+    return response.data['postIndex'];
+  }
+
+  /// 文章編集
+  Future<bool> updatePost({
+    required String uid,
+    required int postId,
+    required String mainMessage,
+    required String fileMessage,
+  }) async {
+    Map<String, dynamic> body = {
+      "mainMessage": mainMessage,
+      "fileMessage": fileMessage,
+    };
+
+    String token = await tokenService.getToken(userId: uid);
+
+    String responseData = await apiPush(
+      "/update/$postId",
+      headers: {
+        'content-type': 'application/json',
+        'X-OneTime-Token': token,
+      },
+      body: body,
+    );
+
+    ResponseData response = ResponseData.fromJson(responseData);
+
+    print("updatePost ${response.statusCode}");
+
+    if (response.statusCode != "200") {
+      return false;
+    }
+    return true;
+  }
+
+  /// 文章削除
+  Future<bool> deletePost({
+    required int postId,
+    required String uid,
+  }) async {
+    String token = await tokenService.getToken(userId: uid);
+
+    String responseData = await apiPush(
+      "/delete/$postId",
+      headers: {
+        'content-type': 'application/json',
+        'X-OneTime-Token': token,
+      },
+      body: {},
+    );
+
+    ResponseData response = ResponseData.fromJson(responseData);
+
+    print("deletePost ${response.statusCode}");
+
+    if (response.statusCode != "200") {
+      return false;
+    }
+
+    return true;
+  }
+
+  /// 文章”いいね”更新
+  Future<bool> updatePostGood(
+    int postId, {
+    String? userUID,
+    required WidgetRef ref,
+  }) async {
     Map<String, dynamic> body = {};
 
-    body = {"postId": postUID, "userUid": userUID, "message": message};
+    if (userUID != null) {
+      body = {"goodedUserUID": userUID};
+      print("Good");
+    }
 
-    String responseData = await apiPush("/createPostComment", body: body);
+    ProfileData userData = ref.watch(loginUserData);
 
-    int index = int.parse(responseData);
-    return index;
+    String token = await tokenService.getToken(userId: userData.uid);
+
+    String responseData = await apiPush(
+      "/updatePostGood/$postId",
+      headers: {
+        'content-type': 'application/json',
+        'X-OneTime-Token': token,
+      },
+      body: body,
+    );
+
+    ResponseData response = ResponseData.fromJson(responseData);
+
+    print("updatePostGood ${response.statusCode}");
+
+    if (response.statusCode != "200") {
+      return false;
+    }
+
+    return true;
+  }
+
+  ///MARK: 文章の”コメント” 作成
+  Future<int> createPostComment({
+    required int postUID,
+    required String userUID,
+    required String message,
+  }) async {
+    Map<String, dynamic> body = {
+      "postId": postUID,
+      "userUid": userUID,
+      "message": message,
+    };
+
+    String token = await tokenService.getToken(userId: userUID);
+
+    String responseData = await apiPush(
+      "/createPostComment",
+      headers: {
+        'content-type': 'application/json',
+        'X-OneTime-Token': token,
+      },
+      body: body,
+    );
+
+    ResponseData response = ResponseData.fromJson(responseData);
+
+    print("createPostComment ${response.statusCode}");
+
+    if (response.statusCode != "200") {
+      return -1;
+    }
+
+    return response.data['postCommentIndex'];
   }
 
   /// 文章 ”コメント” 編集
-  Future<bool> updatePostComment({required int id, required String mainMessage}) async {
+  Future<bool> updatePostComment({
+    required String uid,
+    required int id,
+    required String mainMessage,
+  }) async {
     Map<String, dynamic> body = {};
 
     body = {
@@ -280,21 +383,51 @@ class PostService extends ApiClient {
       "message": mainMessage,
     };
 
-    String responseData = await apiPush("/updatePostComment/$id", body: body);
+    String token = await tokenService.getToken(userId: uid);
 
-    print("updatePostComment $responseData");
+    String responseData = await apiPush(
+      "/updatePostComment/$id",
+      headers: {
+        'content-type': 'application/json',
+        'X-OneTime-Token': token,
+      },
+      body: body,
+    );
 
-    return responseData != "null" ? true : false;
+    ResponseData response = ResponseData.fromJson(responseData);
+
+    print("updatePostComment ${response.statusCode}");
+
+    if (response.statusCode != "200") {
+      return false;
+    }
+
+    return true;
   }
 
   /// 文章 ”コメント” 削除
-  Future<bool> deletePostComment({required int id}) async {
+  Future<bool> deletePostComment({required String uid, required int id}) async {
     Map<String, dynamic> body = {};
 
-    String responseData = await apiPush("/deletePostComment/$id", body: body);
+    String token = await tokenService.getToken(userId: uid);
 
-    print("deletePostComment $responseData");
+    String responseData = await apiPush(
+      "/deletePostComment/$id",
+      headers: {
+        'content-type': 'application/json',
+        'X-OneTime-Token': token,
+      },
+      body: body,
+    );
 
-    return responseData != "null" ? true : false;
+    ResponseData response = ResponseData.fromJson(responseData);
+
+    print("deletePostComment ${response.statusCode}");
+
+    if (response.statusCode != "200") {
+      return false;
+    }
+
+    return true;
   }
 }

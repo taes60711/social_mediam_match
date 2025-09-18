@@ -5,6 +5,8 @@ import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.d
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
+import 'package:social_mediam_match/models/user_model.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
 
 import '../../../../models/post_model.dart';
 import '../../../../provider/post/post_provider.dart';
@@ -63,7 +65,12 @@ class MyPostBtmSheet extends BaseBottomSheet {
                 title: "警告",
                 content: "確定要刪除該文章?",
                 conirmFunc: () async {
-                  bool isSucess = await PostService().deletePost(ref.read(choicedPostProvider.notifier).state.id);
+                  ProfileData userData = ref.watch(loginUserData);
+
+                  bool isSucess = await PostService().deletePost(
+                    postId: ref.read(choicedPostProvider.notifier).state.id,
+                    uid: userData.uid,
+                  );
                   if (isSucess) {
                     ref.read(postListController.notifier).removeData(dataIndex);
                     render();

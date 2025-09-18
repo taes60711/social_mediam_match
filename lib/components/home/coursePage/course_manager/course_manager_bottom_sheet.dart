@@ -8,6 +8,8 @@ import 'package:social_mediam_match/components/utilities/dialog/confirm_dialog.d
 import 'package:social_mediam_match/components/utilities/main_button.dart';
 import 'package:social_mediam_match/components/utilities/style/screen_size.dart';
 import 'package:social_mediam_match/components/utilities/style/app_colors.dart';
+import 'package:social_mediam_match/models/user_model.dart';
+import 'package:social_mediam_match/provider/account/user_provider.dart';
 import 'package:social_mediam_match/services/course_service.dart';
 
 import '../../../../models/course_model.dart';
@@ -78,8 +80,18 @@ class CourseManagerBtmSheet extends BaseBottomSheet {
                 content: "確定要刪除該課程?",
                 conirmFunc: () async {
                   CanTouchScreenLoadingDialog().show();
-                  await CourseService().deleteCourse(courseId: choiceCourse.id);
+
+                  ProfileData userData = ref.watch(loginUserData);
+                  bool isSuccess = await CourseService().deleteCourse(
+                    uid: userData.uid,
+                    courseId: choiceCourse.id,
+                  );
+
                   CanTouchScreenLoadingDialog().close();
+
+                  if (isSuccess == false) {
+                    return;
+                  }
 
                   ref.read(courseListController.notifier).removeData(dataIndex);
                   closePage();

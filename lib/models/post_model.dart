@@ -33,7 +33,6 @@ class PostBoard {
 class PostModel {
   int id;
   String createdBy;
-  String title;
   String mainMessage;
   List<String> fileMessage;
   String postTime;
@@ -46,7 +45,6 @@ class PostModel {
   PostModel({
     this.id = -1,
     this.createdBy = "",
-    this.title = "",
     this.mainMessage = "",
     this.fileMessage = const [],
     this.postTime = "",
@@ -62,7 +60,6 @@ class PostModel {
     return PostModel(
       id: json['id'],
       createdBy: json['createdBy'],
-      title: json['title'],
       mainMessage: json['mainMessage'],
       fileMessage: json['fileMessage'] == null ? [] : (json['fileMessage'] as List<dynamic>).map((e) => e as String).toList(),
       viewed: json['viewed'],
@@ -79,7 +76,6 @@ class PostModel {
     return PostModel(
       id: json['id'],
       createdBy: json['createdBy'],
-      title: json['title'],
       mainMessage: json['mainMessage'],
       fileMessage: json['fileMessage'] == null ? [] : (json['fileMessage'] as List<dynamic>).map((e) => e as String).toList(),
       viewed: json['viewed'],
@@ -101,7 +97,6 @@ class PostModel {
     return PostModel(
       id: data?.id ?? id,
       createdBy: data?.createdBy ?? createdBy,
-      title: data?.title ?? title,
       mainMessage: data?.mainMessage ?? mainMessage,
       fileMessage: data?.fileMessage ?? fileMessage,
       loginUserIsGood: data?.loginUserIsGood ?? loginUserIsGood,
@@ -118,7 +113,6 @@ class PostModel {
     return {
       'id': id,
       'createdBy': createdBy,
-      'title': title,
       'mainMessage': mainMessage,
       'userIsGood': loginUserIsGood,
       'fileMessage': fileMessage,

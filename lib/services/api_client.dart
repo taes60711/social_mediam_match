@@ -7,6 +7,36 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import '../components/utilities/dialog/confirm_dialog.dart';
 
+class ResponseData {
+  String statusCode;
+  String statusMessage;
+  dynamic data;
+
+  ResponseData({
+    required this.statusCode,
+    required this.statusMessage,
+    required this.data,
+  });
+
+  factory ResponseData.fromJson(String jsonstr) {
+    if (jsonstr == "null") {
+      return ResponseData(
+        statusCode: "501",
+        statusMessage: "serverErr",
+        data: {},
+      );
+    }
+
+    Map<String, dynamic> jsons = json.decode(jsonstr);
+
+    return ResponseData(
+      statusCode: jsons['statusCode'],
+      statusMessage: jsons['statusMessage'],
+      data: jsons['data'],
+    );
+  }
+}
+
 class ApiClient {
   final String _ip;
   final String branch;
@@ -78,15 +108,11 @@ class ApiClient {
     );
 
     try {
-      if (response.statusCode != 200) {
-        throw ArgumentError("${response.statusCode}");
-      }
+      return response.body;
     } catch (e) {
       _onError(e);
       return "null";
     }
-
-    return response.body;
   }
 
   void _onError(dynamic errorMessage) {

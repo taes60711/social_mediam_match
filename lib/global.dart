@@ -30,6 +30,7 @@ class APPInfoController {
   Future<bool> checkAppVersion(BuildContext context) async {
     bool isOk = true;
     AppInfoModel serviceVer = await AppInfoService().getAppInfo();
+
     print("Phone Version IOS : ${phoneVer.iosVersion} Android : ${phoneVer.androidVersion}");
     print("Service Version IOS : ${serviceVer.iosVersion} Android : ${serviceVer.androidVersion} "
         "test : ${serviceVer.testVersion} androidTest: ${serviceVer.androidTestVersion}");
@@ -76,7 +77,7 @@ class APIHttpController {
   }
 
   final String _domain = "skillstorm.directsense.tw";
-  final String _ip = "192.168.0.15";
+  final String _ip = "10.12.1.70"; //"192.168.0.20";
   //119.77.173.122
 
   final String _port = '80';

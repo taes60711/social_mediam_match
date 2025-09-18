@@ -1,9 +1,12 @@
 import 'package:social_mediam_match/models/user_model.dart';
+import 'package:social_mediam_match/services/token_service.dart';
 import '../models/course_model.dart';
 import 'api_client.dart';
 
 class CourseService extends ApiClient {
   CourseService() : super(overrideBranch: "/courses");
+
+  TokenService tokenService = TokenService();
 
   ///コース作成・更新
   Future<int> createOrUpdateCourse({
@@ -39,17 +42,62 @@ class CourseService extends ApiClient {
       postType = "update";
       url = "/updateCourse/$courseId";
     }
-    String responseData = await apiPush(url, body: body);
+
+    String token = await tokenService.getToken(userId: createdBy);
+
+    String responseData = await apiPush(url,
+        headers: {
+          'content-type': 'application/json',
+          'X-OneTime-Token': token,
+        },
+        body: body);
 
     if (postType == "create") {
-      print("createCourse $responseData");
-      int index = int.parse(responseData);
-      return index;
+      ResponseData response = ResponseData.fromJson(responseData);
+
+      print("createCourse ${response.statusCode}");
+
+      if (response.statusCode != "200") {
+        return -1;
+      }
+
+      return response.data["courseIndex"];
     } else {
       /// -100 = success ; -101 = fail
-      print("update $responseData");
-      return responseData != "null" ? -100 : -101;
+      ResponseData response = ResponseData.fromJson(responseData);
+
+      print("updateCourse ${response.statusCode}");
+
+      if (response.statusCode != "200") {
+        return -101;
+      }
+
+      return -100;
     }
+  }
+
+  ///コース削除
+  Future<bool> deleteCourse({required String uid, required int courseId}) async {
+    String token = await tokenService.getToken(userId: uid);
+
+    String responseData = await apiPush(
+      "/deleteCourse/$courseId",
+      headers: {
+        'content-type': 'application/json',
+        'X-OneTime-Token': token,
+      },
+      body: {},
+    );
+
+    ResponseData response = ResponseData.fromJson(responseData);
+
+    print("deleteCourse ${response.statusCode}");
+
+    if (response.statusCode != "200") {
+      return false;
+    }
+
+    return true;
   }
 
   /// 全てコース
@@ -215,17 +263,6 @@ class CourseService extends ApiClient {
     String responseData = await apiPush("/deleteUserFromCourse", body: body);
 
     print("updateAddedUserStatus $responseData");
-
-    return responseData != "null" ? true : false;
-  }
-
-  ///コース削除
-  Future<bool> deleteCourse({required int courseId}) async {
-    Map<String, dynamic> body = {};
-
-    String responseData = await apiPush("/deleteCourse/$courseId", body: body);
-
-    print("deleteCourse $responseData");
 
     return responseData != "null" ? true : false;
   }

@@ -96,6 +96,10 @@ class CourseCreatePage extends BaseFadeScalePage {
                     isPublic: courseEditingData.isPublic,
                   );
 
+                  if (index == -1) {
+                    return;
+                  }
+
                   CourseModel createdCourse = CourseModel(
                     id: index,
                     createdBy: userData.uid,

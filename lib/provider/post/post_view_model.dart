@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -49,7 +48,11 @@ class PostViewModel {
   }
 
   ///文章作る
-  Future<void> postCreate({required String mainMessage, required List<String> fileMessage, PostBoard? postBoard}) async {
+  Future<void> postCreate({
+    required String mainMessage,
+    required List<String> fileMessage,
+    PostBoard? postBoard,
+  }) async {
     ProfileData userData = ref.watch(loginUserData);
 
     PostBoard postTypeBoard = ref.read(postCreateChoiceBoard);
@@ -87,7 +90,16 @@ class PostViewModel {
       fileMessageStr = listToListStr(uploadedfileList);
     }
 
-    int postIndex = await PostService().createPost(userData.uid, mainMessage, fileMessageStr, postTypeBoard.type);
+    int postIndex = await PostService().createPost(
+      uid: userData.uid,
+      message: mainMessage,
+      fileMessage: fileMessageStr,
+      type: postTypeBoard.type,
+    );
+
+    if (postIndex == -1) {
+      return;
+    }
 
     PostModel post = PostModel(
       id: postIndex,
@@ -152,12 +164,12 @@ class PostViewModel {
       ///いいねたす
       choiceData.good--;
       choiceData.loginUserIsGood = false;
-      await PostService().updatePostGood(choiceData.id);
+      await PostService().updatePostGood(choiceData.id, ref: ref);
     } else {
       ///いいねひく
       choiceData.good++;
       choiceData.loginUserIsGood = true;
-      await PostService().updatePostGood(choiceData.id, userUID: userData.uid);
+      await PostService().updatePostGood(choiceData.id, userUID: userData.uid, ref: ref);
 
       String postMsg = choiceData.mainMessage.length > 13 ? choiceData.mainMessage.substring(0, 13) : choiceData.mainMessage;
       String message = '"${ref.read(loginUserData.notifier).state.name}"對$postMsg...按了讚';
@@ -200,12 +212,12 @@ class PostViewModel {
       ///いいねたす
       postData.good--;
       postData.loginUserIsGood = false;
-      await PostService().updatePostGood(postData.id);
+      await PostService().updatePostGood(postData.id, ref: ref);
     } else {
       ///いいねひく
       postData.good++;
       postData.loginUserIsGood = true;
-      await PostService().updatePostGood(postData.id, userUID: userData.uid);
+      await PostService().updatePostGood(postData.id, userUID: userData.uid, ref: ref);
 
       String postMsg = postData.mainMessage.length > 13 ? postData.mainMessage.substring(0, 13) : postData.mainMessage;
       String message = '"${ref.read(loginUserData.notifier).state.name}"對$postMsg...按了讚';
@@ -234,7 +246,7 @@ class PostViewModel {
     render();
   }
 
-  ///コメント作成
+  ///コメント更新
   Future<bool> postCommentUpdate({
     required String message,
     required int dataIndex,
@@ -245,8 +257,19 @@ class PostViewModel {
       return false;
     }
 
+    ProfileData userData = ref.watch(loginUserData);
+
     ///編集
-    await PostService().updatePostComment(id: data.uid, mainMessage: message);
+    bool isSuccess = await PostService().updatePostComment(
+      uid: userData.uid,
+      id: data.uid,
+      mainMessage: message,
+    );
+
+    if (isSuccess == false) {
+      return false;
+    }
+
     ref.read(postCommentListControllerProvider).listData[dataIndex].message = message;
     render();
 
@@ -265,6 +288,10 @@ class PostViewModel {
     PostModel choiceData = ref.read(choicedPostProvider);
     ProfileData userData = ref.watch(loginUserData);
     int uid = await PostService().createPostComment(postUID: choiceData.id, userUID: userData.uid, message: message);
+
+    if (uid == -1) {
+      return false;
+    }
 
     PostCommentTextEditorModel sdsat = PostCommentTextEditorModel(
       uid: uid,
@@ -329,8 +356,17 @@ class PostViewModel {
       title: "提示",
       content: "確定要刪除該回覆？",
       conirmFunc: () async {
+        ProfileData userData = ref.watch(loginUserData);
+
         ///削除実行する
-        await PostService().deletePostComment(id: data.uid);
+        bool isSuccess = await PostService().deletePostComment(
+          uid: userData.uid,
+          id: data.uid,
+        );
+
+        if (isSuccess == false) {
+          return;
+        }
 
         PostModel choiceData = ref.read(choicedPostProvider);
 

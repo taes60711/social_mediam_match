@@ -19,6 +19,8 @@ import 'package:uuid/uuid.dart';
 import '../../../../global.dart';
 import '../../../../models/post_model.dart';
 import '../../../../models/rich_text_format.dart';
+import '../../../../models/user_model.dart';
+import '../../../../provider/account/user_provider.dart';
 import '../../../../provider/post/post_provider.dart';
 import '../../../../provider/post/post_view_model.dart';
 import '../../../../services/image_service.dart';
@@ -134,7 +136,10 @@ class PostEditorPage extends BaseFadeScalePage {
                     fileMessageStr = listToListStr(uploadedfileList);
                   }
 
+                  ProfileData userData = ref.watch(loginUserData);
+
                   bool isSucess = await PostService().updatePost(
+                    uid: userData.uid,
                     postId: post.id,
                     mainMessage: mainMessageController.text,
                     fileMessage: fileMessageStr,
