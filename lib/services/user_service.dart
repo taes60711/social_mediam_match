@@ -268,4 +268,48 @@ class UserService extends ApiClient {
 
     return responseData;
   }
+
+  /// 取得加密後的UID
+  Future<String> getEncryptUID({required String uid}) async {
+    String responseData = await apiPush(
+      "/getEncryptUID",
+      body: {},
+      headers: {
+        'content-type': 'application/json',
+        'userUID': uid,
+      },
+    );
+
+    ResponseData response = ResponseData.fromJson(responseData);
+
+    print("getEncryptUID ${response.statusCode}");
+
+    if (response.statusCode != "200") {
+      return "";
+    }
+
+    return response.data["uid"];
+  }
+
+  /// 取得解密的UID
+  Future<String> getDecryptUID({required String uid}) async {
+    String responseData = await apiPush(
+      "/getDecryptUID",
+      body: {},
+      headers: {
+        'content-type': 'application/json',
+        'userUID': uid,
+      },
+    );
+
+    ResponseData response = ResponseData.fromJson(responseData);
+
+    print("getDecryptUID ${response.statusCode}");
+
+    if (response.statusCode != "200") {
+      return "";
+    }
+
+    return response.data["uid"];
+  }
 }

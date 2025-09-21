@@ -11,6 +11,7 @@ import 'package:social_mediam_match/components/utilities/dialog/base_dialog.dart
 import 'package:social_mediam_match/components/utilities/toast.dart';
 import 'package:social_mediam_match/models/user_model.dart';
 import 'package:social_mediam_match/provider/account/user_provider.dart';
+import 'package:social_mediam_match/services/user_service.dart';
 
 import '../../../global.dart';
 import '../../utilities/lodaing_dialog.dart';
@@ -24,7 +25,9 @@ class UserProfileSharePage extends BaseDialog {
   @override
   Future<void> initState(WidgetRef ref) async {
     ProfileData userData = ref.read(loginUserData.notifier).state;
-    shareUrl = "https://${APIHttpController.shareDomain}/profile/${userData.uid}";
+    String encryUID = await UserService().getEncryptUID(uid: userData.uid);
+
+    shareUrl = "https://${APIHttpController.shareDomain}/profile/${encryUID}";
     render();
   }
 

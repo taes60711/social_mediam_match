@@ -42,7 +42,9 @@ class MyNotificationProfilePage extends BaseBottomSheet {
   Widget build(WidgetRef ref) {
     return APIPage<ProfileData>(
       apiFunc: () async {
-        return await UserService().requestUserDataByUID(userUId);
+        String dcryptUID = await UserService().getDecryptUID(uid: userUId);
+
+        return await UserService().requestUserDataByUID(dcryptUID);
       },
       initFunc: (ProfileData userData) async {
         ProfileData myUserData = ref.watch(loginUserData);
